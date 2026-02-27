@@ -1,0 +1,39 @@
+[rom]
+path = "../game.smc"
+size = 1048576
+mapping = "LoROM"
+
+[[banks]]
+number = 0
+name = "kernel"
+type = "code"
+snes_addr = 0x008000
+rom_offset = 0x000000
+description = "Main engine, NMI/IRQ handlers"
+
+[[banks]]
+number = 3
+name = "palettes"
+type = "palette_bgr555"
+snes_addr = 0x038000
+rom_offset = 0x018000
+description = "Primary palette bank"
+output = "palettes/"
+
+[[banks]]
+number = 6
+name = "dashboard_tiles"
+type = "graphics_4bpp"
+snes_addr = 0x068000
+rom_offset = 0x030000
+tile_count = 1024
+output = "graphics/cockpit/"
+
+[[banks]]
+number = 13
+name = "track_data_1"
+type = "track_segments"
+snes_addr = 0x0D8000
+rom_offset = 0x068000
+format = "segment_8byte"
+output = "tracks/pacific.json"
