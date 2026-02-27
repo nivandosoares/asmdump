@@ -53,3 +53,23 @@ Depois abra: `http://127.0.0.1:8080`.
 - Comparar preview renderizado com screenshot de emulador (Mesen-S).
 - Conferir `--tile-info` em regiões críticas (HUD, cockpit, menus).
 - Se houver divergência, revisar `tilemaps/*.json` e bancos em `graphics/bankXX`.
+
+## 5) Interface Qt (desktop, completa)
+
+Instale dependência:
+
+```bash
+pip install PySide6
+```
+
+Abra a interface:
+
+```bash
+python visualize_qt.py
+```
+
+Recursos disponíveis na UI:
+- Aba **Scenes**: carregar cena, zoom/pan, clicar para `tile info`, toggles de layers, export PNG e header C.
+- Aba **Sprites**: renderizar carro por `car/angle/scale` e exportar PNG.
+- Aba **Road**: renderizar pista com `track/start/camera angle` e exportar PNG.
+- Menu **File**: trocar `data root` e recarregar dados extraídos.
