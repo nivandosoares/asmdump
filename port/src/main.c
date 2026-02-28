@@ -27,6 +27,8 @@ static const uint8_t OAM_SIZE_TABLE[8][2][2] = {
     {{2, 4}, {4, 4}}
 };
 
+static const uint8_t MODE7_SPRITE_PRIORITIES[4] = {2, 4, 6, 7};
+
 typedef struct {
     uint32_t *colors;
     size_t palette_count;
@@ -94,6 +96,7 @@ typedef struct {
     int oam_base_address;
     int oam_address_offset;
     int internal_oam_address;
+    int frame_count;
     bool enable_oam_priority;
     bool obj_interlace;
     bool overscan_mode;
@@ -249,6 +252,7 @@ static void snes_bg_scene_free(SnesBgScene *scene) {
     scene->oam_base_address = 0;
     scene->oam_address_offset = 0;
     scene->internal_oam_address = 0;
+    scene->frame_count = 0;
     scene->enable_oam_priority = false;
     scene->obj_interlace = false;
     scene->overscan_mode = false;
@@ -1248,6 +1252,7 @@ static bool snes_bg_scene_load_state_json(const char *path, SnesBgScene *scene) 
     (void)json_try_parse_int(json, "ppu.oamBaseAddress", &scene->oam_base_address);
     (void)json_try_parse_int(json, "ppu.oamAddressOffset", &scene->oam_address_offset);
     (void)json_try_parse_int(json, "ppu.internalOamAddress", &scene->internal_oam_address);
+    (void)json_try_parse_int(json, "ppu.frameCount", &scene->frame_count);
     (void)json_try_parse_bool(json, "ppu.enableOamPriority", &scene->enable_oam_priority);
     (void)json_try_parse_bool(json, "ppu.objInterlace", &scene->obj_interlace);
     (void)json_try_parse_bool(json, "ppu.overscanMode", &scene->overscan_mode);
@@ -1938,6 +1943,206 @@ static uint8_t snes_decode_4bpp_tile_pixel(const SnesBgScene *scene, size_t tile
     return (uint8_t)(plane0 | (plane1 << 1) | (plane2 << 2) | (plane3 << 3));
 }
 
+static uint8_t snes_decode_sprite_row_pixel(uint16_t chr_low, uint16_t chr_high, int shift) {
+    uint8_t color = (uint8_t)((chr_low >> shift) & 0x01u);
+    color |= (uint8_t)((chr_low >> (7 + shift)) & 0x02u);
+    color |= (uint8_t)(((chr_high >> shift) & 0x01u) << 2);
+    color |= (uint8_t)(((chr_high >> (7 + shift)) & 0x02u) << 2);
+    return color;
+}
+
+static int snes_sprite_x_from_oam(const SnesBgScene *scene, int addr, int high_table_value) {
+    int raw = ((((high_table_value & 0x01) << 8) | scene->oam[addr]) & 0x01ff);
+    return (raw & 0x0100) ? (raw - 0x0200) : raw;
+}
+
+static bool snes_sprite_scanline_visible(int scanline, int sprite_x, int sprite_y, int width, int height, bool interlace) {
+    int end_y = 0;
+
+    if (sprite_x != -256 && ((sprite_x + width) <= 0 || sprite_x > 255)) {
+        return false;
+    }
+
+    end_y = sprite_y + (interlace ? (height >> 1) : height);
+    return ((scanline >= sprite_y && scanline < end_y) ||
+            (((end_y & 0x00ff) < sprite_y) && (scanline < (end_y & 0x00ff))));
+}
+
+static void render_snes_mode7_objects_ppu_accurate(AppState *app) {
+    const SnesBgScene *scene = &app->snes_bg_scene;
+    int oam_mode = scene->oam_mode & 0x07;
+    int start_index = scene->enable_oam_priority ? ((scene->internal_oam_address & 0x01fcu) >> 2) : 0;
+    int odd_frame = scene->frame_count & 0x01;
+
+    if (!scene->oam || scene->oam_size < 0x220u) {
+        return;
+    }
+
+    for (int scanline = 0; scanline < SCREEN_HEIGHT; scanline++) {
+        int visible_indices[32];
+        int visible_count = 0;
+        int oam_eval_index = start_index;
+        uint8_t sprite_priority[SCREEN_WIDTH];
+        uint8_t sprite_palette[SCREEN_WIDTH];
+        uint8_t sprite_color[SCREEN_WIDTH];
+        int sprite_tile_count = 0;
+        bool stop_fetch = false;
+
+        memset(sprite_priority, 0xff, sizeof(sprite_priority));
+        memset(sprite_palette, 0, sizeof(sprite_palette));
+        memset(sprite_color, 0, sizeof(sprite_color));
+
+        for (int i = 0; i < 128; i++) {
+            int addr = (oam_eval_index << 2) & 0x01ff;
+            int high_table_value = scene->oam[0x200 + (oam_eval_index >> 2)] >> ((oam_eval_index << 1) & 0x06);
+            int large_sprite = (high_table_value & 0x02) >> 1;
+            int width_tiles = OAM_SIZE_TABLE[oam_mode][large_sprite][0];
+            int height_tiles = OAM_SIZE_TABLE[oam_mode][large_sprite][1];
+            int width = width_tiles << 3;
+            int height = height_tiles << 3;
+            int sprite_x = snes_sprite_x_from_oam(scene, addr, high_table_value);
+            int sprite_y = scene->oam[addr + 1];
+
+            if (snes_sprite_scanline_visible(scanline, sprite_x, sprite_y, width, height, scene->obj_interlace)) {
+                if (visible_count < 32) {
+                    visible_indices[visible_count++] = oam_eval_index;
+                } else {
+                    break;
+                }
+            }
+
+            oam_eval_index = (oam_eval_index + 1) & 0x7f;
+        }
+
+        for (int visible_index = visible_count - 1; visible_index >= 0; visible_index--) {
+            int sprite_index = visible_indices[visible_index];
+            int addr = (sprite_index << 2) & 0x01ff;
+            int high_table_value = scene->oam[0x200 + (sprite_index >> 2)] >> ((sprite_index << 1) & 0x06);
+            int large_sprite = (high_table_value & 0x02) >> 1;
+            int width_tiles = OAM_SIZE_TABLE[oam_mode][large_sprite][0];
+            int width = width_tiles << 3;
+            int sprite_x = snes_sprite_x_from_oam(scene, addr, high_table_value);
+            int sprite_y = scene->oam[addr + 1];
+            int tile_index_base = scene->oam[addr + 2];
+            int flags = scene->oam[addr + 3];
+            bool use_second_table = (flags & 0x01) != 0;
+            int palette_index = (flags >> 1) & 0x07;
+            int raw_priority = (flags >> 4) & 0x03;
+            bool horizontal_mirror = (flags & 0x40) != 0;
+            bool vertical_mirror = (flags & 0x80) != 0;
+            int column_count = width / 8;
+            int column_offset = column_count;
+            int y_gap = scanline - sprite_y;
+
+            if (sprite_x <= -8 && sprite_x != -256) {
+                column_offset += sprite_x / 8;
+            }
+            if (column_offset <= 0) {
+                continue;
+            }
+
+            if (scene->obj_interlace) {
+                y_gap = (y_gap << 1) | odd_frame;
+            }
+
+            while (column_offset > 0) {
+                int y_offset = 0;
+                int row_offset = 0;
+                int tile_row = 0;
+                int tile_column = 0;
+                int row = 0;
+                int tile_column_offset = 0;
+                int tile_index = 0;
+                int fetch_address = 0;
+                int x_base = 0;
+                int end_tile_x = 0;
+                int draw_x = 0;
+                uint16_t chr_low = 0;
+                uint16_t chr_high = 0;
+
+                sprite_tile_count++;
+                if (sprite_tile_count > 34) {
+                    stop_fetch = true;
+                    break;
+                }
+
+                column_offset--;
+                if (vertical_mirror) {
+                    int pos = y_gap < width ? (width - 1 - y_gap) : (width * 3 - 1 - y_gap);
+                    y_offset = pos & 0x07;
+                    row_offset = pos >> 3;
+                } else {
+                    y_offset = y_gap & 0x07;
+                    row_offset = y_gap >> 3;
+                }
+
+                tile_row = (tile_index_base & 0xf0) >> 4;
+                tile_column = tile_index_base & 0x0f;
+                row = (tile_row + row_offset) & 0x0f;
+                tile_column_offset = horizontal_mirror ? column_offset : (column_count - column_offset - 1);
+                tile_index = (row << 4) | ((tile_column + tile_column_offset) & 0x0f);
+                fetch_address = (scene->oam_base_address +
+                                 (tile_index << 4) +
+                                 (use_second_table ? scene->oam_address_offset : 0) +
+                                 y_offset) & 0x7fff;
+
+                x_base = sprite_x == -256 ? 0 : sprite_x;
+                end_tile_x = x_base + ((column_count - column_offset - 1) << 3) + 8;
+                draw_x = sprite_x + ((column_count - column_offset - 1) << 3);
+
+                chr_low = snes_vram_read_word(scene, fetch_address);
+                chr_high = snes_vram_read_word(scene, fetch_address + 8);
+                for (int pixel = 0; pixel < 8; pixel++) {
+                    int x_pos = draw_x + pixel;
+                    int x_offset = horizontal_mirror ? ((7 - pixel) & 0x07) : pixel;
+                    uint8_t color = 0;
+
+                    if (x_pos < 0 || x_pos >= SCREEN_WIDTH) {
+                        continue;
+                    }
+
+                    color = snes_decode_sprite_row_pixel(chr_low, chr_high, 7 - x_offset);
+                    if (color != 0) {
+                        sprite_color[x_pos] = color;
+                        sprite_palette[x_pos] = (uint8_t)palette_index;
+                        sprite_priority[x_pos] = (uint8_t)raw_priority;
+                    }
+                }
+
+                if (column_offset == 0 || end_tile_x >= 256) {
+                    break;
+                }
+            }
+
+            if (stop_fetch) {
+                break;
+            }
+        }
+
+        for (int x_pos = 0; x_pos < SCREEN_WIDTH; x_pos++) {
+            int raw_priority = sprite_priority[x_pos];
+            int sprite_priority_value = 0;
+            int cgram_index = 0;
+
+            if (raw_priority < 1 || raw_priority > 3) {
+                continue;
+            }
+
+            sprite_priority_value = MODE7_SPRITE_PRIORITIES[raw_priority];
+            if (sprite_priority_value <= 3) {
+                continue;
+            }
+
+            cgram_index = 128 + ((int)sprite_palette[x_pos] << 4) + (int)sprite_color[x_pos];
+            if (cgram_index < 0 || cgram_index >= 256) {
+                continue;
+            }
+
+            app->framebuffer[(scanline * SCREEN_WIDTH) + x_pos] = scene->cgram_colors[cgram_index];
+        }
+    }
+}
+
 static void render_snes_objects(AppState *app, int priority_mask) {
     const SnesBgScene *scene = &app->snes_bg_scene;
     int oam_mode = scene->oam_mode & 0x07;
@@ -2096,7 +2301,7 @@ static void render_snes_bg_scene(AppState *app) {
             render_snes_mode7_scene(app);
         }
         if (snes_layer_enabled(scene->main_screen_layers, 4)) {
-            render_snes_objects(app, (1 << 1) | (1 << 2) | (1 << 3));
+            render_snes_mode7_objects_ppu_accurate(app);
         }
         return;
     }

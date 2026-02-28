@@ -477,14 +477,107 @@ Current post-Ballistic boundary for the next native replacement:
   - disabling OBJ on that same derived scene tightens the result sharply:
     - `tools/out/bank1_bootstrap_queue_986_noobj.ppm`
     - compare vs real frame `986`: `21` mismatched pixels (`0.036621%`)
+  - replacing the probe OAM with the clean bridge OAM reaches the same baseline:
+    - `tools/out/bank1_bootstrap_queue_986_bridgeoverride.ppm`
+    - compare vs real frame `986`: `21` mismatched pixels (`0.036621%`)
+  - the late OAM capture divergence is now pinned:
+    - frame `978`: probe OAM vs bridge OAM = `0` differing bytes
+    - frame `982`: probe OAM vs bridge OAM = `0` differing bytes
+    - frame `986`: probe OAM vs bridge OAM = `21` differing bytes
+    - frame `990`: probe OAM vs bridge OAM = `75` differing bytes
   - practical reading: the queued Mode 7 BG path is nearly right at frame `986`; the open regression is mainly in OBJ composition
+- the next queue window is now reproducible and bridge-accurate:
+  - `tools/out/intro_bootstrap_986_990_queue.json` carries the live `986 -> 990` WRAM queue delta
+  - `tools/out/bank1_bootstrap_queue_990_bridgeobj.ppm` applies that queue onto the derived frame-`986` VRAM seed while using clean bridge OAM
+  - compare vs the real frame `990` screenshot: `1518` mismatched pixels (`2.647182%`)
+  - compare vs Mesen `main_visible.ppm`: `2` mismatched pixels (`0.003488%`)
+  - practical reading: the queue/callback-driven attract path can now advance natively through frame `990` when measured against extracted Mesen scene output, but the final-screen gap after `982` is still unresolved
+- the next edge after that is not yet promotable:
+  - `tools/out/intro_bootstrap_990_994_queue.json` and `tools/out/bank1_bootstrap_queue_994_bridgeobj.ppm` now exist as experimental artifacts
+  - compare vs the real frame `994` screenshot: `2143` mismatched pixels (`3.737095%`)
+  - compare vs Mesen `main_visible.ppm`: `96` mismatched pixels (`0.167411%`)
+  - practical reading: bridge-native attract coverage is currently stable through frame `990`; frame `994` is the next unresolved boundary
+- the next bridge-visible step is now closed with a second model:
+  - `tools/build_mode7_source_scene.py` builds late attract scenes by seeding from bridge frame `990` VRAM and patching the visible Mode 7 buffers at `0x4920` and `0x49A0` directly from ROM chunks
+  - the source rotation observed from bridge frames `990..997` is:
+    - frame `991`: `0x4920 = 1A:AA10`, `0x49A0 = 1A:ACA0`
+    - frame `992`: `0x4920 = 1A:AB58`, `0x49A0 = 1A:ACA0`
+    - frame `993`: `0x4920 = 1A:AB58`, `0x49A0 = 1A:AA10`
+    - frame `994`: `0x4920 = 1A:ACA0`, `0x49A0 = 1A:AA10`
+    - frame `995`: `0x4920 = 1A:ACA0`, `0x49A0 = 1A:AB58`
+    - frame `996`: `0x4920 = 1A:AA10`, `0x49A0 = 1A:AB58`
+    - frame `997`: `0x4920 = 1A:AA10`, `0x49A0 = 1A:ACA0`
+  - the resulting scene artifacts are:
+    - `tools/out/bank1_mode7_visible_991.*`
+    - `tools/out/bank1_mode7_visible_992.*`
+    - `tools/out/bank1_mode7_visible_993.*`
+    - `tools/out/bank1_mode7_visible_994.*`
+    - `tools/out/bank1_mode7_visible_995.*`
+    - `tools/out/bank1_mode7_visible_996.*`
+    - `tools/out/bank1_mode7_visible_997.*`
+  - current compare vs Mesen `main_visible.ppm`:
+    - frames `991..997`: `4` mismatched pixels each
+  - practical reading: the derived bridge-visible late attract path is now closed through frame `997`, but this is still an empirical visible-buffer model, not yet a callback-level explanation
+- the same callback family continues cleanly after that:
+  - `tools/out/mesen_range_998_1005_v1/sequence.txt` now carries direct bridge-extracted `snes_bg` states for frames `998..1005`
+  - `tools/out/mesen_range_1006_1013_v1/sequence.txt` now carries the next aligned direct bridge-extracted `snes_bg` states for frames `1006..1013`
+  - `tools/out/mesen_range_1014_1021_v1/sequence.txt` now carries the next aligned direct bridge-extracted `snes_bg` states for frames `1014..1021`
+  - `tools/out/mesen_range_1022_1029_v1/sequence.txt` now carries the next aligned direct bridge-extracted `snes_bg` states for frames `1022..1029`
+  - `tools/out/mesen_range_1030_1037_v1/sequence.txt` now carries the next aligned direct bridge-extracted `snes_bg` states for frames `1030..1037`
+  - `tools/out/mesen_range_1038_1045_v1/sequence.txt` now carries the next aligned direct bridge-extracted `snes_bg` states for frames `1038..1045`
+  - `tools/out/mesen_range_1046_1053_v1/sequence.txt` now carries the next aligned direct bridge-extracted `snes_bg` states for frames `1046..1053`
+  - `tools/out/mesen_range_1054_1061_v1/sequence.txt` now carries the next aligned direct bridge-extracted `snes_bg` states for frames `1054..1061`
+  - `tools/out/mesen_range_1062_1069_v1/sequence.txt` now carries the next aligned direct bridge-extracted `snes_bg` states for frames `1062..1069`
+  - `tools/out/mesen_range_1070_1077_v1/sequence.txt` now carries the next aligned direct bridge-extracted `snes_bg` states for frames `1070..1077`
+  - `tools/out/mesen_range_1078_1085_v1/sequence.txt` now carries the next aligned direct bridge-extracted `snes_bg` states for frames `1078..1085`
+  - `tools/out/mesen_range_1086_1093_v1/sequence.txt` now carries the next aligned direct bridge-extracted `snes_bg` states for frames `1086..1093`
+  - probe-confirmed continuity:
+    - frame `998`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 2`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 152`
+    - frame `1005`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 3`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 208`
+    - frame `1013`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 8`
+    - frame `1014`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 2`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 16`
+    - frame `1021`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 32`
+    - frame `1022`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 32`
+    - frame `1029`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 40`
+    - frame `1037`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 56`
+    - frame `1045`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 72`
+    - frame `1053`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 88`
+    - frame `1061`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0206 = 9`, `$0208 = 13`, `$020A = $9CC3`, `$040A = 14`, `$0054 = 104`
+    - frame `1069`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0206 = 11`, `$0208 = 13`, `$020A = $9CC3`, `$040A = 16`, `$0054 = 120`
+    - frame `1077`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0206 = 13`, `$0208 = 13`, `$020A = $9CC3`, `$040A = 17`, `$0054 = 128`
+    - frame `1085`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0206 = 13`, `$0208 = 13`, `$020A = $9CC3`, `$040A = 17`, `$0054 = 128`
+    - frame `1093`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0206 = 13`, `$0208 = 13`, `$020A = $9CC3`, `$040A = 17`, `$0054 = 128`
+  - SDL playback against Mesen `main_visible.ppm`:
+    - frames `998`, `999`, `1001`, `1002`, `1003`, `1004`, `1005`: `4` mismatched pixels each
+    - frame `1000`: `2` mismatched pixels
+    - frames `1006`, `1007`, `1008`, `1009`, `1010`: `6` mismatched pixels each
+    - frames `1011`, `1012`: `8` mismatched pixels each
+    - frame `1013`: `10` mismatched pixels
+    - frames `1014..1021`: `10` mismatched pixels each
+    - frames `1022..1023`: `10` mismatched pixels each
+    - frames `1024..1025`: `8` mismatched pixels each
+    - frames `1026..1029`: `11` mismatched pixels each
+    - frames `1030..1037`: `0, 0, 0, 0, 4, 3, 0, 0` mismatched pixels each
+    - frames `1038..1045`: `6, 6, 9, 12, 13, 11, 16, 15` mismatched pixels each
+    - frames `1046..1053`: `13, 13, 16, 18, 18, 18, 17, 14` mismatched pixels each
+    - frames `1054..1061`: `14, 14, 15, 16, 19, 20, 21, 22` mismatched pixels each
+    - frames `1062..1069`: `25, 26, 26, 21, 26, 23, 23, 25` mismatched pixels each
+    - frames `1070..1077`: `29, 27, 26, 28, 34, 33, 39, 32` mismatched pixels each
+    - frames `1078..1085`: `41, 41, 47, 47, 58, 63, 60, 69` mismatched pixels each
+    - frames `1086..1093`: `89, 92, 89, 90, 102, 115, 144, 129` mismatched pixels each
+  - the SDL runtime now uses the scanline-accurate `mode7-ppu` object compositor for Mode 7 scenes, which is what closed the `1022/1023/1025` outlier window
+  - practical reading: `01:9FE5` now has bridge-visible native coverage through frame `1093`; the remaining work is explanation and screenshot-accurate composition, not basic runtime reach, though the `1078..1093` mismatch ramp hints that a later presentation detail is starting to matter
 - practical reading:
   - queue-driven `978` and `982` are now promoted into the hybrid intro loop
   - frame `986` is still sampled in the hybrid loop
+  - a second bridge-accurate hybrid manifest now exists for native-coverage tracking through frame `990`
+  - a third bridge-visible hybrid manifest now exists for native coverage through frame `1093`:
+    - `tools/out/intro_loop_hybrid_bridge_visible_sequence.txt`
   - the earlier `958..977` path still wants a deeper ROM-side scene/bootstrap builder
   - the next missing behavior is concentrated at `986+`, not at `978` or `982`
 - current concrete artifact:
   - `tools/out/intro_native_978_derived_sequence.txt` is the promoted queue-driven splice source for that `978..985` replacement window
+  - `tools/out/intro_native_978_bridge_sequence.txt` is the wider bridge-accurate splice source for `978..993`
   - `tools/build_bank1_l00a00c_scene.py` is the current experimental builder for `L00A00C`
   - `tools/out/bank1_l00a00c_scene.ppm` is the seeded `954 -> L00A00C -> 974-template` prototype output
   - current promoted-hybrid validation is:
@@ -493,6 +586,33 @@ Current post-Ballistic boundary for the next native replacement:
     - offset `328` / source frame `982`: `2` pixels (`0.003488%`)
     - offset `332` / source frame `986`: exact sampled fallback
     - offset `676` / source frame `1330`: exact
+  - current bridge-hybrid validation is:
+    - offset `324` / source frame `978`: exact derived-scene playback
+    - offset `328` / source frame `982`: exact derived-scene playback
+    - offset `332` / source frame `986`: exact derived-scene playback
+    - offset `336` / source frame `990`: exact derived-scene playback
+  - current bridge-visible hybrid validation is:
+    - offset `336` / source frame `990`: exact derived-scene playback
+    - offsets `337..341` / source frames `991..995`: exact derived-scene playback
+    - offsets `342..343` / source frames `996..997`: exact derived-scene playback
+    - offsets `344..345` / source frames `998..999`: `4` mismatched pixels each vs Mesen `main_visible.ppm`
+    - offset `346` / source frame `1000`: `2` mismatched pixels vs Mesen `main_visible.ppm`
+    - offsets `347..351` / source frames `1001..1005`: `4` mismatched pixels each vs Mesen `main_visible.ppm`
+    - offsets `352..356` / source frames `1006..1010`: `6` mismatched pixels each vs Mesen `main_visible.ppm`
+    - offsets `357..358` / source frames `1011..1012`: `8` mismatched pixels each vs Mesen `main_visible.ppm`
+    - offset `359` / source frame `1013`: `10` mismatched pixels vs Mesen `main_visible.ppm`
+    - offsets `360..367` / source frames `1014..1021`: `10` mismatched pixels each vs Mesen `main_visible.ppm`
+    - offsets `368..369` / source frames `1022..1023`: `10` mismatched pixels each vs Mesen `main_visible.ppm`
+    - offsets `370..371` / source frames `1024..1025`: `8` mismatched pixels each vs Mesen `main_visible.ppm`
+    - offsets `372..375` / source frames `1026..1029`: `11` mismatched pixels each vs Mesen `main_visible.ppm`
+    - offsets `376..383` / source frames `1030..1037`: `0, 0, 0, 0, 4, 3, 0, 0` mismatched pixels each vs Mesen `main_visible.ppm`
+    - offsets `384..391` / source frames `1038..1045`: `6, 6, 9, 12, 13, 11, 16, 15` mismatched pixels each vs Mesen `main_visible.ppm`
+    - offsets `392..399` / source frames `1046..1053`: `13, 13, 16, 18, 18, 18, 17, 14` mismatched pixels each vs Mesen `main_visible.ppm`
+    - offsets `400..407` / source frames `1054..1061`: `14, 14, 15, 16, 19, 20, 21, 22` mismatched pixels each vs Mesen `main_visible.ppm`
+    - offsets `408..415` / source frames `1062..1069`: `25, 26, 26, 21, 26, 23, 23, 25` mismatched pixels each vs Mesen `main_visible.ppm`
+    - offsets `416..423` / source frames `1070..1077`: `29, 27, 26, 28, 34, 33, 39, 32` mismatched pixels each vs Mesen `main_visible.ppm`
+    - offsets `424..431` / source frames `1078..1085`: `41, 41, 47, 47, 58, 63, 60, 69` mismatched pixels each vs Mesen `main_visible.ppm`
+    - offsets `432..439` / source frames `1086..1093`: `89, 92, 89, 90, 102, 115, 144, 129` mismatched pixels each vs Mesen `main_visible.ppm`
 - the latest bootstrap findings are narrower now:
   - rerunning the probe at `958` and `974` with start-of-frame dumps does not help; both start-frame and end-frame renders still land at `100%` mismatch
   - an experimental ROM-side `L00A00C` builder seeded from frame `954` VRAM/CGRAM and rendered with the stable `974` PPU template is still `99.991281%` mismatched even after skipping the helper palette upload

@@ -4,3 +4,5 @@
 *.cpython
 *.bin
 *.png
+*.json
+.mesen-config

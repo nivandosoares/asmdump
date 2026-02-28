@@ -35,6 +35,8 @@ Run:
 ./port/build/td2_port --sequence ./tools/out/ballistic_callback_sequence.txt
 ./port/build/td2_port --sequence ./tools/out/intro_loop_sequence.txt
 ./port/build/td2_port --sequence ./tools/out/intro_loop_hybrid_sequence.txt
+./port/build/td2_port --sequence ./tools/out/intro_loop_hybrid_bridge_sequence.txt
+./port/build/td2_port --sequence ./tools/out/intro_loop_hybrid_bridge_visible_sequence.txt
 ./port/build/td2_port --headless --palette ./tools/out/bank3_palettes.json --frames 1 --dump-prefix /tmp/td2_frame
 ```
 
@@ -63,6 +65,8 @@ For validation-oriented frame dumps:
 ./port/build/td2_port --headless --sequence ./tools/out/ballistic_callback_sequence.txt --sequence-no-loop --frames 304 --dump-prefix ./port/build/ballistic_callback
 ./port/build/td2_port --headless --sequence ./tools/out/intro_loop_sequence.txt --sequence-no-loop --frames 1418 --dump-prefix ./port/build/intro_loop
 ./port/build/td2_port --headless --sequence ./tools/out/intro_loop_hybrid_sequence.txt --sequence-no-loop --frames 1418 --dump-prefix ./port/build/intro_loop_hybrid
+./port/build/td2_port --headless --sequence ./tools/out/intro_loop_hybrid_bridge_sequence.txt --sequence-no-loop --frames 1418 --dump-prefix ./port/build/intro_loop_hybrid_bridge
+./port/build/td2_port --headless --sequence ./tools/out/intro_loop_hybrid_bridge_visible_sequence.txt --sequence-no-loop --frames 1418 --dump-prefix ./port/build/intro_loop_hybrid_bridge_visible
 ```
 
 This writes `./port/build/frame_00000.ppm` or `./port/build/credits_00000.ppm`.
@@ -113,4 +117,9 @@ The current exact no-input intro-loop milestone uses an `image` sequence built f
 image 4 intro_loop_sequence_images/frame_00654.ppm
 ```
 
-The current best intro-loop runtime artifact is `tools/out/intro_loop_hybrid_sequence.txt`: direct runtime Ballistic via `ballistic_a39c`, then a native OAM-aware `snes_bg` splice for `978..985`, then sampled `image` playback for the remaining later attract states.
+The current screenshot-exact intro-loop runtime artifact is `tools/out/intro_loop_hybrid_sequence.txt`: direct runtime Ballistic via `ballistic_a39c`, then a native OAM-aware `snes_bg` splice for `978..985`, then sampled `image` playback for the remaining later attract states.
+
+The current bridge-accurate native-coverage artifacts are:
+
+- `tools/out/intro_loop_hybrid_bridge_sequence.txt`: the same Ballistic and bootstrap path, then a longer queue-driven `snes_bg` splice covering `978..993`, then sampled `image` playback from `994` onward.
+- `tools/out/intro_loop_hybrid_bridge_visible_sequence.txt`: the same Ballistic and bootstrap path, then native `snes_bg` playback through frame `1093`.

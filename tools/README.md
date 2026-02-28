@@ -14,6 +14,7 @@ Current Sprint 0 tooling:
 - `analyze_frame_delta.py`: summarizes binary, screenshot, PPU-state, and optional probe-log deltas between two extracted frame prefixes
 - `analyze_bootstrap_queue.py`: decodes the low-WRAM `0600` DMA queue, `0700` staged OAM buffer, `0900` OAM high table, and related allocator maps between two bootstrap captures
 - `build_bootstrap_queue_scene.py`: applies the active `0600` DMA descriptors from a queue summary onto a seed VRAM image, optionally lifts staged OAM from WRAM, and emits a normal `snes_bg` scene prefix plus preview
+- `build_mode7_source_scene.py`: seeds a Mode 7 scene from VRAM and patches selected VRAM word regions directly from ROM source blobs before rendering; this is the current bridge-visible builder for the late attract window
 - `mesen_ppu_extract`: headless C# bridge into `MesenCore.so` that dumps the current frame's SNES BG layer views, BG tilesets/CHR sheets, palette, per-sprite previews, sprite screen preview, and raw VRAM/CGRAM/OAM without going through the GUI
 - `extract_mesen_scene_range.py`: batches `mesen_ppu_extract` across a frame range, writes per-frame scene folders, and emits a collapsed `sequence.txt` manifest for the SDL runtime
 - `build_scene_sequence_manifest.py`: converts flat Mesen range dumps into runtime-ready `sequence.txt` manifests, either as `snes_bg` entries or exact sampled `image` entries from screenshots; when `oam.bin` exists, it now carries it through as an optional fourth `snes_bg` path
@@ -23,6 +24,8 @@ Current Sprint 0 tooling:
 - `splice_sequence_manifest.py`: replaces a frame range inside a sequence JSON summary with a new manifest entry, used for hybrid native-plus-sampled intro loops
 - `render_mesen_snes_bg.py`: composes a 256x224 preview directly from Mesen VRAM/CGRAM/state dumps, including Mode 7 and optional OBJ composition from OAM dumps
 - `summarize_mode7_trace.py`: summarizes the tracked register-write traces emitted by `mesen_probe_boot.lua` for Mode 7/TMAIN or DMA/HDMA windows
+- `capture_visible_mode7_range.py`: reuses `mesen_scanline_step_test.lua` to capture one visible-scanline `ppu.mode7.*` sample per frame across a requested range
+- `apply_visible_mode7_samples.py`: applies those captured visible Mode 7 samples onto extracted frame states, writing sidecar `ppu_state_visible.json` files by default
 - `extract_compression_header_manifest.py`: scans a bank for `42FB`/`26FB`/`67FB`/`27FB` blocks and decodes their leading header fields
 - `decompress_td2_chunk.py`: decompresses an individual TD2 chunk from the ROM; `42FB` and boot-path `26FB` are implemented
 - `extract_snes_tiles.py`: decodes SNES 2bpp/4bpp tile banks or raw planar blobs into PPM sheets
@@ -48,6 +51,7 @@ python3 tools/build_bank1_l00a00c_scene.py game.smc tools/out/bank1_l00a00c_scen
 python3 tools/analyze_frame_delta.py tools/out/intro_loop_frame_00954 tools/out/intro_loop_frame_00958 tools/out/intro_bootstrap_954_958_delta.json --probe-json-b tools/out/bootprobe_958_detail/td2_boot_probe.json
 python3 tools/analyze_bootstrap_queue.py tools/out/bootprobe_958_detail/td2_boot_probe_wram.bin tools/out/bootprobe_974_detail/td2_boot_probe_wram.bin tools/out/intro_bootstrap_958_974_queue.json
 python3 tools/build_bootstrap_queue_scene.py game.smc tools/out/intro_bootstrap_958_974_queue.json tools/out/bank1_bootstrap_queue_978 --seed-vram tools/out/bootprobe_958_detail/td2_boot_probe_vram.bin --cgram tools/out/bootprobe_974_detail/td2_boot_probe_cgram.bin --ppu-state tools/out/intro_loop_frame_00978_ppu_state.json --wram tools/out/bootprobe_974_detail/td2_boot_probe_wram.bin --render-objects
+python3 tools/build_mode7_source_scene.py game.smc tools/out/bank1_mode7_visible_994 --seed-vram tools/out/mesen_frame990_assets_v2/vram.bin --cgram tools/out/mesen_frame994_assets_v1/cgram.bin --ppu-state tools/out/mesen_frame994_assets_v1/ppu_state.json --oam tools/out/mesen_frame994_assets_v1/oam.bin --patch 0x4920:0x1AACA0:0x100 --patch 0x49A0:0x1AAA10:0x100 --render-objects
 ./tools/run_mesen_ppu_extract.sh --rom game.smc --frame 300 --out-dir tools/out/mesen_frame300
 python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 654 --end-frame 710 --step 4 --out-dir tools/out/ballistic_sequence --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
 python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 978 --end-frame 982 --step 4 --out-dir tools/out/intro_native_978 --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
@@ -59,6 +63,8 @@ python3 tools/splice_sequence_manifest.py tools/out/intro_loop_sequence.json too
 python3 tools/render_mesen_snes_bg.py .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_vram.bin .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_cgram.bin .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_ppu_state.json tools/out/mesen_poweron_5s_bg_only.ppm --json-out tools/out/mesen_poweron_5s_bg_only.json
 python3 tools/render_mesen_snes_bg.py tools/out/td2_boot_probe_startframe_vram_1200.bin tools/out/td2_boot_probe_startframe_cgram_1200.bin tools/out/td2_boot_probe_startframe_ppu_state_1200.json tools/out/td2_boot_probe_bg_obj_1200.ppm --oam tools/out/td2_boot_probe_startframe_oam_1200.bin --json-out tools/out/td2_boot_probe_bg_obj_1200.json
 python3 tools/render_mesen_snes_bg.py tools/out/td2_boot_probe_startframe_vram_1200.bin tools/out/td2_boot_probe_startframe_cgram_1200.bin tools/out/td2_boot_probe_startframe_ppu_state_1200.json tools/out/td2_boot_probe_bg_obj_1200_ppu.ppm --oam tools/out/td2_boot_probe_startframe_oam_1200.bin --obj-renderer mode7-ppu --json-out tools/out/td2_boot_probe_bg_obj_1200_ppu.json
+python3 tools/capture_visible_mode7_range.py 1094 1101 --output tools/out/visible_mode7_1094_1101.json
+python3 tools/apply_visible_mode7_samples.py tools/out/visible_mode7_1094_1101.json tools/out/mesen_range_1094_1101_v1
 python3 tools/extract_compression_header_manifest.py game.smc --bank 7 --json-out tools/out/bank7_compression_headers.json
 python3 tools/decompress_td2_chunk.py game.smc tools/out/bank7_42fb_8000.bin --bank 7 --addr 0x8000 --json-out tools/out/bank7_42fb_8000.json
 python3 tools/decompress_td2_chunk.py game.smc tools/out/bank7_26fb_817a.bin --bank 7 --addr 0x817A --json-out tools/out/bank7_26fb_817a.json
@@ -99,12 +105,20 @@ Useful make targets:
 - `make -C tools bank1-bootstrap-queue-982-preview`
 - `make -C tools bank1-bootstrap-queue-986-preview`
 - `make -C tools bank1-bootstrap-queue-986-noobj-preview`
+- `make -C tools bank1-bootstrap-queue-986-bridgeoam-preview`
+- `make -C tools bank1-bootstrap-queue-990-bridgeoam-preview`
+- `make -C tools bank1-bootstrap-queue-994-bridgeoam-preview`
+- `make -C tools bank1-visible-mode7-window-preview`
 - `make -C tools intro-bootstrap-deltas`
 - `make -C tools intro-bootstrap-queue`
 - `make -C tools mesen-ppu-frame MESEN_FRAME=300`
 - `make -C tools intro-loop-dump`
 - `make -C tools intro-loop-sequence`
 - `make -C tools intro-native-978`
+- `make -C tools intro-native-978-bridge`
+- `make -C tools intro-native-978-bridge-visible`
+- `make -C tools intro-loop-hybrid-bridge-sequence`
+- `make -C tools intro-loop-hybrid-bridge-visible-sequence`
 - `make -C tools ballistic-native-clip`
 - `make -C tools ballistic-rom-clip`
 - `make -C tools ballistic-callback-asset`
@@ -119,7 +133,7 @@ Useful make targets:
 - `sprites_screen.ppm`, `sprites.json`, and `sprite_previews/sprite_###.ppm`: Mesen's sprite preview screen, metadata list, and per-sprite preview sheets
 - `vram.bin`, `cgram.bin`, `oam.bin`: raw memory dumps for the same frame
 - `state.json`: PPU summary used for the extraction
-- `ppu_state.json`: flat PPU-state export in the same key format consumed by `render_mesen_snes_bg.py` and the SDL runtime
+- `ppu_state.json`: flat PPU-state export in the same key format consumed by `render_mesen_snes_bg.py` and the SDL runtime, now including OAM-related fields (`ppu.oamBaseAddress`, `ppu.oamAddressOffset`, `ppu.internalOamAddress`, `ppu.oamMode`, `ppu.enableOamPriority`, `ppu.objInterlace`, `ppu.overscanMode`)
 
 Current practical reading for this tool:
 
@@ -178,10 +192,13 @@ The current queue-driven bootstrap artifacts live in `tools/out/`:
 - `intro_bootstrap_958_974_queue.json`: frame `958 -> 974` queue/OAM summary
 - `intro_bootstrap_978_982_queue.json`: frame `978 -> 982` queue/OAM summary
 - `intro_bootstrap_982_986_queue.json`: frame `982 -> 986` queue/OAM summary
+- `intro_bootstrap_986_990_queue.json`: frame `986 -> 990` queue/OAM summary
 - `bank1_bootstrap_queue_978.*`: queue-driven frame `978` scene from seed `958` VRAM plus frame `974` queue/OAM state
 - `bank1_bootstrap_queue_982.*`: queue-driven frame `982` scene from derived frame `978` VRAM plus frame `982` queue/OAM state
 - `bank1_bootstrap_queue_986.*`: experimental queue-driven frame `986` scene from derived frame `982` VRAM plus frame `986` queue/OAM state
 - `bank1_bootstrap_queue_986_noobj.*`: the same derived frame `986` scene with OBJ composition disabled
+- `bank1_bootstrap_queue_986_bridgeoverride.*`: the same derived frame `986` scene rendered with a clean bridge OAM override instead of the probe OAM snapshot
+- `bank1_bootstrap_queue_990_bridgeobj.*`: queue-driven frame `990` scene from derived frame `986` VRAM plus frame `990` queue state and clean bridge OAM
 
 Current practical reading for those queue scenes:
 
@@ -189,7 +206,15 @@ Current practical reading for those queue scenes:
 - `bank1_bootstrap_queue_982.ppm` compares against the real frame `982` target with `2` mismatched pixels (`0.003488%`)
 - `bank1_bootstrap_queue_986.ppm` is not yet promotable; it still lands at `958` mismatched pixels (`1.670619%`) against the real frame `986` screenshot
 - `bank1_bootstrap_queue_986_noobj.ppm` lands much closer at `21` mismatched pixels (`0.036621%`)
+- `bank1_bootstrap_queue_986_bridgeoverride.ppm` also lands at `21` mismatched pixels (`0.036621%`)
+- `bank1_bootstrap_queue_990_bridgeobj.ppm` is the next reproducible bridge-accurate step:
+  - compare vs real frame `990` screenshot: `1518` mismatched pixels (`2.647182%`)
+  - compare vs Mesen `main_visible.ppm`: `2` mismatched pixels (`0.003488%`)
 - practical reading: the queue-driven BG path for frame `986` is nearly solved; the remaining regression is concentrated in Mode 7 OBJ composition
+- late-frame OAM capture is the concrete reason for that regression:
+  - probe and bridge OAM dumps match exactly at frames `978` and `982`
+  - they diverge starting at frame `986` (`21` differing bytes) and drift further by frame `990` (`75` differing bytes)
+  - the bridge OAM path collapses the bad OBJ overlay back to the no-OBJ baseline, so the bad late-frame object overlay is tied to the probe OAM snapshot, not the queued BG path
 
 The current best no-input intro-loop runtime manifest is `tools/out/intro_loop_hybrid_sequence.txt`:
 
@@ -202,6 +227,81 @@ The current best no-input intro-loop runtime manifest is `tools/out/intro_loop_h
   - offset `324` / source frame `978`: `2` mismatched pixels (`0.003488%`)
   - offset `328` / source frame `982`: `2` mismatched pixels (`0.003488%`)
   - offset `332` / source frame `986`: exact sampled fallback
+
+The current bridge-accurate native-coverage manifests are:
+
+- `tools/out/intro_loop_hybrid_bridge_sequence.txt`
+  - keeps the direct runtime Ballistic callback for `654..958`
+  - keeps the sampled bootstrap image for `958..978`
+  - replaces frames `978..993` with the queue-oriented bridge splice from `tools/out/intro_native_978_bridge_sequence.txt`
+  - falls back to sampled `image` playback from frame `994` onward
+- `tools/out/intro_loop_hybrid_bridge_visible_sequence.txt`
+  - keeps the same direct runtime Ballistic callback for `654..958`
+  - keeps the sampled bootstrap image for `958..978`
+  - replaces frames `978..1093` with native `snes_bg` scenes from `tools/out/intro_native_978_bridge_visible_sequence.txt`
+- current promoted bridge-visible validation is:
+  - frame `990` derived scene vs Mesen `main_visible.ppm`: `2` mismatched pixels
+  - frames `991..997` derived scenes vs Mesen `main_visible.ppm`: `4` mismatched pixels each
+  - SDL playback from `tools/out/intro_loop_hybrid_bridge_visible_sequence.txt` matches the new `990..997` scene artifacts exactly at offsets `336..343`
+  - the direct bridge-extracted continuation at offsets `344..351` compares against Mesen `main_visible.ppm` with:
+    - frame `1000`: `2` mismatched pixels
+    - all other frames in `998..1005`: `4` mismatched pixels each
+  - the next aligned direct bridge-extracted block at offsets `352..359` compares against Mesen `main_visible.ppm` with:
+    - frames `1006..1010`: `6` mismatched pixels each
+    - frames `1011..1012`: `8` mismatched pixels each
+    - frame `1013`: `10` mismatched pixels
+  - the next aligned direct bridge-extracted block at offsets `360..367` compares against Mesen `main_visible.ppm` with:
+    - frames `1014..1021`: `10` mismatched pixels each
+  - the next aligned direct bridge-extracted block at offsets `368..375` compares against Mesen `main_visible.ppm` with:
+    - frames `1022..1023`: `10` mismatched pixels each
+    - frames `1024..1025`: `8` mismatched pixels each
+    - frames `1026..1029`: `11` mismatched pixels each
+  - the next aligned direct bridge-extracted block at offsets `376..383` compares against Mesen `main_visible.ppm` with:
+    - frames `1030..1037`: `0, 0, 0, 0, 4, 3, 0, 0` mismatched pixels each
+  - the next aligned direct bridge-extracted block at offsets `384..391` compares against Mesen `main_visible.ppm` with:
+    - frames `1038..1045`: `6, 6, 9, 12, 13, 11, 16, 15` mismatched pixels each
+  - the next aligned direct bridge-extracted block at offsets `392..399` compares against Mesen `main_visible.ppm` with:
+    - frames `1046..1053`: `13, 13, 16, 18, 18, 18, 17, 14` mismatched pixels each
+  - the next aligned direct bridge-extracted block at offsets `400..407` compares against Mesen `main_visible.ppm` with:
+    - frames `1054..1061`: `14, 14, 15, 16, 19, 20, 21, 22` mismatched pixels each
+  - the next aligned direct bridge-extracted block at offsets `408..415` compares against Mesen `main_visible.ppm` with:
+    - frames `1062..1069`: `25, 26, 26, 21, 26, 23, 23, 25` mismatched pixels each
+  - the next aligned direct bridge-extracted block at offsets `416..423` compares against Mesen `main_visible.ppm` with:
+    - frames `1070..1077`: `29, 27, 26, 28, 34, 33, 39, 32` mismatched pixels each
+  - the next aligned direct bridge-extracted block at offsets `424..431` compares against Mesen `main_visible.ppm` with:
+    - frames `1078..1085`: `41, 41, 47, 47, 58, 63, 60, 69` mismatched pixels each
+  - the next aligned direct bridge-extracted block at offsets `432..439` compares against Mesen `main_visible.ppm` with:
+    - frames `1086..1093`: `89, 92, 89, 90, 102, 115, 144, 129` mismatched pixels each
+
+The late attract bridge-visible builder artifacts now live in:
+
+- `tools/out/bank1_mode7_visible_991.*` through `tools/out/bank1_mode7_visible_997.*`
+- they seed from `tools/out/mesen_frame990_assets_v2/vram.bin`
+- they patch the visible Mode 7 data regions at `0x4920` and `0x49A0` from three rotating ROM chunks:
+  - `1A:AA10`
+  - `1A:AB58`
+  - `1A:ACA0`
+- practical reading:
+  - the queue-driven model is still the right explanation for the staged bootstrap uploads
+  - the bridge-visible model is the current best explanation of what the late attract window actually displays on frames `991..997`
+  - `tools/out/mesen_range_998_1005_v1/sequence.txt` is the current direct bridge-extracted continuation of that same `01:9FE5` family through frame `1005`
+  - `tools/out/mesen_range_1006_1013_v1/sequence.txt` extends that same direct bridge-extracted continuation through frame `1013`
+  - `tools/out/mesen_range_1014_1021_v1/sequence.txt` extends that same direct bridge-extracted continuation through frame `1021`
+  - `tools/out/mesen_range_1022_1029_v1/sequence.txt` extends that same direct bridge-extracted continuation through frame `1029`
+  - `tools/out/mesen_range_1030_1037_v1/sequence.txt` extends that same direct bridge-extracted continuation through frame `1037`
+  - `tools/out/mesen_range_1038_1045_v1/sequence.txt` extends that same direct bridge-extracted continuation through frame `1045`
+  - `tools/out/mesen_range_1046_1053_v1/sequence.txt` extends that same direct bridge-extracted continuation through frame `1053`
+  - `tools/out/mesen_range_1054_1061_v1/sequence.txt` extends that same direct bridge-extracted continuation through frame `1061`
+  - `tools/out/mesen_range_1062_1069_v1/sequence.txt` extends that same direct bridge-extracted continuation through frame `1069`
+  - `tools/out/mesen_range_1070_1077_v1/sequence.txt` extends that same direct bridge-extracted continuation through frame `1077`
+  - `tools/out/mesen_range_1078_1085_v1/sequence.txt` extends that same direct bridge-extracted continuation through frame `1085`
+  - `tools/out/mesen_range_1086_1093_v1/sequence.txt` extends that same direct bridge-extracted continuation through frame `1093`
+  - `tools/out/visible_mode7_1094_1101.json` captures the first visible-scanline `ppu.mode7.*` values for the next failing block
+  - `tools/out/mesen_range_1094_1101_v1/frame_XXXXX/ppu_state_visible.json` are diagnostic sidecars patched from those visible samples
+  - `tools/runtime_manifest_to_json.py` now turns the assembled runtime manifest into the JSON summary used by the intro bridge-visible pipeline, so extending these windows no longer needs embedded JSON blobs in `Makefile`
+  - practical reading:
+    - the visible-scanline Mode 7 values for `1094..1101` are now measurable and repeatable
+    - simply swapping those visible values onto the direct extracted frame states makes the mismatch much worse, so the blocker beyond `1093` is not solved by a bare `ppu_state` substitution
 
 The next milestone, the full first no-input attract loop, now lives in `tools/out/intro_loop*`:
 
@@ -236,6 +336,18 @@ It contains exactly two derived `snes_bg` entries:
 
 - frame `978` from `bank1_bootstrap_queue_978.*`
 - frame `982` from `bank1_bootstrap_queue_982.*`
+
+The wider bridge-accurate replacement window now also lives in:
+
+- `tools/out/intro_native_978_bridge_sequence.txt`
+- `tools/out/intro_native_978_bridge_sequence.json`
+
+It contains four derived `snes_bg` entries:
+
+- frame `978` from `bank1_bootstrap_queue_978.*`
+- frame `982` from `bank1_bootstrap_queue_982.*`
+- frame `986` from `bank1_bootstrap_queue_986_bridgeoverride.*`
+- frame `990` from `bank1_bootstrap_queue_990_bridgeobj.*`
 
 The current bootstrap-side experiment for `L00A00C` now lives at `tools/out/bank1_l00a00c_scene*`:
 

@@ -123,6 +123,9 @@
     "state_1e2c": 0
   },
   "active_dma_descriptor_count": 5,
+  "replay_mode": "active_after_queue",
+  "stream_from_frame": null,
+  "stream_to_frame": null,
   "jobs": [
     {
       "command": "0x01",
@@ -171,6 +174,7 @@
     }
   ],
   "oam_from_wram": true,
+  "oam_override": false,
   "render": {
     "mode7": {
       "hscroll": 0,
@@ -203,10 +207,9 @@
       "enable_oam_priority": false,
       "internal_oam_address": 0,
       "priority_groups": [
+        1,
         2,
-        4,
-        6,
-        7
+        3
       ],
       "visible_sprites": 0,
       "drawn_pixels": 0

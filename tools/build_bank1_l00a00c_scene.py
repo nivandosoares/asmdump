@@ -10,7 +10,7 @@ from build_bank1_helper_scene import cgram_to_rgb
 from build_boot_vram import load_rom_window, parse_u16le
 from decompress_td2_chunk import decode_26fb, decode_42fb
 from render_mesen_snes_bg import (
-    MODE7_SPRITE_PRIORITIES,
+    MODE7_OBJECT_PRIORITY_GROUPS,
     SCREEN_HEIGHT,
     SCREEN_WIDTH,
     render_mode7_layer,
@@ -223,7 +223,7 @@ def build_scene(
             bytes(oam),
             cgram_rgb,
             state,
-            priority_groups=set(MODE7_SPRITE_PRIORITIES),
+            priority_groups=set(MODE7_OBJECT_PRIORITY_GROUPS),
         )
 
     summary = {

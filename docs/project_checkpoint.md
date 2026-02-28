@@ -25,6 +25,20 @@ What is already real:
   - `tools/out/bank1_bootstrap_queue_978.*`
   - `tools/out/bank1_bootstrap_queue_982.*`
   - frame `986` remains sampled while the next bootstrap/update step is still unresolved
+- a wider bridge-accurate native window now also exists:
+  - `tools/out/intro_native_978_bridge_visible_sequence.txt`
+  - it covers frames `978`, `982`, `986`, `990`, `991`, `992`, `993`, `994`, `995`, `996`, `997`, `998`, `999`, `1000`, `1001`, `1002`, `1003`, `1004`, `1005`, `1006`, `1007`, `1008`, `1009`, `1010`, `1011`, `1012`, `1013`, `1014`, `1015`, `1016`, `1017`, `1018`, `1019`, `1020`, `1021`, `1022`, `1023`, `1024`, `1025`, `1026`, `1027`, `1028`, `1029`, `1030`, `1031`, `1032`, `1033`, `1034`, `1035`, `1036`, `1037`, `1038`, `1039`, `1040`, `1041`, `1042`, `1043`, `1044`, `1045`, `1046`, `1047`, `1048`, `1049`, `1050`, `1051`, `1052`, `1053`, `1054`, `1055`, `1056`, `1057`, `1058`, `1059`, `1060`, `1061`, `1062`, `1063`, `1064`, `1065`, `1066`, `1067`, `1068`, `1069`, `1070`, `1071`, `1072`, `1073`, `1074`, `1075`, `1076`, `1077`, `1078`, `1079`, `1080`, `1081`, `1082`, `1083`, `1084`, `1085`, `1086`, `1087`, `1088`, `1089`, `1090`, `1091`, `1092`, and `1093`
+  - `978/982/986/990` remain queue-driven `snes_bg` scenes
+  - `991..997` now use a ROM-source-patched Mode 7 visible-buffer model
+  - `998..1093` are direct bridge-extracted `snes_bg` states from the same `01:9FE5` callback family
+- a second hybrid intro-loop manifest now tracks native coverage separately from screenshot exactness:
+  - `tools/out/intro_loop_hybrid_bridge_visible_sequence.txt`
+  - it keeps the exact Ballistic/bootstrap front and replaces `978..1093` with native `snes_bg` scenes
+- the next failing bridge-visible block now also has a repeatable visible-state diagnostic path:
+  - `tools/out/visible_mode7_1094_1101.json` records one visible-scanline Mode 7 sample per frame for `1094..1101`
+  - `tools/out/mesen_range_1094_1101_v1/frame_XXXXX/ppu_state_visible.json` are sidecar states patched from that sample set
+  - those patched visible states compare much worse than the baseline direct extraction: `362, 414, 606, 700, 1244, 1515, 3962, 5930` mismatched pixels for `1094..1101`
+  - practical reading: the blocker after `1093` is not a simple “swap in visible `M7A/M7D`” fix
 - an experimental ROM-side `L00A00C` scene builder now exists for the static `958..977` bootstrap window
 - the `958..974` bootstrap landing frame now also has a decoded WRAM-side queue artifact:
   - `tools/out/intro_bootstrap_958_974_queue.json`
@@ -40,6 +54,50 @@ What is already real:
   - it is still too far off to promote
   - `tools/out/bank1_bootstrap_queue_986_noobj.*`
   - it shows the BG/queue path is close and isolates the remaining error to OBJ composition
+  - `tools/out/bank1_bootstrap_queue_986_bridgeoverride.*`
+  - it confirms the late-frame regression is tied to the probe OAM snapshot, not the queued BG path
+- a follow-on bridge-accurate queue scene now also exists:
+  - `tools/out/bank1_bootstrap_queue_990_bridgeobj.*`
+  - it extends the queue-driven attract reconstruction through frame `990` when measured against Mesen `main_visible`
+- the late attract bridge-visible window now has a second model beyond queue replay:
+  - `tools/out/bank1_mode7_visible_991.*` through `tools/out/bank1_mode7_visible_997.*`
+  - these scenes seed from bridge frame `990` VRAM and patch the visible `0x4920/0x49A0` Mode 7 buffers from three rotating ROM chunks (`1A:AA10`, `1A:AB58`, `1A:ACA0`)
+  - current compares versus Mesen `main_visible.ppm` are:
+    - frames `991..997`: `4` mismatched pixels each
+- the next aligned bridge-visible block is now carried directly from extracted SNES state:
+  - `tools/out/mesen_range_998_1005_v1/sequence.txt`
+  - `tools/out/mesen_range_1006_1013_v1/sequence.txt`
+  - `tools/out/mesen_range_1014_1021_v1/sequence.txt`
+  - `tools/out/mesen_range_1022_1029_v1/sequence.txt`
+  - `tools/out/mesen_range_1030_1037_v1/sequence.txt`
+  - `tools/out/mesen_range_1038_1045_v1/sequence.txt`
+  - `tools/out/mesen_range_1046_1053_v1/sequence.txt`
+  - `tools/out/mesen_range_1054_1061_v1/sequence.txt`
+  - `tools/out/mesen_range_1062_1069_v1/sequence.txt`
+  - `tools/out/mesen_range_1070_1077_v1/sequence.txt`
+  - `tools/out/mesen_range_1078_1085_v1/sequence.txt`
+  - `tools/out/mesen_range_1086_1093_v1/sequence.txt`
+  - frames `998..1093` remain under callback `01:9FE5`
+  - current SDL playback compares versus Mesen `main_visible.ppm` are:
+    - frames `998`, `999`, `1001`, `1002`, `1003`, `1004`, `1005`: `4` mismatched pixels each
+    - frame `1000`: `2` mismatched pixels
+    - frames `1006`, `1007`, `1008`, `1009`, `1010`: `6` mismatched pixels each
+    - frame `1011`: `8` mismatched pixels
+    - frame `1012`: `8` mismatched pixels
+    - frame `1013`: `10` mismatched pixels
+    - frames `1014..1021`: `10` mismatched pixels each
+    - frames `1022..1023`: `10` mismatched pixels each
+    - frames `1024..1025`: `8` mismatched pixels each
+    - frames `1026..1029`: `11` mismatched pixels each
+    - frames `1030..1037`: `0, 0, 0, 0, 4, 3, 0, 0` mismatched pixels each
+    - frames `1038..1045`: `6, 6, 9, 12, 13, 11, 16, 15` mismatched pixels each
+    - frames `1046..1053`: `13, 13, 16, 18, 18, 18, 17, 14` mismatched pixels each
+    - frames `1054..1061`: `14, 14, 15, 16, 19, 20, 21, 22` mismatched pixels each
+    - frames `1062..1069`: `25, 26, 26, 21, 26, 23, 23, 25` mismatched pixels each
+    - frames `1070..1077`: `29, 27, 26, 28, 34, 33, 39, 32` mismatched pixels each
+    - frames `1078..1085`: `41, 41, 47, 47, 58, 63, 60, 69` mismatched pixels each
+    - frames `1086..1093`: `89, 92, 89, 90, 102, 115, 144, 129` mismatched pixels each
+  - the SDL Mode 7 path now uses the scanline-accurate `mode7-ppu` object compositor by default for `snes_bg` scenes
 - a working Mesen-based validation harness exists under `validation/`
 - the bank 0 control kernel is documented well enough to guide runtime architecture
 - the bank 1 boot/title screen build path is partially reconstructed into machine-readable manifests
@@ -53,7 +111,8 @@ What is not real yet:
 - no general native front-end state machine exists on the PC side yet beyond the first Ballistic callback family
 - no deterministic post-splash savestate has been added to validation
 - bank 10, bank 11, and bank 30 are not yet documented deeply enough to implement gameplay
-- the post-Ballistic Mode 7 attract path still drifts after frame `978`, so OAM support alone did not close that segment
+- the post-Ballistic Mode 7 attract path is now bridge-accurate through frame `1093`, but the final-screen gap against captured screenshots is still open after frame `982`
+- frame `1094` remains the next unresolved frontier; the new visible-state tooling narrowed the hypothesis, but did not yet produce a promotable `1094..1101` block
 
 ## Phase Status
 
@@ -131,8 +190,24 @@ Current concrete outputs:
 - `tools/out/bank1_bootstrap_queue_982.ppm`: derived frame-`982` scene preview
 - `tools/out/bank1_bootstrap_queue_986.ppm`: experimental frame-`986` queue-driven preview
 - `tools/out/bank1_bootstrap_queue_986_noobj.ppm`: frame-`986` queue-driven preview with OBJ disabled
+- `tools/out/bank1_bootstrap_queue_986_bridgeoverride.ppm`: frame-`986` queue-driven preview using bridge OAM override
 - `tools/out/intro_bootstrap_978_982_queue.json`: WRAM queue summary for frame `978 -> 982`
 - `tools/out/intro_bootstrap_982_986_queue.json`: WRAM queue summary for frame `982 -> 986`
+- `tools/out/bank1_mode7_visible_991.ppm` through `tools/out/bank1_mode7_visible_997.ppm`: bridge-visible Mode 7 scenes built from a raw frame-`990` seed plus ROM-source patches for the visible `0x4920/0x49A0` buffers
+- `tools/out/mesen_range_998_1005_v1/sequence.txt`: direct bridge-extracted `snes_bg` window for frames `998..1005`
+- `tools/out/mesen_range_1006_1013_v1/sequence.txt`: direct bridge-extracted `snes_bg` window for frames `1006..1013`
+- `tools/out/mesen_range_1014_1021_v1/sequence.txt`: direct bridge-extracted `snes_bg` window for frames `1014..1021`
+- `tools/out/mesen_range_1022_1029_v1/sequence.txt`: direct bridge-extracted `snes_bg` window for frames `1022..1029`
+- `tools/out/mesen_range_1030_1037_v1/sequence.txt`: direct bridge-extracted `snes_bg` window for frames `1030..1037`
+- `tools/out/mesen_range_1038_1045_v1/sequence.txt`: direct bridge-extracted `snes_bg` window for frames `1038..1045`
+- `tools/out/mesen_range_1046_1053_v1/sequence.txt`: direct bridge-extracted `snes_bg` window for frames `1046..1053`
+- `tools/out/mesen_range_1054_1061_v1/sequence.txt`: direct bridge-extracted `snes_bg` window for frames `1054..1061`
+- `tools/out/mesen_range_1062_1069_v1/sequence.txt`: direct bridge-extracted `snes_bg` window for frames `1062..1069`
+- `tools/out/mesen_range_1070_1077_v1/sequence.txt`: direct bridge-extracted `snes_bg` window for frames `1070..1077`
+- `tools/out/mesen_range_1078_1085_v1/sequence.txt`: direct bridge-extracted `snes_bg` window for frames `1078..1085`
+- `tools/out/mesen_range_1086_1093_v1/sequence.txt`: direct bridge-extracted `snes_bg` window for frames `1086..1093`
+- `tools/out/intro_native_978_bridge_visible_sequence.txt`: native bridge-visible replacement window covering `978..1093`
+- `tools/out/intro_loop_hybrid_bridge_visible_sequence.txt`: current bridge-accurate hybrid intro-loop manifest
 - `tools/out/bank1_l00a00c_scene.ppm`: experimental ROM-side `L00A00C` bootstrap scene preview using `954` seeds and a `974` presentation template
 - `tools/out/intro_bootstrap_954_958_delta.json`: summary of the first Ballistic-to-bootstrap transition step
 - `tools/out/intro_bootstrap_958_974_delta.json`: summary of the first live `01:9D69` bootstrap step

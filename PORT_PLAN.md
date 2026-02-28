@@ -86,14 +86,80 @@ New useful state beyond the original plan:
   - `tools/out/bank1_bootstrap_queue_986.*`
   - current compare vs the real frame `986` target: `958` mismatched pixels (`1.670619%`)
   - disabling OBJ on the same derived scene drops that to `21` mismatched pixels (`0.036621%`) via `tools/out/bank1_bootstrap_queue_986_noobj.*`
+  - using the clean bridge OAM reaches the same `21`-pixel baseline via `tools/out/bank1_bootstrap_queue_986_bridgeoverride.*`
+  - probe and bridge OAM match at `978/982`, then diverge starting at `986`
   - practical reading: the next blocker is Mode 7 OBJ composition, not the queued BG/state path
+- the next queue window is now also reproducible against bridge output:
+  - `tools/out/intro_bootstrap_986_990_queue.json`
+  - `tools/out/bank1_bootstrap_queue_990_bridgeobj.*`
+  - current compare vs the real frame `990` screenshot: `1518` mismatched pixels (`2.647182%`)
+  - current compare vs Mesen `main_visible.ppm`: `2` mismatched pixels (`0.003488%`)
+  - practical reading: native intro coverage can now move forward through frame `990` when measured against extracted Mesen scene output, but not yet against the final captured screen
+- the next unresolved bridge-native edge is frame `994`:
+  - `tools/out/intro_bootstrap_990_994_queue.json`
+  - `tools/out/bank1_bootstrap_queue_994_bridgeobj.*`
+  - current compare vs the real frame `994` screenshot: `2143` mismatched pixels (`3.737095%`)
+  - current compare vs Mesen `main_visible.ppm`: `96` mismatched pixels (`0.167411%`)
+  - practical reading: `994` is close enough to guide the next investigation, but not ready to promote into the native intro splice
+- the bridge-visible late attract window now has a second, stronger model:
+  - `tools/build_mode7_source_scene.py`
+  - `tools/out/bank1_mode7_visible_991.*` through `tools/out/bank1_mode7_visible_997.*`
+  - the model seeds from bridge frame `990` VRAM and patches the visible `0x4920/0x49A0` Mode 7 buffers directly from three rotating ROM chunks:
+    - `1A:AA10`
+    - `1A:AB58`
+    - `1A:ACA0`
+  - current compare vs Mesen `main_visible.ppm`:
+    - frames `991..997`: `4` mismatched pixels each
+  - practical reading: the derived bridge-visible attract path is now reproducible through frame `997` even though the final screenshot path is still not closed there
+- the same `01:9FE5` callback family now also has direct bridge-extracted native coverage for the next aligned sampled block:
+  - `tools/out/mesen_range_998_1005_v1/sequence.txt`
+  - `tools/out/mesen_range_1006_1013_v1/sequence.txt`
+  - `tools/out/mesen_range_1014_1021_v1/sequence.txt`
+  - `tools/out/mesen_range_1022_1029_v1/sequence.txt`
+  - `tools/out/mesen_range_1030_1037_v1/sequence.txt`
+  - `tools/out/mesen_range_1038_1045_v1/sequence.txt`
+  - `tools/out/mesen_range_1046_1053_v1/sequence.txt`
+  - `tools/out/mesen_range_1054_1061_v1/sequence.txt`
+  - `tools/out/mesen_range_1062_1069_v1/sequence.txt`
+  - `tools/out/mesen_range_1070_1077_v1/sequence.txt`
+  - `tools/out/mesen_range_1078_1085_v1/sequence.txt`
+  - `tools/out/mesen_range_1086_1093_v1/sequence.txt`
+  - frame `998` probe state: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 2`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 152`
+  - frame `1005` probe state: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 3`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 208`
+  - frame `1013` probe state: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 8`
+  - frame `1014` probe state: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 2`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 16`
+  - frame `1021` probe state: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 32`
+  - frame `1022` probe state: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 32`
+  - frame `1029` probe state: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 40`
+  - frame `1037` probe state: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 56`
+  - frame `1045` probe state: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 72`
+  - frame `1053` probe state: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 88`
+  - frame `1061` probe state: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0206 = 9`, `$0208 = 13`, `$020A = $9CC3`, `$040A = 14`, `$0054 = 104`
+  - frame `1069` probe state: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0206 = 11`, `$0208 = 13`, `$020A = $9CC3`, `$040A = 16`, `$0054 = 120`
+  - frame `1077` probe state: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0206 = 13`, `$0208 = 13`, `$020A = $9CC3`, `$040A = 17`, `$0054 = 128`
+  - frame `1085` probe state: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0206 = 13`, `$0208 = 13`, `$020A = $9CC3`, `$040A = 17`, `$0054 = 128`
+  - frame `1093` probe state: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0206 = 13`, `$0208 = 13`, `$020A = $9CC3`, `$040A = 17`, `$0054 = 128`
+  - the SDL runtime now uses the `mode7-ppu`-style per-scanline OBJ compositor for Mode 7 `snes_bg` scenes, which collapses the `1022/1023/1025` outlier frames from multi-thousand-pixel mismatch down into the same `8..11` range as the rest of this block
+  - SDL playback from `tools/out/intro_loop_hybrid_bridge_visible_sequence.txt` now matches Mesen `main_visible` within `2..144` mismatched pixels for frames `998..1093`
+  - subsequent direct bridge-extracted frames `1030..1037` all matcher at `0,0,0,0,4,3,0,0` mismatched pixels
+  - promoted direct bridge-extracted frames `1038..1045` land at `6,6,9,12,13,11,16,15` mismatched pixels against Mesen `main_visible.ppm`
+  - newly promoted direct bridge-extracted frames `1046..1053` land at `13,13,16,18,18,18,17,14` mismatched pixels against Mesen `main_visible.ppm`
+  - newly promoted direct bridge-extracted frames `1054..1061` land at `14,14,15,16,19,20,21,22` mismatched pixels against Mesen `main_visible.ppm`
+  - newly promoted direct bridge-extracted frames `1062..1069` land at `25,26,26,21,26,23,23,25` mismatched pixels against Mesen `main_visible.ppm`
+  - newly promoted direct bridge-extracted frames `1070..1077` land at `29,27,26,28,34,33,39,32` mismatched pixels against Mesen `main_visible.ppm`
+  - newly promoted direct bridge-extracted frames `1078..1085` land at `41,41,47,47,58,63,60,69` mismatched pixels against Mesen `main_visible.ppm`
+  - newly promoted direct bridge-extracted frames `1086..1093` land at `89,92,89,90,102,115,144,129` mismatched pixels against Mesen `main_visible.ppm`
+- the repo now carries two intro-loop manifests on purpose:
+  - `tools/out/intro_loop_hybrid_sequence.txt`: screenshot-exact current best
+  - `tools/out/intro_loop_hybrid_bridge_visible_sequence.txt`: bridge-accurate native-coverage current best through frame `1093`
 
 Immediate next focus:
 
 1. Replace the later sampled attract segments with native front-end state machines one callback family at a time.
-2. Push backward into the unstable `958..977` bootstrap using the new repeatable `L00A00C` scene builder, the carry-over state model from the end of Ballistic, and the decoded `0600` DMA queue manifest from frame `974`.
-3. Fix Mode 7 OBJ composition at `986+`, because the queue-driven BG/state path is already nearly exact there.
-4. Keep building standalone extraction formats so later artist/mod tooling can sit on stable data instead of volatile reverse-engineering experiments.
+2. Push backward into the unstable `958..977` bootstrap using the repeatable `L00A00C` scene builder, the carry-over state model from the end of Ballistic, and the decoded `0600` DMA queue manifest from frame `974`.
+3. Explain the `991..1093` `01:9FE5` presentation path in callback terms, especially the `991..997` visible-buffer rotation and the direct bridge-extracted `998..1093` continuation.
+4. Fix the final-screen composition gap after `982`, because the bridge-visible path is now native through frame `1093` but still not screenshot-accurate there.
+5. Keep building standalone extraction formats so later artist/mod tooling can sit on stable data instead of volatile reverse-engineering experiments.
 
 ## Delivery Phases
 

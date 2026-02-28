@@ -514,7 +514,14 @@ internal static class Program
     {
         Dictionary<string, object> flat = new() {
             ["ppu.bgMode"] = ppuState.BgMode,
+            ["ppu.mode1Bg3Priority"] = ppuState.Mode1Bg3Priority,
             ["ppu.mainScreenLayers"] = ppuState.MainScreenLayers,
+            ["ppu.subScreenLayers"] = ppuState.SubScreenLayers,
+            ["ppu.forcedBlank"] = ppuState.ForcedBlank,
+            ["ppu.brightness"] = ppuState.ScreenBrightness,
+            ["ppu.extBgEnabled"] = ppuState.ExtBgEnabled,
+            ["ppu.hiResMode"] = ppuState.HiResMode,
+            ["ppu.screenInterlace"] = ppuState.ScreenInterlace,
             ["ppu.mode7.fillWithTile0"] = ppuState.Mode7.FillWithTile0,
             ["ppu.mode7.horizontalMirroring"] = ppuState.Mode7.HorizontalMirroring,
             ["ppu.mode7.verticalMirroring"] = ppuState.Mode7.VerticalMirroring,
@@ -523,13 +530,29 @@ internal static class Program
             ["ppu.mode7.centerY"] = ppuState.Mode7.CenterY,
             ["ppu.mode7.hscroll"] = ppuState.Mode7.HScroll,
             ["ppu.mode7.vscroll"] = ppuState.Mode7.VScroll,
+            ["ppu.oamRamAddress"] = ppuState.OamRamAddress,
+            ["ppu.internalOamAddress"] = ppuState.InternalOamRamAddress,
+            ["ppu.oamMode"] = ppuState.OamMode,
+            ["ppu.oamBaseAddress"] = ppuState.OamBaseAddress,
+            ["ppu.oamAddressOffset"] = ppuState.OamAddressOffset,
+            ["ppu.enableOamPriority"] = ppuState.EnableOamPriority,
+            ["ppu.objInterlace"] = ppuState.ObjInterlace,
+            ["ppu.overscanMode"] = ppuState.OverscanMode,
+            ["ppu.directColorMode"] = ppuState.DirectColorMode,
+            ["ppu.colorMathClipMode"] = ppuState.ColorMathClipMode.ToString(),
+            ["ppu.colorMathPreventMode"] = ppuState.ColorMathPreventMode.ToString(),
+            ["ppu.colorMathAddSubscreen"] = ppuState.ColorMathAddSubscreen,
+            ["ppu.colorMathEnabled"] = ppuState.ColorMathEnabled,
+            ["ppu.colorMathSubtractMode"] = ppuState.ColorMathSubtractMode,
+            ["ppu.colorMathHalveResult"] = ppuState.ColorMathHalveResult,
+            ["ppu.fixedColor"] = ppuState.FixedColor,
         };
 
         for(int i = 0; i < ppuState.Mode7.Matrix.Length; i++) {
             flat[$"ppu.mode7.matrix[{i}]"] = ppuState.Mode7.Matrix[i];
         }
 
-        for(int layerIndex = 0; layerIndex < 3; layerIndex++) {
+        for(int layerIndex = 0; layerIndex < ppuState.Layers.Length; layerIndex++) {
             LayerConfig layer = ppuState.Layers[layerIndex];
             flat[$"ppu.layers[{layerIndex}].tilemapAddress"] = layer.TilemapAddress;
             flat[$"ppu.layers[{layerIndex}].chrAddress"] = layer.ChrAddress;
@@ -538,6 +561,25 @@ internal static class Program
             flat[$"ppu.layers[{layerIndex}].largeTiles"] = layer.LargeTiles;
             flat[$"ppu.layers[{layerIndex}].hscroll"] = layer.HScroll;
             flat[$"ppu.layers[{layerIndex}].vscroll"] = layer.VScroll;
+        }
+
+        for(int windowIndex = 0; windowIndex < ppuState.Window.Length; windowIndex++) {
+            WindowConfig window = ppuState.Window[windowIndex];
+            flat[$"ppu.window[{windowIndex}].left"] = window.Left;
+            flat[$"ppu.window[{windowIndex}].right"] = window.Right;
+            for(int layerIndex = 0; layerIndex < window.ActiveLayers.Length; layerIndex++) {
+                flat[$"ppu.window[{windowIndex}].activeLayers[{layerIndex}]"] = window.ActiveLayers[layerIndex];
+                flat[$"ppu.window[{windowIndex}].invertedLayers[{layerIndex}]"] = window.InvertedLayers[layerIndex];
+            }
+        }
+
+        for(int logicIndex = 0; logicIndex < ppuState.MaskLogic.Length; logicIndex++) {
+            flat[$"ppu.windowMaskLogic[{logicIndex}]"] = ppuState.MaskLogic[logicIndex].ToString();
+        }
+
+        for(int maskIndex = 0; maskIndex < ppuState.WindowMaskMain.Length; maskIndex++) {
+            flat[$"ppu.windowMaskMain[{maskIndex}]"] = ppuState.WindowMaskMain[maskIndex];
+            flat[$"ppu.windowMaskSub[{maskIndex}]"] = ppuState.WindowMaskSub[maskIndex];
         }
 
         return flat;
