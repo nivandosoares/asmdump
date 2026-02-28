@@ -16,7 +16,13 @@ What is already real:
 - a ROM-derived `Ballistic presents` intro clip now also plays inside that runtime from helper-scene CGRAM plus the `A39C` `04:99ED` palette ramp
 - a direct runtime `ballistic_a39c` implementation now also plays that same Ballistic clip from a compact callback asset instead of a pre-expanded palette timeline
 - a full first no-input attract loop now also plays inside that runtime as an exact sampled image sequence
-- a hybrid first no-input attract loop also exists, using the direct runtime Ballistic callback clip followed by sampled playback for the later attract states
+- a hybrid first no-input attract loop also exists:
+  - direct runtime Ballistic callback clip for `654..958`
+  - native OAM-aware `snes_bg` playback for the first stable post-Ballistic window (`978..985`)
+  - sampled playback for the remaining later attract states
+- the SDL runtime can now auto-load optional `oam.bin` data for extracted SNES scenes and composite OBJ sprites on top of BG/Mode 7 scenes
+- the first post-Ballistic native replacement is now promoted into the hybrid intro loop as an OAM-aware `snes_bg` clip for frames `978..985`
+- an experimental ROM-side `L00A00C` scene builder now exists for the static `958..977` bootstrap window
 - a working Mesen-based validation harness exists under `validation/`
 - the bank 0 control kernel is documented well enough to guide runtime architecture
 - the bank 1 boot/title screen build path is partially reconstructed into machine-readable manifests
@@ -30,6 +36,7 @@ What is not real yet:
 - no general native front-end state machine exists on the PC side yet beyond the first Ballistic callback family
 - no deterministic post-splash savestate has been added to validation
 - bank 10, bank 11, and bank 30 are not yet documented deeply enough to implement gameplay
+- the post-Ballistic Mode 7 attract path still drifts after frame `978`, so OAM support alone did not close that segment
 
 ## Phase Status
 
@@ -83,6 +90,7 @@ Completed:
 - ROM-derived Ballistic clip generation from helper-scene CGRAM plus the `A39C` palette ramp
 - compact Ballistic callback-asset generation for direct runtime playback
 - sequence splicing for hybrid native-plus-sampled intro manifests
+- experimental `L00A00C` scene building from ROM uploads plus optional live `VRAM/CGRAM/OAM` seeds
 
 Current concrete outputs:
 
@@ -99,7 +107,9 @@ Current concrete outputs:
 - `tools/out/ballistic_rom_sequence.txt`: single-entry runtime manifest for that ROM-derived Ballistic clip
 - `tools/out/ballistic_callback/ballistic_a39c.txt`: compact callback asset for direct runtime Ballistic playback
 - `tools/out/ballistic_callback_sequence.txt`: single-entry runtime manifest for the direct `ballistic_a39c` path
-- `tools/out/intro_loop_hybrid_sequence.txt`: hybrid intro-loop manifest with direct runtime Ballistic and sampled later attract states
+- `tools/out/intro_loop_hybrid_sequence.txt`: hybrid intro-loop manifest with direct runtime Ballistic, a native OAM-aware `978..985` splice, and sampled later attract states
+- `tools/out/intro_native_978/sequence.txt`: the promoted OAM-aware native splice source for the post-Ballistic attract path (`978..985`)
+- `tools/out/bank1_l00a00c_scene.ppm`: experimental ROM-side `L00A00C` bootstrap scene preview using `954` seeds and a `974` presentation template
 
 Still missing:
 
@@ -223,6 +233,7 @@ Current limit:
 
 The current preview path still shows planar tile sheets or raw VRAM dumps, not a final screen.
 The new intro playback manifests are useful and deterministic. Ballistic now has a measured reference clip, a ROM-derived clip, and a direct runtime callback asset, but the later attract states are still sampled scene playback rather than native callback recreation.
+The new `L00A00C` builder is useful for controlled iteration on the `958..977` bootstrap, but it is not exact yet even with `954` seed dumps and a stable `974` PPU template.
 
 Deferred requirement recorded for later phases:
 

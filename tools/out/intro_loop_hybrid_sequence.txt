@@ -1,7 +1,8 @@
-# type duration_frames path_a [path_b path_c]
+# type duration_frames path_a [path_b path_c path_d]
 ballistic_a39c 304 ballistic_callback/ballistic_a39c.txt
 image 20 intro_loop_sequence_images/frame_00958.ppm
-image 8 intro_loop_sequence_images/frame_00978.ppm
+snes_bg 4 intro_native_978/frame_00978/vram.bin intro_native_978/frame_00978/cgram.bin intro_native_978/frame_00978/ppu_state.json intro_native_978/frame_00978/oam.bin
+snes_bg 4 intro_native_978/frame_00982/vram.bin intro_native_978/frame_00982/cgram.bin intro_native_978/frame_00982/ppu_state.json intro_native_978/frame_00982/oam.bin
 image 4 intro_loop_sequence_images/frame_00986.ppm
 image 4 intro_loop_sequence_images/frame_00990.ppm
 image 4 intro_loop_sequence_images/frame_00994.ppm

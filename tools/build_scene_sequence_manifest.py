@@ -80,6 +80,8 @@ def main() -> int:
             entry["vram"] = Path(item["vram"])
             entry["cgram"] = Path(item["cgram"])
             entry["ppu_state"] = Path(item["ppu_state"])
+            if item.get("oam"):
+                entry["oam"] = Path(item["oam"])
         entries.append(entry)
 
     entries.sort(key=lambda item: item["frame"])
@@ -112,7 +114,10 @@ def main() -> int:
                 "screenshot": str(entry["screenshot"]),
             }
         else:
-            digest = file_hash(entry["vram"], entry["cgram"], entry["ppu_state"])
+            digest_paths = [entry["vram"], entry["cgram"], entry["ppu_state"]]
+            if entry.get("oam") is not None:
+                digest_paths.append(entry["oam"])
+            digest = file_hash(*digest_paths)
             playback_entry = {
                 "type": "snes_bg",
                 "frame": entry["frame"],
@@ -123,6 +128,8 @@ def main() -> int:
                 "cgram": relpath(entry["cgram"], manifest_dir),
                 "ppu_state": relpath(entry["ppu_state"], manifest_dir),
             }
+            if entry.get("oam") is not None:
+                playback_entry["oam"] = relpath(entry["oam"], manifest_dir)
 
         if (
             not args.no_collapse_identical
@@ -135,7 +142,7 @@ def main() -> int:
 
         playback_entries.append(playback_entry)
 
-    lines = ["# type duration_frames path_a [path_b path_c]"]
+    lines = ["# type duration_frames path_a [path_b path_c path_d]"]
     for entry in playback_entries:
         if entry["type"] == "image":
             lines.append(
@@ -145,14 +152,15 @@ def main() -> int:
                 )
             )
         else:
-            lines.append(
-                "snes_bg {duration} {vram} {cgram} {state}".format(
-                    duration=entry["duration_frames"],
-                    vram=entry["vram"],
-                    cgram=entry["cgram"],
-                    state=entry["ppu_state"],
-                )
+            line = "snes_bg {duration} {vram} {cgram} {state}".format(
+                duration=entry["duration_frames"],
+                vram=entry["vram"],
+                cgram=entry["cgram"],
+                state=entry["ppu_state"],
             )
+            if entry.get("oam") is not None:
+                line += f" {entry['oam']}"
+            lines.append(line)
         
 
     args.out_manifest.parent.mkdir(parents=True, exist_ok=True)

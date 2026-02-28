@@ -166,7 +166,10 @@ The current runtime milestone goes one step further than that sampled manifest:
 - `tools/out/ballistic_native_sequence.txt` is the measured Ballistic reference clip
 - `tools/out/ballistic_rom_sequence.txt` is the ROM-derived Ballistic runtime clip
 - `tools/out/ballistic_callback_sequence.txt` is the direct runtime Ballistic callback clip
-- `tools/out/intro_loop_hybrid_sequence.txt` splices the direct callback clip into the full no-input loop
+- `tools/out/intro_loop_hybrid_sequence.txt` now splices:
+  - the direct callback clip for `654..958`
+  - the native OAM-aware `snes_bg` window for `978..985`
+  - sampled `image` playback for the remaining attract states
 - the ROM-derived clip currently compares exactly at:
   - frame offset `0` vs source frame `654`
   - frame offset `60` vs source frame `714`
@@ -179,19 +182,44 @@ The current runtime milestone goes one step further than that sampled manifest:
   - frame offset `0` vs source frame `654`
   - frame offset `320` vs source frame `974`
   - frame offset `676` vs source frame `1330`
+- current promoted-hybrid validation around the native post-Ballistic splice is:
+  - frame offset `324` vs source frame `978`: `3` mismatched pixels (`0.005232%`)
+  - frame offset `328` vs source frame `982`: `4` mismatched pixels (`0.006975%`)
 
 Current boundary for the next native intro replacement:
 
 - `958..974` is still the unstable bootstrap zone for the `L00A00C -> 01:9D69 -> 01:9FE5` handoff
 - frame `978` is the first clean extracted-state target after that handoff:
   - direct runtime reconstruction from `VRAM + CGRAM + PPU state` currently lands at `4` mismatched pixels (`0.006975%`)
+- the SDL runtime now also accepts optional `OAM` for extracted SNES scenes:
+  - against a full Mesen frame dump, frame `978` with auto-loaded sibling `oam.bin` lands at `2` mismatched pixels (`0.003488%`) versus `main_visible.ppm`
+  - frame `990` still lands at `623` mismatched pixels (`1.086426%`) versus `main_visible.ppm`
+  - practical reading: OAM support is now in the runtime, but it is not the whole explanation for the later Mode 7 attract drift
 - the same extracted-state path then starts drifting again:
   - frame `986`: `23` mismatched pixels (`0.040109%`)
   - frame `990`: `1295` mismatched pixels (`2.258301%`)
   - frame `994`: `2781` mismatched pixels (`4.849679%`)
 - practical next step:
-  - use `978..985` as the smallest next replacement candidate
   - treat `958..977` as a deeper bootstrap-builder problem rather than a simple scene dump
+  - keep `978..985` as the first promoted native post-Ballistic window inside the hybrid loop
+  - `tools/out/intro_native_978/sequence.txt` is now the splice source for that `978..985` window
+
+That bootstrap reading is now backed by two extra checks:
+
+- rerunning the probe at frames `958` and `974` with `TD2_BOOT_PROBE_DUMP_PPU_MEMORY=1` shows that start-of-frame dumps do not rescue the scene:
+  - `tools/out/bootprobe_958/startframe.ppm` vs `tools/out/bootprobe_958/td2_boot_probe_frame.png`: `100.000000%`
+  - `tools/out/bootprobe_958/endframe.ppm` vs `tools/out/bootprobe_958/td2_boot_probe_frame.png`: `100.000000%`
+  - `tools/out/bootprobe_974/startframe.ppm` vs `tools/out/bootprobe_974/td2_boot_probe_frame.png`: `100.000000%`
+  - `tools/out/bootprobe_974/endframe.ppm` vs `tools/out/bootprobe_974/td2_boot_probe_frame.png`: `100.000000%`
+- frame `958` and frame `974` screenshots are still identical, so the visible bootstrap window is static even though the extracted PPU state is not usable
+- the experimental ROM-side builder at `tools/build_bank1_l00a00c_scene.py` currently applies:
+  - `04:9AED` via `L001210 -> 42FB -> L00065F`
+  - `04:9BF5` via `L001210 -> 26FB -> L00073E`
+  - `L00A9F2(1)` onto a seeded `954` CGRAM base
+- the current seeded prototype output is `tools/out/bank1_l00a00c_scene.ppm`, and it is still `100.000000%` mismatched against both frame `958` and frame `974`
+- practical reading:
+  - the remaining gap is not just "wrong capture boundary"
+  - the bootstrap likely depends on additional carried-over or mutated state beyond the obvious direct uploads
 
 The probe now also writes a second PPU-memory snapshot at the start of the sampled frame when `TD2_BOOT_PROBE_DUMP_PPU_MEMORY=1` is enabled:
 

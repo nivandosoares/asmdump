@@ -1,0 +1,3 @@
+# type duration_frames vram_path cgram_path ppu_state_path [oam_path]
+snes_bg 4 frame_00978/vram.bin frame_00978/cgram.bin frame_00978/ppu_state.json frame_00978/oam.bin
+snes_bg 4 frame_00982/vram.bin frame_00982/cgram.bin frame_00982/ppu_state.json frame_00982/oam.bin

@@ -1,4 +1,4 @@
-# type duration_frames path_a [path_b path_c]
+# type duration_frames path_a [path_b path_c path_d]
 image 4 intro_loop_sequence_images/frame_00654.ppm
 image 4 intro_loop_sequence_images/frame_00658.ppm
 image 4 intro_loop_sequence_images/frame_00662.ppm

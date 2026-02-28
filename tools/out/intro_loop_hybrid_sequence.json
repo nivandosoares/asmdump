@@ -1,10 +1,10 @@
 {
-  "sequence_json": "/home/nivando-soares/asmdump/tools/out/intro_loop_sequence.json",
-  "replace_start_frame": 654,
-  "replace_end_frame_exclusive": 958,
-  "replacement_type": "ballistic_a39c",
-  "replacement_path": "/home/nivando-soares/asmdump/tools/out/ballistic_callback/ballistic_a39c.txt",
-  "replacement_duration": 304,
+  "base_manifest": "/home/nivando-soares/asmdump/tools/out/intro_loop_hybrid_ballistic_sequence.txt",
+  "replacement_manifest": "/home/nivando-soares/asmdump/tools/out/intro_native_978/sequence.txt",
+  "base_frame": 654,
+  "replace_start_frame": 978,
+  "replace_end_frame_exclusive": 986,
   "kept_entry_count": 150,
+  "replacement_entry_count": 2,
   "total_duration_frames": 1418
 }

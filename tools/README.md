@@ -10,9 +10,10 @@ Current Sprint 0 tooling:
 - `render_boot_screen.py`: composes a BG-only 256x224 boot/title preview from the rebuilt VRAM snapshot plus the boot palette manifest
 - `build_bank1_credits_scene.py`: builds the bank 1 `L009D1C` copyright/credits scene directly from ROM helper-table assets and writes VRAM/CGRAM/PPU-state outputs plus a preview PPM
 - `build_bank1_helper_scene.py`: builds other simple bank 1 helper-driven BG scenes from `L00A9A0/L00A9CB/L00A9F2` table entries and explicit PPU setup
+- `build_bank1_l00a00c_scene.py`: experimental bank 1 `L00A00C` bootstrap builder that applies the direct Mode 7 setup uploads onto optional seeded `VRAM/CGRAM/OAM` dumps and renders the result with a supplied PPU-state template
 - `mesen_ppu_extract`: headless C# bridge into `MesenCore.so` that dumps the current frame's SNES BG layer views, BG tilesets/CHR sheets, palette, per-sprite previews, sprite screen preview, and raw VRAM/CGRAM/OAM without going through the GUI
 - `extract_mesen_scene_range.py`: batches `mesen_ppu_extract` across a frame range, writes per-frame scene folders, and emits a collapsed `sequence.txt` manifest for the SDL runtime
-- `build_scene_sequence_manifest.py`: converts flat Mesen range dumps into runtime-ready `sequence.txt` manifests, either as `snes_bg` entries or exact sampled `image` entries from screenshots
+- `build_scene_sequence_manifest.py`: converts flat Mesen range dumps into runtime-ready `sequence.txt` manifests, either as `snes_bg` entries or exact sampled `image` entries from screenshots; when `oam.bin` exists, it now carries it through as an optional fourth `snes_bg` path
 - `build_indexed_palette_animation.py`: collapses a screenshot-backed frame range into one indexed image plus a palette timeline and can emit a one-entry `indexed_anim` sequence manifest
 - `build_ballistic_rom_clip.py`: generates a ROM-derived Ballistic `indexed_anim` clip from the helper-scene CGRAM, the `A39C` `04:99ED` palette ramp, and the measured class mapping
 - `build_ballistic_callback_asset.py`: generates a compact Ballistic callback asset for direct runtime `ballistic_a39c` playback from helper-scene CGRAM, the ROM ramp, and the inferred class mapping
@@ -40,8 +41,10 @@ python3 tools/build_boot_vram.py game.smc tools/out/bank1_boot_screen.json tools
 python3 tools/render_boot_screen.py tools/out/bank1_boot_vram_variant0.bin tools/out/bank1_boot_palettes.json tools/out/bank1_boot_screen_variant0.ppm --rom game.smc --json-out tools/out/bank1_boot_screen_variant0.json
 python3 tools/build_bank1_credits_scene.py game.smc tools/out/bank1_credits_scene
 python3 tools/build_bank1_helper_scene.py game.smc tools/out/bank1_l00a35a_scene --helper-index 4 --visible-layer bg1 --scene-name bank1_L00A35A_frontend --source-routine 01:A35A
+python3 tools/build_bank1_l00a00c_scene.py game.smc tools/out/bank1_l00a00c_scene --seed-vram tools/out/intro_loop_frame_00954_vram.bin --seed-cgram tools/out/intro_loop_frame_00954_cgram.bin --ppu-state-template tools/out/intro_loop_frame_00974_ppu_state.json
 ./tools/run_mesen_ppu_extract.sh --rom game.smc --frame 300 --out-dir tools/out/mesen_frame300
 python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 654 --end-frame 710 --step 4 --out-dir tools/out/ballistic_sequence --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
+python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 978 --end-frame 982 --step 4 --out-dir tools/out/intro_native_978 --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
 python3 tools/build_scene_sequence_manifest.py tools/out/intro_loop.json tools/out/intro_loop_sequence.txt --json-out tools/out/intro_loop_sequence.json --end-frame-exclusive 2072 --prefer-screenshot
 python3 tools/build_indexed_palette_animation.py tools/out/intro_loop.json tools/out/ballistic_native/ballistic_splash.txt --start-frame 654 --end-frame-exclusive 958 --json-out tools/out/ballistic_native/ballistic_splash.json --preview-out tools/out/ballistic_native/ballistic_splash_preview.ppm --sequence-manifest tools/out/ballistic_native_sequence.txt
 python3 tools/build_ballistic_rom_clip.py game.smc tools/out/bank1_l00a35a_scene_cgram.bin tools/out/ballistic_native/ballistic_splash.json tools/out/ballistic_rom/ballistic_splash.txt --json-out tools/out/ballistic_rom/ballistic_splash.json --preview-out tools/out/ballistic_rom/ballistic_splash_preview.ppm --sequence-manifest tools/out/ballistic_rom_sequence.txt
@@ -85,11 +88,14 @@ Useful make targets:
 - `make -C tools bank1-credits-scene-preview`
 - `make -C tools bank1-credits-scene-compare`
 - `make -C tools bank1-a35a-scene-preview`
+- `make -C tools bank1-a00c-scene-preview`
 - `make -C tools mesen-ppu-frame MESEN_FRAME=300`
 - `make -C tools intro-loop-dump`
 - `make -C tools intro-loop-sequence`
+- `make -C tools intro-native-978`
 - `make -C tools ballistic-native-clip`
 - `make -C tools ballistic-rom-clip`
+- `make -C tools ballistic-callback-asset`
 - `make -C tools intro-loop-hybrid-sequence`
 
 `mesen_ppu_extract` is the current bridge for the idea of using Mesen itself as an asset/layer extractor. It writes:
@@ -122,6 +128,7 @@ For the `Ballistic presents` splash, the frame-`654` extraction is a clean exact
 - it extracts one folder per requested frame: `frame_00654/`, `frame_00658/`, ...
 - each frame folder contains `vram.bin`, `cgram.bin`, `ppu_state.json`, and the rest of the usual Mesen bridge outputs
 - it writes `sequence.txt`, a simple line-oriented manifest that `port/build/td2_port --sequence ...` can play directly
+- when `oam.bin` exists in the frame folder, it is now emitted as the optional fourth `snes_bg` path
 - it also writes `sequence.json`, which records the extracted frame list, adjacent-collapse decisions, and total playback duration
 
 The first sampled Ballistic playback set still lives in `tools/out/ballistic_sequence/`:
@@ -157,8 +164,12 @@ The current direct runtime Ballistic callback artifact lives in `tools/out/balli
 The current best no-input intro-loop runtime manifest is `tools/out/intro_loop_hybrid_sequence.txt`:
 
 - it replaces frames `654..958` with the direct runtime Ballistic `ballistic_a39c` clip
-- it keeps the later attract states as sampled `image` playback
+- it replaces frames `978..985` with the OAM-aware `snes_bg` splice from `tools/out/intro_native_978/sequence.txt`
+- it keeps the remaining later attract states as sampled `image` playback
 - it currently compares exactly in the SDL runtime at offsets `0`, `320`, and `676`
+- the promoted native splice currently compares at:
+  - offset `324` / source frame `978`: `3` mismatched pixels (`0.005232%`)
+  - offset `328` / source frame `982`: `4` mismatched pixels (`0.006975%`)
 
 The next milestone, the full first no-input attract loop, now lives in `tools/out/intro_loop*`:
 
@@ -173,6 +184,27 @@ Current validated reading for that loop:
 - the cycle begins at frame `654`, where the active main callback first becomes `01:A39C`
 - it repeats at frames `2072` and `3490`
 - the exact sampled manifest currently collapses `355` captured frames down to `226` playback entries while preserving `1418` frames of total runtime duration
+
+The first native post-Ballistic replacement window now lives in `tools/out/intro_native_978/`:
+
+- `sequence.txt`: `snes_bg` playback manifest for frames `978` and `982`, carrying `oam.bin`
+- `sequence.json`: summary of those two extracted frames
+- `frame_00978/` and `frame_00982/`: full Mesen bridge frame folders with `vram.bin`, `cgram.bin`, `ppu_state.json`, `oam.bin`, `main_visible.ppm`, and related layer assets
+- current validation against `main_visible.ppm` is:
+  - frame `978`: `2` mismatched pixels (`0.003488%`)
+  - frame `982`: `4` mismatched pixels (`0.006975%`)
+- this window is now promoted into `tools/out/intro_loop_hybrid_sequence.txt`
+
+The current bootstrap-side experiment for `L00A00C` now lives at `tools/out/bank1_l00a00c_scene*`:
+
+- it seeds `VRAM/CGRAM` from frame `954`
+- it applies the direct ROM-side setup uploads from `01:A00C`
+- it reuses the stable frame-`974` PPU presentation as a rendering template
+- the generated preview is `tools/out/bank1_l00a00c_scene.ppm`
+- current reading:
+  - it is useful as a repeatable experiment harness for `958..977`
+  - it is not exact yet; the preview is still `100.000000%` mismatched against frames `958` and `974`
+  - the missing behavior is therefore beyond the obvious direct uploads or a simple start-frame vs end-frame capture issue
 
 The wrapper expects the local Mesen Linux release at `/home/nivando-soares/Mesen2/bin/linux-x64/Release` by default. Override with `MESEN_RELEASE_DIR=/path/to/release` when needed.
 

@@ -1,1 +1,6 @@
 *.ppm
+*.pdf
+*.pyc
+*.cpython
+*.bin
+*.png

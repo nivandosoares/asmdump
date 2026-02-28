@@ -68,6 +68,9 @@ def scene_hash(frame_dir: Path) -> str:
     digest = hashlib.sha256()
     for name in ("vram.bin", "cgram.bin", "ppu_state.json"):
         digest.update((frame_dir / name).read_bytes())
+    oam_path = frame_dir / "oam.bin"
+    if oam_path.exists():
+        digest.update(oam_path.read_bytes())
     return digest.hexdigest()
 
 
@@ -110,6 +113,8 @@ def build_manifest_entries(args: argparse.Namespace, frames: list[int]) -> tuple
             "dir": relative_dir.as_posix(),
             "hash": digest,
         }
+        if (frame_dir / "oam.bin").exists():
+            extracted_entry["oam"] = (relative_dir / "oam.bin").as_posix()
         extracted_entries.append(extracted_entry)
 
         if (
@@ -130,6 +135,8 @@ def build_manifest_entries(args: argparse.Namespace, frames: list[int]) -> tuple
                 "source_frames": [frame],
             }
         )
+        if (frame_dir / "oam.bin").exists():
+            playback_entries[-1]["oam"] = (relative_dir / "oam.bin").as_posix()
         previous_hash = digest
 
     return playback_entries, extracted_entries
@@ -138,19 +145,20 @@ def build_manifest_entries(args: argparse.Namespace, frames: list[int]) -> tuple
 def write_manifest(out_dir: Path, playback_entries: list[dict]) -> Path:
     manifest_path = out_dir / "sequence.txt"
     lines = [
-        "# type duration_frames vram_path cgram_path ppu_state_path",
+        "# type duration_frames vram_path cgram_path ppu_state_path [oam_path]",
     ]
 
     for entry in playback_entries:
         relative_dir = Path(entry["dir"])
-        lines.append(
-            "snes_bg {duration} {vram} {cgram} {state}".format(
-                duration=entry["duration_frames"],
-                vram=(relative_dir / "vram.bin").as_posix(),
-                cgram=(relative_dir / "cgram.bin").as_posix(),
-                state=(relative_dir / "ppu_state.json").as_posix(),
-            )
+        line = "snes_bg {duration} {vram} {cgram} {state}".format(
+            duration=entry["duration_frames"],
+            vram=(relative_dir / "vram.bin").as_posix(),
+            cgram=(relative_dir / "cgram.bin").as_posix(),
+            state=(relative_dir / "ppu_state.json").as_posix(),
         )
+        if entry.get("oam"):
+            line += f" {entry['oam']}"
+        lines.append(line)
 
     manifest_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return manifest_path

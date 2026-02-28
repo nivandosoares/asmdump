@@ -41,6 +41,12 @@ BANK1_A35A_SCENE_CGRAM := $(BANK1_A35A_SCENE_PREFIX)_cgram.bin
 BANK1_A35A_SCENE_PPU := $(BANK1_A35A_SCENE_PREFIX)_ppu_state.json
 BANK1_A35A_SCENE_JSON := $(BANK1_A35A_SCENE_PREFIX).json
 BANK1_A35A_SCENE_PPM := $(BANK1_A35A_SCENE_PREFIX).ppm
+BANK1_A00C_SCENE_PREFIX := $(OUT_DIR)/bank1_l00a00c_scene
+BANK1_A00C_SCENE_VRAM := $(BANK1_A00C_SCENE_PREFIX)_vram.bin
+BANK1_A00C_SCENE_CGRAM := $(BANK1_A00C_SCENE_PREFIX)_cgram.bin
+BANK1_A00C_SCENE_PPU := $(BANK1_A00C_SCENE_PREFIX)_ppu_state.json
+BANK1_A00C_SCENE_JSON := $(BANK1_A00C_SCENE_PREFIX).json
+BANK1_A00C_SCENE_PPM := $(BANK1_A00C_SCENE_PREFIX).ppm
 MESEN_BOOT_FRAME := ../.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_frame.png
 MESEN_FRAME ?= 300
 MESEN_FRAME_DIR ?= $(OUT_DIR)/mesen_frame$(MESEN_FRAME)
@@ -64,13 +70,16 @@ BALLISTIC_CALLBACK_JSON := $(BALLISTIC_CALLBACK_DIR)/ballistic_a39c.json
 BALLISTIC_CALLBACK_SEQUENCE := $(OUT_DIR)/ballistic_callback_sequence.txt
 INTRO_LOOP_HYBRID_SEQUENCE := $(OUT_DIR)/intro_loop_hybrid_sequence.txt
 INTRO_LOOP_HYBRID_SEQUENCE_JSON := $(OUT_DIR)/intro_loop_hybrid_sequence.json
+INTRO_LOOP_HYBRID_BASE_SEQUENCE := $(OUT_DIR)/intro_loop_hybrid_ballistic_sequence.txt
+INTRO_LOOP_HYBRID_BASE_JSON := $(OUT_DIR)/intro_loop_hybrid_ballistic_sequence.json
+INTRO_NATIVE_978_DIR := $(OUT_DIR)/intro_native_978
 MESEN_TIMEOUT_SECONDS ?= 75
 
-.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence
+.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-native-978
 
 all: previews
 
-previews: bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-screen-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank1-credits-scene-preview bank1-a35a-scene-preview
+previews: bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-screen-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank1-credits-scene-preview bank1-a35a-scene-preview bank1-a00c-scene-preview
 
 $(OUT_DIR):
 	mkdir -p $(OUT_DIR)
@@ -187,6 +196,14 @@ $(BANK1_A35A_SCENE_VRAM) $(BANK1_A35A_SCENE_CGRAM) $(BANK1_A35A_SCENE_PPU) $(BAN
 
 bank1-a35a-scene-preview: $(BANK1_A35A_SCENE_VRAM) $(BANK1_A35A_SCENE_CGRAM) $(BANK1_A35A_SCENE_PPU) $(BANK1_A35A_SCENE_JSON) $(BANK1_A35A_SCENE_PPM)
 
+$(BANK1_A00C_SCENE_VRAM) $(BANK1_A00C_SCENE_CGRAM) $(BANK1_A00C_SCENE_PPU) $(BANK1_A00C_SCENE_JSON) $(BANK1_A00C_SCENE_PPM): build_bank1_l00a00c_scene.py $(ROM) $(OUT_DIR)/intro_loop_frame_00954_vram.bin $(OUT_DIR)/intro_loop_frame_00954_cgram.bin $(OUT_DIR)/intro_loop_frame_00974_ppu_state.json | $(OUT_DIR)
+	$(PYTHON) build_bank1_l00a00c_scene.py $(ROM) $(BANK1_A00C_SCENE_PREFIX) \
+		--seed-vram $(OUT_DIR)/intro_loop_frame_00954_vram.bin \
+		--seed-cgram $(OUT_DIR)/intro_loop_frame_00954_cgram.bin \
+		--ppu-state-template $(OUT_DIR)/intro_loop_frame_00974_ppu_state.json
+
+bank1-a00c-scene-preview: $(BANK1_A00C_SCENE_VRAM) $(BANK1_A00C_SCENE_CGRAM) $(BANK1_A00C_SCENE_PPU) $(BANK1_A00C_SCENE_JSON) $(BANK1_A00C_SCENE_PPM)
+
 mesen-ppu-frame: | $(OUT_DIR)
 	./run_mesen_ppu_extract.sh --rom $(ROM) --frame $(MESEN_FRAME) --out-dir $(MESEN_FRAME_DIR)
 
@@ -234,13 +251,25 @@ $(BALLISTIC_CALLBACK_ASSET) $(BALLISTIC_CALLBACK_JSON) $(BALLISTIC_CALLBACK_SEQU
 
 ballistic-callback-asset: $(BALLISTIC_CALLBACK_ASSET) $(BALLISTIC_CALLBACK_JSON) $(BALLISTIC_CALLBACK_SEQUENCE)
 
-$(INTRO_LOOP_HYBRID_SEQUENCE) $(INTRO_LOOP_HYBRID_SEQUENCE_JSON): splice_sequence_manifest.py $(INTRO_LOOP_SEQUENCE_JSON) $(BALLISTIC_CALLBACK_ASSET) | $(OUT_DIR)
-	$(PYTHON) splice_sequence_manifest.py $(INTRO_LOOP_SEQUENCE_JSON) $(INTRO_LOOP_HYBRID_SEQUENCE) \
+$(INTRO_LOOP_HYBRID_BASE_SEQUENCE) $(INTRO_LOOP_HYBRID_BASE_JSON): splice_sequence_manifest.py $(INTRO_LOOP_SEQUENCE_JSON) $(BALLISTIC_CALLBACK_ASSET) | $(OUT_DIR)
+	$(PYTHON) splice_sequence_manifest.py $(INTRO_LOOP_SEQUENCE_JSON) $(INTRO_LOOP_HYBRID_BASE_SEQUENCE) \
 		--replace-start-frame 654 \
 		--replace-end-frame-exclusive 958 \
 		--replacement-type ballistic_a39c \
 		--replacement-path $(BALLISTIC_CALLBACK_ASSET) \
 		--replacement-duration 304 \
+		--json-out $(INTRO_LOOP_HYBRID_BASE_JSON)
+
+$(INTRO_NATIVE_978_DIR)/sequence.txt $(INTRO_NATIVE_978_DIR)/sequence.json: extract_mesen_scene_range.py | $(OUT_DIR)
+	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 978 --end-frame 982 --step 4 --out-dir $(INTRO_NATIVE_978_DIR) --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
+
+$(INTRO_LOOP_HYBRID_SEQUENCE) $(INTRO_LOOP_HYBRID_SEQUENCE_JSON): splice_runtime_manifest.py $(INTRO_LOOP_HYBRID_BASE_SEQUENCE) $(INTRO_NATIVE_978_DIR)/sequence.txt | $(OUT_DIR)
+	$(PYTHON) splice_runtime_manifest.py $(INTRO_LOOP_HYBRID_BASE_SEQUENCE) $(INTRO_NATIVE_978_DIR)/sequence.txt $(INTRO_LOOP_HYBRID_SEQUENCE) \
+		--base-frame 654 \
+		--replace-start-frame 978 \
+		--replace-end-frame-exclusive 986 \
 		--json-out $(INTRO_LOOP_HYBRID_SEQUENCE_JSON)
 
 intro-loop-hybrid-sequence: $(INTRO_LOOP_HYBRID_SEQUENCE) $(INTRO_LOOP_HYBRID_SEQUENCE_JSON)
+
+intro-native-978: $(INTRO_NATIVE_978_DIR)/sequence.txt $(INTRO_NATIVE_978_DIR)/sequence.json

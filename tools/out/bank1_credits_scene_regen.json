@@ -1,0 +1,109 @@
+{
+  "scene": "bank1_L009D1C_credits",
+  "helper_index": 0,
+  "source_routine": "01:9D1C",
+  "ppu_setup": {
+    "BGMODE": "0x01",
+    "BG1SC": "0x01",
+    "BG2SC": "0x09",
+    "BG3SC": "0x11",
+    "BG12NBA": "0x42",
+    "BG34NBA": "0x06",
+    "TMAIN": "0x04"
+  },
+  "jobs": [
+    {
+      "helper": "L00A9A0",
+      "source_bank": 4,
+      "source_addr": "0x8000",
+      "compression": "42FB",
+      "source": {
+        "kind": "42FB",
+        "compressed_rom_offset": "0x020000",
+        "compressed_bytes_consumed": 414,
+        "source_bank": 4,
+        "source_addr": "0x8000",
+        "width_words": 32,
+        "row_count": 28,
+        "aux_header": "0x0304",
+        "payload_size": 1792
+      },
+      "apply": {
+        "helper": "L0005AC",
+        "vram_word_addr": "0x1000",
+        "width_words": 32,
+        "row_count": 28,
+        "row_bytes": 64,
+        "page_stride_words": "0x0400",
+        "payload_size": 1792
+      }
+    },
+    {
+      "helper": "L00A9CB",
+      "source_bank": 2,
+      "source_addr": "0xF51F",
+      "compression": "42FB",
+      "source": {
+        "kind": "42FB",
+        "compressed_rom_offset": "0x01751F",
+        "compressed_bytes_consumed": 849,
+        "source_bank": 2,
+        "source_addr": "0xF51F",
+        "payload_size": 2048
+      },
+      "apply": {
+        "helper": "L0006C9",
+        "vram_word_addr": "0x6000",
+        "length_bytes": 2048
+      }
+    },
+    {
+      "helper": "L00A9F2",
+      "source_bank": 2,
+      "source_addr": "0xFBD1",
+      "raw_rom_offset": "0x017BD1",
+      "apply": {
+        "helper": "L000583",
+        "cgram_dest": "0x00",
+        "color_count": 32,
+        "payload_size": 64
+      }
+    }
+  ],
+  "ppu_state": {
+    "ppu.bgMode": 1,
+    "ppu.mainScreenLayers": 4,
+    "ppu.layers[0].tilemapAddress": 0,
+    "ppu.layers[0].chrAddress": 8192,
+    "ppu.layers[0].doubleWidth": true,
+    "ppu.layers[0].doubleHeight": false,
+    "ppu.layers[0].largeTiles": false,
+    "ppu.layers[0].hscroll": 0,
+    "ppu.layers[0].vscroll": 1023,
+    "ppu.layers[1].tilemapAddress": 2048,
+    "ppu.layers[1].chrAddress": 16384,
+    "ppu.layers[1].doubleWidth": true,
+    "ppu.layers[1].doubleHeight": false,
+    "ppu.layers[1].largeTiles": false,
+    "ppu.layers[1].hscroll": 0,
+    "ppu.layers[1].vscroll": 1023,
+    "ppu.layers[2].tilemapAddress": 4096,
+    "ppu.layers[2].chrAddress": 24576,
+    "ppu.layers[2].doubleWidth": true,
+    "ppu.layers[2].doubleHeight": false,
+    "ppu.layers[2].largeTiles": false,
+    "ppu.layers[2].hscroll": 0,
+    "ppu.layers[2].vscroll": 1023
+  },
+  "notes": [
+    "This scene corresponds to the colored copyright/credits screen shown about 5 seconds after power-on.",
+    "The VRAM/CGRAM build here is ROM-driven from the L009D1C helper trio, not copied from a live emulator dump.",
+    "L00A9CB entry 0 is a 42FB-compressed blob consumed through L0006C9."
+  ],
+  "output_files": {
+    "vram": "tools/out/bank1_credits_scene_regen_vram.bin",
+    "cgram": "tools/out/bank1_credits_scene_regen_cgram.bin",
+    "ppu_state": "tools/out/bank1_credits_scene_regen_ppu_state.json",
+    "preview_ppm": "tools/out/bank1_credits_scene_regen.ppm"
+  }
+}

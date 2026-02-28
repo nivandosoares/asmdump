@@ -53,6 +53,7 @@ New useful state beyond the original plan:
 - the `Ballistic presents` splash now has a deterministic entry anchor at frame `654`
 - the `L00A35A -> 01:A39C` path is identified as a palette-driven BG attract state, not a sprite-heavy scene
 - the SDL runtime can now play sampled intro/front-end scene manifests built from extracted `VRAM + CGRAM + PPU state`
+- the SDL runtime can now also auto-load optional `oam.bin` data for extracted SNES scenes and composite OBJ sprites
 - the first native front-end clip now exists in two forms:
   - a measured reference clip derived from deterministic screenshots
   - a ROM-derived clip generated from the helper-scene CGRAM plus the `A39C` `04:99ED` ramp
@@ -60,12 +61,19 @@ New useful state beyond the original plan:
   - it keeps the indexed Ballistic image compact
   - it rebuilds the visible palette from helper-scene CGRAM plus the live `A39C` ramp logic at runtime
 - the first full no-input attract loop is now playable in the SDL runtime as an exact sampled image sequence (`1418` frames, repeating from `654 -> 2072`)
-- the current best intro-loop runtime artifact is a hybrid manifest: direct runtime `ballistic_a39c` Ballistic (`654..958`) followed by sampled image playback for the later attract states
+- the current best intro-loop runtime artifact is a hybrid manifest:
+  - direct runtime `ballistic_a39c` Ballistic (`654..958`)
+  - native OAM-aware `snes_bg` replacement for the first stable post-Ballistic window (`978..985`)
+  - sampled image playback for the remaining later attract states
+- there is now also a repeatable experimental ROM-side `L00A00C` builder:
+  - it applies the direct setup uploads onto seeded `VRAM/CGRAM`
+  - it is useful for iterating on the `958..977` bootstrap
+  - it is not exact yet, which narrows the missing behavior to more than the obvious direct uploads
 
 Immediate next focus:
 
 1. Replace the later sampled attract segments with native front-end state machines one callback family at a time.
-2. Convert the next attract segments after frame `958` into native callback/state playback, starting with the `01:9D69 -> 01:9FE5` handoff.
+2. Push backward into the unstable `958..977` bootstrap using the new repeatable `L00A00C` scene builder and the carry-over state model from the end of Ballistic.
 3. Keep building standalone extraction formats so later artist/mod tooling can sit on stable data instead of volatile reverse-engineering experiments.
 
 ## Delivery Phases

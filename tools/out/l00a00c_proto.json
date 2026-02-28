@@ -1,0 +1,86 @@
+{
+  "9aed_len": 902,
+  "9aed_summary": {
+    "format": "42FB",
+    "declared_output_size": 902,
+    "root_index": 175,
+    "node_count": 9,
+    "node_table_offset": 11,
+    "compressed_stream_offset": 38,
+    "compressed_bytes_consumed": 263,
+    "nodes": [
+      {
+        "node_index": 176,
+        "left": 0,
+        "right": 0
+      },
+      {
+        "node_index": 177,
+        "left": 176,
+        "right": 176
+      },
+      {
+        "node_index": 178,
+        "left": 177,
+        "right": 177
+      },
+      {
+        "node_index": 179,
+        "left": 178,
+        "right": 178
+      },
+      {
+        "node_index": 180,
+        "left": 179,
+        "right": 179
+      },
+      {
+        "node_index": 181,
+        "left": 180,
+        "right": 180
+      },
+      {
+        "node_index": 182,
+        "left": 177,
+        "right": 176
+      },
+      {
+        "node_index": 183,
+        "left": 181,
+        "right": 181
+      },
+      {
+        "node_index": 184,
+        "left": 182,
+        "right": 0
+      }
+    ]
+  },
+  "9bf5_len": 11200,
+  "9bf5_summary": {
+    "format": "26FB",
+    "declared_output_size": 11200,
+    "initial_state": 21,
+    "special_symbol": 16,
+    "special_short_bits": null,
+    "group_count": 4,
+    "total_symbol_count": 7,
+    "short_slots_used": 256,
+    "counts": [
+      0,
+      2,
+      3,
+      2
+    ],
+    "long_bases": [],
+    "long_limits": [],
+    "compressed_stream_offset": 8,
+    "compressed_bytes_consumed": 3488,
+    "decode_steps": 11200,
+    "end_marker_hit": false
+  },
+  "palette_bank": 4,
+  "palette_addr": "0xa4fe",
+  "palette_dest": "0x0",
+  "palette_count": 128
+}

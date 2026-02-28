@@ -408,7 +408,8 @@ Current implementation status:
 - `tools/out/ballistic_callback_sequence.txt` is the current direct runtime Ballistic callback clip
 - `tools/out/intro_loop_hybrid_sequence.txt` is the current best no-input intro-loop runtime manifest:
   - direct runtime Ballistic callback for `654..958`
-  - sampled `image` playback for the later attract states
+  - native OAM-aware `snes_bg` playback for `978..985`
+  - sampled `image` playback for the later attract states before and after that splice
 - the manifest collapses identical adjacent screenshots, reducing `355` captured frames to `226` playback entries while preserving the full `1418` frames of runtime duration
 
 Current post-Ballistic boundary for the next native replacement:
@@ -416,16 +417,36 @@ Current post-Ballistic boundary for the next native replacement:
 - the `958..974` block is still the unstable bootstrap side of `L00A00C -> 01:9D69 -> 01:9FE5`
   - frame `958` reconstructed from extracted `VRAM + CGRAM + PPU state` is not usable yet (`100%` mismatch in the current runtime path)
   - frame `974` is also not yet a clean extracted-state target
+- the static sampled image in that bootstrap block is real:
+  - frame `958` and frame `974` screenshots compare exactly against each other
+  - this means the visible bootstrap window is stable even though the live extracted state is not
 - frame `978` is the first practical stable target after the handoff:
   - runtime reconstruction from extracted SNES state compares at `4` pixels (`0.006975%`) against the sampled screenshot
+- the SDL runtime now also supports optional OAM/OBJ composition for extracted SNES scenes:
+  - on a full Mesen frame dump, frame `978` lands at `2` pixels (`0.003488%`) against `main_visible.ppm`
+  - frame `990` still lands at `623` pixels (`1.086426%`) against `main_visible.ppm`
+  - this makes the reading sharper: OAM is part of the path now, but not the whole missing piece on the later attract frames
 - later frames in that attract path begin to drift again under the current renderer:
   - frame `986`: `23` pixels (`0.040109%`)
   - frame `990`: `1295` pixels (`2.258301%`)
   - frame `994`: `2781` pixels (`4.849679%`)
 - practical reading:
-  - the smallest next replacement candidate is the `978..985` block
+  - the `978..985` block is now promoted into the hybrid intro loop
   - the earlier `958..977` path still wants a deeper ROM-side scene/bootstrap builder
   - the later drift points toward missing OBJ or another presentation nuance on top of the Mode 7 BG path
+- current concrete artifact:
+  - `tools/out/intro_native_978/sequence.txt` is the promoted OAM-aware splice source for that `978..985` window
+  - `tools/build_bank1_l00a00c_scene.py` is the current experimental builder for `L00A00C`
+  - `tools/out/bank1_l00a00c_scene.ppm` is the seeded `954 -> L00A00C -> 974-template` prototype output
+  - current promoted-hybrid validation is:
+    - offset `320` / source frame `974`: exact
+    - offset `324` / source frame `978`: `3` pixels (`0.005232%`)
+    - offset `328` / source frame `982`: `4` pixels (`0.006975%`)
+    - offset `676` / source frame `1330`: exact
+- the latest bootstrap findings are narrower now:
+  - rerunning the probe at `958` and `974` with start-of-frame dumps does not help; both start-frame and end-frame renders still land at `100%` mismatch
+  - an experimental ROM-side `L00A00C` builder seeded from frame `954` VRAM/CGRAM and rendered with the stable `974` PPU template is also still `100%` mismatched
+  - that points to missing bootstrap behavior beyond the obvious direct uploads (`04:9AED`, `04:9BF5`, and `L00A9F2(1)`), not just a bad capture boundary
 
 ## Existing Tooling Hook
 

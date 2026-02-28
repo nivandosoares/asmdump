@@ -1,0 +1,49 @@
+{
+  "rom": "/home/nivando-soares/asmdump/game.smc",
+  "start_frame": 978,
+  "end_frame": 982,
+  "step": 4,
+  "collapse_identical": true,
+  "manifest": "sequence.txt",
+  "frames_requested": [
+    978,
+    982
+  ],
+  "playback_entries": [
+    {
+      "type": "snes_bg",
+      "duration_frames": 4,
+      "frame": 978,
+      "dir": "frame_00978",
+      "source_frames": [
+        978
+      ],
+      "oam": "frame_00978/oam.bin"
+    },
+    {
+      "type": "snes_bg",
+      "duration_frames": 4,
+      "frame": 982,
+      "dir": "frame_00982",
+      "source_frames": [
+        982
+      ],
+      "oam": "frame_00982/oam.bin"
+    }
+  ],
+  "extracted_entries": [
+    {
+      "frame": 978,
+      "dir": "frame_00978",
+      "hash": "7f8351ef8ef6bb1f2d2e0b9e12b78e7ddd3e04f6315a49221bd948855fd6e250",
+      "oam": "frame_00978/oam.bin"
+    },
+    {
+      "frame": 982,
+      "dir": "frame_00982",
+      "hash": "571503623553e02fb9efeab88dd234acdcd7347efe7fdeda6bdc0ec4ce2571c2",
+      "oam": "frame_00982/oam.bin"
+    }
+  ],
+  "total_duration_frames": 8
+}

@@ -1,0 +1,163 @@
+{
+  "scene": "bank1_L00A00C_mode7_bootstrap_experimental",
+  "source_routine": "01:A00C",
+  "notes": [
+    "Experimental ROM-side bootstrap builder for the static 958..977 post-Ballistic window.",
+    "This applies the direct L00A00C uploads onto optional VRAM/CGRAM/OAM seeds and uses a PPU-state template for visible presentation."
+  ],
+  "seeds": {
+    "vram_seeded": true,
+    "cgram_seeded": true,
+    "oam_seeded": false
+  },
+  "jobs": [
+    {
+      "helper": "L001210 -> 42FB -> L00065F",
+      "source_bank": 4,
+      "source_addr": "0x9AED",
+      "compressed_rom_offset": "0x021AED",
+      "decode": {
+        "format": "42FB",
+        "declared_output_size": 902,
+        "root_index": 175,
+        "node_count": 9,
+        "node_table_offset": 11,
+        "compressed_stream_offset": 38,
+        "compressed_bytes_consumed": 263,
+        "nodes": [
+          {
+            "node_index": 176,
+            "left": 0,
+            "right": 0
+          },
+          {
+            "node_index": 177,
+            "left": 176,
+            "right": 176
+          },
+          {
+            "node_index": 178,
+            "left": 177,
+            "right": 177
+          },
+          {
+            "node_index": 179,
+            "left": 178,
+            "right": 178
+          },
+          {
+            "node_index": 180,
+            "left": 179,
+            "right": 179
+          },
+          {
+            "node_index": 181,
+            "left": 180,
+            "right": 180
+          },
+          {
+            "node_index": 182,
+            "left": 177,
+            "right": 176
+          },
+          {
+            "node_index": 183,
+            "left": 181,
+            "right": 181
+          },
+          {
+            "node_index": 184,
+            "left": 182,
+            "right": 0
+          }
+        ]
+      },
+      "apply": {
+        "helper": "L00065F",
+        "vram_word_addr": "0x0000",
+        "row_length_bytes": 32,
+        "row_count": 28,
+        "aux_header": "0x0010",
+        "payload_size": 896
+      }
+    },
+    {
+      "helper": "L001210 -> 26FB -> L00073E",
+      "source_bank": 4,
+      "source_addr": "0x9BF5",
+      "compressed_rom_offset": "0x021BF5",
+      "decode": {
+        "format": "26FB",
+        "declared_output_size": 11200,
+        "initial_state": 21,
+        "special_symbol": 16,
+        "special_short_bits": null,
+        "group_count": 4,
+        "total_symbol_count": 7,
+        "short_slots_used": 256,
+        "counts": [
+          0,
+          2,
+          3,
+          2
+        ],
+        "long_bases": [],
+        "long_limits": [],
+        "compressed_stream_offset": 8,
+        "compressed_bytes_consumed": 3488,
+        "decode_steps": 11200,
+        "end_marker_hit": false
+      },
+      "apply": {
+        "helper": "L00073E",
+        "vram_word_addr": "0x0000",
+        "length_bytes": 11200
+      }
+    },
+    {
+      "helper": "L00A9F2",
+      "helper_index": 1,
+      "source_bank": 4,
+      "source_addr": "0xA4FE",
+      "rom_offset": "0x0224FE",
+      "apply": {
+        "helper": "L000583",
+        "cgram_dest": "0x00",
+        "color_count": 128,
+        "payload_size": 256
+      }
+    }
+  ],
+  "ppu_template_overrides": {
+    "ppu.bgMode": 7,
+    "ppu.mainScreenLayers": 17,
+    "ppu.forcedBlank": false
+  },
+  "render": {
+    "mode7": {
+      "hscroll": 0,
+      "vscroll": -1,
+      "center_x": 128,
+      "center_y": 112,
+      "matrix": [
+        16384,
+        0,
+        0,
+        16448
+      ],
+      "large_map": true,
+      "fill_with_tile0": false,
+      "horizontal_mirroring": false,
+      "vertical_mirroring": false,
+      "debug_start": [
+        -2064384,
+        -1829952
+      ],
+      "debug_end": [
+        2129920,
+        -1829952
+      ]
+    },
+    "objects": null
+  }
+}

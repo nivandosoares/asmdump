@@ -11,6 +11,7 @@ Current scope:
 - palette swatch and gradient viewer
 - PPM image viewer for extracted assets
 - direct SNES BG renderer from extracted `VRAM + CGRAM + PPU state`
+- optional OBJ/OAM composition for extracted SNES scenes
 - sequence playback for extracted intro/front-end scenes
 - indexed palette-animation playback for native intro clips
 
@@ -75,9 +76,15 @@ The SNES BG path accepts either a shared prefix or explicit files:
   --snes-bg-vram ./tools/out/bank1_credits_scene_vram.bin \
   --snes-bg-cgram ./tools/out/bank1_credits_scene_cgram.bin \
   --snes-bg-state ./tools/out/bank1_credits_scene_ppu_state.json
+
+./port/build/td2_port \
+  --snes-bg-vram ./tools/out/mesen_frame978_assets/vram.bin \
+  --snes-bg-cgram ./tools/out/mesen_frame978_assets/cgram.bin \
+  --snes-bg-state ./tools/out/mesen_frame978_assets/ppu_state.json \
+  --snes-bg-oam ./tools/out/mesen_frame978_assets/oam.bin
 ```
 
-This uses the extracted VRAM/CGRAM/state directly and renders the BG layers inside the SDL runtime, without going through a prebuilt PPM.
+This uses the extracted VRAM/CGRAM/state directly and renders the BG layers inside the SDL runtime, without going through a prebuilt PPM. When an OAM dump is provided, or when a sibling `oam.bin` is present next to the VRAM dump, the runtime also composites OBJ sprites.
 
 That same path now supports Mode 7 BG scenes from live Mesen dumps:
 
@@ -91,8 +98,9 @@ That same path now supports Mode 7 BG scenes from live Mesen dumps:
 Sequence manifests are simple text files. Each line is one playback entry:
 
 ```txt
-# type duration_frames path_a [path_b path_c]
+# type duration_frames path_a [path_b path_c path_d]
 snes_bg 4 frame_00654/vram.bin frame_00654/cgram.bin frame_00654/ppu_state.json
+snes_bg 4 frame_00978/vram.bin frame_00978/cgram.bin frame_00978/ppu_state.json frame_00978/oam.bin
 indexed_anim 304 ballistic_rom/ballistic_splash.txt
 ballistic_a39c 304 ballistic_callback/ballistic_a39c.txt
 ```
@@ -105,4 +113,4 @@ The current exact no-input intro-loop milestone uses an `image` sequence built f
 image 4 intro_loop_sequence_images/frame_00654.ppm
 ```
 
-The current best intro-loop runtime artifact is `tools/out/intro_loop_hybrid_sequence.txt`: direct runtime Ballistic via `ballistic_a39c`, then sampled `image` playback for the later attract states.
+The current best intro-loop runtime artifact is `tools/out/intro_loop_hybrid_sequence.txt`: direct runtime Ballistic via `ballistic_a39c`, then a native OAM-aware `snes_bg` splice for `978..985`, then sampled `image` playback for the remaining later attract states.
