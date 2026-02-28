@@ -31,8 +31,8 @@ image 4 intro_loop_sequence_images/frame_01086.ppm
 image 4 intro_loop_sequence_images/frame_01090.ppm
 image 4 intro_loop_sequence_images/frame_01094.ppm
 image 4 intro_loop_sequence_images/frame_01098.ppm
-image 4 intro_loop_sequence_images/frame_01102.ppm
-image 64 intro_loop_sequence_images/frame_01106.ppm
+image 64 intro_loop_sequence_images/frame_01102.ppm
+image 4 intro_loop_sequence_images/frame_01166.ppm
 image 4 intro_loop_sequence_images/frame_01170.ppm
 image 4 intro_loop_sequence_images/frame_01174.ppm
 image 4 intro_loop_sequence_images/frame_01178.ppm
@@ -146,7 +146,6 @@ image 4 intro_loop_sequence_images/frame_01678.ppm
 image 4 intro_loop_sequence_images/frame_01682.ppm
 image 4 intro_loop_sequence_images/frame_01686.ppm
 image 4 intro_loop_sequence_images/frame_01690.ppm
-image 4 intro_loop_sequence_images/frame_01694.ppm
-image 48 intro_loop_sequence_images/frame_01698.ppm
+image 52 intro_loop_sequence_images/frame_01694.ppm
 image 300 intro_loop_sequence_images/frame_01746.ppm
 image 26 intro_loop_sequence_images/frame_02046.ppm

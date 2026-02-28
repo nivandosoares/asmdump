@@ -10,7 +10,7 @@ Current asset:
 - `run_mesen_probe_boot.sh`: convenience wrapper around the generic launcher for the boot probe
 - `mesen_dump_bg_range.lua`: single-run range dumper for `VRAM + CGRAM + PPU state` and optional screenshots on selected frames
 - `run_mesen_dump_bg_range.sh`: convenience wrapper around the generic launcher for that range dumper
-- `mesen_scanline_step_test.lua`: an experimental scanline-step probe that uses `emu.step(..., ppuScanline)` plus `codeBreak` to sample `emu.getState()` once per visible scanline on a target frame
+- `mesen_scanline_step_test.lua`: an experimental scanline-step probe that uses `emu.step(..., ppuScanline)` plus `codeBreak` to sample `emu.getState()` once per visible scanline on a target frame, including the current `ppu.mode7.matrix[*]`, scroll, and center values
 
 Expected workflow:
 
@@ -285,7 +285,92 @@ That extra dump tightened the bootstrap reading:
   - current compare vs the real frame `986` target: `958` mismatched pixels (`1.670619%`)
   - disabling OBJ on the same derived scene yields `tools/out/bank1_bootstrap_queue_986_noobj.ppm`
   - current compare with OBJ disabled: `21` mismatched pixels (`0.036621%`)
+  - overriding OBJ with the clean Mesen bridge OAM yields `tools/out/bank1_bootstrap_queue_986_bridgeoverride.ppm`
+  - current compare with bridge OAM override: `21` mismatched pixels (`0.036621%`)
   - practical reading: queued VRAM plus staged OAM is enough for the frame-`986` BG path too; the remaining regression is concentrated in Mode 7 OBJ composition
+  - the concrete late-frame OAM finding is:
+    - probe OAM and bridge OAM match exactly at frames `978` and `982`
+    - they diverge at frame `986` by `21` bytes
+    - they diverge at frame `990` by `75` bytes
+    - the bad Mode 7 OBJ overlay tracks the probe OAM dump, not the bridge OAM dump
+- `tools/out/intro_bootstrap_986_990_queue.json`
+  - frame `990` still runs `01:9FE5` and carries the next WRAM queue delta forward from the bridge-accurate `986` seed
+  - applying that queue onto `tools/out/bank1_bootstrap_queue_986_bridgeoverride_vram.bin` with clean bridge OAM yields `tools/out/bank1_bootstrap_queue_990_bridgeobj.ppm`
+  - current compare vs the real frame `990` screenshot: `1518` mismatched pixels (`2.647182%`)
+  - current compare vs Mesen `main_visible.ppm`: `2` mismatched pixels (`0.003488%`)
+  - practical reading: the queue-driven attract path can now advance natively through frame `990` when measured against extracted Mesen scene output, but the final-screen gap after frame `982` is still open
+- bridge-visible late attract modeling now goes further than the queue replay path:
+  - bridge frame extracts for `991..997` show that the visible Mode 7 buffers at `0x4920` and `0x49A0` rotate among three ROM chunks (`1A:AA10`, `1A:AB58`, `1A:ACA0`) instead of exposing the last traced DMA stream directly
+  - `tools/build_mode7_source_scene.py` captures that model by seeding from bridge frame `990` VRAM and patching those two visible regions from ROM
+  - resulting validation against Mesen `main_visible.ppm`:
+    - `tools/out/bank1_mode7_visible_991.ppm`: `4` mismatched pixels
+    - `tools/out/bank1_mode7_visible_992.ppm`: `4` mismatched pixels
+    - `tools/out/bank1_mode7_visible_993.ppm`: `4` mismatched pixels
+    - `tools/out/bank1_mode7_visible_994.ppm`: `4` mismatched pixels
+    - `tools/out/bank1_mode7_visible_995.ppm`: `4` mismatched pixels
+    - `tools/out/bank1_mode7_visible_996.ppm`: `4` mismatched pixels
+    - `tools/out/bank1_mode7_visible_997.ppm`: `4` mismatched pixels
+  - practical reading: the derived bridge-visible model now closes `991..997`, but the callback-level explanation for that visible-buffer rotation is still open
+- the next aligned sampled block is now carried directly from extracted SNES state:
+  - `tools/out/mesen_range_998_1005_v1/sequence.txt`
+  - `tools/out/mesen_range_1006_1013_v1/sequence.txt`
+  - `tools/out/mesen_range_1014_1021_v1/sequence.txt`
+  - `tools/out/mesen_range_1022_1029_v1/sequence.txt`
+  - `tools/out/mesen_range_1030_1037_v1/sequence.txt`
+  - `tools/out/mesen_range_1038_1045_v1/sequence.txt`
+  - `tools/out/mesen_range_1046_1053_v1/sequence.txt`
+  - `tools/out/mesen_range_1054_1061_v1/sequence.txt`
+  - `tools/out/mesen_range_1062_1069_v1/sequence.txt`
+  - `tools/out/mesen_range_1070_1077_v1/sequence.txt`
+  - `tools/out/mesen_range_1078_1085_v1/sequence.txt`
+  - `tools/out/mesen_range_1086_1093_v1/sequence.txt`
+  - probe-confirmed callback continuity:
+    - frame `998`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 2`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 152`
+    - frame `1005`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 3`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 208`
+    - frame `1013`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 8`
+    - frame `1014`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 2`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 16`
+    - frame `1021`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 32`
+    - frame `1022`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 32`
+    - frame `1029`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 40`
+    - frame `1037`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 56`
+    - frame `1045`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 72`
+    - frame `1053`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0208 = 13`, `$020A = $9CC3`, `$0054 = 88`
+    - frame `1061`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0206 = 9`, `$0208 = 13`, `$020A = $9CC3`, `$040A = 14`, `$0054 = 104`
+    - frame `1069`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0206 = 11`, `$0208 = 13`, `$020A = $9CC3`, `$040A = 16`, `$0054 = 120`
+    - frame `1077`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0206 = 13`, `$0208 = 13`, `$020A = $9CC3`, `$040A = 17`, `$0054 = 128`
+    - frame `1085`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0206 = 13`, `$0208 = 13`, `$020A = $9CC3`, `$040A = 17`, `$0054 = 128`
+    - frame `1093`: `active_main = 01:9FE5`, `$0202 = 1`, `$0204 = 1`, `$0206 = 13`, `$0208 = 13`, `$020A = $9CC3`, `$040A = 17`, `$0054 = 128`
+  - SDL playback from `tools/out/intro_loop_hybrid_bridge_visible_sequence.txt` compares against Mesen `main_visible.ppm` at:
+    - frame `998`: `4` mismatched pixels
+    - frame `999`: `4` mismatched pixels
+    - frame `1000`: `2` mismatched pixels
+    - frame `1001`: `4` mismatched pixels
+    - frame `1002`: `4` mismatched pixels
+    - frame `1003`: `4` mismatched pixels
+    - frame `1004`: `4` mismatched pixels
+    - frame `1005`: `4` mismatched pixels
+    - frame `1006`: `6` mismatched pixels
+    - frame `1007`: `6` mismatched pixels
+    - frame `1008`: `6` mismatched pixels
+    - frame `1009`: `6` mismatched pixels
+    - frame `1010`: `6` mismatched pixels
+    - frame `1011`: `8` mismatched pixels
+    - frame `1012`: `8` mismatched pixels
+    - frame `1013`: `10` mismatched pixels
+    - frames `1014..1021`: `10` mismatched pixels each
+    - frames `1022..1023`: `10` mismatched pixels each
+    - frames `1024..1025`: `8` mismatched pixels each
+    - frames `1026..1029`: `11` mismatched pixels each
+    - frames `1030..1037`: `0, 0, 0, 0, 4, 3, 0, 0` mismatched pixels each
+    - frames `1038..1045`: `6, 6, 9, 12, 13, 11, 16, 15` mismatched pixels each
+    - frames `1046..1053`: `13, 13, 16, 18, 18, 18, 17, 14` mismatched pixels each
+    - frames `1054..1061`: `14, 14, 15, 16, 19, 20, 21, 22` mismatched pixels each
+    - frames `1062..1069`: `25, 26, 26, 21, 26, 23, 23, 25` mismatched pixels each
+    - frames `1070..1077`: `29, 27, 26, 28, 34, 33, 39, 32` mismatched pixels each
+    - frames `1078..1085`: `41, 41, 47, 47, 58, 63, 60, 69` mismatched pixels each
+    - frames `1086..1093`: `89, 92, 89, 90, 102, 115, 144, 129` mismatched pixels each
+  - the SDL runtime now uses the scanline-accurate `mode7-ppu` object compositor for Mode 7 `snes_bg` playback, which is what closed the `1022/1023/1025` regression window
+  - practical reading: bridge-visible native coverage now extends through frame `1093`, and `998..1093` are still inside the same `01:9FE5` family as the derived `991..997` window, but the mismatch ramp from `1078..1093` suggests a later composition detail is becoming more important
 
 The probe now also writes a second PPU-memory snapshot at the start of the sampled frame when `TD2_BOOT_PROBE_DUMP_PPU_MEMORY=1` is enabled:
 
@@ -363,6 +448,36 @@ Current reading from that probe:
 - `ppu.bgMode = 7` and `ppu.mainScreenLayers = 0x11` remain stable across the sampled frame
 - `ppu.mode7.matrix[0] = 256`, `ppu.mode7.matrix[3] = 257`, `ppu.mode7.hscroll = 0`, `ppu.mode7.vscroll = 8191` remain stable across the sampled frame
 - this makes a scanline-varying Mode 7 register state much less likely as the primary explanation for the remaining frame-`1200` mismatch
+
+The same scanline-step path now also has a repeatable range wrapper for the next bridge-visible frontier:
+
+```sh
+python3 tools/capture_visible_mode7_range.py \
+  1094 1101 \
+  --output tools/out/visible_mode7_1094_1101.json
+python3 tools/apply_visible_mode7_samples.py \
+  tools/out/visible_mode7_1094_1101.json \
+  tools/out/mesen_range_1094_1101_v1
+```
+
+Current reading from that `1094..1101` visible-state pass:
+
+- the captured visible `M7A/M7D` pairs are:
+  - `1094`: `1152 / 1028`
+  - `1095`: `1024 / 1028`
+  - `1096`: `896 / 771`
+  - `1097`: `768 / 771`
+  - `1098`: `640 / 514`
+  - `1099`: `512 / 514`
+  - `1100`: `384 / 257`
+  - `1101`: `256 / 257`
+- those visible values do not match the direct bridge-extracted `ppu_state.json` files for the same frames
+- however, applying those visible values onto the extracted `1094..1101` frame states yields much worse `main_visible` compares:
+  - frames `1094..1101`: `362, 414, 606, 700, 1244, 1515, 3962, 5930` mismatched pixels
+- a focused boot probe at frame `1094` confirms that the probe `startframe` snapshot already carries the same visible `M7A/M7D = 1152 / 1028` pair and still renders at `362` mismatched pixels against the extracted `main_visible`
+- practical reading:
+  - the late-attract frontier after `1093` is not blocked by a simple stale end-of-frame `ppu_state` alone
+  - native bridge-visible coverage should therefore stay promoted only through `1093` until the wider composition/export nuance is explained
 
 The current OBJ experiments line up with that reading:
 

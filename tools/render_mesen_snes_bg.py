@@ -22,6 +22,7 @@ OAM_SIZE_TABLE = (
     ((2, 4), (4, 4)),
 )
 MODE7_SPRITE_PRIORITIES = (2, 4, 6, 7)
+MODE7_OBJECT_PRIORITY_GROUPS = (1, 2, 3)
 
 
 def normalize_scroll(value: int) -> int:
@@ -651,7 +652,14 @@ def main() -> int:
             if args.obj_renderer == "mode7-ppu":
                 obj_summary = render_mode7_objects_ppu_accurate(rgb, vram, oam, cgram, state)
             else:
-                obj_summary = render_objects(rgb, vram, oam, cgram, state, priority_groups={1, 2, 3})
+                obj_summary = render_objects(
+                    rgb,
+                    vram,
+                    oam,
+                    cgram,
+                    state,
+                    priority_groups=set(MODE7_OBJECT_PRIORITY_GROUPS),
+                )
     else:
         for layer_index in range(2, -1, -1):
             if layer_enabled(main_screen_layers, layer_index):

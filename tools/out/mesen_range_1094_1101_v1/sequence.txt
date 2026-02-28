@@ -1,0 +1,9 @@
+# type duration_frames vram_path cgram_path ppu_state_path [oam_path]
+snes_bg 1 frame_01094/vram.bin frame_01094/cgram.bin frame_01094/ppu_state.json frame_01094/oam.bin
+snes_bg 1 frame_01095/vram.bin frame_01095/cgram.bin frame_01095/ppu_state.json frame_01095/oam.bin
+snes_bg 1 frame_01096/vram.bin frame_01096/cgram.bin frame_01096/ppu_state.json frame_01096/oam.bin
+snes_bg 1 frame_01097/vram.bin frame_01097/cgram.bin frame_01097/ppu_state.json frame_01097/oam.bin
+snes_bg 1 frame_01098/vram.bin frame_01098/cgram.bin frame_01098/ppu_state.json frame_01098/oam.bin
+snes_bg 1 frame_01099/vram.bin frame_01099/cgram.bin frame_01099/ppu_state.json frame_01099/oam.bin
+snes_bg 1 frame_01100/vram.bin frame_01100/cgram.bin frame_01100/ppu_state.json frame_01100/oam.bin
+snes_bg 1 frame_01101/vram.bin frame_01101/cgram.bin frame_01101/ppu_state.json frame_01101/oam.bin

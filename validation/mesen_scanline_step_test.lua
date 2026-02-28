@@ -100,9 +100,13 @@ local function on_code_break()
         bg_mode = snapshot["ppu.bgMode"],
         main_layers = snapshot["ppu.mainScreenLayers"],
         m7a = snapshot["ppu.mode7.matrix[0]"],
+        m7b = snapshot["ppu.mode7.matrix[1]"],
+        m7c = snapshot["ppu.mode7.matrix[2]"],
         m7d = snapshot["ppu.mode7.matrix[3]"],
         hscroll = snapshot["ppu.mode7.hscroll"],
         vscroll = snapshot["ppu.mode7.vscroll"],
+        center_x = snapshot["ppu.mode7.centerX"],
+        center_y = snapshot["ppu.mode7.centerY"],
     }
 
     if #state.samples >= max_scanline_samples then

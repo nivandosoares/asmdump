@@ -40,6 +40,7 @@ local config = {
     dump_wram_memory = env_number("TD2_BOOT_PROBE_DUMP_WRAM_MEMORY", 0) ~= 0,
     trace_mode7_writes = env_number("TD2_BOOT_PROBE_TRACE_MODE7", 0) ~= 0,
     trace_dma_writes = env_number("TD2_BOOT_PROBE_TRACE_DMA", 0) ~= 0,
+    trace_vram_writes = env_number("TD2_BOOT_PROBE_TRACE_VRAM", 0) ~= 0,
     savestate_filename = "seed_state.bin"
 }
 
@@ -65,6 +66,7 @@ local state = {
     entries = {},
     mode7_writes = {},
     dma_writes = {},
+    vram_writes = {},
     savestate_attempted = false,
     exec_callback_ref = nil
 }
@@ -128,6 +130,16 @@ local tracked_registers = {
 local dma_register_names = {
     [0x420B] = "DMAEN",
     [0x420C] = "HDMAEN"
+}
+
+local vram_register_names = {
+    [0x2115] = "VMAIN",
+    [0x2116] = "VMADDL",
+    [0x2117] = "VMADDH",
+    [0x2118] = "VMDATAL",
+    [0x2119] = "VMDATAH",
+    [0x2121] = "CGADD",
+    [0x2122] = "CGDATA"
 }
 
 for channel = 0, 7 do
@@ -371,12 +383,28 @@ local function save_dma_trace()
     write_text_file(output_prefix .. "_dma_writes.json", encode_json_value(output, ""))
 end
 
+local function save_vram_trace()
+    if not config.trace_vram_writes then
+        return
+    end
+
+    local output = {
+        screenshot_frame = config.screenshot_frame,
+        total_frames = config.total_frames,
+        trace_start_frame = config.trace_start_frame,
+        trace_end_frame = config.trace_end_frame,
+        writes = state.vram_writes
+    }
+    write_text_file(output_prefix .. "_vram_writes.json", encode_json_value(output, ""))
+end
+
 local function reset_probe_state()
     state.frame = 0
     state.finished = false
     state.entries = {}
     state.mode7_writes = {}
     state.dma_writes = {}
+    state.vram_writes = {}
 end
 
 local function on_first_exec()
@@ -430,6 +458,7 @@ local function on_end_frame()
         save_probe_log()
         save_mode7_trace()
         save_dma_trace()
+        save_vram_trace()
         state.finished = true
         emu.displayMessage("TD2 Boot Probe", "Probe finished. Files written to " .. output_prefix .. ".*")
         emu.stop(0)
@@ -487,6 +516,26 @@ local function on_dma_register_write(address, value)
     }
 end
 
+local function on_vram_register_write(address, value)
+    if state.finished or not config.trace_vram_writes or not is_trace_frame() then
+        return
+    end
+
+    local snapshot = emu.getState()
+    state.vram_writes[#state.vram_writes + 1] = {
+        frame = state.frame,
+        address = address,
+        register = vram_register_names[address] or string.format("$%04X", address),
+        value = value,
+        scanline = snapshot["ppu.scanline"],
+        bg_mode = snapshot["ppu.bgMode"],
+        main_screen_layers = snapshot["ppu.mainScreenLayers"],
+        main_addr = read_u16(0x000038),
+        main_bank = read_u8(0x00003A),
+        dp_0054 = read_u8(0x000054)
+    }
+end
+
 local function on_input_polled()
     if state.finished then
         return
@@ -517,4 +566,8 @@ end
 if config.trace_dma_writes then
     emu.addMemoryCallback(on_dma_register_write, emu.callbackType.write, 0x420B, 0x420C)
     emu.addMemoryCallback(on_dma_register_write, emu.callbackType.write, 0x4300, 0x437A)
+end
+if config.trace_vram_writes then
+    emu.addMemoryCallback(on_vram_register_write, emu.callbackType.write, 0x2115, 0x2119)
+    emu.addMemoryCallback(on_vram_register_write, emu.callbackType.write, 0x2121, 0x2122)
 end
