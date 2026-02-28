@@ -1,0 +1,389 @@
+{
+  "format": "42FB",
+  "declared_output_size": 2048,
+  "root_index": 5,
+  "node_count": 71,
+  "node_table_offset": 11,
+  "compressed_stream_offset": 224,
+  "compressed_bytes_consumed": 849,
+  "nodes": [
+    {
+      "node_index": 7,
+      "left": 0,
+      "right": 0
+    },
+    {
+      "node_index": 10,
+      "left": 7,
+      "right": 7
+    },
+    {
+      "node_index": 11,
+      "left": 10,
+      "right": 10
+    },
+    {
+      "node_index": 13,
+      "left": 34,
+      "right": 204
+    },
+    {
+      "node_index": 15,
+      "left": 11,
+      "right": 11
+    },
+    {
+      "node_index": 19,
+      "left": 8,
+      "right": 48
+    },
+    {
+      "node_index": 20,
+      "left": 7,
+      "right": 0
+    },
+    {
+      "node_index": 21,
+      "left": 50,
+      "right": 204
+    },
+    {
+      "node_index": 22,
+      "left": 15,
+      "right": 15
+    },
+    {
+      "node_index": 23,
+      "left": 13,
+      "right": 13
+    },
+    {
+      "node_index": 26,
+      "left": 4,
+      "right": 120
+    },
+    {
+      "node_index": 27,
+      "left": 19,
+      "right": 19
+    },
+    {
+      "node_index": 29,
+      "left": 2,
+      "right": 252
+    },
+    {
+      "node_index": 31,
+      "left": 16,
+      "right": 96
+    },
+    {
+      "node_index": 37,
+      "left": 134,
+      "right": 120
+    },
+    {
+      "node_index": 39,
+      "left": 4,
+      "right": 24
+    },
+    {
+      "node_index": 40,
+      "left": 10,
+      "right": 0
+    },
+    {
+      "node_index": 42,
+      "left": 26,
+      "right": 21
+    },
+    {
+      "node_index": 43,
+      "left": 32,
+      "right": 192
+    },
+    {
+      "node_index": 44,
+      "left": 22,
+      "right": 22
+    },
+    {
+      "node_index": 45,
+      "left": 255,
+      "right": 255
+    },
+    {
+      "node_index": 47,
+      "left": 124,
+      "right": 20
+    },
+    {
+      "node_index": 51,
+      "left": 12,
+      "right": 48
+    },
+    {
+      "node_index": 52,
+      "left": 31,
+      "right": 31
+    },
+    {
+      "node_index": 53,
+      "left": 18,
+      "right": 108
+    },
+    {
+      "node_index": 54,
+      "left": 4,
+      "right": 248
+    },
+    {
+      "node_index": 55,
+      "left": 13,
+      "right": 37
+    },
+    {
+      "node_index": 58,
+      "left": 24,
+      "right": 96
+    },
+    {
+      "node_index": 59,
+      "left": 130,
+      "right": 124
+    },
+    {
+      "node_index": 61,
+      "left": 20,
+      "right": 42
+    },
+    {
+      "node_index": 64,
+      "left": 39,
+      "right": 39
+    },
+    {
+      "node_index": 71,
+      "left": 2,
+      "right": 12
+    },
+    {
+      "node_index": 73,
+      "left": 19,
+      "right": 56
+    },
+    {
+      "node_index": 74,
+      "left": 29,
+      "right": 254
+    },
+    {
+      "node_index": 75,
+      "left": 44,
+      "right": 44
+    },
+    {
+      "node_index": 77,
+      "left": 21,
+      "right": 23
+    },
+    {
+      "node_index": 78,
+      "left": 43,
+      "right": 43
+    },
+    {
+      "node_index": 79,
+      "left": 45,
+      "right": 45
+    },
+    {
+      "node_index": 80,
+      "left": 48,
+      "right": 192
+    },
+    {
+      "node_index": 81,
+      "left": 6,
+      "right": 248
+    },
+    {
+      "node_index": 83,
+      "left": 2,
+      "right": 124
+    },
+    {
+      "node_index": 84,
+      "left": 21,
+      "right": 13
+    },
+    {
+      "node_index": 86,
+      "left": 51,
+      "right": 58
+    },
+    {
+      "node_index": 87,
+      "left": 55,
+      "right": 47
+    },
+    {
+      "node_index": 88,
+      "left": 56,
+      "right": 20
+    },
+    {
+      "node_index": 89,
+      "left": 114,
+      "right": 12
+    },
+    {
+      "node_index": 90,
+      "left": 1,
+      "right": 254
+    },
+    {
+      "node_index": 91,
+      "left": 59,
+      "right": 126
+    },
+    {
+      "node_index": 92,
+      "left": 62,
+      "right": 192
+    },
+    {
+      "node_index": 94,
+      "left": 34,
+      "right": 220
+    },
+    {
+      "node_index": 95,
+      "left": 36,
+      "right": 216
+    },
+    {
+      "node_index": 97,
+      "left": 48,
+      "right": 19
+    },
+    {
+      "node_index": 98,
+      "left": 57,
+      "right": 198
+    },
+    {
+      "node_index": 99,
+      "left": 73,
+      "right": 0
+    },
+    {
+      "node_index": 101,
+      "left": 24,
+      "right": 86
+    },
+    {
+      "node_index": 103,
+      "left": 27,
+      "right": 88
+    },
+    {
+      "node_index": 104,
+      "left": 60,
+      "right": 192
+    },
+    {
+      "node_index": 105,
+      "left": 72,
+      "right": 48
+    },
+    {
+      "node_index": 106,
+      "left": 238,
+      "right": 20
+    },
+    {
+      "node_index": 107,
+      "left": 4,
+      "right": 56
+    },
+    {
+      "node_index": 109,
+      "left": 12,
+      "right": 6
+    },
+    {
+      "node_index": 110,
+      "left": 23,
+      "right": 37
+    },
+    {
+      "node_index": 111,
+      "left": 29,
+      "right": 92
+    },
+    {
+      "node_index": 113,
+      "left": 33,
+      "right": 198
+    },
+    {
+      "node_index": 115,
+      "left": 40,
+      "right": 42
+    },
+    {
+      "node_index": 116,
+      "left": 59,
+      "right": 89
+    },
+    {
+      "node_index": 117,
+      "left": 81,
+      "right": 252
+    },
+    {
+      "node_index": 121,
+      "left": 147,
+      "right": 108
+    },
+    {
+      "node_index": 122,
+      "left": 36,
+      "right": 24
+    },
+    {
+      "node_index": 123,
+      "left": 76,
+      "right": 48
+    },
+    {
+      "node_index": 125,
+      "left": 105,
+      "right": 122
+    }
+  ],
+  "bank": 2,
+  "addr": "0xF51F",
+  "rom_offset": "0x01751F",
+  "output_path": "tools/out/tmp_credits_a9cb_0.bin",
+  "output_size": 2048,
+  "first_bytes": [
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00"
+  ]
+}

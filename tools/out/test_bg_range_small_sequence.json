@@ -1,0 +1,44 @@
+{
+  "summary_json": "/home/nivando-soares/asmdump/tools/out/test_bg_range_small.json",
+  "end_frame_exclusive": 666,
+  "collapse_identical": true,
+  "entries": [
+    {
+      "type": "snes_bg",
+      "frame": 654,
+      "duration_frames": 4,
+      "hash": "49d1827cd5b715dc1d57f2df60353ee83bccfcbcb286d9be66eca6fd95eb0ddc",
+      "source_frames": [
+        654
+      ],
+      "vram": "test_bg_range_small_frame_00654_vram.bin",
+      "cgram": "test_bg_range_small_frame_00654_cgram.bin",
+      "ppu_state": "test_bg_range_small_frame_00654_ppu_state.json"
+    },
+    {
+      "type": "snes_bg",
+      "frame": 658,
+      "duration_frames": 4,
+      "hash": "40fd185257338db5f3d0374ad9bde075f5e17c94abee986704c501b03f851da3",
+      "source_frames": [
+        658
+      ],
+      "vram": "test_bg_range_small_frame_00658_vram.bin",
+      "cgram": "test_bg_range_small_frame_00658_cgram.bin",
+      "ppu_state": "test_bg_range_small_frame_00658_ppu_state.json"
+    },
+    {
+      "type": "snes_bg",
+      "frame": 662,
+      "duration_frames": 4,
+      "hash": "a2c4f195e153c681ace2b1ce390bceeb0537e56a375efa66a0bb3b8fe4f8a37c",
+      "source_frames": [
+        662
+      ],
+      "vram": "test_bg_range_small_frame_00662_vram.bin",
+      "cgram": "test_bg_range_small_frame_00662_cgram.bin",
+      "ppu_state": "test_bg_range_small_frame_00662_ppu_state.json"
+    }
+  ],
+  "total_duration_frames": 12
+}

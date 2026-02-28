@@ -12,6 +12,8 @@ The project is still in Sprint 0 / early Phase 1-3.
 What is already real:
 
 - a working C/SDL runtime skeleton exists under `port/`
+- a sampled `Ballistic presents` intro segment now plays inside that runtime from extracted SNES scene manifests
+- a full first no-input attract loop now also plays inside that runtime as an exact sampled image sequence
 - a working Mesen-based validation harness exists under `validation/`
 - the bank 0 control kernel is documented well enough to guide runtime architecture
 - the bank 1 boot/title screen build path is partially reconstructed into machine-readable manifests
@@ -22,7 +24,7 @@ What is already real:
 What is not real yet:
 
 - no gameplay has been ported
-- no true title/menu screen composition exists on the PC side yet
+- no native front-end state machine exists on the PC side yet; the current intro loop milestone is still sampled playback
 - no deterministic post-splash savestate has been added to validation
 - bank 10, bank 11, and bank 30 are not yet documented deeply enough to implement gameplay
 
@@ -38,6 +40,8 @@ Completed:
 - isolated launcher that does not rely on the user config directory
 - frame comparison tool for emulator PNG vs port PPM
 - boot-state probe script for front-end selectors
+- deterministic no-input Ballistic sample window pinned to frames `654..710`
+- deterministic full first attract-loop period pinned to `1418` frames (`654 -> 2072`)
 
 Validated outputs:
 
@@ -69,6 +73,9 @@ Completed:
 - bank 7 compression header scan
 - bank 7 `42FB` decompression
 - bank 7 boot-path `26FB` decompression
+- flat `ppu_state.json` export from the Mesen bridge for direct port/runtime consumption
+- range extraction of Mesen scene samples into line-oriented playback manifests
+- single-run screenshot-backed range extraction for exact intro-loop playback
 
 Current concrete outputs:
 
@@ -126,6 +133,8 @@ Completed:
 - palette viewer
 - extracted image viewer
 - PPM frame dumping
+- sequence playback for extracted SNES BG scenes
+- sequence playback for exact sampled image-frame manifests
 
 Still missing:
 
@@ -155,7 +164,7 @@ make -C port
 
 Current limit:
 
-The SDL runtime is still a viewer/smoke-test harness. It does not compose real SNES screens yet.
+The SDL runtime is still a validation-first viewer/compositor harness. It can now play sampled intro scenes and the full first no-input loop, but it does not yet implement native front-end state logic or gameplay.
 
 ### Track B: Content
 
@@ -170,6 +179,8 @@ Implemented in `tools/`:
 - compression header scan
 - `42FB` decoder
 - boot-path `26FB` decoder
+- Mesen scene-range extractor for intro playback manifests
+- scene-manifest builder for exact screenshot-backed intro playback
 
 Most useful make targets:
 
@@ -197,6 +208,14 @@ Important verified details:
 Current limit:
 
 The current preview path still shows planar tile sheets or raw VRAM dumps, not a final screen.
+The new intro playback manifests are useful and deterministic, but they are still sampled scene playback, not a native recreation of the front-end callbacks.
+
+Deferred requirement recorded for later phases:
+
+- once the extraction formats stabilize, add standalone visual-asset tooling for designers/modders:
+  - isolated BG/layer previews
+  - standalone asset image exports for upscale work
+  - mod-friendly asset replacement paths
 
 ### Track C: Reverse Engineering
 
@@ -239,6 +258,8 @@ TD2_BOOT_PROBE_TOTAL_FRAMES=3600 TD2_BOOT_PROBE_INPUT_START_FRAME=240 TD2_BOOT_P
 Important observed result:
 
 - the boot probe does confirm the stable defaults `$1C78 = 1` and `$1C7A = 0`
+- the Ballistic splash now has a clean exact anchor at frame `654`, where the active callback first becomes `01:A39C`
+- the first attract loop repeats every `1418` frames and currently has an exact sampled SDL playback manifest
 - the same probe does not yet reach a populated `$1CCA/$1CE*` state from pure power-on
 - after `3600` frames on the tested no-savestate path, those later selectors remained `0`
 

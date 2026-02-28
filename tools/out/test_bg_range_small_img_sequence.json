@@ -1,0 +1,41 @@
+{
+  "summary_json": "/home/nivando-soares/asmdump/tools/out/test_bg_range_small_img.json",
+  "end_frame_exclusive": 666,
+  "collapse_identical": true,
+  "entries": [
+    {
+      "type": "image",
+      "frame": 654,
+      "duration_frames": 4,
+      "hash": "2cbbeef1249170a43854962fa5b19fba628470c70beb9ce23e15a0f05cb891f2",
+      "source_frames": [
+        654
+      ],
+      "image": "test_bg_range_small_img_sequence_images/frame_00654.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/test_bg_range_small_img_frame_00654_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 658,
+      "duration_frames": 4,
+      "hash": "b0a700869521c1ff0ebbfa966b7d3bb071b8d9d828a91faa01e12725bc062e8c",
+      "source_frames": [
+        658
+      ],
+      "image": "test_bg_range_small_img_sequence_images/frame_00658.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/test_bg_range_small_img_frame_00658_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 662,
+      "duration_frames": 4,
+      "hash": "70d92604606b56deff4384740ea1affe6bc69dd9041a9458b2afe55d69392d12",
+      "source_frames": [
+        662
+      ],
+      "image": "test_bg_range_small_img_sequence_images/frame_00662.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/test_bg_range_small_img_frame_00662_frame.png"
+    }
+  ],
+  "total_duration_frames": 12
+}

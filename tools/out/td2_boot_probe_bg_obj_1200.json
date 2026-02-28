@@ -1,0 +1,74 @@
+{
+  "bg_mode": 7,
+  "main_screen_layers": 17,
+  "layer_states": [
+    {
+      "layer_index": 0,
+      "tilemapAddress": 0,
+      "chrAddress": 8192,
+      "doubleWidth": true,
+      "doubleHeight": false,
+      "largeTiles": false,
+      "hscroll": 0,
+      "vscroll": 1023
+    },
+    {
+      "layer_index": 1,
+      "tilemapAddress": 2048,
+      "chrAddress": 16384,
+      "doubleWidth": true,
+      "doubleHeight": false,
+      "largeTiles": false,
+      "hscroll": 0,
+      "vscroll": 1023
+    },
+    {
+      "layer_index": 2,
+      "tilemapAddress": 4096,
+      "chrAddress": 24576,
+      "doubleWidth": true,
+      "doubleHeight": false,
+      "largeTiles": false,
+      "hscroll": 0,
+      "vscroll": 1023
+    }
+  ],
+  "mode7": {
+    "hscroll": 0,
+    "vscroll": -1,
+    "center_x": 128,
+    "center_y": 112,
+    "matrix": [
+      256,
+      0,
+      0,
+      257
+    ],
+    "large_map": true,
+    "fill_with_tile0": false,
+    "horizontal_mirroring": false,
+    "vertical_mirroring": false,
+    "debug_start": [
+      0,
+      -384
+    ],
+    "debug_end": [
+      65536,
+      -384
+    ]
+  },
+  "obj": {
+    "oam_mode": 0,
+    "oam_base_address": 16384,
+    "oam_address_offset": 4096,
+    "enable_oam_priority": false,
+    "internal_oam_address": 544,
+    "priority_groups": [
+      1,
+      2,
+      3
+    ],
+    "visible_sprites": 21,
+    "drawn_pixels": 2404
+  }
+}

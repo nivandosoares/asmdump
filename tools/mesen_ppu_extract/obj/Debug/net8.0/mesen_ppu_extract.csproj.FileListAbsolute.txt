@@ -1,0 +1,15 @@
+/home/nivando-soares/asmdump/tools/mesen_ppu_extract/bin/Debug/net8.0/mesen_ppu_extract
+/home/nivando-soares/asmdump/tools/mesen_ppu_extract/bin/Debug/net8.0/mesen_ppu_extract.deps.json
+/home/nivando-soares/asmdump/tools/mesen_ppu_extract/bin/Debug/net8.0/mesen_ppu_extract.runtimeconfig.json
+/home/nivando-soares/asmdump/tools/mesen_ppu_extract/bin/Debug/net8.0/mesen_ppu_extract.dll
+/home/nivando-soares/asmdump/tools/mesen_ppu_extract/bin/Debug/net8.0/mesen_ppu_extract.pdb
+/home/nivando-soares/asmdump/tools/mesen_ppu_extract/obj/Debug/net8.0/mesen_ppu_extract.GeneratedMSBuildEditorConfig.editorconfig
+/home/nivando-soares/asmdump/tools/mesen_ppu_extract/obj/Debug/net8.0/mesen_ppu_extract.AssemblyInfoInputs.cache
+/home/nivando-soares/asmdump/tools/mesen_ppu_extract/obj/Debug/net8.0/mesen_ppu_extract.AssemblyInfo.cs
+/home/nivando-soares/asmdump/tools/mesen_ppu_extract/obj/Debug/net8.0/mesen_ppu_extract.csproj.CoreCompileInputs.cache
+/home/nivando-soares/asmdump/tools/mesen_ppu_extract/obj/Debug/net8.0/mesen_ppu_extract.sourcelink.json
+/home/nivando-soares/asmdump/tools/mesen_ppu_extract/obj/Debug/net8.0/mesen_ppu_extract.dll
+/home/nivando-soares/asmdump/tools/mesen_ppu_extract/obj/Debug/net8.0/refint/mesen_ppu_extract.dll
+/home/nivando-soares/asmdump/tools/mesen_ppu_extract/obj/Debug/net8.0/mesen_ppu_extract.pdb
+/home/nivando-soares/asmdump/tools/mesen_ppu_extract/obj/Debug/net8.0/mesen_ppu_extract.genruntimeconfig.cache
+/home/nivando-soares/asmdump/tools/mesen_ppu_extract/obj/Debug/net8.0/ref/mesen_ppu_extract.dll

@@ -43,6 +43,24 @@ That means the fastest path to a shippable port is:
 - `content/`: loaders for tracks, palettes, sprites, tilemaps, text, audio
 - `tools/`: ROM extraction, validation, diff, replay helpers
 
+## Current Milestone Update
+
+Reviewed on 2026-02-28.
+
+New useful state beyond the original plan:
+
+- the frame-`300` copyright/credits scene is an exact solved target from both live Mesen dumps and a ROM-side builder
+- the `Ballistic presents` splash now has a deterministic entry anchor at frame `654`
+- the `L00A35A -> 01:A39C` path is identified as a palette-driven BG attract state, not a sprite-heavy scene
+- the SDL runtime can now play sampled intro/front-end scene manifests built from extracted `VRAM + CGRAM + PPU state`
+- the first full no-input attract loop is now playable in the SDL runtime as an exact sampled image sequence (`1418` frames, repeating from `654 -> 2072`)
+
+Immediate next focus:
+
+1. Replace the sampled Ballistic segment with a native `L00A35A -> A39C` palette-animation state machine.
+2. Replace later sampled attract segments with native front-end state machines one callback family at a time.
+3. Keep building standalone extraction formats so later artist/mod tooling can sit on stable data instead of volatile reverse-engineering experiments.
+
 ## Delivery Phases
 
 ### Phase 0: Build a Golden Reference
@@ -84,6 +102,10 @@ Deliverables:
   - BRR sample catalog
   - music/sequence command streams if identifiable
 - JSON or binary specs for each extracted format.
+- Deferred but planned once formats stabilize:
+  - standalone visual-asset tools for designers and modders
+  - BG/layer compositors that can export isolated layers and flattened previews
+  - asset image export/import helpers suitable for upscale workflows and modded replacements
 
 Exit criteria:
 
@@ -153,6 +175,8 @@ Objective: prove the core game loop on PC.
 Scope:
 
 - splash/title flow
+  - sampled intro playback is an acceptable intermediate milestone
+  - native front-end recreation replaces sampled playback once the callback/state logic is stable
 - one playable track
 - cockpit HUD
 - player car physics
@@ -234,6 +258,7 @@ If the team cannot complete step 4 through step 7 quickly, do not start full gam
 - format specs
 - ROM tooling
 - content packaging
+- later standalone art/mod tools once the extraction specs stop moving
 
 ### Track C: Gameplay Reverse Engineering
 

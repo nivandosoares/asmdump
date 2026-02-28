@@ -28,6 +28,61 @@ typedef struct {
 } ImageData;
 
 typedef struct {
+    int tilemap_address;
+    int chr_address;
+    bool double_width;
+    bool double_height;
+    bool large_tiles;
+    int hscroll;
+    int vscroll;
+} SnesBgLayerState;
+
+typedef struct {
+    bool loaded;
+    int bg_mode;
+    int main_screen_layers;
+    bool mode7_fill_with_tile0;
+    bool mode7_horizontal_mirroring;
+    bool mode7_vertical_mirroring;
+    bool mode7_large_map;
+    int mode7_center_x;
+    int mode7_center_y;
+    int mode7_hscroll;
+    int mode7_vscroll;
+    int mode7_matrix[4];
+    uint8_t *vram;
+    size_t vram_size;
+    uint8_t *cgram;
+    size_t cgram_size;
+    uint32_t cgram_colors[256];
+    SnesBgLayerState layers[3];
+    uint8_t tile_cache[3][1024][64];
+    uint8_t tile_cache_valid[3][1024];
+} SnesBgScene;
+
+typedef enum {
+    SEQUENCE_ENTRY_SNES_BG = 1,
+    SEQUENCE_ENTRY_IMAGE = 2
+} SequenceEntryType;
+
+typedef struct {
+    SequenceEntryType type;
+    int duration_frames;
+    char *primary_path;
+    char *secondary_path;
+    char *tertiary_path;
+} SceneSequenceEntry;
+
+typedef struct {
+    bool loaded;
+    bool loop;
+    SceneSequenceEntry *entries;
+    size_t count;
+    size_t current_index;
+    int frames_remaining;
+} SceneSequence;
+
+typedef struct {
     bool running;
     bool auto_cycle;
     int auto_quit_frames;
@@ -37,6 +92,8 @@ typedef struct {
     const char *dump_prefix;
     PaletteBank palette_bank;
     ImageData image;
+    SnesBgScene snes_bg_scene;
+    SceneSequence sequence;
     int image_offset_x;
     int image_offset_y;
     uint32_t framebuffer[SCREEN_WIDTH * SCREEN_HEIGHT];
@@ -53,6 +110,52 @@ static void image_data_free(ImageData *image) {
     image->pixels = NULL;
     image->width = 0;
     image->height = 0;
+}
+
+static void scene_sequence_free(SceneSequence *sequence) {
+    if (!sequence->entries) {
+        sequence->loaded = false;
+        sequence->count = 0;
+        sequence->current_index = 0;
+        sequence->frames_remaining = 0;
+        return;
+    }
+
+    for (size_t i = 0; i < sequence->count; i++) {
+        free(sequence->entries[i].primary_path);
+        free(sequence->entries[i].secondary_path);
+        free(sequence->entries[i].tertiary_path);
+    }
+
+    free(sequence->entries);
+    sequence->entries = NULL;
+    sequence->loaded = false;
+    sequence->loop = false;
+    sequence->count = 0;
+    sequence->current_index = 0;
+    sequence->frames_remaining = 0;
+}
+
+static void snes_bg_scene_free(SnesBgScene *scene) {
+    free(scene->vram);
+    free(scene->cgram);
+    scene->vram = NULL;
+    scene->cgram = NULL;
+    scene->vram_size = 0;
+    scene->cgram_size = 0;
+    scene->loaded = false;
+    memset(scene->cgram_colors, 0, sizeof(scene->cgram_colors));
+    memset(scene->layers, 0, sizeof(scene->layers));
+    memset(scene->mode7_matrix, 0, sizeof(scene->mode7_matrix));
+    scene->mode7_fill_with_tile0 = false;
+    scene->mode7_horizontal_mirroring = false;
+    scene->mode7_vertical_mirroring = false;
+    scene->mode7_large_map = false;
+    scene->mode7_center_x = 0;
+    scene->mode7_center_y = 0;
+    scene->mode7_hscroll = 0;
+    scene->mode7_vscroll = 0;
+    memset(scene->tile_cache_valid, 0, sizeof(scene->tile_cache_valid));
 }
 
 static bool write_frame_ppm(const char *path, const uint32_t *framebuffer) {
@@ -97,6 +200,57 @@ static bool dump_frame_if_requested(const AppState *app) {
     char path[1024];
     snprintf(path, sizeof(path), "%s_%05llu.ppm", app->dump_prefix, (unsigned long long)app->rendered_frames);
     return write_frame_ppm(path, app->framebuffer);
+}
+
+static char *dup_string(const char *value) {
+    size_t length = 0;
+    char *copy = NULL;
+
+    if (!value) {
+        return NULL;
+    }
+
+    length = strlen(value);
+    copy = malloc(length + 1u);
+    if (!copy) {
+        return NULL;
+    }
+
+    memcpy(copy, value, length + 1u);
+    return copy;
+}
+
+static bool path_is_absolute(const char *path) {
+    return path && path[0] == '/';
+}
+
+static char *resolve_manifest_path(const char *manifest_path, const char *relative_path) {
+    const char *slash = NULL;
+    size_t directory_length = 0;
+    char *resolved = NULL;
+
+    if (!relative_path) {
+        return NULL;
+    }
+    if (path_is_absolute(relative_path)) {
+        return dup_string(relative_path);
+    }
+
+    slash = strrchr(manifest_path, '/');
+    if (!slash) {
+        return dup_string(relative_path);
+    }
+
+    directory_length = (size_t)(slash - manifest_path);
+    resolved = malloc(directory_length + 1u + strlen(relative_path) + 1u);
+    if (!resolved) {
+        return NULL;
+    }
+
+    memcpy(resolved, manifest_path, directory_length);
+    resolved[directory_length] = '/';
+    strcpy(resolved + directory_length + 1u, relative_path);
+    return resolved;
 }
 
 static bool read_ppm_token(FILE *file, char *buffer, size_t buffer_size) {
@@ -266,6 +420,414 @@ static bool read_entire_file(const char *path, char **out_data, size_t *out_size
     return true;
 }
 
+static const char *json_find_value_internal(const char *json, const char *key, bool log_errors) {
+    char pattern[128];
+    const char *cursor = NULL;
+
+    if (snprintf(pattern, sizeof(pattern), "\"%s\"", key) >= (int)sizeof(pattern)) {
+        if (log_errors) {
+            fprintf(stderr, "error: JSON key too long: %s\n", key);
+        }
+        return NULL;
+    }
+
+    cursor = strstr(json, pattern);
+    if (!cursor) {
+        if (log_errors) {
+            fprintf(stderr, "error: missing JSON key: %s\n", key);
+        }
+        return NULL;
+    }
+
+    cursor += strlen(pattern);
+    while (*cursor != '\0' && isspace((unsigned char)*cursor)) {
+        cursor++;
+    }
+    if (*cursor != ':') {
+        if (log_errors) {
+            fprintf(stderr, "error: malformed JSON entry for key: %s\n", key);
+        }
+        return NULL;
+    }
+    cursor++;
+    while (*cursor != '\0' && isspace((unsigned char)*cursor)) {
+        cursor++;
+    }
+
+    return cursor;
+}
+
+static const char *json_find_value(const char *json, const char *key) {
+    return json_find_value_internal(json, key, true);
+}
+
+static bool json_parse_int(const char *json, const char *key, int *out_value) {
+    const char *cursor = json_find_value(json, key);
+    char *end = NULL;
+    long value = 0;
+
+    if (!cursor) {
+        return false;
+    }
+
+    value = strtol(cursor, &end, 10);
+    if (cursor == end) {
+        fprintf(stderr, "error: expected integer value for JSON key: %s\n", key);
+        return false;
+    }
+
+    *out_value = (int)value;
+    return true;
+}
+
+static bool json_parse_bool(const char *json, const char *key, bool *out_value) {
+    const char *cursor = json_find_value(json, key);
+
+    if (!cursor) {
+        return false;
+    }
+
+    if (strncmp(cursor, "true", 4) == 0) {
+        *out_value = true;
+        return true;
+    }
+    if (strncmp(cursor, "false", 5) == 0) {
+        *out_value = false;
+        return true;
+    }
+
+    fprintf(stderr, "error: expected boolean value for JSON key: %s\n", key);
+    return false;
+}
+
+static bool json_try_parse_int(const char *json, const char *key, int *out_value) {
+    const char *cursor = json_find_value_internal(json, key, false);
+    char *end = NULL;
+    long value = 0;
+
+    if (!cursor) {
+        return false;
+    }
+
+    value = strtol(cursor, &end, 10);
+    if (cursor == end) {
+        return false;
+    }
+
+    *out_value = (int)value;
+    return true;
+}
+
+static bool json_try_parse_bool(const char *json, const char *key, bool *out_value) {
+    const char *cursor = json_find_value_internal(json, key, false);
+
+    if (!cursor) {
+        return false;
+    }
+
+    if (strncmp(cursor, "true", 4) == 0) {
+        *out_value = true;
+        return true;
+    }
+    if (strncmp(cursor, "false", 5) == 0) {
+        *out_value = false;
+        return true;
+    }
+
+    return false;
+}
+
+static bool snes_bg_scene_load_state_json(const char *path, SnesBgScene *scene) {
+    char *json = NULL;
+    size_t json_size = 0;
+    bool ok = false;
+
+    if (!read_entire_file(path, &json, &json_size)) {
+        return false;
+    }
+
+    if (!json_parse_int(json, "ppu.bgMode", &scene->bg_mode) ||
+        !json_parse_int(json, "ppu.mainScreenLayers", &scene->main_screen_layers)) {
+        goto cleanup;
+    }
+
+    (void)json_try_parse_bool(json, "ppu.mode7.fillWithTile0", &scene->mode7_fill_with_tile0);
+    (void)json_try_parse_bool(json, "ppu.mode7.horizontalMirroring", &scene->mode7_horizontal_mirroring);
+    (void)json_try_parse_bool(json, "ppu.mode7.verticalMirroring", &scene->mode7_vertical_mirroring);
+    (void)json_try_parse_bool(json, "ppu.mode7.largeMap", &scene->mode7_large_map);
+    (void)json_try_parse_int(json, "ppu.mode7.centerX", &scene->mode7_center_x);
+    (void)json_try_parse_int(json, "ppu.mode7.centerY", &scene->mode7_center_y);
+    (void)json_try_parse_int(json, "ppu.mode7.hscroll", &scene->mode7_hscroll);
+    (void)json_try_parse_int(json, "ppu.mode7.vscroll", &scene->mode7_vscroll);
+    (void)json_try_parse_int(json, "ppu.mode7.matrix[0]", &scene->mode7_matrix[0]);
+    (void)json_try_parse_int(json, "ppu.mode7.matrix[1]", &scene->mode7_matrix[1]);
+    (void)json_try_parse_int(json, "ppu.mode7.matrix[2]", &scene->mode7_matrix[2]);
+    (void)json_try_parse_int(json, "ppu.mode7.matrix[3]", &scene->mode7_matrix[3]);
+
+    for (int layer_index = 0; layer_index < 3; layer_index++) {
+        char key[64];
+        SnesBgLayerState *layer = &scene->layers[layer_index];
+
+        snprintf(key, sizeof(key), "ppu.layers[%d].tilemapAddress", layer_index);
+        if (!json_parse_int(json, key, &layer->tilemap_address)) {
+            goto cleanup;
+        }
+
+        snprintf(key, sizeof(key), "ppu.layers[%d].chrAddress", layer_index);
+        if (!json_parse_int(json, key, &layer->chr_address)) {
+            goto cleanup;
+        }
+
+        snprintf(key, sizeof(key), "ppu.layers[%d].doubleWidth", layer_index);
+        if (!json_parse_bool(json, key, &layer->double_width)) {
+            goto cleanup;
+        }
+
+        snprintf(key, sizeof(key), "ppu.layers[%d].doubleHeight", layer_index);
+        if (!json_parse_bool(json, key, &layer->double_height)) {
+            goto cleanup;
+        }
+
+        snprintf(key, sizeof(key), "ppu.layers[%d].largeTiles", layer_index);
+        if (!json_parse_bool(json, key, &layer->large_tiles)) {
+            goto cleanup;
+        }
+
+        snprintf(key, sizeof(key), "ppu.layers[%d].hscroll", layer_index);
+        if (!json_parse_int(json, key, &layer->hscroll)) {
+            goto cleanup;
+        }
+
+        snprintf(key, sizeof(key), "ppu.layers[%d].vscroll", layer_index);
+        if (!json_parse_int(json, key, &layer->vscroll)) {
+            goto cleanup;
+        }
+    }
+
+    ok = true;
+
+cleanup:
+    free(json);
+    (void)json_size;
+    return ok;
+}
+
+static bool snes_bg_scene_load(const char *vram_path, const char *cgram_path, const char *state_path, SnesBgScene *scene) {
+    char *vram_data = NULL;
+    size_t vram_size = 0;
+    char *cgram_data = NULL;
+    size_t cgram_size = 0;
+    bool ok = false;
+
+    if (!read_entire_file(vram_path, &vram_data, &vram_size)) {
+        return false;
+    }
+    if (!read_entire_file(cgram_path, &cgram_data, &cgram_size)) {
+        free(vram_data);
+        return false;
+    }
+    if (vram_size != 0x10000u) {
+        fprintf(stderr, "error: expected 65536-byte VRAM dump in %s, got %zu bytes\n", vram_path, vram_size);
+        goto cleanup;
+    }
+    if (cgram_size != 0x0200u) {
+        fprintf(stderr, "error: expected 512-byte CGRAM dump in %s, got %zu bytes\n", cgram_path, cgram_size);
+        goto cleanup;
+    }
+
+    snes_bg_scene_free(scene);
+    scene->vram = (uint8_t *)vram_data;
+    scene->cgram = (uint8_t *)cgram_data;
+    scene->vram_size = vram_size;
+    scene->cgram_size = cgram_size;
+    vram_data = NULL;
+    cgram_data = NULL;
+
+    if (!snes_bg_scene_load_state_json(state_path, scene)) {
+        goto cleanup;
+    }
+
+    for (size_t i = 0; i < 256; i++) {
+        size_t offset = i * 2u;
+        uint16_t value = (uint16_t)scene->cgram[offset] | (uint16_t)(scene->cgram[offset + 1u] << 8);
+        uint8_t red = (uint8_t)(value & 0x1fu);
+        uint8_t green = (uint8_t)((value >> 5) & 0x1fu);
+        uint8_t blue = (uint8_t)((value >> 10) & 0x1fu);
+        uint8_t rgb_red = (uint8_t)((red << 3) | (red >> 2));
+        uint8_t rgb_green = (uint8_t)((green << 3) | (green >> 2));
+        uint8_t rgb_blue = (uint8_t)((blue << 3) | (blue >> 2));
+
+        scene->cgram_colors[i] = 0xff000000u |
+                                 ((uint32_t)rgb_red << 16) |
+                                 ((uint32_t)rgb_green << 8) |
+                                 (uint32_t)rgb_blue;
+    }
+
+    memset(scene->tile_cache_valid, 0, sizeof(scene->tile_cache_valid));
+    scene->loaded = true;
+    ok = true;
+
+cleanup:
+    if (!ok) {
+        snes_bg_scene_free(scene);
+    }
+    free(vram_data);
+    free(cgram_data);
+    return ok;
+}
+
+static void app_clear_content(AppState *app) {
+    snes_bg_scene_free(&app->snes_bg_scene);
+    image_data_free(&app->image);
+    app->image_offset_x = 0;
+    app->image_offset_y = 0;
+}
+
+static bool app_load_snes_bg_scene(AppState *app, const char *vram_path, const char *cgram_path, const char *state_path) {
+    app_clear_content(app);
+    return snes_bg_scene_load(vram_path, cgram_path, state_path, &app->snes_bg_scene);
+}
+
+static bool app_load_image_view(AppState *app, const char *image_path) {
+    app_clear_content(app);
+    return image_data_load_ppm(image_path, &app->image);
+}
+
+static bool scene_sequence_load_manifest(const char *path, SceneSequence *sequence) {
+    FILE *file = NULL;
+    char line[4096];
+    SceneSequenceEntry *entries = NULL;
+    size_t count = 0;
+    size_t capacity = 0;
+    bool ok = false;
+
+    file = fopen(path, "r");
+    if (!file) {
+        fprintf(stderr, "error: failed to open sequence manifest %s: %s\n", path, strerror(errno));
+        return false;
+    }
+
+    while (fgets(line, sizeof(line), file)) {
+        char kind[32];
+        char first[2048];
+        char second[2048];
+        char third[2048];
+        long duration = 0;
+        int fields = 0;
+
+        if (line[0] == '#' || line[0] == '\n' || line[0] == '\r') {
+            continue;
+        }
+
+        memset(kind, 0, sizeof(kind));
+        memset(first, 0, sizeof(first));
+        memset(second, 0, sizeof(second));
+        memset(third, 0, sizeof(third));
+        fields = sscanf(line, "%31s %ld %2047s %2047s %2047s", kind, &duration, first, second, third);
+        if (fields < 3) {
+            fprintf(stderr, "error: malformed sequence line in %s: %s\n", path, line);
+            goto cleanup;
+        }
+        if (duration <= 0) {
+            fprintf(stderr, "error: invalid sequence duration in %s: %s\n", path, line);
+            goto cleanup;
+        }
+
+        if (count == capacity) {
+            size_t next_capacity = capacity == 0 ? 8u : capacity * 2u;
+            SceneSequenceEntry *next_entries = realloc(entries, next_capacity * sizeof(*entries));
+            if (!next_entries) {
+                fprintf(stderr, "error: out of memory growing sequence entries for %s\n", path);
+                goto cleanup;
+            }
+            entries = next_entries;
+            capacity = next_capacity;
+        }
+
+        memset(&entries[count], 0, sizeof(entries[count]));
+        entries[count].duration_frames = (int)duration;
+
+        if (strcmp(kind, "snes_bg") == 0) {
+            if (fields != 5) {
+                fprintf(stderr, "error: snes_bg entries require duration, vram, cgram, and state in %s\n", path);
+                goto cleanup;
+            }
+            entries[count].type = SEQUENCE_ENTRY_SNES_BG;
+            entries[count].primary_path = resolve_manifest_path(path, first);
+            entries[count].secondary_path = resolve_manifest_path(path, second);
+            entries[count].tertiary_path = resolve_manifest_path(path, third);
+        } else if (strcmp(kind, "image") == 0) {
+            entries[count].type = SEQUENCE_ENTRY_IMAGE;
+            entries[count].primary_path = resolve_manifest_path(path, first);
+        } else {
+            fprintf(stderr, "error: unknown sequence entry type '%s' in %s\n", kind, path);
+            goto cleanup;
+        }
+
+        if (!entries[count].primary_path ||
+            (entries[count].type == SEQUENCE_ENTRY_SNES_BG &&
+             (!entries[count].secondary_path || !entries[count].tertiary_path))) {
+            fprintf(stderr, "error: out of memory resolving sequence paths in %s\n", path);
+            goto cleanup;
+        }
+
+        count++;
+    }
+
+    scene_sequence_free(sequence);
+    sequence->entries = entries;
+    sequence->count = count;
+    sequence->loaded = count > 0u;
+    sequence->loop = true;
+    sequence->current_index = 0u;
+    sequence->frames_remaining = 0;
+    entries = NULL;
+    ok = true;
+
+cleanup:
+    free(entries);
+    if (file) {
+        fclose(file);
+    }
+    return ok;
+}
+
+static int scene_sequence_total_frames(const SceneSequence *sequence) {
+    int total = 0;
+
+    for (size_t i = 0; i < sequence->count; i++) {
+        total += sequence->entries[i].duration_frames;
+    }
+
+    return total;
+}
+
+static bool app_sequence_apply_entry(AppState *app, size_t index) {
+    const SceneSequenceEntry *entry = NULL;
+
+    if (!app->sequence.loaded || index >= app->sequence.count) {
+        return false;
+    }
+
+    entry = &app->sequence.entries[index];
+    if (entry->type == SEQUENCE_ENTRY_SNES_BG) {
+        if (!app_load_snes_bg_scene(app, entry->primary_path, entry->secondary_path, entry->tertiary_path)) {
+            return false;
+        }
+    } else if (entry->type == SEQUENCE_ENTRY_IMAGE) {
+        if (!app_load_image_view(app, entry->primary_path)) {
+            return false;
+        }
+    } else {
+        fprintf(stderr, "error: unsupported sequence entry type %d\n", (int)entry->type);
+        return false;
+    }
+
+    app->sequence.current_index = index;
+    app->sequence.frames_remaining = entry->duration_frames;
+    return true;
+}
+
 static uint8_t lerp_channel(uint8_t left, uint8_t right, float t) {
     float value = ((float)left * (1.0f - t)) + ((float)right * t);
     if (value < 0.0f) {
@@ -390,6 +952,272 @@ cleanup:
     return ok;
 }
 
+static int snes_bg_bpp(int bg_mode, int layer_index) {
+    switch (bg_mode) {
+        case 0:
+            return 2;
+        case 1:
+            return layer_index == 2 ? 2 : 4;
+        case 2:
+            return 4;
+        case 3:
+            return layer_index == 0 ? 8 : 4;
+        case 4:
+            return layer_index == 0 ? 8 : 2;
+        case 5:
+            return layer_index == 0 ? 4 : 2;
+        case 6:
+            return layer_index == 0 ? 4 : 0;
+        default:
+            return 0;
+    }
+}
+
+static bool snes_layer_enabled(int layer_mask, int layer_index) {
+    return (layer_mask & (1 << layer_index)) != 0;
+}
+
+static int snes_normalize_scroll(int value) {
+    value &= 0x03ff;
+    return value == 0x03ff ? 0 : value;
+}
+
+static int snes_sign_extend(int value, int bits) {
+    int sign_bit = 1 << (bits - 1);
+    int full_range = 1 << bits;
+    int masked = value & (full_range - 1);
+
+    return (masked & sign_bit) ? (masked - full_range) : masked;
+}
+
+static void snes_bg_tilemap_size(const SnesBgLayerState *layer, int *out_width_tiles, int *out_height_tiles) {
+    *out_width_tiles = layer->double_width ? 64 : 32;
+    *out_height_tiles = layer->double_height ? 64 : 32;
+}
+
+static uint16_t snes_bg_read_tilemap_entry(const SnesBgScene *scene, int base_word, int width_tiles, int tile_x, int tile_y) {
+    int block_x = 0;
+    int block_y = 0;
+    int local_x = 0;
+    int local_y = 0;
+    size_t entry_offset = 0;
+
+    if (width_tiles <= 0) {
+        return 0;
+    }
+
+    tile_x %= width_tiles;
+    if (tile_x < 0) {
+        tile_x += width_tiles;
+    }
+
+    block_x = tile_x / 32;
+    block_y = tile_y / 32;
+    local_x = tile_x % 32;
+    local_y = tile_y % 32;
+    entry_offset = (size_t)(base_word + (block_x * 0x0400) + (block_y * 0x0800) + (local_y * 32) + local_x) * 2u;
+
+    if ((entry_offset + 1u) >= scene->vram_size) {
+        return 0;
+    }
+
+    return (uint16_t)scene->vram[entry_offset] | (uint16_t)(scene->vram[entry_offset + 1u] << 8);
+}
+
+static uint16_t snes_vram_read_word(const SnesBgScene *scene, int word_index) {
+    size_t byte_offset = (size_t)word_index * 2u;
+
+    if (word_index < 0 || (byte_offset + 1u) >= scene->vram_size) {
+        return 0;
+    }
+
+    return (uint16_t)scene->vram[byte_offset] | (uint16_t)(scene->vram[byte_offset + 1u] << 8);
+}
+
+static void snes_decode_tile(const uint8_t *tile_data, int bpp, uint8_t *out_pixels) {
+    for (int y = 0; y < 8; y++) {
+        for (int x = 0; x < 8; x++) {
+            int bit = 7 - x;
+            uint8_t color = 0;
+
+            for (int plane_pair = 0; plane_pair < bpp; plane_pair += 2) {
+                int pair_offset = (plane_pair / 2) * 16;
+                uint8_t plane0 = tile_data[pair_offset + (y * 2)];
+                uint8_t plane1 = tile_data[pair_offset + (y * 2) + 1];
+
+                color |= (uint8_t)(((plane0 >> bit) & 1u) << plane_pair);
+                color |= (uint8_t)(((plane1 >> bit) & 1u) << (plane_pair + 1));
+            }
+
+            out_pixels[(y * 8) + x] = color;
+        }
+    }
+}
+
+static const uint8_t *snes_bg_get_tile_pixels(SnesBgScene *scene, int layer_index, int tile_index, int bpp) {
+    SnesBgLayerState *layer = &scene->layers[layer_index];
+    size_t tile_size = (size_t)bpp * 8u;
+    size_t start = ((size_t)layer->chr_address * 2u) + ((size_t)tile_index * tile_size);
+
+    if (tile_index < 0 || tile_index >= 1024) {
+        return NULL;
+    }
+
+    if (!scene->tile_cache_valid[layer_index][tile_index]) {
+        if ((start + tile_size) > scene->vram_size) {
+            memset(scene->tile_cache[layer_index][tile_index], 0, 64u);
+        } else {
+            snes_decode_tile(&scene->vram[start], bpp, scene->tile_cache[layer_index][tile_index]);
+        }
+        scene->tile_cache_valid[layer_index][tile_index] = 1u;
+    }
+
+    return scene->tile_cache[layer_index][tile_index];
+}
+
+static int snes_mode7_clip(int value) {
+    return (value & 0x2000) ? (value | ~0x03ff) : (value & 0x03ff);
+}
+
+static void render_snes_mode7_scene(AppState *app) {
+    const SnesBgScene *scene = &app->snes_bg_scene;
+    int hscroll = snes_sign_extend(scene->mode7_hscroll, 13);
+    int vscroll = snes_sign_extend(scene->mode7_vscroll, 13);
+    int center_x = snes_sign_extend(scene->mode7_center_x, 13);
+    int center_y = snes_sign_extend(scene->mode7_center_y, 13);
+    int matrix_a = snes_sign_extend(scene->mode7_matrix[0], 16);
+    int matrix_b = snes_sign_extend(scene->mode7_matrix[1], 16);
+    int matrix_c = snes_sign_extend(scene->mode7_matrix[2], 16);
+    int matrix_d = snes_sign_extend(scene->mode7_matrix[3], 16);
+
+    for (int screen_y = 0; screen_y < SCREEN_HEIGHT; screen_y++) {
+        int real_y = scene->mode7_vertical_mirroring ? (255 - screen_y) : screen_y;
+        int x_value = (((matrix_a * snes_mode7_clip(hscroll - center_x)) & ~63) +
+                       ((matrix_b * real_y) & ~63) +
+                       ((matrix_b * snes_mode7_clip(vscroll - center_y)) & ~63) +
+                       (center_x << 8));
+        int y_value = (((matrix_c * snes_mode7_clip(hscroll - center_x)) & ~63) +
+                       ((matrix_d * real_y) & ~63) +
+                       ((matrix_d * snes_mode7_clip(vscroll - center_y)) & ~63) +
+                       (center_y << 8));
+        int x_step = matrix_a;
+        int y_step = matrix_c;
+
+        if (scene->mode7_horizontal_mirroring) {
+            x_value += x_step * (SCREEN_WIDTH - 1);
+            y_value += y_step * (SCREEN_WIDTH - 1);
+            x_step = -x_step;
+            y_step = -y_step;
+        }
+
+        for (int screen_x = 0; screen_x < SCREEN_WIDTH; screen_x++) {
+            int x_offset = x_value >> 8;
+            int y_offset = y_value >> 8;
+            uint8_t tile_index = 0;
+            int pixel_word_index = 0;
+            int color_index = 0;
+
+            x_value += x_step;
+            y_value += y_step;
+
+            if (!scene->mode7_large_map) {
+                x_offset &= 0x03ff;
+                y_offset &= 0x03ff;
+            } else if (x_offset < 0 || x_offset > 0x03ff || y_offset < 0 || y_offset > 0x03ff) {
+                if (!scene->mode7_fill_with_tile0) {
+                    continue;
+                }
+            }
+
+            if (!(scene->mode7_large_map && (x_offset < 0 || x_offset > 0x03ff || y_offset < 0 || y_offset > 0x03ff))) {
+                int tile_word_index = ((y_offset & ~0x07) << 4) | (x_offset >> 3);
+                tile_index = (uint8_t)(snes_vram_read_word(scene, tile_word_index) & 0x00ffu);
+            }
+
+            pixel_word_index = (tile_index << 6) + ((y_offset & 0x07) << 3) + (x_offset & 0x07);
+            color_index = (int)((snes_vram_read_word(scene, pixel_word_index) >> 8) & 0x00ffu);
+            if (color_index == 0 || color_index >= 256) {
+                continue;
+            }
+
+            app->framebuffer[(screen_y * SCREEN_WIDTH) + screen_x] = scene->cgram_colors[color_index];
+        }
+    }
+}
+
+static void render_snes_bg_scene(AppState *app) {
+    SnesBgScene *scene = &app->snes_bg_scene;
+    uint32_t backdrop = scene->cgram_colors[0];
+
+    for (int i = 0; i < (SCREEN_WIDTH * SCREEN_HEIGHT); i++) {
+        app->framebuffer[i] = backdrop;
+    }
+
+    if (scene->bg_mode == 7) {
+        if (snes_layer_enabled(scene->main_screen_layers, 0)) {
+            render_snes_mode7_scene(app);
+        }
+        return;
+    }
+
+    for (int layer_index = 2; layer_index >= 0; layer_index--) {
+        SnesBgLayerState *layer = &scene->layers[layer_index];
+        int bpp = snes_bg_bpp(scene->bg_mode, layer_index);
+        int width_tiles = 0;
+        int height_tiles = 0;
+        int palette_stride = 0;
+        int hscroll = 0;
+        int vscroll = 0;
+
+        if (!snes_layer_enabled(scene->main_screen_layers, layer_index) || bpp == 0) {
+            continue;
+        }
+
+        snes_bg_tilemap_size(layer, &width_tiles, &height_tiles);
+        palette_stride = bpp == 2 ? 4 : (bpp == 4 ? 16 : 256);
+        hscroll = snes_normalize_scroll(layer->hscroll);
+        vscroll = snes_normalize_scroll(layer->vscroll);
+
+        for (int screen_y = 0; screen_y < SCREEN_HEIGHT; screen_y++) {
+            int world_y = (screen_y + vscroll) % (height_tiles * 8);
+            int tile_y = world_y / 8;
+            int pixel_y = world_y & 7;
+
+            for (int screen_x = 0; screen_x < SCREEN_WIDTH; screen_x++) {
+                int world_x = (screen_x + hscroll) % (width_tiles * 8);
+                int tile_x = world_x / 8;
+                int pixel_x = world_x & 7;
+                uint16_t entry = snes_bg_read_tilemap_entry(scene, layer->tilemap_address, width_tiles, tile_x, tile_y);
+                int tile_index = entry & 0x03ff;
+                int palette_index = (entry >> 10) & 0x07;
+                bool hflip = (entry & 0x4000u) != 0;
+                bool vflip = (entry & 0x8000u) != 0;
+                const uint8_t *pixels = snes_bg_get_tile_pixels(scene, layer_index, tile_index, bpp);
+                int sample_x = hflip ? (7 - pixel_x) : pixel_x;
+                int sample_y = vflip ? (7 - pixel_y) : pixel_y;
+                uint8_t color_index = 0;
+                int cgram_index = 0;
+
+                if (!pixels) {
+                    continue;
+                }
+
+                color_index = pixels[(sample_y * 8) + sample_x];
+                if (color_index == 0) {
+                    continue;
+                }
+
+                cgram_index = bpp == 8 ? color_index : ((palette_index * palette_stride) + color_index);
+                if (cgram_index < 0 || cgram_index >= 256) {
+                    continue;
+                }
+
+                app->framebuffer[(screen_y * SCREEN_WIDTH) + screen_x] = scene->cgram_colors[cgram_index];
+            }
+        }
+    }
+}
+
 static const uint32_t *app_current_palette(const AppState *app) {
     static const uint32_t fallback[COLORS_PER_PALETTE] = {
         0xff0b1320u, 0xff102542u, 0xff1b3b6fu, 0xff26508cu,
@@ -409,7 +1237,24 @@ static const uint32_t *app_current_palette(const AppState *app) {
 static void update_window_title(SDL_Window *window, const AppState *app) {
     char title[160];
 
-    if (app->image.pixels) {
+    if (app->sequence.loaded) {
+        snprintf(
+            title,
+            sizeof(title),
+            "TD2 Port Skeleton | sequence %zu/%zu | remaining %d",
+            app->sequence.current_index + 1u,
+            app->sequence.count,
+            app->sequence.frames_remaining
+        );
+    } else if (app->snes_bg_scene.loaded) {
+        snprintf(
+            title,
+            sizeof(title),
+            "TD2 Port Skeleton | SNES BG mode %d | layers 0x%02X",
+            app->snes_bg_scene.bg_mode,
+            app->snes_bg_scene.main_screen_layers
+        );
+    } else if (app->image.pixels) {
         snprintf(
             title,
             sizeof(title),
@@ -522,7 +1367,9 @@ static void render_gradient(AppState *app) {
 }
 
 static void render_current_view(AppState *app) {
-    if (app->image.pixels) {
+    if (app->snes_bg_scene.loaded) {
+        render_snes_bg_scene(app);
+    } else if (app->image.pixels) {
         render_image_view(app);
     } else {
         render_gradient(app);
@@ -531,6 +1378,29 @@ static void render_current_view(AppState *app) {
 
 static void app_step(AppState *app) {
     app->tick_count++;
+
+    if (app->sequence.loaded) {
+        if (app->sequence.frames_remaining <= 0) {
+            size_t next_index = app->sequence.current_index + 1u;
+
+            if (next_index >= app->sequence.count) {
+                if (!app->sequence.loop) {
+                    app->running = false;
+                    return;
+                }
+                next_index = 0u;
+            }
+
+            if (!app_sequence_apply_entry(app, next_index)) {
+                app->running = false;
+                return;
+            }
+        }
+
+        if (app->sequence.frames_remaining > 0) {
+            app->sequence.frames_remaining--;
+        }
+    }
 
     if (app->auto_cycle && app->palette_bank.palette_count > 0 && (app->tick_count % TARGET_HZ) == 0) {
         app->current_palette = (app->current_palette + 1u) % app->palette_bank.palette_count;
@@ -544,7 +1414,7 @@ static void app_step(AppState *app) {
 static void print_usage(const char *argv0) {
     fprintf(
         stderr,
-        "usage: %s [--palette path] [--palette-index n] [--image path] [--frames n] [--headless] [--dump-prefix path]\n",
+        "usage: %s [--palette path] [--palette-index n] [--image path] [--sequence path] [--sequence-no-loop] [--snes-bg-prefix path] [--snes-bg-vram path --snes-bg-cgram path --snes-bg-state path] [--frames n] [--headless] [--dump-prefix path]\n",
         argv0
     );
 }
@@ -552,8 +1422,14 @@ static void print_usage(const char *argv0) {
 int main(int argc, char **argv) {
     const char *palette_path = "../tools/out/bank3_palettes.json";
     const char *image_path = NULL;
+    const char *sequence_path = NULL;
+    const char *snes_bg_prefix = NULL;
+    const char *snes_bg_vram_path = NULL;
+    const char *snes_bg_cgram_path = NULL;
+    const char *snes_bg_state_path = NULL;
     bool palette_path_explicit = false;
     bool headless = false;
+    bool sequence_loop = true;
     AppState app = {0};
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
@@ -585,6 +1461,38 @@ int main(int argc, char **argv) {
                 return 1;
             }
             image_path = argv[++i];
+        } else if (strcmp(argv[i], "--sequence") == 0) {
+            if ((i + 1) >= argc) {
+                print_usage(argv[0]);
+                return 1;
+            }
+            sequence_path = argv[++i];
+        } else if (strcmp(argv[i], "--sequence-no-loop") == 0) {
+            sequence_loop = false;
+        } else if (strcmp(argv[i], "--snes-bg-prefix") == 0) {
+            if ((i + 1) >= argc) {
+                print_usage(argv[0]);
+                return 1;
+            }
+            snes_bg_prefix = argv[++i];
+        } else if (strcmp(argv[i], "--snes-bg-vram") == 0) {
+            if ((i + 1) >= argc) {
+                print_usage(argv[0]);
+                return 1;
+            }
+            snes_bg_vram_path = argv[++i];
+        } else if (strcmp(argv[i], "--snes-bg-cgram") == 0) {
+            if ((i + 1) >= argc) {
+                print_usage(argv[0]);
+                return 1;
+            }
+            snes_bg_cgram_path = argv[++i];
+        } else if (strcmp(argv[i], "--snes-bg-state") == 0) {
+            if ((i + 1) >= argc) {
+                print_usage(argv[0]);
+                return 1;
+            }
+            snes_bg_state_path = argv[++i];
         } else if (strcmp(argv[i], "--frames") == 0) {
             if ((i + 1) >= argc) {
                 print_usage(argv[0]);
@@ -609,30 +1517,83 @@ int main(int argc, char **argv) {
         }
     }
 
-    if (palette_path && palette_bank_load_json(palette_path, &app.palette_bank)) {
+    if (snes_bg_prefix) {
+        static char derived_vram_path[1024];
+        static char derived_cgram_path[1024];
+        static char derived_state_path[1024];
+
+        if (!snes_bg_vram_path) {
+            snprintf(derived_vram_path, sizeof(derived_vram_path), "%s_vram.bin", snes_bg_prefix);
+            snes_bg_vram_path = derived_vram_path;
+        }
+        if (!snes_bg_cgram_path) {
+            snprintf(derived_cgram_path, sizeof(derived_cgram_path), "%s_cgram.bin", snes_bg_prefix);
+            snes_bg_cgram_path = derived_cgram_path;
+        }
+        if (!snes_bg_state_path) {
+            snprintf(derived_state_path, sizeof(derived_state_path), "%s_ppu_state.json", snes_bg_prefix);
+            snes_bg_state_path = derived_state_path;
+        }
+    }
+
+    if ((snes_bg_vram_path || snes_bg_cgram_path || snes_bg_state_path) &&
+        !(snes_bg_vram_path && snes_bg_cgram_path && snes_bg_state_path)) {
+        fprintf(stderr, "error: SNES BG scene loading requires VRAM, CGRAM, and state paths\n");
+        return 1;
+    }
+
+    if (sequence_path && !scene_sequence_load_manifest(sequence_path, &app.sequence)) {
+        palette_bank_free(&app.palette_bank);
+        return 1;
+    }
+    if (app.sequence.loaded) {
+        app.sequence.loop = sequence_loop;
+    }
+
+    if ((snes_bg_vram_path && snes_bg_cgram_path && snes_bg_state_path) &&
+        !snes_bg_scene_load(snes_bg_vram_path, snes_bg_cgram_path, snes_bg_state_path, &app.snes_bg_scene)) {
+        scene_sequence_free(&app.sequence);
+        palette_bank_free(&app.palette_bank);
+        return 1;
+    }
+
+    if (app.sequence.loaded && !app_sequence_apply_entry(&app, 0u)) {
+        scene_sequence_free(&app.sequence);
+        palette_bank_free(&app.palette_bank);
+        return 1;
+    }
+
+    if (palette_path && (palette_path_explicit || (!image_path && !app.snes_bg_scene.loaded && !app.sequence.loaded)) &&
+        palette_bank_load_json(palette_path, &app.palette_bank)) {
         if (app.palette_bank.palette_count > 0) {
             app.current_palette %= app.palette_bank.palette_count;
         }
         fprintf(stderr, "loaded %zu palettes from %s\n", app.palette_bank.palette_count, palette_path);
     } else if (palette_path_explicit) {
+        scene_sequence_free(&app.sequence);
+        snes_bg_scene_free(&app.snes_bg_scene);
         palette_bank_free(&app.palette_bank);
         return 1;
     }
 
-    if (image_path && !image_data_load_ppm(image_path, &app.image)) {
+    if (image_path && !app.sequence.loaded && !image_data_load_ppm(image_path, &app.image)) {
+        scene_sequence_free(&app.sequence);
+        snes_bg_scene_free(&app.snes_bg_scene);
         palette_bank_free(&app.palette_bank);
         return 1;
     }
 
     if (headless) {
         if (app.auto_quit_frames <= 0) {
-            app.auto_quit_frames = TARGET_HZ;
+            app.auto_quit_frames = app.sequence.loaded ? scene_sequence_total_frames(&app.sequence) : TARGET_HZ;
         }
 
         while (app.running) {
             app_step(&app);
             render_current_view(&app);
             if (!dump_frame_if_requested(&app)) {
+                scene_sequence_free(&app.sequence);
+                snes_bg_scene_free(&app.snes_bg_scene);
                 image_data_free(&app.image);
                 palette_bank_free(&app.palette_bank);
                 return 1;
@@ -640,6 +1601,8 @@ int main(int argc, char **argv) {
             app.rendered_frames++;
         }
 
+        scene_sequence_free(&app.sequence);
+        snes_bg_scene_free(&app.snes_bg_scene);
         image_data_free(&app.image);
         palette_bank_free(&app.palette_bank);
         return 0;
@@ -647,6 +1610,8 @@ int main(int argc, char **argv) {
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_TIMER) != 0) {
         fprintf(stderr, "error: SDL_Init failed: %s\n", SDL_GetError());
+        scene_sequence_free(&app.sequence);
+        snes_bg_scene_free(&app.snes_bg_scene);
         palette_bank_free(&app.palette_bank);
         return 1;
     }
@@ -663,6 +1628,8 @@ int main(int argc, char **argv) {
     );
     if (!window) {
         fprintf(stderr, "error: SDL_CreateWindow failed: %s\n", SDL_GetError());
+        scene_sequence_free(&app.sequence);
+        snes_bg_scene_free(&app.snes_bg_scene);
         palette_bank_free(&app.palette_bank);
         SDL_Quit();
         return 1;
@@ -681,6 +1648,8 @@ int main(int argc, char **argv) {
     if (!renderer) {
         fprintf(stderr, "error: SDL_CreateRenderer failed: %s\n", SDL_GetError());
         SDL_DestroyWindow(window);
+        scene_sequence_free(&app.sequence);
+        snes_bg_scene_free(&app.snes_bg_scene);
         palette_bank_free(&app.palette_bank);
         SDL_Quit();
         return 1;
@@ -700,6 +1669,8 @@ int main(int argc, char **argv) {
         fprintf(stderr, "error: SDL_CreateTexture failed: %s\n", SDL_GetError());
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
+        scene_sequence_free(&app.sequence);
+        snes_bg_scene_free(&app.snes_bg_scene);
         palette_bank_free(&app.palette_bank);
         SDL_Quit();
         return 1;
@@ -814,7 +1785,7 @@ int main(int argc, char **argv) {
         while (accumulator >= step_seconds) {
             size_t previous_palette = app.current_palette;
             app_step(&app);
-            if (app.current_palette != previous_palette) {
+            if (app.sequence.loaded || app.current_palette != previous_palette) {
                 update_window_title(window, &app);
             }
             accumulator -= step_seconds;
@@ -837,6 +1808,8 @@ int main(int argc, char **argv) {
     SDL_DestroyTexture(texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    scene_sequence_free(&app.sequence);
+    snes_bg_scene_free(&app.snes_bg_scene);
     image_data_free(&app.image);
     palette_bank_free(&app.palette_bank);
     SDL_Quit();

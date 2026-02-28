@@ -1,0 +1,2623 @@
+{
+  "summary_json": "/home/nivando-soares/asmdump/tools/out/intro_loop.json",
+  "end_frame_exclusive": 2072,
+  "collapse_identical": true,
+  "entries": [
+    {
+      "type": "image",
+      "frame": 654,
+      "duration_frames": 4,
+      "hash": "2cbbeef1249170a43854962fa5b19fba628470c70beb9ce23e15a0f05cb891f2",
+      "source_frames": [
+        654
+      ],
+      "image": "intro_loop_sequence_images/frame_00654.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00654_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 658,
+      "duration_frames": 4,
+      "hash": "b0a700869521c1ff0ebbfa966b7d3bb071b8d9d828a91faa01e12725bc062e8c",
+      "source_frames": [
+        658
+      ],
+      "image": "intro_loop_sequence_images/frame_00658.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00658_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 662,
+      "duration_frames": 4,
+      "hash": "70d92604606b56deff4384740ea1affe6bc69dd9041a9458b2afe55d69392d12",
+      "source_frames": [
+        662
+      ],
+      "image": "intro_loop_sequence_images/frame_00662.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00662_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 666,
+      "duration_frames": 4,
+      "hash": "ac58de7dcc487d130cdab0e2ae5e449506052fdaa7e147d919e7284993d8a3ce",
+      "source_frames": [
+        666
+      ],
+      "image": "intro_loop_sequence_images/frame_00666.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00666_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 670,
+      "duration_frames": 4,
+      "hash": "f06f06f45397f3031484236de30debe9d9cb35cf76638fa0690eac09abf3cb2a",
+      "source_frames": [
+        670
+      ],
+      "image": "intro_loop_sequence_images/frame_00670.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00670_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 674,
+      "duration_frames": 4,
+      "hash": "ad071fe13ab37059180551e69ae290df2a7b8100399df73533c170273c4b31a7",
+      "source_frames": [
+        674
+      ],
+      "image": "intro_loop_sequence_images/frame_00674.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00674_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 678,
+      "duration_frames": 4,
+      "hash": "600e300b1d948a016382689643e271ccce5bf37735e9d7efa8e97d64757f81e6",
+      "source_frames": [
+        678
+      ],
+      "image": "intro_loop_sequence_images/frame_00678.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00678_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 682,
+      "duration_frames": 4,
+      "hash": "dcdb0a3d60df0a1e3b4693f844b94b1d3a13e5a7edf38f835ef84fa3f4d0551f",
+      "source_frames": [
+        682
+      ],
+      "image": "intro_loop_sequence_images/frame_00682.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00682_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 686,
+      "duration_frames": 4,
+      "hash": "f85732f409f919651d5d6bd17bc52924ffd78c63673ccd86f364b4bfa9926bc7",
+      "source_frames": [
+        686
+      ],
+      "image": "intro_loop_sequence_images/frame_00686.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00686_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 690,
+      "duration_frames": 4,
+      "hash": "985826b685cbd6d1b93bbb68b223a72432789f93fb503b6a49e13707f12b23c7",
+      "source_frames": [
+        690
+      ],
+      "image": "intro_loop_sequence_images/frame_00690.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00690_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 694,
+      "duration_frames": 4,
+      "hash": "dfdcbd148b07696945014d306b0f3f42c34d930858cc839174ae4bac3e443487",
+      "source_frames": [
+        694
+      ],
+      "image": "intro_loop_sequence_images/frame_00694.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00694_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 698,
+      "duration_frames": 4,
+      "hash": "9b3af5d787a0ba40d57992d09b28177d4fd4df42f81cb26093b6701231c6f41d",
+      "source_frames": [
+        698
+      ],
+      "image": "intro_loop_sequence_images/frame_00698.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00698_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 702,
+      "duration_frames": 4,
+      "hash": "559e1ac37147ab7501f1016fd0ff37819e977ecd5f6784c7c24712edeec22170",
+      "source_frames": [
+        702
+      ],
+      "image": "intro_loop_sequence_images/frame_00702.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00702_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 706,
+      "duration_frames": 4,
+      "hash": "0fb1edffb4072329bdb9184ffb68b658ea672e2882453358a05c9e1f90db67fd",
+      "source_frames": [
+        706
+      ],
+      "image": "intro_loop_sequence_images/frame_00706.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00706_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 710,
+      "duration_frames": 4,
+      "hash": "bf2ad8c7136faafa24427d085c8fe0bbda1c6ab1373ffa1069b7dc30f2531a74",
+      "source_frames": [
+        710
+      ],
+      "image": "intro_loop_sequence_images/frame_00710.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00710_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 714,
+      "duration_frames": 4,
+      "hash": "b0a700869521c1ff0ebbfa966b7d3bb071b8d9d828a91faa01e12725bc062e8c",
+      "source_frames": [
+        714
+      ],
+      "image": "intro_loop_sequence_images/frame_00714.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00714_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 718,
+      "duration_frames": 4,
+      "hash": "70d92604606b56deff4384740ea1affe6bc69dd9041a9458b2afe55d69392d12",
+      "source_frames": [
+        718
+      ],
+      "image": "intro_loop_sequence_images/frame_00718.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00718_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 722,
+      "duration_frames": 4,
+      "hash": "ac58de7dcc487d130cdab0e2ae5e449506052fdaa7e147d919e7284993d8a3ce",
+      "source_frames": [
+        722
+      ],
+      "image": "intro_loop_sequence_images/frame_00722.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00722_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 726,
+      "duration_frames": 4,
+      "hash": "f06f06f45397f3031484236de30debe9d9cb35cf76638fa0690eac09abf3cb2a",
+      "source_frames": [
+        726
+      ],
+      "image": "intro_loop_sequence_images/frame_00726.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00726_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 730,
+      "duration_frames": 4,
+      "hash": "ad071fe13ab37059180551e69ae290df2a7b8100399df73533c170273c4b31a7",
+      "source_frames": [
+        730
+      ],
+      "image": "intro_loop_sequence_images/frame_00730.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00730_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 734,
+      "duration_frames": 4,
+      "hash": "600e300b1d948a016382689643e271ccce5bf37735e9d7efa8e97d64757f81e6",
+      "source_frames": [
+        734
+      ],
+      "image": "intro_loop_sequence_images/frame_00734.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00734_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 738,
+      "duration_frames": 4,
+      "hash": "dcdb0a3d60df0a1e3b4693f844b94b1d3a13e5a7edf38f835ef84fa3f4d0551f",
+      "source_frames": [
+        738
+      ],
+      "image": "intro_loop_sequence_images/frame_00738.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00738_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 742,
+      "duration_frames": 4,
+      "hash": "f85732f409f919651d5d6bd17bc52924ffd78c63673ccd86f364b4bfa9926bc7",
+      "source_frames": [
+        742
+      ],
+      "image": "intro_loop_sequence_images/frame_00742.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00742_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 746,
+      "duration_frames": 4,
+      "hash": "985826b685cbd6d1b93bbb68b223a72432789f93fb503b6a49e13707f12b23c7",
+      "source_frames": [
+        746
+      ],
+      "image": "intro_loop_sequence_images/frame_00746.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00746_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 750,
+      "duration_frames": 4,
+      "hash": "dfdcbd148b07696945014d306b0f3f42c34d930858cc839174ae4bac3e443487",
+      "source_frames": [
+        750
+      ],
+      "image": "intro_loop_sequence_images/frame_00750.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00750_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 754,
+      "duration_frames": 4,
+      "hash": "9b3af5d787a0ba40d57992d09b28177d4fd4df42f81cb26093b6701231c6f41d",
+      "source_frames": [
+        754
+      ],
+      "image": "intro_loop_sequence_images/frame_00754.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00754_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 758,
+      "duration_frames": 4,
+      "hash": "559e1ac37147ab7501f1016fd0ff37819e977ecd5f6784c7c24712edeec22170",
+      "source_frames": [
+        758
+      ],
+      "image": "intro_loop_sequence_images/frame_00758.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00758_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 762,
+      "duration_frames": 4,
+      "hash": "0fb1edffb4072329bdb9184ffb68b658ea672e2882453358a05c9e1f90db67fd",
+      "source_frames": [
+        762
+      ],
+      "image": "intro_loop_sequence_images/frame_00762.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00762_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 766,
+      "duration_frames": 4,
+      "hash": "bf2ad8c7136faafa24427d085c8fe0bbda1c6ab1373ffa1069b7dc30f2531a74",
+      "source_frames": [
+        766
+      ],
+      "image": "intro_loop_sequence_images/frame_00766.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00766_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 770,
+      "duration_frames": 4,
+      "hash": "b0a700869521c1ff0ebbfa966b7d3bb071b8d9d828a91faa01e12725bc062e8c",
+      "source_frames": [
+        770
+      ],
+      "image": "intro_loop_sequence_images/frame_00770.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00770_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 774,
+      "duration_frames": 4,
+      "hash": "70d92604606b56deff4384740ea1affe6bc69dd9041a9458b2afe55d69392d12",
+      "source_frames": [
+        774
+      ],
+      "image": "intro_loop_sequence_images/frame_00774.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00774_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 778,
+      "duration_frames": 4,
+      "hash": "ac58de7dcc487d130cdab0e2ae5e449506052fdaa7e147d919e7284993d8a3ce",
+      "source_frames": [
+        778
+      ],
+      "image": "intro_loop_sequence_images/frame_00778.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00778_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 782,
+      "duration_frames": 4,
+      "hash": "f06f06f45397f3031484236de30debe9d9cb35cf76638fa0690eac09abf3cb2a",
+      "source_frames": [
+        782
+      ],
+      "image": "intro_loop_sequence_images/frame_00782.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00782_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 786,
+      "duration_frames": 4,
+      "hash": "ad071fe13ab37059180551e69ae290df2a7b8100399df73533c170273c4b31a7",
+      "source_frames": [
+        786
+      ],
+      "image": "intro_loop_sequence_images/frame_00786.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00786_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 790,
+      "duration_frames": 4,
+      "hash": "600e300b1d948a016382689643e271ccce5bf37735e9d7efa8e97d64757f81e6",
+      "source_frames": [
+        790
+      ],
+      "image": "intro_loop_sequence_images/frame_00790.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00790_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 794,
+      "duration_frames": 4,
+      "hash": "dcdb0a3d60df0a1e3b4693f844b94b1d3a13e5a7edf38f835ef84fa3f4d0551f",
+      "source_frames": [
+        794
+      ],
+      "image": "intro_loop_sequence_images/frame_00794.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00794_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 798,
+      "duration_frames": 4,
+      "hash": "f85732f409f919651d5d6bd17bc52924ffd78c63673ccd86f364b4bfa9926bc7",
+      "source_frames": [
+        798
+      ],
+      "image": "intro_loop_sequence_images/frame_00798.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00798_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 802,
+      "duration_frames": 4,
+      "hash": "985826b685cbd6d1b93bbb68b223a72432789f93fb503b6a49e13707f12b23c7",
+      "source_frames": [
+        802
+      ],
+      "image": "intro_loop_sequence_images/frame_00802.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00802_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 806,
+      "duration_frames": 4,
+      "hash": "dfdcbd148b07696945014d306b0f3f42c34d930858cc839174ae4bac3e443487",
+      "source_frames": [
+        806
+      ],
+      "image": "intro_loop_sequence_images/frame_00806.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00806_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 810,
+      "duration_frames": 4,
+      "hash": "9b3af5d787a0ba40d57992d09b28177d4fd4df42f81cb26093b6701231c6f41d",
+      "source_frames": [
+        810
+      ],
+      "image": "intro_loop_sequence_images/frame_00810.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00810_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 814,
+      "duration_frames": 4,
+      "hash": "559e1ac37147ab7501f1016fd0ff37819e977ecd5f6784c7c24712edeec22170",
+      "source_frames": [
+        814
+      ],
+      "image": "intro_loop_sequence_images/frame_00814.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00814_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 818,
+      "duration_frames": 4,
+      "hash": "0fb1edffb4072329bdb9184ffb68b658ea672e2882453358a05c9e1f90db67fd",
+      "source_frames": [
+        818
+      ],
+      "image": "intro_loop_sequence_images/frame_00818.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00818_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 822,
+      "duration_frames": 4,
+      "hash": "bf2ad8c7136faafa24427d085c8fe0bbda1c6ab1373ffa1069b7dc30f2531a74",
+      "source_frames": [
+        822
+      ],
+      "image": "intro_loop_sequence_images/frame_00822.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00822_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 826,
+      "duration_frames": 4,
+      "hash": "b0a700869521c1ff0ebbfa966b7d3bb071b8d9d828a91faa01e12725bc062e8c",
+      "source_frames": [
+        826
+      ],
+      "image": "intro_loop_sequence_images/frame_00826.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00826_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 830,
+      "duration_frames": 4,
+      "hash": "70d92604606b56deff4384740ea1affe6bc69dd9041a9458b2afe55d69392d12",
+      "source_frames": [
+        830
+      ],
+      "image": "intro_loop_sequence_images/frame_00830.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00830_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 834,
+      "duration_frames": 4,
+      "hash": "ac58de7dcc487d130cdab0e2ae5e449506052fdaa7e147d919e7284993d8a3ce",
+      "source_frames": [
+        834
+      ],
+      "image": "intro_loop_sequence_images/frame_00834.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00834_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 838,
+      "duration_frames": 4,
+      "hash": "f06f06f45397f3031484236de30debe9d9cb35cf76638fa0690eac09abf3cb2a",
+      "source_frames": [
+        838
+      ],
+      "image": "intro_loop_sequence_images/frame_00838.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00838_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 842,
+      "duration_frames": 4,
+      "hash": "ad071fe13ab37059180551e69ae290df2a7b8100399df73533c170273c4b31a7",
+      "source_frames": [
+        842
+      ],
+      "image": "intro_loop_sequence_images/frame_00842.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00842_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 846,
+      "duration_frames": 4,
+      "hash": "600e300b1d948a016382689643e271ccce5bf37735e9d7efa8e97d64757f81e6",
+      "source_frames": [
+        846
+      ],
+      "image": "intro_loop_sequence_images/frame_00846.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00846_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 850,
+      "duration_frames": 4,
+      "hash": "dcdb0a3d60df0a1e3b4693f844b94b1d3a13e5a7edf38f835ef84fa3f4d0551f",
+      "source_frames": [
+        850
+      ],
+      "image": "intro_loop_sequence_images/frame_00850.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00850_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 854,
+      "duration_frames": 4,
+      "hash": "f85732f409f919651d5d6bd17bc52924ffd78c63673ccd86f364b4bfa9926bc7",
+      "source_frames": [
+        854
+      ],
+      "image": "intro_loop_sequence_images/frame_00854.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00854_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 858,
+      "duration_frames": 4,
+      "hash": "985826b685cbd6d1b93bbb68b223a72432789f93fb503b6a49e13707f12b23c7",
+      "source_frames": [
+        858
+      ],
+      "image": "intro_loop_sequence_images/frame_00858.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00858_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 862,
+      "duration_frames": 4,
+      "hash": "dfdcbd148b07696945014d306b0f3f42c34d930858cc839174ae4bac3e443487",
+      "source_frames": [
+        862
+      ],
+      "image": "intro_loop_sequence_images/frame_00862.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00862_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 866,
+      "duration_frames": 4,
+      "hash": "9b3af5d787a0ba40d57992d09b28177d4fd4df42f81cb26093b6701231c6f41d",
+      "source_frames": [
+        866
+      ],
+      "image": "intro_loop_sequence_images/frame_00866.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00866_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 870,
+      "duration_frames": 4,
+      "hash": "559e1ac37147ab7501f1016fd0ff37819e977ecd5f6784c7c24712edeec22170",
+      "source_frames": [
+        870
+      ],
+      "image": "intro_loop_sequence_images/frame_00870.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00870_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 874,
+      "duration_frames": 4,
+      "hash": "0fb1edffb4072329bdb9184ffb68b658ea672e2882453358a05c9e1f90db67fd",
+      "source_frames": [
+        874
+      ],
+      "image": "intro_loop_sequence_images/frame_00874.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00874_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 878,
+      "duration_frames": 4,
+      "hash": "bf2ad8c7136faafa24427d085c8fe0bbda1c6ab1373ffa1069b7dc30f2531a74",
+      "source_frames": [
+        878
+      ],
+      "image": "intro_loop_sequence_images/frame_00878.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00878_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 882,
+      "duration_frames": 4,
+      "hash": "b0a700869521c1ff0ebbfa966b7d3bb071b8d9d828a91faa01e12725bc062e8c",
+      "source_frames": [
+        882
+      ],
+      "image": "intro_loop_sequence_images/frame_00882.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00882_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 886,
+      "duration_frames": 4,
+      "hash": "70d92604606b56deff4384740ea1affe6bc69dd9041a9458b2afe55d69392d12",
+      "source_frames": [
+        886
+      ],
+      "image": "intro_loop_sequence_images/frame_00886.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00886_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 890,
+      "duration_frames": 4,
+      "hash": "ac58de7dcc487d130cdab0e2ae5e449506052fdaa7e147d919e7284993d8a3ce",
+      "source_frames": [
+        890
+      ],
+      "image": "intro_loop_sequence_images/frame_00890.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00890_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 894,
+      "duration_frames": 4,
+      "hash": "f06f06f45397f3031484236de30debe9d9cb35cf76638fa0690eac09abf3cb2a",
+      "source_frames": [
+        894
+      ],
+      "image": "intro_loop_sequence_images/frame_00894.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00894_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 898,
+      "duration_frames": 4,
+      "hash": "ad071fe13ab37059180551e69ae290df2a7b8100399df73533c170273c4b31a7",
+      "source_frames": [
+        898
+      ],
+      "image": "intro_loop_sequence_images/frame_00898.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00898_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 902,
+      "duration_frames": 4,
+      "hash": "600e300b1d948a016382689643e271ccce5bf37735e9d7efa8e97d64757f81e6",
+      "source_frames": [
+        902
+      ],
+      "image": "intro_loop_sequence_images/frame_00902.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00902_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 906,
+      "duration_frames": 4,
+      "hash": "dcdb0a3d60df0a1e3b4693f844b94b1d3a13e5a7edf38f835ef84fa3f4d0551f",
+      "source_frames": [
+        906
+      ],
+      "image": "intro_loop_sequence_images/frame_00906.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00906_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 910,
+      "duration_frames": 4,
+      "hash": "f85732f409f919651d5d6bd17bc52924ffd78c63673ccd86f364b4bfa9926bc7",
+      "source_frames": [
+        910
+      ],
+      "image": "intro_loop_sequence_images/frame_00910.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00910_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 914,
+      "duration_frames": 4,
+      "hash": "985826b685cbd6d1b93bbb68b223a72432789f93fb503b6a49e13707f12b23c7",
+      "source_frames": [
+        914
+      ],
+      "image": "intro_loop_sequence_images/frame_00914.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00914_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 918,
+      "duration_frames": 4,
+      "hash": "dfdcbd148b07696945014d306b0f3f42c34d930858cc839174ae4bac3e443487",
+      "source_frames": [
+        918
+      ],
+      "image": "intro_loop_sequence_images/frame_00918.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00918_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 922,
+      "duration_frames": 4,
+      "hash": "9b3af5d787a0ba40d57992d09b28177d4fd4df42f81cb26093b6701231c6f41d",
+      "source_frames": [
+        922
+      ],
+      "image": "intro_loop_sequence_images/frame_00922.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00922_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 926,
+      "duration_frames": 4,
+      "hash": "559e1ac37147ab7501f1016fd0ff37819e977ecd5f6784c7c24712edeec22170",
+      "source_frames": [
+        926
+      ],
+      "image": "intro_loop_sequence_images/frame_00926.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00926_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 930,
+      "duration_frames": 4,
+      "hash": "0fb1edffb4072329bdb9184ffb68b658ea672e2882453358a05c9e1f90db67fd",
+      "source_frames": [
+        930
+      ],
+      "image": "intro_loop_sequence_images/frame_00930.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00930_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 934,
+      "duration_frames": 4,
+      "hash": "bf2ad8c7136faafa24427d085c8fe0bbda1c6ab1373ffa1069b7dc30f2531a74",
+      "source_frames": [
+        934
+      ],
+      "image": "intro_loop_sequence_images/frame_00934.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00934_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 938,
+      "duration_frames": 4,
+      "hash": "b0a700869521c1ff0ebbfa966b7d3bb071b8d9d828a91faa01e12725bc062e8c",
+      "source_frames": [
+        938
+      ],
+      "image": "intro_loop_sequence_images/frame_00938.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00938_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 942,
+      "duration_frames": 4,
+      "hash": "70d92604606b56deff4384740ea1affe6bc69dd9041a9458b2afe55d69392d12",
+      "source_frames": [
+        942
+      ],
+      "image": "intro_loop_sequence_images/frame_00942.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00942_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 946,
+      "duration_frames": 4,
+      "hash": "ac58de7dcc487d130cdab0e2ae5e449506052fdaa7e147d919e7284993d8a3ce",
+      "source_frames": [
+        946
+      ],
+      "image": "intro_loop_sequence_images/frame_00946.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00946_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 950,
+      "duration_frames": 4,
+      "hash": "f06f06f45397f3031484236de30debe9d9cb35cf76638fa0690eac09abf3cb2a",
+      "source_frames": [
+        950
+      ],
+      "image": "intro_loop_sequence_images/frame_00950.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00950_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 954,
+      "duration_frames": 4,
+      "hash": "ad071fe13ab37059180551e69ae290df2a7b8100399df73533c170273c4b31a7",
+      "source_frames": [
+        954
+      ],
+      "image": "intro_loop_sequence_images/frame_00954.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00954_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 958,
+      "duration_frames": 20,
+      "hash": "2cbbeef1249170a43854962fa5b19fba628470c70beb9ce23e15a0f05cb891f2",
+      "source_frames": [
+        958,
+        962,
+        966,
+        970,
+        974
+      ],
+      "image": "intro_loop_sequence_images/frame_00958.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00958_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 978,
+      "duration_frames": 8,
+      "hash": "0cdd4734d4ecaf76e80d7942d403a0682b1a835ad8167b4a9ee61fd829836c18",
+      "source_frames": [
+        978,
+        982
+      ],
+      "image": "intro_loop_sequence_images/frame_00978.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00978_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 986,
+      "duration_frames": 4,
+      "hash": "83a94f4644b0d51f70f9588615f81d0a080e222e24f70ab12eb3d641bb5bb099",
+      "source_frames": [
+        986
+      ],
+      "image": "intro_loop_sequence_images/frame_00986.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00986_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 990,
+      "duration_frames": 4,
+      "hash": "61e9bab589c70e66ecaefd071a3895af3fb4ba38500986c085422c74036d93b6",
+      "source_frames": [
+        990
+      ],
+      "image": "intro_loop_sequence_images/frame_00990.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00990_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 994,
+      "duration_frames": 4,
+      "hash": "634f7a9eb8a83e2d182ae42e005842f0503f48ff396c4291bcda104cb3da0388",
+      "source_frames": [
+        994
+      ],
+      "image": "intro_loop_sequence_images/frame_00994.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00994_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 998,
+      "duration_frames": 4,
+      "hash": "6ec9985f76fe01fa6a25da4276352576f870c9a8c1042ef6d2fb8e2cc368ba62",
+      "source_frames": [
+        998
+      ],
+      "image": "intro_loop_sequence_images/frame_00998.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_00998_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1002,
+      "duration_frames": 4,
+      "hash": "c8831d43575bcbea5fd566bbc24e7b3bfa94ac2237f31b6b75d71ff0df16ddd4",
+      "source_frames": [
+        1002
+      ],
+      "image": "intro_loop_sequence_images/frame_01002.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01002_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1006,
+      "duration_frames": 4,
+      "hash": "dd3917bd1875ee3a51301d2500ac969be660f4fc308d726b58fd0af71e0a73c0",
+      "source_frames": [
+        1006
+      ],
+      "image": "intro_loop_sequence_images/frame_01006.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01006_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1010,
+      "duration_frames": 4,
+      "hash": "811916124c3cbe97ea23e2ec1a0494c6036ba33ab71e3ec03f9327910165129e",
+      "source_frames": [
+        1010
+      ],
+      "image": "intro_loop_sequence_images/frame_01010.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01010_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1014,
+      "duration_frames": 4,
+      "hash": "bb9b99966f56bac1b17ba4d34e2c2d0607c883264a03ff9fb3b2d998499fc3af",
+      "source_frames": [
+        1014
+      ],
+      "image": "intro_loop_sequence_images/frame_01014.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01014_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1018,
+      "duration_frames": 4,
+      "hash": "eb2bc2d41ed2e189f5270b33e0fabc43d97767280295fef6b14d4c60228bdf46",
+      "source_frames": [
+        1018
+      ],
+      "image": "intro_loop_sequence_images/frame_01018.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01018_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1022,
+      "duration_frames": 4,
+      "hash": "c915c551dd7a01609f140f03487d7774c0fde5a929277320d73cfda42e68ed7f",
+      "source_frames": [
+        1022
+      ],
+      "image": "intro_loop_sequence_images/frame_01022.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01022_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1026,
+      "duration_frames": 4,
+      "hash": "0fd716b238a00c7ea69c3901fd60a041fbaa2298c93d9a229da0783ba9707c7c",
+      "source_frames": [
+        1026
+      ],
+      "image": "intro_loop_sequence_images/frame_01026.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01026_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1030,
+      "duration_frames": 4,
+      "hash": "165921601184b3820c3862662e3c87d2798d84c46735014253dd8a4a21dbbba5",
+      "source_frames": [
+        1030
+      ],
+      "image": "intro_loop_sequence_images/frame_01030.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01030_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1034,
+      "duration_frames": 4,
+      "hash": "2348ebeb05e79edf1722820213d4dc0c1794dc5a467b7aece47f662b564d3d47",
+      "source_frames": [
+        1034
+      ],
+      "image": "intro_loop_sequence_images/frame_01034.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01034_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1038,
+      "duration_frames": 4,
+      "hash": "d0878f59fb3a73ad07df0073a2065ffc64931af1169d8219c9217cb6e883d166",
+      "source_frames": [
+        1038
+      ],
+      "image": "intro_loop_sequence_images/frame_01038.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01038_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1042,
+      "duration_frames": 4,
+      "hash": "d7bafa16a358ef2c4e113759cd37e1c18bda8ebe59365ba6d704dd413e5ff035",
+      "source_frames": [
+        1042
+      ],
+      "image": "intro_loop_sequence_images/frame_01042.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01042_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1046,
+      "duration_frames": 4,
+      "hash": "d728d3f944b2efbcf4ed3f9996687428911c2f85549d2cb2e121b3f85607328a",
+      "source_frames": [
+        1046
+      ],
+      "image": "intro_loop_sequence_images/frame_01046.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01046_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1050,
+      "duration_frames": 4,
+      "hash": "da5c9af1f740b65b69055d432752f687f078c583152c75187d15ca235ae8fe87",
+      "source_frames": [
+        1050
+      ],
+      "image": "intro_loop_sequence_images/frame_01050.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01050_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1054,
+      "duration_frames": 4,
+      "hash": "f15721a469158b4564d057ace3b1ebc46eb826a1659571064435240f4cb2191f",
+      "source_frames": [
+        1054
+      ],
+      "image": "intro_loop_sequence_images/frame_01054.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01054_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1058,
+      "duration_frames": 4,
+      "hash": "a43617688ee11dc4dc6438f3a796187d1677b0fa9fdfc9558f83fcfdec2db329",
+      "source_frames": [
+        1058
+      ],
+      "image": "intro_loop_sequence_images/frame_01058.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01058_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1062,
+      "duration_frames": 4,
+      "hash": "ac590028df223fb30a9dd7d7af345f7a955cbb98e9855a14cbea93c8765ebdcd",
+      "source_frames": [
+        1062
+      ],
+      "image": "intro_loop_sequence_images/frame_01062.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01062_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1066,
+      "duration_frames": 4,
+      "hash": "d749825d72adcd6cb3914d357214c4f27aa130c57280b111a45fa406f46d16a1",
+      "source_frames": [
+        1066
+      ],
+      "image": "intro_loop_sequence_images/frame_01066.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01066_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1070,
+      "duration_frames": 4,
+      "hash": "47951ffe7f81c899c310ef8561bb559eb6efd007331268ff7b5767671f184425",
+      "source_frames": [
+        1070
+      ],
+      "image": "intro_loop_sequence_images/frame_01070.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01070_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1074,
+      "duration_frames": 4,
+      "hash": "7d783d6381a33c398ec7e6b0ad959e60bd11efc5a2dde58783cd490b1db3b164",
+      "source_frames": [
+        1074
+      ],
+      "image": "intro_loop_sequence_images/frame_01074.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01074_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1078,
+      "duration_frames": 4,
+      "hash": "0d50ceae52d512b18192a375cf818621090397084b5e1141b86004df28df3d55",
+      "source_frames": [
+        1078
+      ],
+      "image": "intro_loop_sequence_images/frame_01078.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01078_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1082,
+      "duration_frames": 4,
+      "hash": "5678d11e021d8a35a22d414604d405547ac7d65db7da3bdbed6733e5261454e8",
+      "source_frames": [
+        1082
+      ],
+      "image": "intro_loop_sequence_images/frame_01082.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01082_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1086,
+      "duration_frames": 4,
+      "hash": "10f082cb5c7434da70dddff5dcacc0d6f7a0645294129545c922051108a2efc6",
+      "source_frames": [
+        1086
+      ],
+      "image": "intro_loop_sequence_images/frame_01086.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01086_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1090,
+      "duration_frames": 4,
+      "hash": "13d1a89b7a7a9c43b378d8f484d7e9ec79c59ae5263e37a4a8aa3f46e8db6a33",
+      "source_frames": [
+        1090
+      ],
+      "image": "intro_loop_sequence_images/frame_01090.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01090_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1094,
+      "duration_frames": 4,
+      "hash": "c3c628b118b840aeed92b99d4db3f257575e0e7a252b25bf906229bcc2afaff7",
+      "source_frames": [
+        1094
+      ],
+      "image": "intro_loop_sequence_images/frame_01094.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01094_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1098,
+      "duration_frames": 4,
+      "hash": "db93f5c03a58126b4d8801c2c59131566e0fecd958969c9a1d925f6dea4eee55",
+      "source_frames": [
+        1098
+      ],
+      "image": "intro_loop_sequence_images/frame_01098.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01098_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1102,
+      "duration_frames": 4,
+      "hash": "3437f54a942ef3de9c5c5979b4c9420255e4b049989d6a38802ab9428a236f32",
+      "source_frames": [
+        1102
+      ],
+      "image": "intro_loop_sequence_images/frame_01102.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01102_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1106,
+      "duration_frames": 64,
+      "hash": "8ae3f2d3c4932e344b016577818be7d5abfbb5709db26318fd7b0c368d147993",
+      "source_frames": [
+        1106,
+        1110,
+        1114,
+        1118,
+        1122,
+        1126,
+        1130,
+        1134,
+        1138,
+        1142,
+        1146,
+        1150,
+        1154,
+        1158,
+        1162,
+        1166
+      ],
+      "image": "intro_loop_sequence_images/frame_01106.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01106_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1170,
+      "duration_frames": 4,
+      "hash": "941d6b1d673ebbfff715e2ec875f8eac1b217fe4613046aa0715de135040d179",
+      "source_frames": [
+        1170
+      ],
+      "image": "intro_loop_sequence_images/frame_01170.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01170_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1174,
+      "duration_frames": 4,
+      "hash": "cf2c1c63a591dfb60333f7d9e0c7b2815af11b4c6c6c890e695c8b8fb32834e3",
+      "source_frames": [
+        1174
+      ],
+      "image": "intro_loop_sequence_images/frame_01174.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01174_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1178,
+      "duration_frames": 4,
+      "hash": "684451b571038e4f9becb4f7ea9a830cbc3b888703a81090ca2bd99e5562264b",
+      "source_frames": [
+        1178
+      ],
+      "image": "intro_loop_sequence_images/frame_01178.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01178_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1182,
+      "duration_frames": 4,
+      "hash": "f558046a1261fe912fada13ce1beacca71a7d1869cb3723016132925b53af212",
+      "source_frames": [
+        1182
+      ],
+      "image": "intro_loop_sequence_images/frame_01182.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01182_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1186,
+      "duration_frames": 4,
+      "hash": "d92857e19bf7aa7246918fd0b162a9b546262faa2a8b5dab69db4b78f0870576",
+      "source_frames": [
+        1186
+      ],
+      "image": "intro_loop_sequence_images/frame_01186.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01186_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1190,
+      "duration_frames": 4,
+      "hash": "fcf319494f31ddffe12c09ec31d558a286bf4e4f2ff64ae0590039c2d7777b64",
+      "source_frames": [
+        1190
+      ],
+      "image": "intro_loop_sequence_images/frame_01190.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01190_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1194,
+      "duration_frames": 4,
+      "hash": "9e5e00f4bada37a49512d5623a0c5e569656dd81ed907c273b1c4999e06722ca",
+      "source_frames": [
+        1194
+      ],
+      "image": "intro_loop_sequence_images/frame_01194.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01194_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1198,
+      "duration_frames": 4,
+      "hash": "eb0e7afb9b3779f3a6f0b0760e6e95a75a0c8a1f2f8a9af09336fb9835192e40",
+      "source_frames": [
+        1198
+      ],
+      "image": "intro_loop_sequence_images/frame_01198.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01198_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1202,
+      "duration_frames": 4,
+      "hash": "f97954367b70ef7849172c83aa02530bae1d7bfd78f8de0a9cb543d706550701",
+      "source_frames": [
+        1202
+      ],
+      "image": "intro_loop_sequence_images/frame_01202.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01202_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1206,
+      "duration_frames": 4,
+      "hash": "168b3999912aa66e5545cdfaccaf7a158a4754efa22410cc096555b8cf5d1285",
+      "source_frames": [
+        1206
+      ],
+      "image": "intro_loop_sequence_images/frame_01206.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01206_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1210,
+      "duration_frames": 20,
+      "hash": "18652253b1c682fd70357b14c1c54a9b06ce5f05778c2c38c2a6c3e8bee326cd",
+      "source_frames": [
+        1210,
+        1214,
+        1218,
+        1222,
+        1226
+      ],
+      "image": "intro_loop_sequence_images/frame_01210.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01210_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1230,
+      "duration_frames": 4,
+      "hash": "505aa22192930ef13e33185d1d7af27e71c99a7069fd1e9691ad6695380daeb1",
+      "source_frames": [
+        1230
+      ],
+      "image": "intro_loop_sequence_images/frame_01230.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01230_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1234,
+      "duration_frames": 4,
+      "hash": "3d93e546dfc3f500941c0602f1442d051d7c1abe1e9cb654fa7fa54a0330605a",
+      "source_frames": [
+        1234
+      ],
+      "image": "intro_loop_sequence_images/frame_01234.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01234_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1238,
+      "duration_frames": 4,
+      "hash": "6a2a95196d8fa0bb6dd33ae574def23033f8be37d982a1f632192bc4472e2e57",
+      "source_frames": [
+        1238
+      ],
+      "image": "intro_loop_sequence_images/frame_01238.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01238_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1242,
+      "duration_frames": 4,
+      "hash": "20efb2a18f41aaa14f955dd13c26a1bc5ba9b602950a98d9f656be5a563ab237",
+      "source_frames": [
+        1242
+      ],
+      "image": "intro_loop_sequence_images/frame_01242.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01242_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1246,
+      "duration_frames": 4,
+      "hash": "15eff4124084d7f9c5a6ea485d4002a5651536d0485820e51a757a67c1367e80",
+      "source_frames": [
+        1246
+      ],
+      "image": "intro_loop_sequence_images/frame_01246.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01246_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1250,
+      "duration_frames": 4,
+      "hash": "b97409d2d34042419ebda0fc69057b9967f0d08e82b3cf4096ff48988606ca4b",
+      "source_frames": [
+        1250
+      ],
+      "image": "intro_loop_sequence_images/frame_01250.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01250_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1254,
+      "duration_frames": 4,
+      "hash": "88672963f99324475c40d407eb76b95e16d34a1aeb070d43bb52f8cf40f3ca1a",
+      "source_frames": [
+        1254
+      ],
+      "image": "intro_loop_sequence_images/frame_01254.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01254_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1258,
+      "duration_frames": 4,
+      "hash": "32c7105a9df3be9b2d25b62f5a21851865d547e810e396a2eb16cd57fc5d937c",
+      "source_frames": [
+        1258
+      ],
+      "image": "intro_loop_sequence_images/frame_01258.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01258_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1262,
+      "duration_frames": 4,
+      "hash": "be9d7591ccbb4a372788639839dc3a744c3319e33323f6b0ff4c7ba63ad6ba9b",
+      "source_frames": [
+        1262
+      ],
+      "image": "intro_loop_sequence_images/frame_01262.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01262_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1266,
+      "duration_frames": 4,
+      "hash": "9fffabb948806340302e0261a05c99e3f73b1a3564ca67db7b7024f9c803748a",
+      "source_frames": [
+        1266
+      ],
+      "image": "intro_loop_sequence_images/frame_01266.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01266_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1270,
+      "duration_frames": 12,
+      "hash": "18652253b1c682fd70357b14c1c54a9b06ce5f05778c2c38c2a6c3e8bee326cd",
+      "source_frames": [
+        1270,
+        1274,
+        1278
+      ],
+      "image": "intro_loop_sequence_images/frame_01270.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01270_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1282,
+      "duration_frames": 52,
+      "hash": "2cbbeef1249170a43854962fa5b19fba628470c70beb9ce23e15a0f05cb891f2",
+      "source_frames": [
+        1282,
+        1286,
+        1290,
+        1294,
+        1298,
+        1302,
+        1306,
+        1310,
+        1314,
+        1318,
+        1322,
+        1326,
+        1330
+      ],
+      "image": "intro_loop_sequence_images/frame_01282.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01282_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1334,
+      "duration_frames": 4,
+      "hash": "3bb0e19b02d4449eedc26574a18472e613d21fe333fba28027375776297f82d6",
+      "source_frames": [
+        1334
+      ],
+      "image": "intro_loop_sequence_images/frame_01334.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01334_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1338,
+      "duration_frames": 4,
+      "hash": "4519e19d8d3d24b2332d3e110ec6b421ed1cf7a61d7c7b5daeca337cf28a0a7c",
+      "source_frames": [
+        1338
+      ],
+      "image": "intro_loop_sequence_images/frame_01338.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01338_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1342,
+      "duration_frames": 4,
+      "hash": "5fcedacee04e7781d377fe7320a2457ed38e5010221c3372cd3f0b08f1105e69",
+      "source_frames": [
+        1342
+      ],
+      "image": "intro_loop_sequence_images/frame_01342.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01342_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1346,
+      "duration_frames": 4,
+      "hash": "49dcc69d1ba12df7c1d97a21380ecf96c19f85d83beb4137050948824047ad20",
+      "source_frames": [
+        1346
+      ],
+      "image": "intro_loop_sequence_images/frame_01346.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01346_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1350,
+      "duration_frames": 4,
+      "hash": "e506a839b8f6cd48c03311c19a6507d38d7b45b8677f444710083ae380124c53",
+      "source_frames": [
+        1350
+      ],
+      "image": "intro_loop_sequence_images/frame_01350.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01350_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1354,
+      "duration_frames": 4,
+      "hash": "e3a81b69504d6e74bdadd8243462dcbe42d53a298dacc1bd240d81c866b3471a",
+      "source_frames": [
+        1354
+      ],
+      "image": "intro_loop_sequence_images/frame_01354.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01354_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1358,
+      "duration_frames": 4,
+      "hash": "f3d28502327c31d1405298503ea4453c64f1affc9c7c60fc3ec51f7fac75f01c",
+      "source_frames": [
+        1358
+      ],
+      "image": "intro_loop_sequence_images/frame_01358.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01358_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1362,
+      "duration_frames": 4,
+      "hash": "23a4cdeab6d3048e696f7493e5fd50e4a9b4d8f7869341187dcc6865af107935",
+      "source_frames": [
+        1362
+      ],
+      "image": "intro_loop_sequence_images/frame_01362.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01362_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1366,
+      "duration_frames": 4,
+      "hash": "73b42a30369f2e543ff3ce613c93d825ee202d7a522ce4745eabd3963a22bbcf",
+      "source_frames": [
+        1366
+      ],
+      "image": "intro_loop_sequence_images/frame_01366.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01366_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1370,
+      "duration_frames": 4,
+      "hash": "46fc9aab53dc3ef5dcc277574dd48979afe5ddf97b7e5f1a04175816e7c5ddd8",
+      "source_frames": [
+        1370
+      ],
+      "image": "intro_loop_sequence_images/frame_01370.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01370_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1374,
+      "duration_frames": 4,
+      "hash": "b12eab253d64753aebe2c4df916cd4f4464d068d24ef58471d2a1dd5e05cd22d",
+      "source_frames": [
+        1374
+      ],
+      "image": "intro_loop_sequence_images/frame_01374.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01374_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1378,
+      "duration_frames": 4,
+      "hash": "0b54f474645483d95488745293943acc5b8fb32a913eca9a06d7f88798a3ff86",
+      "source_frames": [
+        1378
+      ],
+      "image": "intro_loop_sequence_images/frame_01378.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01378_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1382,
+      "duration_frames": 4,
+      "hash": "57d60e5d45f6158bf4e4814b305e3fbac96c165680019b36df773acb60b16e6d",
+      "source_frames": [
+        1382
+      ],
+      "image": "intro_loop_sequence_images/frame_01382.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01382_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1386,
+      "duration_frames": 4,
+      "hash": "ff673332a4cb2a19d25eea8eae7a027586bcff1630b8d0f0b3ee3d3fe0f3ea6f",
+      "source_frames": [
+        1386
+      ],
+      "image": "intro_loop_sequence_images/frame_01386.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01386_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1390,
+      "duration_frames": 4,
+      "hash": "0e6e4df39903d7dbea1fa020f2ea613e1cc1296e9b7dd92fb29075890a406d2b",
+      "source_frames": [
+        1390
+      ],
+      "image": "intro_loop_sequence_images/frame_01390.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01390_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1394,
+      "duration_frames": 4,
+      "hash": "1dee37b50a482822af498f5297047fbb9a049453d2e49c2147875b076a7e6490",
+      "source_frames": [
+        1394
+      ],
+      "image": "intro_loop_sequence_images/frame_01394.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01394_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1398,
+      "duration_frames": 4,
+      "hash": "d13be6c6ea85c3bf15f9cccc869ccc012a7f14f9da04813addcece1d110b6ded",
+      "source_frames": [
+        1398
+      ],
+      "image": "intro_loop_sequence_images/frame_01398.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01398_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1402,
+      "duration_frames": 4,
+      "hash": "631cb176cc05bd3dfae7b2e49ccc9034bf28aaed6839aa8398b987b6f207bbbf",
+      "source_frames": [
+        1402
+      ],
+      "image": "intro_loop_sequence_images/frame_01402.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01402_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1406,
+      "duration_frames": 4,
+      "hash": "ff2c19169464703d0fc702b7bbb8ce6ca5645523021096a143e65123facb0266",
+      "source_frames": [
+        1406
+      ],
+      "image": "intro_loop_sequence_images/frame_01406.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01406_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1410,
+      "duration_frames": 4,
+      "hash": "98e4c66a32156aae5d1e54911e8475dd9ab518d912370fc0f6b578bec91c1e59",
+      "source_frames": [
+        1410
+      ],
+      "image": "intro_loop_sequence_images/frame_01410.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01410_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1414,
+      "duration_frames": 4,
+      "hash": "edb4713e0ffee7c21b4f471790d64c9f78ea15431902e46c8eb2a678d179c632",
+      "source_frames": [
+        1414
+      ],
+      "image": "intro_loop_sequence_images/frame_01414.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01414_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1418,
+      "duration_frames": 4,
+      "hash": "2edc62e34ee9f14dcca9afeb14ea5f960f6286efd1f0bb2581b6a24cc2b2d3f8",
+      "source_frames": [
+        1418
+      ],
+      "image": "intro_loop_sequence_images/frame_01418.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01418_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1422,
+      "duration_frames": 4,
+      "hash": "85dfab518e5ae3ec29b3d89f1fb88ca53edc0ed6240c99d5a40b6532e95fe681",
+      "source_frames": [
+        1422
+      ],
+      "image": "intro_loop_sequence_images/frame_01422.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01422_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1426,
+      "duration_frames": 4,
+      "hash": "be4503524e1ca1ec0a22bb858ed38dcbc6332df69ff298813495a9268d5e2302",
+      "source_frames": [
+        1426
+      ],
+      "image": "intro_loop_sequence_images/frame_01426.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01426_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1430,
+      "duration_frames": 4,
+      "hash": "875e2b76e0bc09a00c89a3379f87945a641c23225277f47dadb88dbaa420bf99",
+      "source_frames": [
+        1430
+      ],
+      "image": "intro_loop_sequence_images/frame_01430.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01430_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1434,
+      "duration_frames": 4,
+      "hash": "0747e5f78701a2e090cd2d1f8766df07134729294ca31d2e38d2961665e68e95",
+      "source_frames": [
+        1434
+      ],
+      "image": "intro_loop_sequence_images/frame_01434.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01434_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1438,
+      "duration_frames": 4,
+      "hash": "2708f7a5bdb5ec1920e52f93a1322e0b685a855c3396da2efd0e41bd2a8e95be",
+      "source_frames": [
+        1438
+      ],
+      "image": "intro_loop_sequence_images/frame_01438.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01438_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1442,
+      "duration_frames": 4,
+      "hash": "1d37df996d4bdeea3ff586d6db8511ac2d2522f8091f0011aec2b59b503be857",
+      "source_frames": [
+        1442
+      ],
+      "image": "intro_loop_sequence_images/frame_01442.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01442_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1446,
+      "duration_frames": 4,
+      "hash": "8b31c599666eab7c024cc6fe7fc352bfc293f586a909a29ba8434acaf06fd5e5",
+      "source_frames": [
+        1446
+      ],
+      "image": "intro_loop_sequence_images/frame_01446.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01446_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1450,
+      "duration_frames": 4,
+      "hash": "cc645c253c5c3f06663c0f19f337112043083ebdac596e4fe519e7fb47394af7",
+      "source_frames": [
+        1450
+      ],
+      "image": "intro_loop_sequence_images/frame_01450.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01450_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1454,
+      "duration_frames": 4,
+      "hash": "330568bf2009a76894821894452b068376ddbea6a76cb3f81c8b7c82fcd55a19",
+      "source_frames": [
+        1454
+      ],
+      "image": "intro_loop_sequence_images/frame_01454.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01454_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1458,
+      "duration_frames": 4,
+      "hash": "d814a13add069fe93ef471935e4d06efe30edda4c7bc7d5593166008974fd1c9",
+      "source_frames": [
+        1458
+      ],
+      "image": "intro_loop_sequence_images/frame_01458.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01458_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1462,
+      "duration_frames": 4,
+      "hash": "96612fbc3137e452d2d7b132a95c1c6695af04db9270419dc9afbd36428f1abe",
+      "source_frames": [
+        1462
+      ],
+      "image": "intro_loop_sequence_images/frame_01462.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01462_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1466,
+      "duration_frames": 4,
+      "hash": "ed69f8fd454f9c8ba84b243491587ada75b3352877bf17f2d9685df9bf94cd8f",
+      "source_frames": [
+        1466
+      ],
+      "image": "intro_loop_sequence_images/frame_01466.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01466_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1470,
+      "duration_frames": 4,
+      "hash": "e1b5a15ba2f308aeaaead3c3efd517f648da8c4afe8440ec349aa669bc6c3933",
+      "source_frames": [
+        1470
+      ],
+      "image": "intro_loop_sequence_images/frame_01470.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01470_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1474,
+      "duration_frames": 4,
+      "hash": "8abfbcead224261f85a8b729f464f9a4b8a7f2dde2b8097495fb5c1349214321",
+      "source_frames": [
+        1474
+      ],
+      "image": "intro_loop_sequence_images/frame_01474.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01474_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1478,
+      "duration_frames": 4,
+      "hash": "fb8f6c41acec5ab601cf61c15a86ae461306e58ace91d985dd911df7dc2918ed",
+      "source_frames": [
+        1478
+      ],
+      "image": "intro_loop_sequence_images/frame_01478.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01478_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1482,
+      "duration_frames": 4,
+      "hash": "8351b7f6137ee3674af1d2a37a625dec42f4b25157c1bafc4136301c679c7327",
+      "source_frames": [
+        1482
+      ],
+      "image": "intro_loop_sequence_images/frame_01482.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01482_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1486,
+      "duration_frames": 4,
+      "hash": "8a4167c69e67fd06a55d73898df514557a91d5f21076b872ac9ae64d41497178",
+      "source_frames": [
+        1486
+      ],
+      "image": "intro_loop_sequence_images/frame_01486.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01486_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1490,
+      "duration_frames": 4,
+      "hash": "5387a131757ff084c283f0b4f8dd5adbe28e2fbcfe2732012359d36eace8718c",
+      "source_frames": [
+        1490
+      ],
+      "image": "intro_loop_sequence_images/frame_01490.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01490_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1494,
+      "duration_frames": 4,
+      "hash": "4f237ad77c99c4caccc4b253b4b3ff4fa1068d409e1d4bf21a279833e9278bbd",
+      "source_frames": [
+        1494
+      ],
+      "image": "intro_loop_sequence_images/frame_01494.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01494_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1498,
+      "duration_frames": 4,
+      "hash": "c2aa00b329563ed8ccd3cf00e2cdf7d03efcd0796efe44c9bd85a828e053f13d",
+      "source_frames": [
+        1498
+      ],
+      "image": "intro_loop_sequence_images/frame_01498.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01498_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1502,
+      "duration_frames": 4,
+      "hash": "dd74e3e0f622af2f82746ec17b627ebb252176c5b4fcbbbb5214c8e1c6317c5b",
+      "source_frames": [
+        1502
+      ],
+      "image": "intro_loop_sequence_images/frame_01502.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01502_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1506,
+      "duration_frames": 4,
+      "hash": "86968f8132956c65c795831b83e05bcf006ff49b832485d23e94989ea8d87a58",
+      "source_frames": [
+        1506
+      ],
+      "image": "intro_loop_sequence_images/frame_01506.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01506_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1510,
+      "duration_frames": 4,
+      "hash": "03a8fc7014f3eb385efce6184311e8a4907a87de023e19c09b2d0724349f8487",
+      "source_frames": [
+        1510
+      ],
+      "image": "intro_loop_sequence_images/frame_01510.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01510_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1514,
+      "duration_frames": 4,
+      "hash": "08ddf0164f9448a8f16bede074142f8beeb65f1460ac2953d69a569441c5f3bd",
+      "source_frames": [
+        1514
+      ],
+      "image": "intro_loop_sequence_images/frame_01514.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01514_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1518,
+      "duration_frames": 4,
+      "hash": "c78c55cd108670e059e9767569e5c5fe5729a1b977e41906d7f9846ab518bda6",
+      "source_frames": [
+        1518
+      ],
+      "image": "intro_loop_sequence_images/frame_01518.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01518_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1522,
+      "duration_frames": 4,
+      "hash": "c52deb14697021a3285dce788d7e2c5f79a839736e581128e6bce96cd3f5954a",
+      "source_frames": [
+        1522
+      ],
+      "image": "intro_loop_sequence_images/frame_01522.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01522_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1526,
+      "duration_frames": 4,
+      "hash": "e0fa1a5153768c7fb0f6dbb3bfcd7f67de1663a02f41a1f607514ac53076e6bb",
+      "source_frames": [
+        1526
+      ],
+      "image": "intro_loop_sequence_images/frame_01526.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01526_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1530,
+      "duration_frames": 4,
+      "hash": "fe7d70a4bcd6513144317e605ac477e5ace64dc490a2f9f030484053ddcca67d",
+      "source_frames": [
+        1530
+      ],
+      "image": "intro_loop_sequence_images/frame_01530.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01530_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1534,
+      "duration_frames": 4,
+      "hash": "b5f4f64a308c3e8c67695d4600b7bca7f0cb19ccaa4de758f80001f04effeed3",
+      "source_frames": [
+        1534
+      ],
+      "image": "intro_loop_sequence_images/frame_01534.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01534_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1538,
+      "duration_frames": 4,
+      "hash": "3b939915f749e8bfa934e61dc12128726fc187ce95393210f397770205f8d4f5",
+      "source_frames": [
+        1538
+      ],
+      "image": "intro_loop_sequence_images/frame_01538.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01538_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1542,
+      "duration_frames": 4,
+      "hash": "889b7d298bdf90aa53a3879fe533dfd708eec4e02f3c13a23a7b7bd7085d9eb2",
+      "source_frames": [
+        1542
+      ],
+      "image": "intro_loop_sequence_images/frame_01542.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01542_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1546,
+      "duration_frames": 4,
+      "hash": "86d91b8901d527640abda803a5799fe32d9e603a943a490f3496f2e71ddc5382",
+      "source_frames": [
+        1546
+      ],
+      "image": "intro_loop_sequence_images/frame_01546.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01546_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1550,
+      "duration_frames": 4,
+      "hash": "f5d447c039380979502d13db5fde5c2d0d3f9acdf40e9113ece7faf7e245fa9f",
+      "source_frames": [
+        1550
+      ],
+      "image": "intro_loop_sequence_images/frame_01550.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01550_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1554,
+      "duration_frames": 4,
+      "hash": "97897223f7b6ddee3b53bc3db52d51a33b89f61e492d7110f258e7235b261189",
+      "source_frames": [
+        1554
+      ],
+      "image": "intro_loop_sequence_images/frame_01554.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01554_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1558,
+      "duration_frames": 4,
+      "hash": "1f9a3d237fa0aebc161f48f796578637849e78ea48730ef22892839a637defb7",
+      "source_frames": [
+        1558
+      ],
+      "image": "intro_loop_sequence_images/frame_01558.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01558_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1562,
+      "duration_frames": 4,
+      "hash": "73238c5c2093107e6758631820e92ef7eb7dee42349aaa9c996d4b5a3e36c3f1",
+      "source_frames": [
+        1562
+      ],
+      "image": "intro_loop_sequence_images/frame_01562.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01562_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1566,
+      "duration_frames": 4,
+      "hash": "cc20b4e20fd9c8929270669325226eab184351184c1bfd0035509b5be4a93cb5",
+      "source_frames": [
+        1566
+      ],
+      "image": "intro_loop_sequence_images/frame_01566.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01566_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1570,
+      "duration_frames": 4,
+      "hash": "06248192f9d841e987364619ca1577cb2584a83b9309882c1593b0424987d671",
+      "source_frames": [
+        1570
+      ],
+      "image": "intro_loop_sequence_images/frame_01570.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01570_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1574,
+      "duration_frames": 4,
+      "hash": "a58748f0c11480cc529b522cc357dcf5979eeb6e16e20e8670844a470c22a2f8",
+      "source_frames": [
+        1574
+      ],
+      "image": "intro_loop_sequence_images/frame_01574.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01574_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1578,
+      "duration_frames": 4,
+      "hash": "638f4dbd8c1328e41f2db1f1fd3c305a04b3f99ddb4c66322b0aecb4345ba93f",
+      "source_frames": [
+        1578
+      ],
+      "image": "intro_loop_sequence_images/frame_01578.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01578_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1582,
+      "duration_frames": 4,
+      "hash": "3e64dcd4a964ccb0d0de9c4bbc0f96b209f809f58c699dcadd9b352791b67b28",
+      "source_frames": [
+        1582
+      ],
+      "image": "intro_loop_sequence_images/frame_01582.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01582_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1586,
+      "duration_frames": 4,
+      "hash": "7480f51e6924c72df2ba092a33b8a531bbb9e5498b175bd8f79421ee5471c6f9",
+      "source_frames": [
+        1586
+      ],
+      "image": "intro_loop_sequence_images/frame_01586.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01586_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1590,
+      "duration_frames": 4,
+      "hash": "694609534f53819af3d4e41af4d7524944661803dab501278935bef6bc6e89c5",
+      "source_frames": [
+        1590
+      ],
+      "image": "intro_loop_sequence_images/frame_01590.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01590_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1594,
+      "duration_frames": 4,
+      "hash": "bb5f2e2d58eae758feb05adba3f0edd2a1ec30371118324f48a7a59662bbba43",
+      "source_frames": [
+        1594
+      ],
+      "image": "intro_loop_sequence_images/frame_01594.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01594_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1598,
+      "duration_frames": 4,
+      "hash": "2410a8a4e2771a0470f4563bc9055de56edbbbe8e5fb6ee64fb0c1f766bea433",
+      "source_frames": [
+        1598
+      ],
+      "image": "intro_loop_sequence_images/frame_01598.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01598_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1602,
+      "duration_frames": 4,
+      "hash": "0d2e2b35ca72bf73ca1255342e0cef3a8d831ee84589f96f603d5d1b5ba26930",
+      "source_frames": [
+        1602
+      ],
+      "image": "intro_loop_sequence_images/frame_01602.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01602_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1606,
+      "duration_frames": 4,
+      "hash": "f0f03b82eaabb50e7b9a8c93561e2f696728db7bda20e856aa0f39692adad883",
+      "source_frames": [
+        1606
+      ],
+      "image": "intro_loop_sequence_images/frame_01606.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01606_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1610,
+      "duration_frames": 4,
+      "hash": "513b60bb67a9084ebb09ca03f8ad4fc8b9fafc24b63cb3b9f8773c74933db3d4",
+      "source_frames": [
+        1610
+      ],
+      "image": "intro_loop_sequence_images/frame_01610.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01610_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1614,
+      "duration_frames": 4,
+      "hash": "de7e84a88d8f7f6c516394f2b09895f1663f09a38d83b348990f057379305c9d",
+      "source_frames": [
+        1614
+      ],
+      "image": "intro_loop_sequence_images/frame_01614.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01614_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1618,
+      "duration_frames": 4,
+      "hash": "8885dbc6b3456495326533d3f8102243ad7bf72e9130072eb58d1f2080ddc6de",
+      "source_frames": [
+        1618
+      ],
+      "image": "intro_loop_sequence_images/frame_01618.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01618_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1622,
+      "duration_frames": 4,
+      "hash": "dc9b862827e2749c8aac5ff84fe5650983308d5eb32ace79d0f28c6bb22c0cc9",
+      "source_frames": [
+        1622
+      ],
+      "image": "intro_loop_sequence_images/frame_01622.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01622_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1626,
+      "duration_frames": 4,
+      "hash": "4a36287adb9771946e8ce1d673af82b5390c098078bab6a02661d78b41ab93e0",
+      "source_frames": [
+        1626
+      ],
+      "image": "intro_loop_sequence_images/frame_01626.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01626_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1630,
+      "duration_frames": 4,
+      "hash": "0f6b1f4c91ef250ba434479bdf31df9aff5ca7e13b2a3f11e18686c9086426d5",
+      "source_frames": [
+        1630
+      ],
+      "image": "intro_loop_sequence_images/frame_01630.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01630_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1634,
+      "duration_frames": 4,
+      "hash": "b5f74bd0ae2e44e7abcc636adc68914a79ab2eb51ec00a5c27a80354b895366e",
+      "source_frames": [
+        1634
+      ],
+      "image": "intro_loop_sequence_images/frame_01634.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01634_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1638,
+      "duration_frames": 4,
+      "hash": "fb9b8206c6af92cb12b570f5fab8209c46f7bf80f26a4926f6bf60c150a9294d",
+      "source_frames": [
+        1638
+      ],
+      "image": "intro_loop_sequence_images/frame_01638.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01638_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1642,
+      "duration_frames": 4,
+      "hash": "f27471c4b0d569609e228085c1cafb7c18289cacc32e934205b646483b1fa29c",
+      "source_frames": [
+        1642
+      ],
+      "image": "intro_loop_sequence_images/frame_01642.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01642_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1646,
+      "duration_frames": 4,
+      "hash": "d46a1eaa209eb2a63c06ffd7896fa4e0a33f0114d471ba5e10057e069551e2f9",
+      "source_frames": [
+        1646
+      ],
+      "image": "intro_loop_sequence_images/frame_01646.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01646_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1650,
+      "duration_frames": 4,
+      "hash": "5ce7e768bdb4f8bb0809e1c26b07061b4fc585e4bb863a99dd07092460efa48b",
+      "source_frames": [
+        1650
+      ],
+      "image": "intro_loop_sequence_images/frame_01650.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01650_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1654,
+      "duration_frames": 4,
+      "hash": "fa04893ea02482be26776a360e4f139abce65b52798bef22b24de6bfdadc0c04",
+      "source_frames": [
+        1654
+      ],
+      "image": "intro_loop_sequence_images/frame_01654.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01654_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1658,
+      "duration_frames": 4,
+      "hash": "c582929c3990909580f1aecbabc6710ec348c1aae9bc18adb06c3c3b89df09c2",
+      "source_frames": [
+        1658
+      ],
+      "image": "intro_loop_sequence_images/frame_01658.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01658_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1662,
+      "duration_frames": 4,
+      "hash": "c5fb861271958faf2d684feec03c7f25d099b87e6927a81e1dcf0e9649c588af",
+      "source_frames": [
+        1662
+      ],
+      "image": "intro_loop_sequence_images/frame_01662.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01662_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1666,
+      "duration_frames": 4,
+      "hash": "20a921a789de41915759936f6459c5cf31654ee87c6f756aa351461a6c3f56d7",
+      "source_frames": [
+        1666
+      ],
+      "image": "intro_loop_sequence_images/frame_01666.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01666_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1670,
+      "duration_frames": 4,
+      "hash": "8016fc876c38e73b9aecf47ad94eedd7b43ed5f26f55cd4c5bbd6a449db9f296",
+      "source_frames": [
+        1670
+      ],
+      "image": "intro_loop_sequence_images/frame_01670.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01670_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1674,
+      "duration_frames": 4,
+      "hash": "47c8aa3497e53b334de8c8a3225823578a29c1a982a1fc7f2fabca716f372cde",
+      "source_frames": [
+        1674
+      ],
+      "image": "intro_loop_sequence_images/frame_01674.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01674_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1678,
+      "duration_frames": 4,
+      "hash": "669eba3c7f14f9ec2444ac5a3a4295b79dfc1e484fc3015c42a9a90905928174",
+      "source_frames": [
+        1678
+      ],
+      "image": "intro_loop_sequence_images/frame_01678.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01678_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1682,
+      "duration_frames": 4,
+      "hash": "262adf9b1a0e3f00d6c5159c5944109481f832f0e073b6776084bb9cc129b3aa",
+      "source_frames": [
+        1682
+      ],
+      "image": "intro_loop_sequence_images/frame_01682.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01682_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1686,
+      "duration_frames": 4,
+      "hash": "c7d01cadd20eb1b277c184c2e06830cfa6b1cb162714cd0004a3ee14d81941e4",
+      "source_frames": [
+        1686
+      ],
+      "image": "intro_loop_sequence_images/frame_01686.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01686_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1690,
+      "duration_frames": 4,
+      "hash": "66da90cc2535642e2ae5c8e4522fbb2ed2b55093664ac9635bbaaa4a8c9c3353",
+      "source_frames": [
+        1690
+      ],
+      "image": "intro_loop_sequence_images/frame_01690.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01690_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1694,
+      "duration_frames": 4,
+      "hash": "428ae268f7e34f8b54fe70eb5a8dd5731e8ca11a246a59e9c59b29d3641de2c7",
+      "source_frames": [
+        1694
+      ],
+      "image": "intro_loop_sequence_images/frame_01694.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01694_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1698,
+      "duration_frames": 48,
+      "hash": "2cbbeef1249170a43854962fa5b19fba628470c70beb9ce23e15a0f05cb891f2",
+      "source_frames": [
+        1698,
+        1702,
+        1706,
+        1710,
+        1714,
+        1718,
+        1722,
+        1726,
+        1730,
+        1734,
+        1738,
+        1742
+      ],
+      "image": "intro_loop_sequence_images/frame_01698.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01698_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 1746,
+      "duration_frames": 300,
+      "hash": "afbfcf81e8eb50fd7899af9049e9a55ba3aa41fdc4badd8a5f311b804a626b3c",
+      "source_frames": [
+        1746,
+        1750,
+        1754,
+        1758,
+        1762,
+        1766,
+        1770,
+        1774,
+        1778,
+        1782,
+        1786,
+        1790,
+        1794,
+        1798,
+        1802,
+        1806,
+        1810,
+        1814,
+        1818,
+        1822,
+        1826,
+        1830,
+        1834,
+        1838,
+        1842,
+        1846,
+        1850,
+        1854,
+        1858,
+        1862,
+        1866,
+        1870,
+        1874,
+        1878,
+        1882,
+        1886,
+        1890,
+        1894,
+        1898,
+        1902,
+        1906,
+        1910,
+        1914,
+        1918,
+        1922,
+        1926,
+        1930,
+        1934,
+        1938,
+        1942,
+        1946,
+        1950,
+        1954,
+        1958,
+        1962,
+        1966,
+        1970,
+        1974,
+        1978,
+        1982,
+        1986,
+        1990,
+        1994,
+        1998,
+        2002,
+        2006,
+        2010,
+        2014,
+        2018,
+        2022,
+        2026,
+        2030,
+        2034,
+        2038,
+        2042
+      ],
+      "image": "intro_loop_sequence_images/frame_01746.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_01746_frame.png"
+    },
+    {
+      "type": "image",
+      "frame": 2046,
+      "duration_frames": 26,
+      "hash": "2cbbeef1249170a43854962fa5b19fba628470c70beb9ce23e15a0f05cb891f2",
+      "source_frames": [
+        2046,
+        2050,
+        2054,
+        2058,
+        2062,
+        2066,
+        2070
+      ],
+      "image": "intro_loop_sequence_images/frame_02046.ppm",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/intro_loop_frame_02046_frame.png"
+    }
+  ],
+  "total_duration_frames": 1418
+}

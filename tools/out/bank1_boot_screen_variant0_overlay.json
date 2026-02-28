@@ -1,0 +1,106 @@
+{
+  "variant": 0,
+  "state_model": {
+    "state_index": 0,
+    "selector_1c78": 1,
+    "selector_1c7a": 0,
+    "1cac": 7,
+    "1cca": 0,
+    "1cfa": 0,
+    "1caa": 0,
+    "1ce2": 0,
+    "1ce4": 0,
+    "1ce6": 0,
+    "1ccc": 0,
+    "1cce": 2,
+    "1cd0": 4,
+    "1cea": 0,
+    "1cae": 0,
+    "negative_layout": false,
+    "job_indices": {
+      "bank9_boot_vram_pages": 0,
+      "bank8_bulk_vram_block": 0,
+      "mixed_page_uploads_to_vram_0000": 1,
+      "mixed_bulk_uploads_to_vram_3000": 1,
+      "compressed_bank7_group_a": 7,
+      "compressed_bank7_group_b": 7
+    },
+    "job_vram_words": {
+      "bank9_boot_vram_pages": 2048,
+      "bank8_bulk_vram_block": 8192,
+      "mixed_page_uploads_to_vram_0000": 0,
+      "mixed_bulk_uploads_to_vram_3000": 12288,
+      "compressed_bank7_group_a": 6144,
+      "compressed_bank7_group_b": 20480,
+      "optional_overlay_to_vram_4d00": 19712,
+      "local_patch_1c78": 24752,
+      "local_patch_1c7a": 24768,
+      "local_patch_static": 24784
+    },
+    "palette_indices": {
+      "boot_cgram_00_1f": 7,
+      "boot_cgram_90": 0,
+      "boot_cgram_a0": 0,
+      "boot_shared_subpalette_b0": 0,
+      "boot_shared_subpalette_c0": 2,
+      "boot_shared_subpalette_d0": 4,
+      "boot_cgram_e0": 7
+    },
+    "ppu_setup": {
+      "BGMODE": 33,
+      "BG1SC": 1,
+      "BG2SC": 11,
+      "BG3SC": 25,
+      "BG12NBA": 35,
+      "BG34NBA": 53,
+      "TMAIN": 23,
+      "OBJSEL": 3
+    }
+  },
+  "selected_palette_entries": {
+    "boot_cgram_00_1f": 7,
+    "boot_cgram_90": 0,
+    "boot_cgram_a0": 0,
+    "boot_shared_subpalette_b0": 0,
+    "boot_shared_subpalette_c0": 2,
+    "boot_shared_subpalette_d0": 4,
+    "boot_cgram_e0": 7
+  },
+  "layers": [
+    {
+      "name": "bg2",
+      "tilemap_base_word": 2048,
+      "chr_base_word": 8192,
+      "screen_size": [
+        64,
+        64
+      ],
+      "bpp": 4
+    },
+    {
+      "name": "bg1",
+      "tilemap_base_word": 0,
+      "chr_base_word": 12288,
+      "screen_size": [
+        64,
+        32
+      ],
+      "bpp": 4
+    },
+    {
+      "name": "bg3",
+      "tilemap_base_word": 6144,
+      "chr_base_word": 20480,
+      "screen_size": [
+        64,
+        32
+      ],
+      "bpp": 2
+    }
+  ],
+  "notes": [
+    "This renderer composes BG layers only.",
+    "OBJ palettes and OAM-driven sprite composition are not implemented here.",
+    "Only the boot-path BG palette upload at CGRAM 0x00-0x1F is consumed for pixels."
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "captured": [{
+      "cgram": "/home/nivando-soares/asmdump/tools/out/test_bg_range_small_frame_00654_cgram.bin",
+      "frame": 654,
+      "ppu_state": "/home/nivando-soares/asmdump/tools/out/test_bg_range_small_frame_00654_ppu_state.json",
+      "vram": "/home/nivando-soares/asmdump/tools/out/test_bg_range_small_frame_00654_vram.bin"
+    }, {
+      "cgram": "/home/nivando-soares/asmdump/tools/out/test_bg_range_small_frame_00658_cgram.bin",
+      "frame": 658,
+      "ppu_state": "/home/nivando-soares/asmdump/tools/out/test_bg_range_small_frame_00658_ppu_state.json",
+      "vram": "/home/nivando-soares/asmdump/tools/out/test_bg_range_small_frame_00658_vram.bin"
+    }, {
+      "cgram": "/home/nivando-soares/asmdump/tools/out/test_bg_range_small_frame_00662_cgram.bin",
+      "frame": 662,
+      "ppu_state": "/home/nivando-soares/asmdump/tools/out/test_bg_range_small_frame_00662_ppu_state.json",
+      "vram": "/home/nivando-soares/asmdump/tools/out/test_bg_range_small_frame_00662_vram.bin"
+    }],
+  "dump_oam": false,
+  "dump_screenshots": false,
+  "end_frame": 662,
+  "output_prefix": "/home/nivando-soares/asmdump/tools/out/test_bg_range_small",
+  "start_frame": 654,
+  "step": 4,
+  "total_frames": 663
+}

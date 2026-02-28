@@ -1,0 +1,255 @@
+{
+  "screenshot_frame": 1200,
+  "total_writes": 274,
+  "register_counts": {
+    "$210F": 2,
+    "$2110": 2,
+    "$2111": 2,
+    "$2112": 2,
+    "$2113": 2,
+    "$2114": 2,
+    "$2116": 1,
+    "$2117": 1,
+    "$2118": 128,
+    "$2119": 128,
+    "M7HOFS": 2,
+    "M7VOFS": 2
+  },
+  "scanline_counts_top": [
+    {
+      "scanline": 228,
+      "count": 165
+    },
+    {
+      "scanline": 229,
+      "count": 82
+    },
+    {
+      "scanline": 227,
+      "count": 13
+    },
+    {
+      "scanline": 226,
+      "count": 11
+    },
+    {
+      "scanline": 225,
+      "count": 3
+    }
+  ],
+  "register_details": {
+    "$210F": {
+      "count": 2,
+      "unique_scanlines": 1,
+      "scanline_min": 226,
+      "scanline_max": 226,
+      "unique_values": [
+        0
+      ]
+    },
+    "$2110": {
+      "count": 2,
+      "unique_scanlines": 1,
+      "scanline_min": 226,
+      "scanline_max": 226,
+      "unique_values": [
+        255
+      ]
+    },
+    "$2111": {
+      "count": 2,
+      "unique_scanlines": 1,
+      "scanline_min": 226,
+      "scanline_max": 226,
+      "unique_values": [
+        0
+      ]
+    },
+    "$2112": {
+      "count": 2,
+      "unique_scanlines": 1,
+      "scanline_min": 226,
+      "scanline_max": 226,
+      "unique_values": [
+        255
+      ]
+    },
+    "$2113": {
+      "count": 2,
+      "unique_scanlines": 1,
+      "scanline_min": 226,
+      "scanline_max": 226,
+      "unique_values": [
+        0
+      ]
+    },
+    "$2114": {
+      "count": 2,
+      "unique_scanlines": 1,
+      "scanline_min": 227,
+      "scanline_max": 227,
+      "unique_values": [
+        255
+      ]
+    },
+    "$2116": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 227,
+      "scanline_max": 227,
+      "unique_values": [
+        32
+      ]
+    },
+    "$2117": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 227,
+      "scanline_max": 227,
+      "unique_values": [
+        73
+      ]
+    },
+    "$2118": {
+      "count": 128,
+      "unique_scanlines": 3,
+      "scanline_min": 227,
+      "scanline_max": 229,
+      "unique_values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        12,
+        14,
+        15,
+        16,
+        26,
+        29,
+        32,
+        33,
+        36,
+        41,
+        47,
+        48,
+        49,
+        52,
+        54,
+        59,
+        60,
+        64,
+        65,
+        67,
+        79,
+        92,
+        95,
+        96,
+        97,
+        108,
+        109,
+        111,
+        120,
+        121,
+        128,
+        129,
+        130,
+        142,
+        145,
+        146,
+        152,
+        158,
+        159,
+        160,
+        177,
+        178,
+        181,
+        183,
+        184,
+        192,
+        200,
+        208,
+        224,
+        232,
+        240,
+        243,
+        248,
+        252,
+        254,
+        255
+      ]
+    },
+    "$2119": {
+      "count": 128,
+      "unique_scanlines": 3,
+      "scanline_min": 227,
+      "scanline_max": 229,
+      "unique_values": [
+        0,
+        2,
+        3,
+        14,
+        15,
+        16,
+        23,
+        24,
+        30,
+        32,
+        49,
+        51,
+        69,
+        80,
+        91,
+        92,
+        96,
+        97,
+        102,
+        103,
+        112,
+        114,
+        119,
+        123,
+        127,
+        128,
+        140,
+        144,
+        147,
+        160,
+        172,
+        176,
+        180,
+        192,
+        204,
+        208,
+        218,
+        224,
+        240,
+        243,
+        249,
+        252
+      ]
+    },
+    "M7HOFS": {
+      "count": 2,
+      "unique_scanlines": 1,
+      "scanline_min": 225,
+      "scanline_max": 225,
+      "unique_values": [
+        0
+      ]
+    },
+    "M7VOFS": {
+      "count": 2,
+      "unique_scanlines": 2,
+      "scanline_min": 225,
+      "scanline_max": 226,
+      "unique_values": [
+        255
+      ]
+    }
+  }
+}

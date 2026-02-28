@@ -1,0 +1,94 @@
+{
+  "screenshot_frame": 1080,
+  "total_writes": 8,
+  "register_counts": {
+    "A1B1": 1,
+    "A1T1H": 1,
+    "A1T1L": 1,
+    "BBAD1": 1,
+    "DAS1H": 1,
+    "DAS1L": 1,
+    "DMAEN": 1,
+    "DMAP1": 1
+  },
+  "scanline_counts_top": [
+    {
+      "scanline": 227,
+      "count": 8
+    }
+  ],
+  "register_details": {
+    "A1B1": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 227,
+      "scanline_max": 227,
+      "unique_values": [
+        0
+      ]
+    },
+    "A1T1H": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 227,
+      "scanline_max": 227,
+      "unique_values": [
+        7
+      ]
+    },
+    "A1T1L": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 227,
+      "scanline_max": 227,
+      "unique_values": [
+        0
+      ]
+    },
+    "BBAD1": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 227,
+      "scanline_max": 227,
+      "unique_values": [
+        4
+      ]
+    },
+    "DAS1H": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 227,
+      "scanline_max": 227,
+      "unique_values": [
+        2
+      ]
+    },
+    "DAS1L": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 227,
+      "scanline_max": 227,
+      "unique_values": [
+        32
+      ]
+    },
+    "DMAEN": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 227,
+      "scanline_max": 227,
+      "unique_values": [
+        2
+      ]
+    },
+    "DMAP1": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 227,
+      "scanline_max": 227,
+      "unique_values": [
+        0
+      ]
+    }
+  }
+}

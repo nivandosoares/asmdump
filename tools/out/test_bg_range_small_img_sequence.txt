@@ -1,0 +1,4 @@
+# type duration_frames vram_path cgram_path ppu_state_path
+image 4 test_bg_range_small_img_sequence_images/frame_00654.ppm
+image 4 test_bg_range_small_img_sequence_images/frame_00658.ppm
+image 4 test_bg_range_small_img_sequence_images/frame_00662.ppm

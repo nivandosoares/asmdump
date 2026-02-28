@@ -6,6 +6,7 @@ import argparse
 import json
 from pathlib import Path
 
+from boot_state_model import compute_boot_state
 from decompress_td2_chunk import (
     LOROM_BANK_SIZE,
     bank_offset,
@@ -82,7 +83,14 @@ def read_l0006c9_blob(rom_bytes: bytes, source_bank: int, source_addr: int, comp
     window, rom_offset = load_rom_window(rom_bytes, source_bank, source_addr)
     compression_header = compression.get("header") if compression else None
 
-    if compression_header == "26FB":
+    if compression_header == "42FB":
+        blob, decode_summary = decode_42fb(window)
+        source_meta = {
+            "kind": "42FB",
+            "compressed_rom_offset": f"0x{rom_offset:06X}",
+            "compressed_bytes_consumed": decode_summary["compressed_bytes_consumed"],
+        }
+    elif compression_header == "26FB":
         blob, decode_summary = decode_26fb(window)
         source_meta = {
             "kind": "26FB",
@@ -158,8 +166,8 @@ def apply_l0006c9_bytes(vram: bytearray, source: bytes, vram_word_addr: int, len
     }
 
 
-def select_entry(entries: list[dict], variant: int) -> tuple[int, dict]:
-    index = min(max(variant, 0), len(entries) - 1)
+def select_entry(entries: list[dict], selected_index: int) -> tuple[int, dict]:
+    index = min(max(selected_index, 0), len(entries) - 1)
     return index, entries[index]
 
 
@@ -172,11 +180,18 @@ def build_boot_vram(
     selector_1c7a: int | None,
 ) -> tuple[bytes, dict]:
     vram = bytearray(VRAM_SIZE_BYTES)
+    state = compute_boot_state(
+        rom_bytes,
+        state_index=variant,
+        selector_1c78=selector_1c78,
+        selector_1c7a=selector_1c7a,
+    )
     summary = {
         "variant": variant,
+        "state_model": state,
         "apply_optional_overlay": apply_optional_overlay,
-        "selector_1c78": selector_1c78,
-        "selector_1c7a": selector_1c7a,
+        "selector_1c78": state["selector_1c78"],
+        "selector_1c7a": state["selector_1c7a"],
         "page_stride_words": f"0x{BOOT_PAGE_STRIDE_WORDS:04X}",
         "applied_jobs": [],
         "skipped_jobs": [],
@@ -185,9 +200,9 @@ def build_boot_vram(
     for job in manifest["jobs"]:
         name = job["name"]
         if name == "bank9_boot_vram_pages":
-            entry_index, entry = select_entry(job["entries"], variant)
-            vram_base_variants = job["vram_base_variants"]
-            vram_base = parse_hex(vram_base_variants[0])
+            selected_index = state["job_indices"][name]
+            entry_index, entry = select_entry(job["entries"], selected_index)
+            vram_base = state["job_vram_words"][name]
             blob, source_meta = read_l0005ac_blob(
                 rom_bytes,
                 entry["source_bank"],
@@ -198,12 +213,13 @@ def build_boot_vram(
             summary["applied_jobs"].append({
                 "job": name,
                 "selected_entry_index": entry_index,
-                "selected_vram_base_variant": vram_base_variants[0],
+                "selected_vram_base_variant": f"0x{vram_base:04X}",
                 "source": source_meta,
                 "apply": apply_meta,
             })
         elif name == "mixed_page_uploads_to_vram_0000":
-            entry_index, entry = select_entry(job["entries"], variant)
+            selected_index = state["job_indices"][name]
+            entry_index, entry = select_entry(job["entries"], selected_index)
             blob, source_meta = read_l0005ac_blob(
                 rom_bytes,
                 entry["source_bank"],
@@ -214,11 +230,13 @@ def build_boot_vram(
             summary["applied_jobs"].append({
                 "job": name,
                 "selected_entry_index": entry_index,
+                "requested_entry_index": selected_index,
                 "source": source_meta,
                 "apply": apply_meta,
             })
         elif name == "compressed_bank7_group_a":
-            entry_index, entry = select_entry(job["entries"], variant)
+            selected_index = state["job_indices"][name]
+            entry_index, entry = select_entry(job["entries"], selected_index)
             blob, source_meta = read_l0005ac_blob(
                 rom_bytes,
                 entry["source_bank"],
@@ -229,11 +247,13 @@ def build_boot_vram(
             summary["applied_jobs"].append({
                 "job": name,
                 "selected_entry_index": entry_index,
+                "requested_entry_index": selected_index,
                 "source": source_meta,
                 "apply": apply_meta,
             })
         elif name in ("bank8_bulk_vram_block", "mixed_bulk_uploads_to_vram_3000"):
-            entry_index, entry = select_entry(job["entries"], variant)
+            selected_index = state["job_indices"][name]
+            entry_index, entry = select_entry(job["entries"], selected_index)
             source_window, rom_offset = load_rom_window(
                 rom_bytes,
                 entry["source_bank"],
@@ -249,6 +269,7 @@ def build_boot_vram(
             summary["applied_jobs"].append({
                 "job": name,
                 "selected_entry_index": entry_index,
+                "requested_entry_index": selected_index,
                 "source": {
                     "kind": "raw",
                     "source_bank": entry["source_bank"],
@@ -258,7 +279,8 @@ def build_boot_vram(
                 "apply": apply_meta,
             })
         elif name == "compressed_bank7_group_b":
-            entry_index, entry = select_entry(job["entries"], variant)
+            selected_index = state["job_indices"][name]
+            entry_index, entry = select_entry(job["entries"], selected_index)
             source_blob, source_meta = read_l0006c9_blob(
                 rom_bytes,
                 entry["source_bank"],
@@ -274,14 +296,15 @@ def build_boot_vram(
             summary["applied_jobs"].append({
                 "job": name,
                 "selected_entry_index": entry_index,
+                "requested_entry_index": selected_index,
                 "source": source_meta,
                 "apply": apply_meta,
             })
         elif name == "optional_overlay_to_vram_4d00":
-            if not apply_optional_overlay:
+            if not apply_optional_overlay and state["1ce6"] == 0:
                 summary["skipped_jobs"].append({
                     "job": name,
-                    "reason": "conditioned on $1CE6 and not enabled for this snapshot",
+                    "reason": "conditioned on $1CE6 and not enabled for this state",
                 })
                 continue
 
@@ -300,6 +323,7 @@ def build_boot_vram(
             )
             summary["applied_jobs"].append({
                 "job": name,
+                "forced": apply_optional_overlay and state["1ce6"] == 0,
                 "source": source_meta,
                 "apply": apply_meta,
             })
@@ -314,9 +338,9 @@ def build_boot_vram(
 
                 selector_name = patch.get("selector")
                 if selector_name == "$1C78":
-                    applied_selector = selector_1c78
+                    applied_selector = state["selector_1c78"]
                 elif selector_name == "$1C7A":
-                    applied_selector = selector_1c7a
+                    applied_selector = state["selector_1c7a"]
 
                 if applied_selector is None:
                     applied_selector = patch.get("default_value")
@@ -364,7 +388,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("rom", type=Path, help="input ROM path")
     parser.add_argument("manifest", type=Path, help="boot screen manifest JSON")
     parser.add_argument("output", type=Path, help="output VRAM binary path")
-    parser.add_argument("--variant", type=int, default=0, help="entry index to select from manifest tables")
+    parser.add_argument(
+        "--variant",
+        "--state-index",
+        dest="variant",
+        type=int,
+        default=0,
+        help="bank1 boot-state table index to model when selecting jobs",
+    )
     parser.add_argument(
         "--apply-optional-overlay",
         action="store_true",

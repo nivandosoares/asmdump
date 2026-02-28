@@ -247,7 +247,11 @@ def main() -> int:
             {
                 "name": "local_bank1_tilemap_patches",
                 "helper": "L0006C9",
-                "note": "Three small local uploads patch the boot screen tilemap area near VRAM 0x60B0.",
+                "note": (
+                    "Three small local uploads patch boot-path VRAM near 0x60B0. "
+                    "Their exact semantic role is still open; they are not yet assumed "
+                    "to be pure BG tilemap data."
+                ),
                 "patches": [
                     {
                         "source": make_source_entry(rom_bytes, header_size, 0x01, 0x8614),

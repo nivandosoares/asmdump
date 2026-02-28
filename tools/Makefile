@@ -11,6 +11,10 @@ BOOT_VRAM_4BPP := $(OUT_DIR)/bank1_boot_vram_variant0_4bpp.ppm
 BOOT_VRAM_OVERLAY_BIN := $(OUT_DIR)/bank1_boot_vram_variant0_overlay.bin
 BOOT_VRAM_OVERLAY_JSON := $(OUT_DIR)/bank1_boot_vram_variant0_overlay.json
 BOOT_VRAM_OVERLAY_4BPP := $(OUT_DIR)/bank1_boot_vram_variant0_overlay_4bpp.ppm
+BOOT_SCREEN_PREVIEW := $(OUT_DIR)/bank1_boot_screen_variant0.ppm
+BOOT_SCREEN_PREVIEW_JSON := $(OUT_DIR)/bank1_boot_screen_variant0.json
+BOOT_SCREEN_OVERLAY_PREVIEW := $(OUT_DIR)/bank1_boot_screen_variant0_overlay.ppm
+BOOT_SCREEN_OVERLAY_PREVIEW_JSON := $(OUT_DIR)/bank1_boot_screen_variant0_overlay.json
 BANK7_HEADER_JSON := $(OUT_DIR)/bank7_compression_headers.json
 BANK7_42FB0_BIN := $(OUT_DIR)/bank7_42fb_8000.bin
 BANK7_42FB0_JSON := $(OUT_DIR)/bank7_42fb_8000.json
@@ -24,12 +28,33 @@ BANK7_CHUNKS := $(OUT_DIR)/bank7_chunks.json
 BANK7_CHUNK1_GRAY := $(OUT_DIR)/bank7_chunk1_gray.ppm
 BANK7_CHUNK1_PALETTE0 := $(OUT_DIR)/bank7_chunk1_palette0.ppm
 BANK9_2BPP := $(OUT_DIR)/bank9_tiles_2bpp.ppm
+BANK1_CREDITS_SCENE_PREFIX := $(OUT_DIR)/bank1_credits_scene
+BANK1_CREDITS_SCENE_VRAM := $(BANK1_CREDITS_SCENE_PREFIX)_vram.bin
+BANK1_CREDITS_SCENE_CGRAM := $(BANK1_CREDITS_SCENE_PREFIX)_cgram.bin
+BANK1_CREDITS_SCENE_PPU := $(BANK1_CREDITS_SCENE_PREFIX)_ppu_state.json
+BANK1_CREDITS_SCENE_JSON := $(BANK1_CREDITS_SCENE_PREFIX).json
+BANK1_CREDITS_SCENE_PPM := $(BANK1_CREDITS_SCENE_PREFIX).ppm
+BANK1_CREDITS_SCENE_DIFF := $(OUT_DIR)/bank1_credits_scene_vs_mesen_diff.ppm
+BANK1_A35A_SCENE_PREFIX := $(OUT_DIR)/bank1_l00a35a_scene
+BANK1_A35A_SCENE_VRAM := $(BANK1_A35A_SCENE_PREFIX)_vram.bin
+BANK1_A35A_SCENE_CGRAM := $(BANK1_A35A_SCENE_PREFIX)_cgram.bin
+BANK1_A35A_SCENE_PPU := $(BANK1_A35A_SCENE_PREFIX)_ppu_state.json
+BANK1_A35A_SCENE_JSON := $(BANK1_A35A_SCENE_PREFIX).json
+BANK1_A35A_SCENE_PPM := $(BANK1_A35A_SCENE_PREFIX).ppm
+MESEN_BOOT_FRAME := ../.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_frame.png
+MESEN_FRAME ?= 300
+MESEN_FRAME_DIR ?= $(OUT_DIR)/mesen_frame$(MESEN_FRAME)
+INTRO_LOOP_PREFIX := $(OUT_DIR)/intro_loop
+INTRO_LOOP_SUMMARY := $(INTRO_LOOP_PREFIX).json
+INTRO_LOOP_SEQUENCE := $(OUT_DIR)/intro_loop_sequence.txt
+INTRO_LOOP_SEQUENCE_JSON := $(OUT_DIR)/intro_loop_sequence.json
+MESEN_TIMEOUT_SECONDS ?= 75
 
-.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview
+.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview mesen-ppu-frame intro-loop-dump intro-loop-sequence
 
 all: previews
 
-previews: bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview
+previews: bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-screen-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank1-credits-scene-preview bank1-a35a-scene-preview
 
 $(OUT_DIR):
 	mkdir -p $(OUT_DIR)
@@ -69,6 +94,16 @@ $(BOOT_VRAM_OVERLAY_4BPP): extract_snes_tiles.py $(BOOT_VRAM_OVERLAY_BIN) | $(OU
 	$(PYTHON) extract_snes_tiles.py $(BOOT_VRAM_OVERLAY_BIN) $(BOOT_VRAM_OVERLAY_4BPP) --raw-binary --bpp 4 --byte-length 0xC000 --columns 32
 
 boot-vram-overlay-preview: $(BOOT_VRAM_OVERLAY_BIN) $(BOOT_VRAM_OVERLAY_JSON) $(BOOT_VRAM_OVERLAY_4BPP)
+
+$(BOOT_SCREEN_PREVIEW) $(BOOT_SCREEN_PREVIEW_JSON): render_boot_screen.py boot_state_model.py $(BOOT_VRAM_BIN) $(BOOT_PALETTE_JSON) $(ROM) | $(OUT_DIR)
+	$(PYTHON) render_boot_screen.py $(BOOT_VRAM_BIN) $(BOOT_PALETTE_JSON) $(BOOT_SCREEN_PREVIEW) --rom $(ROM) --json-out $(BOOT_SCREEN_PREVIEW_JSON)
+
+boot-screen-preview: $(BOOT_SCREEN_PREVIEW) $(BOOT_SCREEN_PREVIEW_JSON)
+
+$(BOOT_SCREEN_OVERLAY_PREVIEW) $(BOOT_SCREEN_OVERLAY_PREVIEW_JSON): render_boot_screen.py boot_state_model.py $(BOOT_VRAM_OVERLAY_BIN) $(BOOT_PALETTE_JSON) $(ROM) | $(OUT_DIR)
+	$(PYTHON) render_boot_screen.py $(BOOT_VRAM_OVERLAY_BIN) $(BOOT_PALETTE_JSON) $(BOOT_SCREEN_OVERLAY_PREVIEW) --rom $(ROM) --json-out $(BOOT_SCREEN_OVERLAY_PREVIEW_JSON)
+
+boot-screen-overlay-preview: $(BOOT_SCREEN_OVERLAY_PREVIEW) $(BOOT_SCREEN_OVERLAY_PREVIEW_JSON)
 
 $(BANK6_GRAY): extract_snes_tiles.py $(ROM) | $(OUT_DIR)
 	$(PYTHON) extract_snes_tiles.py $(ROM) $(BANK6_GRAY) --bank 6 --bpp 4
@@ -120,3 +155,37 @@ $(BANK9_2BPP): extract_snes_tiles.py $(ROM) | $(OUT_DIR)
 	$(PYTHON) extract_snes_tiles.py $(ROM) $(BANK9_2BPP) --bank 9 --bpp 2
 
 bank9-preview: $(BANK9_2BPP)
+
+$(BANK1_CREDITS_SCENE_VRAM) $(BANK1_CREDITS_SCENE_CGRAM) $(BANK1_CREDITS_SCENE_PPU) $(BANK1_CREDITS_SCENE_JSON) $(BANK1_CREDITS_SCENE_PPM): build_bank1_credits_scene.py build_boot_vram.py render_boot_screen.py $(ROM) | $(OUT_DIR)
+	$(PYTHON) build_bank1_credits_scene.py $(ROM) $(BANK1_CREDITS_SCENE_PREFIX)
+
+bank1-credits-scene-preview: $(BANK1_CREDITS_SCENE_VRAM) $(BANK1_CREDITS_SCENE_CGRAM) $(BANK1_CREDITS_SCENE_PPU) $(BANK1_CREDITS_SCENE_JSON) $(BANK1_CREDITS_SCENE_PPM)
+
+$(BANK1_CREDITS_SCENE_DIFF): compare_frames.py $(MESEN_BOOT_FRAME) $(BANK1_CREDITS_SCENE_PPM) | $(OUT_DIR)
+	$(PYTHON) compare_frames.py $(MESEN_BOOT_FRAME) $(BANK1_CREDITS_SCENE_PPM) --diff-out $(BANK1_CREDITS_SCENE_DIFF)
+
+bank1-credits-scene-compare: $(BANK1_CREDITS_SCENE_DIFF)
+
+$(BANK1_A35A_SCENE_VRAM) $(BANK1_A35A_SCENE_CGRAM) $(BANK1_A35A_SCENE_PPU) $(BANK1_A35A_SCENE_JSON) $(BANK1_A35A_SCENE_PPM): build_bank1_helper_scene.py build_boot_vram.py render_boot_screen.py $(ROM) | $(OUT_DIR)
+	$(PYTHON) build_bank1_helper_scene.py $(ROM) $(BANK1_A35A_SCENE_PREFIX) --helper-index 4 --visible-layer bg1 --scene-name bank1_L00A35A_frontend --source-routine 01:A35A
+
+bank1-a35a-scene-preview: $(BANK1_A35A_SCENE_VRAM) $(BANK1_A35A_SCENE_CGRAM) $(BANK1_A35A_SCENE_PPU) $(BANK1_A35A_SCENE_JSON) $(BANK1_A35A_SCENE_PPM)
+
+mesen-ppu-frame: | $(OUT_DIR)
+	./run_mesen_ppu_extract.sh --rom $(ROM) --frame $(MESEN_FRAME) --out-dir $(MESEN_FRAME_DIR)
+
+$(INTRO_LOOP_SUMMARY): | $(OUT_DIR)
+	MESEN_TIMEOUT_SECONDS=$(MESEN_TIMEOUT_SECONDS) \
+	TD2_BG_RANGE_START_FRAME=654 \
+	TD2_BG_RANGE_END_FRAME=2070 \
+	TD2_BG_RANGE_STEP=4 \
+	TD2_BG_RANGE_DUMP_SCREENSHOTS=1 \
+	TD2_BG_RANGE_OUTPUT_PREFIX=$(abspath $(INTRO_LOOP_PREFIX)) \
+	../validation/run_mesen_dump_bg_range.sh $(abspath $(ROM))
+
+intro-loop-dump: $(INTRO_LOOP_SUMMARY)
+
+$(INTRO_LOOP_SEQUENCE) $(INTRO_LOOP_SEQUENCE_JSON): build_scene_sequence_manifest.py $(INTRO_LOOP_SUMMARY) | $(OUT_DIR)
+	$(PYTHON) build_scene_sequence_manifest.py $(INTRO_LOOP_SUMMARY) $(INTRO_LOOP_SEQUENCE) --json-out $(INTRO_LOOP_SEQUENCE_JSON) --end-frame-exclusive 2072 --prefer-screenshot
+
+intro-loop-sequence: $(INTRO_LOOP_SEQUENCE) $(INTRO_LOOP_SEQUENCE_JSON)

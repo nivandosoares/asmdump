@@ -1,0 +1,169 @@
+{
+  "screenshot_frame": 1200,
+  "total_writes": 16,
+  "register_counts": {
+    "A1B0": 1,
+    "A1B1": 1,
+    "A1T0H": 1,
+    "A1T0L": 1,
+    "A1T1H": 1,
+    "A1T1L": 1,
+    "BBAD0": 1,
+    "BBAD1": 1,
+    "DAS0H": 1,
+    "DAS0L": 1,
+    "DAS1H": 1,
+    "DAS1L": 1,
+    "DMAEN": 2,
+    "DMAP0": 1,
+    "DMAP1": 1
+  },
+  "scanline_counts_top": [
+    {
+      "scanline": 227,
+      "count": 8
+    },
+    {
+      "scanline": 229,
+      "count": 8
+    }
+  ],
+  "register_details": {
+    "A1B0": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 227,
+      "scanline_max": 227,
+      "unique_values": [
+        26
+      ]
+    },
+    "A1B1": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 229,
+      "scanline_max": 229,
+      "unique_values": [
+        0
+      ]
+    },
+    "A1T0H": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 227,
+      "scanline_max": 227,
+      "unique_values": [
+        170
+      ]
+    },
+    "A1T0L": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 227,
+      "scanline_max": 227,
+      "unique_values": [
+        16
+      ]
+    },
+    "A1T1H": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 229,
+      "scanline_max": 229,
+      "unique_values": [
+        7
+      ]
+    },
+    "A1T1L": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 229,
+      "scanline_max": 229,
+      "unique_values": [
+        0
+      ]
+    },
+    "BBAD0": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 227,
+      "scanline_max": 227,
+      "unique_values": [
+        24
+      ]
+    },
+    "BBAD1": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 229,
+      "scanline_max": 229,
+      "unique_values": [
+        4
+      ]
+    },
+    "DAS0H": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 227,
+      "scanline_max": 227,
+      "unique_values": [
+        1
+      ]
+    },
+    "DAS0L": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 227,
+      "scanline_max": 227,
+      "unique_values": [
+        0
+      ]
+    },
+    "DAS1H": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 229,
+      "scanline_max": 229,
+      "unique_values": [
+        2
+      ]
+    },
+    "DAS1L": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 229,
+      "scanline_max": 229,
+      "unique_values": [
+        32
+      ]
+    },
+    "DMAEN": {
+      "count": 2,
+      "unique_scanlines": 2,
+      "scanline_min": 227,
+      "scanline_max": 229,
+      "unique_values": [
+        1,
+        2
+      ]
+    },
+    "DMAP0": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 227,
+      "scanline_max": 227,
+      "unique_values": [
+        1
+      ]
+    },
+    "DMAP1": {
+      "count": 1,
+      "unique_scanlines": 1,
+      "scanline_min": 229,
+      "scanline_max": 229,
+      "unique_values": [
+        0
+      ]
+    }
+  }
+}

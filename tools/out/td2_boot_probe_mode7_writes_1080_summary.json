@@ -1,0 +1,128 @@
+{
+  "screenshot_frame": 1080,
+  "total_writes": 20,
+  "register_counts": {
+    "$210F": 2,
+    "$2110": 2,
+    "$2111": 2,
+    "$2112": 2,
+    "$2113": 2,
+    "$2114": 2,
+    "M7A": 2,
+    "M7D": 2,
+    "M7HOFS": 2,
+    "M7VOFS": 2
+  },
+  "scanline_counts_top": [
+    {
+      "scanline": 226,
+      "count": 12
+    },
+    {
+      "scanline": 231,
+      "count": 4
+    },
+    {
+      "scanline": 225,
+      "count": 2
+    },
+    {
+      "scanline": 227,
+      "count": 2
+    }
+  ],
+  "register_details": {
+    "$210F": {
+      "count": 2,
+      "unique_scanlines": 1,
+      "scanline_min": 226,
+      "scanline_max": 226,
+      "unique_values": [
+        0
+      ]
+    },
+    "$2110": {
+      "count": 2,
+      "unique_scanlines": 1,
+      "scanline_min": 226,
+      "scanline_max": 226,
+      "unique_values": [
+        255
+      ]
+    },
+    "$2111": {
+      "count": 2,
+      "unique_scanlines": 1,
+      "scanline_min": 226,
+      "scanline_max": 226,
+      "unique_values": [
+        0
+      ]
+    },
+    "$2112": {
+      "count": 2,
+      "unique_scanlines": 1,
+      "scanline_min": 226,
+      "scanline_max": 226,
+      "unique_values": [
+        255
+      ]
+    },
+    "$2113": {
+      "count": 2,
+      "unique_scanlines": 1,
+      "scanline_min": 226,
+      "scanline_max": 226,
+      "unique_values": [
+        0
+      ]
+    },
+    "$2114": {
+      "count": 2,
+      "unique_scanlines": 1,
+      "scanline_min": 227,
+      "scanline_max": 227,
+      "unique_values": [
+        255
+      ]
+    },
+    "M7A": {
+      "count": 2,
+      "unique_scanlines": 1,
+      "scanline_min": 231,
+      "scanline_max": 231,
+      "unique_values": [
+        11,
+        128
+      ]
+    },
+    "M7D": {
+      "count": 2,
+      "unique_scanlines": 1,
+      "scanline_min": 231,
+      "scanline_max": 231,
+      "unique_values": [
+        11,
+        128
+      ]
+    },
+    "M7HOFS": {
+      "count": 2,
+      "unique_scanlines": 1,
+      "scanline_min": 225,
+      "scanline_max": 225,
+      "unique_values": [
+        0
+      ]
+    },
+    "M7VOFS": {
+      "count": 2,
+      "unique_scanlines": 1,
+      "scanline_min": 226,
+      "scanline_max": 226,
+      "unique_values": [
+        255
+      ]
+    }
+  }
+}

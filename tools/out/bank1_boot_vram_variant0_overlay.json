@@ -1,8 +1,65 @@
 {
   "variant": 0,
+  "state_model": {
+    "state_index": 0,
+    "selector_1c78": 1,
+    "selector_1c7a": 0,
+    "1cac": 7,
+    "1cca": 0,
+    "1cfa": 0,
+    "1caa": 0,
+    "1ce2": 0,
+    "1ce4": 0,
+    "1ce6": 0,
+    "1ccc": 0,
+    "1cce": 2,
+    "1cd0": 4,
+    "1cea": 0,
+    "1cae": 0,
+    "negative_layout": false,
+    "job_indices": {
+      "bank9_boot_vram_pages": 0,
+      "bank8_bulk_vram_block": 0,
+      "mixed_page_uploads_to_vram_0000": 1,
+      "mixed_bulk_uploads_to_vram_3000": 1,
+      "compressed_bank7_group_a": 7,
+      "compressed_bank7_group_b": 7
+    },
+    "job_vram_words": {
+      "bank9_boot_vram_pages": 2048,
+      "bank8_bulk_vram_block": 8192,
+      "mixed_page_uploads_to_vram_0000": 0,
+      "mixed_bulk_uploads_to_vram_3000": 12288,
+      "compressed_bank7_group_a": 6144,
+      "compressed_bank7_group_b": 20480,
+      "optional_overlay_to_vram_4d00": 19712,
+      "local_patch_1c78": 24752,
+      "local_patch_1c7a": 24768,
+      "local_patch_static": 24784
+    },
+    "palette_indices": {
+      "boot_cgram_00_1f": 7,
+      "boot_cgram_90": 0,
+      "boot_cgram_a0": 0,
+      "boot_shared_subpalette_b0": 0,
+      "boot_shared_subpalette_c0": 2,
+      "boot_shared_subpalette_d0": 4,
+      "boot_cgram_e0": 7
+    },
+    "ppu_setup": {
+      "BGMODE": 33,
+      "BG1SC": 1,
+      "BG2SC": 11,
+      "BG3SC": 25,
+      "BG12NBA": 35,
+      "BG34NBA": 53,
+      "TMAIN": 23,
+      "OBJSEL": 3
+    }
+  },
   "apply_optional_overlay": true,
-  "selector_1c78": null,
-  "selector_1c7a": null,
+  "selector_1c78": 1,
+  "selector_1c7a": 0,
   "page_stride_words": "0x0400",
   "applied_jobs": [
     {
@@ -32,6 +89,7 @@
     {
       "job": "bank8_bulk_vram_block",
       "selected_entry_index": 0,
+      "requested_entry_index": 0,
       "source": {
         "kind": "raw",
         "source_bank": 8,
@@ -46,12 +104,13 @@
     },
     {
       "job": "mixed_page_uploads_to_vram_0000",
-      "selected_entry_index": 0,
+      "selected_entry_index": 1,
+      "requested_entry_index": 1,
       "source": {
         "kind": "raw",
-        "raw_rom_offset": "0x0BA750",
+        "raw_rom_offset": "0x0BB856",
         "source_bank": 23,
-        "source_addr": "0xA750",
+        "source_addr": "0xB856",
         "width_words": 64,
         "row_count": 32,
         "aux_header": "0x0308",
@@ -69,12 +128,13 @@
     },
     {
       "job": "mixed_bulk_uploads_to_vram_3000",
-      "selected_entry_index": 0,
+      "selected_entry_index": 1,
+      "requested_entry_index": 1,
       "source": {
         "kind": "raw",
-        "source_bank": 25,
-        "source_addr": "0xBDA8",
-        "raw_rom_offset": "0x0CBDA8"
+        "source_bank": 6,
+        "source_addr": "0x8000",
+        "raw_rom_offset": "0x030000"
       },
       "apply": {
         "helper": "L0006C9",
@@ -84,13 +144,14 @@
     },
     {
       "job": "compressed_bank7_group_a",
-      "selected_entry_index": 0,
+      "selected_entry_index": 7,
+      "requested_entry_index": 7,
       "source": {
         "kind": "42FB",
-        "compressed_rom_offset": "0x038000",
-        "compressed_bytes_consumed": 377,
+        "compressed_rom_offset": "0x03BF49",
+        "compressed_bytes_consumed": 456,
         "source_bank": 7,
-        "source_addr": "0x8000",
+        "source_addr": "0xBF49",
         "width_words": 64,
         "row_count": 32,
         "aux_header": "0x0304",
@@ -108,23 +169,25 @@
     },
     {
       "job": "compressed_bank7_group_b",
-      "selected_entry_index": 0,
+      "selected_entry_index": 7,
+      "requested_entry_index": 7,
       "source": {
         "kind": "26FB",
-        "compressed_rom_offset": "0x03817A",
-        "compressed_bytes_consumed": 1160,
+        "compressed_rom_offset": "0x03C112",
+        "compressed_bytes_consumed": 2333,
         "source_bank": 7,
-        "source_addr": "0x817A",
-        "payload_size": 2160
+        "source_addr": "0xC112",
+        "payload_size": 2832
       },
       "apply": {
         "helper": "L0006C9",
         "vram_word_addr": "0x5000",
-        "length_bytes": 2160
+        "length_bytes": 2832
       }
     },
     {
       "job": "optional_overlay_to_vram_4d00",
+      "forced": true,
       "source": {
         "kind": "26FB",
         "compressed_rom_offset": "0x06EFDE",
