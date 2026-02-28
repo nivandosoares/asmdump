@@ -1,0 +1,172 @@
+{
+  "rom": "/home/nivando-soares/asmdump/game.smc",
+  "frameRequest": 986,
+  "holdB": false,
+  "holdStart": false,
+  "ppu": {
+    "frameCount": 986,
+    "scanline": 225,
+    "cycle": 26,
+    "bgMode": 7,
+    "mainScreenLayers": 17,
+    "subScreenLayers": 0,
+    "forcedBlank": false,
+    "brightness": 15,
+    "directColorMode": false,
+    "layers": [
+      {
+        "tilemapAddress": 0,
+        "chrAddress": 8192,
+        "hScroll": 0,
+        "vScroll": 1023,
+        "doubleWidth": true,
+        "doubleHeight": false,
+        "largeTiles": false
+      },
+      {
+        "tilemapAddress": 2048,
+        "chrAddress": 16384,
+        "hScroll": 0,
+        "vScroll": 1023,
+        "doubleWidth": true,
+        "doubleHeight": false,
+        "largeTiles": false
+      },
+      {
+        "tilemapAddress": 4096,
+        "chrAddress": 24576,
+        "hScroll": 0,
+        "vScroll": 1023,
+        "doubleWidth": true,
+        "doubleHeight": false,
+        "largeTiles": false
+      },
+      {
+        "tilemapAddress": 0,
+        "chrAddress": 0,
+        "hScroll": 0,
+        "vScroll": 1023,
+        "doubleWidth": false,
+        "doubleHeight": false,
+        "largeTiles": false
+      }
+    ],
+    "mode7": {
+      "matrix": [
+        15488,
+        0,
+        0,
+        15420
+      ],
+      "hScroll": 0,
+      "vScroll": 8191,
+      "centerX": 128,
+      "centerY": 112,
+      "largeMap": true,
+      "fillWithTile0": false,
+      "horizontalMirroring": false,
+      "verticalMirroring": false
+    }
+  },
+  "ppuTools": {
+    "scanlineBgMode": "BwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHAAAAAAAAAAAAAAAAAAA="
+  },
+  "layers": [
+    {
+      "name": "bg1",
+      "layer": 0,
+      "enabled": true,
+      "size": {
+        "width": 1024,
+        "height": 1024
+      },
+      "bpp": 8,
+      "format": "Mode7",
+      "tilemapAddress": 0,
+      "tilesetAddress": 0
+    },
+    {
+      "name": "bg2",
+      "layer": 1,
+      "enabled": true,
+      "size": {
+        "width": 1024,
+        "height": 1024
+      },
+      "bpp": 8,
+      "format": "Mode7ExtBg",
+      "tilemapAddress": 0,
+      "tilesetAddress": 0
+    },
+    {
+      "name": "bg3",
+      "layer": 2,
+      "enabled": false
+    },
+    {
+      "name": "bg4",
+      "layer": 3,
+      "enabled": false
+    },
+    {
+      "name": "main",
+      "layer": 4,
+      "enabled": true,
+      "size": {
+        "width": 256,
+        "height": 239
+      },
+      "bpp": 0,
+      "format": "Bpp2",
+      "tilemapAddress": 0,
+      "tilesetAddress": 0
+    },
+    {
+      "name": "sub",
+      "layer": 5,
+      "enabled": true,
+      "size": {
+        "width": 256,
+        "height": 239
+      },
+      "bpp": 0,
+      "format": "Bpp2",
+      "tilemapAddress": 0,
+      "tilesetAddress": 0
+    }
+  ],
+  "tilesets": [
+    {
+      "layer": 0,
+      "name": "bg1",
+      "file": "tiles_bg1.ppm",
+      "startAddress": 0,
+      "format": "Mode7",
+      "palette": 0
+    },
+    {
+      "layer": 1,
+      "name": "bg2",
+      "file": "tiles_bg2.ppm",
+      "startAddress": 0,
+      "format": "Mode7",
+      "palette": 0
+    },
+    {
+      "layer": 2,
+      "name": "bg3",
+      "file": "tiles_bg3.ppm",
+      "startAddress": 0,
+      "format": "Mode7",
+      "palette": 0
+    },
+    {
+      "layer": 3,
+      "name": "bg4",
+      "file": "tiles_bg4.ppm",
+      "startAddress": 0,
+      "format": "Mode7",
+      "palette": 0
+    }
+  ]
+}

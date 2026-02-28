@@ -168,7 +168,7 @@ The current runtime milestone goes one step further than that sampled manifest:
 - `tools/out/ballistic_callback_sequence.txt` is the direct runtime Ballistic callback clip
 - `tools/out/intro_loop_hybrid_sequence.txt` now splices:
   - the direct callback clip for `654..958`
-  - the native OAM-aware `snes_bg` window for `978..985`
+  - the queue-driven `snes_bg` window for `978..985`
   - sampled `image` playback for the remaining attract states
 - the ROM-derived clip currently compares exactly at:
   - frame offset `0` vs source frame `654`
@@ -183,8 +183,9 @@ The current runtime milestone goes one step further than that sampled manifest:
   - frame offset `320` vs source frame `974`
   - frame offset `676` vs source frame `1330`
 - current promoted-hybrid validation around the native post-Ballistic splice is:
-  - frame offset `324` vs source frame `978`: `3` mismatched pixels (`0.005232%`)
-  - frame offset `328` vs source frame `982`: `4` mismatched pixels (`0.006975%`)
+  - frame offset `324` vs source frame `978`: `2` mismatched pixels (`0.003488%`)
+  - frame offset `328` vs source frame `982`: `2` mismatched pixels (`0.003488%`)
+  - frame offset `332` vs source frame `986`: exact sampled fallback
 
 Current boundary for the next native intro replacement:
 
@@ -201,8 +202,9 @@ Current boundary for the next native intro replacement:
   - frame `994`: `2781` mismatched pixels (`4.849679%`)
 - practical next step:
   - treat `958..977` as a deeper bootstrap-builder problem rather than a simple scene dump
-  - keep `978..985` as the first promoted native post-Ballistic window inside the hybrid loop
-  - `tools/out/intro_native_978/sequence.txt` is now the splice source for that `978..985` window
+  - keep queue-driven `978` and `982` as the first promoted post-Ballistic replacements inside the hybrid loop
+  - frame `986` is still the first unresolved edge after those replacements
+  - `tools/out/intro_native_978_derived_sequence.txt` is now the splice source for the promoted replacement window
 
 That bootstrap reading is now backed by two extra checks:
 
@@ -267,6 +269,23 @@ That extra dump tightened the bootstrap reading:
     - command `0x01`, source `1A:A988`, size `0x0040`, VRAM destination `0x4900`
   - `0700..091F` is confirmed as the staged OAM buffer copied by the NMI `DMA1 -> $2104` upload
   - the repeated `0xE100` head word in that region is the OAM fill/sentinel pattern, not a tile queue entry
+- `tools/out/intro_bootstrap_978_982_queue.json`
+  - frame `978` still runs `01:9FE5` with `4` active descriptors
+  - frame `982` still runs `01:9FE5` with `5` active descriptors
+  - the new active descriptor is:
+    - `1A:AB58 -> VRAM 0x49A0`, size `0x0100`
+  - applying that queue onto the derived frame-`978` seed yields `tools/out/bank1_bootstrap_queue_982.ppm`
+  - current compare vs the real frame `982` target: `2` mismatched pixels (`0.003488%`)
+- `tools/out/intro_bootstrap_982_986_queue.json`
+  - frame `986` still runs `01:9FE5` but grows the active queue to `7` descriptors
+  - the two new active descriptors are:
+    - `1A:AA10 -> VRAM 0x4920`, size `0x0100`
+    - `1A:ACA0 -> VRAM 0x49A0`, size `0x0100`
+  - applying that queue onto the derived frame-`982` seed yields `tools/out/bank1_bootstrap_queue_986.ppm`
+  - current compare vs the real frame `986` target: `958` mismatched pixels (`1.670619%`)
+  - disabling OBJ on the same derived scene yields `tools/out/bank1_bootstrap_queue_986_noobj.ppm`
+  - current compare with OBJ disabled: `21` mismatched pixels (`0.036621%`)
+  - practical reading: queued VRAM plus staged OAM is enough for the frame-`986` BG path too; the remaining regression is concentrated in Mode 7 OBJ composition
 
 The probe now also writes a second PPU-memory snapshot at the start of the sampled frame when `TD2_BOOT_PROBE_DUMP_PPU_MEMORY=1` is enabled:
 

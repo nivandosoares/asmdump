@@ -408,7 +408,7 @@ Current implementation status:
 - `tools/out/ballistic_callback_sequence.txt` is the current direct runtime Ballistic callback clip
 - `tools/out/intro_loop_hybrid_sequence.txt` is the current best no-input intro-loop runtime manifest:
   - direct runtime Ballistic callback for `654..958`
-  - native OAM-aware `snes_bg` playback for `978..985`
+  - queue-driven `snes_bg` playback for `978..985`
   - sampled `image` playback for the later attract states before and after that splice
 - the manifest collapses identical adjacent screenshots, reducing `355` captured frames to `226` playback entries while preserving the full `1418` frames of runtime duration
 
@@ -448,6 +448,10 @@ Current post-Ballistic boundary for the next native replacement:
       - the artifact also exposes `active_after_entries`, so downstream builders can consume the live subset directly instead of re-slicing `0600` from `dp_0054`
     - `0700..091F` is confirmed as the staged OAM upload buffer, not a tile queue
       - repeated `0xE100` head words are the fill/sentinel pattern used before the NMI `DMA1 -> $2104` copy
+    - that queue artifact is now exercised by `tools/build_bootstrap_queue_scene.py`
+      - current concrete output: `tools/out/bank1_bootstrap_queue_978.ppm`
+      - seed VRAM from frame `958` + active queue/OAM state from frame `974` + presentation template from frame `978`
+      - current validation against the real frame `978` screenshot: `2` mismatched pixels (`0.003488%`)
 - frame `978` is the first practical stable target after the handoff:
   - runtime reconstruction from extracted SNES state compares at `4` pixels (`0.006975%`) against the sampled screenshot
 - the SDL runtime now also supports optional OAM/OBJ composition for extracted SNES scenes:
@@ -458,18 +462,36 @@ Current post-Ballistic boundary for the next native replacement:
   - frame `986`: `23` pixels (`0.040109%`)
   - frame `990`: `1295` pixels (`2.258301%`)
   - frame `994`: `2781` pixels (`4.849679%`)
+- the next stable queue-driven window is now also solved:
+  - `tools/out/intro_bootstrap_978_982_queue.json` shows `01:9FE5` holding the same callback and growing the active `0600` queue from `4` to `5` descriptors
+  - the new live descriptor is:
+    - command `0x01`, source `1A:AB58`, size `0x0100`, VRAM destination `0x49A0`
+  - `tools/out/bank1_bootstrap_queue_982.ppm` applies that queue onto the derived frame-`978` VRAM seed
+  - compare vs real frame `982`: `2` mismatched pixels (`0.003488%`)
+- pushing the same queue method one more window does not close the next step yet:
+  - `tools/out/intro_bootstrap_982_986_queue.json` grows the active queue from `5` to `7` descriptors
+  - the two new descriptors are:
+    - command `0x01`, source `1A:AA10`, size `0x0100`, VRAM destination `0x4920`
+    - command `0x01`, source `1A:ACA0`, size `0x0100`, VRAM destination `0x49A0`
+  - the experimental output `tools/out/bank1_bootstrap_queue_986.ppm` still lands at `958` mismatched pixels (`1.670619%`) against the real frame `986` screenshot
+  - disabling OBJ on that same derived scene tightens the result sharply:
+    - `tools/out/bank1_bootstrap_queue_986_noobj.ppm`
+    - compare vs real frame `986`: `21` mismatched pixels (`0.036621%`)
+  - practical reading: the queued Mode 7 BG path is nearly right at frame `986`; the open regression is mainly in OBJ composition
 - practical reading:
-  - the `978..985` block is now promoted into the hybrid intro loop
+  - queue-driven `978` and `982` are now promoted into the hybrid intro loop
+  - frame `986` is still sampled in the hybrid loop
   - the earlier `958..977` path still wants a deeper ROM-side scene/bootstrap builder
-  - the later drift points toward missing OBJ or another presentation nuance on top of the Mode 7 BG path
+  - the next missing behavior is concentrated at `986+`, not at `978` or `982`
 - current concrete artifact:
-  - `tools/out/intro_native_978/sequence.txt` is the promoted OAM-aware splice source for that `978..985` window
+  - `tools/out/intro_native_978_derived_sequence.txt` is the promoted queue-driven splice source for that `978..985` replacement window
   - `tools/build_bank1_l00a00c_scene.py` is the current experimental builder for `L00A00C`
   - `tools/out/bank1_l00a00c_scene.ppm` is the seeded `954 -> L00A00C -> 974-template` prototype output
   - current promoted-hybrid validation is:
     - offset `320` / source frame `974`: exact
-    - offset `324` / source frame `978`: `3` pixels (`0.005232%`)
-    - offset `328` / source frame `982`: `4` pixels (`0.006975%`)
+    - offset `324` / source frame `978`: `2` pixels (`0.003488%`)
+    - offset `328` / source frame `982`: `2` pixels (`0.003488%`)
+    - offset `332` / source frame `986`: exact sampled fallback
     - offset `676` / source frame `1330`: exact
 - the latest bootstrap findings are narrower now:
   - rerunning the probe at `958` and `974` with start-of-frame dumps does not help; both start-frame and end-frame renders still land at `100%` mismatch

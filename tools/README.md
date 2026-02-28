@@ -13,6 +13,7 @@ Current Sprint 0 tooling:
 - `build_bank1_l00a00c_scene.py`: experimental bank 1 `L00A00C` bootstrap builder that applies the direct Mode 7 setup uploads onto optional seeded `VRAM/CGRAM/OAM` dumps and renders the result with a supplied PPU-state template
 - `analyze_frame_delta.py`: summarizes binary, screenshot, PPU-state, and optional probe-log deltas between two extracted frame prefixes
 - `analyze_bootstrap_queue.py`: decodes the low-WRAM `0600` DMA queue, `0700` staged OAM buffer, `0900` OAM high table, and related allocator maps between two bootstrap captures
+- `build_bootstrap_queue_scene.py`: applies the active `0600` DMA descriptors from a queue summary onto a seed VRAM image, optionally lifts staged OAM from WRAM, and emits a normal `snes_bg` scene prefix plus preview
 - `mesen_ppu_extract`: headless C# bridge into `MesenCore.so` that dumps the current frame's SNES BG layer views, BG tilesets/CHR sheets, palette, per-sprite previews, sprite screen preview, and raw VRAM/CGRAM/OAM without going through the GUI
 - `extract_mesen_scene_range.py`: batches `mesen_ppu_extract` across a frame range, writes per-frame scene folders, and emits a collapsed `sequence.txt` manifest for the SDL runtime
 - `build_scene_sequence_manifest.py`: converts flat Mesen range dumps into runtime-ready `sequence.txt` manifests, either as `snes_bg` entries or exact sampled `image` entries from screenshots; when `oam.bin` exists, it now carries it through as an optional fourth `snes_bg` path
@@ -46,6 +47,7 @@ python3 tools/build_bank1_helper_scene.py game.smc tools/out/bank1_l00a35a_scene
 python3 tools/build_bank1_l00a00c_scene.py game.smc tools/out/bank1_l00a00c_scene --seed-vram tools/out/intro_loop_frame_00954_vram.bin --seed-cgram tools/out/intro_loop_frame_00954_cgram.bin --ppu-state-template tools/out/intro_loop_frame_00974_ppu_state.json --skip-palette
 python3 tools/analyze_frame_delta.py tools/out/intro_loop_frame_00954 tools/out/intro_loop_frame_00958 tools/out/intro_bootstrap_954_958_delta.json --probe-json-b tools/out/bootprobe_958_detail/td2_boot_probe.json
 python3 tools/analyze_bootstrap_queue.py tools/out/bootprobe_958_detail/td2_boot_probe_wram.bin tools/out/bootprobe_974_detail/td2_boot_probe_wram.bin tools/out/intro_bootstrap_958_974_queue.json
+python3 tools/build_bootstrap_queue_scene.py game.smc tools/out/intro_bootstrap_958_974_queue.json tools/out/bank1_bootstrap_queue_978 --seed-vram tools/out/bootprobe_958_detail/td2_boot_probe_vram.bin --cgram tools/out/bootprobe_974_detail/td2_boot_probe_cgram.bin --ppu-state tools/out/intro_loop_frame_00978_ppu_state.json --wram tools/out/bootprobe_974_detail/td2_boot_probe_wram.bin --render-objects
 ./tools/run_mesen_ppu_extract.sh --rom game.smc --frame 300 --out-dir tools/out/mesen_frame300
 python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 654 --end-frame 710 --step 4 --out-dir tools/out/ballistic_sequence --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
 python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 978 --end-frame 982 --step 4 --out-dir tools/out/intro_native_978 --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
@@ -93,6 +95,10 @@ Useful make targets:
 - `make -C tools bank1-credits-scene-compare`
 - `make -C tools bank1-a35a-scene-preview`
 - `make -C tools bank1-a00c-scene-preview`
+- `make -C tools bank1-bootstrap-queue-978-preview`
+- `make -C tools bank1-bootstrap-queue-982-preview`
+- `make -C tools bank1-bootstrap-queue-986-preview`
+- `make -C tools bank1-bootstrap-queue-986-noobj-preview`
 - `make -C tools intro-bootstrap-deltas`
 - `make -C tools intro-bootstrap-queue`
 - `make -C tools mesen-ppu-frame MESEN_FRAME=300`
@@ -167,15 +173,35 @@ The current direct runtime Ballistic callback artifact lives in `tools/out/balli
 - `ballistic_a39c.json`: structured summary with class mapping and runtime parameters
 - `../ballistic_callback_sequence.txt`: one-entry runtime sequence manifest for the direct callback path
 
+The current queue-driven bootstrap artifacts live in `tools/out/`:
+
+- `intro_bootstrap_958_974_queue.json`: frame `958 -> 974` queue/OAM summary
+- `intro_bootstrap_978_982_queue.json`: frame `978 -> 982` queue/OAM summary
+- `intro_bootstrap_982_986_queue.json`: frame `982 -> 986` queue/OAM summary
+- `bank1_bootstrap_queue_978.*`: queue-driven frame `978` scene from seed `958` VRAM plus frame `974` queue/OAM state
+- `bank1_bootstrap_queue_982.*`: queue-driven frame `982` scene from derived frame `978` VRAM plus frame `982` queue/OAM state
+- `bank1_bootstrap_queue_986.*`: experimental queue-driven frame `986` scene from derived frame `982` VRAM plus frame `986` queue/OAM state
+- `bank1_bootstrap_queue_986_noobj.*`: the same derived frame `986` scene with OBJ composition disabled
+
+Current practical reading for those queue scenes:
+
+- `bank1_bootstrap_queue_978.ppm` compares against the real frame `978` target with `2` mismatched pixels (`0.003488%`)
+- `bank1_bootstrap_queue_982.ppm` compares against the real frame `982` target with `2` mismatched pixels (`0.003488%`)
+- `bank1_bootstrap_queue_986.ppm` is not yet promotable; it still lands at `958` mismatched pixels (`1.670619%`) against the real frame `986` screenshot
+- `bank1_bootstrap_queue_986_noobj.ppm` lands much closer at `21` mismatched pixels (`0.036621%`)
+- practical reading: the queue-driven BG path for frame `986` is nearly solved; the remaining regression is concentrated in Mode 7 OBJ composition
+
 The current best no-input intro-loop runtime manifest is `tools/out/intro_loop_hybrid_sequence.txt`:
 
 - it replaces frames `654..958` with the direct runtime Ballistic `ballistic_a39c` clip
-- it replaces frames `978..985` with the OAM-aware `snes_bg` splice from `tools/out/intro_native_978/sequence.txt`
+- it keeps the sampled bootstrap image for `958..978`
+- it replaces frames `978..985` with the queue-driven `snes_bg` splice from `tools/out/intro_native_978_derived_sequence.txt`
 - it keeps the remaining later attract states as sampled `image` playback
 - it currently compares exactly in the SDL runtime at offsets `0`, `320`, and `676`
 - the promoted native splice currently compares at:
-  - offset `324` / source frame `978`: `3` mismatched pixels (`0.005232%`)
-  - offset `328` / source frame `982`: `4` mismatched pixels (`0.006975%`)
+  - offset `324` / source frame `978`: `2` mismatched pixels (`0.003488%`)
+  - offset `328` / source frame `982`: `2` mismatched pixels (`0.003488%`)
+  - offset `332` / source frame `986`: exact sampled fallback
 
 The next milestone, the full first no-input attract loop, now lives in `tools/out/intro_loop*`:
 
@@ -200,6 +226,16 @@ The first native post-Ballistic replacement window now lives in `tools/out/intro
   - frame `978`: `2` mismatched pixels (`0.003488%`)
   - frame `982`: `4` mismatched pixels (`0.006975%`)
 - this window is now promoted into `tools/out/intro_loop_hybrid_sequence.txt`
+
+The promoted queue-driven replacement window now lives in:
+
+- `tools/out/intro_native_978_derived_sequence.txt`
+- `tools/out/intro_native_978_derived_sequence.json`
+
+It contains exactly two derived `snes_bg` entries:
+
+- frame `978` from `bank1_bootstrap_queue_978.*`
+- frame `982` from `bank1_bootstrap_queue_982.*`
 
 The current bootstrap-side experiment for `L00A00C` now lives at `tools/out/bank1_l00a00c_scene*`:
 
@@ -244,6 +280,15 @@ The WRAM-side queue decode now makes the landing frame more concrete:
   - `regions.0600_dma_queue.active_after_entries = [...]`
 - `0700..091F` is confirmed as the staged OAM upload buffer copied by the NMI `DMA1 -> $2104` path
 - repeated `0xE100` head words in that region are the OAM fill/sentinel pattern, not a tile queue
+
+That queue summary now also feeds a derived scene artifact:
+
+- `tools/out/bank1_bootstrap_queue_978.*`
+  - seed VRAM: frame `958`
+  - active queue/OAM stage: frame `974`
+  - presentation template: frame `978`
+  - current validation against the real frame `978` screenshot: `2` mismatched pixels (`0.003488%`)
+  - the SDL runtime matches that derived preview exactly when loaded via `--snes-bg-prefix`
 
 The wrapper expects the local Mesen Linux release at `/home/nivando-soares/Mesen2/bin/linux-x64/Release` by default. Override with `MESEN_RELEASE_DIR=/path/to/release` when needed.
 

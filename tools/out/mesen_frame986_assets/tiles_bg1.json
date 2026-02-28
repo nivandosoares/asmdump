@@ -1,0 +1,15 @@
+{
+  "layer": 0,
+  "name": "bg1",
+  "startAddress": 0,
+  "format": "Mode7",
+  "palette": 0,
+  "widthTiles": 16,
+  "heightTiles": 64,
+  "widthPixels": 128,
+  "heightPixels": 512,
+  "chrAddress": 8192,
+  "bgMode": 7,
+  "directColor": false,
+  "extBg": false
+}

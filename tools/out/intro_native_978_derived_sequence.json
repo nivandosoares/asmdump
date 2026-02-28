@@ -1,0 +1,22 @@
+{
+  "manifest": "out/intro_native_978_derived_sequence.txt",
+  "entries": [
+    {
+      "type": "snes_bg",
+      "duration_frames": 4,
+      "vram": "bank1_bootstrap_queue_978_vram.bin",
+      "cgram": "bank1_bootstrap_queue_978_cgram.bin",
+      "ppu_state": "bank1_bootstrap_queue_978_ppu_state.json",
+      "oam": "bank1_bootstrap_queue_978_oam.bin"
+    },
+    {
+      "type": "snes_bg",
+      "duration_frames": 4,
+      "vram": "bank1_bootstrap_queue_982_vram.bin",
+      "cgram": "bank1_bootstrap_queue_982_cgram.bin",
+      "ppu_state": "bank1_bootstrap_queue_982_ppu_state.json",
+      "oam": "bank1_bootstrap_queue_982_oam.bin"
+    }
+  ],
+  "total_duration_frames": 8
+}\n

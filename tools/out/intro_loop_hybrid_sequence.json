@@ -1,6 +1,6 @@
 {
   "base_manifest": "/home/nivando-soares/asmdump/tools/out/intro_loop_hybrid_ballistic_sequence.txt",
-  "replacement_manifest": "/home/nivando-soares/asmdump/tools/out/intro_native_978/sequence.txt",
+  "replacement_manifest": "/home/nivando-soares/asmdump/tools/out/intro_native_978_derived_sequence.txt",
   "base_frame": 654,
   "replace_start_frame": 978,
   "replace_end_frame_exclusive": 986,

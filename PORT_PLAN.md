@@ -63,8 +63,9 @@ New useful state beyond the original plan:
 - the first full no-input attract loop is now playable in the SDL runtime as an exact sampled image sequence (`1418` frames, repeating from `654 -> 2072`)
 - the current best intro-loop runtime artifact is a hybrid manifest:
   - direct runtime `ballistic_a39c` Ballistic (`654..958`)
-  - native OAM-aware `snes_bg` replacement for the first stable post-Ballistic window (`978..985`)
-  - sampled image playback for the remaining later attract states
+  - sampled bootstrap image playback for `958..978`
+  - queue-driven `snes_bg` replacements for frames `978` and `982`
+  - sampled image playback for the remaining later attract states, starting again at frame `986`
 - there is now also a repeatable experimental ROM-side `L00A00C` builder:
   - it applies the direct setup uploads onto seeded `VRAM/CGRAM`
   - it is useful for iterating on the `958..977` bootstrap
@@ -73,12 +74,26 @@ New useful state beyond the original plan:
   - `tools/out/intro_bootstrap_958_974_queue.json`
   - frame `974` arms exactly two `0600` DMA descriptors (`1A:9948 -> VRAM 0x4000`, `1A:A988 -> VRAM 0x4900`)
   - `0700..091F` is confirmed as staged OAM data for the following NMI upload
+- that queue data is now exercised by a derived scene artifact:
+  - `tools/out/bank1_bootstrap_queue_978.*`
+  - current compare vs the real frame `978` screenshot: `2` mismatched pixels
+- the next queue window is also closed enough to use:
+  - `tools/out/intro_bootstrap_978_982_queue.json`
+  - `tools/out/bank1_bootstrap_queue_982.*`
+  - current compare vs the real frame `982` target: `2` mismatched pixels
+- the following queue window is not yet closed:
+  - `tools/out/intro_bootstrap_982_986_queue.json`
+  - `tools/out/bank1_bootstrap_queue_986.*`
+  - current compare vs the real frame `986` target: `958` mismatched pixels (`1.670619%`)
+  - disabling OBJ on the same derived scene drops that to `21` mismatched pixels (`0.036621%`) via `tools/out/bank1_bootstrap_queue_986_noobj.*`
+  - practical reading: the next blocker is Mode 7 OBJ composition, not the queued BG/state path
 
 Immediate next focus:
 
 1. Replace the later sampled attract segments with native front-end state machines one callback family at a time.
 2. Push backward into the unstable `958..977` bootstrap using the new repeatable `L00A00C` scene builder, the carry-over state model from the end of Ballistic, and the decoded `0600` DMA queue manifest from frame `974`.
-3. Keep building standalone extraction formats so later artist/mod tooling can sit on stable data instead of volatile reverse-engineering experiments.
+3. Fix Mode 7 OBJ composition at `986+`, because the queue-driven BG/state path is already nearly exact there.
+4. Keep building standalone extraction formats so later artist/mod tooling can sit on stable data instead of volatile reverse-engineering experiments.
 
 ## Delivery Phases
 

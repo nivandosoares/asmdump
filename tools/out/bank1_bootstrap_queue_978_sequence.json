@@ -1,0 +1,14 @@
+{
+  "manifest": "out/bank1_bootstrap_queue_978_sequence.txt",
+  "entries": [
+    {
+      "type": "snes_bg",
+      "duration_frames": 4,
+      "vram": "bank1_bootstrap_queue_978_vram.bin",
+      "cgram": "bank1_bootstrap_queue_978_cgram.bin",
+      "ppu_state": "bank1_bootstrap_queue_978_ppu_state.json",
+      "oam": "bank1_bootstrap_queue_978_oam.bin"
+    }
+  ],
+  "total_duration_frames": 4
+}\n

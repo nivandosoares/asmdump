@@ -18,14 +18,28 @@ What is already real:
 - a full first no-input attract loop now also plays inside that runtime as an exact sampled image sequence
 - a hybrid first no-input attract loop also exists:
   - direct runtime Ballistic callback clip for `654..958`
-  - native OAM-aware `snes_bg` playback for the first stable post-Ballistic window (`978..985`)
-  - sampled playback for the remaining later attract states
+  - queue-driven `snes_bg` playback for frames `978` and `982`
+  - sampled playback for the remaining later attract states, including frame `986`
 - the SDL runtime can now auto-load optional `oam.bin` data for extracted SNES scenes and composite OBJ sprites on top of BG/Mode 7 scenes
-- the first post-Ballistic native replacement is now promoted into the hybrid intro loop as an OAM-aware `snes_bg` clip for frames `978..985`
+- the first two post-Ballistic queue-driven replacements are now promoted into the hybrid intro loop:
+  - `tools/out/bank1_bootstrap_queue_978.*`
+  - `tools/out/bank1_bootstrap_queue_982.*`
+  - frame `986` remains sampled while the next bootstrap/update step is still unresolved
 - an experimental ROM-side `L00A00C` scene builder now exists for the static `958..977` bootstrap window
 - the `958..974` bootstrap landing frame now also has a decoded WRAM-side queue artifact:
   - `tools/out/intro_bootstrap_958_974_queue.json`
   - it identifies two live `0600` DMA descriptors and confirms `0700..091F` as OAM staging
+- the first queue-driven bootstrap scene now also exists:
+  - `tools/out/bank1_bootstrap_queue_978.*`
+  - it reconstructs frame `978` from seed `958` VRAM plus the active frame-`974` queue/OAM state
+- the next queue-driven bootstrap scene now also exists:
+  - `tools/out/bank1_bootstrap_queue_982.*`
+  - it reconstructs frame `982` from derived frame `978` VRAM plus the active frame-`982` queue/OAM state
+- a further queue-driven experiment now exists for the next step:
+  - `tools/out/bank1_bootstrap_queue_986.*`
+  - it is still too far off to promote
+  - `tools/out/bank1_bootstrap_queue_986_noobj.*`
+  - it shows the BG/queue path is close and isolates the remaining error to OBJ composition
 - a working Mesen-based validation harness exists under `validation/`
 - the bank 0 control kernel is documented well enough to guide runtime architecture
 - the bank 1 boot/title screen build path is partially reconstructed into machine-readable manifests
@@ -111,12 +125,19 @@ Current concrete outputs:
 - `tools/out/ballistic_rom_sequence.txt`: single-entry runtime manifest for that ROM-derived Ballistic clip
 - `tools/out/ballistic_callback/ballistic_a39c.txt`: compact callback asset for direct runtime Ballistic playback
 - `tools/out/ballistic_callback_sequence.txt`: single-entry runtime manifest for the direct `ballistic_a39c` path
-- `tools/out/intro_loop_hybrid_sequence.txt`: hybrid intro-loop manifest with direct runtime Ballistic, a native OAM-aware `978..985` splice, and sampled later attract states
-- `tools/out/intro_native_978/sequence.txt`: the promoted OAM-aware native splice source for the post-Ballistic attract path (`978..985`)
+- `tools/out/intro_loop_hybrid_sequence.txt`: hybrid intro-loop manifest with direct runtime Ballistic, sampled bootstrap frames, queue-driven `978/982`, and sampled later attract states
+- `tools/out/intro_native_978/sequence.txt`: the raw extracted OAM-aware splice source for the first post-Ballistic attract window
+- `tools/out/intro_native_978_derived_sequence.txt`: the promoted queue-driven splice source for frames `978` and `982`
+- `tools/out/bank1_bootstrap_queue_982.ppm`: derived frame-`982` scene preview
+- `tools/out/bank1_bootstrap_queue_986.ppm`: experimental frame-`986` queue-driven preview
+- `tools/out/bank1_bootstrap_queue_986_noobj.ppm`: frame-`986` queue-driven preview with OBJ disabled
+- `tools/out/intro_bootstrap_978_982_queue.json`: WRAM queue summary for frame `978 -> 982`
+- `tools/out/intro_bootstrap_982_986_queue.json`: WRAM queue summary for frame `982 -> 986`
 - `tools/out/bank1_l00a00c_scene.ppm`: experimental ROM-side `L00A00C` bootstrap scene preview using `954` seeds and a `974` presentation template
 - `tools/out/intro_bootstrap_954_958_delta.json`: summary of the first Ballistic-to-bootstrap transition step
 - `tools/out/intro_bootstrap_958_974_delta.json`: summary of the first live `01:9D69` bootstrap step
 - `tools/out/intro_bootstrap_958_974_queue.json`: decoded low-WRAM queue state for that same landing frame
+- `tools/out/bank1_bootstrap_queue_978.ppm`: queue-driven reconstruction of the first stable post-bootstrap frame
 
 Still missing:
 
@@ -244,6 +265,7 @@ The new `L00A00C` builder is useful for controlled iteration on the `958..977` b
 The new bootstrap delta summaries materially improved the reading of that gap: `954 -> 958` carries CGRAM forward unchanged, while `958 -> 974` is the first step where `01:9D69` becomes active and populates the `0202/0208/020A` state consumed by `L009DC6`.
 The new WRAM-side queue decode sharpened that further: by frame `974`, `dp_0054 = 0x10`, which means two `0600` DMA descriptors are armed, sourced from `1A:9948` and `1A:A988`, and `0700..091F` is confirmed as the staged OAM upload buffer rather than a tile queue.
 That queue artifact is also directly builder-friendly now: it carries `active_dma_descriptor_count_after` plus `active_after_entries`, so the next bootstrap pass can consume the live NMI queue without re-deriving the active slice from raw WRAM.
+That paid off immediately: `tools/out/bank1_bootstrap_queue_978.ppm` now reconstructs the first stable post-bootstrap frame from queue data with only `2` mismatched pixels against the real frame `978` screenshot.
 
 Deferred requirement recorded for later phases:
 
