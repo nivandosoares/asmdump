@@ -1,0 +1,211 @@
+{
+  "prefix_a": "out/intro_loop_frame_00954",
+  "prefix_b": "out/intro_loop_frame_00958",
+  "frame_a": 954,
+  "frame_b": 958,
+  "vram": {
+    "size_bytes": 65536,
+    "diff_bytes": 6808,
+    "diff_ratio": 0.1038818359375,
+    "even_byte_diffs": 4637,
+    "odd_byte_diffs": 2171,
+    "first_runs": [
+      {
+        "start": 0,
+        "end": 0,
+        "length": 1
+      },
+      {
+        "start": 2,
+        "end": 2,
+        "length": 1
+      },
+      {
+        "start": 4,
+        "end": 4,
+        "length": 1
+      },
+      {
+        "start": 6,
+        "end": 6,
+        "length": 1
+      },
+      {
+        "start": 8,
+        "end": 8,
+        "length": 1
+      },
+      {
+        "start": 10,
+        "end": 10,
+        "length": 1
+      },
+      {
+        "start": 12,
+        "end": 12,
+        "length": 1
+      },
+      {
+        "start": 14,
+        "end": 14,
+        "length": 1
+      },
+      {
+        "start": 16,
+        "end": 16,
+        "length": 1
+      },
+      {
+        "start": 18,
+        "end": 18,
+        "length": 1
+      },
+      {
+        "start": 20,
+        "end": 20,
+        "length": 1
+      },
+      {
+        "start": 22,
+        "end": 22,
+        "length": 1
+      },
+      {
+        "start": 24,
+        "end": 24,
+        "length": 1
+      },
+      {
+        "start": 26,
+        "end": 26,
+        "length": 1
+      },
+      {
+        "start": 28,
+        "end": 28,
+        "length": 1
+      },
+      {
+        "start": 30,
+        "end": 30,
+        "length": 1
+      },
+      {
+        "start": 32,
+        "end": 32,
+        "length": 1
+      },
+      {
+        "start": 34,
+        "end": 34,
+        "length": 1
+      },
+      {
+        "start": 36,
+        "end": 36,
+        "length": 1
+      },
+      {
+        "start": 38,
+        "end": 38,
+        "length": 1
+      },
+      {
+        "start": 40,
+        "end": 40,
+        "length": 1
+      },
+      {
+        "start": 42,
+        "end": 42,
+        "length": 1
+      },
+      {
+        "start": 44,
+        "end": 44,
+        "length": 1
+      },
+      {
+        "start": 46,
+        "end": 46,
+        "length": 1
+      },
+      {
+        "start": 48,
+        "end": 48,
+        "length": 1
+      },
+      {
+        "start": 50,
+        "end": 50,
+        "length": 1
+      },
+      {
+        "start": 52,
+        "end": 52,
+        "length": 1
+      },
+      {
+        "start": 54,
+        "end": 54,
+        "length": 1
+      },
+      {
+        "start": 56,
+        "end": 56,
+        "length": 1
+      },
+      {
+        "start": 58,
+        "end": 58,
+        "length": 1
+      },
+      {
+        "start": 60,
+        "end": 60,
+        "length": 1
+      },
+      {
+        "start": 62,
+        "end": 62,
+        "length": 1
+      }
+    ]
+  },
+  "cgram": {
+    "size_bytes": 512,
+    "diff_bytes": 0,
+    "diff_ratio": 0.0,
+    "even_byte_diffs": 0,
+    "odd_byte_diffs": 0,
+    "first_runs": []
+  },
+  "frame_image": {
+    "width": 256,
+    "height": 224,
+    "pixel_count": 57344,
+    "mismatch_pixels": 7880,
+    "mismatch_ratio": 0.13741629464285715,
+    "max_channel_diff": 255,
+    "mean_abs_channel_diff": 16.09445335751488,
+    "rmse": 61.15754879033363
+  },
+  "ppu_state_changes": {
+    "ppu.forcedBlank": {
+      "a": false,
+      "b": true
+    },
+    "ppu.bgMode": {
+      "a": 1,
+      "b": 7
+    },
+    "ppu.mainScreenLayers": {
+      "a": 1,
+      "b": 17
+    },
+    "ppu.oamBaseAddress": {
+      "a": 0,
+      "b": 16384
+    }
+  }
+}

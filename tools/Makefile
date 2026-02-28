@@ -73,9 +73,12 @@ INTRO_LOOP_HYBRID_SEQUENCE_JSON := $(OUT_DIR)/intro_loop_hybrid_sequence.json
 INTRO_LOOP_HYBRID_BASE_SEQUENCE := $(OUT_DIR)/intro_loop_hybrid_ballistic_sequence.txt
 INTRO_LOOP_HYBRID_BASE_JSON := $(OUT_DIR)/intro_loop_hybrid_ballistic_sequence.json
 INTRO_NATIVE_978_DIR := $(OUT_DIR)/intro_native_978
+INTRO_BOOTSTRAP_954_958_JSON := $(OUT_DIR)/intro_bootstrap_954_958_delta.json
+INTRO_BOOTSTRAP_958_974_JSON := $(OUT_DIR)/intro_bootstrap_958_974_delta.json
+INTRO_BOOTSTRAP_QUEUE_958_974_JSON := $(OUT_DIR)/intro_bootstrap_958_974_queue.json
 MESEN_TIMEOUT_SECONDS ?= 75
 
-.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-native-978
+.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview intro-bootstrap-deltas intro-bootstrap-queue mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-native-978
 
 all: previews
 
@@ -200,9 +203,31 @@ $(BANK1_A00C_SCENE_VRAM) $(BANK1_A00C_SCENE_CGRAM) $(BANK1_A00C_SCENE_PPU) $(BAN
 	$(PYTHON) build_bank1_l00a00c_scene.py $(ROM) $(BANK1_A00C_SCENE_PREFIX) \
 		--seed-vram $(OUT_DIR)/intro_loop_frame_00954_vram.bin \
 		--seed-cgram $(OUT_DIR)/intro_loop_frame_00954_cgram.bin \
-		--ppu-state-template $(OUT_DIR)/intro_loop_frame_00974_ppu_state.json
+		--ppu-state-template $(OUT_DIR)/intro_loop_frame_00974_ppu_state.json \
+		--skip-palette
 
 bank1-a00c-scene-preview: $(BANK1_A00C_SCENE_VRAM) $(BANK1_A00C_SCENE_CGRAM) $(BANK1_A00C_SCENE_PPU) $(BANK1_A00C_SCENE_JSON) $(BANK1_A00C_SCENE_PPM)
+
+$(INTRO_BOOTSTRAP_954_958_JSON): analyze_frame_delta.py $(OUT_DIR)/intro_loop_frame_00954_vram.bin $(OUT_DIR)/intro_loop_frame_00958_vram.bin $(OUT_DIR)/bootprobe_958_detail/td2_boot_probe.json | $(OUT_DIR)
+	$(PYTHON) analyze_frame_delta.py $(OUT_DIR)/intro_loop_frame_00954 $(OUT_DIR)/intro_loop_frame_00958 $(INTRO_BOOTSTRAP_954_958_JSON) \
+		--probe-json-b $(OUT_DIR)/bootprobe_958_detail/td2_boot_probe.json
+
+$(INTRO_BOOTSTRAP_958_974_JSON): analyze_frame_delta.py $(OUT_DIR)/intro_loop_frame_00958_vram.bin $(OUT_DIR)/intro_loop_frame_00974_vram.bin $(OUT_DIR)/bootprobe_958_detail/td2_boot_probe.json $(OUT_DIR)/bootprobe_974_detail/td2_boot_probe.json | $(OUT_DIR)
+	$(PYTHON) analyze_frame_delta.py $(OUT_DIR)/intro_loop_frame_00958 $(OUT_DIR)/intro_loop_frame_00974 $(INTRO_BOOTSTRAP_958_974_JSON) \
+		--probe-json-a $(OUT_DIR)/bootprobe_958_detail/td2_boot_probe.json \
+		--probe-json-b $(OUT_DIR)/bootprobe_974_detail/td2_boot_probe.json
+
+intro-bootstrap-deltas: $(INTRO_BOOTSTRAP_954_958_JSON) $(INTRO_BOOTSTRAP_958_974_JSON)
+
+$(INTRO_BOOTSTRAP_QUEUE_958_974_JSON): analyze_bootstrap_queue.py $(OUT_DIR)/bootprobe_958_detail/td2_boot_probe_wram.bin $(OUT_DIR)/bootprobe_974_detail/td2_boot_probe_wram.bin $(OUT_DIR)/bootprobe_958_detail/td2_boot_probe.json $(OUT_DIR)/bootprobe_974_detail/td2_boot_probe.json | $(OUT_DIR)
+	$(PYTHON) analyze_bootstrap_queue.py \
+		$(OUT_DIR)/bootprobe_958_detail/td2_boot_probe_wram.bin \
+		$(OUT_DIR)/bootprobe_974_detail/td2_boot_probe_wram.bin \
+		--probe-json-a $(OUT_DIR)/bootprobe_958_detail/td2_boot_probe.json \
+		--probe-json-b $(OUT_DIR)/bootprobe_974_detail/td2_boot_probe.json \
+		$(INTRO_BOOTSTRAP_QUEUE_958_974_JSON)
+
+intro-bootstrap-queue: $(INTRO_BOOTSTRAP_QUEUE_958_974_JSON)
 
 mesen-ppu-frame: | $(OUT_DIR)
 	./run_mesen_ppu_extract.sh --rom $(ROM) --frame $(MESEN_FRAME) --out-dir $(MESEN_FRAME_DIR)

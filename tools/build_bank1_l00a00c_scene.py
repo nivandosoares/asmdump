@@ -57,6 +57,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--seed-cgram", type=Path, default=None, help="optional 512-byte CGRAM seed")
     parser.add_argument("--seed-oam", type=Path, default=None, help="optional 544-byte OAM seed")
     parser.add_argument(
+        "--skip-palette",
+        action="store_true",
+        help="skip applying L00A9F2(1); useful for the observed 954->958 bootstrap carry-over case",
+    )
+    parser.add_argument(
         "--render-objects",
         action="store_true",
         help="render OBJ on top of the Mode 7 BG when --seed-oam is supplied",
@@ -172,6 +177,7 @@ def build_scene(
     seed_vram: bytearray,
     seed_cgram: bytearray,
     seed_oam: bytearray | None,
+    skip_palette: bool,
     render_objects_enabled: bool,
 ) -> tuple[bytes, bytes, bytes | None, dict[str, int | bool], bytes, dict]:
     vram = bytearray(seed_vram)
@@ -186,13 +192,16 @@ def build_scene(
     bulk_blob, bulk_decode_summary = decode_26fb(bulk_window)
     bulk_apply_summary = apply_l00073e_high(vram, bulk_blob)
 
-    palette_source, palette_source_summary = load_palette_block(rom_bytes, L00A00C_PALETTE_HELPER_INDEX)
-    palette_apply_summary = apply_palette(
-        cgram,
-        palette_source,
-        int(palette_source_summary["cgram_dest"], 16),
-        int(palette_source_summary["color_count"]),
-    )
+    palette_source_summary = None
+    palette_apply_summary = None
+    if not skip_palette:
+        palette_source, palette_source_summary = load_palette_block(rom_bytes, L00A00C_PALETTE_HELPER_INDEX)
+        palette_apply_summary = apply_palette(
+            cgram,
+            palette_source,
+            int(palette_source_summary["cgram_dest"], 16),
+            int(palette_source_summary["color_count"]),
+        )
 
     state = dict(ppu_state_template)
     state["ppu.bgMode"] = 0x07
@@ -246,15 +255,8 @@ def build_scene(
                 "decode": bulk_decode_summary,
                 "apply": bulk_apply_summary,
             },
-            {
-                "helper": palette_source_summary["helper"],
-                "helper_index": palette_source_summary["helper_index"],
-                "source_bank": palette_source_summary["source_bank"],
-                "source_addr": palette_source_summary["source_addr"],
-                "rom_offset": palette_source_summary["rom_offset"],
-                "apply": palette_apply_summary,
-            },
         ],
+        "palette_applied": not skip_palette,
         "ppu_template_overrides": {
             "ppu.bgMode": 0x07,
             "ppu.mainScreenLayers": 0x11,
@@ -265,6 +267,15 @@ def build_scene(
             "objects": obj_summary,
         },
     }
+    if palette_source_summary is not None and palette_apply_summary is not None:
+        summary["jobs"].append({
+            "helper": palette_source_summary["helper"],
+            "helper_index": palette_source_summary["helper_index"],
+            "source_bank": palette_source_summary["source_bank"],
+            "source_addr": palette_source_summary["source_addr"],
+            "rom_offset": palette_source_summary["rom_offset"],
+            "apply": palette_apply_summary,
+        })
     return bytes(vram), bytes(cgram), (bytes(oam) if oam is not None else None), state, bytes(rgb), summary
 
 
@@ -282,6 +293,7 @@ def main() -> int:
         seed_vram,
         seed_cgram,
         seed_oam,
+        args.skip_palette,
         args.render_objects,
     )
 

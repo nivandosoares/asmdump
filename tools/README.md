@@ -11,6 +11,8 @@ Current Sprint 0 tooling:
 - `build_bank1_credits_scene.py`: builds the bank 1 `L009D1C` copyright/credits scene directly from ROM helper-table assets and writes VRAM/CGRAM/PPU-state outputs plus a preview PPM
 - `build_bank1_helper_scene.py`: builds other simple bank 1 helper-driven BG scenes from `L00A9A0/L00A9CB/L00A9F2` table entries and explicit PPU setup
 - `build_bank1_l00a00c_scene.py`: experimental bank 1 `L00A00C` bootstrap builder that applies the direct Mode 7 setup uploads onto optional seeded `VRAM/CGRAM/OAM` dumps and renders the result with a supplied PPU-state template
+- `analyze_frame_delta.py`: summarizes binary, screenshot, PPU-state, and optional probe-log deltas between two extracted frame prefixes
+- `analyze_bootstrap_queue.py`: decodes the low-WRAM `0600` DMA queue, `0700` staged OAM buffer, `0900` OAM high table, and related allocator maps between two bootstrap captures
 - `mesen_ppu_extract`: headless C# bridge into `MesenCore.so` that dumps the current frame's SNES BG layer views, BG tilesets/CHR sheets, palette, per-sprite previews, sprite screen preview, and raw VRAM/CGRAM/OAM without going through the GUI
 - `extract_mesen_scene_range.py`: batches `mesen_ppu_extract` across a frame range, writes per-frame scene folders, and emits a collapsed `sequence.txt` manifest for the SDL runtime
 - `build_scene_sequence_manifest.py`: converts flat Mesen range dumps into runtime-ready `sequence.txt` manifests, either as `snes_bg` entries or exact sampled `image` entries from screenshots; when `oam.bin` exists, it now carries it through as an optional fourth `snes_bg` path
@@ -41,7 +43,9 @@ python3 tools/build_boot_vram.py game.smc tools/out/bank1_boot_screen.json tools
 python3 tools/render_boot_screen.py tools/out/bank1_boot_vram_variant0.bin tools/out/bank1_boot_palettes.json tools/out/bank1_boot_screen_variant0.ppm --rom game.smc --json-out tools/out/bank1_boot_screen_variant0.json
 python3 tools/build_bank1_credits_scene.py game.smc tools/out/bank1_credits_scene
 python3 tools/build_bank1_helper_scene.py game.smc tools/out/bank1_l00a35a_scene --helper-index 4 --visible-layer bg1 --scene-name bank1_L00A35A_frontend --source-routine 01:A35A
-python3 tools/build_bank1_l00a00c_scene.py game.smc tools/out/bank1_l00a00c_scene --seed-vram tools/out/intro_loop_frame_00954_vram.bin --seed-cgram tools/out/intro_loop_frame_00954_cgram.bin --ppu-state-template tools/out/intro_loop_frame_00974_ppu_state.json
+python3 tools/build_bank1_l00a00c_scene.py game.smc tools/out/bank1_l00a00c_scene --seed-vram tools/out/intro_loop_frame_00954_vram.bin --seed-cgram tools/out/intro_loop_frame_00954_cgram.bin --ppu-state-template tools/out/intro_loop_frame_00974_ppu_state.json --skip-palette
+python3 tools/analyze_frame_delta.py tools/out/intro_loop_frame_00954 tools/out/intro_loop_frame_00958 tools/out/intro_bootstrap_954_958_delta.json --probe-json-b tools/out/bootprobe_958_detail/td2_boot_probe.json
+python3 tools/analyze_bootstrap_queue.py tools/out/bootprobe_958_detail/td2_boot_probe_wram.bin tools/out/bootprobe_974_detail/td2_boot_probe_wram.bin tools/out/intro_bootstrap_958_974_queue.json
 ./tools/run_mesen_ppu_extract.sh --rom game.smc --frame 300 --out-dir tools/out/mesen_frame300
 python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 654 --end-frame 710 --step 4 --out-dir tools/out/ballistic_sequence --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
 python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 978 --end-frame 982 --step 4 --out-dir tools/out/intro_native_978 --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
@@ -89,6 +93,8 @@ Useful make targets:
 - `make -C tools bank1-credits-scene-compare`
 - `make -C tools bank1-a35a-scene-preview`
 - `make -C tools bank1-a00c-scene-preview`
+- `make -C tools intro-bootstrap-deltas`
+- `make -C tools intro-bootstrap-queue`
 - `make -C tools mesen-ppu-frame MESEN_FRAME=300`
 - `make -C tools intro-loop-dump`
 - `make -C tools intro-loop-sequence`
@@ -203,8 +209,41 @@ The current bootstrap-side experiment for `L00A00C` now lives at `tools/out/bank
 - the generated preview is `tools/out/bank1_l00a00c_scene.ppm`
 - current reading:
   - it is useful as a repeatable experiment harness for `958..977`
-  - it is not exact yet; the preview is still `100.000000%` mismatched against frames `958` and `974`
+  - it is not exact yet; the preview is still `99.991281%` mismatched against frames `958` and `974` with `--skip-palette`
   - the missing behavior is therefore beyond the obvious direct uploads or a simple start-frame vs end-frame capture issue
+
+The current bootstrap delta summaries now live in:
+
+- `tools/out/intro_bootstrap_954_958_delta.json`
+- `tools/out/intro_bootstrap_958_974_delta.json`
+- `tools/out/intro_bootstrap_958_974_queue.json`
+
+Current useful readings from those summaries:
+
+- `954 -> 958`:
+  - screenshot mismatch: `13.741629%`
+  - `VRAM` changes: `6808` bytes
+  - `CGRAM` changes: `0` bytes
+  - `PPU` switches to `bgMode = 7`, `mainScreenLayers = 0x11`, `forcedBlank = true`
+- `958 -> 974`:
+  - screenshot mismatch: `0.000000%`
+  - `VRAM` changes: `5875` bytes, all on odd bytes
+  - `CGRAM` changes: `278` bytes
+  - active main callback changes from bank 0 idle `00:8029` to `01:9D69`
+  - key bootstrap state becomes populated: `$0202 = 1`, `$0208 = 13`, `$020A = 0x9CC3`, `$040A = 0xFFFF`
+
+The WRAM-side queue decode now makes the landing frame more concrete:
+
+- `dp_0054 = 0x10` at frame `974`, so exactly `2` `0600` DMA descriptors are live
+- those descriptors decode as:
+  - command `0x01`, source `1A:9948`, size `0x1040`, VRAM destination `0x4000`
+  - command `0x01`, source `1A:A988`, size `0x0040`, VRAM destination `0x4900`
+- the JSON also carries the probe-side cursor and the pre-sliced active descriptor list:
+  - `probe_after.dp_0054 = 16`
+  - `regions.0600_dma_queue.active_dma_descriptor_count_after = 2`
+  - `regions.0600_dma_queue.active_after_entries = [...]`
+- `0700..091F` is confirmed as the staged OAM upload buffer copied by the NMI `DMA1 -> $2104` path
+- repeated `0xE100` head words in that region are the OAM fill/sentinel pattern, not a tile queue
 
 The wrapper expects the local Mesen Linux release at `/home/nivando-soares/Mesen2/bin/linux-x64/Release` by default. Override with `MESEN_RELEASE_DIR=/path/to/release` when needed.
 

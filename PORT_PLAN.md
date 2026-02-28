@@ -69,11 +69,15 @@ New useful state beyond the original plan:
   - it applies the direct setup uploads onto seeded `VRAM/CGRAM`
   - it is useful for iterating on the `958..977` bootstrap
   - it is not exact yet, which narrows the missing behavior to more than the obvious direct uploads
+- the bootstrap side now also has a decoded WRAM queue artifact:
+  - `tools/out/intro_bootstrap_958_974_queue.json`
+  - frame `974` arms exactly two `0600` DMA descriptors (`1A:9948 -> VRAM 0x4000`, `1A:A988 -> VRAM 0x4900`)
+  - `0700..091F` is confirmed as staged OAM data for the following NMI upload
 
 Immediate next focus:
 
 1. Replace the later sampled attract segments with native front-end state machines one callback family at a time.
-2. Push backward into the unstable `958..977` bootstrap using the new repeatable `L00A00C` scene builder and the carry-over state model from the end of Ballistic.
+2. Push backward into the unstable `958..977` bootstrap using the new repeatable `L00A00C` scene builder, the carry-over state model from the end of Ballistic, and the decoded `0600` DMA queue manifest from frame `974`.
 3. Keep building standalone extraction formats so later artist/mod tooling can sit on stable data instead of volatile reverse-engineering experiments.
 
 ## Delivery Phases

@@ -37,6 +37,7 @@ local config = {
     player = env_number("TD2_BOOT_PROBE_PLAYER", 0),
     input_pattern = parse_input_env("TD2_BOOT_PROBE_INPUT"),
     dump_ppu_memory = env_number("TD2_BOOT_PROBE_DUMP_PPU_MEMORY", 0) ~= 0,
+    dump_wram_memory = env_number("TD2_BOOT_PROBE_DUMP_WRAM_MEMORY", 0) ~= 0,
     trace_mode7_writes = env_number("TD2_BOOT_PROBE_TRACE_MODE7", 0) ~= 0,
     trace_dma_writes = env_number("TD2_BOOT_PROBE_TRACE_DMA", 0) ~= 0,
     savestate_filename = "seed_state.bin"
@@ -238,7 +239,41 @@ local function snapshot_boot_state()
         active_irq_callback_addr = read_u16(0x00003E),
         active_irq_callback_bank = read_u8(0x000040),
         dp_0020 = read_u16(0x000020),
-        state_0f70 = read_u8(0x000F70)
+        state_0f70 = read_u8(0x000F70),
+        state_0990 = read_u16(0x7E0990),
+        state_09a2 = read_u16(0x7E09A2),
+        state_09a4 = read_u16(0x7E09A4),
+        state_09a8 = read_u16(0x7E09A8),
+        state_0200 = read_u16(0x7E0200),
+        state_0202 = read_u16(0x7E0202),
+        state_0204 = read_u16(0x7E0204),
+        state_0206 = read_u16(0x7E0206),
+        state_0208 = read_u16(0x7E0208),
+        state_020a = read_u16(0x7E020A),
+        state_0400 = read_u16(0x7E0400),
+        state_0402 = read_u16(0x7E0402),
+        state_0404 = read_u16(0x7E0404),
+        state_0405 = read_u16(0x7E0405),
+        state_0406 = read_u16(0x7E0406),
+        state_0408 = read_u16(0x7E0408),
+        state_040a = read_u16(0x7E040A),
+        state_0440 = read_u16(0x7E0440),
+        state_0442 = read_u16(0x7E0442),
+        state_0444 = read_u16(0x7E0444),
+        state_1e2c = read_u16(0x7E1E2C),
+        dp_0000 = read_u16(0x000000),
+        dp_0004 = read_u16(0x000004),
+        dp_0008 = read_u16(0x000008),
+        dp_000c = read_u16(0x00000C),
+        dp_0010 = read_u16(0x000010),
+        dp_0011 = read_u16(0x000011),
+        dp_0012 = read_u16(0x000012),
+        dp_0022 = read_u16(0x000022),
+        dp_0040 = read_u16(0x000040),
+        dp_0053 = read_u8(0x000053),
+        dp_0054 = read_u8(0x000054),
+        dp_0055 = read_u16(0x000055),
+        dp_0056 = read_u8(0x000056)
     }
 end
 
@@ -289,53 +324,21 @@ local function dump_ppu_snapshot(prefix)
     write_text_file(prefix .. "_ppu_state.json", encode_json_value(filtered_state, ""))
 end
 
+local function dump_wram_snapshot(prefix)
+    dump_memory_region(prefix .. "_wram.bin", emu.memType.snesWorkRam, 0x2000)
+end
+
 local function is_trace_frame()
     return state.frame >= config.trace_start_frame and state.frame <= config.trace_end_frame
 end
 
 local function save_probe_log()
-    local lines = {
-        "{",
-        "  \"total_frames\": " .. tostring(config.total_frames) .. ",",
-        "  \"frames\": ["
+    local output = {
+        total_frames = config.total_frames,
+        screenshot_frame = config.screenshot_frame,
+        frames = state.entries,
     }
-
-    for i = 1, #state.entries do
-        local entry = state.entries[i]
-        local suffix = i == #state.entries and "" or ","
-        lines[#lines + 1] = string.format(
-            "    {\"frame\": %d, \"1c78\": %d, \"1c7a\": %d, \"1c7c\": %d, \"1c82\": %d, \"1cac\": %d, \"1cca\": %d, \"1ccc\": %d, \"1cce\": %d, \"1cd0\": %d, \"1ce2\": %d, \"1ce4\": %d, \"1ce6\": %d, \"1cea\": %d, \"0996\": %d, \"main_addr\": %d, \"main_bank\": %d, \"nmi_addr\": %d, \"nmi_bank\": %d, \"irq_addr\": %d, \"irq_bank\": %d, \"0020\": %d, \"0f70\": %d}%s",
-            entry.frame,
-            entry.selector_1c78,
-            entry.selector_1c7a,
-            entry.selector_1c7c,
-            entry.selector_1c82,
-            entry.selector_1cac,
-            entry.selector_1cca,
-            entry.selector_1ccc,
-            entry.selector_1cce,
-            entry.selector_1cd0,
-            entry.selector_1ce2,
-            entry.selector_1ce4,
-            entry.selector_1ce6,
-            entry.selector_1cea,
-            entry.state_0996,
-            entry.active_main_callback_addr,
-            entry.active_main_callback_bank,
-            entry.active_nmi_callback_addr,
-            entry.active_nmi_callback_bank,
-            entry.active_irq_callback_addr,
-            entry.active_irq_callback_bank,
-            entry.dp_0020,
-            entry.state_0f70,
-            suffix
-        )
-    end
-
-    lines[#lines + 1] = "  ]"
-    lines[#lines + 1] = "}"
-
-    write_text_file(output_prefix .. ".json", table.concat(lines, "\n"))
+    write_text_file(output_prefix .. ".json", encode_json_value(output, ""))
 end
 
 local function save_mode7_trace()
@@ -416,6 +419,9 @@ local function on_end_frame()
         if config.dump_ppu_memory then
             dump_ppu_snapshot(output_prefix)
         end
+        if config.dump_wram_memory then
+            dump_wram_snapshot(output_prefix)
+        end
     end
 
     state.frame = state.frame + 1
@@ -437,6 +443,9 @@ local function on_start_frame()
 
     if config.dump_ppu_memory and state.frame == config.screenshot_frame then
         dump_ppu_snapshot(output_prefix .. "_startframe")
+    end
+    if config.dump_wram_memory and state.frame == config.screenshot_frame then
+        dump_wram_snapshot(output_prefix .. "_startframe")
     end
 end
 

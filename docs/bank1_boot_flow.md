@@ -420,6 +420,34 @@ Current post-Ballistic boundary for the next native replacement:
 - the static sampled image in that bootstrap block is real:
   - frame `958` and frame `974` screenshots compare exactly against each other
   - this means the visible bootstrap window is stable even though the live extracted state is not
+- the new binary/probe summaries split that stable window into two distinct technical phases:
+  - `954 -> 958`:
+    - screenshot mismatch vs Ballistic end frame: `13.741629%`
+    - `VRAM` changes: `6808` bytes
+    - `CGRAM` changes: `0`
+    - `PPU` changes immediately to `bgMode = 7`, `TMAIN = $11`, `forcedBlank = true`
+    - reading: the first visible bootstrap step carries Ballistic palette state forward
+  - `958 -> 974`:
+    - screenshots remain identical (`0.000000%` mismatch)
+    - `VRAM` changes: `5875` bytes, all on odd bytes
+    - `CGRAM` changes: `278`
+    - active main callback flips from idle `00:8029` to `01:9D69`
+    - `01:9D69`-fed state becomes populated:
+      - `$0202 = 1`
+      - `$0208 = 13`
+      - `$020A = $9CC3`
+      - `$040A = $FFFF`
+    - reading: the static visible screen is being updated underneath by the first live bootstrap callback
+    - low-WRAM queue state is now also pinned:
+      - frame `958`: `dp_0054 = 0x00`
+      - frame `974`: `dp_0054 = 0x10`
+      - practical reading: frame `974` has exactly `2` `0600` DMA descriptors armed for NMI
+    - `tools/out/intro_bootstrap_958_974_queue.json` decodes those descriptors as:
+      - command `0x01`, source `1A:9948`, size `0x1040`, VRAM destination `0x4000`
+      - command `0x01`, source `1A:A988`, size `0x0040`, VRAM destination `0x4900`
+      - the artifact also exposes `active_after_entries`, so downstream builders can consume the live subset directly instead of re-slicing `0600` from `dp_0054`
+    - `0700..091F` is confirmed as the staged OAM upload buffer, not a tile queue
+      - repeated `0xE100` head words are the fill/sentinel pattern used before the NMI `DMA1 -> $2104` copy
 - frame `978` is the first practical stable target after the handoff:
   - runtime reconstruction from extracted SNES state compares at `4` pixels (`0.006975%`) against the sampled screenshot
 - the SDL runtime now also supports optional OAM/OBJ composition for extracted SNES scenes:
@@ -445,7 +473,7 @@ Current post-Ballistic boundary for the next native replacement:
     - offset `676` / source frame `1330`: exact
 - the latest bootstrap findings are narrower now:
   - rerunning the probe at `958` and `974` with start-of-frame dumps does not help; both start-frame and end-frame renders still land at `100%` mismatch
-  - an experimental ROM-side `L00A00C` builder seeded from frame `954` VRAM/CGRAM and rendered with the stable `974` PPU template is also still `100%` mismatched
+  - an experimental ROM-side `L00A00C` builder seeded from frame `954` VRAM/CGRAM and rendered with the stable `974` PPU template is still `99.991281%` mismatched even after skipping the helper palette upload
   - that points to missing bootstrap behavior beyond the obvious direct uploads (`04:9AED`, `04:9BF5`, and `L00A9F2(1)`), not just a bad capture boundary
 
 ## Existing Tooling Hook

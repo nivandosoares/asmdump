@@ -1,0 +1,468 @@
+{
+  "prefix_a": "out/intro_loop_frame_00958",
+  "prefix_b": "out/intro_loop_frame_00974",
+  "frame_a": 958,
+  "frame_b": 974,
+  "vram": {
+    "size_bytes": 65536,
+    "diff_bytes": 5875,
+    "diff_ratio": 0.0896453857421875,
+    "even_byte_diffs": 0,
+    "odd_byte_diffs": 5875,
+    "first_runs": [
+      {
+        "start": 253,
+        "end": 253,
+        "length": 1
+      },
+      {
+        "start": 255,
+        "end": 255,
+        "length": 1
+      },
+      {
+        "start": 369,
+        "end": 369,
+        "length": 1
+      },
+      {
+        "start": 371,
+        "end": 371,
+        "length": 1
+      },
+      {
+        "start": 373,
+        "end": 373,
+        "length": 1
+      },
+      {
+        "start": 379,
+        "end": 379,
+        "length": 1
+      },
+      {
+        "start": 381,
+        "end": 381,
+        "length": 1
+      },
+      {
+        "start": 383,
+        "end": 383,
+        "length": 1
+      },
+      {
+        "start": 475,
+        "end": 475,
+        "length": 1
+      },
+      {
+        "start": 477,
+        "end": 477,
+        "length": 1
+      },
+      {
+        "start": 479,
+        "end": 479,
+        "length": 1
+      },
+      {
+        "start": 485,
+        "end": 485,
+        "length": 1
+      },
+      {
+        "start": 487,
+        "end": 487,
+        "length": 1
+      },
+      {
+        "start": 489,
+        "end": 489,
+        "length": 1
+      },
+      {
+        "start": 491,
+        "end": 491,
+        "length": 1
+      },
+      {
+        "start": 493,
+        "end": 493,
+        "length": 1
+      },
+      {
+        "start": 495,
+        "end": 495,
+        "length": 1
+      },
+      {
+        "start": 497,
+        "end": 497,
+        "length": 1
+      },
+      {
+        "start": 499,
+        "end": 499,
+        "length": 1
+      },
+      {
+        "start": 501,
+        "end": 501,
+        "length": 1
+      },
+      {
+        "start": 503,
+        "end": 503,
+        "length": 1
+      },
+      {
+        "start": 505,
+        "end": 505,
+        "length": 1
+      },
+      {
+        "start": 507,
+        "end": 507,
+        "length": 1
+      },
+      {
+        "start": 509,
+        "end": 509,
+        "length": 1
+      },
+      {
+        "start": 511,
+        "end": 511,
+        "length": 1
+      },
+      {
+        "start": 567,
+        "end": 567,
+        "length": 1
+      },
+      {
+        "start": 569,
+        "end": 569,
+        "length": 1
+      },
+      {
+        "start": 571,
+        "end": 571,
+        "length": 1
+      },
+      {
+        "start": 573,
+        "end": 573,
+        "length": 1
+      },
+      {
+        "start": 577,
+        "end": 577,
+        "length": 1
+      },
+      {
+        "start": 579,
+        "end": 579,
+        "length": 1
+      },
+      {
+        "start": 581,
+        "end": 581,
+        "length": 1
+      }
+    ]
+  },
+  "cgram": {
+    "size_bytes": 512,
+    "diff_bytes": 278,
+    "diff_ratio": 0.54296875,
+    "even_byte_diffs": 141,
+    "odd_byte_diffs": 137,
+    "first_runs": [
+      {
+        "start": 0,
+        "end": 1,
+        "length": 2
+      },
+      {
+        "start": 3,
+        "end": 28,
+        "length": 26
+      },
+      {
+        "start": 30,
+        "end": 56,
+        "length": 27
+      },
+      {
+        "start": 58,
+        "end": 63,
+        "length": 6
+      },
+      {
+        "start": 66,
+        "end": 69,
+        "length": 4
+      },
+      {
+        "start": 71,
+        "end": 95,
+        "length": 25
+      },
+      {
+        "start": 102,
+        "end": 103,
+        "length": 2
+      },
+      {
+        "start": 110,
+        "end": 111,
+        "length": 2
+      },
+      {
+        "start": 118,
+        "end": 119,
+        "length": 2
+      },
+      {
+        "start": 126,
+        "end": 127,
+        "length": 2
+      },
+      {
+        "start": 134,
+        "end": 135,
+        "length": 2
+      },
+      {
+        "start": 142,
+        "end": 143,
+        "length": 2
+      },
+      {
+        "start": 150,
+        "end": 151,
+        "length": 2
+      },
+      {
+        "start": 158,
+        "end": 159,
+        "length": 2
+      },
+      {
+        "start": 162,
+        "end": 167,
+        "length": 6
+      },
+      {
+        "start": 170,
+        "end": 175,
+        "length": 6
+      },
+      {
+        "start": 178,
+        "end": 183,
+        "length": 6
+      },
+      {
+        "start": 186,
+        "end": 191,
+        "length": 6
+      },
+      {
+        "start": 194,
+        "end": 198,
+        "length": 5
+      },
+      {
+        "start": 202,
+        "end": 206,
+        "length": 5
+      },
+      {
+        "start": 210,
+        "end": 214,
+        "length": 5
+      },
+      {
+        "start": 217,
+        "end": 302,
+        "length": 86
+      },
+      {
+        "start": 304,
+        "end": 346,
+        "length": 43
+      },
+      {
+        "start": 348,
+        "end": 351,
+        "length": 4
+      }
+    ]
+  },
+  "frame_image": {
+    "width": 256,
+    "height": 224,
+    "pixel_count": 57344,
+    "mismatch_pixels": 0,
+    "mismatch_ratio": 0.0,
+    "max_channel_diff": 0,
+    "mean_abs_channel_diff": 0.0,
+    "rmse": 0.0
+  },
+  "ppu_state_changes": {
+    "ppu.forcedBlank": {
+      "a": true,
+      "b": false
+    },
+    "ppu.mode7.centerX": {
+      "a": 0,
+      "b": 128
+    },
+    "ppu.mode7.centerY": {
+      "a": 0,
+      "b": 112
+    },
+    "ppu.mode7.matrix[0]": {
+      "a": 86,
+      "b": 16384
+    },
+    "ppu.mode7.matrix[1]": {
+      "a": 27648,
+      "b": 0
+    },
+    "ppu.mode7.matrix[3]": {
+      "a": 256,
+      "b": 16448
+    },
+    "ppu.mode7.largeMap": {
+      "a": false,
+      "b": true
+    }
+  },
+  "probe_entry_a": {
+    "active_main_callback_addr": 32809,
+    "active_main_callback_bank": 0,
+    "active_nmi_callback_addr": 32809,
+    "active_nmi_callback_bank": 0,
+    "active_irq_callback_addr": 33631,
+    "active_irq_callback_bank": 0,
+    "state_0990": 0,
+    "state_09a8": 2,
+    "state_0200": 0,
+    "state_0202": 0,
+    "state_0204": 0,
+    "state_0206": 0,
+    "state_0208": 0,
+    "state_020a": 0,
+    "state_0400": 0,
+    "state_0402": 0,
+    "state_0404": 0,
+    "state_0405": 0,
+    "state_0406": 0,
+    "state_0408": 0,
+    "state_040a": 0,
+    "state_0440": 0,
+    "state_0442": 0,
+    "state_0444": 0,
+    "state_1e2c": 0,
+    "dp_0020": 9,
+    "dp_0000": 3590,
+    "dp_0004": 0,
+    "dp_0008": 0,
+    "dp_000c": 40145,
+    "dp_0010": 9606,
+    "dp_0011": 37,
+    "dp_0012": 0
+  },
+  "probe_entry_b": {
+    "active_main_callback_addr": 40297,
+    "active_main_callback_bank": 1,
+    "active_nmi_callback_addr": 32809,
+    "active_nmi_callback_bank": 0,
+    "active_irq_callback_addr": 33631,
+    "active_irq_callback_bank": 0,
+    "state_0990": 0,
+    "state_09a8": 2,
+    "state_0200": 0,
+    "state_0202": 1,
+    "state_0204": 0,
+    "state_0206": 0,
+    "state_0208": 13,
+    "state_020a": 40131,
+    "state_0400": 0,
+    "state_0402": 0,
+    "state_0404": 0,
+    "state_0405": 0,
+    "state_0406": 0,
+    "state_0408": 0,
+    "state_040a": 65535,
+    "state_0440": 0,
+    "state_0442": 0,
+    "state_0444": 0,
+    "state_1e2c": 0,
+    "dp_0020": 9,
+    "dp_0000": 0,
+    "dp_0004": 34817,
+    "dp_0008": 64,
+    "dp_000c": 38944,
+    "dp_0010": 38872,
+    "dp_0011": 6807,
+    "dp_0012": 26
+  },
+  "probe_changes": {
+    "active_main_callback_addr": {
+      "a": 32809,
+      "b": 40297
+    },
+    "active_main_callback_bank": {
+      "a": 0,
+      "b": 1
+    },
+    "state_0202": {
+      "a": 0,
+      "b": 1
+    },
+    "state_0208": {
+      "a": 0,
+      "b": 13
+    },
+    "state_020a": {
+      "a": 0,
+      "b": 40131
+    },
+    "state_040a": {
+      "a": 0,
+      "b": 65535
+    },
+    "dp_0000": {
+      "a": 3590,
+      "b": 0
+    },
+    "dp_0004": {
+      "a": 0,
+      "b": 34817
+    },
+    "dp_0008": {
+      "a": 0,
+      "b": 64
+    },
+    "dp_000c": {
+      "a": 40145,
+      "b": 38944
+    },
+    "dp_0010": {
+      "a": 9606,
+      "b": 38872
+    },
+    "dp_0011": {
+      "a": 37,
+      "b": 6807
+    },
+    "dp_0012": {
+      "a": 0,
+      "b": 26
+    }
+  }
+}

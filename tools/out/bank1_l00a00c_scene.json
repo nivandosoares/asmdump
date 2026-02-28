@@ -113,21 +113,9 @@
         "vram_word_addr": "0x0000",
         "length_bytes": 11200
       }
-    },
-    {
-      "helper": "L00A9F2",
-      "helper_index": 1,
-      "source_bank": 4,
-      "source_addr": "0xA4FE",
-      "rom_offset": "0x0224FE",
-      "apply": {
-        "helper": "L000583",
-        "cgram_dest": "0x00",
-        "color_count": 128,
-        "payload_size": 256
-      }
     }
   ],
+  "palette_applied": false,
   "ppu_template_overrides": {
     "ppu.bgMode": 7,
     "ppu.mainScreenLayers": 17,

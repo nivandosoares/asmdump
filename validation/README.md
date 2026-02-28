@@ -215,11 +215,58 @@ That bootstrap reading is now backed by two extra checks:
 - the experimental ROM-side builder at `tools/build_bank1_l00a00c_scene.py` currently applies:
   - `04:9AED` via `L001210 -> 42FB -> L00065F`
   - `04:9BF5` via `L001210 -> 26FB -> L00073E`
-  - `L00A9F2(1)` onto a seeded `954` CGRAM base
+  - optional `L00A9F2(1)` onto a seeded `954` CGRAM base
 - the current seeded prototype output is `tools/out/bank1_l00a00c_scene.ppm`, and it is still `100.000000%` mismatched against both frame `958` and frame `974`
 - practical reading:
   - the remaining gap is not just "wrong capture boundary"
   - the bootstrap likely depends on additional carried-over or mutated state beyond the obvious direct uploads
+
+The new bootstrap delta summaries make that sharper:
+
+- `tools/out/intro_bootstrap_954_958_delta.json`
+  - screenshot mismatch: `13.741629%`
+  - `VRAM` delta: `6808` bytes
+  - `CGRAM` delta: `0` bytes
+  - reading: the first visible bootstrap step carries Ballistic CGRAM forward unchanged
+- `tools/out/intro_bootstrap_958_974_delta.json`
+  - screenshot mismatch: `0.000000%`
+  - `VRAM` delta: `5875` bytes, all odd-byte changes
+  - `CGRAM` delta: `278` bytes
+  - active main callback changes from `00:8029` to `01:9D69`
+  - key state variables first become nonzero:
+    - `$0202 = 1`
+    - `$0208 = 13`
+    - `$020A = 0x9CC3`
+    - `$040A = 0xFFFF`
+  - reading: `01:9D69` is the first live bootstrap callback that populates the state feeding `L009DC6`
+
+The probe can now also dump low WRAM around those staging queues with `TD2_BOOT_PROBE_DUMP_WRAM_MEMORY=1`:
+
+- `td2_boot_probe_wram.bin`
+- `td2_boot_probe_startframe_wram.bin`
+
+That extra dump tightened the bootstrap reading:
+
+- frame `958`
+  - `dp_0054 = 0x00`
+  - `state_09A2 = 0`
+  - `state_09A4 = 0x0200`
+- frame `974`
+  - `dp_0054 = 0x10`
+  - `state_09A2 = 0`
+  - `state_09A4 = 0x0200`
+  - practical reading: exactly `2` `0600` DMA descriptors are armed for the next NMI pass
+- `tools/out/intro_bootstrap_958_974_queue.json`
+  - decodes that WRAM window into queue structures
+  - carries both raw probe context and a ready-to-consume active slice:
+    - `probe_after.dp_0054 = 16`
+    - `regions.0600_dma_queue.active_dma_descriptor_count_after = 2`
+    - `regions.0600_dma_queue.active_after_entries`
+  - the two active `0600` descriptors at frame `974` are:
+    - command `0x01`, source `1A:9948`, size `0x1040`, VRAM destination `0x4000`
+    - command `0x01`, source `1A:A988`, size `0x0040`, VRAM destination `0x4900`
+  - `0700..091F` is confirmed as the staged OAM buffer copied by the NMI `DMA1 -> $2104` upload
+  - the repeated `0xE100` head word in that region is the OAM fill/sentinel pattern, not a tile queue entry
 
 The probe now also writes a second PPU-memory snapshot at the start of the sampled frame when `TD2_BOOT_PROBE_DUMP_PPU_MEMORY=1` is enabled:
 
