@@ -1,0 +1,149 @@
+[
+  {
+    "offset": 0,
+    "pattern": "42fb",
+    "index": 0,
+    "next_offset": 378,
+    "span": 378
+  },
+  {
+    "offset": 378,
+    "pattern": "26fb",
+    "index": 1,
+    "next_offset": 1994,
+    "span": 1616
+  },
+  {
+    "offset": 1994,
+    "pattern": "42fb",
+    "index": 2,
+    "next_offset": 2377,
+    "span": 383
+  },
+  {
+    "offset": 2377,
+    "pattern": "26fb",
+    "index": 3,
+    "next_offset": 3992,
+    "span": 1615
+  },
+  {
+    "offset": 3992,
+    "pattern": "42fb",
+    "index": 4,
+    "next_offset": 4568,
+    "span": 576
+  },
+  {
+    "offset": 4568,
+    "pattern": "26fb",
+    "index": 5,
+    "next_offset": 6707,
+    "span": 2139
+  },
+  {
+    "offset": 6707,
+    "pattern": "42fb",
+    "index": 6,
+    "next_offset": 7178,
+    "span": 471
+  },
+  {
+    "offset": 7178,
+    "pattern": "26fb",
+    "index": 7,
+    "next_offset": 9004,
+    "span": 1826
+  },
+  {
+    "offset": 9004,
+    "pattern": "42fb",
+    "index": 8,
+    "next_offset": 9489,
+    "span": 485
+  },
+  {
+    "offset": 9489,
+    "pattern": "26fb",
+    "index": 9,
+    "next_offset": 11408,
+    "span": 1919
+  },
+  {
+    "offset": 11408,
+    "pattern": "42fb",
+    "index": 10,
+    "next_offset": 11914,
+    "span": 506
+  },
+  {
+    "offset": 11914,
+    "pattern": "26fb",
+    "index": 11,
+    "next_offset": 14030,
+    "span": 2116
+  },
+  {
+    "offset": 14030,
+    "pattern": "42fb",
+    "index": 12,
+    "next_offset": 14448,
+    "span": 418
+  },
+  {
+    "offset": 14448,
+    "pattern": "26fb",
+    "index": 13,
+    "next_offset": 16201,
+    "span": 1753
+  },
+  {
+    "offset": 16201,
+    "pattern": "42fb",
+    "index": 14,
+    "next_offset": 16658,
+    "span": 457
+  },
+  {
+    "offset": 16658,
+    "pattern": "26fb",
+    "index": 15,
+    "next_offset": 19004,
+    "span": 2346
+  },
+  {
+    "offset": 19004,
+    "pattern": "42fb",
+    "index": 16,
+    "next_offset": 19112,
+    "span": 108
+  },
+  {
+    "offset": 19112,
+    "pattern": "26fb",
+    "index": 17,
+    "next_offset": 19130,
+    "span": 18
+  },
+  {
+    "offset": 19130,
+    "pattern": "42fb",
+    "index": 18,
+    "next_offset": 19267,
+    "span": 137
+  },
+  {
+    "offset": 19267,
+    "pattern": "26fb",
+    "index": 19,
+    "next_offset": 19621,
+    "span": 354
+  },
+  {
+    "offset": 19621,
+    "pattern": "26fb",
+    "index": 20,
+    "next_offset": 32768,
+    "span": 13147
+  }
+]

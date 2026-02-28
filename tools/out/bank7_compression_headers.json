@@ -1,0 +1,311 @@
+[
+  {
+    "offset": 0,
+    "pattern": "42fb",
+    "header": {
+      "marker": "42FB",
+      "header_bytes": "42fb0010067400100687128900008a89",
+      "field_be_02": 16,
+      "field_be_04": 1652,
+      "declared_output_span": 4102
+    },
+    "index": 0,
+    "next_offset": 378,
+    "span": 378
+  },
+  {
+    "offset": 378,
+    "pattern": "26fb",
+    "header": {
+      "marker": "26FB",
+      "header_bytes": "26fb000870040043a3249a760804c110",
+      "field_be_03": 2160,
+      "field_be_06": 67
+    },
+    "index": 1,
+    "next_offset": 1994,
+    "span": 1616
+  },
+  {
+    "offset": 1994,
+    "pattern": "42fb",
+    "header": {
+      "marker": "42FB",
+      "header_bytes": "42fb001006790010068f129000009190",
+      "field_be_02": 16,
+      "field_be_04": 1657,
+      "declared_output_span": 4102
+    },
+    "index": 2,
+    "next_offset": 2377,
+    "span": 383
+  },
+  {
+    "offset": 2377,
+    "pattern": "26fb",
+    "header": {
+      "marker": "26FB",
+      "header_bytes": "26fb0008f0040047a55cb66516361502",
+      "field_be_03": 2288,
+      "field_be_06": 71
+    },
+    "index": 3,
+    "next_offset": 3992,
+    "span": 1615
+  },
+  {
+    "offset": 3992,
+    "pattern": "42fb",
+    "header": {
+      "marker": "42FB",
+      "header_bytes": "42fb0010063a001006dd1bde0000dfde",
+      "field_be_02": 16,
+      "field_be_04": 1594,
+      "declared_output_span": 4102
+    },
+    "index": 4,
+    "next_offset": 4568,
+    "span": 576
+  },
+  {
+    "offset": 4568,
+    "pattern": "26fb",
+    "header": {
+      "marker": "26FB",
+      "header_bytes": "26fb000dd004006ea4e4d246922c2f09",
+      "field_be_03": 3536,
+      "field_be_06": 110
+    },
+    "index": 5,
+    "next_offset": 6707,
+    "span": 2139
+  },
+  {
+    "offset": 6707,
+    "pattern": "42fb",
+    "header": {
+      "marker": "42FB",
+      "header_bytes": "42fb001006d10010069d1f9e00009f9b",
+      "field_be_02": 16,
+      "field_be_04": 1745,
+      "declared_output_span": 4102
+    },
+    "index": 6,
+    "next_offset": 7178,
+    "span": 471
+  },
+  {
+    "offset": 7178,
+    "pattern": "26fb",
+    "header": {
+      "marker": "26FB",
+      "header_bytes": "26fb0009d004004ea50cb2e795160c42",
+      "field_be_03": 2512,
+      "field_be_06": 78
+    },
+    "index": 7,
+    "next_offset": 9004,
+    "span": 1826
+  },
+  {
+    "offset": 9004,
+    "pattern": "42fb",
+    "header": {
+      "marker": "42FB",
+      "header_bytes": "42fb001006df001006bc13bd0000bebd",
+      "field_be_02": 16,
+      "field_be_04": 1759,
+      "declared_output_span": 4102
+    },
+    "index": 8,
+    "next_offset": 9489,
+    "span": 485
+  },
+  {
+    "offset": 9489,
+    "pattern": "26fb",
+    "header": {
+      "marker": "26FB",
+      "header_bytes": "26fb000bc004005e24a4b66690110420",
+      "field_be_03": 3008,
+      "field_be_06": 94
+    },
+    "index": 9,
+    "next_offset": 11408,
+    "span": 1919
+  },
+  {
+    "offset": 11408,
+    "pattern": "42fb",
+    "header": {
+      "marker": "42FB",
+      "header_bytes": "42fb001006f4001006bb1abc0000bdbc",
+      "field_be_02": 16,
+      "field_be_04": 1780,
+      "declared_output_span": 4102
+    },
+    "index": 10,
+    "next_offset": 11914,
+    "span": 506
+  },
+  {
+    "offset": 11914,
+    "pattern": "26fb",
+    "header": {
+      "marker": "26FB",
+      "header_bytes": "26fb000bb005005da55cb6524d120d87",
+      "field_be_03": 2992,
+      "field_be_06": 93
+    },
+    "index": 11,
+    "next_offset": 14030,
+    "span": 2116
+  },
+  {
+    "offset": 14030,
+    "pattern": "42fb",
+    "header": {
+      "marker": "42FB",
+      "header_bytes": "42fb0010069c00100694179500009695",
+      "field_be_02": 16,
+      "field_be_04": 1692,
+      "declared_output_span": 4102
+    },
+    "index": 12,
+    "next_offset": 14448,
+    "span": 418
+  },
+  {
+    "offset": 14448,
+    "pattern": "26fb",
+    "header": {
+      "marker": "26FB",
+      "header_bytes": "26fb00094004004a224cb65598118f82",
+      "field_be_03": 2368,
+      "field_be_06": 74
+    },
+    "index": 13,
+    "next_offset": 16201,
+    "span": 1753
+  },
+  {
+    "offset": 16201,
+    "pattern": "42fb",
+    "header": {
+      "marker": "42FB",
+      "header_bytes": "42fb001006c3001006b113b20000b3b2",
+      "field_be_02": 16,
+      "field_be_04": 1731,
+      "declared_output_span": 4102
+    },
+    "index": 14,
+    "next_offset": 16658,
+    "span": 457
+  },
+  {
+    "offset": 16658,
+    "pattern": "26fb",
+    "header": {
+      "marker": "26FB",
+      "header_bytes": "26fb000b10040058a4549665950ba184",
+      "field_be_03": 2832,
+      "field_be_06": 88
+    },
+    "index": 15,
+    "next_offset": 19004,
+    "span": 2346
+  },
+  {
+    "offset": 19004,
+    "pattern": "42fb",
+    "header": {
+      "marker": "42FB",
+      "header_bytes": "42fb0010066600100602180500000601",
+      "field_be_02": 16,
+      "field_be_04": 1638,
+      "declared_output_span": 4102
+    },
+    "index": 16,
+    "next_offset": 19112,
+    "span": 108
+  },
+  {
+    "offset": 19112,
+    "pattern": "26fb",
+    "header": {
+      "marker": "26FB",
+      "header_bytes": "26fb000030031a00dd2010144f89b6db",
+      "field_be_03": 48,
+      "field_be_06": 6656
+    },
+    "index": 17,
+    "next_offset": 19130,
+    "span": 18
+  },
+  {
+    "offset": 19130,
+    "pattern": "42fb",
+    "header": {
+      "marker": "42FB",
+      "header_bytes": "42fb00100683001006011802d0210402",
+      "field_be_02": 16,
+      "field_be_04": 1667,
+      "declared_output_span": 4102
+    },
+    "index": 18,
+    "next_offset": 19267,
+    "span": 137
+  },
+  {
+    "offset": 19267,
+    "pattern": "26fb",
+    "header": {
+      "marker": "26FB",
+      "header_bytes": "26fb0001c00403880365422020c1060e",
+      "field_be_03": 448,
+      "field_be_06": 904
+    },
+    "index": 19,
+    "next_offset": 19621,
+    "span": 354
+  },
+  {
+    "offset": 19621,
+    "pattern": "26fb",
+    "header": {
+      "marker": "26FB",
+      "header_bytes": "26fb00592004000b248d33488215e7c4",
+      "field_be_03": 22816,
+      "field_be_06": 11
+    },
+    "index": 20,
+    "next_offset": 26842,
+    "span": 7221
+  },
+  {
+    "offset": 26842,
+    "pattern": "27fb",
+    "header": {
+      "marker": "27FB",
+      "header_bytes": "27fbb77b5bccaa896df64b9387678f5f",
+      "field_be_03": 31579,
+      "field_be_06": 43657
+    },
+    "index": 21,
+    "next_offset": 31488,
+    "span": 4646
+  },
+  {
+    "offset": 31488,
+    "pattern": "27fb",
+    "header": {
+      "marker": "27FB",
+      "header_bytes": "27fbd0c8c0c0900025dc8c6bc6bf07b0",
+      "field_be_03": 51392,
+      "field_be_06": 36864
+    },
+    "index": 22,
+    "next_offset": 32768,
+    "span": 1280
+  }
+]

@@ -1,0 +1,507 @@
+{
+  "description": "Structured summary of the bank 1 boot/title screen build path near L008CA2. This focuses on concrete VRAM/CGRAM uploads and callback installation.",
+  "entry_point": "01:8CA2",
+  "ppu_setup": {
+    "BGMODE": "0x21",
+    "BG1SC": "0x01",
+    "BG2SC": "0x0B",
+    "BG3SC": "0x19",
+    "BG12NBA": "0x23",
+    "BG34NBA": "0x35",
+    "TMAIN": "0x17",
+    "OBJSEL": "0x03"
+  },
+  "palette_manifest": "tools/out/bank1_boot_palettes.json",
+  "jobs": [
+    {
+      "name": "bank9_boot_vram_pages",
+      "helper": "L0005AC",
+      "source_table": "01:85DE",
+      "source_bank": 9,
+      "entry_count": 9,
+      "vram_base_variants": [
+        "0x0800",
+        "0x1000"
+      ],
+      "note": "Immediate paged VRAM uploads selected by the sign of $1CEA. This appears to seed one of the front-end screen layouts.",
+      "entries": [
+        {
+          "index": 0,
+          "source_bank": 9,
+          "source_addr": "0x8000",
+          "rom_offset": "0x048000"
+        },
+        {
+          "index": 1,
+          "source_bank": 9,
+          "source_addr": "0x9006",
+          "rom_offset": "0x049006"
+        },
+        {
+          "index": 2,
+          "source_bank": 9,
+          "source_addr": "0xB00C",
+          "rom_offset": "0x04B00C"
+        },
+        {
+          "index": 3,
+          "source_bank": 9,
+          "source_addr": "0x8000",
+          "rom_offset": "0x048000"
+        },
+        {
+          "index": 4,
+          "source_bank": 9,
+          "source_addr": "0x9F80",
+          "rom_offset": "0x049F80"
+        },
+        {
+          "index": 5,
+          "source_bank": 9,
+          "source_addr": "0xB9A0",
+          "rom_offset": "0x04B9A0"
+        },
+        {
+          "index": 6,
+          "source_bank": 9,
+          "source_addr": "0xAF2B",
+          "rom_offset": "0x04AF2B"
+        },
+        {
+          "index": 7,
+          "source_bank": 9,
+          "source_addr": "0xAFAB",
+          "rom_offset": "0x04AFAB"
+        },
+        {
+          "index": 8,
+          "source_bank": 9,
+          "source_addr": "0xB02B",
+          "rom_offset": "0x04B02B"
+        }
+      ]
+    },
+    {
+      "name": "bank8_bulk_vram_block",
+      "helper": "L0006C9",
+      "source_table": "01:85E4",
+      "source_bank": 8,
+      "entry_count": 8,
+      "length_bytes": "0x1F80",
+      "vram_dest": "0x2000",
+      "entries": [
+        {
+          "index": 0,
+          "source_bank": 8,
+          "source_addr": "0x8000",
+          "rom_offset": "0x040000"
+        },
+        {
+          "index": 1,
+          "source_bank": 8,
+          "source_addr": "0x9F80",
+          "rom_offset": "0x041F80"
+        },
+        {
+          "index": 2,
+          "source_bank": 8,
+          "source_addr": "0xB9A0",
+          "rom_offset": "0x0439A0"
+        },
+        {
+          "index": 3,
+          "source_bank": 8,
+          "source_addr": "0xAF2B",
+          "rom_offset": "0x042F2B"
+        },
+        {
+          "index": 4,
+          "source_bank": 8,
+          "source_addr": "0xAFAB",
+          "rom_offset": "0x042FAB"
+        },
+        {
+          "index": 5,
+          "source_bank": 8,
+          "source_addr": "0xB02B",
+          "rom_offset": "0x04302B"
+        },
+        {
+          "index": 6,
+          "source_bank": 8,
+          "source_addr": "0x8120",
+          "rom_offset": "0x040120"
+        },
+        {
+          "index": 7,
+          "source_bank": 8,
+          "source_addr": "0xA4D4",
+          "rom_offset": "0x0424D4"
+        }
+      ]
+    },
+    {
+      "name": "mixed_page_uploads_to_vram_0000",
+      "helper": "L0005AC",
+      "source_table": "01:85C6",
+      "entry_count": 4,
+      "vram_base": "0x0000",
+      "entries": [
+        {
+          "index": 0,
+          "source_bank": 23,
+          "source_addr": "0xA750",
+          "rom_offset": "0x0BA750"
+        },
+        {
+          "index": 1,
+          "source_bank": 23,
+          "source_addr": "0xB856",
+          "rom_offset": "0x0BB856"
+        },
+        {
+          "index": 2,
+          "source_bank": 23,
+          "source_addr": "0xC95C",
+          "rom_offset": "0x0BC95C"
+        },
+        {
+          "index": 3,
+          "source_bank": 25,
+          "source_addr": "0xBDA8",
+          "rom_offset": "0x0CBDA8"
+        }
+      ]
+    },
+    {
+      "name": "mixed_bulk_uploads_to_vram_3000",
+      "helper": "L0006C9",
+      "source_table": "01:85D2",
+      "entry_count": 4,
+      "length_bytes": "0x3920",
+      "vram_dest": "0x3000",
+      "entries": [
+        {
+          "index": 0,
+          "source_bank": 25,
+          "source_addr": "0xBDA8",
+          "rom_offset": "0x0CBDA8"
+        },
+        {
+          "index": 1,
+          "source_bank": 6,
+          "source_addr": "0x8000",
+          "rom_offset": "0x030000"
+        },
+        {
+          "index": 2,
+          "source_bank": 6,
+          "source_addr": "0xB920",
+          "rom_offset": "0x033920"
+        },
+        {
+          "index": 3,
+          "source_bank": 6,
+          "source_addr": "0x8000",
+          "rom_offset": "0x030000"
+        }
+      ]
+    },
+    {
+      "name": "compressed_bank7_group_a",
+      "helper": "L001210 -> L0005AC",
+      "source_table": "01:8564",
+      "source_bank": 7,
+      "entry_count": 9,
+      "wram_decompress_dest": "0x7E:2000",
+      "vram_base": "0x1800",
+      "entries": [
+        {
+          "index": 0,
+          "source_bank": 7,
+          "source_addr": "0x8000",
+          "rom_offset": "0x038000",
+          "compression": {
+            "mapped": true,
+            "rom_offset": "0x038000",
+            "header": "42FB"
+          }
+        },
+        {
+          "index": 1,
+          "source_bank": 7,
+          "source_addr": "0x87CA",
+          "rom_offset": "0x0387CA",
+          "compression": {
+            "mapped": true,
+            "rom_offset": "0x0387CA",
+            "header": "42FB"
+          }
+        },
+        {
+          "index": 2,
+          "source_bank": 7,
+          "source_addr": "0x8F98",
+          "rom_offset": "0x038F98",
+          "compression": {
+            "mapped": true,
+            "rom_offset": "0x038F98",
+            "header": "42FB"
+          }
+        },
+        {
+          "index": 3,
+          "source_bank": 7,
+          "source_addr": "0x9A33",
+          "rom_offset": "0x039A33",
+          "compression": {
+            "mapped": true,
+            "rom_offset": "0x039A33",
+            "header": "42FB"
+          }
+        },
+        {
+          "index": 4,
+          "source_bank": 7,
+          "source_addr": "0xA32C",
+          "rom_offset": "0x03A32C",
+          "compression": {
+            "mapped": true,
+            "rom_offset": "0x03A32C",
+            "header": "42FB"
+          }
+        },
+        {
+          "index": 5,
+          "source_bank": 7,
+          "source_addr": "0xAC90",
+          "rom_offset": "0x03AC90",
+          "compression": {
+            "mapped": true,
+            "rom_offset": "0x03AC90",
+            "header": "42FB"
+          }
+        },
+        {
+          "index": 6,
+          "source_bank": 7,
+          "source_addr": "0xB6CE",
+          "rom_offset": "0x03B6CE",
+          "compression": {
+            "mapped": true,
+            "rom_offset": "0x03B6CE",
+            "header": "42FB"
+          }
+        },
+        {
+          "index": 7,
+          "source_bank": 7,
+          "source_addr": "0xBF49",
+          "rom_offset": "0x03BF49",
+          "compression": {
+            "mapped": true,
+            "rom_offset": "0x03BF49",
+            "header": "42FB"
+          }
+        },
+        {
+          "index": 8,
+          "source_bank": 7,
+          "source_addr": "0xCA3C",
+          "rom_offset": "0x03CA3C",
+          "compression": {
+            "mapped": true,
+            "rom_offset": "0x03CA3C",
+            "header": "42FB"
+          }
+        }
+      ]
+    },
+    {
+      "name": "compressed_bank7_group_b",
+      "helper": "L001210 -> L0006C9",
+      "source_table": "01:8576",
+      "source_bank": 7,
+      "entry_count": 9,
+      "wram_decompress_dest": "0x7E:2000",
+      "vram_dest": "0x5000",
+      "entries": [
+        {
+          "index": 0,
+          "source_bank": 7,
+          "source_addr": "0x817A",
+          "rom_offset": "0x03817A",
+          "compression": {
+            "mapped": true,
+            "rom_offset": "0x03817A",
+            "header": "26FB"
+          }
+        },
+        {
+          "index": 1,
+          "source_bank": 7,
+          "source_addr": "0x8949",
+          "rom_offset": "0x038949",
+          "compression": {
+            "mapped": true,
+            "rom_offset": "0x038949",
+            "header": "26FB"
+          }
+        },
+        {
+          "index": 2,
+          "source_bank": 7,
+          "source_addr": "0x91D8",
+          "rom_offset": "0x0391D8",
+          "compression": {
+            "mapped": true,
+            "rom_offset": "0x0391D8",
+            "header": "26FB"
+          }
+        },
+        {
+          "index": 3,
+          "source_bank": 7,
+          "source_addr": "0x9C0A",
+          "rom_offset": "0x039C0A",
+          "compression": {
+            "mapped": true,
+            "rom_offset": "0x039C0A",
+            "header": "26FB"
+          }
+        },
+        {
+          "index": 4,
+          "source_bank": 7,
+          "source_addr": "0xA511",
+          "rom_offset": "0x03A511",
+          "compression": {
+            "mapped": true,
+            "rom_offset": "0x03A511",
+            "header": "26FB"
+          }
+        },
+        {
+          "index": 5,
+          "source_bank": 7,
+          "source_addr": "0xAE8A",
+          "rom_offset": "0x03AE8A",
+          "compression": {
+            "mapped": true,
+            "rom_offset": "0x03AE8A",
+            "header": "26FB"
+          }
+        },
+        {
+          "index": 6,
+          "source_bank": 7,
+          "source_addr": "0xB870",
+          "rom_offset": "0x03B870",
+          "compression": {
+            "mapped": true,
+            "rom_offset": "0x03B870",
+            "header": "26FB"
+          }
+        },
+        {
+          "index": 7,
+          "source_bank": 7,
+          "source_addr": "0xC112",
+          "rom_offset": "0x03C112",
+          "compression": {
+            "mapped": true,
+            "rom_offset": "0x03C112",
+            "header": "26FB"
+          }
+        },
+        {
+          "index": 8,
+          "source_bank": 7,
+          "source_addr": "0xCAA8",
+          "rom_offset": "0x03CAA8",
+          "compression": {
+            "mapped": true,
+            "rom_offset": "0x03CAA8",
+            "header": "26FB"
+          }
+        }
+      ]
+    },
+    {
+      "name": "optional_overlay_to_vram_4d00",
+      "helper": "L001210 -> L0006C9",
+      "condition": "$1CE6 != 0",
+      "source": {
+        "bank": 13,
+        "addr": "0xEFDE",
+        "rom_offset": "0x06EFDE",
+        "compression": {
+          "mapped": true,
+          "rom_offset": "0x06EFDE",
+          "header": "26FB"
+        }
+      },
+      "wram_decompress_dest": "0x7E:2000",
+      "vram_dest": "0x4D00"
+    },
+    {
+      "name": "local_bank1_tilemap_patches",
+      "helper": "L0006C9",
+      "note": "Three small local uploads patch the boot screen tilemap area near VRAM 0x60B0.",
+      "patches": [
+        {
+          "source": {
+            "source_bank": 1,
+            "source_addr": "0x8614",
+            "rom_offset": "0x008614"
+          },
+          "source_stride": "0x20",
+          "selector": "$1C78",
+          "default_value": 1,
+          "length_bytes": "0x20",
+          "vram_dest": "0x60B0"
+        },
+        {
+          "source": {
+            "source_bank": 1,
+            "source_addr": "0x8614",
+            "rom_offset": "0x008614"
+          },
+          "source_stride": "0x20",
+          "selector": "$1C7A",
+          "default_value": 0,
+          "length_bytes": "0x20",
+          "vram_dest": "0x60C0"
+        },
+        {
+          "source": {
+            "source_bank": 1,
+            "source_addr": "0x8674",
+            "rom_offset": "0x008674"
+          },
+          "length_bytes": "0x40",
+          "vram_dest": "0x60D0"
+        }
+      ]
+    }
+  ],
+  "callbacks_installed": {
+    "irq": {
+      "helper": "L000341",
+      "bank": 1,
+      "addr": "0x96A0",
+      "v_timer": "0x0017",
+      "h_timer_shadow": "0x0056"
+    },
+    "main": {
+      "helper": "L000385",
+      "bank": 2,
+      "addr": "0x9016"
+    },
+    "nmi": {
+      "helper": "L0003A0",
+      "bank": 2,
+      "addr": "0x8F3C"
+    }
+  }
+}

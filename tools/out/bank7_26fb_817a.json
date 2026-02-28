@@ -1,0 +1,60 @@
+{
+  "format": "26FB",
+  "declared_output_size": 2160,
+  "initial_state": 67,
+  "special_symbol": 100,
+  "special_short_bits": null,
+  "group_count": 11,
+  "total_symbol_count": 224,
+  "short_slots_used": 210,
+  "counts": [
+    0,
+    0,
+    2,
+    0,
+    3,
+    8,
+    28,
+    34,
+    64,
+    27,
+    58
+  ],
+  "long_bases": [
+    345,
+    829,
+    1824
+  ],
+  "long_limits": [
+    61952,
+    63680,
+    0
+  ],
+  "compressed_stream_offset": 8,
+  "compressed_bytes_consumed": 1160,
+  "decode_steps": 1440,
+  "end_marker_hit": false,
+  "bank": 7,
+  "addr": "0x817A",
+  "rom_offset": "0x03817A",
+  "output_path": "out/bank7_26fb_817a.bin",
+  "output_size": 2160,
+  "first_bytes": [
+    "0x00",
+    "0x61",
+    "0xFF",
+    "0x1C",
+    "0x08",
+    "0x7A",
+    "0x3A",
+    "0x3F",
+    "0x00",
+    "0x00",
+    "0x02",
+    "0x04",
+    "0x02",
+    "0x04",
+    "0x02",
+    "0x04"
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "format": "42FB",
+  "declared_output_size": 4102,
+  "root_index": 135,
+  "node_count": 18,
+  "node_table_offset": 11,
+  "compressed_stream_offset": 65,
+  "compressed_bytes_consumed": 377,
+  "nodes": [
+    {
+      "node_index": 137,
+      "left": 0,
+      "right": 0
+    },
+    {
+      "node_index": 138,
+      "left": 137,
+      "right": 137
+    },
+    {
+      "node_index": 139,
+      "left": 4,
+      "right": 134
+    },
+    {
+      "node_index": 140,
+      "left": 139,
+      "right": 139
+    },
+    {
+      "node_index": 141,
+      "left": 138,
+      "right": 138
+    },
+    {
+      "node_index": 142,
+      "left": 140,
+      "right": 140
+    },
+    {
+      "node_index": 143,
+      "left": 141,
+      "right": 141
+    },
+    {
+      "node_index": 144,
+      "left": 142,
+      "right": 142
+    },
+    {
+      "node_index": 145,
+      "left": 143,
+      "right": 143
+    },
+    {
+      "node_index": 146,
+      "left": 144,
+      "right": 144
+    },
+    {
+      "node_index": 147,
+      "left": 145,
+      "right": 145
+    },
+    {
+      "node_index": 148,
+      "left": 146,
+      "right": 146
+    },
+    {
+      "node_index": 149,
+      "left": 147,
+      "right": 147
+    },
+    {
+      "node_index": 150,
+      "left": 148,
+      "right": 148
+    },
+    {
+      "node_index": 151,
+      "left": 149,
+      "right": 149
+    },
+    {
+      "node_index": 152,
+      "left": 150,
+      "right": 150
+    },
+    {
+      "node_index": 153,
+      "left": 152,
+      "right": 152
+    },
+    {
+      "node_index": 154,
+      "left": 151,
+      "right": 151
+    }
+  ],
+  "bank": 7,
+  "addr": "0x8000",
+  "rom_offset": "0x038000",
+  "output_path": "out/bank7_42fb_8000.bin",
+  "output_size": 4102,
+  "first_bytes": [
+    "0x40",
+    "0x00",
+    "0x20",
+    "0x00",
+    "0x04",
+    "0x03",
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00",
+    "0x00"
+  ]
+}

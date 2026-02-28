@@ -1,0 +1,186 @@
+{
+  "variant": 0,
+  "apply_optional_overlay": false,
+  "selector_1c78": null,
+  "selector_1c7a": null,
+  "page_stride_words": "0x0400",
+  "applied_jobs": [
+    {
+      "job": "bank9_boot_vram_pages",
+      "selected_entry_index": 0,
+      "selected_vram_base_variant": "0x0800",
+      "source": {
+        "kind": "raw",
+        "raw_rom_offset": "0x048000",
+        "source_bank": 9,
+        "source_addr": "0x8000",
+        "width_words": 64,
+        "row_count": 32,
+        "aux_header": "0x0308",
+        "payload_size": 4096
+      },
+      "apply": {
+        "helper": "L0005AC",
+        "vram_word_addr": "0x0800",
+        "width_words": 64,
+        "row_count": 32,
+        "row_bytes": 128,
+        "page_stride_words": "0x0400",
+        "payload_size": 4096
+      }
+    },
+    {
+      "job": "bank8_bulk_vram_block",
+      "selected_entry_index": 0,
+      "source": {
+        "kind": "raw",
+        "source_bank": 8,
+        "source_addr": "0x8000",
+        "raw_rom_offset": "0x040000"
+      },
+      "apply": {
+        "helper": "L0006C9",
+        "vram_word_addr": "0x2000",
+        "length_bytes": 8064
+      }
+    },
+    {
+      "job": "mixed_page_uploads_to_vram_0000",
+      "selected_entry_index": 0,
+      "source": {
+        "kind": "raw",
+        "raw_rom_offset": "0x0BA750",
+        "source_bank": 23,
+        "source_addr": "0xA750",
+        "width_words": 64,
+        "row_count": 32,
+        "aux_header": "0x0308",
+        "payload_size": 4096
+      },
+      "apply": {
+        "helper": "L0005AC",
+        "vram_word_addr": "0x0000",
+        "width_words": 64,
+        "row_count": 32,
+        "row_bytes": 128,
+        "page_stride_words": "0x0400",
+        "payload_size": 4096
+      }
+    },
+    {
+      "job": "mixed_bulk_uploads_to_vram_3000",
+      "selected_entry_index": 0,
+      "source": {
+        "kind": "raw",
+        "source_bank": 25,
+        "source_addr": "0xBDA8",
+        "raw_rom_offset": "0x0CBDA8"
+      },
+      "apply": {
+        "helper": "L0006C9",
+        "vram_word_addr": "0x3000",
+        "length_bytes": 14624
+      }
+    },
+    {
+      "job": "compressed_bank7_group_a",
+      "selected_entry_index": 0,
+      "source": {
+        "kind": "42FB",
+        "compressed_rom_offset": "0x038000",
+        "compressed_bytes_consumed": 377,
+        "source_bank": 7,
+        "source_addr": "0x8000",
+        "width_words": 64,
+        "row_count": 32,
+        "aux_header": "0x0304",
+        "payload_size": 4096
+      },
+      "apply": {
+        "helper": "L0005AC",
+        "vram_word_addr": "0x1800",
+        "width_words": 64,
+        "row_count": 32,
+        "row_bytes": 128,
+        "page_stride_words": "0x0400",
+        "payload_size": 4096
+      }
+    },
+    {
+      "job": "compressed_bank7_group_b",
+      "selected_entry_index": 0,
+      "source": {
+        "kind": "26FB",
+        "compressed_rom_offset": "0x03817A",
+        "compressed_bytes_consumed": 1160,
+        "source_bank": 7,
+        "source_addr": "0x817A",
+        "payload_size": 2160
+      },
+      "apply": {
+        "helper": "L0006C9",
+        "vram_word_addr": "0x5000",
+        "length_bytes": 2160
+      }
+    },
+    {
+      "job": "local_bank1_tilemap_patches",
+      "patches": [
+        {
+          "selector": "$1C78",
+          "applied_selector_value": 1,
+          "source": {
+            "kind": "raw",
+            "source_bank": 1,
+            "source_addr": "0x8614",
+            "raw_rom_offset": "0x008634",
+            "source_offset": "0x0020"
+          },
+          "apply": {
+            "helper": "L0006C9",
+            "vram_word_addr": "0x60B0",
+            "length_bytes": 32
+          }
+        },
+        {
+          "selector": "$1C7A",
+          "applied_selector_value": 0,
+          "source": {
+            "kind": "raw",
+            "source_bank": 1,
+            "source_addr": "0x8614",
+            "raw_rom_offset": "0x008614",
+            "source_offset": "0x0000"
+          },
+          "apply": {
+            "helper": "L0006C9",
+            "vram_word_addr": "0x60C0",
+            "length_bytes": 32
+          }
+        },
+        {
+          "selector": null,
+          "applied_selector_value": null,
+          "source": {
+            "kind": "raw",
+            "source_bank": 1,
+            "source_addr": "0x8674",
+            "raw_rom_offset": "0x008674",
+            "source_offset": "0x0000"
+          },
+          "apply": {
+            "helper": "L0006C9",
+            "vram_word_addr": "0x60D0",
+            "length_bytes": 64
+          }
+        }
+      ]
+    }
+  ],
+  "skipped_jobs": [
+    {
+      "job": "optional_overlay_to_vram_4d00",
+      "reason": "conditioned on $1CE6 and not enabled for this snapshot"
+    }
+  ]
+}
