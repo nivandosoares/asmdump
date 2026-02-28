@@ -180,6 +180,19 @@ The current runtime milestone goes one step further than that sampled manifest:
   - frame offset `320` vs source frame `974`
   - frame offset `676` vs source frame `1330`
 
+Current boundary for the next native intro replacement:
+
+- `958..974` is still the unstable bootstrap zone for the `L00A00C -> 01:9D69 -> 01:9FE5` handoff
+- frame `978` is the first clean extracted-state target after that handoff:
+  - direct runtime reconstruction from `VRAM + CGRAM + PPU state` currently lands at `4` mismatched pixels (`0.006975%`)
+- the same extracted-state path then starts drifting again:
+  - frame `986`: `23` mismatched pixels (`0.040109%`)
+  - frame `990`: `1295` mismatched pixels (`2.258301%`)
+  - frame `994`: `2781` mismatched pixels (`4.849679%`)
+- practical next step:
+  - use `978..985` as the smallest next replacement candidate
+  - treat `958..977` as a deeper bootstrap-builder problem rather than a simple scene dump
+
 The probe now also writes a second PPU-memory snapshot at the start of the sampled frame when `TD2_BOOT_PROBE_DUMP_PPU_MEMORY=1` is enabled:
 
 - `td2_boot_probe_startframe_vram.bin`

@@ -411,6 +411,22 @@ Current implementation status:
   - sampled `image` playback for the later attract states
 - the manifest collapses identical adjacent screenshots, reducing `355` captured frames to `226` playback entries while preserving the full `1418` frames of runtime duration
 
+Current post-Ballistic boundary for the next native replacement:
+
+- the `958..974` block is still the unstable bootstrap side of `L00A00C -> 01:9D69 -> 01:9FE5`
+  - frame `958` reconstructed from extracted `VRAM + CGRAM + PPU state` is not usable yet (`100%` mismatch in the current runtime path)
+  - frame `974` is also not yet a clean extracted-state target
+- frame `978` is the first practical stable target after the handoff:
+  - runtime reconstruction from extracted SNES state compares at `4` pixels (`0.006975%`) against the sampled screenshot
+- later frames in that attract path begin to drift again under the current renderer:
+  - frame `986`: `23` pixels (`0.040109%`)
+  - frame `990`: `1295` pixels (`2.258301%`)
+  - frame `994`: `2781` pixels (`4.849679%`)
+- practical reading:
+  - the smallest next replacement candidate is the `978..985` block
+  - the earlier `958..977` path still wants a deeper ROM-side scene/bootstrap builder
+  - the later drift points toward missing OBJ or another presentation nuance on top of the Mode 7 BG path
+
 ## Existing Tooling Hook
 
 `tools/extract_boot_palette_manifest.py` now dumps these known boot-time palette tables into JSON.
