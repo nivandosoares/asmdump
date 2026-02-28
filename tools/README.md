@@ -13,6 +13,10 @@ Current Sprint 0 tooling:
 - `mesen_ppu_extract`: headless C# bridge into `MesenCore.so` that dumps the current frame's SNES BG layer views, BG tilesets/CHR sheets, palette, per-sprite previews, sprite screen preview, and raw VRAM/CGRAM/OAM without going through the GUI
 - `extract_mesen_scene_range.py`: batches `mesen_ppu_extract` across a frame range, writes per-frame scene folders, and emits a collapsed `sequence.txt` manifest for the SDL runtime
 - `build_scene_sequence_manifest.py`: converts flat Mesen range dumps into runtime-ready `sequence.txt` manifests, either as `snes_bg` entries or exact sampled `image` entries from screenshots
+- `build_indexed_palette_animation.py`: collapses a screenshot-backed frame range into one indexed image plus a palette timeline and can emit a one-entry `indexed_anim` sequence manifest
+- `build_ballistic_rom_clip.py`: generates a ROM-derived Ballistic `indexed_anim` clip from the helper-scene CGRAM, the `A39C` `04:99ED` palette ramp, and the measured class mapping
+- `build_ballistic_callback_asset.py`: generates a compact Ballistic callback asset for direct runtime `ballistic_a39c` playback from helper-scene CGRAM, the ROM ramp, and the inferred class mapping
+- `splice_sequence_manifest.py`: replaces a frame range inside a sequence JSON summary with a new manifest entry, used for hybrid native-plus-sampled intro loops
 - `render_mesen_snes_bg.py`: composes a 256x224 preview directly from Mesen VRAM/CGRAM/state dumps, including Mode 7 and optional OBJ composition from OAM dumps
 - `summarize_mode7_trace.py`: summarizes the tracked register-write traces emitted by `mesen_probe_boot.lua` for Mode 7/TMAIN or DMA/HDMA windows
 - `extract_compression_header_manifest.py`: scans a bank for `42FB`/`26FB`/`67FB`/`27FB` blocks and decodes their leading header fields
@@ -39,6 +43,10 @@ python3 tools/build_bank1_helper_scene.py game.smc tools/out/bank1_l00a35a_scene
 ./tools/run_mesen_ppu_extract.sh --rom game.smc --frame 300 --out-dir tools/out/mesen_frame300
 python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 654 --end-frame 710 --step 4 --out-dir tools/out/ballistic_sequence --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
 python3 tools/build_scene_sequence_manifest.py tools/out/intro_loop.json tools/out/intro_loop_sequence.txt --json-out tools/out/intro_loop_sequence.json --end-frame-exclusive 2072 --prefer-screenshot
+python3 tools/build_indexed_palette_animation.py tools/out/intro_loop.json tools/out/ballistic_native/ballistic_splash.txt --start-frame 654 --end-frame-exclusive 958 --json-out tools/out/ballistic_native/ballistic_splash.json --preview-out tools/out/ballistic_native/ballistic_splash_preview.ppm --sequence-manifest tools/out/ballistic_native_sequence.txt
+python3 tools/build_ballistic_rom_clip.py game.smc tools/out/bank1_l00a35a_scene_cgram.bin tools/out/ballistic_native/ballistic_splash.json tools/out/ballistic_rom/ballistic_splash.txt --json-out tools/out/ballistic_rom/ballistic_splash.json --preview-out tools/out/ballistic_rom/ballistic_splash_preview.ppm --sequence-manifest tools/out/ballistic_rom_sequence.txt
+python3 tools/build_ballistic_callback_asset.py game.smc tools/out/bank1_l00a35a_scene_cgram.bin tools/out/ballistic_rom/ballistic_splash.json tools/out/ballistic_callback/ballistic_a39c.txt --json-out tools/out/ballistic_callback/ballistic_a39c.json --sequence-manifest tools/out/ballistic_callback_sequence.txt
+python3 tools/splice_sequence_manifest.py tools/out/intro_loop_sequence.json tools/out/intro_loop_hybrid_sequence.txt --replace-start-frame 654 --replace-end-frame-exclusive 958 --replacement-type ballistic_a39c --replacement-path tools/out/ballistic_callback/ballistic_a39c.txt --replacement-duration 304 --json-out tools/out/intro_loop_hybrid_sequence.json
 python3 tools/render_mesen_snes_bg.py .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_vram.bin .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_cgram.bin .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_ppu_state.json tools/out/mesen_poweron_5s_bg_only.ppm --json-out tools/out/mesen_poweron_5s_bg_only.json
 python3 tools/render_mesen_snes_bg.py tools/out/td2_boot_probe_startframe_vram_1200.bin tools/out/td2_boot_probe_startframe_cgram_1200.bin tools/out/td2_boot_probe_startframe_ppu_state_1200.json tools/out/td2_boot_probe_bg_obj_1200.ppm --oam tools/out/td2_boot_probe_startframe_oam_1200.bin --json-out tools/out/td2_boot_probe_bg_obj_1200.json
 python3 tools/render_mesen_snes_bg.py tools/out/td2_boot_probe_startframe_vram_1200.bin tools/out/td2_boot_probe_startframe_cgram_1200.bin tools/out/td2_boot_probe_startframe_ppu_state_1200.json tools/out/td2_boot_probe_bg_obj_1200_ppu.ppm --oam tools/out/td2_boot_probe_startframe_oam_1200.bin --obj-renderer mode7-ppu --json-out tools/out/td2_boot_probe_bg_obj_1200_ppu.json
@@ -80,6 +88,9 @@ Useful make targets:
 - `make -C tools mesen-ppu-frame MESEN_FRAME=300`
 - `make -C tools intro-loop-dump`
 - `make -C tools intro-loop-sequence`
+- `make -C tools ballistic-native-clip`
+- `make -C tools ballistic-rom-clip`
+- `make -C tools intro-loop-hybrid-sequence`
 
 `mesen_ppu_extract` is the current bridge for the idea of using Mesen itself as an asset/layer extractor. It writes:
 
@@ -113,10 +124,41 @@ For the `Ballistic presents` splash, the frame-`654` extraction is a clean exact
 - it writes `sequence.txt`, a simple line-oriented manifest that `port/build/td2_port --sequence ...` can play directly
 - it also writes `sequence.json`, which records the extracted frame list, adjacent-collapse decisions, and total playback duration
 
-The first sampled Ballistic playback set currently lives in `tools/out/ballistic_sequence/`:
+The first sampled Ballistic playback set still lives in `tools/out/ballistic_sequence/`:
 
 - `sequence.txt`: `15` `snes_bg` entries covering frames `654..710` in `4`-frame steps
 - `sequence.json`: summary of those entries, with `60` frames of total playback
+
+The current native measured Ballistic artifact lives in `tools/out/ballistic_native/`:
+
+- `ballistic_splash.txt`: indexed palette-animation clip manifest
+- `ballistic_splash_indices.bin`: `256x224` indexed image with `15` classes total
+- `ballistic_splash.json`: structured summary with palette timeline and pixel-class counts
+- `ballistic_splash_preview.ppm`: first-frame reconstruction preview
+- `../ballistic_native_sequence.txt`: one-entry runtime sequence manifest for the clip
+
+The current ROM-derived Ballistic artifact lives in `tools/out/ballistic_rom/`:
+
+- `ballistic_splash.txt`: ROM-derived indexed palette-animation clip manifest
+- `ballistic_splash_indices.bin`: copied indexed image shared with the measured reference clip
+- `ballistic_splash.json`: structured summary with inferred class-to-CGRAM mapping
+- `ballistic_splash_preview.ppm`: ROM-derived first visible frame preview
+- `../ballistic_rom_sequence.txt`: one-entry runtime sequence manifest for the current Ballistic runtime clip
+
+The current direct runtime Ballistic callback artifact lives in `tools/out/ballistic_callback/`:
+
+- `ballistic_a39c.txt`: compact callback asset manifest
+- `ballistic_a39c_indices.bin`: copied indexed image shared with the measured reference clip
+- `ballistic_a39c_helper_cgram.bin`: helper-scene CGRAM seed for the callback
+- `ballistic_a39c_ramp.bin`: extracted `04:99ED` ramp words used by `01:A39C`
+- `ballistic_a39c.json`: structured summary with class mapping and runtime parameters
+- `../ballistic_callback_sequence.txt`: one-entry runtime sequence manifest for the direct callback path
+
+The current best no-input intro-loop runtime manifest is `tools/out/intro_loop_hybrid_sequence.txt`:
+
+- it replaces frames `654..958` with the direct runtime Ballistic `ballistic_a39c` clip
+- it keeps the later attract states as sampled `image` playback
+- it currently compares exactly in the SDL runtime at offsets `0`, `320`, and `676`
 
 The next milestone, the full first no-input attract loop, now lives in `tools/out/intro_loop*`:
 

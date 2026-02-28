@@ -147,7 +147,7 @@ One useful probe result for the `Ballistic presents` splash is the callback hand
   - ...
   - `708 -> 0`
 
-That makes frames `654..710` the current sampled window for the first SDL-side intro playback manifest.
+That makes frames `654..710` the first clean validation window for the Ballistic splash.
 
 Longer no-input probing now also pins down the repeat period of the first attract loop:
 
@@ -160,6 +160,25 @@ That repeat period is what the current exact sampled intro manifest uses:
 - dump range: frames `654..2070`, sampled every `4` frames
 - runtime end-exclusive frame: `2072`
 - this yields the first full exact no-input loop manifest under `tools/out/intro_loop_sequence.txt`
+
+The current runtime milestone goes one step further than that sampled manifest:
+
+- `tools/out/ballistic_native_sequence.txt` is the measured Ballistic reference clip
+- `tools/out/ballistic_rom_sequence.txt` is the ROM-derived Ballistic runtime clip
+- `tools/out/ballistic_callback_sequence.txt` is the direct runtime Ballistic callback clip
+- `tools/out/intro_loop_hybrid_sequence.txt` splices the direct callback clip into the full no-input loop
+- the ROM-derived clip currently compares exactly at:
+  - frame offset `0` vs source frame `654`
+  - frame offset `60` vs source frame `714`
+  - frame offset `300` vs source frame `954`
+- the direct callback clip also compares exactly at:
+  - frame offset `0`
+  - frame offset `60`
+  - frame offset `300`
+- current exact validation checks for the hybrid path are:
+  - frame offset `0` vs source frame `654`
+  - frame offset `320` vs source frame `974`
+  - frame offset `676` vs source frame `1330`
 
 The probe now also writes a second PPU-memory snapshot at the start of the sampled frame when `TD2_BOOT_PROBE_DUMP_PPU_MEMORY=1` is enabled:
 

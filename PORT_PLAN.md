@@ -53,12 +53,19 @@ New useful state beyond the original plan:
 - the `Ballistic presents` splash now has a deterministic entry anchor at frame `654`
 - the `L00A35A -> 01:A39C` path is identified as a palette-driven BG attract state, not a sprite-heavy scene
 - the SDL runtime can now play sampled intro/front-end scene manifests built from extracted `VRAM + CGRAM + PPU state`
+- the first native front-end clip now exists in two forms:
+  - a measured reference clip derived from deterministic screenshots
+  - a ROM-derived clip generated from the helper-scene CGRAM plus the `A39C` `04:99ED` ramp
+- the SDL runtime now also has a direct `ballistic_a39c` sequence path:
+  - it keeps the indexed Ballistic image compact
+  - it rebuilds the visible palette from helper-scene CGRAM plus the live `A39C` ramp logic at runtime
 - the first full no-input attract loop is now playable in the SDL runtime as an exact sampled image sequence (`1418` frames, repeating from `654 -> 2072`)
+- the current best intro-loop runtime artifact is a hybrid manifest: direct runtime `ballistic_a39c` Ballistic (`654..958`) followed by sampled image playback for the later attract states
 
 Immediate next focus:
 
-1. Replace the sampled Ballistic segment with a native `L00A35A -> A39C` palette-animation state machine.
-2. Replace later sampled attract segments with native front-end state machines one callback family at a time.
+1. Replace the later sampled attract segments with native front-end state machines one callback family at a time.
+2. Convert the next attract segments after frame `958` into native callback/state playback, starting with the `01:9D69 -> 01:9FE5` handoff.
 3. Keep building standalone extraction formats so later artist/mod tooling can sit on stable data instead of volatile reverse-engineering experiments.
 
 ## Delivery Phases

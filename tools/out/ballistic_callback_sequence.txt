@@ -1,0 +1,2 @@
+# type duration_frames path_a [path_b path_c]
+ballistic_a39c 304 ballistic_callback/ballistic_a39c.txt

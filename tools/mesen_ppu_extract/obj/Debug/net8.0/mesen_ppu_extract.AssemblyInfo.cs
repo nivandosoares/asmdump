@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("mesen_ppu_extract")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2bc9dc2723880fe44f54210d972ef54832ffbd08")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+aa67d277ed799df67b208aad808d1430c57a362a")]
 [assembly: System.Reflection.AssemblyProductAttribute("mesen_ppu_extract")]
 [assembly: System.Reflection.AssemblyTitleAttribute("mesen_ppu_extract")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

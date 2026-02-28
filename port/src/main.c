@@ -27,6 +27,35 @@ typedef struct {
     int height;
 } ImageData;
 
+typedef enum {
+    INDEXED_ANIM_MODE_PALETTE_FRAMES = 0,
+    INDEXED_ANIM_MODE_BALLISTIC_A39C = 1
+} IndexedAnimMode;
+
+typedef struct {
+    bool loaded;
+    IndexedAnimMode mode;
+    uint8_t *indices;
+    int width;
+    int height;
+    int palette_count;
+    uint32_t *palette_frames;
+    int *durations;
+    size_t frame_count;
+    size_t current_frame;
+    int frames_remaining;
+    uint8_t *helper_cgram;
+    size_t helper_cgram_size;
+    uint16_t *ramp_words;
+    size_t ramp_word_count;
+    int *class_cgram_indices;
+    int dynamic_start;
+    int dynamic_count;
+    int counter_wrap;
+    int step_frames;
+    uint32_t *runtime_palette;
+} IndexedPaletteAnimation;
+
 typedef struct {
     int tilemap_address;
     int chr_address;
@@ -62,7 +91,9 @@ typedef struct {
 
 typedef enum {
     SEQUENCE_ENTRY_SNES_BG = 1,
-    SEQUENCE_ENTRY_IMAGE = 2
+    SEQUENCE_ENTRY_IMAGE = 2,
+    SEQUENCE_ENTRY_INDEXED_ANIM = 3,
+    SEQUENCE_ENTRY_BALLISTIC_A39C = 4
 } SequenceEntryType;
 
 typedef struct {
@@ -92,12 +123,15 @@ typedef struct {
     const char *dump_prefix;
     PaletteBank palette_bank;
     ImageData image;
+    IndexedPaletteAnimation indexed_anim;
     SnesBgScene snes_bg_scene;
     SceneSequence sequence;
     int image_offset_x;
     int image_offset_y;
     uint32_t framebuffer[SCREEN_WIDTH * SCREEN_HEIGHT];
 } AppState;
+
+static bool read_entire_file(const char *path, char **out_data, size_t *out_size);
 
 static void palette_bank_free(PaletteBank *bank) {
     free(bank->colors);
@@ -110,6 +144,37 @@ static void image_data_free(ImageData *image) {
     image->pixels = NULL;
     image->width = 0;
     image->height = 0;
+}
+
+static void indexed_palette_animation_free(IndexedPaletteAnimation *animation) {
+    free(animation->indices);
+    free(animation->palette_frames);
+    free(animation->durations);
+    free(animation->helper_cgram);
+    free(animation->ramp_words);
+    free(animation->class_cgram_indices);
+    free(animation->runtime_palette);
+    animation->indices = NULL;
+    animation->palette_frames = NULL;
+    animation->durations = NULL;
+    animation->helper_cgram = NULL;
+    animation->ramp_words = NULL;
+    animation->class_cgram_indices = NULL;
+    animation->runtime_palette = NULL;
+    animation->loaded = false;
+    animation->mode = INDEXED_ANIM_MODE_PALETTE_FRAMES;
+    animation->width = 0;
+    animation->height = 0;
+    animation->palette_count = 0;
+    animation->frame_count = 0;
+    animation->current_frame = 0;
+    animation->frames_remaining = 0;
+    animation->helper_cgram_size = 0;
+    animation->ramp_word_count = 0;
+    animation->dynamic_start = 0;
+    animation->dynamic_count = 0;
+    animation->counter_wrap = 0;
+    animation->step_frames = 0;
 }
 
 static void scene_sequence_free(SceneSequence *sequence) {
@@ -366,6 +431,548 @@ static bool image_data_load_ppm(const char *path, ImageData *out_image) {
     out_image->height = height;
     fclose(file);
     return true;
+}
+
+static uint32_t snes_cgram_word_to_argb(uint16_t word) {
+    int red = word & 0x1fu;
+    int green = (word >> 5) & 0x1fu;
+    int blue = (word >> 10) & 0x1fu;
+    uint8_t red8 = (uint8_t)((red << 3) | (red >> 2));
+    uint8_t green8 = (uint8_t)((green << 3) | (green >> 2));
+    uint8_t blue8 = (uint8_t)((blue << 3) | (blue >> 2));
+
+    return 0xff000000u |
+           ((uint32_t)red8 << 16) |
+           ((uint32_t)green8 << 8) |
+           (uint32_t)blue8;
+}
+
+static bool indexed_palette_animation_update_runtime_palette(IndexedPaletteAnimation *animation) {
+    uint8_t cgram[0x200];
+
+    if (!animation->loaded ||
+        animation->mode != INDEXED_ANIM_MODE_BALLISTIC_A39C ||
+        !animation->helper_cgram ||
+        animation->helper_cgram_size != sizeof(cgram) ||
+        !animation->ramp_words ||
+        !animation->class_cgram_indices ||
+        !animation->runtime_palette) {
+        return false;
+    }
+
+    memcpy(cgram, animation->helper_cgram, sizeof(cgram));
+    if (animation->current_frame > 0u) {
+        int counter_value = 0;
+
+        for (size_t frame_index = 1u; frame_index <= animation->current_frame; frame_index++) {
+            int start_word = counter_value + 2;
+            if ((start_word + animation->dynamic_count) > (int)animation->ramp_word_count) {
+                fprintf(stderr, "error: Ballistic ramp is too short for frame %zu\n", frame_index);
+                return false;
+            }
+
+            for (int color_index = 0; color_index < animation->dynamic_count; color_index++) {
+                uint16_t word = animation->ramp_words[start_word + color_index];
+                int cgram_offset = (animation->dynamic_start + color_index) * 2;
+                if ((cgram_offset + 1) >= (int)sizeof(cgram)) {
+                    fprintf(stderr, "error: Ballistic CGRAM write exceeds 512-byte CGRAM buffer\n");
+                    return false;
+                }
+                cgram[cgram_offset] = (uint8_t)(word & 0xffu);
+                cgram[cgram_offset + 1] = (uint8_t)(word >> 8);
+            }
+
+            counter_value--;
+            if (counter_value < 0) {
+                counter_value = animation->counter_wrap;
+            }
+        }
+    }
+
+    for (int class_index = 0; class_index < animation->palette_count; class_index++) {
+        int cgram_index = animation->class_cgram_indices[class_index];
+        size_t cgram_offset = (size_t)cgram_index * 2u;
+
+        if (class_index == 0 || animation->current_frame == 0u) {
+            animation->runtime_palette[class_index] = 0xff000000u;
+            continue;
+        }
+        if (cgram_index < 0 || (cgram_offset + 1u) >= sizeof(cgram)) {
+            animation->runtime_palette[class_index] = 0xff000000u;
+            continue;
+        }
+
+        animation->runtime_palette[class_index] =
+            snes_cgram_word_to_argb((uint16_t)cgram[cgram_offset] | (uint16_t)(cgram[cgram_offset + 1u] << 8));
+    }
+
+    return true;
+}
+
+static bool indexed_palette_animation_load(const char *manifest_path, IndexedPaletteAnimation *out_animation) {
+    FILE *file = NULL;
+    char line[8192];
+    char *resolved_indices_path = NULL;
+    uint8_t *indices = NULL;
+    uint32_t *palette_frames = NULL;
+    int *durations = NULL;
+    size_t palette_capacity = 0;
+    size_t frame_count = 0;
+    int width = 0;
+    int height = 0;
+    int palette_count = 0;
+    bool ok = false;
+
+    file = fopen(manifest_path, "r");
+    if (!file) {
+        fprintf(stderr, "error: failed to open indexed animation manifest %s: %s\n", manifest_path, strerror(errno));
+        return false;
+    }
+
+    while (fgets(line, sizeof(line), file)) {
+        char *token = line;
+
+        while (*token && isspace((unsigned char)*token)) {
+            token++;
+        }
+        if (*token == '\0' || *token == '#' || *token == '\n' || *token == '\r') {
+            continue;
+        }
+
+        if (strncmp(token, "size ", 5) == 0) {
+            int parsed_width = 0;
+            int parsed_height = 0;
+            if (sscanf(token, "size %d %d", &parsed_width, &parsed_height) != 2 ||
+                parsed_width <= 0 || parsed_height <= 0) {
+                fprintf(stderr, "error: invalid size line in %s: %s\n", manifest_path, line);
+                goto cleanup;
+            }
+            width = parsed_width;
+            height = parsed_height;
+        } else if (strncmp(token, "indices ", 8) == 0) {
+            char relative_path[4096];
+            if (sscanf(token, "indices %4095s", relative_path) != 1) {
+                fprintf(stderr, "error: invalid indices line in %s: %s\n", manifest_path, line);
+                goto cleanup;
+            }
+            free(resolved_indices_path);
+            resolved_indices_path = resolve_manifest_path(manifest_path, relative_path);
+            if (!resolved_indices_path) {
+                fprintf(stderr, "error: out of memory resolving indexed animation path in %s\n", manifest_path);
+                goto cleanup;
+            }
+        } else if (strncmp(token, "palette_count ", 14) == 0) {
+            int parsed_palette_count = 0;
+            if (sscanf(token, "palette_count %d", &parsed_palette_count) != 1 ||
+                parsed_palette_count <= 0 || parsed_palette_count > 256) {
+                fprintf(stderr, "error: invalid palette_count line in %s: %s\n", manifest_path, line);
+                goto cleanup;
+            }
+            palette_count = parsed_palette_count;
+        } else if (strncmp(token, "frame ", 6) == 0) {
+            char *cursor = token + 6;
+            char *end = NULL;
+            long duration = strtol(cursor, &end, 10);
+
+            if (cursor == end || duration <= 0) {
+                fprintf(stderr, "error: invalid frame duration in %s: %s\n", manifest_path, line);
+                goto cleanup;
+            }
+            if (palette_count <= 0) {
+                fprintf(stderr, "error: frame entries require palette_count first in %s\n", manifest_path);
+                goto cleanup;
+            }
+            if (frame_count == palette_capacity) {
+                size_t next_capacity = palette_capacity == 0 ? 8u : palette_capacity * 2u;
+                uint32_t *next_palette_frames = realloc(palette_frames, next_capacity * (size_t)palette_count * sizeof(*palette_frames));
+                int *next_durations = realloc(durations, next_capacity * sizeof(*durations));
+                if (!next_palette_frames || !next_durations) {
+                    free(next_palette_frames);
+                    free(next_durations);
+                    fprintf(stderr, "error: out of memory growing indexed animation %s\n", manifest_path);
+                    goto cleanup;
+                }
+                palette_frames = next_palette_frames;
+                durations = next_durations;
+                palette_capacity = next_capacity;
+            }
+
+            durations[frame_count] = (int)duration;
+            cursor = end;
+            for (int color_index = 0; color_index < palette_count; color_index++) {
+                long channels[3] = {0};
+                for (int channel = 0; channel < 3; channel++) {
+                    while (*cursor && isspace((unsigned char)*cursor)) {
+                        cursor++;
+                    }
+                    channels[channel] = strtol(cursor, &end, 10);
+                    if (cursor == end || channels[channel] < 0 || channels[channel] > 255) {
+                        fprintf(stderr, "error: invalid RGB channel in %s: %s\n", manifest_path, line);
+                        goto cleanup;
+                    }
+                    cursor = end;
+                }
+
+                palette_frames[(frame_count * (size_t)palette_count) + (size_t)color_index] =
+                    0xff000000u |
+                    ((uint32_t)channels[0] << 16) |
+                    ((uint32_t)channels[1] << 8) |
+                    (uint32_t)channels[2];
+            }
+
+            frame_count++;
+        } else {
+            fprintf(stderr, "error: unknown indexed animation directive in %s: %s\n", manifest_path, line);
+            goto cleanup;
+        }
+    }
+
+    if (width <= 0 || height <= 0 || palette_count <= 0 || frame_count == 0 || !resolved_indices_path) {
+        fprintf(stderr, "error: incomplete indexed animation manifest %s\n", manifest_path);
+        goto cleanup;
+    }
+
+    {
+        char *indices_data = NULL;
+        size_t indices_size = 0;
+        if (!read_entire_file(resolved_indices_path, &indices_data, &indices_size)) {
+            goto cleanup;
+        }
+        if (indices_size != ((size_t)width * (size_t)height)) {
+            fprintf(
+                stderr,
+                "error: indexed animation image %s has %zu bytes, expected %zu\n",
+                resolved_indices_path,
+                indices_size,
+                (size_t)width * (size_t)height
+            );
+            free(indices_data);
+            goto cleanup;
+        }
+        indices = (uint8_t *)indices_data;
+    }
+
+    for (size_t pixel_index = 0; pixel_index < ((size_t)width * (size_t)height); pixel_index++) {
+        if ((int)indices[pixel_index] >= palette_count) {
+            fprintf(stderr, "error: indexed animation pixel %zu exceeds palette_count in %s\n", pixel_index, manifest_path);
+            goto cleanup;
+        }
+    }
+
+    indexed_palette_animation_free(out_animation);
+    out_animation->indices = indices;
+    out_animation->width = width;
+    out_animation->height = height;
+    out_animation->palette_count = palette_count;
+    out_animation->palette_frames = palette_frames;
+    out_animation->durations = durations;
+    out_animation->frame_count = frame_count;
+    out_animation->current_frame = 0u;
+    out_animation->frames_remaining = durations[0];
+    out_animation->loaded = true;
+    indices = NULL;
+    palette_frames = NULL;
+    durations = NULL;
+    ok = true;
+
+cleanup:
+    if (!ok) {
+        indexed_palette_animation_free(out_animation);
+    }
+    fclose(file);
+    free(resolved_indices_path);
+    free(indices);
+    free(palette_frames);
+    free(durations);
+    return ok;
+}
+
+static bool indexed_palette_animation_load_ballistic_a39c(const char *manifest_path, IndexedPaletteAnimation *out_animation) {
+    FILE *file = NULL;
+    char line[4096];
+    char *resolved_indices_path = NULL;
+    char *resolved_helper_cgram_path = NULL;
+    char *resolved_ramp_path = NULL;
+    uint8_t *indices = NULL;
+    uint8_t *helper_cgram = NULL;
+    uint16_t *ramp_words = NULL;
+    uint32_t *runtime_palette = NULL;
+    int *durations = NULL;
+    int *class_cgram_indices = NULL;
+    size_t ramp_word_count = 0;
+    int width = 0;
+    int height = 0;
+    int class_count = 0;
+    int timeline_count = 0;
+    int step_frames = 0;
+    int dynamic_start = 0;
+    int dynamic_count = 0;
+    int counter_wrap = 0;
+    bool ok = false;
+
+    file = fopen(manifest_path, "r");
+    if (!file) {
+        fprintf(stderr, "error: failed to open Ballistic callback asset %s: %s\n", manifest_path, strerror(errno));
+        return false;
+    }
+
+    class_cgram_indices = malloc(256u * sizeof(*class_cgram_indices));
+    if (!class_cgram_indices) {
+        fprintf(stderr, "error: out of memory preparing Ballistic mapping for %s\n", manifest_path);
+        goto cleanup;
+    }
+    for (int i = 0; i < 256; i++) {
+        class_cgram_indices[i] = -1;
+    }
+
+    while (fgets(line, sizeof(line), file)) {
+        char *token = line;
+
+        while (*token && isspace((unsigned char)*token)) {
+            token++;
+        }
+        if (*token == '\0' || *token == '#' || *token == '\n' || *token == '\r') {
+            continue;
+        }
+
+        if (strncmp(token, "size ", 5) == 0) {
+            int parsed_width = 0;
+            int parsed_height = 0;
+            if (sscanf(token, "size %d %d", &parsed_width, &parsed_height) != 2 ||
+                parsed_width <= 0 || parsed_height <= 0) {
+                fprintf(stderr, "error: invalid size line in %s: %s\n", manifest_path, line);
+                goto cleanup;
+            }
+            width = parsed_width;
+            height = parsed_height;
+        } else if (strncmp(token, "indices ", 8) == 0) {
+            char relative_path[4096];
+            if (sscanf(token, "indices %4095s", relative_path) != 1) {
+                fprintf(stderr, "error: invalid indices line in %s: %s\n", manifest_path, line);
+                goto cleanup;
+            }
+            free(resolved_indices_path);
+            resolved_indices_path = resolve_manifest_path(manifest_path, relative_path);
+            if (!resolved_indices_path) {
+                fprintf(stderr, "error: out of memory resolving Ballistic indices path in %s\n", manifest_path);
+                goto cleanup;
+            }
+        } else if (strncmp(token, "helper_cgram ", 13) == 0) {
+            char relative_path[4096];
+            if (sscanf(token, "helper_cgram %4095s", relative_path) != 1) {
+                fprintf(stderr, "error: invalid helper_cgram line in %s: %s\n", manifest_path, line);
+                goto cleanup;
+            }
+            free(resolved_helper_cgram_path);
+            resolved_helper_cgram_path = resolve_manifest_path(manifest_path, relative_path);
+            if (!resolved_helper_cgram_path) {
+                fprintf(stderr, "error: out of memory resolving Ballistic helper_cgram path in %s\n", manifest_path);
+                goto cleanup;
+            }
+        } else if (strncmp(token, "ramp ", 5) == 0) {
+            char relative_path[4096];
+            if (sscanf(token, "ramp %4095s", relative_path) != 1) {
+                fprintf(stderr, "error: invalid ramp line in %s: %s\n", manifest_path, line);
+                goto cleanup;
+            }
+            free(resolved_ramp_path);
+            resolved_ramp_path = resolve_manifest_path(manifest_path, relative_path);
+            if (!resolved_ramp_path) {
+                fprintf(stderr, "error: out of memory resolving Ballistic ramp path in %s\n", manifest_path);
+                goto cleanup;
+            }
+        } else if (strncmp(token, "class_count ", 12) == 0) {
+            if (sscanf(token, "class_count %d", &class_count) != 1 ||
+                class_count <= 0 || class_count > 256) {
+                fprintf(stderr, "error: invalid class_count line in %s: %s\n", manifest_path, line);
+                goto cleanup;
+            }
+        } else if (strncmp(token, "timeline_count ", 15) == 0) {
+            if (sscanf(token, "timeline_count %d", &timeline_count) != 1 || timeline_count <= 0) {
+                fprintf(stderr, "error: invalid timeline_count line in %s: %s\n", manifest_path, line);
+                goto cleanup;
+            }
+        } else if (strncmp(token, "step_frames ", 12) == 0) {
+            if (sscanf(token, "step_frames %d", &step_frames) != 1 || step_frames <= 0) {
+                fprintf(stderr, "error: invalid step_frames line in %s: %s\n", manifest_path, line);
+                goto cleanup;
+            }
+        } else if (strncmp(token, "dynamic_start ", 14) == 0) {
+            if (sscanf(token, "dynamic_start %d", &dynamic_start) != 1 || dynamic_start < 0) {
+                fprintf(stderr, "error: invalid dynamic_start line in %s: %s\n", manifest_path, line);
+                goto cleanup;
+            }
+        } else if (strncmp(token, "dynamic_count ", 14) == 0) {
+            if (sscanf(token, "dynamic_count %d", &dynamic_count) != 1 || dynamic_count <= 0) {
+                fprintf(stderr, "error: invalid dynamic_count line in %s: %s\n", manifest_path, line);
+                goto cleanup;
+            }
+        } else if (strncmp(token, "counter_wrap ", 13) == 0) {
+            if (sscanf(token, "counter_wrap %d", &counter_wrap) != 1 || counter_wrap < 0) {
+                fprintf(stderr, "error: invalid counter_wrap line in %s: %s\n", manifest_path, line);
+                goto cleanup;
+            }
+        } else if (strncmp(token, "mapping ", 8) == 0) {
+            int class_index = 0;
+            int cgram_index = 0;
+            if (sscanf(token, "mapping %d %d", &class_index, &cgram_index) != 2 ||
+                class_index < 0 || class_index >= 256 || cgram_index < 0 || cgram_index >= 256) {
+                fprintf(stderr, "error: invalid mapping line in %s: %s\n", manifest_path, line);
+                goto cleanup;
+            }
+            class_cgram_indices[class_index] = cgram_index;
+        } else {
+            fprintf(stderr, "error: unknown Ballistic callback directive in %s: %s\n", manifest_path, line);
+            goto cleanup;
+        }
+    }
+
+    if (width <= 0 || height <= 0 || class_count <= 0 || timeline_count <= 0 || step_frames <= 0 ||
+        !resolved_indices_path || !resolved_helper_cgram_path || !resolved_ramp_path) {
+        fprintf(stderr, "error: incomplete Ballistic callback asset %s\n", manifest_path);
+        goto cleanup;
+    }
+
+    for (int class_index = 0; class_index < class_count; class_index++) {
+        if (class_cgram_indices[class_index] < 0) {
+            fprintf(stderr, "error: missing Ballistic mapping for class %d in %s\n", class_index, manifest_path);
+            goto cleanup;
+        }
+    }
+
+    {
+        char *indices_data = NULL;
+        size_t indices_size = 0;
+        if (!read_entire_file(resolved_indices_path, &indices_data, &indices_size)) {
+            goto cleanup;
+        }
+        if (indices_size != ((size_t)width * (size_t)height)) {
+            fprintf(
+                stderr,
+                "error: Ballistic indexed image %s has %zu bytes, expected %zu\n",
+                resolved_indices_path,
+                indices_size,
+                (size_t)width * (size_t)height
+            );
+            free(indices_data);
+            goto cleanup;
+        }
+        indices = (uint8_t *)indices_data;
+    }
+
+    for (size_t pixel_index = 0; pixel_index < ((size_t)width * (size_t)height); pixel_index++) {
+        if ((int)indices[pixel_index] >= class_count) {
+            fprintf(stderr, "error: Ballistic pixel %zu exceeds class_count in %s\n", pixel_index, manifest_path);
+            goto cleanup;
+        }
+    }
+
+    {
+        char *helper_cgram_data = NULL;
+        size_t helper_cgram_size = 0;
+        if (!read_entire_file(resolved_helper_cgram_path, &helper_cgram_data, &helper_cgram_size)) {
+            goto cleanup;
+        }
+        if (helper_cgram_size != 0x200u) {
+            fprintf(stderr, "error: Ballistic helper CGRAM %s has %zu bytes, expected 512\n", resolved_helper_cgram_path, helper_cgram_size);
+            free(helper_cgram_data);
+            goto cleanup;
+        }
+        helper_cgram = (uint8_t *)helper_cgram_data;
+    }
+
+    {
+        char *ramp_data = NULL;
+        size_t ramp_size = 0;
+        if (!read_entire_file(resolved_ramp_path, &ramp_data, &ramp_size)) {
+            goto cleanup;
+        }
+        if ((ramp_size % 2u) != 0u) {
+            fprintf(stderr, "error: Ballistic ramp %s has an odd byte length\n", resolved_ramp_path);
+            free(ramp_data);
+            goto cleanup;
+        }
+        ramp_word_count = ramp_size / 2u;
+        ramp_words = malloc(ramp_word_count * sizeof(*ramp_words));
+        if (!ramp_words) {
+            free(ramp_data);
+            fprintf(stderr, "error: out of memory loading Ballistic ramp %s\n", resolved_ramp_path);
+            goto cleanup;
+        }
+        for (size_t word_index = 0; word_index < ramp_word_count; word_index++) {
+            ramp_words[word_index] = (uint16_t)(uint8_t)ramp_data[word_index * 2u] |
+                                     (uint16_t)((uint8_t)ramp_data[(word_index * 2u) + 1u] << 8);
+        }
+        free(ramp_data);
+    }
+
+    if ((counter_wrap + 2 + dynamic_count) > (int)ramp_word_count) {
+        fprintf(stderr, "error: Ballistic ramp %s is too short for counter_wrap=%d dynamic_count=%d\n",
+                resolved_ramp_path, counter_wrap, dynamic_count);
+        goto cleanup;
+    }
+
+    durations = malloc((size_t)timeline_count * sizeof(*durations));
+    runtime_palette = malloc((size_t)class_count * sizeof(*runtime_palette));
+    if (!durations || !runtime_palette) {
+        fprintf(stderr, "error: out of memory building Ballistic runtime buffers for %s\n", manifest_path);
+        goto cleanup;
+    }
+    for (int frame_index = 0; frame_index < timeline_count; frame_index++) {
+        durations[frame_index] = step_frames;
+    }
+
+    indexed_palette_animation_free(out_animation);
+    out_animation->loaded = true;
+    out_animation->mode = INDEXED_ANIM_MODE_BALLISTIC_A39C;
+    out_animation->indices = indices;
+    out_animation->width = width;
+    out_animation->height = height;
+    out_animation->palette_count = class_count;
+    out_animation->durations = durations;
+    out_animation->frame_count = (size_t)timeline_count;
+    out_animation->current_frame = 0u;
+    out_animation->frames_remaining = step_frames;
+    out_animation->helper_cgram = helper_cgram;
+    out_animation->helper_cgram_size = 0x200u;
+    out_animation->ramp_words = ramp_words;
+    out_animation->ramp_word_count = ramp_word_count;
+    out_animation->class_cgram_indices = class_cgram_indices;
+    out_animation->dynamic_start = dynamic_start;
+    out_animation->dynamic_count = dynamic_count;
+    out_animation->counter_wrap = counter_wrap;
+    out_animation->step_frames = step_frames;
+    out_animation->runtime_palette = runtime_palette;
+    if (!indexed_palette_animation_update_runtime_palette(out_animation)) {
+        indexed_palette_animation_free(out_animation);
+        goto cleanup;
+    }
+
+    indices = NULL;
+    helper_cgram = NULL;
+    ramp_words = NULL;
+    class_cgram_indices = NULL;
+    durations = NULL;
+    runtime_palette = NULL;
+    ok = true;
+
+cleanup:
+    if (!ok) {
+        indexed_palette_animation_free(out_animation);
+    }
+    if (file) {
+        fclose(file);
+    }
+    free(resolved_indices_path);
+    free(resolved_helper_cgram_path);
+    free(resolved_ramp_path);
+    free(indices);
+    free(helper_cgram);
+    free(ramp_words);
+    free(class_cgram_indices);
+    free(durations);
+    free(runtime_palette);
+    return ok;
 }
 
 static bool read_entire_file(const char *path, char **out_data, size_t *out_size) {
@@ -678,6 +1285,7 @@ cleanup:
 
 static void app_clear_content(AppState *app) {
     snes_bg_scene_free(&app->snes_bg_scene);
+    indexed_palette_animation_free(&app->indexed_anim);
     image_data_free(&app->image);
     app->image_offset_x = 0;
     app->image_offset_y = 0;
@@ -691,6 +1299,16 @@ static bool app_load_snes_bg_scene(AppState *app, const char *vram_path, const c
 static bool app_load_image_view(AppState *app, const char *image_path) {
     app_clear_content(app);
     return image_data_load_ppm(image_path, &app->image);
+}
+
+static bool app_load_indexed_animation(AppState *app, const char *manifest_path) {
+    app_clear_content(app);
+    return indexed_palette_animation_load(manifest_path, &app->indexed_anim);
+}
+
+static bool app_load_ballistic_a39c(AppState *app, const char *manifest_path) {
+    app_clear_content(app);
+    return indexed_palette_animation_load_ballistic_a39c(manifest_path, &app->indexed_anim);
 }
 
 static bool scene_sequence_load_manifest(const char *path, SceneSequence *sequence) {
@@ -756,6 +1374,20 @@ static bool scene_sequence_load_manifest(const char *path, SceneSequence *sequen
             entries[count].primary_path = resolve_manifest_path(path, first);
             entries[count].secondary_path = resolve_manifest_path(path, second);
             entries[count].tertiary_path = resolve_manifest_path(path, third);
+        } else if (strcmp(kind, "indexed_anim") == 0) {
+            if (fields != 3) {
+                fprintf(stderr, "error: indexed_anim entries require duration and clip path in %s\n", path);
+                goto cleanup;
+            }
+            entries[count].type = SEQUENCE_ENTRY_INDEXED_ANIM;
+            entries[count].primary_path = resolve_manifest_path(path, first);
+        } else if (strcmp(kind, "ballistic_a39c") == 0) {
+            if (fields != 3) {
+                fprintf(stderr, "error: ballistic_a39c entries require duration and asset path in %s\n", path);
+                goto cleanup;
+            }
+            entries[count].type = SEQUENCE_ENTRY_BALLISTIC_A39C;
+            entries[count].primary_path = resolve_manifest_path(path, first);
         } else if (strcmp(kind, "image") == 0) {
             entries[count].type = SEQUENCE_ENTRY_IMAGE;
             entries[count].primary_path = resolve_manifest_path(path, first);
@@ -812,6 +1444,14 @@ static bool app_sequence_apply_entry(AppState *app, size_t index) {
     entry = &app->sequence.entries[index];
     if (entry->type == SEQUENCE_ENTRY_SNES_BG) {
         if (!app_load_snes_bg_scene(app, entry->primary_path, entry->secondary_path, entry->tertiary_path)) {
+            return false;
+        }
+    } else if (entry->type == SEQUENCE_ENTRY_INDEXED_ANIM) {
+        if (!app_load_indexed_animation(app, entry->primary_path)) {
+            return false;
+        }
+    } else if (entry->type == SEQUENCE_ENTRY_BALLISTIC_A39C) {
+        if (!app_load_ballistic_a39c(app, entry->primary_path)) {
             return false;
         }
     } else if (entry->type == SEQUENCE_ENTRY_IMAGE) {
@@ -1218,6 +1858,79 @@ static void render_snes_bg_scene(AppState *app) {
     }
 }
 
+static void indexed_palette_animation_step(IndexedPaletteAnimation *animation) {
+    bool advanced = false;
+
+    if (!animation->loaded || animation->frame_count == 0) {
+        return;
+    }
+
+    if (animation->frames_remaining <= 0) {
+        size_t next_frame = animation->current_frame + 1u;
+        if (next_frame >= animation->frame_count) {
+            return;
+        }
+        animation->current_frame = next_frame;
+        animation->frames_remaining = animation->durations[next_frame];
+        advanced = true;
+    }
+
+    if (animation->frames_remaining > 0) {
+        animation->frames_remaining--;
+    }
+
+    if (advanced && animation->mode == INDEXED_ANIM_MODE_BALLISTIC_A39C) {
+        indexed_palette_animation_update_runtime_palette(animation);
+    }
+}
+
+static void render_indexed_palette_animation(AppState *app) {
+    const IndexedPaletteAnimation *animation = &app->indexed_anim;
+    const uint32_t *palette = NULL;
+    int src_x = 0;
+    int src_y = 0;
+    int dest_x = 0;
+    int dest_y = 0;
+    int visible_width = 0;
+    int visible_height = 0;
+
+    for (int i = 0; i < (SCREEN_WIDTH * SCREEN_HEIGHT); i++) {
+        app->framebuffer[i] = 0xff000000u;
+    }
+
+    if (!animation->loaded || !animation->indices || animation->frame_count == 0) {
+        return;
+    }
+
+    if (animation->mode == INDEXED_ANIM_MODE_BALLISTIC_A39C) {
+        if (!animation->runtime_palette) {
+            return;
+        }
+        palette = animation->runtime_palette;
+    } else {
+        if (!animation->palette_frames) {
+            return;
+        }
+        palette = &animation->palette_frames[animation->current_frame * (size_t)animation->palette_count];
+    }
+    src_x = animation->width > SCREEN_WIDTH ? (animation->width - SCREEN_WIDTH) / 2 : 0;
+    src_y = animation->height > SCREEN_HEIGHT ? (animation->height - SCREEN_HEIGHT) / 2 : 0;
+    dest_x = animation->width < SCREEN_WIDTH ? (SCREEN_WIDTH - animation->width) / 2 : 0;
+    dest_y = animation->height < SCREEN_HEIGHT ? (SCREEN_HEIGHT - animation->height) / 2 : 0;
+    visible_width = animation->width < SCREEN_WIDTH ? animation->width : SCREEN_WIDTH;
+    visible_height = animation->height < SCREEN_HEIGHT ? animation->height : SCREEN_HEIGHT;
+
+    for (int y = 0; y < visible_height; y++) {
+        for (int x = 0; x < visible_width; x++) {
+            uint8_t class_index = animation->indices[(size_t)(src_y + y) * (size_t)animation->width + (size_t)(src_x + x)];
+            if ((int)class_index >= animation->palette_count) {
+                continue;
+            }
+            app->framebuffer[(size_t)(dest_y + y) * SCREEN_WIDTH + (size_t)(dest_x + x)] = palette[class_index];
+        }
+    }
+}
+
 static const uint32_t *app_current_palette(const AppState *app) {
     static const uint32_t fallback[COLORS_PER_PALETTE] = {
         0xff0b1320u, 0xff102542u, 0xff1b3b6fu, 0xff26508cu,
@@ -1253,6 +1966,15 @@ static void update_window_title(SDL_Window *window, const AppState *app) {
             "TD2 Port Skeleton | SNES BG mode %d | layers 0x%02X",
             app->snes_bg_scene.bg_mode,
             app->snes_bg_scene.main_screen_layers
+        );
+    } else if (app->indexed_anim.loaded) {
+        snprintf(
+            title,
+            sizeof(title),
+            "TD2 Port Skeleton | indexed anim %zu/%zu | remaining %d",
+            app->indexed_anim.current_frame + 1u,
+            app->indexed_anim.frame_count,
+            app->indexed_anim.frames_remaining
         );
     } else if (app->image.pixels) {
         snprintf(
@@ -1369,6 +2091,8 @@ static void render_gradient(AppState *app) {
 static void render_current_view(AppState *app) {
     if (app->snes_bg_scene.loaded) {
         render_snes_bg_scene(app);
+    } else if (app->indexed_anim.loaded) {
+        render_indexed_palette_animation(app);
     } else if (app->image.pixels) {
         render_image_view(app);
     } else {
@@ -1401,6 +2125,8 @@ static void app_step(AppState *app) {
             app->sequence.frames_remaining--;
         }
     }
+
+    indexed_palette_animation_step(&app->indexed_anim);
 
     if (app->auto_cycle && app->palette_bank.palette_count > 0 && (app->tick_count % TARGET_HZ) == 0) {
         app->current_palette = (app->current_palette + 1u) % app->palette_bank.palette_count;
@@ -1553,12 +2279,14 @@ int main(int argc, char **argv) {
     if ((snes_bg_vram_path && snes_bg_cgram_path && snes_bg_state_path) &&
         !snes_bg_scene_load(snes_bg_vram_path, snes_bg_cgram_path, snes_bg_state_path, &app.snes_bg_scene)) {
         scene_sequence_free(&app.sequence);
+        indexed_palette_animation_free(&app.indexed_anim);
         palette_bank_free(&app.palette_bank);
         return 1;
     }
 
     if (app.sequence.loaded && !app_sequence_apply_entry(&app, 0u)) {
         scene_sequence_free(&app.sequence);
+        indexed_palette_animation_free(&app.indexed_anim);
         palette_bank_free(&app.palette_bank);
         return 1;
     }
@@ -1572,6 +2300,7 @@ int main(int argc, char **argv) {
     } else if (palette_path_explicit) {
         scene_sequence_free(&app.sequence);
         snes_bg_scene_free(&app.snes_bg_scene);
+        indexed_palette_animation_free(&app.indexed_anim);
         palette_bank_free(&app.palette_bank);
         return 1;
     }
@@ -1579,6 +2308,7 @@ int main(int argc, char **argv) {
     if (image_path && !app.sequence.loaded && !image_data_load_ppm(image_path, &app.image)) {
         scene_sequence_free(&app.sequence);
         snes_bg_scene_free(&app.snes_bg_scene);
+        indexed_palette_animation_free(&app.indexed_anim);
         palette_bank_free(&app.palette_bank);
         return 1;
     }
@@ -1594,6 +2324,7 @@ int main(int argc, char **argv) {
             if (!dump_frame_if_requested(&app)) {
                 scene_sequence_free(&app.sequence);
                 snes_bg_scene_free(&app.snes_bg_scene);
+                indexed_palette_animation_free(&app.indexed_anim);
                 image_data_free(&app.image);
                 palette_bank_free(&app.palette_bank);
                 return 1;
@@ -1603,6 +2334,7 @@ int main(int argc, char **argv) {
 
         scene_sequence_free(&app.sequence);
         snes_bg_scene_free(&app.snes_bg_scene);
+        indexed_palette_animation_free(&app.indexed_anim);
         image_data_free(&app.image);
         palette_bank_free(&app.palette_bank);
         return 0;
@@ -1612,6 +2344,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, "error: SDL_Init failed: %s\n", SDL_GetError());
         scene_sequence_free(&app.sequence);
         snes_bg_scene_free(&app.snes_bg_scene);
+        indexed_palette_animation_free(&app.indexed_anim);
         palette_bank_free(&app.palette_bank);
         return 1;
     }
@@ -1630,6 +2363,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, "error: SDL_CreateWindow failed: %s\n", SDL_GetError());
         scene_sequence_free(&app.sequence);
         snes_bg_scene_free(&app.snes_bg_scene);
+        indexed_palette_animation_free(&app.indexed_anim);
         palette_bank_free(&app.palette_bank);
         SDL_Quit();
         return 1;
@@ -1650,6 +2384,7 @@ int main(int argc, char **argv) {
         SDL_DestroyWindow(window);
         scene_sequence_free(&app.sequence);
         snes_bg_scene_free(&app.snes_bg_scene);
+        indexed_palette_animation_free(&app.indexed_anim);
         palette_bank_free(&app.palette_bank);
         SDL_Quit();
         return 1;
@@ -1671,6 +2406,7 @@ int main(int argc, char **argv) {
         SDL_DestroyWindow(window);
         scene_sequence_free(&app.sequence);
         snes_bg_scene_free(&app.snes_bg_scene);
+        indexed_palette_animation_free(&app.indexed_anim);
         palette_bank_free(&app.palette_bank);
         SDL_Quit();
         return 1;
@@ -1810,6 +2546,7 @@ int main(int argc, char **argv) {
     SDL_DestroyWindow(window);
     scene_sequence_free(&app.sequence);
     snes_bg_scene_free(&app.snes_bg_scene);
+    indexed_palette_animation_free(&app.indexed_anim);
     image_data_free(&app.image);
     palette_bank_free(&app.palette_bank);
     SDL_Quit();

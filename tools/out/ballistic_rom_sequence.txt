@@ -1,0 +1,2 @@
+# type duration_frames path_a [path_b path_c]
+indexed_anim 304 ballistic_rom/ballistic_splash.txt

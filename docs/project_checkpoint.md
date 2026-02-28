@@ -12,8 +12,11 @@ The project is still in Sprint 0 / early Phase 1-3.
 What is already real:
 
 - a working C/SDL runtime skeleton exists under `port/`
-- a sampled `Ballistic presents` intro segment now plays inside that runtime from extracted SNES scene manifests
+- a measured `Ballistic presents` intro clip now plays inside that runtime as an indexed image plus palette timeline derived from deterministic captures
+- a ROM-derived `Ballistic presents` intro clip now also plays inside that runtime from helper-scene CGRAM plus the `A39C` `04:99ED` palette ramp
+- a direct runtime `ballistic_a39c` implementation now also plays that same Ballistic clip from a compact callback asset instead of a pre-expanded palette timeline
 - a full first no-input attract loop now also plays inside that runtime as an exact sampled image sequence
+- a hybrid first no-input attract loop also exists, using the direct runtime Ballistic callback clip followed by sampled playback for the later attract states
 - a working Mesen-based validation harness exists under `validation/`
 - the bank 0 control kernel is documented well enough to guide runtime architecture
 - the bank 1 boot/title screen build path is partially reconstructed into machine-readable manifests
@@ -24,7 +27,7 @@ What is already real:
 What is not real yet:
 
 - no gameplay has been ported
-- no native front-end state machine exists on the PC side yet; the current intro loop milestone is still sampled playback
+- no general native front-end state machine exists on the PC side yet beyond the first Ballistic callback family
 - no deterministic post-splash savestate has been added to validation
 - bank 10, bank 11, and bank 30 are not yet documented deeply enough to implement gameplay
 
@@ -76,6 +79,10 @@ Completed:
 - flat `ppu_state.json` export from the Mesen bridge for direct port/runtime consumption
 - range extraction of Mesen scene samples into line-oriented playback manifests
 - single-run screenshot-backed range extraction for exact intro-loop playback
+- indexed palette-animation extraction from deterministic screenshot ranges
+- ROM-derived Ballistic clip generation from helper-scene CGRAM plus the `A39C` palette ramp
+- compact Ballistic callback-asset generation for direct runtime playback
+- sequence splicing for hybrid native-plus-sampled intro manifests
 
 Current concrete outputs:
 
@@ -86,6 +93,13 @@ Current concrete outputs:
 - `tools/out/bank1_boot_vram_variant0_overlay.json`: same snapshot with optional overlay forced on
 - `tools/out/bank7_42fb_8000.json`: first `42FB` decode summary
 - `tools/out/bank7_26fb_817a.json`: first `26FB` decode summary
+- `tools/out/ballistic_native/ballistic_splash.txt`: measured indexed palette-animation clip for the Ballistic splash
+- `tools/out/ballistic_native_sequence.txt`: single-entry runtime manifest for that measured Ballistic clip
+- `tools/out/ballistic_rom/ballistic_splash.txt`: ROM-derived indexed palette-animation clip for the Ballistic splash
+- `tools/out/ballistic_rom_sequence.txt`: single-entry runtime manifest for that ROM-derived Ballistic clip
+- `tools/out/ballistic_callback/ballistic_a39c.txt`: compact callback asset for direct runtime Ballistic playback
+- `tools/out/ballistic_callback_sequence.txt`: single-entry runtime manifest for the direct `ballistic_a39c` path
+- `tools/out/intro_loop_hybrid_sequence.txt`: hybrid intro-loop manifest with direct runtime Ballistic and sampled later attract states
 
 Still missing:
 
@@ -164,7 +178,7 @@ make -C port
 
 Current limit:
 
-The SDL runtime is still a validation-first viewer/compositor harness. It can now play sampled intro scenes and the full first no-input loop, but it does not yet implement native front-end state logic or gameplay.
+The SDL runtime is still a validation-first viewer/compositor harness. It can now play sampled intro scenes, the full first no-input loop, measured and ROM-derived Ballistic clips, and a direct runtime Ballistic callback asset, but it does not yet implement broader native front-end state logic or gameplay.
 
 ### Track B: Content
 
@@ -208,7 +222,7 @@ Important verified details:
 Current limit:
 
 The current preview path still shows planar tile sheets or raw VRAM dumps, not a final screen.
-The new intro playback manifests are useful and deterministic, but they are still sampled scene playback, not a native recreation of the front-end callbacks.
+The new intro playback manifests are useful and deterministic. Ballistic now has a measured reference clip, a ROM-derived clip, and a direct runtime callback asset, but the later attract states are still sampled scene playback rather than native callback recreation.
 
 Deferred requirement recorded for later phases:
 
@@ -259,7 +273,9 @@ Important observed result:
 
 - the boot probe does confirm the stable defaults `$1C78 = 1` and `$1C7A = 0`
 - the Ballistic splash now has a clean exact anchor at frame `654`, where the active callback first becomes `01:A39C`
-- the first attract loop repeats every `1418` frames and currently has an exact sampled SDL playback manifest
+- the Ballistic splash has been collapsed into `15` indexed pixel classes and `76` palette frames (`304` frames total)
+- the measured, ROM-derived, and direct-callback Ballistic paths all reproduce the sampled validation frames exactly inside the SDL runtime
+- the first attract loop repeats every `1418` frames and currently has both an exact sampled SDL playback manifest and a hybrid manifest with the direct Ballistic callback clip spliced in
 - the same probe does not yet reach a populated `$1CCA/$1CE*` state from pure power-on
 - after `3600` frames on the tested no-savestate path, those later selectors remained `0`
 

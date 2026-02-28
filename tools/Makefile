@@ -48,9 +48,25 @@ INTRO_LOOP_PREFIX := $(OUT_DIR)/intro_loop
 INTRO_LOOP_SUMMARY := $(INTRO_LOOP_PREFIX).json
 INTRO_LOOP_SEQUENCE := $(OUT_DIR)/intro_loop_sequence.txt
 INTRO_LOOP_SEQUENCE_JSON := $(OUT_DIR)/intro_loop_sequence.json
+BALLISTIC_NATIVE_DIR := $(OUT_DIR)/ballistic_native
+BALLISTIC_NATIVE_CLIP := $(BALLISTIC_NATIVE_DIR)/ballistic_splash.txt
+BALLISTIC_NATIVE_JSON := $(BALLISTIC_NATIVE_DIR)/ballistic_splash.json
+BALLISTIC_NATIVE_PREVIEW := $(BALLISTIC_NATIVE_DIR)/ballistic_splash_preview.ppm
+BALLISTIC_NATIVE_SEQUENCE := $(OUT_DIR)/ballistic_native_sequence.txt
+BALLISTIC_ROM_DIR := $(OUT_DIR)/ballistic_rom
+BALLISTIC_ROM_CLIP := $(BALLISTIC_ROM_DIR)/ballistic_splash.txt
+BALLISTIC_ROM_JSON := $(BALLISTIC_ROM_DIR)/ballistic_splash.json
+BALLISTIC_ROM_PREVIEW := $(BALLISTIC_ROM_DIR)/ballistic_splash_preview.ppm
+BALLISTIC_ROM_SEQUENCE := $(OUT_DIR)/ballistic_rom_sequence.txt
+BALLISTIC_CALLBACK_DIR := $(OUT_DIR)/ballistic_callback
+BALLISTIC_CALLBACK_ASSET := $(BALLISTIC_CALLBACK_DIR)/ballistic_a39c.txt
+BALLISTIC_CALLBACK_JSON := $(BALLISTIC_CALLBACK_DIR)/ballistic_a39c.json
+BALLISTIC_CALLBACK_SEQUENCE := $(OUT_DIR)/ballistic_callback_sequence.txt
+INTRO_LOOP_HYBRID_SEQUENCE := $(OUT_DIR)/intro_loop_hybrid_sequence.txt
+INTRO_LOOP_HYBRID_SEQUENCE_JSON := $(OUT_DIR)/intro_loop_hybrid_sequence.json
 MESEN_TIMEOUT_SECONDS ?= 75
 
-.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview mesen-ppu-frame intro-loop-dump intro-loop-sequence
+.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence
 
 all: previews
 
@@ -189,3 +205,42 @@ $(INTRO_LOOP_SEQUENCE) $(INTRO_LOOP_SEQUENCE_JSON): build_scene_sequence_manifes
 	$(PYTHON) build_scene_sequence_manifest.py $(INTRO_LOOP_SUMMARY) $(INTRO_LOOP_SEQUENCE) --json-out $(INTRO_LOOP_SEQUENCE_JSON) --end-frame-exclusive 2072 --prefer-screenshot
 
 intro-loop-sequence: $(INTRO_LOOP_SEQUENCE) $(INTRO_LOOP_SEQUENCE_JSON)
+
+$(BALLISTIC_NATIVE_CLIP) $(BALLISTIC_NATIVE_JSON) $(BALLISTIC_NATIVE_PREVIEW) $(BALLISTIC_NATIVE_SEQUENCE): build_indexed_palette_animation.py $(INTRO_LOOP_SUMMARY) | $(OUT_DIR)
+	mkdir -p $(BALLISTIC_NATIVE_DIR)
+	$(PYTHON) build_indexed_palette_animation.py $(INTRO_LOOP_SUMMARY) $(BALLISTIC_NATIVE_CLIP) \
+		--start-frame 654 \
+		--end-frame-exclusive 958 \
+		--json-out $(BALLISTIC_NATIVE_JSON) \
+		--preview-out $(BALLISTIC_NATIVE_PREVIEW) \
+		--sequence-manifest $(BALLISTIC_NATIVE_SEQUENCE)
+
+ballistic-native-clip: $(BALLISTIC_NATIVE_CLIP) $(BALLISTIC_NATIVE_JSON) $(BALLISTIC_NATIVE_PREVIEW) $(BALLISTIC_NATIVE_SEQUENCE)
+
+$(BALLISTIC_ROM_CLIP) $(BALLISTIC_ROM_JSON) $(BALLISTIC_ROM_PREVIEW) $(BALLISTIC_ROM_SEQUENCE): build_ballistic_rom_clip.py $(ROM) $(BANK1_A35A_SCENE_CGRAM) $(BALLISTIC_NATIVE_JSON) $(BALLISTIC_NATIVE_CLIP) | $(OUT_DIR)
+	mkdir -p $(BALLISTIC_ROM_DIR)
+	$(PYTHON) build_ballistic_rom_clip.py $(ROM) $(BANK1_A35A_SCENE_CGRAM) $(BALLISTIC_NATIVE_JSON) $(BALLISTIC_ROM_CLIP) \
+		--json-out $(BALLISTIC_ROM_JSON) \
+		--preview-out $(BALLISTIC_ROM_PREVIEW) \
+		--sequence-manifest $(BALLISTIC_ROM_SEQUENCE)
+
+ballistic-rom-clip: $(BALLISTIC_ROM_CLIP) $(BALLISTIC_ROM_JSON) $(BALLISTIC_ROM_PREVIEW) $(BALLISTIC_ROM_SEQUENCE)
+
+$(BALLISTIC_CALLBACK_ASSET) $(BALLISTIC_CALLBACK_JSON) $(BALLISTIC_CALLBACK_SEQUENCE): build_ballistic_callback_asset.py $(ROM) $(BANK1_A35A_SCENE_CGRAM) $(BALLISTIC_ROM_JSON) | $(OUT_DIR)
+	mkdir -p $(BALLISTIC_CALLBACK_DIR)
+	$(PYTHON) build_ballistic_callback_asset.py $(ROM) $(BANK1_A35A_SCENE_CGRAM) $(BALLISTIC_ROM_JSON) $(BALLISTIC_CALLBACK_ASSET) \
+		--json-out $(BALLISTIC_CALLBACK_JSON) \
+		--sequence-manifest $(BALLISTIC_CALLBACK_SEQUENCE)
+
+ballistic-callback-asset: $(BALLISTIC_CALLBACK_ASSET) $(BALLISTIC_CALLBACK_JSON) $(BALLISTIC_CALLBACK_SEQUENCE)
+
+$(INTRO_LOOP_HYBRID_SEQUENCE) $(INTRO_LOOP_HYBRID_SEQUENCE_JSON): splice_sequence_manifest.py $(INTRO_LOOP_SEQUENCE_JSON) $(BALLISTIC_CALLBACK_ASSET) | $(OUT_DIR)
+	$(PYTHON) splice_sequence_manifest.py $(INTRO_LOOP_SEQUENCE_JSON) $(INTRO_LOOP_HYBRID_SEQUENCE) \
+		--replace-start-frame 654 \
+		--replace-end-frame-exclusive 958 \
+		--replacement-type ballistic_a39c \
+		--replacement-path $(BALLISTIC_CALLBACK_ASSET) \
+		--replacement-duration 304 \
+		--json-out $(INTRO_LOOP_HYBRID_SEQUENCE_JSON)
+
+intro-loop-hybrid-sequence: $(INTRO_LOOP_HYBRID_SEQUENCE) $(INTRO_LOOP_HYBRID_SEQUENCE_JSON)

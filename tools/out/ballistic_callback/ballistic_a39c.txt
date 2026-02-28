@@ -1,0 +1,26 @@
+# ballistic A39C runtime asset
+size 256 224
+indices ballistic_a39c_indices.bin
+helper_cgram ballistic_a39c_helper_cgram.bin
+ramp ballistic_a39c_ramp.bin
+class_count 15
+timeline_count 76
+step_frames 4
+dynamic_start 2
+dynamic_count 14
+counter_wrap 13
+mapping 0 0
+mapping 1 12
+mapping 2 11
+mapping 3 10
+mapping 4 9
+mapping 5 8
+mapping 6 7
+mapping 7 6
+mapping 8 5
+mapping 9 4
+mapping 10 3
+mapping 11 2
+mapping 12 37
+mapping 13 34
+mapping 14 36

@@ -370,11 +370,23 @@ Important practical conclusion:
   - ...
   - `708 -> 0`
 
-The current port-side compromise is intentionally pragmatic:
+The current port-side compromise is still pragmatic, but it is now more compact than the earlier sampled scene playback:
 
-- use frame `654` as the exact static scene anchor
-- use sampled Mesen scene extracts for the early Ballistic playback window (`654..710`, step `4`) in the SDL runtime
-- keep the callback notes above as the path toward replacing that sampled playback with a smaller native palette-animation state machine later
+- use the deterministic screenshot range `654..954`, step `4`, as the measured source of truth for the current Ballistic clip
+- collapse that window into one indexed `256x224` image plus a palette timeline
+- the resulting clip uses `15` pixel classes total, including black, and `76` palette frames for `304` frames of runtime
+- the measured reference clip lives at `tools/out/ballistic_native_sequence.txt`
+- a ROM-derived clip now also exists at `tools/out/ballistic_rom_sequence.txt`
+- that ROM-derived clip keeps the same indexed image but replaces the measured palette timeline with:
+  - helper-scene CGRAM from `L00A9F2(4)`
+  - the `A39C` sliding rewrite of CGRAM slots `2..15`
+  - fixed accent colors from the helper-loaded CGRAM (`34`, `36`, `37`)
+- a direct runtime callback asset now also exists at `tools/out/ballistic_callback_sequence.txt`
+- that direct runtime path uses the same indexed image and class mapping, but computes the visible palette from:
+  - helper-scene CGRAM
+  - the `04:99ED` ramp
+  - the live `A39C` counter/update rules (`step=4`, start at black, wrap counter to `13`)
+- the ROM-derived manifest and the direct runtime callback path both compare exactly against the sampled validation frames
 
 The longer no-input attract loop is now pinned down as well:
 
@@ -391,7 +403,12 @@ That makes the current exact sampled loop milestone straightforward:
 Current implementation status:
 
 - `tools/out/intro_loop_sequence.txt` is the first full no-input attract-loop manifest
-- it is screenshot-backed `image` playback, not yet native callback recreation
+- `tools/out/ballistic_native_sequence.txt` is the measured Ballistic reference clip
+- `tools/out/ballistic_rom_sequence.txt` is the current ROM-derived Ballistic runtime clip
+- `tools/out/ballistic_callback_sequence.txt` is the current direct runtime Ballistic callback clip
+- `tools/out/intro_loop_hybrid_sequence.txt` is the current best no-input intro-loop runtime manifest:
+  - direct runtime Ballistic callback for `654..958`
+  - sampled `image` playback for the later attract states
 - the manifest collapses identical adjacent screenshots, reducing `355` captured frames to `226` playback entries while preserving the full `1418` frames of runtime duration
 
 ## Existing Tooling Hook
