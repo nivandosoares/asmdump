@@ -1,7 +1,7 @@
 CC ?= cc
 TARGET := td2_port
 BUILD_DIR := build
-SRC := src/main.c
+SRC := src/main.c src/td2_io.c src/td2_ppu.c
 
 SDL_CFLAGS := $(shell pkg-config --cflags sdl2)
 SDL_LIBS := $(shell pkg-config --libs sdl2)
