@@ -8,6 +8,9 @@
 *.o
 .mesen-config
 port/build/
-tools/out/
+tools/out/*.ppm
+tools/out/*.bin
+tools/out/*.png
+tools/out/*.json
 tools/__pycache__/
 .vscode/
