@@ -14,3 +14,4 @@ tools/out/*.png
 tools/out/*.json
 tools/__pycache__/
 .vscode/
+port/build/td2_port
