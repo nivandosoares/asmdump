@@ -1,3 +1,4 @@
+#define _POSIX_C_SOURCE 200809L
 #include <SDL.h>
 
 #include "td2_types.h"
@@ -9,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 static void indexed_palette_animation_free(IndexedPaletteAnimation *animation) {
     free(animation->indices);
@@ -720,6 +722,18 @@ static bool scene_sequence_load_manifest(const char *path, SceneSequence *sequen
             }
             entries[count].type = SEQUENCE_ENTRY_BALLISTIC_A39C;
             entries[count].primary_path = resolve_manifest_path(path, first);
+        } else if (strcmp(kind, "mode7_anim") == 0) {
+            if (fields != 5 && fields != 6) {
+                fprintf(stderr, "error: mode7_anim entries require duration, vram, cgram, state, and optional oam in %s\n", path);
+                goto cleanup;
+            }
+            entries[count].type = SEQUENCE_ENTRY_MODE7_ANIM;
+            entries[count].primary_path = resolve_manifest_path(path, first);
+            entries[count].secondary_path = resolve_manifest_path(path, second);
+            entries[count].tertiary_path = resolve_manifest_path(path, third);
+            if (fields == 6) {
+                entries[count].quaternary_path = resolve_manifest_path(path, fourth);
+            }
         } else if (strcmp(kind, "image") == 0) {
             entries[count].type = SEQUENCE_ENTRY_IMAGE;
             entries[count].primary_path = resolve_manifest_path(path, first);
@@ -729,7 +743,7 @@ static bool scene_sequence_load_manifest(const char *path, SceneSequence *sequen
         }
 
         if (!entries[count].primary_path ||
-            (entries[count].type == SEQUENCE_ENTRY_SNES_BG &&
+            ((entries[count].type == SEQUENCE_ENTRY_SNES_BG || entries[count].type == SEQUENCE_ENTRY_MODE7_ANIM) &&
              (!entries[count].secondary_path || !entries[count].tertiary_path ||
               (fields == 6 && !entries[count].quaternary_path)))) {
             fprintf(stderr, "error: out of memory resolving sequence paths in %s\n", path);
@@ -792,6 +806,21 @@ static bool app_sequence_apply_entry(AppState *app, size_t index) {
         if (!app_load_ballistic_a39c(app, entry->primary_path)) {
             return false;
         }
+    } else if (entry->type == SEQUENCE_ENTRY_MODE7_ANIM) {
+        if (!app_load_snes_bg_scene(
+                app,
+                entry->primary_path,
+                entry->secondary_path,
+                entry->tertiary_path,
+                entry->quaternary_path)) {
+            return false;
+        }
+        /* Initialize Mode 7 animation from the base scene's matrix values.
+         * The 01:9FE5 callback decrements $22 by $0080 each frame and writes:
+         *   M7A = $22 (full 16-bit), M7D = (high_byte << 8) | high_byte
+         * due to the SNES M7 register double-write latch. */
+        app->mode7_anim_scale = app->snes_bg_scene.mode7_matrix[0];
+        app->mode7_anim_step = 0x0080;
     } else if (entry->type == SEQUENCE_ENTRY_IMAGE) {
         if (!app_load_image_view(app, entry->primary_path)) {
             return false;
@@ -1108,6 +1137,24 @@ static void app_step(AppState *app) {
         if (app->sequence.frames_remaining > 0) {
             app->sequence.frames_remaining--;
         }
+
+        /* Mode 7 per-frame animation: replay 01:9FE5 callback logic.
+         * On each frame after the first, decrement scale and recompute
+         * M7A and M7D accounting for the SNES register latch behavior. */
+        if (app->sequence.current_index < app->sequence.count &&
+            app->sequence.entries[app->sequence.current_index].type == SEQUENCE_ENTRY_MODE7_ANIM &&
+            app->snes_bg_scene.loaded) {
+            int remaining = app->sequence.frames_remaining;
+            int duration = app->sequence.entries[app->sequence.current_index].duration_frames;
+            int elapsed = duration - remaining;
+            if (elapsed > 0) {
+                int scale = app->mode7_anim_scale - app->mode7_anim_step;
+                int high_byte = (scale >> 8) & 0xFF;
+                app->mode7_anim_scale = scale;
+                app->snes_bg_scene.mode7_matrix[0] = scale;
+                app->snes_bg_scene.mode7_matrix[3] = (high_byte << 8) | high_byte;
+            }
+        }
     }
 
     indexed_palette_animation_step(&app->indexed_anim);
@@ -1133,6 +1180,7 @@ int main(int argc, char **argv) {
     const char *palette_path = "../tools/out/bank3_palettes.json";
     const char *image_path = NULL;
     const char *sequence_path = NULL;
+    bool sequence_path_default = true;
     const char *snes_bg_prefix = NULL;
     const char *snes_bg_vram_path = NULL;
     const char *snes_bg_cgram_path = NULL;
@@ -1178,6 +1226,7 @@ int main(int argc, char **argv) {
                 return 1;
             }
             sequence_path = argv[++i];
+            sequence_path_default = false;
         } else if (strcmp(argv[i], "--sequence-no-loop") == 0) {
             sequence_loop = false;
         } else if (strcmp(argv[i], "--snes-bg-prefix") == 0) {
@@ -1264,6 +1313,21 @@ int main(int argc, char **argv) {
         !(snes_bg_vram_path && snes_bg_cgram_path && snes_bg_state_path)) {
         fprintf(stderr, "error: SNES BG scene loading requires VRAM, CGRAM, and state paths\n");
         return 1;
+    }
+
+    /* Default to the intro loop sequence, resolved relative to the executable. */
+    char default_sequence_buf[4096];
+    if (!sequence_path && sequence_path_default) {
+        char exe_dir[4000];
+        ssize_t len = readlink("/proc/self/exe", exe_dir, sizeof(exe_dir) - 1);
+        if (len > 0) {
+            exe_dir[len] = '\0';
+            char *slash = strrchr(exe_dir, '/');
+            if (slash) *slash = '\0';
+            snprintf(default_sequence_buf, sizeof(default_sequence_buf),
+                     "%s/../../tools/out/intro_loop_hybrid_bridge_visible_sequence.txt", exe_dir);
+            sequence_path = default_sequence_buf;
+        }
     }
 
     if (sequence_path && !scene_sequence_load_manifest(sequence_path, &app.sequence)) {

@@ -126,7 +126,8 @@ typedef enum {
     SEQUENCE_ENTRY_SNES_BG = 1,
     SEQUENCE_ENTRY_IMAGE = 2,
     SEQUENCE_ENTRY_INDEXED_ANIM = 3,
-    SEQUENCE_ENTRY_BALLISTIC_A39C = 4
+    SEQUENCE_ENTRY_BALLISTIC_A39C = 4,
+    SEQUENCE_ENTRY_MODE7_ANIM = 5
 } SequenceEntryType;
 
 typedef struct {
@@ -163,6 +164,9 @@ typedef struct {
     int image_offset_x;
     int image_offset_y;
     uint32_t framebuffer[SCREEN_WIDTH * SCREEN_HEIGHT];
+    /* Mode 7 animation state (01:9FE5 callback replay). */
+    int mode7_anim_scale;   /* Current $22 value (M7A), decremented by step each frame. */
+    int mode7_anim_step;    /* Decrement per frame (0x0080). */
 } AppState;
 
 #endif /* TD2_TYPES_H */
