@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "description": "Intro vertical-slice pixel regression gates for CI-style pass/fail checks.",
-  "sequence_manifest": "tools/out/intro_loop_hybrid_bridge_visible_sequence.txt",
+  "sequence_manifest": "../tools/out/intro_loop_hybrid_bridge_visible_sequence.txt",
   "frame_pattern": "frame_%05d.ppm",
   "policies": {
     "solved_strict": {
@@ -19,35 +19,35 @@
       "id": "bootstrap_queue_978",
       "kind": "token_vs_golden",
       "token": "bank1_bootstrap_queue_978_vram.bin",
-      "golden": "tools/out/bank1_bootstrap_queue_978.ppm",
+      "golden": "../tools/out/bank1_bootstrap_queue_978.ppm",
       "policy": "solved_strict"
     },
     {
       "id": "bootstrap_queue_982",
       "kind": "token_vs_golden",
       "token": "bank1_bootstrap_queue_982_vram.bin",
-      "golden": "tools/out/bank1_bootstrap_queue_982.ppm",
+      "golden": "../tools/out/bank1_bootstrap_queue_982.ppm",
       "policy": "solved_strict"
     },
     {
       "id": "bridgeoverride_986",
       "kind": "token_vs_golden",
       "token": "bank1_bootstrap_queue_986_bridgeoverride_vram.bin",
-      "golden": "tools/out/bank1_bootstrap_queue_986_bridgeoverride.ppm",
+      "golden": "../tools/out/bank1_bootstrap_queue_986_bridgeoverride.ppm",
       "policy": "bootstrap_tolerated"
     },
     {
       "id": "bridgeobj_990",
       "kind": "token_vs_golden",
       "token": "bank1_bootstrap_queue_990_bridgeobj_vram.bin",
-      "golden": "tools/out/bank1_bootstrap_queue_990_bridgeobj.ppm",
+      "golden": "../tools/out/bank1_bootstrap_queue_990_bridgeobj.ppm",
       "policy": "mode7_tolerated"
     },
     {
       "id": "mode7_visible_991",
       "kind": "token_vs_golden",
       "token": "bank1_mode7_visible_991_vram.bin",
-      "golden": "tools/out/bank1_mode7_visible_991.ppm",
+      "golden": "../tools/out/bank1_mode7_visible_991.ppm",
       "policy": "mode7_tolerated"
     },
     {
