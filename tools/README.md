@@ -27,6 +27,7 @@ Current Sprint 0 tooling:
 - `render_mesen_snes_bg.py`: composes a 256x224 preview directly from Mesen VRAM/CGRAM/state dumps, including Mode 7 and optional OBJ composition from OAM dumps
 - `summarize_mode7_trace.py`: summarizes the tracked register-write traces emitted by `mesen_probe_boot.lua` for Mode 7/TMAIN or DMA/HDMA windows
 - `summarize_l001210_trace.py`: summarizes `L001210` dispatcher execution hits (`$0C/$0E/$10`) captured by `mesen_probe_boot.lua` for chunk provenance
+- `run_l001210_probe_matrix.py`: runs multiple deterministic `mesen_probe_boot.lua` scenarios and aggregates bank30 candidate hit coverage into one matrix report
 - `capture_visible_mode7_range.py`: reuses `mesen_scanline_step_test.lua` to capture one visible-scanline `ppu.mode7.*` sample per frame across a requested range
 - `apply_visible_mode7_samples.py`: applies those captured visible Mode 7 samples onto extracted frame states, writing sidecar `ppu_state_visible.json` files by default
 - `extract_compression_header_manifest.py`: scans a bank for `42FB`/`26FB`/`67FB`/`27FB` blocks and decodes their leading header fields
@@ -36,6 +37,8 @@ Current Sprint 0 tooling:
 - `extract_snes_tiles.py`: decodes SNES 2bpp/4bpp tile banks or raw planar blobs into PPM sheets
 - `scan_structured_bank.py`: scans a bank for recurring header markers like `42fb` / `26fb`
 - `compare_frames.py`: compares `.png` and `.ppm` frames and optionally writes a diff image
+- `check_regression_gates.py`: enforces policy-driven golden-scene and transition gates from JSON contracts
+- `validate_callback_contracts.py`: validates machine-readable callback/state checkpoints against probe frame snapshots
 - `Makefile`: repeatable targets for the current preview extraction set
 
 Usage:
@@ -75,7 +78,10 @@ python3 tools/apply_visible_mode7_samples.py tools/out/visible_mode7_1094_1101.j
 python3 tools/extract_compression_header_manifest.py game.smc --bank 7 --json-out tools/out/bank7_compression_headers.json
 python3 tools/validate_td2_chunks.py game.smc --bank 30 --headers-json tools/out/bank30_headers.json --json-out tools/out/bank30_chunk_validation.json
 python3 tools/summarize_l001210_trace.py .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json --json-out tools/out/td2_boot_probe_l001210_summary.json
+python3 tools/run_l001210_probe_matrix.py --out-dir tools/out/l001210_probe_matrix --total-frames 2200 --timeout-seconds 90
 python3 tools/build_bank30_chunk_registry.py tools/out/bank30_headers.json tools/out/bank30_chunk_validation.json tools/out/td2_boot_probe_l001210_summary.json tools/out/bank30_chunk_registry.json --markdown-out tools/out/bank30_chunk_registry.md
+python3 tools/check_regression_gates.py validation/regression_gates_intro.jsonc --render-dir port/build/regression_frames --json-out tools/out/regression_gates_intro_report.json
+python3 tools/validate_callback_contracts.py rom_analysis/docs/callback_state_contracts.jsonc .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe.json --json-out tools/out/callback_state_contracts_report.json
 python3 tools/decompress_td2_chunk.py game.smc tools/out/bank7_42fb_8000.bin --bank 7 --addr 0x8000 --json-out tools/out/bank7_42fb_8000.json
 python3 tools/decompress_td2_chunk.py game.smc tools/out/bank7_26fb_817a.bin --bank 7 --addr 0x817A --json-out tools/out/bank7_26fb_817a.json
 python3 tools/decompress_td2_chunk.py game.smc tools/out/bank30_67fb_da96.bin --bank 30 --addr 0xDA96 --json-out tools/out/bank30_67fb_da96.json
@@ -106,7 +112,10 @@ Useful make targets:
 - `make -C tools bank30-validate`
 - `make -C tools bank30-registry`
 - `make -C tools l001210-probe L001210_PROBE_TOTAL_FRAMES=3600`
+- `make -C tools l001210-probe-matrix L001210_MATRIX_TOTAL_FRAMES=2200`
 - `make -C tools l001210-trace-summary`
+- `make -C tools regression-gates REGRESSION_GATES_RENDER_DIR=../port/build/regression_frames`
+- `make -C tools callback-contracts-check`
 - `make -C tools bank7-42fb0`
 - `make -C tools bank7-42fb0-preview`
 - `make -C tools bank7-26fb0`

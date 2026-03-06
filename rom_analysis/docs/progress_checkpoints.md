@@ -41,7 +41,7 @@ next gate needed to advance.
   - `tools/build_bank30_chunk_registry.py`
 - Added make targets in `tools/Makefile`:
   - `bank30-headers`, `bank30-validate`, `l001210-probe`,
-    `l001210-trace-summary`, `bank30-registry`
+    `l001210-probe-matrix`, `l001210-trace-summary`, `bank30-registry`
 - Evidence:
   - `tools/out/bank30_chunk_registry.json`
   - `tools/out/bank30_chunk_registry.md`
@@ -64,6 +64,40 @@ Current unresolved queue (from registry):
 - Workbench doc:
   - `rom_analysis/docs/mesen_debugger_design_workbench.md`
 
+### CP-06: Validation gates and state contracts
+
+- Added pixel-gate runner:
+  - `tools/check_regression_gates.py`
+- Added callback contract runner:
+  - `tools/validate_callback_contracts.py`
+- Added contracts:
+  - `validation/regression_gates_intro.jsonc`
+  - `rom_analysis/docs/callback_state_contracts.jsonc`
+- Added gate usage doc:
+  - `rom_analysis/docs/validation_gates.md`
+
+### CP-05: Deterministic `L001210` probe matrix harness
+
+- Extended boot probe input controls:
+  - `TD2_BOOT_PROBE_INPUT_END_FRAME`
+  - `TD2_BOOT_PROBE_INPUT_WINDOWS` (`start-end:buttons;frame:buttons`)
+- Added scenario runner:
+  - `tools/run_l001210_probe_matrix.py`
+- Added make target:
+  - `make -C tools l001210-probe-matrix`
+- Evidence:
+  - `tools/out/l001210_probe_matrix_v1/matrix_summary.json`
+  - `tools/out/l001210_probe_matrix_v1/matrix_summary.md`
+
+Matrix v1 outcome (`1500` frames, `4` scenarios):
+
+- no `1E:E91F` hits
+- no `1E:EE7F` hits
+- no `1E:DA96` hits
+- no `1E:9681` hits
+- `1E:DF6C/E039/E73F/E800` still appear in the expected attract-window runs
+- periodic `start` pulses can suppress bank30 usage entirely for that window (`0` bank30 hits)
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):
@@ -74,6 +108,11 @@ Current unresolved queue (from registry):
 - Alternate scripted input (`start,b`, `4000` frames):
   - total hits: `2` (`02:F51F`, `04:8000`)
   - no bank30 candidates reached
+- Matrix v1 (`1500` frames each, `4` scenarios):
+  - `poweron_no_input`: `11` total hits, `4` bank30 hits (`DF6C/E039/E73F/E800`)
+  - `hold_start_b_240_359`: `17` total hits, `4` bank30 hits (`DF6C/E039/E73F/E800`)
+  - `pulse_start_240`: `11` total hits, `4` bank30 hits (`DF6C/E039/E73F/E800`)
+  - `periodic_start_pulses_240_1800`: `17` total hits, `0` bank30 hits
 
 ## Next Advancement Gates
 

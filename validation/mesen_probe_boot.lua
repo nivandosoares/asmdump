@@ -12,20 +12,76 @@ local function env_number(name, fallback)
     return parsed
 end
 
-local function parse_input_env(name)
-    local raw = os.getenv(name)
+local function trim(value)
+    return tostring(value):match("^%s*(.-)%s*$")
+end
+
+local function parse_button_pattern(raw)
     if raw == nil or raw == "" then
         return {}
     end
 
     local pattern = {}
     for token in raw:gmatch("[^,]+") do
-        local key = token:match("^%s*(.-)%s*$")
+        local key = trim(token)
         if key ~= "" then
             pattern[key] = true
         end
     end
     return pattern
+end
+
+local function parse_input_env(name)
+    local raw = os.getenv(name)
+    return parse_button_pattern(raw)
+end
+
+local function parse_input_windows_env(name)
+    local raw = os.getenv(name)
+    if raw == nil or raw == "" then
+        return {}
+    end
+
+    local windows = {}
+    for segment in raw:gmatch("[^;]+") do
+        local item = trim(segment)
+        if item ~= "" then
+            local range_raw, buttons_raw = item:match("^([^:]+):?(.*)$")
+            if range_raw ~= nil then
+                local start_raw, end_raw = range_raw:match("^(%-?%d+)%s*%-%s*(%-?%d+)$")
+                if start_raw == nil then
+                    local single_raw = range_raw:match("^(%-?%d+)$")
+                    if single_raw ~= nil then
+                        start_raw = single_raw
+                        end_raw = single_raw
+                    end
+                end
+
+                local start_frame = tonumber(start_raw)
+                local end_frame = tonumber(end_raw)
+                if start_frame ~= nil and end_frame ~= nil then
+                    if end_frame < start_frame then
+                        start_frame, end_frame = end_frame, start_frame
+                    end
+
+                    windows[#windows + 1] = {
+                        start_frame = math.floor(start_frame),
+                        end_frame = math.floor(end_frame),
+                        pattern = parse_button_pattern(buttons_raw)
+                    }
+                end
+            end
+        end
+    end
+
+    table.sort(windows, function(a, b)
+        if a.start_frame == b.start_frame then
+            return a.end_frame < b.end_frame
+        end
+        return a.start_frame < b.start_frame
+    end)
+
+    return windows
 end
 
 local config = {
@@ -34,8 +90,10 @@ local config = {
     trace_start_frame = env_number("TD2_BOOT_PROBE_TRACE_START_FRAME", -1),
     trace_end_frame = env_number("TD2_BOOT_PROBE_TRACE_END_FRAME", -1),
     input_start_frame = env_number("TD2_BOOT_PROBE_INPUT_START_FRAME", -1),
+    input_end_frame = env_number("TD2_BOOT_PROBE_INPUT_END_FRAME", -1),
     player = env_number("TD2_BOOT_PROBE_PLAYER", 0),
     input_pattern = parse_input_env("TD2_BOOT_PROBE_INPUT"),
+    input_windows = parse_input_windows_env("TD2_BOOT_PROBE_INPUT_WINDOWS"),
     dump_ppu_memory = env_number("TD2_BOOT_PROBE_DUMP_PPU_MEMORY", 0) ~= 0,
     dump_wram_memory = env_number("TD2_BOOT_PROBE_DUMP_WRAM_MEMORY", 0) ~= 0,
     trace_mode7_writes = env_number("TD2_BOOT_PROBE_TRACE_MODE7", 0) ~= 0,
@@ -60,6 +118,10 @@ end
 
 if config.trace_end_frame < config.trace_start_frame then
     config.trace_end_frame = config.trace_start_frame
+end
+
+if config.input_end_frame >= 0 and config.input_start_frame >= 0 and config.input_end_frame < config.input_start_frame then
+    config.input_end_frame = config.input_start_frame
 end
 
 local state = {
@@ -690,20 +752,42 @@ local function on_l001210_exec()
     }
 end
 
+local function resolve_active_input_pattern(frame)
+    if #config.input_windows > 0 then
+        for _, window in ipairs(config.input_windows) do
+            if frame >= window.start_frame and frame <= window.end_frame then
+                return window.pattern
+            end
+        end
+        return nil
+    end
+
+    if config.input_start_frame < 0 or frame < config.input_start_frame then
+        return nil
+    end
+
+    if config.input_end_frame >= 0 and frame > config.input_end_frame then
+        return nil
+    end
+
+    if next(config.input_pattern) == nil then
+        return nil
+    end
+
+    return config.input_pattern
+end
+
 local function on_input_polled()
     if state.finished then
         return
     end
 
-    if config.input_start_frame < 0 or state.frame < config.input_start_frame then
+    local input_pattern = resolve_active_input_pattern(state.frame)
+    if input_pattern == nil then
         return
     end
 
-    if next(config.input_pattern) == nil then
-        return
-    end
-
-    emu.setInput(config.input_pattern, config.player)
+    emu.setInput(input_pattern, config.player)
 end
 
 emu.displayMessage("TD2 Boot Probe", "Script armed for " .. tostring(config.total_frames) .. " frames.")

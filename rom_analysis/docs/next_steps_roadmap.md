@@ -9,10 +9,16 @@ Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 
 | Roadmap lane | Status | Current reading |
 |---|---|---|
-| 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry are done; unresolved queue remains (`E91F`, `EE7F`, `DA96`, `9681`). |
+| 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + input-matrix harness are done; unresolved queue remains (`E91F`, `EE7F`, `DA96`, `9681`). |
 | 2. Tilemap-to-ROM provenance | in progress | Design-pack tooling and proof exports are done; direct frame/layer/tile-index -> chunk mapping is pending. |
 | 3. Gameplay-frame expansion | not started | Intro/attract windows are covered; deterministic gameplay capture windows are not yet extracted. |
 | 4. Bank API contracts | not started | Baseline docs exist; callback/API contracts for bank 30/10/11 are not yet mapped to completion. |
+
+Validation contract baseline:
+
+- `validation/regression_gates_intro.jsonc`
+- `rom_analysis/docs/callback_state_contracts.jsonc`
+- `rom_analysis/docs/validation_gates.md`
 
 ## 1. Consolidate `67FB` Coverage (Now Unblocked)
 
@@ -29,9 +35,11 @@ decode support exists.
 - Keep a provenance tag per candidate (`table-confirmed`, `runtime-confirmed`, `unreferenced`).
 - Runtime proof step (now available):
   - `make -C tools l001210-probe L001210_PROBE_TOTAL_FRAMES=3600 MESEN_TIMEOUT_SECONDS=90`
+  - `make -C tools l001210-probe-matrix L001210_MATRIX_TOTAL_FRAMES=1500`
   - `make -C tools l001210-trace-summary`
   - Current no-input attract coverage confirms `DF6C/E039/E73F/E800` and leaves `DA96/E91F/EE7F` unresolved.
   - `start,b` scripted-input probe (`4000` frames, input from frame `240`) currently yields only early `42FB` hits and no bank30 coverage.
+  - matrix v1 (`4` scenarios, `1500` frames each) also leaves `DA96/E91F/EE7F` unresolved and shows one strong suppression path with `0` bank30 hits (`periodic_start_pulses_240_1800`).
 - Consolidated chunk registry:
   - `make -C tools bank30-registry`
   - Current status counts:

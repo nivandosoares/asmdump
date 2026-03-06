@@ -24,6 +24,7 @@ mapping the callback chain from front-end code into gameplay logic.
 
 Detailed execution checklist: `rom_analysis/docs/next_steps_roadmap.md`.
 Progress checkpoints: `rom_analysis/docs/progress_checkpoints.md`.
+Validation gates: `rom_analysis/docs/validation_gates.md`.
 
 1. Main-loop handoff map (bank 0 -> bank 30):
    - find first writes to `$096C-$0971` that target bank 30 addresses.

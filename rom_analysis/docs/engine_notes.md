@@ -43,6 +43,8 @@
 - Trace first bank 30 callback staged into `$096C-$096E`.
 - Capture accompanying WRAM state snapshot for each transition.
 - Produce transition graph with trigger conditions.
+- Keep machine-readable intro callback checkpoints in:
+  - `rom_analysis/docs/callback_state_contracts.jsonc`
 
 ### P1: Bank 30 Interface Contract
 

@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "description": "Machine-readable callback/state checkpoints for intro no-input validation.",
+  "source": "validation/README.md callback continuity notes",
+  "expected_probe_profile": "no-input power-on run aligned to intro loop frames (>= 1093 frames)",
+  "contracts": [
+    {
+      "id": "ballistic_entry_a39c",
+      "phase": "solved_scene",
+      "checks": [
+        {
+          "frame": 654,
+          "active_main_callback": "01:A39C",
+          "note": "ballistic callback family starts"
+        }
+      ]
+    },
+    {
+      "id": "bootstrap_handoff",
+      "phase": "bootstrap_transition",
+      "checks": [
+        {
+          "frame": 974,
+          "active_main_callback": "01:9D69",
+          "note": "first live bootstrap callback"
+        },
+        {
+          "frame": 976,
+          "active_main_callback": "01:9FE5",
+          "note": "mode7 attract callback established"
+        }
+      ]
+    },
+    {
+      "id": "mode7_9fe5_continuity_998_1093",
+      "phase": "mode7_intro",
+      "checks": [
+        {
+          "frame": 998,
+          "active_main_callback": "01:9FE5",
+          "state_0202": 1,
+          "state_0204": 2,
+          "state_0208": 13,
+          "state_020a": 40131,
+          "dp_0054": 152
+        },
+        {
+          "frame": 1005,
+          "active_main_callback": "01:9FE5",
+          "state_0202": 1,
+          "state_0204": 3,
+          "state_0208": 13,
+          "state_020a": 40131,
+          "dp_0054": 208
+        },
+        {
+          "frame": 1013,
+          "active_main_callback": "01:9FE5",
+          "state_0202": 1,
+          "state_0204": 1,
+          "state_0208": 13,
+          "state_020a": 40131,
+          "dp_0054": 8
+        },
+        {
+          "frame": 1014,
+          "active_main_callback": "01:9FE5",
+          "state_0202": 1,
+          "state_0204": 2,
+          "state_0208": 13,
+          "state_020a": 40131,
+          "dp_0054": 16
+        },
+        {
+          "frame": 1021,
+          "active_main_callback": "01:9FE5",
+          "state_0202": 1,
+          "state_0204": 1,
+          "state_0208": 13,
+          "state_020a": 40131,
+          "dp_0054": 32
+        },
+        {
+          "frame": 1022,
+          "active_main_callback": "01:9FE5",
+          "state_0202": 1,
+          "state_0204": 1,
+          "state_0208": 13,
+          "state_020a": 40131,
+          "dp_0054": 32
+        },
+        {
+          "frame": 1029,
+          "active_main_callback": "01:9FE5",
+          "state_0202": 1,
+          "state_0204": 1,
+          "state_0208": 13,
+          "state_020a": 40131,
+          "dp_0054": 40
+        },
+        {
+          "frame": 1037,
+          "active_main_callback": "01:9FE5",
+          "state_0202": 1,
+          "state_0204": 1,
+          "state_0208": 13,
+          "state_020a": 40131,
+          "dp_0054": 56
+        },
+        {
+          "frame": 1045,
+          "active_main_callback": "01:9FE5",
+          "state_0202": 1,
+          "state_0204": 1,
+          "state_0208": 13,
+          "state_020a": 40131,
+          "dp_0054": 72
+        },
+        {
+          "frame": 1053,
+          "active_main_callback": "01:9FE5",
+          "state_0202": 1,
+          "state_0204": 1,
+          "state_0208": 13,
+          "state_020a": 40131,
+          "dp_0054": 88
+        },
+        {
+          "frame": 1061,
+          "active_main_callback": "01:9FE5",
+          "state_0202": 1,
+          "state_0204": 1,
+          "state_0206": 9,
+          "state_0208": 13,
+          "state_020a": 40131,
+          "state_040a": 14,
+          "dp_0054": 104
+        },
+        {
+          "frame": 1069,
+          "active_main_callback": "01:9FE5",
+          "state_0202": 1,
+          "state_0204": 1,
+          "state_0206": 11,
+          "state_0208": 13,
+          "state_020a": 40131,
+          "state_040a": 16,
+          "dp_0054": 120
+        },
+        {
+          "frame": 1077,
+          "active_main_callback": "01:9FE5",
+          "state_0202": 1,
+          "state_0204": 1,
+          "state_0206": 13,
+          "state_0208": 13,
+          "state_020a": 40131,
+          "state_040a": 17,
+          "dp_0054": 128
+        },
+        {
+          "frame": 1085,
+          "active_main_callback": "01:9FE5",
+          "state_0202": 1,
+          "state_0204": 1,
+          "state_0206": 13,
+          "state_0208": 13,
+          "state_020a": 40131,
+          "state_040a": 17,
+          "dp_0054": 128
+        },
+        {
+          "frame": 1093,
+          "active_main_callback": "01:9FE5",
+          "state_0202": 1,
+          "state_0204": 1,
+          "state_0206": 13,
+          "state_0208": 13,
+          "state_020a": 40131,
+          "state_040a": 17,
+          "dp_0054": 128
+        }
+      ]
+    }
+  ]
+}

@@ -68,6 +68,25 @@ TD2_BOOT_PROBE_INPUT=start,b \
 ./validation/run_mesen_probe_boot.sh
 ```
 
+To limit that legacy pattern to a frame window, set `TD2_BOOT_PROBE_INPUT_END_FRAME`:
+
+```sh
+TD2_BOOT_PROBE_TOTAL_FRAMES=1800 \
+TD2_BOOT_PROBE_INPUT_START_FRAME=240 \
+TD2_BOOT_PROBE_INPUT_END_FRAME=359 \
+TD2_BOOT_PROBE_INPUT=start,b \
+./validation/run_mesen_probe_boot.sh
+```
+
+For richer deterministic sequences, use `TD2_BOOT_PROBE_INPUT_WINDOWS` with
+semicolon-separated windows in `start-end:buttons` or `frame:buttons` form:
+
+```sh
+TD2_BOOT_PROBE_TOTAL_FRAMES=1800 \
+TD2_BOOT_PROBE_INPUT_WINDOWS="240:start;241-360:b;654:start" \
+./validation/run_mesen_probe_boot.sh
+```
+
 To capture the deterministic power-on copyright/credits scene around the `5` second mark:
 
 ```sh
@@ -104,11 +123,34 @@ TD2_BOOT_PROBE_TRACE_L001210=1 \
 python3 tools/summarize_l001210_trace.py \
   .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json \
   --json-out tools/out/td2_boot_probe_l001210_summary.json
+
+python3 tools/run_l001210_probe_matrix.py \
+  --out-dir tools/out/l001210_probe_matrix \
+  --total-frames 2200 \
+  --timeout-seconds 90
 ```
 
 When that trace is enabled, the probe also writes:
 
 - `.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json`
+
+To enforce CI-style pixel gates on a rendered intro sequence:
+
+```sh
+python3 tools/check_regression_gates.py \
+  validation/regression_gates_intro.jsonc \
+  --render-dir port/build/regression_frames \
+  --json-out tools/out/regression_gates_intro_report.json
+```
+
+To validate callback/state checkpoints as machine-readable contracts:
+
+```sh
+python3 tools/validate_callback_contracts.py \
+  rom_analysis/docs/callback_state_contracts.jsonc \
+  .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe.json \
+  --json-out tools/out/callback_state_contracts_report.json
+```
 
 In the current environment, the frame-`300` screenshot is the colored copyright/credits scene with blue/red text on black.
 The interesting RE result is that the tracked bank 1 selectors are still at the trivial early values on that frame:

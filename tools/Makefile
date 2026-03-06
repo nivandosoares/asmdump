@@ -157,6 +157,12 @@ BANK1_VISIBLE_997_SCENE_PPM := $(BANK1_VISIBLE_997_SCENE_PREFIX).ppm
 MESEN_BOOT_FRAME := ../.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_frame.png
 L001210_TRACE_JSON := ../.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json
 L001210_TRACE_SUMMARY_JSON := $(OUT_DIR)/td2_boot_probe_l001210_summary.json
+REGRESSION_GATES_CONTRACT ?= ../validation/regression_gates_intro.jsonc
+REGRESSION_GATES_RENDER_DIR ?= ../port/build/regression_frames
+REGRESSION_GATES_REPORT_JSON ?= $(OUT_DIR)/regression_gates_intro_report.json
+CALLBACK_CONTRACTS_JSON ?= ../rom_analysis/docs/callback_state_contracts.jsonc
+CALLBACK_PROBE_JSON ?= ../.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe.json
+CALLBACK_CONTRACTS_REPORT_JSON ?= $(OUT_DIR)/callback_state_contracts_report.json
 MESEN_FRAME ?= 300
 MESEN_FRAME_DIR ?= $(OUT_DIR)/mesen_frame$(MESEN_FRAME)
 MESEN_DESIGN_PACK_DIR ?= $(OUT_DIR)/design_frame$(MESEN_FRAME)
@@ -250,8 +256,11 @@ INTRO_BOOTSTRAP_QUEUE_990_994_JSON := $(OUT_DIR)/intro_bootstrap_990_994_queue.j
 MESEN_TIMEOUT_SECONDS ?= 75
 L001210_PROBE_TOTAL_FRAMES ?= 3600
 L001210_MAX_HITS ?= 0
+L001210_MATRIX_OUT_DIR ?= $(OUT_DIR)/l001210_probe_matrix
+L001210_MATRIX_TOTAL_FRAMES ?= 2200
+L001210_MATRIX_TIMEOUT_SECONDS ?= 90
 
-.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank30-headers bank30-validate bank30-registry l001210-probe l001210-trace-summary bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview bank1-bootstrap-queue-978-preview bank1-bootstrap-queue-982-preview bank1-bootstrap-queue-986-preview bank1-bootstrap-queue-986-noobj-preview bank1-bootstrap-queue-986-bridgeoam-preview bank1-bootstrap-queue-990-bridgeoam-preview bank1-bootstrap-queue-994-bridgeoam-preview bank1-visible-mode7-window-preview intro-bootstrap-deltas intro-bootstrap-queue mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-loop-hybrid-bridge-sequence intro-loop-hybrid-bridge-visible-sequence intro-native-978 intro-native-978-derived intro-native-978-bridge intro-native-978-bridge-visible
+.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank30-headers bank30-validate bank30-registry l001210-probe l001210-probe-matrix l001210-trace-summary regression-gates callback-contracts-check bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview bank1-bootstrap-queue-978-preview bank1-bootstrap-queue-982-preview bank1-bootstrap-queue-986-preview bank1-bootstrap-queue-986-noobj-preview bank1-bootstrap-queue-986-bridgeoam-preview bank1-bootstrap-queue-990-bridgeoam-preview bank1-bootstrap-queue-994-bridgeoam-preview bank1-visible-mode7-window-preview intro-bootstrap-deltas intro-bootstrap-queue mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-loop-hybrid-bridge-sequence intro-loop-hybrid-bridge-visible-sequence intro-native-978 intro-native-978-derived intro-native-978-bridge intro-native-978-bridge-visible
 
 all: previews
 
@@ -351,10 +360,30 @@ l001210-probe:
 	MESEN_TIMEOUT_SECONDS=$(MESEN_TIMEOUT_SECONDS) \
 	../validation/run_mesen_probe_boot.sh $(abspath $(ROM))
 
+l001210-probe-matrix:
+	$(PYTHON) run_l001210_probe_matrix.py \
+		--rom $(abspath $(ROM)) \
+		--out-dir tools/$(L001210_MATRIX_OUT_DIR) \
+		--total-frames $(L001210_MATRIX_TOTAL_FRAMES) \
+		--timeout-seconds $(L001210_MATRIX_TIMEOUT_SECONDS) \
+		--max-hits $(L001210_MAX_HITS)
+
 $(L001210_TRACE_SUMMARY_JSON): summarize_l001210_trace.py $(L001210_TRACE_JSON) | $(OUT_DIR)
 	$(PYTHON) summarize_l001210_trace.py $(L001210_TRACE_JSON) --json-out $(L001210_TRACE_SUMMARY_JSON)
 
 l001210-trace-summary: $(L001210_TRACE_SUMMARY_JSON)
+
+regression-gates:
+	$(PYTHON) check_regression_gates.py \
+		$(REGRESSION_GATES_CONTRACT) \
+		--render-dir $(REGRESSION_GATES_RENDER_DIR) \
+		--json-out $(REGRESSION_GATES_REPORT_JSON)
+
+callback-contracts-check:
+	$(PYTHON) validate_callback_contracts.py \
+		$(CALLBACK_CONTRACTS_JSON) \
+		$(CALLBACK_PROBE_JSON) \
+		--json-out $(CALLBACK_CONTRACTS_REPORT_JSON)
 
 $(BANK7_42FB0_BIN) $(BANK7_42FB0_JSON): decompress_td2_chunk.py $(ROM) | $(OUT_DIR)
 	$(PYTHON) decompress_td2_chunk.py $(ROM) $(BANK7_42FB0_BIN) --bank 7 --addr 0x8000 --json-out $(BANK7_42FB0_JSON)
