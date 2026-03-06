@@ -113,6 +113,12 @@ Matrix v1 outcome (`1500` frames, `4` scenarios):
   - `hold_start_b_240_359`: `17` total hits, `4` bank30 hits (`DF6C/E039/E73F/E800`)
   - `pulse_start_240`: `11` total hits, `4` bank30 hits (`DF6C/E039/E73F/E800`)
   - `periodic_start_pulses_240_1800`: `17` total hits, `0` bank30 hits
+- Callback/state contracts:
+  - `make -C tools callback-contracts-check` -> `18/18` checks passed
+  - capture profile used: no-input probe, `1120` frames
+- Pixel regression gates:
+  - `make -C tools regression-gates REGRESSION_GATES_RENDER_DIR=../port/build/regression_frames_v2`
+  - result: `6/6` checks passed (`0` mismatched pixels each)
 
 ## Next Advancement Gates
 

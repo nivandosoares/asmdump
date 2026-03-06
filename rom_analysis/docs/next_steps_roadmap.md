@@ -19,6 +19,7 @@ Validation contract baseline:
 - `validation/regression_gates_intro.jsonc`
 - `rom_analysis/docs/callback_state_contracts.jsonc`
 - `rom_analysis/docs/validation_gates.md`
+- Latest run status: callback contracts `18/18` pass; regression gates `6/6` pass.
 
 ## 1. Consolidate `67FB` Coverage (Now Unblocked)
 
