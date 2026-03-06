@@ -61,8 +61,9 @@ def parse_header_fields(header: bytes) -> dict[str, int | str]:
         fields["field_be_03"] = read_be16(header, 3) or 0
         fields["field_be_06"] = read_be16(header, 6) or 0
     elif marker == "67FB":
+        fields["field_u8_02"] = header[2] if len(header) > 2 else 0
         fields["declared_output_span"] = read_be16(header, 3) or 0
-        fields["word_le_10"] = read_le16(header, 10) or 0
+        fields["mode_word_le_10"] = read_le16(header, 10) or 0
 
     return fields
 

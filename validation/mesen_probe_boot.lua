@@ -41,6 +41,8 @@ local config = {
     trace_mode7_writes = env_number("TD2_BOOT_PROBE_TRACE_MODE7", 0) ~= 0,
     trace_dma_writes = env_number("TD2_BOOT_PROBE_TRACE_DMA", 0) ~= 0,
     trace_vram_writes = env_number("TD2_BOOT_PROBE_TRACE_VRAM", 0) ~= 0,
+    trace_l001210_exec = env_number("TD2_BOOT_PROBE_TRACE_L001210", 0) ~= 0,
+    l001210_max_hits = env_number("TD2_BOOT_PROBE_L001210_MAX_HITS", 0),
     savestate_filename = "seed_state.bin"
 }
 
@@ -67,6 +69,8 @@ local state = {
     mode7_writes = {},
     dma_writes = {},
     vram_writes = {},
+    l001210_hits = {},
+    l001210_dropped_hits = 0,
     savestate_attempted = false,
     exec_callback_ref = nil
 }
@@ -141,6 +145,85 @@ local vram_register_names = {
     [0x2121] = "CGADD",
     [0x2122] = "CGDATA"
 }
+
+local compression_marker_names = {
+    [0x42FB] = "42FB",
+    [0x26FB] = "26FB",
+    [0x67FB] = "67FB",
+    [0x27FB] = "27FB"
+}
+
+local l001210_known_sources = {
+    {
+        id = "bank30_42fb_9681",
+        source_linear = 0x1E9681,
+        source_snes = "1E:9681",
+        marker = "42FB",
+        provenance = "candidate",
+        note = "zero-output sentinel candidate"
+    },
+    {
+        id = "bank30_67fb_da96",
+        source_linear = 0x1EDA96,
+        source_snes = "1E:DA96",
+        marker = "67FB",
+        provenance = "candidate",
+        note = "large 67FB chunk with overlapping marker window"
+    },
+    {
+        id = "bank30_26fb_df6c",
+        source_linear = 0x1EDF6C,
+        source_snes = "1E:DF6C",
+        marker = "26FB",
+        provenance = "table-confirmed",
+        note = "referenced by bank1 helper pointer table"
+    },
+    {
+        id = "bank30_26fb_e039",
+        source_linear = 0x1EE039,
+        source_snes = "1E:E039",
+        marker = "26FB",
+        provenance = "table-confirmed",
+        note = "referenced by bank1 helper pointer table"
+    },
+    {
+        id = "bank30_26fb_e73f",
+        source_linear = 0x1EE73F,
+        source_snes = "1E:E73F",
+        marker = "26FB",
+        provenance = "table-confirmed",
+        note = "referenced by bank1 helper pointer table"
+    },
+    {
+        id = "bank30_26fb_e800",
+        source_linear = 0x1EE800,
+        source_snes = "1E:E800",
+        marker = "26FB",
+        provenance = "table-confirmed",
+        note = "referenced by bank1 helper pointer table"
+    },
+    {
+        id = "bank30_67fb_e91f",
+        source_linear = 0x1EE91F,
+        source_snes = "1E:E91F",
+        marker = "67FB",
+        provenance = "candidate",
+        note = "current decoder fails with source exhaustion"
+    },
+    {
+        id = "bank30_26fb_ee7f",
+        source_linear = 0x1EEE7F,
+        source_snes = "1E:EE7F",
+        marker = "26FB",
+        provenance = "table-confirmed",
+        note = "referenced by bank1 helper pointer table"
+    }
+}
+
+local l001210_known_source_lookup = {}
+for _, source in ipairs(l001210_known_sources) do
+    l001210_known_source_lookup[source.source_linear] = source
+end
 
 for channel = 0, 7 do
     local base = 0x4300 + (channel * 0x10)
@@ -225,6 +308,16 @@ end
 
 local function read_u8(address)
     return emu.read(address, emu.memType.snesDebug)
+end
+
+local function swap_u16(value)
+    local lo = value % 0x100
+    local hi = math.floor(value / 0x100) % 0x100
+    return (lo * 0x100) + hi
+end
+
+local function format_snes_ptr(bank, addr)
+    return string.format("%02X:%04X", bank % 0x100, addr % 0x10000)
 end
 
 local function snapshot_boot_state()
@@ -398,6 +491,23 @@ local function save_vram_trace()
     write_text_file(output_prefix .. "_vram_writes.json", encode_json_value(output, ""))
 end
 
+local function save_l001210_trace()
+    if not config.trace_l001210_exec then
+        return
+    end
+
+    local output = {
+        screenshot_frame = config.screenshot_frame,
+        total_frames = config.total_frames,
+        max_hits = config.l001210_max_hits,
+        hit_count = #state.l001210_hits,
+        dropped_hits = state.l001210_dropped_hits,
+        known_sources = l001210_known_sources,
+        hits = state.l001210_hits
+    }
+    write_text_file(output_prefix .. "_l001210_exec.json", encode_json_value(output, ""))
+end
+
 local function reset_probe_state()
     state.frame = 0
     state.finished = false
@@ -405,6 +515,8 @@ local function reset_probe_state()
     state.mode7_writes = {}
     state.dma_writes = {}
     state.vram_writes = {}
+    state.l001210_hits = {}
+    state.l001210_dropped_hits = 0
 end
 
 local function on_first_exec()
@@ -459,6 +571,7 @@ local function on_end_frame()
         save_mode7_trace()
         save_dma_trace()
         save_vram_trace()
+        save_l001210_trace()
         state.finished = true
         emu.displayMessage("TD2 Boot Probe", "Probe finished. Files written to " .. output_prefix .. ".*")
         emu.stop(0)
@@ -536,6 +649,47 @@ local function on_vram_register_write(address, value)
     }
 end
 
+local function on_l001210_exec()
+    if state.finished or not config.trace_l001210_exec then
+        return
+    end
+
+    if config.l001210_max_hits > 0 and #state.l001210_hits >= config.l001210_max_hits then
+        state.l001210_dropped_hits = state.l001210_dropped_hits + 1
+        return
+    end
+
+    local source_addr = read_u16(0x00000C)
+    local source_bank = read_u8(0x00000E)
+    local dest_addr = read_u16(0x000010)
+    local source_linear = (source_bank * 0x10000) + source_addr
+    local marker_raw_le = read_u16(source_linear)
+    local marker_word = swap_u16(marker_raw_le)
+    local marker_tag = compression_marker_names[marker_word]
+    local known = l001210_known_source_lookup[source_linear]
+
+    state.l001210_hits[#state.l001210_hits + 1] = {
+        frame = state.frame,
+        source_linear = source_linear,
+        source_bank = source_bank,
+        source_addr = source_addr,
+        source_snes = format_snes_ptr(source_bank, source_addr),
+        source_marker_raw_le = marker_raw_le,
+        source_marker_word = marker_word,
+        source_marker = marker_tag or string.format("%04X", marker_word),
+        source_marker_supported = marker_tag ~= nil,
+        source_known_id = known and known.id or nil,
+        source_provenance = known and known.provenance or (source_bank == 0x1E and "bank30-unclassified" or "unclassified"),
+        destination_addr = dest_addr,
+        destination_snes = format_snes_ptr(0x7E, dest_addr),
+        active_main_callback_addr = read_u16(0x000038),
+        active_main_callback_bank = read_u8(0x00003A),
+        state_0202 = read_u16(0x7E0202),
+        state_0208 = read_u16(0x7E0208),
+        dp_0054 = read_u8(0x000054)
+    }
+end
+
 local function on_input_polled()
     if state.finished then
         return
@@ -570,4 +724,7 @@ end
 if config.trace_vram_writes then
     emu.addMemoryCallback(on_vram_register_write, emu.callbackType.write, 0x2115, 0x2119)
     emu.addMemoryCallback(on_vram_register_write, emu.callbackType.write, 0x2121, 0x2122)
+end
+if config.trace_l001210_exec then
+    emu.addMemoryCallback(on_l001210_exec, emu.callbackType.exec, 0x009210, 0x009210)
 end

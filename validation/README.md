@@ -94,6 +94,22 @@ That writes:
 - `.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_oam.bin`
 - `.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_ppu_state.json`
 
+To trace chunk-dispatch usage at `00:9210` (`L001210`) with entry-time `$0C/$0E/$10`:
+
+```sh
+TD2_BOOT_PROBE_TOTAL_FRAMES=3600 \
+TD2_BOOT_PROBE_TRACE_L001210=1 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/summarize_l001210_trace.py \
+  .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json \
+  --json-out tools/out/td2_boot_probe_l001210_summary.json
+```
+
+When that trace is enabled, the probe also writes:
+
+- `.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json`
+
 In the current environment, the frame-`300` screenshot is the colored copyright/credits scene with blue/red text on black.
 The interesting RE result is that the tracked bank 1 selectors are still at the trivial early values on that frame:
 

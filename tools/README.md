@@ -16,6 +16,8 @@ Current Sprint 0 tooling:
 - `build_bootstrap_queue_scene.py`: applies the active `0600` DMA descriptors from a queue summary onto a seed VRAM image, optionally lifts staged OAM from WRAM, and emits a normal `snes_bg` scene prefix plus preview
 - `build_mode7_source_scene.py`: seeds a Mode 7 scene from VRAM and patches selected VRAM word regions directly from ROM source blobs before rendering; this is the current bridge-visible builder for the late attract window
 - `mesen_ppu_extract`: headless C# bridge into `MesenCore.so` that dumps the current frame's SNES BG layer views, BG tilesets/CHR sheets, palette, per-sprite previews, sprite screen preview, and raw VRAM/CGRAM/OAM without going through the GUI
+- `build_mesen_design_pack.py`: repack a raw `mesen_ppu_extract` frame folder into a stable design-team bundle (`layers/`, `tilemaps/`, `tilesets/`, `sprites/`, `palette/`, `raw/`) plus a `design_pack.json` manifest
+- `build_mesen_design_pack_range.py`: batch `build_mesen_design_pack.py` over `frame_*` directories and emit `design_pack_range.json` for timeline review
 - `extract_mesen_scene_range.py`: batches `mesen_ppu_extract` across a frame range, writes per-frame scene folders, and emits a collapsed `sequence.txt` manifest for the SDL runtime
 - `build_scene_sequence_manifest.py`: converts flat Mesen range dumps into runtime-ready `sequence.txt` manifests, either as `snes_bg` entries or exact sampled `image` entries from screenshots; when `oam.bin` exists, it now carries it through as an optional fourth `snes_bg` path
 - `build_indexed_palette_animation.py`: collapses a screenshot-backed frame range into one indexed image plus a palette timeline and can emit a one-entry `indexed_anim` sequence manifest
@@ -24,10 +26,13 @@ Current Sprint 0 tooling:
 - `splice_sequence_manifest.py`: replaces a frame range inside a sequence JSON summary with a new manifest entry, used for hybrid native-plus-sampled intro loops
 - `render_mesen_snes_bg.py`: composes a 256x224 preview directly from Mesen VRAM/CGRAM/state dumps, including Mode 7 and optional OBJ composition from OAM dumps
 - `summarize_mode7_trace.py`: summarizes the tracked register-write traces emitted by `mesen_probe_boot.lua` for Mode 7/TMAIN or DMA/HDMA windows
+- `summarize_l001210_trace.py`: summarizes `L001210` dispatcher execution hits (`$0C/$0E/$10`) captured by `mesen_probe_boot.lua` for chunk provenance
 - `capture_visible_mode7_range.py`: reuses `mesen_scanline_step_test.lua` to capture one visible-scanline `ppu.mode7.*` sample per frame across a requested range
 - `apply_visible_mode7_samples.py`: applies those captured visible Mode 7 samples onto extracted frame states, writing sidecar `ppu_state_visible.json` files by default
 - `extract_compression_header_manifest.py`: scans a bank for `42FB`/`26FB`/`67FB`/`27FB` blocks and decodes their leading header fields
-- `decompress_td2_chunk.py`: decompresses an individual TD2 chunk from the ROM; `42FB` and boot-path `26FB` are implemented
+- `validate_td2_chunks.py`: validates candidate chunk starts by running supported decoders and reporting consumed source windows/overlaps
+- `build_bank30_chunk_registry.py`: consolidates bank30 header scan + decode validation + runtime `L001210` hits into one registry with unresolved-priority tags
+- `decompress_td2_chunk.py`: decompresses an individual TD2 chunk from the ROM; `42FB`, `26FB`, and `67FB` are implemented
 - `extract_snes_tiles.py`: decodes SNES 2bpp/4bpp tile banks or raw planar blobs into PPM sheets
 - `scan_structured_bank.py`: scans a bank for recurring header markers like `42fb` / `26fb`
 - `compare_frames.py`: compares `.png` and `.ppm` frames and optionally writes a diff image
@@ -53,6 +58,8 @@ python3 tools/analyze_bootstrap_queue.py tools/out/bootprobe_958_detail/td2_boot
 python3 tools/build_bootstrap_queue_scene.py game.smc tools/out/intro_bootstrap_958_974_queue.json tools/out/bank1_bootstrap_queue_978 --seed-vram tools/out/bootprobe_958_detail/td2_boot_probe_vram.bin --cgram tools/out/bootprobe_974_detail/td2_boot_probe_cgram.bin --ppu-state tools/out/intro_loop_frame_00978_ppu_state.json --wram tools/out/bootprobe_974_detail/td2_boot_probe_wram.bin --render-objects
 python3 tools/build_mode7_source_scene.py game.smc tools/out/bank1_mode7_visible_994 --seed-vram tools/out/mesen_frame990_assets_v2/vram.bin --cgram tools/out/mesen_frame994_assets_v1/cgram.bin --ppu-state tools/out/mesen_frame994_assets_v1/ppu_state.json --oam tools/out/mesen_frame994_assets_v1/oam.bin --patch 0x4920:0x1AACA0:0x100 --patch 0x49A0:0x1AAA10:0x100 --render-objects
 ./tools/run_mesen_ppu_extract.sh --rom game.smc --frame 300 --out-dir tools/out/mesen_frame300
+python3 tools/build_mesen_design_pack.py tools/out/mesen_frame300 tools/out/design_frame300 --clean-out
+python3 tools/build_mesen_design_pack_range.py tools/out/mesen_range_1086_1093_v1 tools/out/design_mesen_range_1086_1093_v1 --clean-out
 python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 654 --end-frame 710 --step 4 --out-dir tools/out/ballistic_sequence --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
 python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 978 --end-frame 982 --step 4 --out-dir tools/out/intro_native_978 --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
 python3 tools/build_scene_sequence_manifest.py tools/out/intro_loop.json tools/out/intro_loop_sequence.txt --json-out tools/out/intro_loop_sequence.json --end-frame-exclusive 2072 --prefer-screenshot
@@ -66,8 +73,12 @@ python3 tools/render_mesen_snes_bg.py tools/out/td2_boot_probe_startframe_vram_1
 python3 tools/capture_visible_mode7_range.py 1094 1101 --output tools/out/visible_mode7_1094_1101.json
 python3 tools/apply_visible_mode7_samples.py tools/out/visible_mode7_1094_1101.json tools/out/mesen_range_1094_1101_v1
 python3 tools/extract_compression_header_manifest.py game.smc --bank 7 --json-out tools/out/bank7_compression_headers.json
+python3 tools/validate_td2_chunks.py game.smc --bank 30 --headers-json tools/out/bank30_headers.json --json-out tools/out/bank30_chunk_validation.json
+python3 tools/summarize_l001210_trace.py .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json --json-out tools/out/td2_boot_probe_l001210_summary.json
+python3 tools/build_bank30_chunk_registry.py tools/out/bank30_headers.json tools/out/bank30_chunk_validation.json tools/out/td2_boot_probe_l001210_summary.json tools/out/bank30_chunk_registry.json --markdown-out tools/out/bank30_chunk_registry.md
 python3 tools/decompress_td2_chunk.py game.smc tools/out/bank7_42fb_8000.bin --bank 7 --addr 0x8000 --json-out tools/out/bank7_42fb_8000.json
 python3 tools/decompress_td2_chunk.py game.smc tools/out/bank7_26fb_817a.bin --bank 7 --addr 0x817A --json-out tools/out/bank7_26fb_817a.json
+python3 tools/decompress_td2_chunk.py game.smc tools/out/bank30_67fb_da96.bin --bank 30 --addr 0xDA96 --json-out tools/out/bank30_67fb_da96.json
 python3 tools/extract_snes_tiles.py game.smc tools/out/bank6_tiles_gray.ppm --bank 6 --bpp 4
 python3 tools/extract_snes_tiles.py game.smc tools/out/bank6_tiles_palette0.ppm --bank 6 --bpp 4 --palette-json tools/out/bank3_palettes.json --palette-index 0
 python3 tools/extract_snes_tiles.py tools/out/bank7_42fb_8000.bin tools/out/bank7_42fb_8000_gray.ppm --raw-binary --offset 0x6 --byte-length 0x1000 --bpp 4 --columns 16
@@ -91,6 +102,11 @@ Useful make targets:
 - `make -C tools bank6-preview`
 - `make -C tools bank7-scan`
 - `make -C tools bank7-headers`
+- `make -C tools bank30-headers`
+- `make -C tools bank30-validate`
+- `make -C tools bank30-registry`
+- `make -C tools l001210-probe L001210_PROBE_TOTAL_FRAMES=3600`
+- `make -C tools l001210-trace-summary`
 - `make -C tools bank7-42fb0`
 - `make -C tools bank7-42fb0-preview`
 - `make -C tools bank7-26fb0`
@@ -112,6 +128,8 @@ Useful make targets:
 - `make -C tools intro-bootstrap-deltas`
 - `make -C tools intro-bootstrap-queue`
 - `make -C tools mesen-ppu-frame MESEN_FRAME=300`
+- `make -C tools mesen-design-pack MESEN_FRAME=300`
+- `make -C tools mesen-design-pack-range MESEN_RANGE_FRAMES_DIR=out/mesen_range_1086_1093_v1`
 - `make -C tools intro-loop-dump`
 - `make -C tools intro-loop-sequence`
 - `make -C tools intro-native-978`
@@ -142,6 +160,13 @@ Current practical reading for this tool:
 - its `GetTilemap` outputs are viewer-oriented layer renders, not a final composed screenshot
 - for frame `300`, the extracted PPU state lands on the expected credits scene state (`bgMode = 1`, `mainScreenLayers = 0x04`, `chrAddress = 0x2000/0x4000/0x6000`)
 - the frame-`300` `*_visible.ppm` outputs do not match the final screenshot pixel-for-pixel, so they should be treated as standalone layer assets, not as golden-frame replacements
+
+`build_mesen_design_pack.py` now adds inspect-and-draw outputs on top of those raw dumps:
+
+- `tilemaps/bg*_tilemap.json`: decoded tilemap entries per cell (tile index, palette, priority, hflip, vflip), plus usage stats
+- `tilemaps/bg*_tilemap.csv`: spreadsheet-friendly per-cell export
+- `sprites/sprites_visible.json`: visible-sprite subset with priority grouping for draw-order inspection
+- `design_pack.json`: references all of the above through `tilemaps` and `sprite_analysis` sections
 
 For the `Ballistic presents` splash, the frame-`654` extraction is a clean exact anchor:
 

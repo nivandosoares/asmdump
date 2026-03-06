@@ -16,6 +16,11 @@ BOOT_SCREEN_PREVIEW_JSON := $(OUT_DIR)/bank1_boot_screen_variant0.json
 BOOT_SCREEN_OVERLAY_PREVIEW := $(OUT_DIR)/bank1_boot_screen_variant0_overlay.ppm
 BOOT_SCREEN_OVERLAY_PREVIEW_JSON := $(OUT_DIR)/bank1_boot_screen_variant0_overlay.json
 BANK7_HEADER_JSON := $(OUT_DIR)/bank7_compression_headers.json
+BANK30_HEADER_JSON := $(OUT_DIR)/bank30_headers.json
+BANK30_VALIDATION_JSON := $(OUT_DIR)/bank30_chunk_validation.json
+BANK30_RUNTIME_SUMMARY_JSON := $(OUT_DIR)/td2_boot_probe_l001210_summary.json
+BANK30_REGISTRY_JSON := $(OUT_DIR)/bank30_chunk_registry.json
+BANK30_REGISTRY_MD := $(OUT_DIR)/bank30_chunk_registry.md
 BANK7_42FB0_BIN := $(OUT_DIR)/bank7_42fb_8000.bin
 BANK7_42FB0_JSON := $(OUT_DIR)/bank7_42fb_8000.json
 BANK7_42FB0_GRAY := $(OUT_DIR)/bank7_42fb_8000_gray.ppm
@@ -150,8 +155,13 @@ BANK1_VISIBLE_997_SCENE_OAM := $(BANK1_VISIBLE_997_SCENE_PREFIX)_oam.bin
 BANK1_VISIBLE_997_SCENE_JSON := $(BANK1_VISIBLE_997_SCENE_PREFIX).json
 BANK1_VISIBLE_997_SCENE_PPM := $(BANK1_VISIBLE_997_SCENE_PREFIX).ppm
 MESEN_BOOT_FRAME := ../.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_frame.png
+L001210_TRACE_JSON := ../.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json
+L001210_TRACE_SUMMARY_JSON := $(OUT_DIR)/td2_boot_probe_l001210_summary.json
 MESEN_FRAME ?= 300
 MESEN_FRAME_DIR ?= $(OUT_DIR)/mesen_frame$(MESEN_FRAME)
+MESEN_DESIGN_PACK_DIR ?= $(OUT_DIR)/design_frame$(MESEN_FRAME)
+MESEN_RANGE_FRAMES_DIR ?= $(MESEN_RANGE_1086_1093_DIR)
+MESEN_DESIGN_PACK_RANGE_DIR ?= $(OUT_DIR)/design_mesen_range_1086_1093_v1
 MESEN_FRAME986_DIR := $(OUT_DIR)/mesen_frame986_assets_v2
 MESEN_FRAME990_DIR := $(OUT_DIR)/mesen_frame990_assets_v2
 MESEN_FRAME991_DIR := $(OUT_DIR)/mesen_frame991_assets_v1
@@ -238,8 +248,10 @@ INTRO_BOOTSTRAP_QUEUE_982_986_JSON := $(OUT_DIR)/intro_bootstrap_982_986_queue.j
 INTRO_BOOTSTRAP_QUEUE_986_990_JSON := $(OUT_DIR)/intro_bootstrap_986_990_queue.json
 INTRO_BOOTSTRAP_QUEUE_990_994_JSON := $(OUT_DIR)/intro_bootstrap_990_994_queue.json
 MESEN_TIMEOUT_SECONDS ?= 75
+L001210_PROBE_TOTAL_FRAMES ?= 3600
+L001210_MAX_HITS ?= 0
 
-.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview bank1-bootstrap-queue-978-preview bank1-bootstrap-queue-982-preview bank1-bootstrap-queue-986-preview bank1-bootstrap-queue-986-noobj-preview bank1-bootstrap-queue-986-bridgeoam-preview bank1-bootstrap-queue-990-bridgeoam-preview bank1-bootstrap-queue-994-bridgeoam-preview bank1-visible-mode7-window-preview intro-bootstrap-deltas intro-bootstrap-queue mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-loop-hybrid-bridge-sequence intro-loop-hybrid-bridge-visible-sequence intro-native-978 intro-native-978-derived intro-native-978-bridge intro-native-978-bridge-visible
+.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank30-headers bank30-validate bank30-registry l001210-probe l001210-trace-summary bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview bank1-bootstrap-queue-978-preview bank1-bootstrap-queue-982-preview bank1-bootstrap-queue-986-preview bank1-bootstrap-queue-986-noobj-preview bank1-bootstrap-queue-986-bridgeoam-preview bank1-bootstrap-queue-990-bridgeoam-preview bank1-bootstrap-queue-994-bridgeoam-preview bank1-visible-mode7-window-preview intro-bootstrap-deltas intro-bootstrap-queue mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-loop-hybrid-bridge-sequence intro-loop-hybrid-bridge-visible-sequence intro-native-978 intro-native-978-derived intro-native-978-bridge intro-native-978-bridge-visible
 
 all: previews
 
@@ -311,6 +323,38 @@ $(BANK7_HEADER_JSON): extract_compression_header_manifest.py $(ROM) | $(OUT_DIR)
 	$(PYTHON) extract_compression_header_manifest.py $(ROM) --bank 7 --json-out $(BANK7_HEADER_JSON)
 
 bank7-headers: $(BANK7_HEADER_JSON)
+
+$(BANK30_HEADER_JSON): extract_compression_header_manifest.py $(ROM) | $(OUT_DIR)
+	$(PYTHON) extract_compression_header_manifest.py $(ROM) --bank 30 --json-out $(BANK30_HEADER_JSON)
+
+bank30-headers: $(BANK30_HEADER_JSON)
+
+$(BANK30_VALIDATION_JSON): validate_td2_chunks.py decompress_td2_chunk.py $(ROM) $(BANK30_HEADER_JSON) | $(OUT_DIR)
+	$(PYTHON) validate_td2_chunks.py $(ROM) --bank 30 --headers-json $(BANK30_HEADER_JSON) --json-out $(BANK30_VALIDATION_JSON)
+
+bank30-validate: $(BANK30_VALIDATION_JSON)
+
+$(BANK30_REGISTRY_JSON) $(BANK30_REGISTRY_MD): build_bank30_chunk_registry.py $(BANK30_HEADER_JSON) $(BANK30_VALIDATION_JSON) $(BANK30_RUNTIME_SUMMARY_JSON) | $(OUT_DIR)
+	$(PYTHON) build_bank30_chunk_registry.py \
+		$(BANK30_HEADER_JSON) \
+		$(BANK30_VALIDATION_JSON) \
+		$(BANK30_RUNTIME_SUMMARY_JSON) \
+		$(BANK30_REGISTRY_JSON) \
+		--markdown-out $(BANK30_REGISTRY_MD)
+
+bank30-registry: $(BANK30_REGISTRY_JSON) $(BANK30_REGISTRY_MD)
+
+l001210-probe:
+	TD2_BOOT_PROBE_TOTAL_FRAMES=$(L001210_PROBE_TOTAL_FRAMES) \
+	TD2_BOOT_PROBE_TRACE_L001210=1 \
+	TD2_BOOT_PROBE_L001210_MAX_HITS=$(L001210_MAX_HITS) \
+	MESEN_TIMEOUT_SECONDS=$(MESEN_TIMEOUT_SECONDS) \
+	../validation/run_mesen_probe_boot.sh $(abspath $(ROM))
+
+$(L001210_TRACE_SUMMARY_JSON): summarize_l001210_trace.py $(L001210_TRACE_JSON) | $(OUT_DIR)
+	$(PYTHON) summarize_l001210_trace.py $(L001210_TRACE_JSON) --json-out $(L001210_TRACE_SUMMARY_JSON)
+
+l001210-trace-summary: $(L001210_TRACE_SUMMARY_JSON)
 
 $(BANK7_42FB0_BIN) $(BANK7_42FB0_JSON): decompress_td2_chunk.py $(ROM) | $(OUT_DIR)
 	$(PYTHON) decompress_td2_chunk.py $(ROM) $(BANK7_42FB0_BIN) --bank 7 --addr 0x8000 --json-out $(BANK7_42FB0_JSON)
@@ -573,8 +617,15 @@ $(INTRO_BOOTSTRAP_QUEUE_990_994_JSON): analyze_bootstrap_queue.py $(OUT_DIR)/boo
 
 intro-bootstrap-queue: $(INTRO_BOOTSTRAP_QUEUE_958_974_JSON) $(INTRO_BOOTSTRAP_QUEUE_978_982_JSON) $(INTRO_BOOTSTRAP_QUEUE_982_986_JSON) $(INTRO_BOOTSTRAP_QUEUE_986_990_JSON) $(INTRO_BOOTSTRAP_QUEUE_990_994_JSON)
 
+.PHONY: mesen-design-pack mesen-design-pack-range
 mesen-ppu-frame: | $(OUT_DIR)
 	./run_mesen_ppu_extract.sh --rom $(ROM) --frame $(MESEN_FRAME) --out-dir $(MESEN_FRAME_DIR)
+
+mesen-design-pack: mesen-ppu-frame
+	$(PYTHON) build_mesen_design_pack.py $(MESEN_FRAME_DIR) $(MESEN_DESIGN_PACK_DIR) --clean-out
+
+mesen-design-pack-range: | $(OUT_DIR)
+	$(PYTHON) build_mesen_design_pack_range.py $(MESEN_RANGE_FRAMES_DIR) $(MESEN_DESIGN_PACK_RANGE_DIR) --clean-out
 
 $(MESEN_FRAME986_DIR)/oam.bin: | $(OUT_DIR)
 	./run_mesen_ppu_extract.sh --rom $(ROM) --frame 986 --out-dir $(MESEN_FRAME986_DIR)

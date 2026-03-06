@@ -391,9 +391,104 @@ def decode_26fb(chunk: bytes) -> tuple[bytes, dict]:
     return bytes(output), summary
 
 
+def decode_67fb(chunk: bytes) -> tuple[bytes, dict]:
+    if len(chunk) < 12 or chunk[:2] != b"\x67\xfb":
+        raise ValueError("chunk is not a 67FB block")
+
+    # Mirrors bank0 L001171:
+    # - skip one byte after marker
+    # - read big-endian output size from offsets 3..4
+    # - skip five bytes
+    # - read mode word at offsets 10..11 (0x0101 => byte mode, else word mode)
+    declared_output_size = (chunk[3] << 8) | chunk[4]
+    mode_word = chunk[10] | (chunk[11] << 8)
+    byte_mode = mode_word == 0x0101
+    ptr = 12
+
+    output = bytearray()
+    token_count = 0
+    repeat_ops = 0
+    literal_ops = 0
+
+    def require_byte() -> int:
+        nonlocal ptr
+        if ptr >= len(chunk):
+            raise ValueError("67FB stream ended early while reading byte")
+        value = chunk[ptr]
+        ptr += 1
+        return value
+
+    def require_word() -> tuple[int, int]:
+        low = require_byte()
+        high = require_byte()
+        return low, high
+
+    while len(output) < declared_output_size:
+        token = require_byte()
+        token_count += 1
+
+        if token >= 0x80:
+            run_length = ((token ^ 0xFF) + 1) & 0xFF
+            if run_length == 0:
+                run_length = 256
+            literal_ops += 1
+
+            if byte_mode:
+                for _ in range(run_length):
+                    if len(output) >= declared_output_size:
+                        break
+                    output.append(require_byte())
+            else:
+                for _ in range(run_length):
+                    if len(output) >= declared_output_size:
+                        break
+                    low, high = require_word()
+                    if len(output) < declared_output_size:
+                        output.append(low)
+                    if len(output) < declared_output_size:
+                        output.append(high)
+            continue
+
+        run_length = token + 1
+        repeat_ops += 1
+        if byte_mode:
+            value = require_byte()
+            for _ in range(run_length):
+                if len(output) >= declared_output_size:
+                    break
+                output.append(value)
+        else:
+            low, high = require_word()
+            for _ in range(run_length):
+                if len(output) >= declared_output_size:
+                    break
+                if len(output) < declared_output_size:
+                    output.append(low)
+                if len(output) < declared_output_size:
+                    output.append(high)
+
+    if len(output) != declared_output_size:
+        raise ValueError(
+            f"67FB decode length mismatch: got {len(output)} bytes, expected {declared_output_size}"
+        )
+
+    summary = {
+        "format": "67FB",
+        "declared_output_size": declared_output_size,
+        "mode_word": mode_word,
+        "byte_mode": byte_mode,
+        "compressed_stream_offset": 12,
+        "compressed_bytes_consumed": ptr,
+        "token_count": token_count,
+        "repeat_ops": repeat_ops,
+        "literal_ops": literal_ops,
+    }
+    return bytes(output), summary
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Decompress a TD2 chunk from the ROM. Supports 42FB and partial 26FB coverage."
+        description="Decompress a TD2 chunk from the ROM. Supports 42FB/26FB/67FB."
     )
     parser.add_argument("rom", type=Path, help="input ROM path")
     parser.add_argument("output", type=Path, help="output binary path")
@@ -436,6 +531,8 @@ def main() -> int:
         output, summary = decode_42fb(chunk)
     elif chunk[:2] == b"\x26\xfb":
         output, summary = decode_26fb(chunk)
+    elif chunk[:2] == b"\x67\xfb":
+        output, summary = decode_67fb(chunk)
     else:
         raise ValueError(
             f"unsupported chunk marker {chunk[:2].hex()} at bank {args.bank:02X}:{args.addr:04X}"
