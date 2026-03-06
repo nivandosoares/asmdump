@@ -10,7 +10,7 @@ CFLAGS ?= -std=c11 -O2 -Wall -Wextra -Wpedantic
 CPPFLAGS += $(SDL_CFLAGS)
 LDFLAGS += $(SDL_LIBS)
 
-.PHONY: all clean run
+.PHONY: all clean run assets
 
 all: $(BUILD_DIR)/$(TARGET)
 
@@ -22,6 +22,9 @@ $(BUILD_DIR)/$(TARGET): $(SRC) | $(BUILD_DIR)
 
 run: $(BUILD_DIR)/$(TARGET)
 	./$(BUILD_DIR)/$(TARGET)
+
+assets:
+	$(MAKE) -C ../tools
 
 clean:
 	rm -rf $(BUILD_DIR)

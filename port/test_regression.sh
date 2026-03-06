@@ -6,7 +6,7 @@
 # Usage: ./test_regression.sh [sequence_manifest]
 #
 # Requires: port built (make), Python 3, golden PPM references in
-# tools/out/ matching the expected frame numbers.
+# tools/out/. Checkpoints are mapped by manifest entry token.
 #
 set -euo pipefail
 
@@ -41,7 +41,7 @@ echo ""
 "$PORT" --sequence "$SEQUENCE" --headless --frames 1000 --dump-prefix "$TMP_DIR/frame" 2>&1 || true
 
 # Count rendered frames
-FRAME_COUNT=$(ls "$TMP_DIR"/frame_*.ppm 2>/dev/null | wc -l)
+FRAME_COUNT=$(find "$TMP_DIR" -maxdepth 1 -name 'frame_*.ppm' | wc -l)
 echo "Rendered $FRAME_COUNT frames"
 
 if [ "$FRAME_COUNT" -eq 0 ]; then
@@ -74,39 +74,68 @@ PASS=0
 FAIL=0
 SKIP=0
 
+find_entry_start_frame() {
+    local token="$1"
+    awk -v token="$token" '
+        /^[[:space:]]*#/ || NF == 0 { next }
+        {
+            if (index($0, token) > 0) {
+                print total
+                found = 1
+                exit
+            }
+            total += ($2 + 0)
+        }
+        END {
+            if (!found) {
+                exit 1
+            }
+        }
+    ' "$SEQUENCE"
+}
+
 compare_frame() {
     local frame_num="$1"
     local golden="$2"
+    local label="$3"
     local rendered
     rendered=$(printf "$TMP_DIR/frame_%05d.ppm" "$frame_num")
 
     if [ ! -f "$golden" ]; then
+        echo "  $label @ frame $frame_num: SKIP (missing golden)"
         SKIP=$((SKIP + 1))
         return
     fi
     if [ ! -f "$rendered" ]; then
-        echo "  frame $frame_num: SKIP (not rendered)"
+        echo "  $label @ frame $frame_num: SKIP (not rendered)"
         SKIP=$((SKIP + 1))
         return
     fi
 
     # Use compare_frames.py if available, otherwise byte-compare
     if [ -f "$COMPARE" ]; then
-        RESULT=$(python3 "$COMPARE" "$golden" "$rendered" 2>&1) || true
-        if echo "$RESULT" | grep -q "0 mismatched"; then
-            echo "  frame $frame_num: PASS (pixel-perfect)"
+        local result mismatch mismatch_ratio
+        result=$(python3 "$COMPARE" "$golden" "$rendered" 2>&1) || true
+        mismatch=$(printf "%s\n" "$result" | awk -F': ' '/^mismatch:/ {split($2, a, " "); print a[1]; exit}')
+        mismatch_ratio=$(printf "%s\n" "$result" | awk -F'[()]' '/^mismatch:/ {print $2; exit}')
+
+        if [ -z "$mismatch" ]; then
+            echo "  $label @ frame $frame_num: FAIL (could not parse compare output)"
+            printf "%s\n" "$result" | sed 's/^/    /'
+            FAIL=$((FAIL + 1))
+        elif [ "$mismatch" -eq 0 ]; then
+            echo "  $label @ frame $frame_num: PASS (pixel-perfect)"
             PASS=$((PASS + 1))
         else
-            MISMATCH=$(echo "$RESULT" | grep -oP '\d+ mismatched' | head -1)
-            echo "  frame $frame_num: ${MISMATCH:-differences detected}"
+            echo "  $label @ frame $frame_num: FAIL ($mismatch mismatched, ${mismatch_ratio:-ratio-unknown})"
             FAIL=$((FAIL + 1))
         fi
     else
         if cmp -s "$golden" "$rendered"; then
-            echo "  frame $frame_num: PASS (byte-identical)"
+            echo "  $label @ frame $frame_num: PASS (byte-identical)"
             PASS=$((PASS + 1))
         else
-            echo "  frame $frame_num: FAIL (differs)"
+            echo "  $label @ frame $frame_num: FAIL (differs)"
             FAIL=$((FAIL + 1))
         fi
     fi
@@ -115,17 +144,81 @@ compare_frame() {
 echo ""
 echo "--- Golden frame comparisons ---"
 
-# Look for any golden reference PPMs in tools/out
-for golden in "$TOOLS_OUT"/bank1_bootstrap_queue_978.ppm \
-              "$TOOLS_OUT"/bank1_bootstrap_queue_982.ppm; do
-    if [ -f "$golden" ]; then
-        # Extract frame number from filename
-        NUM=$(echo "$golden" | grep -oP '\d+(?=\.ppm)')
-        if [ -n "$NUM" ]; then
-            compare_frame "$NUM" "$golden"
-        fi
+# label|manifest token|golden image
+CHECKPOINTS=(
+    "bootstrap_queue_978|bank1_bootstrap_queue_978_vram.bin|$TOOLS_OUT/bank1_bootstrap_queue_978.ppm"
+    "bootstrap_queue_982|bank1_bootstrap_queue_982_vram.bin|$TOOLS_OUT/bank1_bootstrap_queue_982.ppm"
+    "bridgeoverride_986|bank1_bootstrap_queue_986_bridgeoverride_vram.bin|$TOOLS_OUT/bank1_bootstrap_queue_986_bridgeoverride.ppm"
+    "bridgeobj_990|bank1_bootstrap_queue_990_bridgeobj_vram.bin|$TOOLS_OUT/bank1_bootstrap_queue_990_bridgeobj.ppm"
+    "mode7_visible_991|bank1_mode7_visible_991_vram.bin|$TOOLS_OUT/bank1_mode7_visible_991.ppm"
+)
+
+for checkpoint in "${CHECKPOINTS[@]}"; do
+    IFS='|' read -r label token golden <<< "$checkpoint"
+    if frame_num=$(find_entry_start_frame "$token" 2>/dev/null); then
+        compare_frame "$frame_num" "$golden" "$label"
+    else
+        echo "  $label: SKIP (manifest token not found: $token)"
+        SKIP=$((SKIP + 1))
     fi
 done
+
+echo ""
+echo "--- Transition continuity checks ---"
+
+check_zero_diff_pair() {
+    local frame_a="$1"
+    local frame_b="$2"
+    local label="$3"
+    local image_a image_b
+    image_a=$(printf "$TMP_DIR/frame_%05d.ppm" "$frame_a")
+    image_b=$(printf "$TMP_DIR/frame_%05d.ppm" "$frame_b")
+
+    if [ ! -f "$image_a" ] || [ ! -f "$image_b" ]; then
+        echo "  $label: SKIP (frames not rendered)"
+        SKIP=$((SKIP + 1))
+        return
+    fi
+
+    if [ -f "$COMPARE" ]; then
+        local result mismatch mismatch_ratio
+        result=$(python3 "$COMPARE" "$image_a" "$image_b" 2>&1) || true
+        mismatch=$(printf "%s\n" "$result" | awk -F': ' '/^mismatch:/ {split($2, a, " "); print a[1]; exit}')
+        mismatch_ratio=$(printf "%s\n" "$result" | awk -F'[()]' '/^mismatch:/ {print $2; exit}')
+
+        if [ -z "$mismatch" ]; then
+            echo "  $label: FAIL (could not parse compare output)"
+            printf "%s\n" "$result" | sed 's/^/    /'
+            FAIL=$((FAIL + 1))
+        elif [ "$mismatch" -eq 0 ]; then
+            echo "  $label: PASS (seamless)"
+            PASS=$((PASS + 1))
+        else
+            echo "  $label: FAIL ($mismatch mismatched, ${mismatch_ratio:-ratio-unknown})"
+            FAIL=$((FAIL + 1))
+        fi
+    else
+        if cmp -s "$image_a" "$image_b"; then
+            echo "  $label: PASS (byte-identical)"
+            PASS=$((PASS + 1))
+        else
+            echo "  $label: FAIL (differs)"
+            FAIL=$((FAIL + 1))
+        fi
+    fi
+}
+
+if hold_start=$(find_entry_start_frame "bank1_mode7_hold_1102_ppu_state.txt" 2>/dev/null); then
+    if [ "$hold_start" -gt 0 ]; then
+        check_zero_diff_pair "$((hold_start - 1))" "$hold_start" "mode7_hold_transition"
+    else
+        echo "  mode7_hold_transition: SKIP (hold starts at frame 0)"
+        SKIP=$((SKIP + 1))
+    fi
+else
+    echo "  mode7_hold_transition: SKIP (hold token not found)"
+    SKIP=$((SKIP + 1))
+fi
 
 echo ""
 echo "=== Results: $PASS passed, $FAIL failed, $SKIP skipped ==="

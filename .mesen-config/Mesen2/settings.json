@@ -1,6 +1,6 @@
 ﻿{
   "Version": "2.1.1",
-  "ConfigUpgrade": 1,
+  "ConfigUpgrade": 5,
   "Video": {
     "CustomAspectRatio": 1,
     "VideoFilter": "None",
@@ -113,18 +113,18 @@
       "Mapping1": {
         "MouseButtons": null,
         "SuperScopeButtons": null,
-        "A": 0,
-        "B": 0,
-        "X": 0,
-        "Y": 0,
-        "L": 0,
-        "R": 0,
-        "Up": 0,
-        "Down": 0,
-        "Left": 0,
-        "Right": 0,
-        "Start": 0,
-        "Select": 0,
+        "A": 54,
+        "B": 53,
+        "X": 140,
+        "Y": 56,
+        "L": 64,
+        "R": 52,
+        "Up": 66,
+        "Down": 62,
+        "Left": 44,
+        "Right": 47,
+        "Start": 55,
+        "Select": 58,
         "U": 0,
         "D": 0,
         "TurboA": 0,
@@ -218,8 +218,8 @@
         "TurboStart": 0,
         "GenericKey1": 0
       },
-      "TurboSpeed": 0,
-      "Type": "None"
+      "TurboSpeed": 2,
+      "Type": "SnesController"
     },
     "Port2": {
       "Mapping1": {
@@ -1290,22 +1290,22 @@
         "MouseButtons": null,
         "OekakidsButtons": null,
         "BandaiHypershotButtons": null,
-        "A": 0,
-        "B": 0,
+        "A": 54,
+        "B": 53,
         "X": 0,
         "Y": 0,
         "L": 0,
         "R": 0,
-        "Up": 0,
-        "Down": 0,
-        "Left": 0,
-        "Right": 0,
-        "Start": 0,
-        "Select": 0,
+        "Up": 66,
+        "Down": 62,
+        "Left": 44,
+        "Right": 47,
+        "Start": 52,
+        "Select": 64,
         "U": 0,
         "D": 0,
-        "TurboA": 0,
-        "TurboB": 0,
+        "TurboA": 140,
+        "TurboB": 56,
         "TurboX": 0,
         "TurboY": 0,
         "TurboL": 0,
@@ -1434,8 +1434,8 @@
         "TurboStart": 0,
         "GenericKey1": 0
       },
-      "TurboSpeed": 0,
-      "Type": "None"
+      "TurboSpeed": 2,
+      "Type": "NesController"
     },
     "Port2": {
       "Mapping1": {
@@ -3405,22 +3405,22 @@
     },
     "Controller": {
       "Mapping1": {
-        "A": 0,
-        "B": 0,
+        "A": 54,
+        "B": 53,
         "X": 0,
         "Y": 0,
         "L": 0,
         "R": 0,
-        "Up": 0,
-        "Down": 0,
-        "Left": 0,
-        "Right": 0,
-        "Start": 0,
-        "Select": 0,
+        "Up": 66,
+        "Down": 62,
+        "Left": 44,
+        "Right": 47,
+        "Start": 52,
+        "Select": 64,
         "U": 0,
         "D": 0,
-        "TurboA": 0,
-        "TurboB": 0,
+        "TurboA": 140,
+        "TurboB": 56,
         "TurboX": 0,
         "TurboY": 0,
         "TurboL": 0,
@@ -3504,8 +3504,8 @@
         "TurboStart": 0,
         "GenericKey1": 0
       },
-      "TurboSpeed": 0,
-      "Type": "None"
+      "TurboSpeed": 2,
+      "Type": "GameboyController"
     },
     "Model": "AutoFavorGbc",
     "UseSgb2": true,
@@ -3549,22 +3549,22 @@
     },
     "Port1": {
       "Mapping1": {
-        "A": 0,
-        "B": 0,
+        "A": 54,
+        "B": 53,
         "X": 0,
         "Y": 0,
         "L": 0,
         "R": 0,
-        "Up": 0,
-        "Down": 0,
-        "Left": 0,
-        "Right": 0,
-        "Start": 0,
-        "Select": 0,
+        "Up": 66,
+        "Down": 62,
+        "Left": 44,
+        "Right": 47,
+        "Start": 52,
+        "Select": 64,
         "U": 0,
         "D": 0,
-        "TurboA": 0,
-        "TurboB": 0,
+        "TurboA": 140,
+        "TurboB": 56,
         "TurboX": 0,
         "TurboY": 0,
         "TurboL": 0,
@@ -3648,8 +3648,8 @@
         "TurboStart": 0,
         "GenericKey1": 0
       },
-      "TurboSpeed": 0,
-      "Type": "None"
+      "TurboSpeed": 2,
+      "Type": "PceController"
     },
     "Port1A": {
       "Mapping1": {
@@ -4734,22 +4734,22 @@
     "Port1": {
       "Mapping1": {
         "LightPhaserButtons": null,
-        "A": 0,
-        "B": 0,
+        "A": 54,
+        "B": 53,
         "X": 0,
         "Y": 0,
         "L": 0,
         "R": 0,
-        "Up": 0,
-        "Down": 0,
-        "Left": 0,
-        "Right": 0,
-        "Start": 0,
-        "Select": 0,
+        "Up": 66,
+        "Down": 62,
+        "Left": 44,
+        "Right": 47,
+        "Start": 52,
+        "Select": 64,
         "U": 0,
         "D": 0,
-        "TurboA": 0,
-        "TurboB": 0,
+        "TurboA": 140,
+        "TurboB": 56,
         "TurboX": 0,
         "TurboY": 0,
         "TurboL": 0,
@@ -4836,8 +4836,8 @@
         "TurboStart": 0,
         "GenericKey1": 0
       },
-      "TurboSpeed": 0,
-      "Type": "None"
+      "TurboSpeed": 2,
+      "Type": "SmsController"
     },
     "Port2": {
       "Mapping1": {
@@ -4993,7 +4993,26 @@
     "Port1": {
       "Mapping1": {
         "LightPhaserButtons": null,
-        "ColecoVisionControllerButtons": null,
+        "ColecoVisionControllerButtons": [
+          66,
+          47,
+          44,
+          62,
+          60,
+          48,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          74,
+          61,
+          49
+        ],
         "A": 0,
         "B": 0,
         "X": 0,
@@ -5099,8 +5118,8 @@
         "TurboStart": 0,
         "GenericKey1": 0
       },
-      "TurboSpeed": 0,
-      "Type": "None"
+      "TurboSpeed": 2,
+      "Type": "ColecoVisionController"
     },
     "Port2": {
       "Mapping1": {
@@ -5234,18 +5253,18 @@
     },
     "Controller": {
       "Mapping1": {
-        "A": 0,
-        "B": 0,
+        "A": 54,
+        "B": 53,
         "X": 0,
         "Y": 0,
-        "L": 0,
-        "R": 0,
-        "Up": 0,
-        "Down": 0,
-        "Left": 0,
-        "Right": 0,
-        "Start": 0,
-        "Select": 0,
+        "L": 64,
+        "R": 52,
+        "Up": 66,
+        "Down": 62,
+        "Left": 44,
+        "Right": 47,
+        "Start": 55,
+        "Select": 58,
         "U": 0,
         "D": 0,
         "TurboA": 0,
@@ -5333,8 +5352,8 @@
         "TurboStart": 0,
         "GenericKey1": 0
       },
-      "TurboSpeed": 0,
-      "Type": "None"
+      "TurboSpeed": 2,
+      "Type": "GbaController"
     },
     "SkipBootScreen": false,
     "DisableFrameSkipping": false,
@@ -5368,20 +5387,20 @@
     },
     "ControllerHorizontal": {
       "Mapping1": {
-        "A": 0,
-        "B": 0,
+        "A": 67,
+        "B": 69,
         "X": 0,
         "Y": 0,
-        "L": 0,
-        "R": 0,
-        "Up": 0,
-        "Down": 0,
-        "Left": 0,
-        "Right": 0,
-        "Start": 0,
+        "L": 23,
+        "R": 25,
+        "Up": 66,
+        "Down": 62,
+        "Left": 44,
+        "Right": 47,
+        "Start": 48,
         "Select": 0,
-        "U": 0,
-        "D": 0,
+        "U": 24,
+        "D": 26,
         "TurboA": 0,
         "TurboB": 0,
         "TurboX": 0,
@@ -5390,7 +5409,7 @@
         "TurboR": 0,
         "TurboSelect": 0,
         "TurboStart": 0,
-        "GenericKey1": 0
+        "GenericKey1": 60
       },
       "Mapping2": {
         "A": 0,
@@ -5467,25 +5486,25 @@
         "TurboStart": 0,
         "GenericKey1": 0
       },
-      "TurboSpeed": 0,
-      "Type": "None"
+      "TurboSpeed": 2,
+      "Type": "WsController"
     },
     "ControllerVertical": {
       "Mapping1": {
-        "A": 0,
-        "B": 0,
+        "A": 69,
+        "B": 67,
         "X": 0,
         "Y": 0,
-        "L": 0,
-        "R": 0,
-        "Up": 0,
-        "Down": 0,
-        "Left": 0,
-        "Right": 0,
-        "Start": 0,
+        "L": 62,
+        "R": 66,
+        "Up": 23,
+        "Down": 25,
+        "Left": 26,
+        "Right": 24,
+        "Start": 48,
         "Select": 0,
-        "U": 0,
-        "D": 0,
+        "U": 44,
+        "D": 47,
         "TurboA": 0,
         "TurboB": 0,
         "TurboX": 0,
@@ -5494,7 +5513,7 @@
         "TurboR": 0,
         "TurboSelect": 0,
         "TurboStart": 0,
-        "GenericKey1": 0
+        "GenericKey1": 60
       },
       "Mapping2": {
         "A": 0,
@@ -5571,8 +5590,8 @@
         "TurboStart": 0,
         "GenericKey1": 0
       },
-      "TurboSpeed": 0,
-      "Type": "None"
+      "TurboSpeed": 2,
+      "Type": "WsControllerVertical"
     },
     "Model": "Auto",
     "UseBootRom": false,
@@ -5633,14 +5652,1484 @@
     "GameSelectionScreenMode": "ResumeState",
     "FontAntialiasing": "SubPixelAntialias",
     "MesenFont": {
-      "FontFamily": "Microsoft Sans Serif",
+      "FontFamily": "DejaVu Sans",
       "FontSize": 11
     },
     "MesenMenuFont": {
-      "FontFamily": "Segoe UI",
+      "FontFamily": "DejaVu Sans",
       "FontSize": 12
     },
-    "ShortcutKeys": [],
+    "ShortcutKeys": [
+      {
+        "Shortcut": "FastForward",
+        "KeyCombination": {
+          "Key1": 3,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 4105,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "Rewind",
+        "KeyCombination": {
+          "Key1": 2,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 4104,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "IncreaseSpeed",
+        "KeyCombination": {
+          "Key1": 141,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "DecreaseSpeed",
+        "KeyCombination": {
+          "Key1": 143,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "MaxSpeed",
+        "KeyCombination": {
+          "Key1": 98,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "IncreaseVolume",
+        "KeyCombination": {
+          "Key1": 118,
+          "Key2": 141,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "DecreaseVolume",
+        "KeyCombination": {
+          "Key1": 118,
+          "Key2": 143,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleFps",
+        "KeyCombination": {
+          "Key1": 99,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleFullscreen",
+        "KeyCombination": {
+          "Key1": 100,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "TakeScreenshot",
+        "KeyCombination": {
+          "Key1": 101,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "Reset",
+        "KeyCombination": {
+          "Key1": 118,
+          "Key2": 61,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "PowerCycle",
+        "KeyCombination": {
+          "Key1": 118,
+          "Key2": 63,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ReloadRom",
+        "KeyCombination": {
+          "Key1": 118,
+          "Key2": 116,
+          "Key3": 61
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "Pause",
+        "KeyCombination": {
+          "Key1": 13,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "RunSingleFrame",
+        "KeyCombination": {
+          "Key1": 146,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SetScale1x",
+        "KeyCombination": {
+          "Key1": 120,
+          "Key2": 35,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SetScale2x",
+        "KeyCombination": {
+          "Key1": 120,
+          "Key2": 36,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SetScale3x",
+        "KeyCombination": {
+          "Key1": 120,
+          "Key2": 37,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SetScale4x",
+        "KeyCombination": {
+          "Key1": 120,
+          "Key2": 38,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SetScale5x",
+        "KeyCombination": {
+          "Key1": 120,
+          "Key2": 39,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SetScale6x",
+        "KeyCombination": {
+          "Key1": 120,
+          "Key2": 40,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SetScale7x",
+        "KeyCombination": {
+          "Key1": 120,
+          "Key2": 41,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SetScale8x",
+        "KeyCombination": {
+          "Key1": 120,
+          "Key2": 42,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SetScale9x",
+        "KeyCombination": {
+          "Key1": 120,
+          "Key2": 43,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SetScale10x",
+        "KeyCombination": {
+          "Key1": 120,
+          "Key2": 34,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "OpenFile",
+        "KeyCombination": {
+          "Key1": 118,
+          "Key2": 58,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SaveStateSlot1",
+        "KeyCombination": {
+          "Key1": 116,
+          "Key2": 90,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SaveStateSlot2",
+        "KeyCombination": {
+          "Key1": 116,
+          "Key2": 91,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SaveStateSlot3",
+        "KeyCombination": {
+          "Key1": 116,
+          "Key2": 92,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SaveStateSlot4",
+        "KeyCombination": {
+          "Key1": 116,
+          "Key2": 93,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SaveStateSlot5",
+        "KeyCombination": {
+          "Key1": 116,
+          "Key2": 94,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SaveStateSlot6",
+        "KeyCombination": {
+          "Key1": 116,
+          "Key2": 95,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SaveStateSlot7",
+        "KeyCombination": {
+          "Key1": 116,
+          "Key2": 96,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SaveStateToFile",
+        "KeyCombination": {
+          "Key1": 118,
+          "Key2": 62,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "LoadStateSlot1",
+        "KeyCombination": {
+          "Key1": 90,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "LoadStateSlot2",
+        "KeyCombination": {
+          "Key1": 91,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "LoadStateSlot3",
+        "KeyCombination": {
+          "Key1": 92,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "LoadStateSlot4",
+        "KeyCombination": {
+          "Key1": 93,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "LoadStateSlot5",
+        "KeyCombination": {
+          "Key1": 94,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "LoadStateSlot6",
+        "KeyCombination": {
+          "Key1": 95,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "LoadStateSlot7",
+        "KeyCombination": {
+          "Key1": 96,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "LoadStateSlotAuto",
+        "KeyCombination": {
+          "Key1": 97,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "LoadStateFromFile",
+        "KeyCombination": {
+          "Key1": 118,
+          "Key2": 55,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "RewindTenSecs",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "RewindOneMin",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SelectSaveSlot1",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SelectSaveSlot2",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SelectSaveSlot3",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SelectSaveSlot4",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SelectSaveSlot5",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SelectSaveSlot6",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SelectSaveSlot7",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SelectSaveSlot8",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SelectSaveSlot9",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SelectSaveSlot10",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "MoveToNextStateSlot",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "MoveToPreviousStateSlot",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SaveState",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "LoadState",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleCheats",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleFastForward",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleRewind",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleRecordVideo",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleRecordAudio",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleRecordMovie",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "PowerOff",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "Exit",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ExecReset",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ExecPowerCycle",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ExecReloadRom",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ExecPowerOff",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleGameTimer",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleFrameCounter",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleLagCounter",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleOsd",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleAlwaysOnTop",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleDebugInfo",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleAudio",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "PreviousTrack",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "NextTrack",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleBgLayer1",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleBgLayer2",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleBgLayer3",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleBgLayer4",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleSprites1",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ToggleSprites2",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "EnableAllLayers",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "ResetLagCounter",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SaveStateSlot8",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SaveStateSlot9",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SaveStateSlot10",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "SaveStateDialog",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "LoadStateSlot8",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "LoadStateSlot9",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "LoadStateSlot10",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "LoadStateDialog",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "LoadLastSession",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "InputBarcode",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "LoadTape",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "RecordTape",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "StopRecordTape",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "FdsSwitchDiskSide",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "FdsEjectDisk",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "FdsInsertDiskNumber",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "FdsInsertNextDisk",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "VsServiceButton",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "VsServiceButton2",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "VsInsertCoin1",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "VsInsertCoin2",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "VsInsertCoin3",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "VsInsertCoin4",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "StartRecordHdPack",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      },
+      {
+        "Shortcut": "StopRecordHdPack",
+        "KeyCombination": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        },
+        "KeyCombination2": {
+          "Key1": 0,
+          "Key2": 0,
+          "Key3": 0
+        }
+      }
+    ],
     "OverrideGameFolder": false,
     "OverrideAviFolder": false,
     "OverrideMovieFolder": false,
@@ -8114,7 +9603,17 @@
       "DimOffscreenSprites": true,
       "ShowListView": false,
       "ListViewHeight": 100,
-      "ColumnWidths": [],
+      "ColumnWidths": [
+        50,
+        82,
+        78,
+        64,
+        60,
+        67,
+        83,
+        68,
+        60
+      ],
       "ImageScale": 2,
       "RefreshTiming": {
         "RefreshOnBreakPause": true,
@@ -8123,14 +9622,14 @@
         "RefreshCycle": 0
       },
       "WindowSize": {
-        "Width": 0,
-        "Height": 0
+        "Width": 600,
+        "Height": 600
       },
       "WindowLocation": {
-        "X": 0,
-        "Y": 0
+        "X": 50,
+        "Y": 82
       },
-      "WindowIsMaximized": false
+      "WindowIsMaximized": true
     },
     "Integration": {
       "AutoLoadDbgFiles": true,
@@ -8232,29 +9731,38 @@
     },
     "Fonts": {
       "DisassemblyFont": {
-        "FontFamily": "Consolas",
-        "FontSize": 14
+        "FontFamily": "DejaVu Sans Mono",
+        "FontSize": 12
       },
       "MemoryViewerFont": {
-        "FontFamily": "Consolas",
-        "FontSize": 14
+        "FontFamily": "DejaVu Sans Mono",
+        "FontSize": 12
       },
       "AssemblerFont": {
-        "FontFamily": "Consolas",
-        "FontSize": 14
+        "FontFamily": "DejaVu Sans Mono",
+        "FontSize": 12
       },
       "ScriptWindowFont": {
-        "FontFamily": "Consolas",
-        "FontSize": 14
+        "FontFamily": "DejaVu Sans Mono",
+        "FontSize": 12
       },
       "OtherMonoFont": {
-        "FontFamily": "Consolas",
+        "FontFamily": "DejaVu Sans Mono",
         "FontSize": 12
       }
     }
   },
   "RecentFiles": {
-    "Items": []
+    "Items": [
+      {
+        "RomFile": {
+          "Path": "/home/nivando-soares/asmdump/game.smc",
+          "InnerFile": "",
+          "InnerFileIndex": 0
+        },
+        "PatchFile": null
+      }
+    ]
   },
   "VideoRecord": {
     "Codec": "CSCD",
@@ -8310,12 +9818,12 @@
   },
   "MainWindow": {
     "WindowSize": {
-      "Width": 0,
-      "Height": 0
+      "Width": 512,
+      "Height": 473
     },
     "WindowLocation": {
-      "X": 0,
-      "Y": 0
+      "X": 944,
+      "Y": 284
     },
     "WindowIsMaximized": false
   },

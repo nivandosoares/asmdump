@@ -6,6 +6,10 @@
 *.png
 *.json
 *.o
+|*.csv
+|*.cdl
+|*.dll
+|*.txt
 .mesen-config
 port/build/
 tools/out/*.ppm
@@ -15,3 +19,4 @@ tools/out/*.json
 tools/__pycache__/
 .vscode/
 port/build/td2_port
+.aider*
