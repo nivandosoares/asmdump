@@ -130,6 +130,33 @@ python3 tools/run_l001210_probe_matrix.py \
   --timeout-seconds 90
 ```
 
+To save a deterministic savestate snapshot at a specific probe frame:
+
+```sh
+TD2_BOOT_PROBE_TOTAL_FRAMES=1120 \
+TD2_BOOT_PROBE_SAVE_SAVESTATE_FRAME=1093 \
+TD2_BOOT_PROBE_SAVE_SAVESTATE=tools/out/l001210_state_1093.bin \
+./validation/run_mesen_probe_boot.sh ./game.smc
+```
+
+Then use that state as a matrix start point:
+
+```sh
+python3 tools/run_l001210_probe_matrix.py \
+  --out-dir tools/out/l001210_probe_matrix_from_1093 \
+  --total-frames 2000 \
+  --timeout-seconds 120 \
+  --savestate tools/out/l001210_state_1093.bin
+```
+
+Current environment note:
+
+- the headless `--testRunner` build can load a savestate when provided,
+  but probe-side save attempts currently report:
+  - `saved_savestate_error = "no supported savestate API found on emu table"`
+- so the save-from-probe flow is documented but currently blocked until
+  that API surface is available.
+
 When that trace is enabled, the probe also writes:
 
 - `.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json`

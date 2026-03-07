@@ -78,7 +78,9 @@ python3 tools/apply_visible_mode7_samples.py tools/out/visible_mode7_1094_1101.j
 python3 tools/extract_compression_header_manifest.py game.smc --bank 7 --json-out tools/out/bank7_compression_headers.json
 python3 tools/validate_td2_chunks.py game.smc --bank 30 --headers-json tools/out/bank30_headers.json --json-out tools/out/bank30_chunk_validation.json
 python3 tools/summarize_l001210_trace.py .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json --json-out tools/out/td2_boot_probe_l001210_summary.json
+TD2_BOOT_PROBE_TOTAL_FRAMES=1120 TD2_BOOT_PROBE_SAVE_SAVESTATE_FRAME=1093 TD2_BOOT_PROBE_SAVE_SAVESTATE=tools/out/l001210_state_1093.bin ./validation/run_mesen_probe_boot.sh ./game.smc
 python3 tools/run_l001210_probe_matrix.py --out-dir tools/out/l001210_probe_matrix --total-frames 2200 --timeout-seconds 90
+python3 tools/run_l001210_probe_matrix.py --out-dir tools/out/l001210_probe_matrix_from_1093 --total-frames 2000 --timeout-seconds 120 --savestate tools/out/l001210_state_1093.bin
 python3 tools/build_bank30_chunk_registry.py tools/out/bank30_headers.json tools/out/bank30_chunk_validation.json tools/out/td2_boot_probe_l001210_summary.json tools/out/bank30_chunk_registry.json --markdown-out tools/out/bank30_chunk_registry.md
 python3 tools/check_regression_gates.py validation/regression_gates_intro.jsonc --render-dir port/build/regression_frames --json-out tools/out/regression_gates_intro_report.json
 python3 tools/validate_callback_contracts.py rom_analysis/docs/callback_state_contracts.jsonc .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe.json --json-out tools/out/callback_state_contracts_report.json
@@ -112,8 +114,14 @@ Useful make targets:
 - `make -C tools bank30-validate`
 - `make -C tools bank30-registry`
 - `make -C tools l001210-probe L001210_PROBE_TOTAL_FRAMES=3600`
+- `make -C tools l001210-save-savestate L001210_SAVE_STATE_FRAME=1093 L001210_SAVE_TOTAL_FRAMES=1120`
 - `make -C tools l001210-probe-matrix L001210_MATRIX_TOTAL_FRAMES=2200`
 - `make -C tools l001210-trace-summary`
+
+Current environment note:
+
+- probe-side savestate save is currently best-effort only; the headless
+  `--testRunner` build reports no callable save API on `emu`.
 - `make -C tools regression-gates REGRESSION_GATES_RENDER_DIR=../port/build/regression_frames`
 - `make -C tools callback-contracts-check`
 - `make -C tools bank7-42fb0`

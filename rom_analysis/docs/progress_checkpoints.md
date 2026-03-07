@@ -113,12 +113,24 @@ Matrix v1 outcome (`1500` frames, `4` scenarios):
   - `hold_start_b_240_359`: `17` total hits, `4` bank30 hits (`DF6C/E039/E73F/E800`)
   - `pulse_start_240`: `11` total hits, `4` bank30 hits (`DF6C/E039/E73F/E800`)
   - `periodic_start_pulses_240_1800`: `17` total hits, `0` bank30 hits
+- Matrix v2 (`3200` frames each, `13` scenarios):
+  - unresolved candidates still `0` hits across all scenarios:
+    - `1E:E91F`, `1E:EE7F`, `1E:DA96`, `1E:9681`
+  - strongest positive bank30 scenario:
+    - `pulse_b_every120`: `81` total hits, `20` bank30 hits (still only `DF6C/E039/E73F/E800`)
 - Callback/state contracts:
   - `make -C tools callback-contracts-check` -> `18/18` checks passed
   - capture profile used: no-input probe, `1120` frames
 - Pixel regression gates:
   - `make -C tools regression-gates REGRESSION_GATES_RENDER_DIR=../port/build/regression_frames_v2`
   - result: `6/6` checks passed (`0` mismatched pixels each)
+
+Savestate lane blocker (current environment):
+
+- `mesen_probe_boot.lua` can load savestates, but headless `--testRunner` does not expose
+  a callable save API (`saveSavestate/saveState/serializeState` absent on `emu` table).
+- probe JSON currently reports:
+  - `saved_savestate_error = "no supported savestate API found on emu table"`
 
 ## Next Advancement Gates
 

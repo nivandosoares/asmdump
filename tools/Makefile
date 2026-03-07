@@ -259,8 +259,11 @@ L001210_MAX_HITS ?= 0
 L001210_MATRIX_OUT_DIR ?= $(OUT_DIR)/l001210_probe_matrix
 L001210_MATRIX_TOTAL_FRAMES ?= 2200
 L001210_MATRIX_TIMEOUT_SECONDS ?= 90
+L001210_SAVE_STATE_FRAME ?= 1093
+L001210_SAVE_TOTAL_FRAMES ?= 1120
+L001210_SAVE_STATE_PATH ?= ../tools/out/l001210_state_$(L001210_SAVE_STATE_FRAME).bin
 
-.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank30-headers bank30-validate bank30-registry l001210-probe l001210-probe-matrix l001210-trace-summary regression-gates callback-contracts-check bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview bank1-bootstrap-queue-978-preview bank1-bootstrap-queue-982-preview bank1-bootstrap-queue-986-preview bank1-bootstrap-queue-986-noobj-preview bank1-bootstrap-queue-986-bridgeoam-preview bank1-bootstrap-queue-990-bridgeoam-preview bank1-bootstrap-queue-994-bridgeoam-preview bank1-visible-mode7-window-preview intro-bootstrap-deltas intro-bootstrap-queue mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-loop-hybrid-bridge-sequence intro-loop-hybrid-bridge-visible-sequence intro-native-978 intro-native-978-derived intro-native-978-bridge intro-native-978-bridge-visible
+.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank30-headers bank30-validate bank30-registry l001210-probe l001210-save-savestate l001210-probe-matrix l001210-trace-summary regression-gates callback-contracts-check bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview bank1-bootstrap-queue-978-preview bank1-bootstrap-queue-982-preview bank1-bootstrap-queue-986-preview bank1-bootstrap-queue-986-noobj-preview bank1-bootstrap-queue-986-bridgeoam-preview bank1-bootstrap-queue-990-bridgeoam-preview bank1-bootstrap-queue-994-bridgeoam-preview bank1-visible-mode7-window-preview intro-bootstrap-deltas intro-bootstrap-queue mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-loop-hybrid-bridge-sequence intro-loop-hybrid-bridge-visible-sequence intro-native-978 intro-native-978-derived intro-native-978-bridge intro-native-978-bridge-visible
 
 all: previews
 
@@ -357,6 +360,13 @@ l001210-probe:
 	TD2_BOOT_PROBE_TOTAL_FRAMES=$(L001210_PROBE_TOTAL_FRAMES) \
 	TD2_BOOT_PROBE_TRACE_L001210=1 \
 	TD2_BOOT_PROBE_L001210_MAX_HITS=$(L001210_MAX_HITS) \
+	MESEN_TIMEOUT_SECONDS=$(MESEN_TIMEOUT_SECONDS) \
+	../validation/run_mesen_probe_boot.sh $(abspath $(ROM))
+
+l001210-save-savestate:
+	TD2_BOOT_PROBE_TOTAL_FRAMES=$(L001210_SAVE_TOTAL_FRAMES) \
+	TD2_BOOT_PROBE_SAVE_SAVESTATE_FRAME=$(L001210_SAVE_STATE_FRAME) \
+	TD2_BOOT_PROBE_SAVE_SAVESTATE=$(abspath $(L001210_SAVE_STATE_PATH)) \
 	MESEN_TIMEOUT_SECONDS=$(MESEN_TIMEOUT_SECONDS) \
 	../validation/run_mesen_probe_boot.sh $(abspath $(ROM))
 

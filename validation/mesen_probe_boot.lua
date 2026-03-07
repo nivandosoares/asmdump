@@ -89,6 +89,7 @@ local config = {
     screenshot_frame = env_number("TD2_BOOT_PROBE_SCREENSHOT_FRAME", -1),
     trace_start_frame = env_number("TD2_BOOT_PROBE_TRACE_START_FRAME", -1),
     trace_end_frame = env_number("TD2_BOOT_PROBE_TRACE_END_FRAME", -1),
+    save_savestate_frame = env_number("TD2_BOOT_PROBE_SAVE_SAVESTATE_FRAME", -1),
     input_start_frame = env_number("TD2_BOOT_PROBE_INPUT_START_FRAME", -1),
     input_end_frame = env_number("TD2_BOOT_PROBE_INPUT_END_FRAME", -1),
     player = env_number("TD2_BOOT_PROBE_PLAYER", 0),
@@ -101,7 +102,8 @@ local config = {
     trace_vram_writes = env_number("TD2_BOOT_PROBE_TRACE_VRAM", 0) ~= 0,
     trace_l001210_exec = env_number("TD2_BOOT_PROBE_TRACE_L001210", 0) ~= 0,
     l001210_max_hits = env_number("TD2_BOOT_PROBE_L001210_MAX_HITS", 0),
-    savestate_filename = "seed_state.bin"
+    savestate_filename = "seed_state.bin",
+    save_savestate_filename = trim(os.getenv("TD2_BOOT_PROBE_SAVE_SAVESTATE_FILENAME") or "td2_boot_probe_saved_state.bin")
 }
 
 if config.screenshot_frame < 0 then
@@ -133,6 +135,8 @@ local state = {
     vram_writes = {},
     l001210_hits = {},
     l001210_dropped_hits = 0,
+    saved_savestate_path = nil,
+    saved_savestate_error = nil,
     savestate_attempted = false,
     exec_callback_ref = nil
 }
@@ -152,6 +156,28 @@ local function resolve_savestate_path()
 end
 
 local savestate_path = resolve_savestate_path()
+
+local function resolve_save_savestate_path()
+    local env_path = os.getenv("TD2_BOOT_PROBE_SAVE_SAVESTATE")
+    if env_path ~= nil then
+        if env_path ~= "" then
+            return env_path
+        end
+        return nil
+    end
+
+    if config.save_savestate_frame < 0 then
+        return nil
+    end
+
+    if config.save_savestate_filename == "" then
+        return nil
+    end
+
+    return script_data_dir .. "/" .. config.save_savestate_filename
+end
+
+local save_savestate_path = resolve_save_savestate_path()
 
 local function read_binary_file(path)
     if not path or path == "" then
@@ -503,6 +529,9 @@ local function save_probe_log()
     local output = {
         total_frames = config.total_frames,
         screenshot_frame = config.screenshot_frame,
+        save_savestate_frame = config.save_savestate_frame,
+        saved_savestate_path = state.saved_savestate_path,
+        saved_savestate_error = state.saved_savestate_error,
         frames = state.entries,
     }
     write_text_file(output_prefix .. ".json", encode_json_value(output, ""))
@@ -579,6 +608,8 @@ local function reset_probe_state()
     state.vram_writes = {}
     state.l001210_hits = {}
     state.l001210_dropped_hits = 0
+    state.saved_savestate_path = nil
+    state.saved_savestate_error = nil
 end
 
 local function on_first_exec()
@@ -643,6 +674,38 @@ end
 local function on_start_frame()
     if state.finished then
         return
+    end
+
+    if save_savestate_path ~= nil and config.save_savestate_frame >= 0 and state.saved_savestate_path == nil and state.frame == config.save_savestate_frame then
+        local save_methods = {
+            {"saveSavestate", emu.saveSavestate},
+            {"saveState", emu.saveState},
+            {"serializeState", emu.serializeState}
+        }
+
+        for _, method in ipairs(save_methods) do
+            local method_name = method[1]
+            local method_fn = method[2]
+            if type(method_fn) == "function" then
+                local ok, savestate_data = pcall(method_fn)
+                if ok and savestate_data ~= nil and savestate_data ~= "" then
+                    write_binary_file(save_savestate_path, savestate_data)
+                    state.saved_savestate_path = save_savestate_path
+                    state.saved_savestate_error = nil
+                    break
+                end
+
+                if not ok then
+                    state.saved_savestate_error = method_name .. ": " .. tostring(savestate_data)
+                else
+                    state.saved_savestate_error = method_name .. ": returned empty data"
+                end
+            end
+        end
+
+        if state.saved_savestate_path == nil and state.saved_savestate_error == nil then
+            state.saved_savestate_error = "no supported savestate API found on emu table"
+        end
     end
 
     if config.dump_ppu_memory and state.frame == config.screenshot_frame then
