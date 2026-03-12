@@ -84,6 +84,50 @@ local function parse_input_windows_env(name)
     return windows
 end
 
+local function parse_exec_point_env(name)
+    local raw = os.getenv(name)
+    if raw == nil or raw == "" then
+        return {}
+    end
+
+    local points = {}
+    local seen = {}
+    for segment in raw:gmatch("[^,;]+") do
+        local item = trim(segment)
+        if item ~= "" then
+            local label_raw, addr_raw = item:match("^([^=]+)=(.+)$")
+            if addr_raw == nil then
+                label_raw = nil
+                addr_raw = item
+            end
+
+            addr_raw = trim(addr_raw):upper()
+            local bank_raw, addr_hex = addr_raw:match("^(%x%x):(%x%x%x%x)$")
+            if bank_raw ~= nil and addr_hex ~= nil then
+                local bank = tonumber(bank_raw, 16)
+                local addr = tonumber(addr_hex, 16)
+                local linear = (bank * 0x10000) + addr
+                if not seen[linear] then
+                    seen[linear] = true
+                    points[#points + 1] = {
+                        id = label_raw ~= nil and trim(label_raw) or string.format("%02X:%04X", bank, addr),
+                        bank = bank,
+                        addr = addr,
+                        linear = linear,
+                        snes = string.format("%02X:%04X", bank, addr)
+                    }
+                end
+            end
+        end
+    end
+
+    table.sort(points, function(a, b)
+        return a.linear < b.linear
+    end)
+
+    return points
+end
+
 local config = {
     total_frames = env_number("TD2_BOOT_PROBE_TOTAL_FRAMES", 180),
     screenshot_frame = env_number("TD2_BOOT_PROBE_SCREENSHOT_FRAME", -1),
@@ -102,6 +146,24 @@ local config = {
     trace_vram_writes = env_number("TD2_BOOT_PROBE_TRACE_VRAM", 0) ~= 0,
     trace_l001210_exec = env_number("TD2_BOOT_PROBE_TRACE_L001210", 0) ~= 0,
     l001210_max_hits = env_number("TD2_BOOT_PROBE_L001210_MAX_HITS", 0),
+    trace_exec_points = parse_exec_point_env("TD2_BOOT_PROBE_TRACE_EXEC_POINTS"),
+    exec_point_max_hits = env_number("TD2_BOOT_PROBE_EXEC_POINT_MAX_HITS", 128),
+    trace_write_points = parse_exec_point_env("TD2_BOOT_PROBE_TRACE_WRITE_POINTS"),
+    write_point_max_hits = env_number("TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS", 256),
+    force_main_callback_start_frame = env_number("TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_START_FRAME", -1),
+    force_main_callback_end_frame = env_number("TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_END_FRAME", -1),
+    force_main_callback_addr = env_number("TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_ADDR", -1),
+    force_main_callback_bank = env_number("TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_BANK", -1),
+    force_selectors_start_frame = env_number("TD2_BOOT_PROBE_FORCE_SELECTORS_START_FRAME", -1),
+    force_selectors_end_frame = env_number("TD2_BOOT_PROBE_FORCE_SELECTORS_END_FRAME", -1),
+    force_selector_1c78 = env_number("TD2_BOOT_PROBE_FORCE_1C78", -1),
+    force_selector_1c80 = env_number("TD2_BOOT_PROBE_FORCE_1C80", -1),
+    force_selector_1ca8 = env_number("TD2_BOOT_PROBE_FORCE_1CA8", -1),
+    force_selector_1c86 = env_number("TD2_BOOT_PROBE_FORCE_1C86", -1),
+    force_selector_1cac = env_number("TD2_BOOT_PROBE_FORCE_1CAC", -1),
+    force_selector_1cae = env_number("TD2_BOOT_PROBE_FORCE_1CAE", -1),
+    force_state_1d10 = env_number("TD2_BOOT_PROBE_FORCE_1D10", -1),
+    force_selectors_on_b1f9 = env_number("TD2_BOOT_PROBE_FORCE_SELECTORS_ON_B1F9", 0) ~= 0,
     savestate_filename = "seed_state.bin",
     save_savestate_filename = trim(os.getenv("TD2_BOOT_PROBE_SAVE_SAVESTATE_FILENAME") or "td2_boot_probe_saved_state.bin")
 }
@@ -126,6 +188,18 @@ if config.input_end_frame >= 0 and config.input_start_frame >= 0 and config.inpu
     config.input_end_frame = config.input_start_frame
 end
 
+if config.force_selectors_end_frame >= 0
+    and config.force_selectors_start_frame >= 0
+    and config.force_selectors_end_frame < config.force_selectors_start_frame then
+    config.force_selectors_end_frame = config.force_selectors_start_frame
+end
+
+if config.force_main_callback_end_frame >= 0
+    and config.force_main_callback_start_frame >= 0
+    and config.force_main_callback_end_frame < config.force_main_callback_start_frame then
+    config.force_main_callback_end_frame = config.force_main_callback_start_frame
+end
+
 local state = {
     frame = 0,
     finished = false,
@@ -135,11 +209,39 @@ local state = {
     vram_writes = {},
     l001210_hits = {},
     l001210_dropped_hits = 0,
+    exec_point_hits = {},
+    exec_point_dropped_hits = 0,
+    write_point_hits = {},
+    write_point_dropped_hits = 0,
+    last_l001210_callsite = nil,
+    b1f9_exec_count = 0,
+    b1f9_exec_frames = {},
     saved_savestate_path = nil,
     saved_savestate_error = nil,
     savestate_attempted = false,
     exec_callback_ref = nil
 }
+
+local function new_b1f9_stage_counts()
+    return {
+        b226 = 0,
+        b256 = 0,
+        b273 = 0,
+        b59b = 0
+    }
+end
+
+local function new_b1f9_stage_frames()
+    return {
+        b226 = {},
+        b256 = {},
+        b273 = {},
+        b59b = {}
+    }
+end
+
+state.b1f9_stage_counts = new_b1f9_stage_counts()
+state.b1f9_stage_frames = new_b1f9_stage_frames()
 
 local script_data_dir = emu.getScriptDataFolder()
 local output_prefix = script_data_dir .. "/td2_boot_probe"
@@ -313,6 +415,21 @@ for _, source in ipairs(l001210_known_sources) do
     l001210_known_source_lookup[source.source_linear] = source
 end
 
+local l001210_known_callsites = {
+    {id = "l001210_call_018e3c", pc_linear = 0x018E3C, pc_snes = "01:8E3C"},
+    {id = "l001210_call_018e59", pc_linear = 0x018E59, pc_snes = "01:8E59"},
+    {id = "l001210_call_018ea3", pc_linear = 0x018EA3, pc_snes = "01:8EA3"},
+    {id = "l001210_call_01a043", pc_linear = 0x01A043, pc_snes = "01:A043"},
+    {id = "l001210_call_01a061", pc_linear = 0x01A061, pc_snes = "01:A061"},
+    {id = "l001210_call_01a1c4", pc_linear = 0x01A1C4, pc_snes = "01:A1C4"},
+    {id = "l001210_call_01a42f", pc_linear = 0x01A42F, pc_snes = "01:A42F"},
+    {id = "l001210_call_01a9bd", pc_linear = 0x01A9BD, pc_snes = "01:A9BD"},
+    {id = "l001210_call_01a9e1", pc_linear = 0x01A9E1, pc_snes = "01:A9E1"},
+    {id = "l001210_call_01b256", pc_linear = 0x01B256, pc_snes = "01:B256"},
+    {id = "l001210_call_01b273", pc_linear = 0x01B273, pc_snes = "01:B273"},
+    {id = "l001210_call_01b59b", pc_linear = 0x01B59B, pc_snes = "01:B59B"}
+}
+
 for channel = 0, 7 do
     local base = 0x4300 + (channel * 0x10)
     dma_register_names[base + 0x0] = string.format("DMAP%d", channel)
@@ -398,6 +515,28 @@ local function read_u8(address)
     return emu.read(address, emu.memType.snesDebug)
 end
 
+local function mask_u16(value)
+    if type(value) ~= "number" then
+        return nil
+    end
+    return math.floor(value) % 0x10000
+end
+
+local function mask_u8(value)
+    if type(value) ~= "number" then
+        return nil
+    end
+    return math.floor(value) % 0x100
+end
+
+local function write_u16(address, value)
+    emu.write16(address, mask_u16(value), emu.memType.snesDebug)
+end
+
+local function write_u8(address, value)
+    emu.write(address, mask_u8(value), emu.memType.snesDebug)
+end
+
 local function swap_u16(value)
     local lo = value % 0x100
     local hi = math.floor(value / 0x100) % 0x100
@@ -414,7 +553,9 @@ local function snapshot_boot_state()
         selector_1c78 = read_u16(0x7E1C78),
         selector_1c7a = read_u16(0x7E1C7A),
         selector_1c7c = read_u16(0x7E1C7C),
+        selector_1c80 = read_u16(0x7E1C80),
         selector_1c82 = read_u16(0x7E1C82),
+        selector_1ca8 = read_u16(0x7E1CA8),
         selector_1cac = read_u16(0x7E1CAC),
         selector_1cca = read_u16(0x7E1CCA),
         selector_1ccc = read_u16(0x7E1CCC),
@@ -433,10 +574,18 @@ local function snapshot_boot_state()
         active_irq_callback_bank = read_u8(0x000040),
         dp_0020 = read_u16(0x000020),
         state_0f70 = read_u8(0x000F70),
+        state_0960 = read_u16(0x7E0960),
+        state_0962 = read_u16(0x7E0962),
         state_0990 = read_u16(0x7E0990),
         state_09a2 = read_u16(0x7E09A2),
         state_09a4 = read_u16(0x7E09A4),
         state_09a8 = read_u16(0x7E09A8),
+        state_1c6a = read_u16(0x7E1C6A),
+        state_1c70 = read_u16(0x7E1C70),
+        state_1c74 = read_u16(0x7E1C74),
+        state_1c76 = read_u16(0x7E1C76),
+        state_1c84 = read_u16(0x7E1C84),
+        state_1c86 = read_u16(0x7E1C86),
         state_0200 = read_u16(0x7E0200),
         state_0202 = read_u16(0x7E0202),
         state_0204 = read_u16(0x7E0204),
@@ -454,6 +603,8 @@ local function snapshot_boot_state()
         state_0442 = read_u16(0x7E0442),
         state_0444 = read_u16(0x7E0444),
         state_1e2c = read_u16(0x7E1E2C),
+        state_1d08 = read_u16(0x7E1D08),
+        state_1d10 = read_u16(0x7E1D10),
         dp_0000 = read_u16(0x000000),
         dp_0004 = read_u16(0x000004),
         dp_0008 = read_u16(0x000008),
@@ -530,11 +681,92 @@ local function save_probe_log()
         total_frames = config.total_frames,
         screenshot_frame = config.screenshot_frame,
         save_savestate_frame = config.save_savestate_frame,
+        trace_exec_points = config.trace_exec_points,
+        exec_point_max_hits = config.exec_point_max_hits,
+        trace_write_points = config.trace_write_points,
+        write_point_max_hits = config.write_point_max_hits,
+        force_main_callback_start_frame = config.force_main_callback_start_frame,
+        force_main_callback_end_frame = config.force_main_callback_end_frame,
+        force_main_callback_addr = config.force_main_callback_addr,
+        force_main_callback_bank = config.force_main_callback_bank,
+        force_selectors_start_frame = config.force_selectors_start_frame,
+        force_selectors_end_frame = config.force_selectors_end_frame,
+        force_selector_1c78 = config.force_selector_1c78,
+        force_selector_1c80 = config.force_selector_1c80,
+        force_selector_1ca8 = config.force_selector_1ca8,
+        force_selector_1c86 = config.force_selector_1c86,
+        force_selector_1cac = config.force_selector_1cac,
+        force_selector_1cae = config.force_selector_1cae,
+        force_state_1d10 = config.force_state_1d10,
+        force_selectors_on_b1f9 = config.force_selectors_on_b1f9,
+        b1f9_exec_count = state.b1f9_exec_count,
+        b1f9_exec_frames = state.b1f9_exec_frames,
+        b1f9_stage_counts = state.b1f9_stage_counts,
+        b1f9_stage_frames = state.b1f9_stage_frames,
+        exec_point_trace = {
+            hit_count = #state.exec_point_hits,
+            dropped_hits = state.exec_point_dropped_hits,
+            hits = state.exec_point_hits,
+        },
+        write_point_trace = {
+            hit_count = #state.write_point_hits,
+            dropped_hits = state.write_point_dropped_hits,
+            hits = state.write_point_hits,
+        },
         saved_savestate_path = state.saved_savestate_path,
         saved_savestate_error = state.saved_savestate_error,
         frames = state.entries,
     }
     write_text_file(output_prefix .. ".json", encode_json_value(output, ""))
+end
+
+local function apply_forced_main_callback(frame)
+    if config.force_main_callback_start_frame < 0 or frame < config.force_main_callback_start_frame then
+        return
+    end
+
+    if config.force_main_callback_end_frame >= 0 and frame > config.force_main_callback_end_frame then
+        return
+    end
+
+    if config.force_main_callback_addr >= 0 then
+        write_u16(0x000038, config.force_main_callback_addr)
+    end
+    if config.force_main_callback_bank >= 0 then
+        write_u8(0x00003A, config.force_main_callback_bank)
+    end
+end
+
+local function apply_forced_selectors(frame)
+    if config.force_selectors_start_frame < 0 or frame < config.force_selectors_start_frame then
+        return
+    end
+
+    if config.force_selectors_end_frame >= 0 and frame > config.force_selectors_end_frame then
+        return
+    end
+
+    if config.force_selector_1c78 >= 0 then
+        write_u16(0x7E1C78, config.force_selector_1c78)
+    end
+    if config.force_selector_1c80 >= 0 then
+        write_u16(0x7E1C80, config.force_selector_1c80)
+    end
+    if config.force_selector_1ca8 >= 0 then
+        write_u16(0x7E1CA8, config.force_selector_1ca8)
+    end
+    if config.force_selector_1c86 >= 0 then
+        write_u16(0x7E1C86, config.force_selector_1c86)
+    end
+    if config.force_selector_1cac >= 0 then
+        write_u16(0x7E1CAC, config.force_selector_1cac)
+    end
+    if config.force_selector_1cae >= 0 then
+        write_u16(0x7E1CAE, config.force_selector_1cae)
+    end
+    if config.force_state_1d10 >= 0 then
+        write_u16(0x7E1D10, config.force_state_1d10)
+    end
 end
 
 local function save_mode7_trace()
@@ -594,6 +826,7 @@ local function save_l001210_trace()
         hit_count = #state.l001210_hits,
         dropped_hits = state.l001210_dropped_hits,
         known_sources = l001210_known_sources,
+        known_callsites = l001210_known_callsites,
         hits = state.l001210_hits
     }
     write_text_file(output_prefix .. "_l001210_exec.json", encode_json_value(output, ""))
@@ -608,6 +841,15 @@ local function reset_probe_state()
     state.vram_writes = {}
     state.l001210_hits = {}
     state.l001210_dropped_hits = 0
+    state.exec_point_hits = {}
+    state.exec_point_dropped_hits = 0
+    state.write_point_hits = {}
+    state.write_point_dropped_hits = 0
+    state.last_l001210_callsite = nil
+    state.b1f9_exec_count = 0
+    state.b1f9_exec_frames = {}
+    state.b1f9_stage_counts = new_b1f9_stage_counts()
+    state.b1f9_stage_frames = new_b1f9_stage_frames()
     state.saved_savestate_path = nil
     state.saved_savestate_error = nil
 end
@@ -675,6 +917,9 @@ local function on_start_frame()
     if state.finished then
         return
     end
+
+    apply_forced_main_callback(state.frame)
+    apply_forced_selectors(state.frame)
 
     if save_savestate_path ~= nil and config.save_savestate_frame >= 0 and state.saved_savestate_path == nil and state.frame == config.save_savestate_frame then
         local save_methods = {
@@ -774,6 +1019,192 @@ local function on_vram_register_write(address, value)
     }
 end
 
+local function derive_l00a9_source(callsite_linear, table_index)
+    if table_index == nil then
+        return nil
+    end
+
+    local index = mask_u16(table_index)
+    if index == nil then
+        return nil
+    end
+
+    local pointer_base = nil
+    local bank_base = nil
+    local table_name = nil
+    if callsite_linear == 0x01A9BD then
+        pointer_base = 0x01A789
+        bank_base = 0x01A7D3
+        table_name = "L00A9A0"
+    elseif callsite_linear == 0x01A9E1 then
+        pointer_base = 0x01A842
+        bank_base = 0x01A888
+        table_name = "L00A9CB"
+    else
+        return nil
+    end
+
+    local source_addr = read_u16(pointer_base + (index * 2))
+    local source_bank = read_u8(bank_base + index)
+    local source_linear = (source_bank * 0x10000) + source_addr
+    return {
+        table_name = table_name,
+        table_index = index,
+        source_addr = source_addr,
+        source_bank = source_bank,
+        source_linear = source_linear,
+        source_snes = format_snes_ptr(source_bank, source_addr)
+    }
+end
+
+local function make_l001210_callsite_callback(callsite)
+    return function()
+        if state.finished or not config.trace_l001210_exec then
+            return
+        end
+
+        local cpu_state = emu.getState()
+        local reg_a = mask_u16(cpu_state["cpu.a"])
+        local reg_x = mask_u16(cpu_state["cpu.x"])
+        local reg_y = mask_u16(cpu_state["cpu.y"])
+        local reg_pc = mask_u16(cpu_state["cpu.pc"])
+        local reg_sp = mask_u16(cpu_state["cpu.sp"])
+        local reg_ps = mask_u16(cpu_state["cpu.ps"])
+        local reg_d = mask_u16(cpu_state["cpu.d"])
+        local reg_dbr = mask_u16(cpu_state["cpu.dbr"])
+        local reg_k = mask_u16(cpu_state["cpu.k"])
+
+        local l00a9_index = nil
+        if callsite.pc_linear == 0x01A9BD or callsite.pc_linear == 0x01A9E1 then
+            l00a9_index = reg_x
+        end
+        local l00a9_source = derive_l00a9_source(callsite.pc_linear, l00a9_index)
+
+        state.last_l001210_callsite = {
+            frame = state.frame,
+            pc_linear = callsite.pc_linear,
+            pc_snes = callsite.pc_snes,
+            id = callsite.id,
+            reg_a = reg_a,
+            reg_x = reg_x,
+            reg_y = reg_y,
+            reg_pc = reg_pc,
+            reg_sp = reg_sp,
+            reg_ps = reg_ps,
+            reg_d = reg_d,
+            reg_dbr = reg_dbr,
+            reg_k = reg_k,
+            l00a9_table = l00a9_source and l00a9_source.table_name or nil,
+            l00a9_table_index = l00a9_source and l00a9_source.table_index or nil,
+            l00a9_source_linear = l00a9_source and l00a9_source.source_linear or nil,
+            l00a9_source_snes = l00a9_source and l00a9_source.source_snes or nil
+        }
+    end
+end
+
+local function make_exec_point_callback(point)
+    return function()
+        if state.finished then
+            return
+        end
+
+        if config.exec_point_max_hits > 0 and #state.exec_point_hits >= config.exec_point_max_hits then
+            state.exec_point_dropped_hits = state.exec_point_dropped_hits + 1
+            return
+        end
+
+        local cpu_state = emu.getState()
+        local reg_a = mask_u16(cpu_state["cpu.a"])
+        local reg_x = mask_u16(cpu_state["cpu.x"])
+        local reg_y = mask_u16(cpu_state["cpu.y"])
+        local reg_pc = mask_u16(cpu_state["cpu.pc"])
+        local reg_sp = mask_u16(cpu_state["cpu.sp"])
+        local reg_ps = mask_u16(cpu_state["cpu.ps"])
+        local reg_d = mask_u16(cpu_state["cpu.d"])
+        local reg_dbr = mask_u16(cpu_state["cpu.dbr"])
+        local reg_k = mask_u16(cpu_state["cpu.k"])
+
+        state.exec_point_hits[#state.exec_point_hits + 1] = {
+            frame = state.frame,
+            point_id = point.id,
+            point_snes = point.snes,
+            point_linear = point.linear,
+            cpu_a = reg_a,
+            cpu_x = reg_x,
+            cpu_y = reg_y,
+            cpu_pc = reg_pc,
+            cpu_sp = reg_sp,
+            cpu_ps = reg_ps,
+            cpu_d = reg_d,
+            cpu_dbr = reg_dbr,
+            cpu_k = reg_k,
+            active_main_callback_addr = read_u16(0x000038),
+            active_main_callback_bank = read_u8(0x00003A),
+            selector_1c78 = read_u16(0x7E1C78),
+            selector_1c80 = read_u16(0x7E1C80),
+            selector_1ca8 = read_u16(0x7E1CA8),
+            selector_1c86 = read_u16(0x7E1C86),
+            selector_1cac = read_u16(0x7E1CAC),
+            selector_1cae = read_u16(0x7E1CAE),
+            state_0960 = read_u16(0x7E0960),
+            state_0964 = read_u16(0x7E0964),
+            state_0f42 = read_u16(0x000F42),
+            state_0f77 = read_u16(0x000F77),
+            state_0202 = read_u16(0x7E0202),
+            state_0204 = read_u16(0x7E0204),
+            state_0206 = read_u16(0x7E0206),
+            state_0208 = read_u16(0x7E0208),
+            state_1d10 = read_u16(0x7E1D10),
+            dp_000c = read_u16(0x00000C),
+            dp_000e = read_u16(0x00000E),
+            dp_0010 = read_u16(0x000010),
+            dp_0054 = read_u8(0x000054),
+        }
+    end
+end
+
+local function make_write_point_callback(point)
+    return function(address, value)
+        if state.finished or not is_trace_frame() then
+            return
+        end
+
+        if config.write_point_max_hits > 0 and #state.write_point_hits >= config.write_point_max_hits then
+            state.write_point_dropped_hits = state.write_point_dropped_hits + 1
+            return
+        end
+
+        local snapshot = emu.getState()
+        state.write_point_hits[#state.write_point_hits + 1] = {
+            frame = state.frame,
+            point_id = point.id,
+            point_snes = point.snes,
+            point_linear = point.linear,
+            address = address,
+            value = value,
+            scanline = snapshot["ppu.scanline"],
+            bg_mode = snapshot["ppu.bgMode"],
+            main_screen_layers = snapshot["ppu.mainScreenLayers"],
+            active_main_callback_addr = read_u16(0x000038),
+            active_main_callback_bank = read_u8(0x00003A),
+            selector_1c78 = read_u16(0x7E1C78),
+            selector_1c80 = read_u16(0x7E1C80),
+            selector_1ca8 = read_u16(0x7E1CA8),
+            selector_1c86 = read_u16(0x7E1C86),
+            selector_1cac = read_u16(0x7E1CAC),
+            selector_1cae = read_u16(0x7E1CAE),
+            state_0960 = read_u16(0x7E0960),
+            state_0964 = read_u16(0x7E0964),
+            state_0968 = read_u16(0x7E0968),
+            state_0974 = read_u16(0x7E0974),
+            state_0f42 = read_u16(0x000F42),
+            state_0f77 = read_u16(0x000F77),
+            state_1d10 = read_u16(0x7E1D10),
+            dp_0054 = read_u8(0x000054),
+        }
+    end
+end
+
 local function on_l001210_exec()
     if state.finished or not config.trace_l001210_exec then
         return
@@ -792,6 +1223,11 @@ local function on_l001210_exec()
     local marker_word = swap_u16(marker_raw_le)
     local marker_tag = compression_marker_names[marker_word]
     local known = l001210_known_source_lookup[source_linear]
+    local selector_1c78 = read_u16(0x7E1C78)
+    local selector_1c80 = read_u16(0x7E1C80)
+    local selector_1ca8 = read_u16(0x7E1CA8)
+    local caller = state.last_l001210_callsite
+    local caller_matches_frame = caller ~= nil and caller.frame == state.frame
 
     state.l001210_hits[#state.l001210_hits + 1] = {
         frame = state.frame,
@@ -809,10 +1245,36 @@ local function on_l001210_exec()
         destination_snes = format_snes_ptr(0x7E, dest_addr),
         active_main_callback_addr = read_u16(0x000038),
         active_main_callback_bank = read_u8(0x00003A),
+        caller_id = caller_matches_frame and caller.id or nil,
+        caller_pc_linear = caller_matches_frame and caller.pc_linear or nil,
+        caller_pc_snes = caller_matches_frame and caller.pc_snes or nil,
+        caller_reg_a = caller_matches_frame and caller.reg_a or nil,
+        caller_reg_x = caller_matches_frame and caller.reg_x or nil,
+        caller_reg_y = caller_matches_frame and caller.reg_y or nil,
+        caller_reg_pc = caller_matches_frame and caller.reg_pc or nil,
+        caller_reg_sp = caller_matches_frame and caller.reg_sp or nil,
+        caller_reg_ps = caller_matches_frame and caller.reg_ps or nil,
+        caller_reg_d = caller_matches_frame and caller.reg_d or nil,
+        caller_reg_dbr = caller_matches_frame and caller.reg_dbr or nil,
+        caller_reg_k = caller_matches_frame and caller.reg_k or nil,
+        caller_l00a9_table = caller_matches_frame and caller.l00a9_table or nil,
+        caller_l00a9_table_index = caller_matches_frame and caller.l00a9_table_index or nil,
+        caller_l00a9_source_linear = caller_matches_frame and caller.l00a9_source_linear or nil,
+        caller_l00a9_source_snes = caller_matches_frame and caller.l00a9_source_snes or nil,
+        caller_l00a9_source_matches = caller_matches_frame and caller.l00a9_source_linear ~= nil and caller.l00a9_source_linear == source_linear or nil,
+        selector_1c78 = selector_1c78,
+        selector_1c80 = selector_1c80,
+        selector_1ca8 = selector_1ca8,
+        selector_1c86 = read_u16(0x7E1C86),
+        selector_1cac = read_u16(0x7E1CAC),
+        selector_1cae = read_u16(0x7E1CAE),
         state_0202 = read_u16(0x7E0202),
         state_0208 = read_u16(0x7E0208),
+        state_1d10 = read_u16(0x7E1D10),
         dp_0054 = read_u8(0x000054)
     }
+
+    state.last_l001210_callsite = nil
 end
 
 local function resolve_active_input_pattern(frame)
@@ -853,6 +1315,55 @@ local function on_input_polled()
     emu.setInput(input_pattern, config.player)
 end
 
+local function on_b1f9_exec()
+    if state.finished then
+        return
+    end
+    state.b1f9_exec_count = state.b1f9_exec_count + 1
+    if #state.b1f9_exec_frames < 64 then
+        state.b1f9_exec_frames[#state.b1f9_exec_frames + 1] = state.frame
+    end
+    apply_forced_selectors(state.frame)
+end
+
+local function mark_b1f9_stage(stage_key)
+    if state.finished then
+        return
+    end
+
+    local stage_counts = state.b1f9_stage_counts
+    local stage_frames = state.b1f9_stage_frames
+    if stage_counts == nil or stage_frames == nil then
+        return
+    end
+
+    if stage_counts[stage_key] == nil then
+        stage_counts[stage_key] = 0
+    end
+    stage_counts[stage_key] = stage_counts[stage_key] + 1
+
+    local frames = stage_frames[stage_key]
+    if type(frames) == "table" and #frames < 64 then
+        frames[#frames + 1] = state.frame
+    end
+end
+
+local function on_b1f9_stage_b226()
+    mark_b1f9_stage("b226")
+end
+
+local function on_b1f9_stage_b256()
+    mark_b1f9_stage("b256")
+end
+
+local function on_b1f9_stage_b273()
+    mark_b1f9_stage("b273")
+end
+
+local function on_b1f9_stage_b59b()
+    mark_b1f9_stage("b59b")
+end
+
 emu.displayMessage("TD2 Boot Probe", "Script armed for " .. tostring(config.total_frames) .. " frames.")
 if savestate_path ~= nil then
     state.exec_callback_ref = emu.addMemoryCallback(on_first_exec, emu.callbackType.exec, 0x000000, 0xFFFFFF)
@@ -872,6 +1383,29 @@ if config.trace_vram_writes then
     emu.addMemoryCallback(on_vram_register_write, emu.callbackType.write, 0x2115, 0x2119)
     emu.addMemoryCallback(on_vram_register_write, emu.callbackType.write, 0x2121, 0x2122)
 end
+if config.trace_l001210_exec or config.force_selectors_on_b1f9 then
+    emu.addMemoryCallback(on_b1f9_exec, emu.callbackType.exec, 0x01B1F9, 0x01B1F9)
+    emu.addMemoryCallback(on_b1f9_stage_b226, emu.callbackType.exec, 0x01B226, 0x01B226)
+    emu.addMemoryCallback(on_b1f9_stage_b256, emu.callbackType.exec, 0x01B256, 0x01B256)
+    emu.addMemoryCallback(on_b1f9_stage_b273, emu.callbackType.exec, 0x01B273, 0x01B273)
+    emu.addMemoryCallback(on_b1f9_stage_b59b, emu.callbackType.exec, 0x01B59B, 0x01B59B)
+end
 if config.trace_l001210_exec then
+    for _, callsite in ipairs(l001210_known_callsites) do
+        local callback = make_l001210_callsite_callback(callsite)
+        emu.addMemoryCallback(callback, emu.callbackType.exec, callsite.pc_linear, callsite.pc_linear)
+    end
     emu.addMemoryCallback(on_l001210_exec, emu.callbackType.exec, 0x009210, 0x009210)
+end
+if #config.trace_exec_points > 0 then
+    for _, point in ipairs(config.trace_exec_points) do
+        local callback = make_exec_point_callback(point)
+        emu.addMemoryCallback(callback, emu.callbackType.exec, point.linear, point.linear)
+    end
+end
+if #config.trace_write_points > 0 then
+    for _, point in ipairs(config.trace_write_points) do
+        local callback = make_write_point_callback(point)
+        emu.addMemoryCallback(callback, emu.callbackType.write, point.linear, point.linear)
+    end
 end

@@ -157,9 +157,136 @@ Current environment note:
 - so the save-from-probe flow is documented but currently blocked until
   that API surface is available.
 
+To force selector values for targeted branch testing windows:
+
+```sh
+TD2_BOOT_PROBE_TOTAL_FRAMES=4000 \
+TD2_BOOT_PROBE_TRACE_L001210=1 \
+TD2_BOOT_PROBE_FORCE_SELECTORS_START_FRAME=0 \
+TD2_BOOT_PROBE_FORCE_SELECTORS_END_FRAME=3999 \
+TD2_BOOT_PROBE_FORCE_1C78=1 \
+TD2_BOOT_PROBE_FORCE_1C80=0 \
+TD2_BOOT_PROBE_FORCE_1CA8=2 \
+TD2_BOOT_PROBE_FORCE_1C86=1 \
+TD2_BOOT_PROBE_FORCE_1D10=16640 \
+TD2_BOOT_PROBE_FORCE_SELECTORS_ON_B1F9=1 \
+./validation/run_mesen_probe_boot.sh ./game.smc
+```
+
+`TD2_BOOT_PROBE_FORCE_SELECTORS_ON_B1F9=1` re-applies the same forced values at
+the `01:B1F9` exec point so the dynamic-index branch sees the requested values.
+`TD2_BOOT_PROBE_FORCE_1C86` and `TD2_BOOT_PROBE_FORCE_1D10` are useful for
+testing the `01:9568/01:95AD -> 01:B1F9` branch gates.
+
+To force the active main callback pointer for a frame window:
+
+```sh
+TD2_BOOT_PROBE_TOTAL_FRAMES=3200 \
+TD2_BOOT_PROBE_TRACE_L001210=1 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_START_FRAME=1200 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_END_FRAME=2399 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_ADDR=38248 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_BANK=1 \
+./validation/run_mesen_probe_boot.sh ./game.smc
+```
+
+`38248` is `0x9568` in decimal. Use `38317` (`0x95AD`) to target the sibling
+callback branch.
+
+To trace exact exec points in a targeted branch experiment:
+
+```sh
+TD2_BOOT_PROBE_TOTAL_FRAMES=2200 \
+TD2_BOOT_PROBE_TRACE_L001210=1 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_START_FRAME=1200 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_END_FRAME=1800 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_ADDR=38248 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_BANK=1 \
+TD2_BOOT_PROBE_FORCE_SELECTORS_START_FRAME=1200 \
+TD2_BOOT_PROBE_FORCE_SELECTORS_END_FRAME=1800 \
+TD2_BOOT_PROBE_FORCE_1C86=1 \
+TD2_BOOT_PROBE_FORCE_1C78=1 \
+TD2_BOOT_PROBE_FORCE_1C80=0 \
+TD2_BOOT_PROBE_FORCE_1CA8=2 \
+TD2_BOOT_PROBE_FORCE_1D10=16640 \
+TD2_BOOT_PROBE_TRACE_EXEC_POINTS='b1f9=01:B1F9,after_050f=01:B202,after_083f=01:B206,b226=01:B226,b256=01:B256,b273=01:B273,b59b=01:B59B,050f=00:050F,083f=00:083F' \
+TD2_BOOT_PROBE_EXEC_POINT_MAX_HITS=32 \
+./validation/run_mesen_probe_boot.sh ./game.smc
+```
+
+`TD2_BOOT_PROBE_TRACE_EXEC_POINTS` accepts a comma- or semicolon-separated list
+of `label=BB:AAAA` or bare `BB:AAAA` SNES addresses. Matching exec hits are
+captured into `td2_boot_probe.json` under `exec_point_trace`.
+
+To trace exact write points in the same forced branch window:
+
+```sh
+TD2_BOOT_PROBE_TOTAL_FRAMES=2200 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=1200 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=1202 \
+TD2_BOOT_PROBE_TRACE_L001210=1 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_START_FRAME=1200 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_END_FRAME=1800 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_ADDR=38248 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_BANK=1 \
+TD2_BOOT_PROBE_FORCE_SELECTORS_START_FRAME=1200 \
+TD2_BOOT_PROBE_FORCE_SELECTORS_END_FRAME=1800 \
+TD2_BOOT_PROBE_FORCE_1C86=1 \
+TD2_BOOT_PROBE_FORCE_1C78=1 \
+TD2_BOOT_PROBE_FORCE_1C80=0 \
+TD2_BOOT_PROBE_FORCE_1CA8=2 \
+TD2_BOOT_PROBE_FORCE_1D10=16640 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS='hdmaen=00:420C,mosaic=00:2106,bgmode=00:2105,bg1sc=00:2107,bg2sc=00:2108,bg3sc=00:2109,bg12nba=00:210B,objsel=00:2101,tmain=00:212C,cgadsub=00:2131,cgwsel=00:2130,tmw=00:212E,setini=00:2133,tsub=00:212D,tsw=00:212F,w12sel=00:2123,w34sel=00:2124,wobjsel=00:2125,mem0966=7E:0966,mem0968=7E:0968,mem0974=7E:0974,mem0f42=00:0F42' \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=128 \
+./validation/run_mesen_probe_boot.sh ./game.smc
+```
+
+`TD2_BOOT_PROBE_TRACE_WRITE_POINTS` uses the same address syntax as
+`TD2_BOOT_PROBE_TRACE_EXEC_POINTS` and records matching writes in
+`td2_boot_probe.json` under `write_point_trace`.
+
 When that trace is enabled, the probe also writes:
 
 - `.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json`
+
+Recent payload additions in each `hits[]` entry:
+
+- selector snapshot fields: `selector_1c78`, `selector_1c80`, `selector_1ca8`,
+  `selector_1c86`, `selector_1cac`, `selector_1cae`
+- additional state field: `state_1d10`
+- caller site tagging: `caller_id`, `caller_pc_snes`, `caller_pc_linear`
+- caller CPU regs: `caller_reg_a/x/y/pc/sp/ps/d/dbr/k`
+- derived helper-table provenance for `01:A9BD`/`01:A9E1`:
+  - `caller_l00a9_table`
+  - `caller_l00a9_table_index`
+  - `caller_l00a9_source_snes`
+  - `caller_l00a9_source_linear`
+  - `caller_l00a9_source_matches`
+
+Recent top-level additions in `td2_boot_probe.json`:
+
+- callback forcing config echo:
+  - `force_main_callback_start_frame`
+  - `force_main_callback_end_frame`
+  - `force_main_callback_addr`
+  - `force_main_callback_bank`
+- `B1F9` execution counters:
+  - `b1f9_exec_count`
+  - `b1f9_exec_frames`
+  - `b1f9_stage_counts` (`b226`, `b256`, `b273`, `b59b`)
+  - `b1f9_stage_frames`
+- exec-point trace bundle:
+  - `trace_exec_points`
+  - `exec_point_max_hits`
+  - `exec_point_trace.hit_count`
+  - `exec_point_trace.dropped_hits`
+  - `exec_point_trace.hits[]` with CPU regs plus selector/state snapshots
+- write-point trace bundle:
+  - `trace_write_points`
+  - `write_point_max_hits`
+  - `write_point_trace.hit_count`
+  - `write_point_trace.dropped_hits`
+  - `write_point_trace.hits[]` with value, scanline, and selector/state snapshots
 
 To enforce CI-style pixel gates on a rendered intro sequence:
 

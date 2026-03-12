@@ -18,6 +18,27 @@ INPUT_ENV_KEYS = (
     "TD2_BOOT_PROBE_INPUT_WINDOWS",
 )
 
+EXPERIMENT_ENV_KEYS = (
+    "TD2_BOOT_PROBE_TRACE_EXEC_POINTS",
+    "TD2_BOOT_PROBE_EXEC_POINT_MAX_HITS",
+    "TD2_BOOT_PROBE_TRACE_WRITE_POINTS",
+    "TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS",
+    "TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_START_FRAME",
+    "TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_END_FRAME",
+    "TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_ADDR",
+    "TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_BANK",
+    "TD2_BOOT_PROBE_FORCE_SELECTORS_START_FRAME",
+    "TD2_BOOT_PROBE_FORCE_SELECTORS_END_FRAME",
+    "TD2_BOOT_PROBE_FORCE_1C78",
+    "TD2_BOOT_PROBE_FORCE_1C80",
+    "TD2_BOOT_PROBE_FORCE_1CA8",
+    "TD2_BOOT_PROBE_FORCE_1C86",
+    "TD2_BOOT_PROBE_FORCE_1CAC",
+    "TD2_BOOT_PROBE_FORCE_1CAE",
+    "TD2_BOOT_PROBE_FORCE_1D10",
+    "TD2_BOOT_PROBE_FORCE_SELECTORS_ON_B1F9",
+)
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -161,6 +182,8 @@ def build_env(
 
     for key in INPUT_ENV_KEYS:
         env.pop(key, None)
+    for key in EXPERIMENT_ENV_KEYS:
+        env.pop(key, None)
 
     frames = to_int(scenario.get("total_frames"), total_frames)
     timeout = to_int(scenario.get("timeout_seconds"), timeout_seconds)
@@ -173,20 +196,24 @@ def build_env(
     input_windows = scenario.get("input_windows")
     if input_windows not in (None, ""):
         env["TD2_BOOT_PROBE_INPUT_WINDOWS"] = str(input_windows)
-        return env, frames
+    else:
+        input_pattern = scenario.get("input_pattern")
+        if input_pattern not in (None, ""):
+            if isinstance(input_pattern, list):
+                env["TD2_BOOT_PROBE_INPUT"] = ",".join(str(part) for part in input_pattern)
+            else:
+                env["TD2_BOOT_PROBE_INPUT"] = str(input_pattern)
+            env["TD2_BOOT_PROBE_INPUT_START_FRAME"] = str(
+                to_int(scenario.get("input_start_frame"), -1)
+            )
+            input_end_frame = to_int(scenario.get("input_end_frame"), -1)
+            if input_end_frame >= 0:
+                env["TD2_BOOT_PROBE_INPUT_END_FRAME"] = str(input_end_frame)
 
-    input_pattern = scenario.get("input_pattern")
-    if input_pattern not in (None, ""):
-        if isinstance(input_pattern, list):
-            env["TD2_BOOT_PROBE_INPUT"] = ",".join(str(part) for part in input_pattern)
-        else:
-            env["TD2_BOOT_PROBE_INPUT"] = str(input_pattern)
-        env["TD2_BOOT_PROBE_INPUT_START_FRAME"] = str(
-            to_int(scenario.get("input_start_frame"), -1)
-        )
-        input_end_frame = to_int(scenario.get("input_end_frame"), -1)
-        if input_end_frame >= 0:
-            env["TD2_BOOT_PROBE_INPUT_END_FRAME"] = str(input_end_frame)
+    extra_env = scenario.get("extra_env")
+    if isinstance(extra_env, dict):
+        for key, value in extra_env.items():
+            env[str(key)] = str(value)
 
     return env, frames
 
@@ -276,6 +303,7 @@ def main() -> int:
     runner_path = resolve_path(root, args.runner)
     out_dir = resolve_path(root, args.out_dir)
     trace_path = root / ".mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json"
+    probe_path = root / ".mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe.json"
 
     if not rom_path.is_file():
         raise FileNotFoundError(f"ROM not found: {rom_path}")
@@ -321,6 +349,11 @@ def main() -> int:
         scenario_trace_path.write_text(
             json.dumps(payload, indent=2) + "\n", encoding="utf-8"
         )
+        scenario_probe_path_rel: str | None = None
+        if probe_path.is_file():
+            scenario_probe_path = out_dir / f"{scenario['_file_name']}_probe.json"
+            scenario_probe_path.write_text(probe_path.read_text(encoding="utf-8"), encoding="utf-8")
+            scenario_probe_path_rel = str(scenario_probe_path.relative_to(root))
 
         candidates = summarize_bank30_candidates(payload)
         bank30_hits = sum(to_int(item.get("hit_count"), 0) for item in candidates)
@@ -333,6 +366,7 @@ def main() -> int:
             "bank30_hits": bank30_hits,
             "bank30_candidates": candidates,
             "trace_json": str(scenario_trace_path.relative_to(root)),
+            "probe_json": scenario_probe_path_rel,
         }
         scenario_rows.append(scenario_summary)
 
