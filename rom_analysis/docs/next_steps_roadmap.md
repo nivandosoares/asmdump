@@ -10,7 +10,7 @@ Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 | Roadmap lane | Status | Current reading |
 |---|---|---|
 | 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps are done; targeted `B1F9` prologue traces now prove forced entry context, but unresolved queue still remains (`E91F`, `EE7F`, `DA96`, `9681`). |
-| 2. Tilemap-to-ROM provenance | in progress | First committed mapping exists for `1086..1093`; next step is to expand beyond the initial window and raise confidence where mapping is currently carry/forward inferred. |
+| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance now covers `1086..1101`; next step is to capture and bind the next contiguous late-attract block beyond `1101`. |
 | 3. Gameplay-frame expansion | not started | Intro/attract windows are covered; deterministic gameplay capture windows are not yet extracted. |
 | 4. Bank API contracts | not started | Baseline docs exist; callback/API contracts for bank 30/10/11 are not yet mapped to completion. |
 
@@ -115,6 +115,19 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
   - `rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.jsonc`
   - `rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md`
   - generated via `tools/build_tilemap_chunk_provenance.py` with runtime trace + bank13 validation binding
+- Closed second contiguous window deliverable:
+  - `rom_analysis/maps/tilemaps/mesen_range_1094_1101_provenance.jsonc`
+  - `rom_analysis/maps/tilemaps/mesen_range_1094_1101_provenance.md`
+  - generated from `tools/out/design_mesen_range_1094_1101_v1` with preserved
+    `L001210` runtime hits at `1088/1096/1101` plus bank13/bank7 validation binding
+- Current window reading:
+  - `bg1` remains the visible main-screen layer through `1094..1101`
+  - the tile-index set stays fixed at `144` indices / `22` ranges with
+    `chrBaseWords = 0x2000`
+  - runtime chunk provenance steps across that same visible block:
+    - `1094..1095` -> `0D:C4DC`
+    - `1096..1100` -> `07:BF49`
+    - `1101` -> `07:C112`
 - For target windows (start with `1086..1093`):
   - `make -C tools mesen-design-pack-range MESEN_RANGE_FRAMES_DIR=out/mesen_range_1086_1093_v1`
 - For each frame pack:
@@ -124,6 +137,10 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
 - Save outputs in:
   - `rom_analysis/maps/tilemaps/`
   - `rom_analysis/docs/memory_map.md`
+- Immediate follow-up:
+  - capture/build the next contiguous late-attract frame block after `1101`
+  - bind it with the preserved `L001210` trace sequence if the frame-aligned hit
+    cadence remains stable
 
 ## 3. Expand Into Gameplay Frames
 

@@ -1,0 +1,1400 @@
+{
+  "design_pack_range": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1094_1101_v1/design_pack_range.json",
+  "l001210_exec_json": "/home/nivando-soares/asmdump/tools/out/l001210_probe_matrix_v1/periodic_start_pulses_240_1800_l001210_exec.json",
+  "chunk_validation_inputs": [
+    "/home/nivando-soares/asmdump/tools/out/bank13_chunk_validation.json",
+    "/home/nivando-soares/asmdump/tools/out/bank7_chunk_validation.json"
+  ],
+  "settings": {
+    "carry_frames": 16,
+    "forward_frames": 2,
+    "include_inactive_layers": false
+  },
+  "frame_range": {
+    "start": 1094,
+    "end": 1101
+  },
+  "row_count": 8,
+  "summary": {
+    "mapped_rows": 8,
+    "unmapped_rows": 0
+  },
+  "rows": [
+    {
+      "frame": 1094,
+      "layer_name": "bg1",
+      "layer_index": 0,
+      "bg_mode": 7,
+      "bpp": 8,
+      "active": true,
+      "enabled_on_main": true,
+      "enabled_on_sub": false,
+      "chr_base_words": 8192,
+      "tilemap_base_words": 0,
+      "tile_index_count": 144,
+      "tile_index_ranges": [
+        {
+          "start": 0,
+          "end": 3,
+          "count": 4
+        },
+        {
+          "start": 6,
+          "end": 6,
+          "count": 1
+        },
+        {
+          "start": 10,
+          "end": 18,
+          "count": 9
+        },
+        {
+          "start": 20,
+          "end": 23,
+          "count": 4
+        },
+        {
+          "start": 41,
+          "end": 41,
+          "count": 1
+        },
+        {
+          "start": 44,
+          "end": 48,
+          "count": 5
+        },
+        {
+          "start": 53,
+          "end": 55,
+          "count": 3
+        },
+        {
+          "start": 61,
+          "end": 63,
+          "count": 3
+        },
+        {
+          "start": 69,
+          "end": 121,
+          "count": 53
+        },
+        {
+          "start": 123,
+          "end": 140,
+          "count": 18
+        },
+        {
+          "start": 256,
+          "end": 256,
+          "count": 1
+        },
+        {
+          "start": 260,
+          "end": 261,
+          "count": 2
+        },
+        {
+          "start": 263,
+          "end": 265,
+          "count": 3
+        },
+        {
+          "start": 768,
+          "end": 768,
+          "count": 1
+        },
+        {
+          "start": 777,
+          "end": 777,
+          "count": 1
+        },
+        {
+          "start": 787,
+          "end": 787,
+          "count": 1
+        },
+        {
+          "start": 792,
+          "end": 808,
+          "count": 17
+        },
+        {
+          "start": 810,
+          "end": 811,
+          "count": 2
+        },
+        {
+          "start": 817,
+          "end": 820,
+          "count": 4
+        },
+        {
+          "start": 824,
+          "end": 828,
+          "count": 5
+        },
+        {
+          "start": 832,
+          "end": 836,
+          "count": 5
+        },
+        {
+          "start": 890,
+          "end": 890,
+          "count": 1
+        }
+      ],
+      "tile_index_examples": [
+        0,
+        1,
+        2,
+        3,
+        6,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        20,
+        21
+      ],
+      "candidate_chunks": [
+        {
+          "source_snes": "0D:C4DC",
+          "source_marker": "26FB",
+          "source_provenance": "unclassified",
+          "hit_frame": 1088,
+          "relationship": "carryover-from-last-hit",
+          "frame_delta": 6,
+          "destination_snes": "7E:2000",
+          "state_0202": 1,
+          "state_0208": 13,
+          "dp_0054": 96,
+          "chunk_validation": {
+            "bank": 13,
+            "addr": 50396,
+            "snes": "0D:C4DC",
+            "marker": "26FB",
+            "status": "ok",
+            "output_size": 4000,
+            "consumed_bytes": 1374,
+            "window_start": 17628,
+            "window_end_exclusive": 19002,
+            "source_validation": "/home/nivando-soares/asmdump/tools/out/bank13_chunk_validation.json"
+          }
+        }
+      ],
+      "candidate_status": "mapped",
+      "design_pack_manifest": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1094_1101_v1/frame_01094/design_pack.json",
+      "tilemap_json": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1094_1101_v1/frame_01094/tilemaps/bg1_tilemap.json"
+    },
+    {
+      "frame": 1095,
+      "layer_name": "bg1",
+      "layer_index": 0,
+      "bg_mode": 7,
+      "bpp": 8,
+      "active": true,
+      "enabled_on_main": true,
+      "enabled_on_sub": false,
+      "chr_base_words": 8192,
+      "tilemap_base_words": 0,
+      "tile_index_count": 144,
+      "tile_index_ranges": [
+        {
+          "start": 0,
+          "end": 3,
+          "count": 4
+        },
+        {
+          "start": 6,
+          "end": 6,
+          "count": 1
+        },
+        {
+          "start": 10,
+          "end": 18,
+          "count": 9
+        },
+        {
+          "start": 20,
+          "end": 23,
+          "count": 4
+        },
+        {
+          "start": 41,
+          "end": 41,
+          "count": 1
+        },
+        {
+          "start": 44,
+          "end": 48,
+          "count": 5
+        },
+        {
+          "start": 53,
+          "end": 55,
+          "count": 3
+        },
+        {
+          "start": 61,
+          "end": 63,
+          "count": 3
+        },
+        {
+          "start": 69,
+          "end": 121,
+          "count": 53
+        },
+        {
+          "start": 123,
+          "end": 140,
+          "count": 18
+        },
+        {
+          "start": 256,
+          "end": 256,
+          "count": 1
+        },
+        {
+          "start": 260,
+          "end": 261,
+          "count": 2
+        },
+        {
+          "start": 263,
+          "end": 265,
+          "count": 3
+        },
+        {
+          "start": 768,
+          "end": 768,
+          "count": 1
+        },
+        {
+          "start": 777,
+          "end": 777,
+          "count": 1
+        },
+        {
+          "start": 787,
+          "end": 787,
+          "count": 1
+        },
+        {
+          "start": 792,
+          "end": 808,
+          "count": 17
+        },
+        {
+          "start": 810,
+          "end": 811,
+          "count": 2
+        },
+        {
+          "start": 817,
+          "end": 820,
+          "count": 4
+        },
+        {
+          "start": 824,
+          "end": 828,
+          "count": 5
+        },
+        {
+          "start": 832,
+          "end": 836,
+          "count": 5
+        },
+        {
+          "start": 890,
+          "end": 890,
+          "count": 1
+        }
+      ],
+      "tile_index_examples": [
+        0,
+        1,
+        2,
+        3,
+        6,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        20,
+        21
+      ],
+      "candidate_chunks": [
+        {
+          "source_snes": "0D:C4DC",
+          "source_marker": "26FB",
+          "source_provenance": "unclassified",
+          "hit_frame": 1088,
+          "relationship": "carryover-from-last-hit",
+          "frame_delta": 7,
+          "destination_snes": "7E:2000",
+          "state_0202": 1,
+          "state_0208": 13,
+          "dp_0054": 96,
+          "chunk_validation": {
+            "bank": 13,
+            "addr": 50396,
+            "snes": "0D:C4DC",
+            "marker": "26FB",
+            "status": "ok",
+            "output_size": 4000,
+            "consumed_bytes": 1374,
+            "window_start": 17628,
+            "window_end_exclusive": 19002,
+            "source_validation": "/home/nivando-soares/asmdump/tools/out/bank13_chunk_validation.json"
+          }
+        }
+      ],
+      "candidate_status": "mapped",
+      "design_pack_manifest": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1094_1101_v1/frame_01095/design_pack.json",
+      "tilemap_json": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1094_1101_v1/frame_01095/tilemaps/bg1_tilemap.json"
+    },
+    {
+      "frame": 1096,
+      "layer_name": "bg1",
+      "layer_index": 0,
+      "bg_mode": 7,
+      "bpp": 8,
+      "active": true,
+      "enabled_on_main": true,
+      "enabled_on_sub": false,
+      "chr_base_words": 8192,
+      "tilemap_base_words": 0,
+      "tile_index_count": 144,
+      "tile_index_ranges": [
+        {
+          "start": 0,
+          "end": 3,
+          "count": 4
+        },
+        {
+          "start": 6,
+          "end": 6,
+          "count": 1
+        },
+        {
+          "start": 10,
+          "end": 18,
+          "count": 9
+        },
+        {
+          "start": 20,
+          "end": 23,
+          "count": 4
+        },
+        {
+          "start": 41,
+          "end": 41,
+          "count": 1
+        },
+        {
+          "start": 44,
+          "end": 48,
+          "count": 5
+        },
+        {
+          "start": 53,
+          "end": 55,
+          "count": 3
+        },
+        {
+          "start": 61,
+          "end": 63,
+          "count": 3
+        },
+        {
+          "start": 69,
+          "end": 121,
+          "count": 53
+        },
+        {
+          "start": 123,
+          "end": 140,
+          "count": 18
+        },
+        {
+          "start": 256,
+          "end": 256,
+          "count": 1
+        },
+        {
+          "start": 260,
+          "end": 261,
+          "count": 2
+        },
+        {
+          "start": 263,
+          "end": 265,
+          "count": 3
+        },
+        {
+          "start": 768,
+          "end": 768,
+          "count": 1
+        },
+        {
+          "start": 777,
+          "end": 777,
+          "count": 1
+        },
+        {
+          "start": 787,
+          "end": 787,
+          "count": 1
+        },
+        {
+          "start": 792,
+          "end": 808,
+          "count": 17
+        },
+        {
+          "start": 810,
+          "end": 811,
+          "count": 2
+        },
+        {
+          "start": 817,
+          "end": 820,
+          "count": 4
+        },
+        {
+          "start": 824,
+          "end": 828,
+          "count": 5
+        },
+        {
+          "start": 832,
+          "end": 836,
+          "count": 5
+        },
+        {
+          "start": 890,
+          "end": 890,
+          "count": 1
+        }
+      ],
+      "tile_index_examples": [
+        0,
+        1,
+        2,
+        3,
+        6,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        20,
+        21
+      ],
+      "candidate_chunks": [
+        {
+          "source_snes": "07:BF49",
+          "source_marker": "42FB",
+          "source_provenance": "unclassified",
+          "hit_frame": 1096,
+          "relationship": "runtime-hit",
+          "frame_delta": 0,
+          "destination_snes": "7E:2000",
+          "state_0202": 1,
+          "state_0208": 13,
+          "dp_0054": 96,
+          "chunk_validation": {
+            "bank": 7,
+            "addr": 48969,
+            "snes": "07:BF49",
+            "marker": "42FB",
+            "status": "ok",
+            "output_size": 4102,
+            "consumed_bytes": 456,
+            "window_start": 16201,
+            "window_end_exclusive": 16657,
+            "source_validation": "/home/nivando-soares/asmdump/tools/out/bank7_chunk_validation.json"
+          }
+        }
+      ],
+      "candidate_status": "mapped",
+      "design_pack_manifest": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1094_1101_v1/frame_01096/design_pack.json",
+      "tilemap_json": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1094_1101_v1/frame_01096/tilemaps/bg1_tilemap.json"
+    },
+    {
+      "frame": 1097,
+      "layer_name": "bg1",
+      "layer_index": 0,
+      "bg_mode": 7,
+      "bpp": 8,
+      "active": true,
+      "enabled_on_main": true,
+      "enabled_on_sub": false,
+      "chr_base_words": 8192,
+      "tilemap_base_words": 0,
+      "tile_index_count": 144,
+      "tile_index_ranges": [
+        {
+          "start": 0,
+          "end": 3,
+          "count": 4
+        },
+        {
+          "start": 6,
+          "end": 6,
+          "count": 1
+        },
+        {
+          "start": 10,
+          "end": 18,
+          "count": 9
+        },
+        {
+          "start": 20,
+          "end": 23,
+          "count": 4
+        },
+        {
+          "start": 41,
+          "end": 41,
+          "count": 1
+        },
+        {
+          "start": 44,
+          "end": 48,
+          "count": 5
+        },
+        {
+          "start": 53,
+          "end": 55,
+          "count": 3
+        },
+        {
+          "start": 61,
+          "end": 63,
+          "count": 3
+        },
+        {
+          "start": 69,
+          "end": 121,
+          "count": 53
+        },
+        {
+          "start": 123,
+          "end": 140,
+          "count": 18
+        },
+        {
+          "start": 256,
+          "end": 256,
+          "count": 1
+        },
+        {
+          "start": 260,
+          "end": 261,
+          "count": 2
+        },
+        {
+          "start": 263,
+          "end": 265,
+          "count": 3
+        },
+        {
+          "start": 768,
+          "end": 768,
+          "count": 1
+        },
+        {
+          "start": 777,
+          "end": 777,
+          "count": 1
+        },
+        {
+          "start": 787,
+          "end": 787,
+          "count": 1
+        },
+        {
+          "start": 792,
+          "end": 808,
+          "count": 17
+        },
+        {
+          "start": 810,
+          "end": 811,
+          "count": 2
+        },
+        {
+          "start": 817,
+          "end": 820,
+          "count": 4
+        },
+        {
+          "start": 824,
+          "end": 828,
+          "count": 5
+        },
+        {
+          "start": 832,
+          "end": 836,
+          "count": 5
+        },
+        {
+          "start": 890,
+          "end": 890,
+          "count": 1
+        }
+      ],
+      "tile_index_examples": [
+        0,
+        1,
+        2,
+        3,
+        6,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        20,
+        21
+      ],
+      "candidate_chunks": [
+        {
+          "source_snes": "07:BF49",
+          "source_marker": "42FB",
+          "source_provenance": "unclassified",
+          "hit_frame": 1096,
+          "relationship": "carryover-from-last-hit",
+          "frame_delta": 1,
+          "destination_snes": "7E:2000",
+          "state_0202": 1,
+          "state_0208": 13,
+          "dp_0054": 96,
+          "chunk_validation": {
+            "bank": 7,
+            "addr": 48969,
+            "snes": "07:BF49",
+            "marker": "42FB",
+            "status": "ok",
+            "output_size": 4102,
+            "consumed_bytes": 456,
+            "window_start": 16201,
+            "window_end_exclusive": 16657,
+            "source_validation": "/home/nivando-soares/asmdump/tools/out/bank7_chunk_validation.json"
+          }
+        }
+      ],
+      "candidate_status": "mapped",
+      "design_pack_manifest": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1094_1101_v1/frame_01097/design_pack.json",
+      "tilemap_json": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1094_1101_v1/frame_01097/tilemaps/bg1_tilemap.json"
+    },
+    {
+      "frame": 1098,
+      "layer_name": "bg1",
+      "layer_index": 0,
+      "bg_mode": 7,
+      "bpp": 8,
+      "active": true,
+      "enabled_on_main": true,
+      "enabled_on_sub": false,
+      "chr_base_words": 8192,
+      "tilemap_base_words": 0,
+      "tile_index_count": 144,
+      "tile_index_ranges": [
+        {
+          "start": 0,
+          "end": 3,
+          "count": 4
+        },
+        {
+          "start": 6,
+          "end": 6,
+          "count": 1
+        },
+        {
+          "start": 10,
+          "end": 18,
+          "count": 9
+        },
+        {
+          "start": 20,
+          "end": 23,
+          "count": 4
+        },
+        {
+          "start": 41,
+          "end": 41,
+          "count": 1
+        },
+        {
+          "start": 44,
+          "end": 48,
+          "count": 5
+        },
+        {
+          "start": 53,
+          "end": 55,
+          "count": 3
+        },
+        {
+          "start": 61,
+          "end": 63,
+          "count": 3
+        },
+        {
+          "start": 69,
+          "end": 121,
+          "count": 53
+        },
+        {
+          "start": 123,
+          "end": 140,
+          "count": 18
+        },
+        {
+          "start": 256,
+          "end": 256,
+          "count": 1
+        },
+        {
+          "start": 260,
+          "end": 261,
+          "count": 2
+        },
+        {
+          "start": 263,
+          "end": 265,
+          "count": 3
+        },
+        {
+          "start": 768,
+          "end": 768,
+          "count": 1
+        },
+        {
+          "start": 777,
+          "end": 777,
+          "count": 1
+        },
+        {
+          "start": 787,
+          "end": 787,
+          "count": 1
+        },
+        {
+          "start": 792,
+          "end": 808,
+          "count": 17
+        },
+        {
+          "start": 810,
+          "end": 811,
+          "count": 2
+        },
+        {
+          "start": 817,
+          "end": 820,
+          "count": 4
+        },
+        {
+          "start": 824,
+          "end": 828,
+          "count": 5
+        },
+        {
+          "start": 832,
+          "end": 836,
+          "count": 5
+        },
+        {
+          "start": 890,
+          "end": 890,
+          "count": 1
+        }
+      ],
+      "tile_index_examples": [
+        0,
+        1,
+        2,
+        3,
+        6,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        20,
+        21
+      ],
+      "candidate_chunks": [
+        {
+          "source_snes": "07:BF49",
+          "source_marker": "42FB",
+          "source_provenance": "unclassified",
+          "hit_frame": 1096,
+          "relationship": "carryover-from-last-hit",
+          "frame_delta": 2,
+          "destination_snes": "7E:2000",
+          "state_0202": 1,
+          "state_0208": 13,
+          "dp_0054": 96,
+          "chunk_validation": {
+            "bank": 7,
+            "addr": 48969,
+            "snes": "07:BF49",
+            "marker": "42FB",
+            "status": "ok",
+            "output_size": 4102,
+            "consumed_bytes": 456,
+            "window_start": 16201,
+            "window_end_exclusive": 16657,
+            "source_validation": "/home/nivando-soares/asmdump/tools/out/bank7_chunk_validation.json"
+          }
+        }
+      ],
+      "candidate_status": "mapped",
+      "design_pack_manifest": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1094_1101_v1/frame_01098/design_pack.json",
+      "tilemap_json": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1094_1101_v1/frame_01098/tilemaps/bg1_tilemap.json"
+    },
+    {
+      "frame": 1099,
+      "layer_name": "bg1",
+      "layer_index": 0,
+      "bg_mode": 7,
+      "bpp": 8,
+      "active": true,
+      "enabled_on_main": true,
+      "enabled_on_sub": false,
+      "chr_base_words": 8192,
+      "tilemap_base_words": 0,
+      "tile_index_count": 144,
+      "tile_index_ranges": [
+        {
+          "start": 0,
+          "end": 3,
+          "count": 4
+        },
+        {
+          "start": 6,
+          "end": 6,
+          "count": 1
+        },
+        {
+          "start": 10,
+          "end": 18,
+          "count": 9
+        },
+        {
+          "start": 20,
+          "end": 23,
+          "count": 4
+        },
+        {
+          "start": 41,
+          "end": 41,
+          "count": 1
+        },
+        {
+          "start": 44,
+          "end": 48,
+          "count": 5
+        },
+        {
+          "start": 53,
+          "end": 55,
+          "count": 3
+        },
+        {
+          "start": 61,
+          "end": 63,
+          "count": 3
+        },
+        {
+          "start": 69,
+          "end": 121,
+          "count": 53
+        },
+        {
+          "start": 123,
+          "end": 140,
+          "count": 18
+        },
+        {
+          "start": 256,
+          "end": 256,
+          "count": 1
+        },
+        {
+          "start": 260,
+          "end": 261,
+          "count": 2
+        },
+        {
+          "start": 263,
+          "end": 265,
+          "count": 3
+        },
+        {
+          "start": 768,
+          "end": 768,
+          "count": 1
+        },
+        {
+          "start": 777,
+          "end": 777,
+          "count": 1
+        },
+        {
+          "start": 787,
+          "end": 787,
+          "count": 1
+        },
+        {
+          "start": 792,
+          "end": 808,
+          "count": 17
+        },
+        {
+          "start": 810,
+          "end": 811,
+          "count": 2
+        },
+        {
+          "start": 817,
+          "end": 820,
+          "count": 4
+        },
+        {
+          "start": 824,
+          "end": 828,
+          "count": 5
+        },
+        {
+          "start": 832,
+          "end": 836,
+          "count": 5
+        },
+        {
+          "start": 890,
+          "end": 890,
+          "count": 1
+        }
+      ],
+      "tile_index_examples": [
+        0,
+        1,
+        2,
+        3,
+        6,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        20,
+        21
+      ],
+      "candidate_chunks": [
+        {
+          "source_snes": "07:BF49",
+          "source_marker": "42FB",
+          "source_provenance": "unclassified",
+          "hit_frame": 1096,
+          "relationship": "carryover-from-last-hit",
+          "frame_delta": 3,
+          "destination_snes": "7E:2000",
+          "state_0202": 1,
+          "state_0208": 13,
+          "dp_0054": 96,
+          "chunk_validation": {
+            "bank": 7,
+            "addr": 48969,
+            "snes": "07:BF49",
+            "marker": "42FB",
+            "status": "ok",
+            "output_size": 4102,
+            "consumed_bytes": 456,
+            "window_start": 16201,
+            "window_end_exclusive": 16657,
+            "source_validation": "/home/nivando-soares/asmdump/tools/out/bank7_chunk_validation.json"
+          }
+        }
+      ],
+      "candidate_status": "mapped",
+      "design_pack_manifest": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1094_1101_v1/frame_01099/design_pack.json",
+      "tilemap_json": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1094_1101_v1/frame_01099/tilemaps/bg1_tilemap.json"
+    },
+    {
+      "frame": 1100,
+      "layer_name": "bg1",
+      "layer_index": 0,
+      "bg_mode": 7,
+      "bpp": 8,
+      "active": true,
+      "enabled_on_main": true,
+      "enabled_on_sub": false,
+      "chr_base_words": 8192,
+      "tilemap_base_words": 0,
+      "tile_index_count": 144,
+      "tile_index_ranges": [
+        {
+          "start": 0,
+          "end": 3,
+          "count": 4
+        },
+        {
+          "start": 6,
+          "end": 6,
+          "count": 1
+        },
+        {
+          "start": 10,
+          "end": 18,
+          "count": 9
+        },
+        {
+          "start": 20,
+          "end": 23,
+          "count": 4
+        },
+        {
+          "start": 41,
+          "end": 41,
+          "count": 1
+        },
+        {
+          "start": 44,
+          "end": 48,
+          "count": 5
+        },
+        {
+          "start": 53,
+          "end": 55,
+          "count": 3
+        },
+        {
+          "start": 61,
+          "end": 63,
+          "count": 3
+        },
+        {
+          "start": 69,
+          "end": 121,
+          "count": 53
+        },
+        {
+          "start": 123,
+          "end": 140,
+          "count": 18
+        },
+        {
+          "start": 256,
+          "end": 256,
+          "count": 1
+        },
+        {
+          "start": 260,
+          "end": 261,
+          "count": 2
+        },
+        {
+          "start": 263,
+          "end": 265,
+          "count": 3
+        },
+        {
+          "start": 768,
+          "end": 768,
+          "count": 1
+        },
+        {
+          "start": 777,
+          "end": 777,
+          "count": 1
+        },
+        {
+          "start": 787,
+          "end": 787,
+          "count": 1
+        },
+        {
+          "start": 792,
+          "end": 808,
+          "count": 17
+        },
+        {
+          "start": 810,
+          "end": 811,
+          "count": 2
+        },
+        {
+          "start": 817,
+          "end": 820,
+          "count": 4
+        },
+        {
+          "start": 824,
+          "end": 828,
+          "count": 5
+        },
+        {
+          "start": 832,
+          "end": 836,
+          "count": 5
+        },
+        {
+          "start": 890,
+          "end": 890,
+          "count": 1
+        }
+      ],
+      "tile_index_examples": [
+        0,
+        1,
+        2,
+        3,
+        6,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        20,
+        21
+      ],
+      "candidate_chunks": [
+        {
+          "source_snes": "07:BF49",
+          "source_marker": "42FB",
+          "source_provenance": "unclassified",
+          "hit_frame": 1096,
+          "relationship": "carryover-from-last-hit",
+          "frame_delta": 4,
+          "destination_snes": "7E:2000",
+          "state_0202": 1,
+          "state_0208": 13,
+          "dp_0054": 96,
+          "chunk_validation": {
+            "bank": 7,
+            "addr": 48969,
+            "snes": "07:BF49",
+            "marker": "42FB",
+            "status": "ok",
+            "output_size": 4102,
+            "consumed_bytes": 456,
+            "window_start": 16201,
+            "window_end_exclusive": 16657,
+            "source_validation": "/home/nivando-soares/asmdump/tools/out/bank7_chunk_validation.json"
+          }
+        }
+      ],
+      "candidate_status": "mapped",
+      "design_pack_manifest": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1094_1101_v1/frame_01100/design_pack.json",
+      "tilemap_json": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1094_1101_v1/frame_01100/tilemaps/bg1_tilemap.json"
+    },
+    {
+      "frame": 1101,
+      "layer_name": "bg1",
+      "layer_index": 0,
+      "bg_mode": 7,
+      "bpp": 8,
+      "active": true,
+      "enabled_on_main": true,
+      "enabled_on_sub": false,
+      "chr_base_words": 8192,
+      "tilemap_base_words": 0,
+      "tile_index_count": 144,
+      "tile_index_ranges": [
+        {
+          "start": 0,
+          "end": 3,
+          "count": 4
+        },
+        {
+          "start": 6,
+          "end": 6,
+          "count": 1
+        },
+        {
+          "start": 10,
+          "end": 18,
+          "count": 9
+        },
+        {
+          "start": 20,
+          "end": 23,
+          "count": 4
+        },
+        {
+          "start": 41,
+          "end": 41,
+          "count": 1
+        },
+        {
+          "start": 44,
+          "end": 48,
+          "count": 5
+        },
+        {
+          "start": 53,
+          "end": 55,
+          "count": 3
+        },
+        {
+          "start": 61,
+          "end": 63,
+          "count": 3
+        },
+        {
+          "start": 69,
+          "end": 121,
+          "count": 53
+        },
+        {
+          "start": 123,
+          "end": 140,
+          "count": 18
+        },
+        {
+          "start": 256,
+          "end": 256,
+          "count": 1
+        },
+        {
+          "start": 260,
+          "end": 261,
+          "count": 2
+        },
+        {
+          "start": 263,
+          "end": 265,
+          "count": 3
+        },
+        {
+          "start": 768,
+          "end": 768,
+          "count": 1
+        },
+        {
+          "start": 777,
+          "end": 777,
+          "count": 1
+        },
+        {
+          "start": 787,
+          "end": 787,
+          "count": 1
+        },
+        {
+          "start": 792,
+          "end": 808,
+          "count": 17
+        },
+        {
+          "start": 810,
+          "end": 811,
+          "count": 2
+        },
+        {
+          "start": 817,
+          "end": 820,
+          "count": 4
+        },
+        {
+          "start": 824,
+          "end": 828,
+          "count": 5
+        },
+        {
+          "start": 832,
+          "end": 836,
+          "count": 5
+        },
+        {
+          "start": 890,
+          "end": 890,
+          "count": 1
+        }
+      ],
+      "tile_index_examples": [
+        0,
+        1,
+        2,
+        3,
+        6,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        20,
+        21
+      ],
+      "candidate_chunks": [
+        {
+          "source_snes": "07:C112",
+          "source_marker": "26FB",
+          "source_provenance": "unclassified",
+          "hit_frame": 1101,
+          "relationship": "runtime-hit",
+          "frame_delta": 0,
+          "destination_snes": "7E:2000",
+          "state_0202": 1,
+          "state_0208": 13,
+          "dp_0054": 96,
+          "chunk_validation": {
+            "bank": 7,
+            "addr": 49426,
+            "snes": "07:C112",
+            "marker": "26FB",
+            "status": "ok",
+            "output_size": 2832,
+            "consumed_bytes": 2333,
+            "window_start": 16658,
+            "window_end_exclusive": 18991,
+            "source_validation": "/home/nivando-soares/asmdump/tools/out/bank7_chunk_validation.json"
+          }
+        }
+      ],
+      "candidate_status": "mapped",
+      "design_pack_manifest": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1094_1101_v1/frame_01101/design_pack.json",
+      "tilemap_json": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1094_1101_v1/frame_01101/tilemaps/bg1_tilemap.json"
+    }
+  ]
+}

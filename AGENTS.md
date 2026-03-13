@@ -84,6 +84,10 @@ Use these default limits unless the task clearly justifies more:
   - at most `2` parameter variants in the same lane
 - Larger matrix or long-running validation:
   - at most `1` fresh rerun unless the previous run was invalid
+- Same-blocker pivot rule:
+  - after `3` attempts on the same blocker without a new artifact, a stronger
+    narrowing, or a changed observed boundary, document the blocker and move to
+    the next concrete step or lane
 - Investigation thrash limit:
   - do not spend more than about `30` minutes on the same failing validation
     pattern without producing a new artifact, new telemetry, or a documented

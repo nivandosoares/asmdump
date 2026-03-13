@@ -18,6 +18,7 @@ Current Sprint 0 tooling:
 - `mesen_ppu_extract`: headless C# bridge into `MesenCore.so` that dumps the current frame's SNES BG layer views, BG tilesets/CHR sheets, palette, per-sprite previews, sprite screen preview, and raw VRAM/CGRAM/OAM without going through the GUI
 - `build_mesen_design_pack.py`: repack a raw `mesen_ppu_extract` frame folder into a stable design-team bundle (`layers/`, `tilemaps/`, `tilesets/`, `sprites/`, `palette/`, `raw/`) plus a `design_pack.json` manifest
 - `build_mesen_design_pack_range.py`: batch `build_mesen_design_pack.py` over `frame_*` directories and emit `design_pack_range.json` for timeline review
+- `build_tilemap_chunk_provenance.py`: correlates design-pack tile-index ranges with `L001210` runtime chunk hits and chunk-validation metadata into `frame/layer/tile-index-range -> candidate ROM chunk` tables
 - `extract_mesen_scene_range.py`: batches `mesen_ppu_extract` across a frame range, writes per-frame scene folders, and emits a collapsed `sequence.txt` manifest for the SDL runtime
 - `build_scene_sequence_manifest.py`: converts flat Mesen range dumps into runtime-ready `sequence.txt` manifests, either as `snes_bg` entries or exact sampled `image` entries from screenshots; when `oam.bin` exists, it now carries it through as an optional fourth `snes_bg` path
 - `build_indexed_palette_animation.py`: collapses a screenshot-backed frame range into one indexed image plus a palette timeline and can emit a one-entry `indexed_anim` sequence manifest
@@ -26,8 +27,8 @@ Current Sprint 0 tooling:
 - `splice_sequence_manifest.py`: replaces a frame range inside a sequence JSON summary with a new manifest entry, used for hybrid native-plus-sampled intro loops
 - `render_mesen_snes_bg.py`: composes a 256x224 preview directly from Mesen VRAM/CGRAM/state dumps, including Mode 7 and optional OBJ composition from OAM dumps
 - `summarize_mode7_trace.py`: summarizes the tracked register-write traces emitted by `mesen_probe_boot.lua` for Mode 7/TMAIN or DMA/HDMA windows
-- `summarize_l001210_trace.py`: summarizes `L001210` dispatcher execution hits (`$0C/$0E/$10`) captured by `mesen_probe_boot.lua` for chunk provenance
-- `run_l001210_probe_matrix.py`: runs multiple deterministic `mesen_probe_boot.lua` scenarios and aggregates bank30 candidate hit coverage into one matrix report
+- `summarize_l001210_trace.py`: summarizes `L001210` dispatcher execution hits (`$0C/$0E/$10`) captured by `mesen_probe_boot.lua` for chunk provenance, including caller-site coverage and `L00A9*` table-index usage when present
+- `run_l001210_probe_matrix.py`: runs multiple deterministic `mesen_probe_boot.lua` scenarios and aggregates bank30 candidate hit coverage into one matrix report; scenarios may include `extra_env` to inject probe env overrides per run
 - `capture_visible_mode7_range.py`: reuses `mesen_scanline_step_test.lua` to capture one visible-scanline `ppu.mode7.*` sample per frame across a requested range
 - `apply_visible_mode7_samples.py`: applies those captured visible Mode 7 samples onto extracted frame states, writing sidecar `ppu_state_visible.json` files by default
 - `extract_compression_header_manifest.py`: scans a bank for `42FB`/`26FB`/`67FB`/`27FB` blocks and decodes their leading header fields
@@ -63,6 +64,7 @@ python3 tools/build_mode7_source_scene.py game.smc tools/out/bank1_mode7_visible
 ./tools/run_mesen_ppu_extract.sh --rom game.smc --frame 300 --out-dir tools/out/mesen_frame300
 python3 tools/build_mesen_design_pack.py tools/out/mesen_frame300 tools/out/design_frame300 --clean-out
 python3 tools/build_mesen_design_pack_range.py tools/out/mesen_range_1086_1093_v1 tools/out/design_mesen_range_1086_1093_v1 --clean-out
+python3 tools/build_tilemap_chunk_provenance.py tools/out/design_mesen_range_1086_1093_v1 .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.jsonc --chunk-validation tools/out/bank13_chunk_validation.json --markdown-out rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md
 python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 654 --end-frame 710 --step 4 --out-dir tools/out/ballistic_sequence --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
 python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 978 --end-frame 982 --step 4 --out-dir tools/out/intro_native_978 --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
 python3 tools/build_scene_sequence_manifest.py tools/out/intro_loop.json tools/out/intro_loop_sequence.txt --json-out tools/out/intro_loop_sequence.json --end-frame-exclusive 2072 --prefer-screenshot
@@ -81,6 +83,7 @@ python3 tools/summarize_l001210_trace.py .mesen-config/Mesen2/LuaScriptData/mese
 TD2_BOOT_PROBE_TOTAL_FRAMES=1120 TD2_BOOT_PROBE_SAVE_SAVESTATE_FRAME=1093 TD2_BOOT_PROBE_SAVE_SAVESTATE=tools/out/l001210_state_1093.bin ./validation/run_mesen_probe_boot.sh ./game.smc
 python3 tools/run_l001210_probe_matrix.py --out-dir tools/out/l001210_probe_matrix --total-frames 2200 --timeout-seconds 90
 python3 tools/run_l001210_probe_matrix.py --out-dir tools/out/l001210_probe_matrix_from_1093 --total-frames 2000 --timeout-seconds 120 --savestate tools/out/l001210_state_1093.bin
+# scenario JSON may include `extra_env`, e.g. {"name":"force","extra_env":{"TD2_BOOT_PROBE_FORCE_1C78":"1"}}
 python3 tools/build_bank30_chunk_registry.py tools/out/bank30_headers.json tools/out/bank30_chunk_validation.json tools/out/td2_boot_probe_l001210_summary.json tools/out/bank30_chunk_registry.json --markdown-out tools/out/bank30_chunk_registry.md
 python3 tools/check_regression_gates.py validation/regression_gates_intro.jsonc --render-dir port/build/regression_frames --json-out tools/out/regression_gates_intro_report.json
 python3 tools/validate_callback_contracts.py rom_analysis/docs/callback_state_contracts.jsonc .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe.json --json-out tools/out/callback_state_contracts_report.json
@@ -110,9 +113,12 @@ Useful make targets:
 - `make -C tools bank6-preview`
 - `make -C tools bank7-scan`
 - `make -C tools bank7-headers`
+- `make -C tools bank13-headers`
+- `make -C tools bank13-validate`
 - `make -C tools bank30-headers`
 - `make -C tools bank30-validate`
 - `make -C tools bank30-registry`
+- `make -C tools tilemap-provenance-1086-1093`
 - `make -C tools l001210-probe L001210_PROBE_TOTAL_FRAMES=3600`
 - `make -C tools l001210-save-savestate L001210_SAVE_STATE_FRAME=1093 L001210_SAVE_TOTAL_FRAMES=1120`
 - `make -C tools l001210-probe-matrix L001210_MATRIX_TOTAL_FRAMES=2200`

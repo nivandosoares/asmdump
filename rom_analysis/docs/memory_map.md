@@ -59,6 +59,26 @@ Validated with `tools/validate_td2_chunks.py` against `tools/out/bank30_headers.
 | runtime `L001210` hits (no-input, `3600` frames) | `1E:DF6C/E039/E73F/E800` | Each hit twice in one attract-loop window (`frames 1280..2712`); destination pointer staged as `7E:2000`; repeat spacing `1418` frames. |
 | runtime no-hit set (same run) | `1E:9681/DA96/E91F/EE7F` | Not observed on the deterministic no-input attract path; likely path-conditional or later-scene dependent. |
 
+## Tilemap-to-ROM Provenance (Window `1086..1093`)
+
+Generated with:
+
+`python3 tools/build_tilemap_chunk_provenance.py tools/out/design_mesen_range_1086_1093_v1 .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.jsonc --chunk-validation tools/out/bank13_chunk_validation.json --markdown-out rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md`
+
+| Frame window | Layer | Tile-index coverage | CHR base | Candidate ROM chunk | Evidence model |
+|---|---|---|---|---|---|
+| `1086..1093` | `bg1` (Mode 7 main layer) | `144` unique tile indices (`22` contiguous ranges) | `0x2000` | `0D:C4DC` (`26FB`) | Runtime hit at frame `1088`; frames `1089..1093` use carry-over mapping from that hit; frames `1086..1087` use nearest-forward mapping (`+2/+1` frames). |
+| `1094..1101` | `bg1` (Mode 7 main layer) | `144` unique tile indices (`22` contiguous ranges) | `0x2000` | `0D:C4DC` -> `07:BF49` -> `07:C112` | Frames `1094..1095` carry forward the `1088` bank13 hit; frame `1096` is a direct runtime hit at `07:BF49`, frames `1097..1100` carry from that hit, and frame `1101` is a direct runtime hit at `07:C112`. |
+
+Supporting artifacts:
+
+- `rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.jsonc`
+- `rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md`
+- `rom_analysis/maps/tilemaps/mesen_range_1094_1101_provenance.jsonc`
+- `rom_analysis/maps/tilemaps/mesen_range_1094_1101_provenance.md`
+- `tools/out/bank13_chunk_validation.json` (`0D:C4DC` decode: `output_size=4000`, `consumed=1374`)
+- `tools/out/bank7_chunk_validation.json` (`07:BF49` decode: `output_size=4102`, `consumed=456`; `07:C112` decode: `output_size=2832`, `consumed=2333`)
+
 ## Open Mapping Priorities
 
 1. Confirm bank 0 -> bank 30 gameplay callback transition addresses.

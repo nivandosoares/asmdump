@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; unresolved targets remain |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; first tilemap-to-ROM provenance window (`1086..1093`) is now committed |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows now cover `1086..1101` with validated bank13/bank7 runtime anchors |
 | Lane 3: Gameplay-era frame archaeology | queued | no deterministic gameplay capture window committed yet |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -594,6 +594,47 @@ Write-surface outcome (`2200` frames, trace window `1200..1800`):
   - this is enough evidence to treat the current headless `B1F9` lane as
     low-yield; the remaining useful follow-up is manual debugger work or a shift
     to the next unblocked roadmap lane
+
+### CP-23: Second contiguous tilemap provenance window (`1094..1101`)
+
+- Built a second design-pack range:
+  - `tools/out/design_mesen_range_1094_1101_v1/design_pack_range.json`
+- Added bank-7 chunk validation metadata:
+  - `tools/out/bank7_compression_headers.json`
+  - `tools/out/bank7_chunk_validation.json`
+- Added committed provenance outputs:
+  - `rom_analysis/maps/tilemaps/mesen_range_1094_1101_provenance.jsonc`
+  - `rom_analysis/maps/tilemaps/mesen_range_1094_1101_provenance.md`
+- Added memory-map binding:
+  - `rom_analysis/docs/memory_map.md`
+
+Window reading:
+
+- `bg1` remains the active main-screen tile layer for all frames `1094..1101`.
+- `chrBaseWords` remains `0x2000`.
+- The visible tile-index set stays stable:
+  - `144` unique indices
+  - `22` contiguous ranges
+- Runtime chunk provenance advances across the same visible tilemap block:
+  - `1094..1095`: carry-over from `0D:C4DC` (`26FB`, bank 13) hit at frame `1088`
+  - `1096`: direct runtime hit at `07:BF49` (`42FB`, bank 7)
+  - `1097..1100`: carry-over from `07:BF49`
+  - `1101`: direct runtime hit at `07:C112` (`26FB`, bank 7)
+- Validation metadata now exists for all three anchors:
+  - `0D:C4DC`: `output_size = 4000`
+  - `07:BF49`: `output_size = 4102`
+  - `07:C112`: `output_size = 2832`
+- runtime-binding note:
+  - this window uses the preserved
+    `tools/out/l001210_probe_matrix_v1/periodic_start_pulses_240_1800_l001210_exec.json`
+    trace because the original ad hoc `.mesen` runtime trace was overwritten
+    later; the preserved trace matches the contiguous `1088/1096/1101` hit
+    sequence used for this late-attract block
+- practical reading:
+  - the visible `bg1` tilemap stays constant while the backing runtime chunk
+    source changes underneath it
+  - the next useful Lane 2 step is to capture and bind the next contiguous block
+    after `1101`, not to keep reworking `1086..1101`
 
 ## Current Checkpoint Metrics
 

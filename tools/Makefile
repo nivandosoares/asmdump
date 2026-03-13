@@ -16,11 +16,15 @@ BOOT_SCREEN_PREVIEW_JSON := $(OUT_DIR)/bank1_boot_screen_variant0.json
 BOOT_SCREEN_OVERLAY_PREVIEW := $(OUT_DIR)/bank1_boot_screen_variant0_overlay.ppm
 BOOT_SCREEN_OVERLAY_PREVIEW_JSON := $(OUT_DIR)/bank1_boot_screen_variant0_overlay.json
 BANK7_HEADER_JSON := $(OUT_DIR)/bank7_compression_headers.json
+BANK13_HEADER_JSON := $(OUT_DIR)/bank13_headers.json
+BANK13_VALIDATION_JSON := $(OUT_DIR)/bank13_chunk_validation.json
 BANK30_HEADER_JSON := $(OUT_DIR)/bank30_headers.json
 BANK30_VALIDATION_JSON := $(OUT_DIR)/bank30_chunk_validation.json
 BANK30_RUNTIME_SUMMARY_JSON := $(OUT_DIR)/td2_boot_probe_l001210_summary.json
 BANK30_REGISTRY_JSON := $(OUT_DIR)/bank30_chunk_registry.json
 BANK30_REGISTRY_MD := $(OUT_DIR)/bank30_chunk_registry.md
+TILEMAP_PROVENANCE_1086_1093_JSON := ../rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.jsonc
+TILEMAP_PROVENANCE_1086_1093_MD := ../rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md
 BANK7_42FB0_BIN := $(OUT_DIR)/bank7_42fb_8000.bin
 BANK7_42FB0_JSON := $(OUT_DIR)/bank7_42fb_8000.json
 BANK7_42FB0_GRAY := $(OUT_DIR)/bank7_42fb_8000_gray.ppm
@@ -263,7 +267,7 @@ L001210_SAVE_STATE_FRAME ?= 1093
 L001210_SAVE_TOTAL_FRAMES ?= 1120
 L001210_SAVE_STATE_PATH ?= ../tools/out/l001210_state_$(L001210_SAVE_STATE_FRAME).bin
 
-.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank30-headers bank30-validate bank30-registry l001210-probe l001210-save-savestate l001210-probe-matrix l001210-trace-summary regression-gates callback-contracts-check bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview bank1-bootstrap-queue-978-preview bank1-bootstrap-queue-982-preview bank1-bootstrap-queue-986-preview bank1-bootstrap-queue-986-noobj-preview bank1-bootstrap-queue-986-bridgeoam-preview bank1-bootstrap-queue-990-bridgeoam-preview bank1-bootstrap-queue-994-bridgeoam-preview bank1-visible-mode7-window-preview intro-bootstrap-deltas intro-bootstrap-queue mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-loop-hybrid-bridge-sequence intro-loop-hybrid-bridge-visible-sequence intro-native-978 intro-native-978-derived intro-native-978-bridge intro-native-978-bridge-visible
+.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank13-headers bank13-validate bank30-headers bank30-validate bank30-registry tilemap-provenance-1086-1093 l001210-probe l001210-save-savestate l001210-probe-matrix l001210-trace-summary regression-gates callback-contracts-check bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview bank1-bootstrap-queue-978-preview bank1-bootstrap-queue-982-preview bank1-bootstrap-queue-986-preview bank1-bootstrap-queue-986-noobj-preview bank1-bootstrap-queue-986-bridgeoam-preview bank1-bootstrap-queue-990-bridgeoam-preview bank1-bootstrap-queue-994-bridgeoam-preview bank1-visible-mode7-window-preview intro-bootstrap-deltas intro-bootstrap-queue mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-loop-hybrid-bridge-sequence intro-loop-hybrid-bridge-visible-sequence intro-native-978 intro-native-978-derived intro-native-978-bridge intro-native-978-bridge-visible
 
 all: previews
 
@@ -336,6 +340,16 @@ $(BANK7_HEADER_JSON): extract_compression_header_manifest.py $(ROM) | $(OUT_DIR)
 
 bank7-headers: $(BANK7_HEADER_JSON)
 
+$(BANK13_HEADER_JSON): extract_compression_header_manifest.py $(ROM) | $(OUT_DIR)
+	$(PYTHON) extract_compression_header_manifest.py $(ROM) --bank 13 --json-out $(BANK13_HEADER_JSON)
+
+bank13-headers: $(BANK13_HEADER_JSON)
+
+$(BANK13_VALIDATION_JSON): validate_td2_chunks.py decompress_td2_chunk.py $(ROM) $(BANK13_HEADER_JSON) | $(OUT_DIR)
+	$(PYTHON) validate_td2_chunks.py $(ROM) --bank 13 --headers-json $(BANK13_HEADER_JSON) --json-out $(BANK13_VALIDATION_JSON)
+
+bank13-validate: $(BANK13_VALIDATION_JSON)
+
 $(BANK30_HEADER_JSON): extract_compression_header_manifest.py $(ROM) | $(OUT_DIR)
 	$(PYTHON) extract_compression_header_manifest.py $(ROM) --bank 30 --json-out $(BANK30_HEADER_JSON)
 
@@ -355,6 +369,14 @@ $(BANK30_REGISTRY_JSON) $(BANK30_REGISTRY_MD): build_bank30_chunk_registry.py $(
 		--markdown-out $(BANK30_REGISTRY_MD)
 
 bank30-registry: $(BANK30_REGISTRY_JSON) $(BANK30_REGISTRY_MD)
+
+tilemap-provenance-1086-1093: mesen-design-pack-range $(BANK13_VALIDATION_JSON)
+	$(PYTHON) build_tilemap_chunk_provenance.py \
+		$(MESEN_DESIGN_PACK_RANGE_DIR) \
+		$(L001210_TRACE_JSON) \
+		$(TILEMAP_PROVENANCE_1086_1093_JSON) \
+		--chunk-validation $(BANK13_VALIDATION_JSON) \
+		--markdown-out $(TILEMAP_PROVENANCE_1086_1093_MD)
 
 l001210-probe:
 	TD2_BOOT_PROBE_TOTAL_FRAMES=$(L001210_PROBE_TOTAL_FRAMES) \
