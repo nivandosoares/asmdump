@@ -516,6 +516,47 @@ Corrected late-window outcome (`2200` frames, trace window `1200..1202`):
     conditions or use manual debugger confirmation, not more immediate-return
     watchpoints
 
+### CP-21: Per-point-capped `B1F9` wait/exit surface check
+
+- Extended probe control surface in `validation/mesen_probe_boot.lua`:
+  - `TD2_BOOT_PROBE_EXEC_POINT_MAX_HITS_PER_POINT`
+- Added the same env cleanup to `tools/run_l001210_probe_matrix.py`.
+- Updated validation note in `validation/README.md`.
+- Ran a widened forced-callback wait/exit probe for the `01:9568` lane.
+- Evidence:
+  - `tools/out/b1f9_wait_surface_9568/td2_boot_probe.json`
+
+Wait/exit outcome (`2200` frames, trace window `1200..1800`):
+
+- watch list:
+  - `01:B1F9`
+  - `01:B226`
+  - `01:B638`
+  - `01:B6E3`
+  - `01:B755`
+  - `01:9575`
+- trace budget:
+  - `exec_point_max_hits = 16`
+  - `exec_point_max_hits_per_point = 1`
+- observed exec hits:
+  - `01:B1F9` once at frame `1201`
+- no exec hits were observed at:
+  - `01:B226`
+  - `01:B638`
+  - `01:B6E3`
+  - `01:B755`
+  - `01:9575`
+- the per-point cap did not hide later hits:
+  - `exec_point_trace.dropped_hits = 0`
+- practical reading:
+  - removing repeat-budget pressure still does not expose any downstream
+    `L00B1F9` progress in the headless exec surface
+  - this is a stronger negative than the earlier immediate-return probe because
+    the window is wide and the trace no longer risks being flooded by loop hits
+  - the next useful proving lane should move away from headless exec
+    watchpoints and toward manual debugger confirmation or a different state/write
+    instrumentation surface around the `L00B638` / `L00B6E3` wait conditions
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):
@@ -644,6 +685,14 @@ Corrected late-window outcome (`2200` frames, trace window `1200..1202`):
     - but the `01:B1F9` exec snapshot itself sees `$1CA8 = 3`
   - static caller explanation:
     - `L009568` and `L0095AD` both `inc $1CA8` before `jsr L00B1F9`
+- Per-point-capped `B1F9` wait/exit surface (`01:9568`, `2200` frames, window `1200..1800`):
+  - observed:
+    - `01:B1F9` once at frame `1201`
+  - no hits at:
+    - `01:B226`, `01:B638`, `01:B6E3`, `01:B755`, `01:9575`
+  - trace budget note:
+    - `exec_point_max_hits_per_point = 1`
+    - `exec_point_trace.dropped_hits = 0`
 - Targeted `B1F9` side-effect traces (`2` scenarios, `4400` total frames):
   - both forced callback+state scenarios reached:
     - `01:B1F9` once at frame `1201`
@@ -706,15 +755,17 @@ Current status:
 - targeted exec-point tracing now also confirms the forced entry-time state on both
   `01:9568`/`01:95AD` lanes, but the headless runner still reports only `01:B1F9`
   itself and no downstream helper/return sites.
+- widened per-point-capped exec tracing keeps the same boundary:
+  - only `01:B1F9` is seen; no `B226/B638/B6E3/B755/9575`
 - targeted side-effect tracing is now also negative: no helper/setup writes were
   observed around the forced `01:B1F9` entry.
 - caller-stack proof now closes one ambiguity: the forced lane really is entering
   from `01:9568/01:95AD`.
 - corrected late-window tracing plus static caller/routine reads now show a more
   specific next proving lane:
-  - target the `L00B638` / `L00B6E3` wait/exit conditions inside `L00B1F9`, or
-    use manual debugger confirmation there, before attempting further
-    `B256/B273/B59B` activation.
+  - use manual debugger confirmation or a different state/write instrumentation
+    surface around `L00B638` / `L00B6E3`, because further headless exec
+    watchpoint widening has stopped changing the observed boundary.
 
 ### Gate G2: tilemap provenance binding for first frame window (closed)
 

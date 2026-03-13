@@ -76,12 +76,16 @@ decode support exists.
     right bottleneck:
     - after setup, the routine can enter longer wait/worker loops at
       `L00B638` / `L00B6E3` before it reaches `L00B755` and returns
+  - widened per-point-capped wait/exit tracing (`1200..1800`) still records only:
+    - `01:B1F9` once at frame `1201`
+    - no `01:B226`, `01:B638`, `01:B6E3`, `01:B755`, or `01:9575`
+    - `exec_point_trace.dropped_hits = 0`
   - combined v10/v11/v12/v13/v14 telemetry still shows bank30 producers only from `01:A9BD/01:A9E1` with `L00A9` indices `28/29`; unresolved index `32` remains unseen.
-  - immediate follow-up should pivot from immediate-return watchpoints to the
-    `L00B638` / `L00B6E3` wait/exit surface, or to manual debugger
-    verification there, because the real dispatcher-driven
-    `01:9568/01:95AD -> 01:B1F9` path can legitimately stay inside `L00B1F9`
-    longer than a `1200..1202` return window.
+  - immediate follow-up should now pivot away from more headless exec
+    watchpoints and toward manual debugger confirmation or a different
+    state/write instrumentation surface around `L00B638` / `L00B6E3`,
+    because widening the exec watchpoint window no longer changes the observed
+    boundary.
   - trace payload now includes selector fields (`$1C78/$1C80/$1CA8/$1CAC/$1CAE`) per hit, which confirms the `L00B1F9` dynamic-index branch condition for `EE7F` (`$1C80 < $1CA8` with `$1C78 = 1`) is not active during the observed no-input bank30 hit windows.
   - trace payload now also includes `selector_1c86` and `state_1d10`, plus probe-level `b1f9_exec_count/b1f9_exec_frames`, `b1f9_stage_counts/b1f9_stage_frames`, and main-callback forcing controls for targeted control-flow tests.
   - trace payload now also includes caller CPU regs and derived `L00A9A0/L00A9CB` index/source fields (`caller_l00a9_*`), with no mismatches seen across v10/v11 sweeps (`1645/1645` matches where present).

@@ -219,6 +219,8 @@ of `label=BB:AAAA` or bare `BB:AAAA` SNES addresses. Matching exec hits are
 captured into `td2_boot_probe.json` under `exec_point_trace`, and the capture
 window is bounded by `TD2_BOOT_PROBE_TRACE_START_FRAME` /
 `TD2_BOOT_PROBE_TRACE_END_FRAME`.
+Use `TD2_BOOT_PROBE_EXEC_POINT_MAX_HITS_PER_POINT` to cap repeated loop hits
+per watched address when you only need the first `N` sightings of each point.
 
 To trace exact write points in the same forced branch window:
 
@@ -280,6 +282,7 @@ Recent top-level additions in `td2_boot_probe.json`:
 - exec-point trace bundle:
   - `trace_exec_points`
   - `exec_point_max_hits`
+  - `exec_point_max_hits_per_point`
   - `exec_point_trace.hit_count`
   - `exec_point_trace.dropped_hits`
   - `exec_point_trace.hits[]` with CPU regs, stack bytes/return decode, plus selector/state snapshots

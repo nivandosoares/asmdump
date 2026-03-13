@@ -148,6 +148,7 @@ local config = {
     l001210_max_hits = env_number("TD2_BOOT_PROBE_L001210_MAX_HITS", 0),
     trace_exec_points = parse_exec_point_env("TD2_BOOT_PROBE_TRACE_EXEC_POINTS"),
     exec_point_max_hits = env_number("TD2_BOOT_PROBE_EXEC_POINT_MAX_HITS", 128),
+    exec_point_max_hits_per_point = env_number("TD2_BOOT_PROBE_EXEC_POINT_MAX_HITS_PER_POINT", 0),
     trace_write_points = parse_exec_point_env("TD2_BOOT_PROBE_TRACE_WRITE_POINTS"),
     write_point_max_hits = env_number("TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS", 256),
     force_main_callback_start_frame = env_number("TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_START_FRAME", -1),
@@ -210,6 +211,7 @@ local state = {
     l001210_hits = {},
     l001210_dropped_hits = 0,
     exec_point_hits = {},
+    exec_point_hit_counts = {},
     exec_point_dropped_hits = 0,
     write_point_hits = {},
     write_point_dropped_hits = 0,
@@ -683,6 +685,7 @@ local function save_probe_log()
         save_savestate_frame = config.save_savestate_frame,
         trace_exec_points = config.trace_exec_points,
         exec_point_max_hits = config.exec_point_max_hits,
+        exec_point_max_hits_per_point = config.exec_point_max_hits_per_point,
         trace_write_points = config.trace_write_points,
         write_point_max_hits = config.write_point_max_hits,
         force_main_callback_start_frame = config.force_main_callback_start_frame,
@@ -842,6 +845,7 @@ local function reset_probe_state()
     state.l001210_hits = {}
     state.l001210_dropped_hits = 0
     state.exec_point_hits = {}
+    state.exec_point_hit_counts = {}
     state.exec_point_dropped_hits = 0
     state.write_point_hits = {}
     state.write_point_dropped_hits = 0
@@ -1108,6 +1112,13 @@ local function make_exec_point_callback(point)
             return
         end
 
+        local hit_count_for_point = state.exec_point_hit_counts[point.linear] or 0
+        if config.exec_point_max_hits_per_point > 0
+            and hit_count_for_point >= config.exec_point_max_hits_per_point then
+            state.exec_point_dropped_hits = state.exec_point_dropped_hits + 1
+            return
+        end
+
         if config.exec_point_max_hits > 0 and #state.exec_point_hits >= config.exec_point_max_hits then
             state.exec_point_dropped_hits = state.exec_point_dropped_hits + 1
             return
@@ -1178,6 +1189,7 @@ local function make_exec_point_callback(point)
             dp_0010 = read_u16(0x000010),
             dp_0054 = read_u8(0x000054),
         }
+        state.exec_point_hit_counts[point.linear] = hit_count_for_point + 1
     end
 end
 
