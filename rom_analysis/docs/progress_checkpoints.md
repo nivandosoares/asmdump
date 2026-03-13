@@ -557,6 +557,44 @@ Wait/exit outcome (`2200` frames, trace window `1200..1800`):
     watchpoints and toward manual debugger confirmation or a different state/write
     instrumentation surface around the `L00B638` / `L00B6E3` wait conditions
 
+### CP-22: `B1F9` wait-path WRAM write surface check
+
+- Ran a widened forced-callback WRAM write trace for the `01:9568` lane.
+- Evidence:
+  - `tools/out/b1f9_wait_wram_9568/td2_boot_probe.json`
+
+Write-surface outcome (`2200` frames, trace window `1200..1800`):
+
+- watched state writes:
+  - `7E:0960`
+  - `7E:0964`
+  - `7E:0200`
+  - `7E:0202`
+  - `7E:1E2C`
+  - `7E:0440`
+  - `7E:0442`
+  - `7E:0444`
+  - `7E:040A`
+- observed write hits:
+  - none
+- trace result:
+  - `write_point_trace.hit_count = 0`
+  - `write_point_trace.dropped_hits = 0`
+- nearby frame snapshots (`1200..1210`) remain flat at:
+  - `$0960 = 0`
+  - `$0200 = 0`
+  - `$0202 = 1`
+  - `$1E2C = 0`
+  - `$0440/$0442/$0444 = 0/0/0`
+  - `$040A = 0x0011`
+- practical reading:
+  - even a different headless state/write surface around the expected
+    `L00B638` / `L00B6E3` wait-path state does not reveal progress beyond the
+    known `01:B1F9` entry
+  - this is enough evidence to treat the current headless `B1F9` lane as
+    low-yield; the remaining useful follow-up is manual debugger work or a shift
+    to the next unblocked roadmap lane
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):
@@ -693,6 +731,15 @@ Wait/exit outcome (`2200` frames, trace window `1200..1800`):
   - trace budget note:
     - `exec_point_max_hits_per_point = 1`
     - `exec_point_trace.dropped_hits = 0`
+- `B1F9` wait-path WRAM write surface (`01:9568`, `2200` frames, window `1200..1800`):
+  - observed writes:
+    - none
+  - trace result:
+    - `write_point_trace.hit_count = 0`
+    - `write_point_trace.dropped_hits = 0`
+  - stable nearby state snapshots:
+    - `$0960 = 0`, `$0200 = 0`, `$0202 = 1`, `$1E2C = 0`
+    - `$0440/$0442/$0444 = 0/0/0`, `$040A = 0x0011`
 - Targeted `B1F9` side-effect traces (`2` scenarios, `4400` total frames):
   - both forced callback+state scenarios reached:
     - `01:B1F9` once at frame `1201`
@@ -757,15 +804,18 @@ Current status:
   itself and no downstream helper/return sites.
 - widened per-point-capped exec tracing keeps the same boundary:
   - only `01:B1F9` is seen; no `B226/B638/B6E3/B755/9575`
+- widened WRAM write tracing around the expected wait-path state also stays flat:
+  - no writes at `$0960/$0964/$0200/$0202/$1E2C/$0440/$0442/$0444/$040A`
 - targeted side-effect tracing is now also negative: no helper/setup writes were
   observed around the forced `01:B1F9` entry.
 - caller-stack proof now closes one ambiguity: the forced lane really is entering
   from `01:9568/01:95AD`.
 - corrected late-window tracing plus static caller/routine reads now show a more
   specific next proving lane:
-  - use manual debugger confirmation or a different state/write instrumentation
-    surface around `L00B638` / `L00B6E3`, because further headless exec
-    watchpoint widening has stopped changing the observed boundary.
+  - use manual debugger confirmation for the remaining `B1F9` question, or move
+    to the next unblocked roadmap lane in headless mode, because further
+    headless exec/state/write widening has stopped changing the observed
+    boundary.
 
 ### Gate G2: tilemap provenance binding for first frame window (closed)
 
