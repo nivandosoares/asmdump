@@ -1123,6 +1123,20 @@ local function make_exec_point_callback(point)
         local reg_d = mask_u16(cpu_state["cpu.d"])
         local reg_dbr = mask_u16(cpu_state["cpu.dbr"])
         local reg_k = mask_u16(cpu_state["cpu.k"])
+        local stack_addr = mask_u16(reg_sp + 1)
+        local stack_bytes = {}
+        if stack_addr ~= nil then
+            for offset = 0, 7 do
+                stack_bytes[#stack_bytes + 1] = read_u8(0x000000 + ((stack_addr + offset) % 0x10000))
+            end
+        end
+
+        local stack_return_minus_one = nil
+        local stack_return_rts = nil
+        if #stack_bytes >= 2 then
+            stack_return_minus_one = stack_bytes[1] + (stack_bytes[2] * 0x100)
+            stack_return_rts = (stack_return_minus_one + 1) % 0x10000
+        end
 
         state.exec_point_hits[#state.exec_point_hits + 1] = {
             frame = state.frame,
@@ -1138,6 +1152,10 @@ local function make_exec_point_callback(point)
             cpu_d = reg_d,
             cpu_dbr = reg_dbr,
             cpu_k = reg_k,
+            stack_addr = stack_addr,
+            stack_bytes = stack_bytes,
+            stack_return_minus_one = stack_return_minus_one,
+            stack_return_rts = stack_return_rts,
             active_main_callback_addr = read_u16(0x000038),
             active_main_callback_bank = read_u8(0x00003A),
             selector_1c78 = read_u16(0x7E1C78),

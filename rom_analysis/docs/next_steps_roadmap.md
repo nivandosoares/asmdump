@@ -3,7 +3,7 @@
 This roadmap is the direct follow-up after enabling Mesen design packs with
 decoded tilemaps and sprite visibility metadata.
 
-## Current Status Snapshot (2026-03-12)
+## Current Status Snapshot (2026-03-13)
 
 Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 
@@ -53,6 +53,9 @@ decode support exists.
   - matrix v14 stage trace (`3` scenarios, `6600` frames aggregate) confirms forced lanes still report `b1f9_exec_count = 1` but show no `B1F9` internal stage progress (`B226/B256/B273/B59B` all `0`).
   - targeted prologue exec traces (`2200` frames each, forced `01:9568` and `01:95AD`) record only the `01:B1F9` entry at frame `1201`; no exec hits are yet observed at `00:050F`, `00:083F`, return sites `01:B202/01:B206`, or inner stages `01:B226/B256/B273/B59B`.
   - targeted side-effect traces over the same forced lanes and frame window (`1200..1202`) also record no writes at the expected helper/setup sites (`HDMAEN`, `$0966/$0968`, `$0974`, `BGMODE/BGxSC/BG12NBA`, `$0F42`, `TMAIN`, `OBJSEL`, or the `L00052E` window/color-math resets).
+  - stack-return tracing now proves the forced entries are real in-bank calls:
+    - forced `01:9568` reaches `L00B1F9` with `stack_return_rts = 0x9575` (`L009575`)
+    - forced `01:95AD` reaches `L00B1F9` with `stack_return_rts = 0x95B7`
   - shared `B1F9` entry snapshot on both forced lanes:
     - `$1C80/$1CA8 = 0/2`
     - `$1C86 = 1`
@@ -62,7 +65,7 @@ decode support exists.
     - forced `01:9568` enters with `$0F77 = 1`
     - forced `01:95AD` enters with `$0F77 = 0`
   - combined v10/v11/v12/v13/v14 telemetry still shows bank30 producers only from `01:A9BD/01:A9E1` with `L00A9` indices `28/29`; unresolved index `32` remains unseen.
-  - immediate follow-up should pivot from headless probe-only work to manual debugger verification or a different probe surface for the `B1F9` calling context, because both pure exec watchpoints and bounded side-effect tracing stop at the same entry boundary.
+  - immediate follow-up should pivot from headless probe-only work to manual debugger verification or a different probe surface for why the real `B1F9` `jsr` path still produces no downstream helper/setup activity, because both pure exec watchpoints and bounded side-effect tracing stop at the same entry boundary.
   - trace payload now includes selector fields (`$1C78/$1C80/$1CA8/$1CAC/$1CAE`) per hit, which confirms the `L00B1F9` dynamic-index branch condition for `EE7F` (`$1C80 < $1CA8` with `$1C78 = 1`) is not active during the observed no-input bank30 hit windows.
   - trace payload now also includes `selector_1c86` and `state_1d10`, plus probe-level `b1f9_exec_count/b1f9_exec_frames`, `b1f9_stage_counts/b1f9_stage_frames`, and main-callback forcing controls for targeted control-flow tests.
   - trace payload now also includes caller CPU regs and derived `L00A9A0/L00A9CB` index/source fields (`caller_l00a9_*`), with no mismatches seen across v10/v11 sweeps (`1645/1645` matches where present).

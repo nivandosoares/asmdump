@@ -1,6 +1,6 @@
 # ROM Archaeology Progress Checkpoints
 
-Snapshot date: `2026-03-12`
+Snapshot date: `2026-03-13`
 
 This file tracks plan progress as checkpoints with objective evidence and the
 next gate needed to advance.
@@ -437,6 +437,34 @@ Write-trace outcome (`2` scenarios, `2200` frames each, trace window `1200..1202
     produce any of the expected helper/setup side effects in the surrounding
     frame window.
 
+### CP-19: `B1F9` caller stack proof
+
+- Extended exec-point payload in `validation/mesen_probe_boot.lua`:
+  - `stack_addr`
+  - `stack_bytes`
+  - `stack_return_minus_one`
+  - `stack_return_rts`
+- Re-ran narrow forced-callback entry probes for `01:B1F9`.
+- Evidence:
+  - `tools/out/b1f9_prologue_trace_9568/td2_boot_probe.json`
+  - `tools/out/b1f9_prologue_trace_95ad/td2_boot_probe.json`
+
+Stack outcome:
+
+- forced `01:9568` lane:
+  - `stack_return_rts = 0x9575`
+  - this matches the post-`jsr L00B1F9` site at `L009575`
+- forced `01:95AD` lane:
+  - `stack_return_rts = 0x95B7`
+  - this matches the post-`jsr L00B1F9` site immediately after the `L0095AD`
+    call sequence
+- practical reading:
+  - the forced entry is a real bank-1 `jsr` into `L00B1F9`, not an artifact of
+    the callback pointer override alone
+  - the unresolved problem is now narrower:
+    - why the real `jsr` path in the headless forced lane still shows no
+      downstream helper/setup exec hits or writes
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):
@@ -563,6 +591,14 @@ Write-trace outcome (`2` scenarios, `2200` frames each, trace window `1200..1202
     - `00:420C`, `00:2106`, `00:2105`, `00:2107`, `00:2108`, `00:2109`, `00:210B`
     - `00:2101`, `00:212C`, `00:2131`, `00:2130`, `00:212E`, `00:212D`, `00:212F`
     - `00:2123`, `00:2124`, `00:2125`, `7E:0966`, `7E:0968`, `7E:0974`, `00:0F42`
+- Targeted `B1F9` stack-return traces:
+  - forced `01:9568` lane:
+    - `stack_return_rts = 0x9575` (`L009575`)
+  - forced `01:95AD` lane:
+    - `stack_return_rts = 0x95B7`
+  - practical reading:
+    - both forced lanes reach `L00B1F9` through the expected in-bank `jsr`
+      call sites
 - Combined caller/index telemetry (`v10a/v10b/v11/v11b`, `32` traces):
   - observed caller PCs:
     - `01:8E3C`, `01:8E59`, `01:A043`, `01:A061`, `01:A1C4`, `01:A42F`, `01:A9BD`, `01:A9E1`
@@ -608,9 +644,11 @@ Current status:
   itself and no downstream helper/return sites.
 - targeted side-effect tracing is now also negative: no helper/setup writes were
   observed around the forced `01:B1F9` entry.
+- caller-stack proof now closes one ambiguity: the forced lane really is entering
+  from `01:9568/01:95AD`.
 - next proving lane: move to manual debugger confirmation or a different probe
-  surface for the `B1F9` calling context before attempting further `B256/B273/B59B`
-  activation.
+  surface for why the real `B1F9` `jsr` path still produces no downstream helper
+  or setup activity before attempting further `B256/B273/B59B` activation.
 
 ### Gate G2: tilemap provenance binding for first frame window (closed)
 

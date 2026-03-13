@@ -280,7 +280,7 @@ Recent top-level additions in `td2_boot_probe.json`:
   - `exec_point_max_hits`
   - `exec_point_trace.hit_count`
   - `exec_point_trace.dropped_hits`
-  - `exec_point_trace.hits[]` with CPU regs plus selector/state snapshots
+  - `exec_point_trace.hits[]` with CPU regs, stack bytes/return decode, plus selector/state snapshots
 - write-point trace bundle:
   - `trace_write_points`
   - `write_point_max_hits`
