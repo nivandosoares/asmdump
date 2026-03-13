@@ -135,6 +135,15 @@ Ask the user only when blocked by one of these:
 
 Do not ask for routine confirmation to continue.
 
+## Git Workflow
+
+- Commits are allowed whenever they create a clean checkpoint.
+- Push directly to `origin/master` by default for this repository.
+- Do not wait for separate confirmation before pushing a completed checkpoint.
+- Prefer small, coherent commits over batching unrelated work together.
+- If unrelated dirty worktree changes exist, commit only the files that belong
+  to the current checkpoint and leave the rest untouched.
+
 ## End-Of-Turn Output Contract
 
 End each substantive turn with these status lines in the final response:
