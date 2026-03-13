@@ -11,7 +11,7 @@ next gate needed to advance.
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; unresolved targets remain |
 | Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows now cover `1086..1117`, with `1117` as the current headless confidence edge from the preserved `1101` bank-7 runtime anchor |
-| Lane 3: Gameplay-era frame archaeology | queued | no deterministic gameplay capture window committed yet |
+| Lane 3: Gameplay-era frame archaeology | active | a deterministic track-start seed window now exists (`game_11.mss` -> frames `86..93`), but it is still a static scene rather than active driving |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
 ## Completed Checkpoints
@@ -674,6 +674,52 @@ Window reading:
   - per the blocker policy, that extractor lane is now documented and parked;
     the next useful move is either a different bridge surface for a later direct
     runtime hit or a pivot to the next roadmap lane
+
+### CP-25: First deterministic gameplay-seed window (`track1`, frames `86..93`)
+
+- Verified an existing deterministic seed savestate:
+  - `.mesen-config/Mesen2/SaveStates/game_11.mss`
+- Revalidated the screenshot harness against that seed:
+  - `validation/mesen_capture.lua` captures `300` frames after `60` warm-up
+    frames with `b` held
+  - the first nontrivial screenshot appears at capture index `26`
+    (script frame `86`)
+- Added a seeded gameplay-range dump lane in `validation/mesen_dump_bg_range.lua`:
+  - the dumper now accepts the same simple fixed input window controls used by
+    the other validation harnesses
+- Captured the first raw gameplay-seed window:
+  - `tools/out/track1_seed_0086_0093_v2.json`
+  - `tools/out/track1_seed_0086_0093_v2_sequence.txt`
+  - `tools/out/track1_seed_0086_0093_v2_sequence.json`
+- Added a committed window note:
+  - `rom_analysis/maps/tracks/track1_seed_0086_0093.md`
+
+Window reading:
+
+- The flat dump covers frames `86..93` from the seeded run with `b` held during
+  script frames `60..359`.
+- Frame `86` renders back from `VRAM + CGRAM + PPU state + OAM` with `0`
+  mismatched pixels against the screenshot harness image
+  `td2_track1_accel_frame_00026.png`.
+- Render-side reading for the captured seed window:
+  - `bgMode = 1`
+  - `mainScreenLayers = 0x04`
+- The captured scene is static across the full `86..93` window:
+  - `VRAM` diff `0`
+  - `CGRAM` diff `0`
+  - `OAM` diff `0`
+  - rendered BG output unchanged between frames `86` and `93`
+- Probe-side callback/state context over the same seeded input window remains
+  trivial:
+  - `active_main = 00:8029`
+  - `active_nmi = 00:8029`
+  - tracked `$0202/$0204/$0206/$0208/$020A/$040A/$0054` all stay `0`
+- practical reading:
+  - `game_11.mss` is a valid deterministic seed for track-start visuals
+  - this seed is not yet a moving gameplay segment under the tested `b`-hold
+    input alone
+  - the next gameplay follow-up should be a seeded button sweep or a different
+    savestate nearer active driving
 
 ## Current Checkpoint Metrics
 

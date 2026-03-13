@@ -50,6 +50,23 @@ TD2_BG_RANGE_OUTPUT_PREFIX=/home/nivando-soares/asmdump/tools/out/intro_loop \
 ./validation/run_mesen_dump_bg_range.sh
 ```
 
+The same dumper can now replay a simple fixed input window while it captures a
+seeded gameplay range:
+
+```sh
+MESEN_TIMEOUT_SECONDS=60 \
+TD2_BG_RANGE_START_FRAME=86 \
+TD2_BG_RANGE_END_FRAME=93 \
+TD2_BG_RANGE_STEP=1 \
+TD2_BG_RANGE_DUMP_OAM=1 \
+TD2_BG_RANGE_DUMP_SCREENSHOTS=1 \
+TD2_BG_RANGE_INPUT_START_FRAME=60 \
+TD2_BG_RANGE_INPUT_END_FRAME=359 \
+TD2_BG_RANGE_INPUT=b \
+TD2_BG_RANGE_OUTPUT_PREFIX=/home/nivando-soares/asmdump/tools/out/track1_seed_0086_0093 \
+./validation/run_mesen_dump_bg_range.sh ./game.smc ./.mesen-config/Mesen2/SaveStates/game_11.mss
+```
+
 That produces flat files like:
 
 - `tools/out/intro_loop_frame_00654_vram.bin`

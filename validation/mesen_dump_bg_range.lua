@@ -12,6 +12,30 @@ local function env_number(name, fallback)
     return parsed
 end
 
+local function trim(value)
+    return tostring(value):match("^%s*(.-)%s*$")
+end
+
+local function parse_button_pattern(raw)
+    if raw == nil or raw == "" then
+        return {}
+    end
+
+    local pattern = {}
+    for token in raw:gmatch("[^,]+") do
+        local key = trim(token)
+        if key ~= "" then
+            pattern[key] = true
+        end
+    end
+    return pattern
+end
+
+local function parse_input_env(name)
+    local raw = os.getenv(name)
+    return parse_button_pattern(raw)
+end
+
 local function read_binary_file(path)
     if not path or path == "" then
         return nil
@@ -144,7 +168,11 @@ local config = {
     step = env_number("TD2_BG_RANGE_STEP", 1),
     dump_oam = env_number("TD2_BG_RANGE_DUMP_OAM", 0) ~= 0,
     dump_screenshots = env_number("TD2_BG_RANGE_DUMP_SCREENSHOTS", 0) ~= 0,
-    savestate_filename = "seed_state.bin"
+    savestate_filename = "seed_state.bin",
+    input_start_frame = env_number("TD2_BG_RANGE_INPUT_START_FRAME", -1),
+    input_end_frame = env_number("TD2_BG_RANGE_INPUT_END_FRAME", -1),
+    input_player = env_number("TD2_BG_RANGE_INPUT_PLAYER", 0),
+    input_pattern = parse_input_env("TD2_BG_RANGE_INPUT")
 }
 
 if config.end_frame < config.start_frame then
@@ -222,6 +250,35 @@ local function should_capture_frame(frame)
     return ((frame - config.start_frame) % config.step) == 0
 end
 
+local function resolve_active_input_pattern(frame)
+    if config.input_start_frame < 0 or frame < config.input_start_frame then
+        return nil
+    end
+
+    if config.input_end_frame >= 0 and frame > config.input_end_frame then
+        return nil
+    end
+
+    if next(config.input_pattern) == nil then
+        return nil
+    end
+
+    return config.input_pattern
+end
+
+local function on_input_polled()
+    if state.finished then
+        return
+    end
+
+    local input_pattern = resolve_active_input_pattern(state.frame)
+    if input_pattern == nil then
+        return
+    end
+
+    emu.setInput(input_pattern, config.input_player)
+end
+
 local function capture_frame(frame)
     local prefix = string.format("%s_frame_%05d", output_prefix, frame)
     local filtered_state = filter_state_snapshot(emu.getState())
@@ -261,6 +318,10 @@ local function save_summary()
         total_frames = config.total_frames,
         dump_oam = config.dump_oam,
         dump_screenshots = config.dump_screenshots,
+        input_start_frame = config.input_start_frame,
+        input_end_frame = config.input_end_frame,
+        input_player = config.input_player,
+        input_pattern = config.input_pattern,
         output_prefix = output_prefix,
         captured = state.captured
     }
@@ -294,4 +355,5 @@ emu.displayMessage(
 if savestate_path ~= nil then
     state.exec_callback_ref = emu.addMemoryCallback(on_first_exec, emu.callbackType.exec, 0x000000, 0xFFFFFF)
 end
+emu.addEventCallback(on_input_polled, emu.eventType.inputPolled)
 emu.addEventCallback(on_end_frame, emu.eventType.endFrame)

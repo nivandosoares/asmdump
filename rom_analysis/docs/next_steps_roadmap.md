@@ -11,7 +11,7 @@ Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 |---|---|---|
 | 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps are done; targeted `B1F9` prologue traces now prove forced entry context, but unresolved queue still remains (`E91F`, `EE7F`, `DA96`, `9681`). |
 | 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance now covers `1086..1117`; `1117` is the current headless confidence edge, so the next step is to recover a later direct runtime hit or pivot to the next unblocked lane. |
-| 3. Gameplay-frame expansion | not started | Intro/attract windows are covered; deterministic gameplay capture windows are not yet extracted. |
+| 3. Gameplay-frame expansion | in progress | A deterministic track-start seed now exists (`game_11.mss` -> frames `86..93`), but the current `b`-hold run is still static rather than active driving. |
 | 4. Bank API contracts | not started | Baseline docs exist; callback/API contracts for bank 30/10/11 are not yet mapped to completion. |
 
 Validation contract baseline:
@@ -163,6 +163,20 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
 
 Goal: move from intro archaeology to gameplay-era assets.
 
+- Closed first deterministic seed-window deliverable:
+  - `rom_analysis/maps/tracks/track1_seed_0086_0093.md`
+  - `tools/out/track1_seed_0086_0093_v2.json`
+  - `tools/out/track1_seed_0086_0093_v2_sequence.txt`
+  - `tools/out/track1_seed_0086_0093_v2_sequence.json`
+- Current gameplay reading:
+  - `.mesen-config/Mesen2/SaveStates/game_11.mss` is a usable deterministic
+    track-start seed
+  - the first nontrivial `b`-hold screenshot arrives at script frame `86`
+  - the seeded raw dump for frames `86..93` is exact against the screenshot
+    harness, but the scene is static across that whole window
+  - probe-side callback/state telemetry for the same window remains trivial
+    (`active_main = active_nmi = 00:8029`, tracked gameplay-state fields still
+    `0`), so bank10/bank11 ownership is still not mapped here
 - Capture deterministic gameplay frame windows via Mesen extractor.
 - Build design packs for those windows:
   - `make -C tools mesen-design-pack-range MESEN_RANGE_FRAMES_DIR=out/<gameplay_range_dir>`
@@ -170,6 +184,12 @@ Goal: move from intro archaeology to gameplay-era assets.
   - road surfaces and horizon tiles -> `rom_analysis/graphics/tilesets/`
   - HUD/UI elements -> `rom_analysis/graphics/ui/`
   - dynamic objects/sprites -> `rom_analysis/graphics/sprites/`
+- Immediate follow-up:
+  - run a seeded input/button sweep from `game_11.mss` to find the first
+    moving/driving window
+  - if `game_11.mss` never leaves the static scene under reasonable scripted
+    inputs, replace it with a later gameplay savestate before spending time on
+    design-pack conversion
 
 ## 4. Bank API Contracts (Code-Side Archaeology)
 
