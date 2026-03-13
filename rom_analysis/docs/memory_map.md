@@ -69,6 +69,8 @@ Generated with:
 |---|---|---|---|---|---|
 | `1086..1093` | `bg1` (Mode 7 main layer) | `144` unique tile indices (`22` contiguous ranges) | `0x2000` | `0D:C4DC` (`26FB`) | Runtime hit at frame `1088`; frames `1089..1093` use carry-over mapping from that hit; frames `1086..1087` use nearest-forward mapping (`+2/+1` frames). |
 | `1094..1101` | `bg1` (Mode 7 main layer) | `144` unique tile indices (`22` contiguous ranges) | `0x2000` | `0D:C4DC` -> `07:BF49` -> `07:C112` | Frames `1094..1095` carry forward the `1088` bank13 hit; frame `1096` is a direct runtime hit at `07:BF49`, frames `1097..1100` carry from that hit, and frame `1101` is a direct runtime hit at `07:C112`. |
+| `1102..1109` | `bg1` (Mode 7 main layer) | `144` unique tile indices (`22` contiguous ranges) | `0x2000` | `07:C112` (`26FB`) | All frames carry forward the direct `1101` bank-7 hit; `frame_delta = 1..8`. |
+| `1110..1117` | `bg1` (Mode 7 main layer) | `144` unique tile indices (`22` contiguous ranges) | `0x2000` | `07:C112` (`26FB`) | All frames carry forward the direct `1101` bank-7 hit; `frame_delta = 9..16`, which is the current headless confidence edge. |
 
 Supporting artifacts:
 
@@ -76,6 +78,10 @@ Supporting artifacts:
 - `rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md`
 - `rom_analysis/maps/tilemaps/mesen_range_1094_1101_provenance.jsonc`
 - `rom_analysis/maps/tilemaps/mesen_range_1094_1101_provenance.md`
+- `rom_analysis/maps/tilemaps/mesen_range_1102_1109_provenance.jsonc`
+- `rom_analysis/maps/tilemaps/mesen_range_1102_1109_provenance.md`
+- `rom_analysis/maps/tilemaps/mesen_range_1110_1117_provenance.jsonc`
+- `rom_analysis/maps/tilemaps/mesen_range_1110_1117_provenance.md`
 - `tools/out/bank13_chunk_validation.json` (`0D:C4DC` decode: `output_size=4000`, `consumed=1374`)
 - `tools/out/bank7_chunk_validation.json` (`07:BF49` decode: `output_size=4102`, `consumed=456`; `07:C112` decode: `output_size=2832`, `consumed=2333`)
 

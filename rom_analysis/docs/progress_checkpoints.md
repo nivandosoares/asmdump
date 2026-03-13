@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; unresolved targets remain |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows now cover `1086..1101` with validated bank13/bank7 runtime anchors |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows now cover `1086..1117`, with `1117` as the current headless confidence edge from the preserved `1101` bank-7 runtime anchor |
 | Lane 3: Gameplay-era frame archaeology | queued | no deterministic gameplay capture window committed yet |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -635,6 +635,45 @@ Window reading:
     source changes underneath it
   - the next useful Lane 2 step is to capture and bind the next contiguous block
     after `1101`, not to keep reworking `1086..1101`
+
+### CP-24: Carry-covered continuation of the late-attract tilemap window (`1102..1117`)
+
+- Built two follow-on design-pack ranges:
+  - `tools/out/design_mesen_range_1102_1109_v1/design_pack_range.json`
+  - `tools/out/design_mesen_range_1110_1117_v1/design_pack_range.json`
+- Added committed provenance outputs:
+  - `rom_analysis/maps/tilemaps/mesen_range_1102_1109_provenance.jsonc`
+  - `rom_analysis/maps/tilemaps/mesen_range_1102_1109_provenance.md`
+  - `rom_analysis/maps/tilemaps/mesen_range_1110_1117_provenance.jsonc`
+  - `rom_analysis/maps/tilemaps/mesen_range_1110_1117_provenance.md`
+- Extended the memory-map binding:
+  - `rom_analysis/docs/memory_map.md`
+
+Window reading:
+
+- `bg1` remains the active main-screen tile layer for all frames `1102..1117`.
+- `chrBaseWords` remains `0x2000`.
+- The visible tile-index set stays stable:
+  - `144` unique indices
+  - `22` contiguous ranges
+- Runtime chunk provenance stays on the same validated bank-7 source for the full carry-covered block:
+  - `1102..1109`: `07:C112` (`26FB`, bank 7), `frame_delta = 1..8`
+  - `1110..1117`: `07:C112` (`26FB`, bank 7), `frame_delta = 9..16`
+- Validation metadata remains stable for the carry source:
+  - `07:C112`: `output_size = 2832`, `consumed_bytes = 2333`
+- practical reading:
+  - contiguous late-attract tilemap provenance now covers `1086..1117`
+  - `1117` is the current headless confidence edge because it exactly exhausts
+    the current carry window from the direct `1101` hit, and the preserved
+    `periodic_start_pulses_240_1800` trace has no later direct hit after `1101`
+  - a scripted-input attempt to open the later direct-hit cluster
+    (`6800:start;6900-6920:start,a` -> `7051/7059/7064`) was tried three ways in
+    the extractor bridge and failed on the same boundary: once
+    `InitializeDebugger` + input overrides were enabled, the Mesen bridge did
+    not advance frames
+  - per the blocker policy, that extractor lane is now documented and parked;
+    the next useful move is either a different bridge surface for a later direct
+    runtime hit or a pivot to the next roadmap lane
 
 ## Current Checkpoint Metrics
 

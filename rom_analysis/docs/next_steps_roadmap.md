@@ -10,7 +10,7 @@ Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 | Roadmap lane | Status | Current reading |
 |---|---|---|
 | 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps are done; targeted `B1F9` prologue traces now prove forced entry context, but unresolved queue still remains (`E91F`, `EE7F`, `DA96`, `9681`). |
-| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance now covers `1086..1101`; next step is to capture and bind the next contiguous late-attract block beyond `1101`. |
+| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance now covers `1086..1117`; `1117` is the current headless confidence edge, so the next step is to recover a later direct runtime hit or pivot to the next unblocked lane. |
 | 3. Gameplay-frame expansion | not started | Intro/attract windows are covered; deterministic gameplay capture windows are not yet extracted. |
 | 4. Bank API contracts | not started | Baseline docs exist; callback/API contracts for bank 30/10/11 are not yet mapped to completion. |
 
@@ -120,14 +120,26 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
   - `rom_analysis/maps/tilemaps/mesen_range_1094_1101_provenance.md`
   - generated from `tools/out/design_mesen_range_1094_1101_v1` with preserved
     `L001210` runtime hits at `1088/1096/1101` plus bank13/bank7 validation binding
+- Closed carry-covered continuation deliverables:
+  - `rom_analysis/maps/tilemaps/mesen_range_1102_1109_provenance.jsonc`
+  - `rom_analysis/maps/tilemaps/mesen_range_1102_1109_provenance.md`
+  - `rom_analysis/maps/tilemaps/mesen_range_1110_1117_provenance.jsonc`
+  - `rom_analysis/maps/tilemaps/mesen_range_1110_1117_provenance.md`
+  - generated from `tools/out/design_mesen_range_1102_1109_v1` and
+    `tools/out/design_mesen_range_1110_1117_v1` with preserved bank-7 carryover
+    from the direct `1101` `07:C112` hit
 - Current window reading:
-  - `bg1` remains the visible main-screen layer through `1094..1101`
+  - `bg1` remains the visible main-screen layer through `1117`
   - the tile-index set stays fixed at `144` indices / `22` ranges with
     `chrBaseWords = 0x2000`
   - runtime chunk provenance steps across that same visible block:
     - `1094..1095` -> `0D:C4DC`
     - `1096..1100` -> `07:BF49`
-    - `1101` -> `07:C112`
+    - `1101..1117` -> `07:C112`
+  - confidence boundary:
+    - `1117` is the current headless edge because it is `frame_delta = 16` from
+      the direct `1101` hit and the preserved `periodic_start_pulses_240_1800`
+      trace has no later direct hit after `1101`
 - For target windows (start with `1086..1093`):
   - `make -C tools mesen-design-pack-range MESEN_RANGE_FRAMES_DIR=out/mesen_range_1086_1093_v1`
 - For each frame pack:
@@ -138,9 +150,14 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
   - `rom_analysis/maps/tilemaps/`
   - `rom_analysis/docs/memory_map.md`
 - Immediate follow-up:
-  - capture/build the next contiguous late-attract frame block after `1101`
-  - bind it with the preserved `L001210` trace sequence if the frame-aligned hit
-    cadence remains stable
+  - do not extend blindly past `1117` on carryover alone
+  - recover a later direct runtime hit on the same scene cadence, or use a
+    different bridge surface for that proof
+  - scripted-input extraction is currently parked as a blocker:
+    - matching the later `6800:start;6900-6920:start,a` scenario would be the
+      right headless follow-up, but three extractor-bridge attempts all stopped
+      at the same boundary once `InitializeDebugger` + input overrides were in
+      play, so that lane is not worth more retries right now
 
 ## 3. Expand Into Gameplay Frames
 
