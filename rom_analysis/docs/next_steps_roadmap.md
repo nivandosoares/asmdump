@@ -56,16 +56,32 @@ decode support exists.
   - stack-return tracing now proves the forced entries are real in-bank calls:
     - forced `01:9568` reaches `L00B1F9` with `stack_return_rts = 0x9575` (`L009575`)
     - forced `01:95AD` reaches `L00B1F9` with `stack_return_rts = 0x95B7`
-  - shared `B1F9` entry snapshot on both forced lanes:
-    - `$1C80/$1CA8 = 0/2`
-    - `$1C86 = 1`
-    - `$1D10 = 0x4100`
-    - `$0960 = 0`
+    - both lanes also carry the same deeper stack anchor `0x82A0`, matching the
+      bank-0 callback-dispatch wrapper before `jmp [$0038]`
+  - corrected exec-point tracing now honors the configured trace-frame window.
+  - corrected late-window `01:9568` trace (`1200..1202`) records:
+    - `00:82A1` at frame `1200`
+    - `01:B1F9` at frame `1201`
+    - no `01:9575` hit in that immediate window
+  - caller/frame-state reconciliation is now tighter:
+    - frame snapshots still hold the forced pre-call tuple
+      `$1C78/$1C80/$1CA8 = 1/0/2`
+    - but the corrected `01:B1F9` exec snapshot sees `$1CA8 = 3`
+    - static bank-1 caller reads explain that delta because both `L009568` and
+      `L0095AD` do `inc $1CA8` before `jsr L00B1F9`
   - lane-specific difference:
     - forced `01:9568` enters with `$0F77 = 1`
     - forced `01:95AD` enters with `$0F77 = 0`
+  - static `L00B1F9` reading now shows the missing immediate return is not the
+    right bottleneck:
+    - after setup, the routine can enter longer wait/worker loops at
+      `L00B638` / `L00B6E3` before it reaches `L00B755` and returns
   - combined v10/v11/v12/v13/v14 telemetry still shows bank30 producers only from `01:A9BD/01:A9E1` with `L00A9` indices `28/29`; unresolved index `32` remains unseen.
-  - immediate follow-up should pivot from headless probe-only work to manual debugger verification or a different probe surface for why the real `B1F9` `jsr` path still produces no downstream helper/setup activity, because both pure exec watchpoints and bounded side-effect tracing stop at the same entry boundary.
+  - immediate follow-up should pivot from immediate-return watchpoints to the
+    `L00B638` / `L00B6E3` wait/exit surface, or to manual debugger
+    verification there, because the real dispatcher-driven
+    `01:9568/01:95AD -> 01:B1F9` path can legitimately stay inside `L00B1F9`
+    longer than a `1200..1202` return window.
   - trace payload now includes selector fields (`$1C78/$1C80/$1CA8/$1CAC/$1CAE`) per hit, which confirms the `L00B1F9` dynamic-index branch condition for `EE7F` (`$1C80 < $1CA8` with `$1C78 = 1`) is not active during the observed no-input bank30 hit windows.
   - trace payload now also includes `selector_1c86` and `state_1d10`, plus probe-level `b1f9_exec_count/b1f9_exec_frames`, `b1f9_stage_counts/b1f9_stage_frames`, and main-callback forcing controls for targeted control-flow tests.
   - trace payload now also includes caller CPU regs and derived `L00A9A0/L00A9CB` index/source fields (`caller_l00a9_*`), with no mismatches seen across v10/v11 sweeps (`1645/1645` matches where present).

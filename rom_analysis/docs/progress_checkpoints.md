@@ -391,6 +391,10 @@ Exec-trace outcome (`2` scenarios, `2200` frames each):
 - lane-specific difference at entry:
   - forced `01:9568` shows `$0F77 = 1`
   - forced `01:95AD` shows `$0F77 = 0`
+- note:
+  - this first prologue bundle was captured before exec-point traces honored
+    `TD2_BOOT_PROBE_TRACE_START_FRAME` / `TD2_BOOT_PROBE_TRACE_END_FRAME`; the
+    corrected late-window read is recorded in `CP-20`
 - practical reading:
   - the headless runner now proves the `B1F9` entry context, but still does not
     expose post-entry helper/return flow through pure exec watchpoints.
@@ -458,12 +462,59 @@ Stack outcome:
   - `stack_return_rts = 0x95B7`
   - this matches the post-`jsr L00B1F9` site immediately after the `L0095AD`
     call sequence
+- deeper stack word on both lanes:
+  - `0x82A0` (`+1 -> 0x82A1`)
+  - this matches the bank-0 main-callback dispatcher wrapper that pushes a
+    synthetic return before `jmp [$0038]`
 - practical reading:
   - the forced entry is a real bank-1 `jsr` into `L00B1F9`, not an artifact of
     the callback pointer override alone
-  - the unresolved problem is now narrower:
-    - why the real `jsr` path in the headless forced lane still shows no
-      downstream helper/setup exec hits or writes
+  - the call chain shape is now also consistent with normal NMI callback
+    dispatch:
+    - bank 0 dispatcher -> `01:9568/01:95AD` -> `01:B1F9`
+- the unresolved problem is now narrower:
+  - why the real `jsr` path in the headless forced lane still shows no
+    downstream helper/setup exec hits or writes
+
+### CP-20: `B1F9` return-window correction and caller-side `1CA8` increment
+
+- Fixed probe behavior in `validation/mesen_probe_boot.lua`:
+  - exec-point callbacks now honor
+    `TD2_BOOT_PROBE_TRACE_START_FRAME` / `TD2_BOOT_PROBE_TRACE_END_FRAME`
+- Updated validation note in `validation/README.md`.
+- Ran a corrected late-window forced-callback probe for the `01:9568` lane.
+- Evidence:
+  - `tools/out/b1f9_return_trace_9568/td2_boot_probe.json`
+
+Corrected late-window outcome (`2200` frames, trace window `1200..1202`):
+
+- observed exec points:
+  - `00:82A1` at frame `1200`
+  - `01:B1F9` at frame `1201`
+- no exec hit was observed at:
+  - `01:9575`
+- frame snapshots for `1200..1201` still show the forced pre-call state:
+  - `$1C78/$1C80/$1CA8 = 1/0/2`
+  - `$1C86 = 1`
+  - `$1D10 = 0x4100`
+- but the corrected `01:B1F9` exec snapshot records:
+  - `$1CA8 = 3`
+  - `stack_return_rts = 0x9575`
+- static caller read now explains that delta:
+  - `L009568` does `inc $1CA8` before `jsr L00B1F9`
+  - `L0095AD` does the same
+- static `L00B1F9` read also explains why an immediate `01:9575` hit is not the
+  best next proving surface:
+  - after entry/setup, the routine can run long internal wait loops at
+    `L00B638` / `L00B6E3` before it reaches `L00B755` and returns to the caller
+- practical reading:
+  - the old “entry sees `$1CA8 = 2`” interpretation was too literal; the forced
+    frame state is `2`, but both known callers increment it before the `jsr`
+  - the missing immediate `01:9575` hit no longer points to a broken call chain;
+    it is consistent with `L00B1F9` doing longer in-routine work before return
+  - the next low-thrash lane should target the `L00B638` / `L00B6E3` wait/exit
+    conditions or use manual debugger confirmation, not more immediate-return
+    watchpoints
 
 ## Current Checkpoint Metrics
 
@@ -582,6 +633,17 @@ Stack outcome:
   - lane difference:
     - `$0F77 = 1` on forced `01:9568`
     - `$0F77 = 0` on forced `01:95AD`
+- Corrected `B1F9` return-window trace (`01:9568`, `2200` frames, window `1200..1202`):
+  - observed:
+    - `00:82A1` at frame `1200`
+    - `01:B1F9` at frame `1201`
+  - no hit at:
+    - `01:9575`
+  - corrected entry read:
+    - frame-level forced state still holds `$1C78/$1C80/$1CA8 = 1/0/2`
+    - but the `01:B1F9` exec snapshot itself sees `$1CA8 = 3`
+  - static caller explanation:
+    - `L009568` and `L0095AD` both `inc $1CA8` before `jsr L00B1F9`
 - Targeted `B1F9` side-effect traces (`2` scenarios, `4400` total frames):
   - both forced callback+state scenarios reached:
     - `01:B1F9` once at frame `1201`
@@ -596,9 +658,11 @@ Stack outcome:
     - `stack_return_rts = 0x9575` (`L009575`)
   - forced `01:95AD` lane:
     - `stack_return_rts = 0x95B7`
+  - shared deeper stack word:
+    - `0x82A0` (`dispatcher wrapper anchor`, `RTS -> 0x82A1`)
   - practical reading:
     - both forced lanes reach `L00B1F9` through the expected in-bank `jsr`
-      call sites
+      call sites under the normal bank-0 callback dispatcher
 - Combined caller/index telemetry (`v10a/v10b/v11/v11b`, `32` traces):
   - observed caller PCs:
     - `01:8E3C`, `01:8E59`, `01:A043`, `01:A061`, `01:A1C4`, `01:A42F`, `01:A9BD`, `01:A9E1`
@@ -646,9 +710,11 @@ Current status:
   observed around the forced `01:B1F9` entry.
 - caller-stack proof now closes one ambiguity: the forced lane really is entering
   from `01:9568/01:95AD`.
-- next proving lane: move to manual debugger confirmation or a different probe
-  surface for why the real `B1F9` `jsr` path still produces no downstream helper
-  or setup activity before attempting further `B256/B273/B59B` activation.
+- corrected late-window tracing plus static caller/routine reads now show a more
+  specific next proving lane:
+  - target the `L00B638` / `L00B6E3` wait/exit conditions inside `L00B1F9`, or
+    use manual debugger confirmation there, before attempting further
+    `B256/B273/B59B` activation.
 
 ### Gate G2: tilemap provenance binding for first frame window (closed)
 

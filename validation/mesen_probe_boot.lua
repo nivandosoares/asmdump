@@ -1104,7 +1104,7 @@ end
 
 local function make_exec_point_callback(point)
     return function()
-        if state.finished then
+        if state.finished or not is_trace_frame() then
             return
         end
 

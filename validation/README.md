@@ -216,7 +216,9 @@ TD2_BOOT_PROBE_EXEC_POINT_MAX_HITS=32 \
 
 `TD2_BOOT_PROBE_TRACE_EXEC_POINTS` accepts a comma- or semicolon-separated list
 of `label=BB:AAAA` or bare `BB:AAAA` SNES addresses. Matching exec hits are
-captured into `td2_boot_probe.json` under `exec_point_trace`.
+captured into `td2_boot_probe.json` under `exec_point_trace`, and the capture
+window is bounded by `TD2_BOOT_PROBE_TRACE_START_FRAME` /
+`TD2_BOOT_PROBE_TRACE_END_FRAME`.
 
 To trace exact write points in the same forced branch window:
 
