@@ -36,6 +36,54 @@ local function parse_input_env(name)
     return parse_button_pattern(raw)
 end
 
+local function parse_input_windows_env(name)
+    local raw = os.getenv(name)
+    if raw == nil or raw == "" then
+        return {}
+    end
+
+    local windows = {}
+    for segment in raw:gmatch("[^;]+") do
+        local item = trim(segment)
+        if item ~= "" then
+            local range_raw, buttons_raw = item:match("^([^:]+):?(.*)$")
+            if range_raw ~= nil then
+                local start_raw, end_raw = range_raw:match("^(%-?%d+)%s*%-%s*(%-?%d+)$")
+                if start_raw == nil then
+                    local single_raw = range_raw:match("^(%-?%d+)$")
+                    if single_raw ~= nil then
+                        start_raw = single_raw
+                        end_raw = single_raw
+                    end
+                end
+
+                local start_frame = tonumber(start_raw)
+                local end_frame = tonumber(end_raw)
+                if start_frame ~= nil and end_frame ~= nil then
+                    if end_frame < start_frame then
+                        start_frame, end_frame = end_frame, start_frame
+                    end
+
+                    windows[#windows + 1] = {
+                        start_frame = math.floor(start_frame),
+                        end_frame = math.floor(end_frame),
+                        pattern = parse_button_pattern(buttons_raw)
+                    }
+                end
+            end
+        end
+    end
+
+    table.sort(windows, function(a, b)
+        if a.start_frame == b.start_frame then
+            return a.end_frame < b.end_frame
+        end
+        return a.start_frame < b.start_frame
+    end)
+
+    return windows
+end
+
 local function read_binary_file(path)
     if not path or path == "" then
         return nil
@@ -172,7 +220,8 @@ local config = {
     input_start_frame = env_number("TD2_BG_RANGE_INPUT_START_FRAME", -1),
     input_end_frame = env_number("TD2_BG_RANGE_INPUT_END_FRAME", -1),
     input_player = env_number("TD2_BG_RANGE_INPUT_PLAYER", 0),
-    input_pattern = parse_input_env("TD2_BG_RANGE_INPUT")
+    input_pattern = parse_input_env("TD2_BG_RANGE_INPUT"),
+    input_windows = parse_input_windows_env("TD2_BG_RANGE_INPUT_WINDOWS")
 }
 
 if config.end_frame < config.start_frame then
@@ -251,6 +300,18 @@ local function should_capture_frame(frame)
 end
 
 local function resolve_active_input_pattern(frame)
+    if #config.input_windows > 0 then
+        for _, window in ipairs(config.input_windows) do
+            if frame >= window.start_frame and frame <= window.end_frame then
+                if next(window.pattern) == nil then
+                    return nil
+                end
+                return window.pattern
+            end
+        end
+        return nil
+    end
+
     if config.input_start_frame < 0 or frame < config.input_start_frame then
         return nil
     end
@@ -322,6 +383,7 @@ local function save_summary()
         input_end_frame = config.input_end_frame,
         input_player = config.input_player,
         input_pattern = config.input_pattern,
+        input_windows = config.input_windows,
         output_prefix = output_prefix,
         captured = state.captured
     }

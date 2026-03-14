@@ -11,7 +11,7 @@ Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 |---|---|---|
 | 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps are done; targeted `B1F9` prologue traces now prove forced entry context, but unresolved queue still remains (`E91F`, `EE7F`, `DA96`, `9681`). |
 | 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance now covers `1086..1117`; `1117` is the current headless confidence edge, so the next step is to recover a later direct runtime hit or pivot to the next unblocked lane. |
-| 3. Gameplay-frame expansion | in progress | A deterministic track-start seed now exists (`game_11.mss` -> frames `86..93`), but the current `b`-hold run is still static rather than active driving. |
+| 3. Gameplay-frame expansion | in progress | `game_11.mss` now has bounded moving paths at the screenshot level (`b_hold`, `start_then_a_hold`), but the earliest raw `VRAM/CGRAM/OAM/PPU` follow-up still diverges from the screenshot sweep. |
 | 4. Bank API contracts | not started | Baseline docs exist; callback/API contracts for bank 30/10/11 are not yet mapped to completion. |
 
 Validation contract baseline:
@@ -168,15 +168,30 @@ Goal: move from intro archaeology to gameplay-era assets.
   - `tools/out/track1_seed_0086_0093_v2.json`
   - `tools/out/track1_seed_0086_0093_v2_sequence.txt`
   - `tools/out/track1_seed_0086_0093_v2_sequence.json`
+- Closed seeded sweep deliverable:
+  - `rom_analysis/maps/tracks/track1_seed_sweep_v1.md`
+  - `tools/out/track1_seed_sweep_v1/summary.json`
+  - `tools/out/track1_seed_sweep_v1/summary.md`
 - Current gameplay reading:
   - `.mesen-config/Mesen2/SaveStates/game_11.mss` is a usable deterministic
     track-start seed
-  - the first nontrivial `b`-hold screenshot arrives at script frame `86`
-  - the seeded raw dump for frames `86..93` is exact against the screenshot
-    harness, but the scene is static across that whole window
-  - probe-side callback/state telemetry for the same window remains trivial
-    (`active_main = active_nmi = 00:8029`, tracked gameplay-state fields still
-    `0`), so bank10/bank11 ownership is still not mapped here
+  - bounded scripted-input sweep result:
+    - `b_hold` first becomes nontrivial at frame `76` and moves again at `92`
+    - `start_then_b_hold` stays a static seed after frame `64`
+    - `start_then_a_hold` becomes nontrivial at frame `61` and moves again at
+      `65`
+  - the old raw `86..93` `b`-hold dump is still exact against the screenshot
+    harness, but that specific window remains static
+  - the first early moving raw follow-up (`start_then_a_hold`, `61..68`) is now
+    a documented blocker:
+    - input scheduling is present in the dump summary
+    - but the raw surface renders back as `bgMode = 0`,
+      `mainScreenLayers = 0x00`
+    - the dumper screenshot for frame `61` differs from the sweep screenshot by
+      `51503` pixels and does not match nearby sweep frames either
+  - probe-side callback/state telemetry for the known static `86..93` window
+    remains trivial (`active_main = active_nmi = 00:8029`, tracked gameplay
+    fields still `0`)
 - Capture deterministic gameplay frame windows via Mesen extractor.
 - Build design packs for those windows:
   - `make -C tools mesen-design-pack-range MESEN_RANGE_FRAMES_DIR=out/<gameplay_range_dir>`
@@ -185,11 +200,14 @@ Goal: move from intro archaeology to gameplay-era assets.
   - HUD/UI elements -> `rom_analysis/graphics/ui/`
   - dynamic objects/sprites -> `rom_analysis/graphics/sprites/`
 - Immediate follow-up:
-  - run a seeded input/button sweep from `game_11.mss` to find the first
-    moving/driving window
-  - if `game_11.mss` never leaves the static scene under reasonable scripted
-    inputs, replace it with a later gameplay savestate before spending time on
-    design-pack conversion
+  - do not spend more retries on the early `start_then_a_hold` raw mismatch;
+    that blocker has already been narrowed three times without a changed
+    boundary
+  - next best headless path is either:
+    - build a screenshot-backed moving gameplay artifact from the sweep outputs,
+      or
+    - replace `game_11.mss` with a later gameplay savestate before spending
+      more time on raw design-pack conversion
 
 ## 4. Bank API Contracts (Code-Side Archaeology)
 

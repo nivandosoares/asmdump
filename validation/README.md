@@ -26,6 +26,29 @@ For automated headless runs with Mesen2's test runner:
 ./validation/run_mesen_capture.sh
 ```
 
+`mesen_capture.lua` now accepts the same lightweight env-style overrides used by
+the other probes:
+
+- `TD2_CAPTURE_WARMUP_FRAMES`
+- `TD2_CAPTURE_FRAMES`
+- `TD2_CAPTURE_SCREENSHOT_EVERY`
+- `TD2_CAPTURE_PLAYER`
+- `TD2_CAPTURE_OUTPUT_PREFIX`
+- `TD2_CAPTURE_INPUT`
+- `TD2_CAPTURE_INPUT_START_FRAME`
+- `TD2_CAPTURE_INPUT_END_FRAME`
+- `TD2_CAPTURE_INPUT_WINDOWS`
+
+`TD2_CAPTURE_INPUT_WINDOWS` uses the same semicolon-separated `start-end:buttons`
+or `frame:buttons` format as the boot probe, for example:
+
+```sh
+MESEN_TIMEOUT_SECONDS=60 \
+TD2_CAPTURE_OUTPUT_PREFIX=/home/nivando-soares/asmdump/tools/out/track1_seed_sweep_v1/start_then_b_hold/capture \
+TD2_CAPTURE_INPUT_WINDOWS='60:start;61-359:b' \
+./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_capture.lua ./.mesen-config/Mesen2/SaveStates/game_11.mss
+```
+
 To seed the run from a deterministic savestate instead of power-on:
 
 ```sh
@@ -64,6 +87,21 @@ TD2_BG_RANGE_INPUT_START_FRAME=60 \
 TD2_BG_RANGE_INPUT_END_FRAME=359 \
 TD2_BG_RANGE_INPUT=b \
 TD2_BG_RANGE_OUTPUT_PREFIX=/home/nivando-soares/asmdump/tools/out/track1_seed_0086_0093 \
+./validation/run_mesen_dump_bg_range.sh ./game.smc ./.mesen-config/Mesen2/SaveStates/game_11.mss
+```
+
+For multi-stage seeded gameplay schedules, `mesen_dump_bg_range.lua` also
+accepts `TD2_BG_RANGE_INPUT_WINDOWS` in the same `start-end:buttons` or
+`frame:buttons` format:
+
+```sh
+MESEN_TIMEOUT_SECONDS=60 \
+TD2_BG_RANGE_START_FRAME=61 \
+TD2_BG_RANGE_END_FRAME=68 \
+TD2_BG_RANGE_STEP=1 \
+TD2_BG_RANGE_DUMP_OAM=1 \
+TD2_BG_RANGE_INPUT_WINDOWS='60:start;61-359:a' \
+TD2_BG_RANGE_OUTPUT_PREFIX=/home/nivando-soares/asmdump/tools/out/track1_start_then_a_0061_0068_v1 \
 ./validation/run_mesen_dump_bg_range.sh ./game.smc ./.mesen-config/Mesen2/SaveStates/game_11.mss
 ```
 

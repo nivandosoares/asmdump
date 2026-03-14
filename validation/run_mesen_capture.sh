@@ -41,6 +41,17 @@ if [[ ! -f "$SETTINGS_TEMPLATE" ]]; then
   exit 1
 fi
 
+mkdir_parent_if_set() {
+  local path="$1"
+  if [[ -n "$path" ]]; then
+    mkdir -p "$(dirname "$path")"
+  fi
+}
+
+mkdir_parent_if_set "${TD2_CAPTURE_OUTPUT_PREFIX:-}"
+mkdir_parent_if_set "${TD2_BG_RANGE_OUTPUT_PREFIX:-}"
+mkdir_parent_if_set "${TD2_BOOT_PROBE_SAVE_SAVESTATE:-}"
+
 mkdir -p "$MESEN_HOME"
 cp "$SETTINGS_TEMPLATE" "$SETTINGS_PATH"
 sed -i 's/"AllowIoOsAccess": false/"AllowIoOsAccess": true/' "$SETTINGS_PATH"

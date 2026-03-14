@@ -716,10 +716,71 @@ Window reading:
   - tracked `$0202/$0204/$0206/$0208/$020A/$040A/$0054` all stay `0`
 - practical reading:
   - `game_11.mss` is a valid deterministic seed for track-start visuals
-  - this seed is not yet a moving gameplay segment under the tested `b`-hold
-    input alone
+  - this specific raw `86..93` window is still static under the original
+    `b`-hold path
   - the next gameplay follow-up should be a seeded button sweep or a different
     savestate nearer active driving
+
+### CP-26: Seeded gameplay sweep and early raw-bridge blocker (`track1`)
+
+- Extended the gameplay capture path for automation:
+  - `validation/mesen_capture.lua` now accepts env-driven capture controls and
+    multi-window inputs
+  - `validation/mesen_dump_bg_range.lua` now accepts
+    `TD2_BG_RANGE_INPUT_WINDOWS`
+  - `validation/run_mesen_capture.sh` now creates parent directories for
+    capture/bg-range output prefixes
+- Added a bounded gameplay sweep runner:
+  - `tools/run_track1_seed_sweep.py`
+  - `make -C tools track1-seed-sweep`
+- Added the sweep note:
+  - `rom_analysis/maps/tracks/track1_seed_sweep_v1.md`
+- Sweep artifacts:
+  - `tools/out/track1_seed_sweep_v1/summary.json`
+  - `tools/out/track1_seed_sweep_v1/summary.md`
+
+Sweep reading:
+
+- `b_hold` (`60-359:b`) is dynamic:
+  - first nontrivial frame `76`
+  - first later motion `92`
+  - `4` distinct screenshot hashes
+- `start_then_b_hold` (`60:start;61-359:b`) remains a static seed:
+  - first nontrivial frame `64`
+  - no later motion in the bounded `300`-frame run
+- `start_then_a_hold` (`60:start;61-359:a`) is also dynamic:
+  - first nontrivial frame `61`
+  - first later motion `65`
+  - `3` distinct screenshot hashes
+
+Targeted raw follow-up:
+
+- Captured the earliest dynamic raw window for `start_then_a_hold`:
+  - `tools/out/track1_start_then_a_0061_0068_v1.json`
+  - `tools/out/track1_start_then_a_0061_0068_v1_sequence.txt`
+  - `tools/out/track1_start_then_a_0061_0068_v1_sequence.json`
+  - `tools/out/track1_start_then_a_0061_0068_v1_delta_61_65.json`
+- Added a screenshot probe of the exact same dumper lane:
+  - `tools/out/track1_start_then_a_frame61_probe_v1_frame_00061_frame.png`
+
+Blocker reading:
+
+- the moving-window blocker has changed:
+  - movement is now proven at the screenshot level from `game_11.mss`
+  - but the early `start_then_a_hold` raw bridge does not align with that
+    screenshot sweep
+- three narrowing attempts all held the same boundary:
+  - raw frame `61` renders as `bgMode = 0`, `mainScreenLayers = 0x00`
+  - the dumper screenshot differs from the sweep screenshot for frame `61` by
+    `51503` pixels
+  - that mismatch stays flat across nearby sweep frames `60..70`
+  - raw `VRAM/CGRAM/OAM/PPU` state stays unchanged from frames `61` to `65`
+- per the blocker policy, that exact early raw-bridge lane is now documented and
+  parked
+- next useful gameplay follow-up:
+  - use a screenshot-backed moving gameplay manifest from the sweep outputs, or
+  - replace `game_11.mss` with a later gameplay savestate whose raw dump aligns
+    cleanly
 
 ## Current Checkpoint Metrics
 
@@ -966,3 +1027,11 @@ Definition of done:
   - frame range assets
   - callback/context notes
   - initial bank10/bank11 contract pointers
+
+Current status:
+- deterministic seeded movement is now proven from `game_11.mss` at the
+  screenshot level (`b_hold`, `start_then_a_hold`)
+- the current open blocker is raw-surface alignment, not movement discovery
+- next defensible target:
+  - screenshot-backed moving gameplay artifact, or
+  - later gameplay savestate with clean raw-dump alignment

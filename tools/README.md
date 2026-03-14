@@ -29,6 +29,7 @@ Current Sprint 0 tooling:
 - `summarize_mode7_trace.py`: summarizes the tracked register-write traces emitted by `mesen_probe_boot.lua` for Mode 7/TMAIN or DMA/HDMA windows
 - `summarize_l001210_trace.py`: summarizes `L001210` dispatcher execution hits (`$0C/$0E/$10`) captured by `mesen_probe_boot.lua` for chunk provenance, including caller-site coverage and `L00A9*` table-index usage when present
 - `run_l001210_probe_matrix.py`: runs multiple deterministic `mesen_probe_boot.lua` scenarios and aggregates bank30 candidate hit coverage into one matrix report; scenarios may include `extra_env` to inject probe env overrides per run
+- `run_track1_seed_sweep.py`: runs a bounded deterministic input sweep against a gameplay savestate, hashes screenshot pixels, and classifies each scenario as fully static, static-after-first-nontrivial, or dynamic
 - `capture_visible_mode7_range.py`: reuses `mesen_scanline_step_test.lua` to capture one visible-scanline `ppu.mode7.*` sample per frame across a requested range
 - `apply_visible_mode7_samples.py`: applies those captured visible Mode 7 samples onto extracted frame states, writing sidecar `ppu_state_visible.json` files by default
 - `extract_compression_header_manifest.py`: scans a bank for `42FB`/`26FB`/`67FB`/`27FB` blocks and decodes their leading header fields
@@ -75,6 +76,7 @@ python3 tools/splice_sequence_manifest.py tools/out/intro_loop_sequence.json too
 python3 tools/render_mesen_snes_bg.py .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_vram.bin .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_cgram.bin .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_ppu_state.json tools/out/mesen_poweron_5s_bg_only.ppm --json-out tools/out/mesen_poweron_5s_bg_only.json
 python3 tools/render_mesen_snes_bg.py tools/out/td2_boot_probe_startframe_vram_1200.bin tools/out/td2_boot_probe_startframe_cgram_1200.bin tools/out/td2_boot_probe_startframe_ppu_state_1200.json tools/out/td2_boot_probe_bg_obj_1200.ppm --oam tools/out/td2_boot_probe_startframe_oam_1200.bin --json-out tools/out/td2_boot_probe_bg_obj_1200.json
 python3 tools/render_mesen_snes_bg.py tools/out/td2_boot_probe_startframe_vram_1200.bin tools/out/td2_boot_probe_startframe_cgram_1200.bin tools/out/td2_boot_probe_startframe_ppu_state_1200.json tools/out/td2_boot_probe_bg_obj_1200_ppu.ppm --oam tools/out/td2_boot_probe_startframe_oam_1200.bin --obj-renderer mode7-ppu --json-out tools/out/td2_boot_probe_bg_obj_1200_ppu.json
+python3 tools/run_track1_seed_sweep.py --out-dir tools/out/track1_seed_sweep_v1
 python3 tools/capture_visible_mode7_range.py 1094 1101 --output tools/out/visible_mode7_1094_1101.json
 python3 tools/apply_visible_mode7_samples.py tools/out/visible_mode7_1094_1101.json tools/out/mesen_range_1094_1101_v1
 python3 tools/extract_compression_header_manifest.py game.smc --bank 7 --json-out tools/out/bank7_compression_headers.json
@@ -153,6 +155,7 @@ Current environment note:
 - `make -C tools mesen-ppu-frame MESEN_FRAME=300`
 - `make -C tools mesen-design-pack MESEN_FRAME=300`
 - `make -C tools mesen-design-pack-range MESEN_RANGE_FRAMES_DIR=out/mesen_range_1086_1093_v1`
+- `make -C tools track1-seed-sweep TRACK1_SEED_SWEEP_SAVESTATE=../.mesen-config/Mesen2/SaveStates/game_11.mss`
 - `make -C tools intro-loop-dump`
 - `make -C tools intro-loop-sequence`
 - `make -C tools intro-native-978`
