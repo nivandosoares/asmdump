@@ -1,0 +1,1000 @@
+{
+  "total_hits": 66,
+  "dropped_hits": 0,
+  "unique_sources": 33,
+  "bank_counts": {
+    "00": 3,
+    "02": 4,
+    "04": 20,
+    "05": 2,
+    "07": 3,
+    "0D": 1,
+    "0E": 9,
+    "11": 6,
+    "1A": 5,
+    "1E": 12,
+    "1F": 1
+  },
+  "marker_counts": {
+    "26FB": 48,
+    "42FB": 18
+  },
+  "caller_counts": {
+    "01:8E3C": 1,
+    "01:8E59": 1,
+    "01:A043": 3,
+    "01:A061": 3,
+    "01:A1C4": 3,
+    "01:A42F": 3,
+    "01:A9BD": 24,
+    "01:A9E1": 28
+  },
+  "bank30_caller_counts": {
+    "01:A9BD": 6,
+    "01:A9E1": 6
+  },
+  "l00a9_index_counts": {
+    "L00A9A0:0": 1,
+    "L00A9A0:10": 1,
+    "L00A9A0:11": 1,
+    "L00A9A0:15": 3,
+    "L00A9A0:25": 1,
+    "L00A9A0:28": 3,
+    "L00A9A0:29": 3,
+    "L00A9A0:34": 3,
+    "L00A9A0:4": 3,
+    "L00A9A0:6": 2,
+    "L00A9A0:7": 1,
+    "L00A9A0:8": 1,
+    "L00A9A0:9": 1,
+    "L00A9CB:0": 1,
+    "L00A9CB:10": 1,
+    "L00A9CB:11": 1,
+    "L00A9CB:15": 3,
+    "L00A9CB:22": 1,
+    "L00A9CB:25": 1,
+    "L00A9CB:28": 3,
+    "L00A9CB:29": 3,
+    "L00A9CB:34": 3,
+    "L00A9CB:4": 3,
+    "L00A9CB:5": 3,
+    "L00A9CB:6": 2,
+    "L00A9CB:7": 1,
+    "L00A9CB:8": 1,
+    "L00A9CB:9": 1
+  },
+  "l00a9_bank30_index_counts": {
+    "L00A9A0:28": 3,
+    "L00A9A0:29": 3,
+    "L00A9CB:28": 3,
+    "L00A9CB:29": 3
+  },
+  "l00a9_source_match_counts": {
+    "true": 52,
+    "false": 0
+  },
+  "sources": [
+    {
+      "source_linear": 193823,
+      "source_snes": "02:F51F",
+      "source_bank": 2,
+      "source_addr": 62751,
+      "source_marker": "42FB",
+      "source_marker_word": 17147,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 4,
+      "first_frame": 81,
+      "last_frame": 4554,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 4
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "source_linear": 295606,
+      "source_snes": "04:82B6",
+      "source_bank": 4,
+      "source_addr": 33462,
+      "source_marker": "42FB",
+      "source_marker_word": 17147,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 3,
+      "first_frame": 626,
+      "last_frame": 3462,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 3
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "source_linear": 296329,
+      "source_snes": "04:8589",
+      "source_bank": 4,
+      "source_addr": 34185,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 3,
+      "first_frame": 629,
+      "last_frame": 3465,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 3
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "source_linear": 301805,
+      "source_snes": "04:9AED",
+      "source_bank": 4,
+      "source_addr": 39661,
+      "source_marker": "42FB",
+      "source_marker_word": 17147,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 3,
+      "first_frame": 955,
+      "last_frame": 3791,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 3
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "source_linear": 302069,
+      "source_snes": "04:9BF5",
+      "source_bank": 4,
+      "source_addr": 39925,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 3,
+      "first_frame": 957,
+      "last_frame": 3793,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 3
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "source_linear": 304894,
+      "source_snes": "04:A6FE",
+      "source_bank": 4,
+      "source_addr": 42750,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 3,
+      "first_frame": 1303,
+      "last_frame": 4139,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 3
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "source_linear": 975463,
+      "source_snes": "0E:E267",
+      "source_bank": 14,
+      "source_addr": 57959,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 3,
+      "first_frame": 1693,
+      "last_frame": 4529,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 3
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "source_linear": 976638,
+      "source_snes": "0E:E6FE",
+      "source_bank": 14,
+      "source_addr": 59134,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 3,
+      "first_frame": 1700,
+      "last_frame": 4536,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 3
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "source_linear": 1163112,
+      "source_snes": "11:BF68",
+      "source_bank": 17,
+      "source_addr": 49000,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 3,
+      "first_frame": 1726,
+      "last_frame": 4562,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 3
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "source_linear": 1163228,
+      "source_snes": "11:BFDC",
+      "source_bank": 17,
+      "source_addr": 49116,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 3,
+      "first_frame": 1721,
+      "last_frame": 4556,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 3
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "source_linear": 1757759,
+      "source_snes": "1A:D23F",
+      "source_bank": 26,
+      "source_addr": 53823,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 3,
+      "first_frame": 1729,
+      "last_frame": 4564,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 3
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "source_linear": 2023276,
+      "source_snes": "1E:DF6C",
+      "source_bank": 30,
+      "source_addr": 57196,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "table-confirmed",
+      "source_known_id": "bank30_26fb_df6c",
+      "count": 3,
+      "first_frame": 1280,
+      "last_frame": 4116,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 3
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 3
+        }
+      ],
+      "known_note": "referenced by bank1 helper pointer table"
+    },
+    {
+      "source_linear": 2023481,
+      "source_snes": "1E:E039",
+      "source_bank": 30,
+      "source_addr": 57401,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "table-confirmed",
+      "source_known_id": "bank30_26fb_e039",
+      "count": 3,
+      "first_frame": 1282,
+      "last_frame": 4118,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 3
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 3
+        }
+      ],
+      "known_note": "referenced by bank1 helper pointer table"
+    },
+    {
+      "source_linear": 2025279,
+      "source_snes": "1E:E73F",
+      "source_bank": 30,
+      "source_addr": 59199,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "table-confirmed",
+      "source_known_id": "bank30_26fb_e73f",
+      "count": 3,
+      "first_frame": 1292,
+      "last_frame": 4127,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 3
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 3
+        }
+      ],
+      "known_note": "referenced by bank1 helper pointer table"
+    },
+    {
+      "source_linear": 2025472,
+      "source_snes": "1E:E800",
+      "source_bank": 30,
+      "source_addr": 59392,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "table-confirmed",
+      "source_known_id": "bank30_26fb_e800",
+      "count": 3,
+      "first_frame": 1294,
+      "last_frame": 4130,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 3
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 3
+        }
+      ],
+      "known_note": "referenced by bank1 helper pointer table"
+    },
+    {
+      "source_linear": 311063,
+      "source_snes": "04:BF17",
+      "source_bank": 4,
+      "source_addr": 48919,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 2,
+      "first_frame": 4879,
+      "last_frame": 6802,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 2
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "source_linear": 312375,
+      "source_snes": "04:C437",
+      "source_bank": 4,
+      "source_addr": 50231,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 2,
+      "first_frame": 4887,
+      "last_frame": 6810,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 2
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "source_linear": 45227,
+      "source_snes": "00:B0AB",
+      "source_bank": 0,
+      "source_addr": 45227,
+      "source_marker": "42FB",
+      "source_marker_word": 17147,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 5935,
+      "last_frame": 5935,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 46770,
+      "source_snes": "00:B6B2",
+      "source_bank": 0,
+      "source_addr": 46770,
+      "source_marker": "42FB",
+      "source_marker_word": 17147,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 5248,
+      "last_frame": 5248,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 48314,
+      "source_snes": "00:BCBA",
+      "source_bank": 0,
+      "source_addr": 48314,
+      "source_marker": "42FB",
+      "source_marker_word": 17147,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 5591,
+      "last_frame": 5591,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 294912,
+      "source_snes": "04:8000",
+      "source_bank": 4,
+      "source_addr": 32768,
+      "source_marker": "42FB",
+      "source_marker_word": 17147,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 79,
+      "last_frame": 79,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 387408,
+      "source_snes": "05:E950",
+      "source_bank": 5,
+      "source_addr": 59728,
+      "source_marker": "42FB",
+      "source_marker_word": 17147,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 6348,
+      "last_frame": 6348,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 388106,
+      "source_snes": "05:EC0A",
+      "source_bank": 5,
+      "source_addr": 60426,
+      "source_marker": "42FB",
+      "source_marker_word": 17147,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 6351,
+      "last_frame": 6351,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 507721,
+      "source_snes": "07:BF49",
+      "source_bank": 7,
+      "source_addr": 48969,
+      "source_marker": "42FB",
+      "source_marker_word": 17147,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 7059,
+      "last_frame": 7059,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 508178,
+      "source_snes": "07:C112",
+      "source_bank": 7,
+      "source_addr": 49426,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 7064,
+      "last_frame": 7064,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 511141,
+      "source_snes": "07:CCA5",
+      "source_bank": 7,
+      "source_addr": 52389,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 6731,
+      "last_frame": 6731,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 902364,
+      "source_snes": "0D:C4DC",
+      "source_bank": 13,
+      "source_addr": 50396,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 7051,
+      "last_frame": 7051,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 950272,
+      "source_snes": "0E:8000",
+      "source_bank": 14,
+      "source_addr": 32768,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 5940,
+      "last_frame": 5940,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 954878,
+      "source_snes": "0E:91FE",
+      "source_bank": 14,
+      "source_addr": 37374,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 5253,
+      "last_frame": 5253,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 959528,
+      "source_snes": "0E:A428",
+      "source_bank": 14,
+      "source_addr": 42024,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 5596,
+      "last_frame": 5596,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 1753496,
+      "source_snes": "1A:C198",
+      "source_bank": 26,
+      "source_addr": 49560,
+      "source_marker": "42FB",
+      "source_marker_word": 17147,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 5227,
+      "last_frame": 5227,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 1754458,
+      "source_snes": "1A:C55A",
+      "source_bank": 26,
+      "source_addr": 50522,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 5232,
+      "last_frame": 5232,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 2093300,
+      "source_snes": "1F:F0F4",
+      "source_bank": 31,
+      "source_addr": 61684,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 6722,
+      "last_frame": 6722,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    }
+  ],
+  "bank30": {
+    "known_candidates": [
+      {
+        "id": "bank30_42fb_9681",
+        "source_linear": 2004609,
+        "source_snes": "1E:9681",
+        "marker": "42FB",
+        "provenance": "candidate",
+        "note": "zero-output sentinel candidate",
+        "hit_count": 0,
+        "first_frame": null,
+        "last_frame": null
+      },
+      {
+        "id": "bank30_67fb_da96",
+        "source_linear": 2022038,
+        "source_snes": "1E:DA96",
+        "marker": "67FB",
+        "provenance": "candidate",
+        "note": "large 67FB chunk with overlapping marker window",
+        "hit_count": 0,
+        "first_frame": null,
+        "last_frame": null
+      },
+      {
+        "id": "bank30_26fb_df6c",
+        "source_linear": 2023276,
+        "source_snes": "1E:DF6C",
+        "marker": "26FB",
+        "provenance": "table-confirmed",
+        "note": "referenced by bank1 helper pointer table",
+        "hit_count": 3,
+        "first_frame": 1280,
+        "last_frame": 4116
+      },
+      {
+        "id": "bank30_26fb_e039",
+        "source_linear": 2023481,
+        "source_snes": "1E:E039",
+        "marker": "26FB",
+        "provenance": "table-confirmed",
+        "note": "referenced by bank1 helper pointer table",
+        "hit_count": 3,
+        "first_frame": 1282,
+        "last_frame": 4118
+      },
+      {
+        "id": "bank30_26fb_e73f",
+        "source_linear": 2025279,
+        "source_snes": "1E:E73F",
+        "marker": "26FB",
+        "provenance": "table-confirmed",
+        "note": "referenced by bank1 helper pointer table",
+        "hit_count": 3,
+        "first_frame": 1292,
+        "last_frame": 4127
+      },
+      {
+        "id": "bank30_26fb_e800",
+        "source_linear": 2025472,
+        "source_snes": "1E:E800",
+        "marker": "26FB",
+        "provenance": "table-confirmed",
+        "note": "referenced by bank1 helper pointer table",
+        "hit_count": 3,
+        "first_frame": 1294,
+        "last_frame": 4130
+      },
+      {
+        "id": "bank30_67fb_e91f",
+        "source_linear": 2025759,
+        "source_snes": "1E:E91F",
+        "marker": "67FB",
+        "provenance": "candidate",
+        "note": "current decoder fails with source exhaustion",
+        "hit_count": 0,
+        "first_frame": null,
+        "last_frame": null
+      },
+      {
+        "id": "bank30_26fb_ee7f",
+        "source_linear": 2027135,
+        "source_snes": "1E:EE7F",
+        "marker": "26FB",
+        "provenance": "table-confirmed",
+        "note": "referenced by bank1 helper pointer table",
+        "hit_count": 0,
+        "first_frame": null,
+        "last_frame": null
+      }
+    ],
+    "unknown_sources": []
+  }
+}

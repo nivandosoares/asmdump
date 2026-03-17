@@ -3,15 +3,15 @@
 This roadmap is the direct follow-up after enabling Mesen design packs with
 decoded tilemaps and sprite visibility metadata.
 
-## Current Status Snapshot (2026-03-13)
+## Current Status Snapshot (2026-03-17)
 
 Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 
 | Roadmap lane | Status | Current reading |
 |---|---|---|
 | 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps are done; targeted `B1F9` prologue traces now prove forced entry context, but unresolved queue still remains (`E91F`, `EE7F`, `DA96`, `9681`). |
-| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance now covers `1086..1117`; `1117` is the current headless confidence edge, so the next step is to recover a later direct runtime hit or pivot to the next unblocked lane. |
-| 3. Gameplay-frame expansion | in progress | `game_11.mss` now has bounded moving paths at the screenshot level (`b_hold`, `start_then_a_hold`), but the earliest raw `VRAM/CGRAM/OAM/PPU` follow-up still diverges from the screenshot sweep. |
+| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`, the later direct-hit cluster `7051/7059/7064` is now packaged with exact provenance anchors, and the next step is to validate one interior frame per segment before promoting that later scene into a contiguous window. |
+| 3. Gameplay-frame expansion | in progress | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty. |
 | 4. Bank API contracts | not started | Baseline docs exist; callback/API contracts for bank 30/10/11 are not yet mapped to completion. |
 
 Validation contract baseline:
@@ -151,13 +151,30 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
   - `rom_analysis/docs/memory_map.md`
 - Immediate follow-up:
   - do not extend blindly past `1117` on carryover alone
-  - recover a later direct runtime hit on the same scene cadence, or use a
-    different bridge surface for that proof
-  - scripted-input extraction is currently parked as a blocker:
-    - matching the later `6800:start;6900-6920:start,a` scenario would be the
-      right headless follow-up, but three extractor-bridge attempts all stopped
-      at the same boundary once `InitializeDebugger` + input overrides were in
-      play, so that lane is not worth more retries right now
+  - recovered later-scene deliverables:
+    - `tools/out/l001210_probe_7051_inputfix_summary.json`
+    - `rom_analysis/maps/tilemaps/mesen_range_7051_provenance.jsonc`
+    - `rom_analysis/maps/tilemaps/mesen_range_7051_provenance.md`
+    - `rom_analysis/maps/tilemaps/mesen_range_7051_7064_provenance.jsonc`
+    - `rom_analysis/maps/tilemaps/mesen_range_7051_7064_provenance.md`
+    - `tools/out/l001210_probe_7051_inputfix_summary.json`
+  - the timed input-window bridge now succeeds on the previously blocked
+    scenario `6800:start;6900-6920:start,a`
+  - the matching targeted probe restores the later direct-hit cluster, and the
+    extracted design packs keep the same visible layer/tile-index block across
+    those exact hits:
+    - `7051` -> `0D:C4DC`
+    - `7059` -> `07:BF49`
+    - `7064` -> `07:C112`
+  - current decision:
+    - this is enough to close exact anchors, but not enough to claim a full
+      `7051..7064` contiguous window because the source rotates at each direct
+      hit and the interior frames are still unextracted
+  - the next best step is now a minimal interior carry check on that same
+    scenario:
+    - extract/design-pack `7055` and `7061`
+    - if those frames keep the same visible tile block and map cleanly by carry,
+      promote the later scene into a contiguous provenance window
 
 ## 3. Expand Into Gameplay Frames
 
@@ -178,8 +195,8 @@ Goal: move from intro archaeology to gameplay-era assets.
   - bounded scripted-input sweep result:
     - `b_hold` first becomes nontrivial at frame `76` and moves again at `92`
     - `start_then_b_hold` stays a static seed after frame `64`
-    - `start_then_a_hold` becomes nontrivial at frame `61` and moves again at
-      `65`
+    - current refreshed sweep (`v2_current`) now also keeps `start_then_a_hold`
+      static after its first nontrivial frame `64`
   - the old raw `86..93` `b`-hold dump is still exact against the screenshot
     harness, but that specific window remains static
   - the first early moving raw follow-up (`start_then_a_hold`, `61..68`) is now
@@ -189,9 +206,78 @@ Goal: move from intro archaeology to gameplay-era assets.
       `mainScreenLayers = 0x00`
     - the dumper screenshot for frame `61` differs from the sweep screenshot by
       `51503` pixels and does not match nearby sweep frames either
-  - probe-side callback/state telemetry for the known static `86..93` window
-    remains trivial (`active_main = active_nmi = 00:8029`, tracked gameplay
-    fields still `0`)
+  - the first screenshot-backed moving follow-up is now committed:
+    - `rom_analysis/maps/tracks/track1_b_hold_cycle_0076_0156.md`
+    - `rom_analysis/maps/tracks/track1_seed_sweep_v2_current.md`
+    - `tools/out/track1_b_hold_cycle_0076_0156_v2_sequence.txt`
+    - `tools/out/track1_b_hold_cycle_0076_0156_v2_sequence.json`
+    - it collapses frames `76..155` into `5` image entries / `4` distinct
+      states
+    - state changes land on a `16`-frame cadence at `76/92/108/124/140`
+    - frame `140` repeats the frame-`76` image, giving a screenshot-backed
+      `64`-frame cycle
+  - the current blocker is now sharper:
+    - raw dump artifacts `track1_b_hold_0086_0108_v1*` stay byte-identical
+      across `86 -> 92` and `92 -> 108`
+    - archived probe fields also stay flat at `86`, `92`, and `108`
+    - deeper debugger follow-up now explains why:
+      - visible-scanline sampling on frames `86`, `92`, and `108` runs under
+        `active_main = 02:9016`
+      - visible IRQ state alternates between `01:96A0` and `01:960D`
+      - visible `ppu.mainScreenLayers` toggles between `0x13` and `0x17`
+      - targeted late-scanline register tracing records the same
+        `M7HOFS/M7VOFS/$210F-$2114` write set on every frame `86..108`
+      - end-of-frame raw/probe still collapses back to `00:8029/00:835F` and
+        `ppu.mainScreenLayers = 0x04`
+    - practical read:
+      - the screenshot-vs-raw split is now a phase split, not a missing
+        gameplay lane
+      - the remaining blocker is that the sampled visible-phase `PPU` state for
+        `86`, `92`, and `108` still matches except for the visible-phase queue
+        cursor pair `7E:0053/0054`
+      - the added bank-1 producer-side WRAM/window/OAM fields also stay flat
+        across those three frames
+      - `cpu.d = 0` rules out a hidden direct-page base change
+      - explicit visible-phase `v5` samples bind `00:0053/0054` to the same
+        `7E:0053/0054` WRAM values, with frame `86` at `0x38/0x38` and frames
+        `92/108` at `0x48/0x48`
+      - the same `v5` queue summary shows `queue_dma_active_descriptor_count = 0`
+        across all sampled visible scanlines even though `0600` still has
+        `32` nonzero slots
+      - mirrored-bank boot-probe exec tracing still reports `0` hits on the
+        bank-0 queue helpers and bank-1/bank-2 queue producers
+      - widened scanline-local tracing on frame `86` now reaches scanline `259`
+        and catches an intermediate late write trio at frame `87`, scanline
+        `228`: `00:0053/0055/0056 = 0x38/0x90/0x15` while `00:0054` stays
+        `0x38` under `active_main = 02:9016`
+      - frame-boundary follow-up now proves that same state survives frame
+        `86 end`, frame `87 start`, the frame-`87` scanline wrap
+        (`261 -> 0`), and at least through frame `87`, scanline `97`
+      - wider multi-frame follow-ups now prove the same state also survives
+        frame `87 end`, frame `88 start`, frame `88 end`, frame `89` start,
+        and at least through frame `89`, scanline `96`
+      - the same late write trio repeats on frames `88` and `89`, which makes
+        this a recurring post-visible `02:9016` stage rather than a one-frame
+        anomaly
+      - shifted `88` follow-up now records the first direct visible-path
+        `00:0054` producer:
+        - frame `90`, scanline `30`: `00:0054 = 0x40`
+        - frame `90`, scanline `54`: `00:0054 = 0x48`
+        - `00:0053` still remains `0x38`
+      - shifted `90` follow-up now records the next equalized gameplay state:
+        - frame `90 end`: `00:0053/0054/0055/0056 = 0x38/0x48/0x90/0x15`
+        - frame `91 start/end`:
+          `00:0053/0054/0055/0056 = 0x48/0x48/0xB8/0x14`
+        - frame `92 start`:
+          `00:0053/0054/0055/0056 = 0x48/0x48/0x90/0x15`
+        - frame `91`, scanline `229`: `00:0053 = 0x48`,
+          `00:0055/0056 = 0xB8/0x14`
+        - frame `92`, scanline `227`: `00:0055/0056` resets to `0x90/0x15`
+      - helper-side follow-up against nearby bank-1 sinks
+        `7E:1E24/1E26/070C/0718` stays negative across that same `90..92`
+        window
+      - the older end-of-frame write trace still collapses later to
+        `00:0053/0055/0056 = 0x00/0x84/0x17` under `active_main = 00:8029`
 - Capture deterministic gameplay frame windows via Mesen extractor.
 - Build design packs for those windows:
   - `make -C tools mesen-design-pack-range MESEN_RANGE_FRAMES_DIR=out/<gameplay_range_dir>`
@@ -203,11 +289,16 @@ Goal: move from intro archaeology to gameplay-era assets.
   - do not spend more retries on the early `start_then_a_hold` raw mismatch;
     that blocker has already been narrowed three times without a changed
     boundary
-  - next best headless path is either:
-    - build a screenshot-backed moving gameplay artifact from the sweep outputs,
-      or
-    - replace `game_11.mss` with a later gameplay savestate before spending
-      more time on raw design-pack conversion
+  - next best headless path is now the visible-phase debugger lane:
+    - trace the producer/reset path behind the frame-`91`
+      `00:0053/0055/0056` burst and the frame-`92` return to
+      `0x48/0x48/0x90/0x15` first
+    - then return to the later `02:9016` -> `00:8029` collapse once the
+      transient `0x14B8` visible state is explained
+    - then extend scanline or targeted trace coverage toward
+      sprite/OAM/color-math or other producer-side state
+    - keep “later gameplay savestate” as a fallback if this visible-phase lane
+      stops narrowing the transition
 
 ## 4. Bank API Contracts (Code-Side Archaeology)
 

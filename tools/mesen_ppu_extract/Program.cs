@@ -63,27 +63,19 @@ internal static class Program
             Trace("Pause after LoadRom");
             MesenCore.Pause();
 
-            if(options.Frame > 0) {
-                if(options.HoldB || options.HoldStart) {
-                    throw new NotSupportedException("Input override stepping is not wired for the non-debugger frame-advance path yet.");
+            if(options.RequiresDebuggerStepping) {
+                Trace("InitializeDebugger for timed input stepping");
+                MesenCore.InitializeDebugger();
+                AdvanceToRequestedFrame(options);
+            } else {
+                if(options.Frame > 0) {
+                    Trace($"Resume until frame >= {options.Frame}");
+                    MesenCore.Resume();
+                    MesenCore.WaitForFrame(CpuType.Snes, (uint)options.Frame, TimeSpan.FromSeconds(options.FrameTimeoutSeconds));
+                    Trace("Pause at target frame");
+                    MesenCore.Pause();
                 }
 
-                Trace($"Resume until frame >= {options.Frame}");
-                MesenCore.Resume();
-                MesenCore.WaitForFrame(CpuType.Snes, (uint)options.Frame, TimeSpan.FromSeconds(options.FrameTimeoutSeconds));
-                Trace("Pause at target frame");
-                MesenCore.Pause();
-            }
-
-            if(options.HoldB || options.HoldStart) {
-                var input = new DebugControllerState {
-                    B = options.HoldB,
-                    Start = options.HoldStart,
-                };
-                Trace("InitializeDebugger for input overrides");
-                MesenCore.InitializeDebugger();
-                MesenCore.SetInputOverrides(0, input);
-            } else {
                 Trace("InitializeDebugger");
                 MesenCore.InitializeDebugger();
             }
@@ -296,6 +288,11 @@ internal static class Program
                 frameRequest = options.Frame,
                 holdB = options.HoldB,
                 holdStart = options.HoldStart,
+                inputWindows = options.InputWindows.Select(window => new {
+                    startFrame = window.StartFrame,
+                    endFrame = window.EndFrame,
+                    buttons = window.Buttons,
+                }),
                 ppu = new {
                     frameCount = ppuState.FrameCount,
                     scanline = ppuState.Scanline,
@@ -347,6 +344,119 @@ internal static class Program
             } catch {
             }
         }
+    }
+
+    private static void AdvanceToRequestedFrame(Options options)
+    {
+        DateTime deadline = DateTime.UtcNow + TimeSpan.FromSeconds(options.FrameTimeoutSeconds);
+        int currentFrame = checked((int)MesenCore.GetTimingInfo(CpuType.Snes).FrameCount);
+        while(currentFrame < options.Frame) {
+            TimeSpan remaining = deadline - DateTime.UtcNow;
+            if(remaining <= TimeSpan.Zero) {
+                throw new TimeoutException($"Timed out waiting for frame {options.Frame}.");
+            }
+
+            DebugControllerState input = options.ResolveInputState(currentFrame);
+            MesenCore.SetInputOverrides(0, input);
+            MesenCore.Resume();
+            MesenCore.WaitForFrame(CpuType.Snes, (uint)(currentFrame + 1), remaining);
+            MesenCore.Pause();
+
+            int nextFrame = checked((int)MesenCore.GetTimingInfo(CpuType.Snes).FrameCount);
+            if(nextFrame != currentFrame + 1) {
+                throw new TimeoutException(
+                    $"Timed-input advance overshot from frame {currentFrame} to {nextFrame}; per-frame input windows are not reliable on this bridge path."
+                );
+            }
+            currentFrame = nextFrame;
+        }
+
+        MesenCore.SetInputOverrides(0, default);
+    }
+
+    private static DebugControllerState ParseButtonPattern(string rawButtons)
+    {
+        DebugControllerState state = default;
+        foreach(string token in rawButtons.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)) {
+            switch(token.ToLowerInvariant()) {
+                case "a":
+                    state.A = true;
+                    break;
+                case "b":
+                    state.B = true;
+                    break;
+                case "x":
+                    state.X = true;
+                    break;
+                case "y":
+                    state.Y = true;
+                    break;
+                case "l":
+                    state.L = true;
+                    break;
+                case "r":
+                    state.R = true;
+                    break;
+                case "u":
+                case "up":
+                    state.U = true;
+                    state.Up = true;
+                    break;
+                case "d":
+                case "down":
+                    state.D = true;
+                    state.Down = true;
+                    break;
+                case "left":
+                    state.Left = true;
+                    break;
+                case "right":
+                    state.Right = true;
+                    break;
+                case "select":
+                    state.Select = true;
+                    break;
+                case "start":
+                    state.Start = true;
+                    break;
+                default:
+                    throw new ArgumentException($"Unsupported button in input window: {token}");
+            }
+        }
+        return state;
+    }
+
+    internal static List<InputWindow> ParseInputWindows(string raw)
+    {
+        List<InputWindow> windows = [];
+        foreach(string segment in raw.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)) {
+            string[] parts = segment.Split(':', 2);
+            string rangePart = parts[0].Trim();
+            string buttonsPart = parts.Length > 1 ? parts[1].Trim() : string.Empty;
+
+            int startFrame;
+            int endFrame;
+            string[] bounds = rangePart.Split('-', 2, StringSplitOptions.TrimEntries);
+            if(bounds.Length == 2) {
+                startFrame = int.Parse(bounds[0]);
+                endFrame = int.Parse(bounds[1]);
+            } else {
+                startFrame = int.Parse(rangePart);
+                endFrame = startFrame;
+            }
+
+            if(endFrame < startFrame) {
+                (startFrame, endFrame) = (endFrame, startFrame);
+            }
+
+            windows.Add(new InputWindow(startFrame, endFrame, ParseButtonPattern(buttonsPart), buttonsPart));
+        }
+
+        windows.Sort(static (a, b) => {
+            int compare = a.StartFrame.CompareTo(b.StartFrame);
+            return compare != 0 ? compare : a.EndFrame.CompareTo(b.EndFrame);
+        });
+        return windows;
     }
 
     private static void SavePaletteJson(string path, DebugPaletteInfo info, uint[] rgbPalette)
@@ -588,8 +698,38 @@ internal static class Program
 
 internal readonly record struct LayerTilesetPreset(int StartAddress, TileFormat Format, int Palette);
 
-internal sealed record Options(string RomPath, int Frame, string OutDir, bool HoldB, bool HoldStart, double FrameTimeoutSeconds)
+internal sealed record InputWindow(int StartFrame, int EndFrame, DebugControllerState State, string Buttons);
+
+internal sealed record Options(
+    string RomPath,
+    int Frame,
+    string OutDir,
+    bool HoldB,
+    bool HoldStart,
+    double FrameTimeoutSeconds,
+    IReadOnlyList<InputWindow> InputWindows
+)
 {
+    public bool RequiresDebuggerStepping => HoldB || HoldStart || InputWindows.Count > 0;
+
+    public DebugControllerState ResolveInputState(int frame)
+    {
+        foreach(InputWindow window in InputWindows) {
+            if(frame >= window.StartFrame && frame <= window.EndFrame) {
+                return window.State;
+            }
+        }
+
+        if(HoldB || HoldStart) {
+            return new DebugControllerState {
+                B = HoldB,
+                Start = HoldStart,
+            };
+        }
+
+        return default;
+    }
+
     public static Options Parse(string[] args)
     {
         string? romPath = null;
@@ -598,6 +738,7 @@ internal sealed record Options(string RomPath, int Frame, string OutDir, bool Ho
         bool holdB = false;
         bool holdStart = false;
         double frameTimeoutSeconds = 30.0;
+        string? inputWindowsRaw = null;
 
         for(int i = 0; i < args.Length; i++) {
             switch(args[i]) {
@@ -619,6 +760,9 @@ internal sealed record Options(string RomPath, int Frame, string OutDir, bool Ho
                 case "--hold-start":
                     holdStart = true;
                     break;
+                case "--input-windows":
+                    inputWindowsRaw = RequireValue(args, ref i, "--input-windows");
+                    break;
                 default:
                     throw new ArgumentException($"Unknown argument: {args[i]}");
             }
@@ -633,13 +777,28 @@ internal sealed record Options(string RomPath, int Frame, string OutDir, bool Ho
         if(frameTimeoutSeconds <= 0.0) {
             throw new ArgumentException("--frame-timeout-seconds must be greater than zero");
         }
+        if(!string.IsNullOrWhiteSpace(inputWindowsRaw) && (holdB || holdStart)) {
+            throw new ArgumentException("Use either --input-windows or --hold-b/--hold-start, not both.");
+        }
 
-        return new Options(Path.GetFullPath(romPath), frame, Path.GetFullPath(outDir), holdB, holdStart, frameTimeoutSeconds);
+        List<InputWindow> inputWindows = string.IsNullOrWhiteSpace(inputWindowsRaw)
+            ? []
+            : Program.ParseInputWindows(inputWindowsRaw);
+
+        return new Options(
+            Path.GetFullPath(romPath),
+            frame,
+            Path.GetFullPath(outDir),
+            holdB,
+            holdStart,
+            frameTimeoutSeconds,
+            inputWindows
+        );
     }
 
     public static void PrintUsage()
     {
-        Console.Error.WriteLine("Usage: mesen_ppu_extract --rom <path> --frame <n> --out-dir <dir> [--frame-timeout-seconds <seconds>] [--hold-b] [--hold-start]");
+        Console.Error.WriteLine("Usage: mesen_ppu_extract --rom <path> --frame <n> --out-dir <dir> [--frame-timeout-seconds <seconds>] [--hold-b] [--hold-start] [--input-windows <start-end:buttons;...>]");
     }
 
     private static string RequireValue(string[] args, ref int index, string argName)

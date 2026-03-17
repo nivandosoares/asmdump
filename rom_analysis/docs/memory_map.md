@@ -59,7 +59,7 @@ Validated with `tools/validate_td2_chunks.py` against `tools/out/bank30_headers.
 | runtime `L001210` hits (no-input, `3600` frames) | `1E:DF6C/E039/E73F/E800` | Each hit twice in one attract-loop window (`frames 1280..2712`); destination pointer staged as `7E:2000`; repeat spacing `1418` frames. |
 | runtime no-hit set (same run) | `1E:9681/DA96/E91F/EE7F` | Not observed on the deterministic no-input attract path; likely path-conditional or later-scene dependent. |
 
-## Tilemap-to-ROM Provenance (Window `1086..1093`)
+## Tilemap-to-ROM Provenance
 
 Generated with:
 
@@ -71,6 +71,15 @@ Generated with:
 | `1094..1101` | `bg1` (Mode 7 main layer) | `144` unique tile indices (`22` contiguous ranges) | `0x2000` | `0D:C4DC` -> `07:BF49` -> `07:C112` | Frames `1094..1095` carry forward the `1088` bank13 hit; frame `1096` is a direct runtime hit at `07:BF49`, frames `1097..1100` carry from that hit, and frame `1101` is a direct runtime hit at `07:C112`. |
 | `1102..1109` | `bg1` (Mode 7 main layer) | `144` unique tile indices (`22` contiguous ranges) | `0x2000` | `07:C112` (`26FB`) | All frames carry forward the direct `1101` bank-7 hit; `frame_delta = 1..8`. |
 | `1110..1117` | `bg1` (Mode 7 main layer) | `144` unique tile indices (`22` contiguous ranges) | `0x2000` | `07:C112` (`26FB`) | All frames carry forward the direct `1101` bank-7 hit; `frame_delta = 9..16`, which is the current headless confidence edge. |
+| `7051` | `bg1` | `0x000..0x2C8` | `0x2000` | `0D:C4DC` (`26FB`) | Direct runtime hit at frame `7051` on the restored timed-input scenario `6800:start;6900-6920:start,a`. |
+| `7051` | `bg2` | `0x000` | `0x3000` | `0D:C4DC` (`26FB`) | Same direct runtime hit at frame `7051`. |
+| `7051` | `bg3` | `0x000` | `0x6000` | `0D:C4DC` (`26FB`) | Same direct runtime hit at frame `7051`. |
+| `7059` | `bg1` | `0x000..0x2C8` | `0x2000` | `07:BF49` (`42FB`) | Direct runtime hit at frame `7059` on the same restored timed-input scenario. |
+| `7059` | `bg2` | `0x000` | `0x3000` | `07:BF49` (`42FB`) | Same direct runtime hit at frame `7059`. |
+| `7059` | `bg3` | `0x000` | `0x6000` | `07:BF49` (`42FB`) | Same direct runtime hit at frame `7059`. |
+| `7064` | `bg1` | `0x000..0x2C8` | `0x2000` | `07:C112` (`26FB`) | Direct runtime hit at frame `7064` on the same restored timed-input scenario. |
+| `7064` | `bg2` | `0x000` | `0x3000` | `07:C112` (`26FB`) | Same direct runtime hit at frame `7064`. |
+| `7064` | `bg3` | `0x000` | `0x6000` | `07:C112` (`26FB`) | Same direct runtime hit at frame `7064`. |
 
 Supporting artifacts:
 
@@ -82,8 +91,21 @@ Supporting artifacts:
 - `rom_analysis/maps/tilemaps/mesen_range_1102_1109_provenance.md`
 - `rom_analysis/maps/tilemaps/mesen_range_1110_1117_provenance.jsonc`
 - `rom_analysis/maps/tilemaps/mesen_range_1110_1117_provenance.md`
+- `rom_analysis/maps/tilemaps/mesen_range_7051_provenance.jsonc`
+- `rom_analysis/maps/tilemaps/mesen_range_7051_provenance.md`
+- `rom_analysis/maps/tilemaps/mesen_range_7051_7064_provenance.jsonc`
+- `rom_analysis/maps/tilemaps/mesen_range_7051_7064_provenance.md`
+- `tools/out/l001210_probe_7051_inputfix_summary.json`
 - `tools/out/bank13_chunk_validation.json` (`0D:C4DC` decode: `output_size=4000`, `consumed=1374`)
 - `tools/out/bank7_chunk_validation.json` (`07:BF49` decode: `output_size=4102`, `consumed=456`; `07:C112` decode: `output_size=2832`, `consumed=2333`)
+
+Current later-scene reading:
+
+- the visible layer setup and tile-index coverage remain stable across exact-hit
+  frames `7051/7059/7064`
+- this is enough to document exact anchors, but not yet enough to promote a
+  full `7051..7064` contiguous window because the source chunk rotates at each
+  direct hit and the interior frames are still unverified
 
 ## Open Mapping Priorities
 

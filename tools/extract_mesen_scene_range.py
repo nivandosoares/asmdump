@@ -53,6 +53,14 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Re-extract frames even if their directory already exists.",
     )
+    parser.add_argument(
+        "--input-windows",
+        default="",
+        help=(
+            "Optional semicolon-separated input windows passed through to mesen_ppu_extract, "
+            "for example '6800:start;6900-6920:start,a'."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -96,6 +104,8 @@ def extract_frame(args: argparse.Namespace, frame: int, frame_dir: Path) -> None
         "--frame-timeout-seconds",
         str(args.frame_timeout_seconds),
     ]
+    if args.input_windows:
+        cmd.extend(["--input-windows", args.input_windows])
     subprocess.run(cmd, check=True, env=env)
 
 

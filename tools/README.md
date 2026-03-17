@@ -30,7 +30,10 @@ Current Sprint 0 tooling:
 - `summarize_l001210_trace.py`: summarizes `L001210` dispatcher execution hits (`$0C/$0E/$10`) captured by `mesen_probe_boot.lua` for chunk provenance, including caller-site coverage and `L00A9*` table-index usage when present
 - `run_l001210_probe_matrix.py`: runs multiple deterministic `mesen_probe_boot.lua` scenarios and aggregates bank30 candidate hit coverage into one matrix report; scenarios may include `extra_env` to inject probe env overrides per run
 - `run_track1_seed_sweep.py`: runs a bounded deterministic input sweep against a gameplay savestate, hashes screenshot pixels, and classifies each scenario as fully static, static-after-first-nontrivial, or dynamic
+- `build_capture_sequence_manifest.py`: converts `mesen_capture.lua` screenshot runs (`*_input_log.json` + `*_frame_XXXXX.png`) into collapsed runtime `image` sequence manifests
 - `capture_visible_mode7_range.py`: reuses `mesen_scanline_step_test.lua` to capture one visible-scanline `ppu.mode7.*` sample per frame across a requested range
+- `capture_scanline_samples_range.py`: reuses `mesen_scanline_step_test.lua` to capture the full per-scanline sample list for each requested frame, supports seeded savestate/input-window gameplay runs, can pass optional exec/write trace points through to the Lua probe, and now preserves the probe's `frame_events` boundary snapshots
+- `summarize_scanline_dma_queue.py`: summarizes visible-phase `$53/$54` queue-cursor state and parsed active `0600` descriptors from one or more `mesen_scanline_step_test.lua` capture JSON files
 - `apply_visible_mode7_samples.py`: applies those captured visible Mode 7 samples onto extracted frame states, writing sidecar `ppu_state_visible.json` files by default
 - `extract_compression_header_manifest.py`: scans a bank for `42FB`/`26FB`/`67FB`/`27FB` blocks and decodes their leading header fields
 - `validate_td2_chunks.py`: validates candidate chunk starts by running supported decoders and reporting consumed source windows/overlaps
@@ -68,6 +71,7 @@ python3 tools/build_mesen_design_pack_range.py tools/out/mesen_range_1086_1093_v
 python3 tools/build_tilemap_chunk_provenance.py tools/out/design_mesen_range_1086_1093_v1 .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.jsonc --chunk-validation tools/out/bank13_chunk_validation.json --markdown-out rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md
 python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 654 --end-frame 710 --step 4 --out-dir tools/out/ballistic_sequence --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
 python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 978 --end-frame 982 --step 4 --out-dir tools/out/intro_native_978 --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
+python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 7051 --end-frame 7051 --step 1 --out-dir tools/out/mesen_range_7051_inputfix_v1 --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release --input-windows '6800:start;6900-6920:start,a' --frame-timeout-seconds 180
 python3 tools/build_scene_sequence_manifest.py tools/out/intro_loop.json tools/out/intro_loop_sequence.txt --json-out tools/out/intro_loop_sequence.json --end-frame-exclusive 2072 --prefer-screenshot
 python3 tools/build_indexed_palette_animation.py tools/out/intro_loop.json tools/out/ballistic_native/ballistic_splash.txt --start-frame 654 --end-frame-exclusive 958 --json-out tools/out/ballistic_native/ballistic_splash.json --preview-out tools/out/ballistic_native/ballistic_splash_preview.ppm --sequence-manifest tools/out/ballistic_native_sequence.txt
 python3 tools/build_ballistic_rom_clip.py game.smc tools/out/bank1_l00a35a_scene_cgram.bin tools/out/ballistic_native/ballistic_splash.json tools/out/ballistic_rom/ballistic_splash.txt --json-out tools/out/ballistic_rom/ballistic_splash.json --preview-out tools/out/ballistic_rom/ballistic_splash_preview.ppm --sequence-manifest tools/out/ballistic_rom_sequence.txt
@@ -77,8 +81,13 @@ python3 tools/render_mesen_snes_bg.py .mesen-config/Mesen2/LuaScriptData/mesen_p
 python3 tools/render_mesen_snes_bg.py tools/out/td2_boot_probe_startframe_vram_1200.bin tools/out/td2_boot_probe_startframe_cgram_1200.bin tools/out/td2_boot_probe_startframe_ppu_state_1200.json tools/out/td2_boot_probe_bg_obj_1200.ppm --oam tools/out/td2_boot_probe_startframe_oam_1200.bin --json-out tools/out/td2_boot_probe_bg_obj_1200.json
 python3 tools/render_mesen_snes_bg.py tools/out/td2_boot_probe_startframe_vram_1200.bin tools/out/td2_boot_probe_startframe_cgram_1200.bin tools/out/td2_boot_probe_startframe_ppu_state_1200.json tools/out/td2_boot_probe_bg_obj_1200_ppu.ppm --oam tools/out/td2_boot_probe_startframe_oam_1200.bin --obj-renderer mode7-ppu --json-out tools/out/td2_boot_probe_bg_obj_1200_ppu.json
 python3 tools/run_track1_seed_sweep.py --out-dir tools/out/track1_seed_sweep_v1
+python3 tools/build_capture_sequence_manifest.py tools/out/track1_seed_sweep_v1/b_hold/capture_input_log.json tools/out/track1_b_hold_cycle_0076_0156_sequence.txt --json-out tools/out/track1_b_hold_cycle_0076_0156_sequence.json --start-frame 76 --end-frame-exclusive 156
 python3 tools/capture_visible_mode7_range.py 1094 1101 --output tools/out/visible_mode7_1094_1101.json
 python3 tools/apply_visible_mode7_samples.py tools/out/visible_mode7_1094_1101.json tools/out/mesen_range_1094_1101_v1
+python3 tools/capture_scanline_samples_range.py 86 86 --savestate .mesen-config/Mesen2/SaveStates/game_11.mss --input-windows '60-359:b' --output tools/out/track1_b_hold_scanline_frame_0086_v1.json --max-samples 224
+python3 tools/capture_scanline_samples_range.py 86 86 --savestate .mesen-config/Mesen2/SaveStates/game_11.mss --input-windows '60-359:b' --trace-exec-points 'main_visible=02:9016,main_end=00:8029,qreset_80=80:04DF' --trace-write-points 'dp_0053=00:0053,dp_0054=00:0054,dp_0055=00:0055,dp_0056=00:0056' --output tools/out/track1_b_hold_scanline_frame_0086_trace_v2.json --max-samples 260
+python3 tools/capture_scanline_samples_range.py 86 86 --savestate .mesen-config/Mesen2/SaveStates/game_11.mss --input-windows '60-359:b' --trace-exec-points 'main_visible=02:9016,main_end=00:8029,qreset_80=80:04DF' --trace-write-points 'dp_0053=00:0053,dp_0054=00:0054,dp_0055=00:0055,dp_0056=00:0056' --output tools/out/track1_b_hold_scanline_frame_0086_trace_v4.json --max-samples 360
+python3 tools/summarize_scanline_dma_queue.py tools/out/track1_b_hold_scanline_frame_0086_v5.json tools/out/track1_b_hold_scanline_frame_0092_v5.json tools/out/track1_b_hold_scanline_frame_0108_v5.json --output tools/out/track1_b_hold_visible_queue_0086_0092_0108_v1.json
 python3 tools/extract_compression_header_manifest.py game.smc --bank 7 --json-out tools/out/bank7_compression_headers.json
 python3 tools/validate_td2_chunks.py game.smc --bank 30 --headers-json tools/out/bank30_headers.json --json-out tools/out/bank30_chunk_validation.json
 python3 tools/summarize_l001210_trace.py .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json --json-out tools/out/td2_boot_probe_l001210_summary.json
@@ -132,6 +141,7 @@ Current environment note:
   `--testRunner` build reports no callable save API on `emu`.
 - `make -C tools regression-gates REGRESSION_GATES_RENDER_DIR=../port/build/regression_frames`
 - `make -C tools callback-contracts-check`
+- `make -C tools track1-b-hold-cycle`
 - `make -C tools bank7-42fb0`
 - `make -C tools bank7-42fb0-preview`
 - `make -C tools bank7-26fb0`
@@ -204,6 +214,9 @@ For the `Ballistic presents` splash, the frame-`654` extraction is a clean exact
 
 - it extracts one folder per requested frame: `frame_00654/`, `frame_00658/`, ...
 - each frame folder contains `vram.bin`, `cgram.bin`, `ppu_state.json`, and the rest of the usual Mesen bridge outputs
+- `--input-windows` reuses the same `start-end:buttons;...` syntax as the Lua
+  capture/probe tools and now works through guarded per-frame resume/pause
+  advances when the extractor needs scripted input
 - it writes `sequence.txt`, a simple line-oriented manifest that `port/build/td2_port --sequence ...` can play directly
 - when `oam.bin` exists in the frame folder, it is now emitted as the optional fourth `snes_bg` path
 - it also writes `sequence.json`, which records the extracted frame list, adjacent-collapse decisions, and total playback duration

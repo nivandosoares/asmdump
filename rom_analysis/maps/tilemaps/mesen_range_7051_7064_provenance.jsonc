@@ -1,0 +1,537 @@
+{
+  "design_pack_range": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_7051_inputfix_v1/design_pack_range.json",
+  "l001210_exec_json": "/home/nivando-soares/asmdump/.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json",
+  "chunk_validation_inputs": [
+    "/home/nivando-soares/asmdump/tools/out/bank13_chunk_validation.json",
+    "/home/nivando-soares/asmdump/tools/out/bank7_chunk_validation.json"
+  ],
+  "settings": {
+    "carry_frames": 16,
+    "forward_frames": 2,
+    "include_inactive_layers": false
+  },
+  "frame_range": {
+    "start": 7051,
+    "end": 7064
+  },
+  "row_count": 9,
+  "summary": {
+    "mapped_rows": 9,
+    "unmapped_rows": 0
+  },
+  "rows": [
+    {
+      "frame": 7051,
+      "layer_name": "bg1",
+      "layer_index": 0,
+      "bg_mode": 1,
+      "bpp": 4,
+      "active": true,
+      "enabled_on_main": true,
+      "enabled_on_sub": false,
+      "chr_base_words": 8192,
+      "tilemap_base_words": 0,
+      "tile_index_count": 713,
+      "tile_index_ranges": [
+        {
+          "start": 0,
+          "end": 712,
+          "count": 713
+        }
+      ],
+      "tile_index_examples": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "candidate_chunks": [
+        {
+          "source_snes": "0D:C4DC",
+          "source_marker": "26FB",
+          "source_provenance": "unclassified",
+          "hit_frame": 7051,
+          "relationship": "runtime-hit",
+          "frame_delta": 0,
+          "destination_snes": "7E:2000",
+          "state_0202": 0,
+          "state_0208": 21,
+          "dp_0054": 104,
+          "chunk_validation": {
+            "bank": 13,
+            "addr": 50396,
+            "snes": "0D:C4DC",
+            "marker": "26FB",
+            "status": "ok",
+            "output_size": 4000,
+            "consumed_bytes": 1374,
+            "window_start": 17628,
+            "window_end_exclusive": 19002,
+            "source_validation": "/home/nivando-soares/asmdump/tools/out/bank13_chunk_validation.json"
+          }
+        }
+      ],
+      "candidate_status": "mapped",
+      "design_pack_manifest": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_7051_inputfix_v1/frame_07051/design_pack.json",
+      "tilemap_json": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_7051_inputfix_v1/frame_07051/tilemaps/bg1_tilemap.json"
+    },
+    {
+      "frame": 7051,
+      "layer_name": "bg2",
+      "layer_index": 1,
+      "bg_mode": 1,
+      "bpp": 4,
+      "active": true,
+      "enabled_on_main": false,
+      "enabled_on_sub": false,
+      "chr_base_words": 12288,
+      "tilemap_base_words": 4096,
+      "tile_index_count": 1,
+      "tile_index_ranges": [
+        {
+          "start": 0,
+          "end": 0,
+          "count": 1
+        }
+      ],
+      "tile_index_examples": [
+        0
+      ],
+      "candidate_chunks": [
+        {
+          "source_snes": "0D:C4DC",
+          "source_marker": "26FB",
+          "source_provenance": "unclassified",
+          "hit_frame": 7051,
+          "relationship": "runtime-hit",
+          "frame_delta": 0,
+          "destination_snes": "7E:2000",
+          "state_0202": 0,
+          "state_0208": 21,
+          "dp_0054": 104,
+          "chunk_validation": {
+            "bank": 13,
+            "addr": 50396,
+            "snes": "0D:C4DC",
+            "marker": "26FB",
+            "status": "ok",
+            "output_size": 4000,
+            "consumed_bytes": 1374,
+            "window_start": 17628,
+            "window_end_exclusive": 19002,
+            "source_validation": "/home/nivando-soares/asmdump/tools/out/bank13_chunk_validation.json"
+          }
+        }
+      ],
+      "candidate_status": "mapped",
+      "design_pack_manifest": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_7051_inputfix_v1/frame_07051/design_pack.json",
+      "tilemap_json": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_7051_inputfix_v1/frame_07051/tilemaps/bg2_tilemap.json"
+    },
+    {
+      "frame": 7051,
+      "layer_name": "bg3",
+      "layer_index": 2,
+      "bg_mode": 1,
+      "bpp": 2,
+      "active": true,
+      "enabled_on_main": false,
+      "enabled_on_sub": false,
+      "chr_base_words": 24576,
+      "tilemap_base_words": 4096,
+      "tile_index_count": 1,
+      "tile_index_ranges": [
+        {
+          "start": 0,
+          "end": 0,
+          "count": 1
+        }
+      ],
+      "tile_index_examples": [
+        0
+      ],
+      "candidate_chunks": [
+        {
+          "source_snes": "0D:C4DC",
+          "source_marker": "26FB",
+          "source_provenance": "unclassified",
+          "hit_frame": 7051,
+          "relationship": "runtime-hit",
+          "frame_delta": 0,
+          "destination_snes": "7E:2000",
+          "state_0202": 0,
+          "state_0208": 21,
+          "dp_0054": 104,
+          "chunk_validation": {
+            "bank": 13,
+            "addr": 50396,
+            "snes": "0D:C4DC",
+            "marker": "26FB",
+            "status": "ok",
+            "output_size": 4000,
+            "consumed_bytes": 1374,
+            "window_start": 17628,
+            "window_end_exclusive": 19002,
+            "source_validation": "/home/nivando-soares/asmdump/tools/out/bank13_chunk_validation.json"
+          }
+        }
+      ],
+      "candidate_status": "mapped",
+      "design_pack_manifest": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_7051_inputfix_v1/frame_07051/design_pack.json",
+      "tilemap_json": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_7051_inputfix_v1/frame_07051/tilemaps/bg3_tilemap.json"
+    },
+    {
+      "frame": 7059,
+      "layer_name": "bg1",
+      "layer_index": 0,
+      "bg_mode": 1,
+      "bpp": 4,
+      "active": true,
+      "enabled_on_main": true,
+      "enabled_on_sub": false,
+      "chr_base_words": 8192,
+      "tilemap_base_words": 0,
+      "tile_index_count": 713,
+      "tile_index_ranges": [
+        {
+          "start": 0,
+          "end": 712,
+          "count": 713
+        }
+      ],
+      "tile_index_examples": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "candidate_chunks": [
+        {
+          "source_snes": "07:BF49",
+          "source_marker": "42FB",
+          "source_provenance": "unclassified",
+          "hit_frame": 7059,
+          "relationship": "runtime-hit",
+          "frame_delta": 0,
+          "destination_snes": "7E:2000",
+          "state_0202": 0,
+          "state_0208": 21,
+          "dp_0054": 104,
+          "chunk_validation": {
+            "bank": 7,
+            "addr": 48969,
+            "snes": "07:BF49",
+            "marker": "42FB",
+            "status": "ok",
+            "output_size": 4102,
+            "consumed_bytes": 456,
+            "window_start": 16201,
+            "window_end_exclusive": 16657,
+            "source_validation": "/home/nivando-soares/asmdump/tools/out/bank7_chunk_validation.json"
+          }
+        }
+      ],
+      "candidate_status": "mapped",
+      "design_pack_manifest": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_7051_inputfix_v1/frame_07059/design_pack.json",
+      "tilemap_json": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_7051_inputfix_v1/frame_07059/tilemaps/bg1_tilemap.json"
+    },
+    {
+      "frame": 7059,
+      "layer_name": "bg2",
+      "layer_index": 1,
+      "bg_mode": 1,
+      "bpp": 4,
+      "active": true,
+      "enabled_on_main": false,
+      "enabled_on_sub": false,
+      "chr_base_words": 12288,
+      "tilemap_base_words": 4096,
+      "tile_index_count": 1,
+      "tile_index_ranges": [
+        {
+          "start": 0,
+          "end": 0,
+          "count": 1
+        }
+      ],
+      "tile_index_examples": [
+        0
+      ],
+      "candidate_chunks": [
+        {
+          "source_snes": "07:BF49",
+          "source_marker": "42FB",
+          "source_provenance": "unclassified",
+          "hit_frame": 7059,
+          "relationship": "runtime-hit",
+          "frame_delta": 0,
+          "destination_snes": "7E:2000",
+          "state_0202": 0,
+          "state_0208": 21,
+          "dp_0054": 104,
+          "chunk_validation": {
+            "bank": 7,
+            "addr": 48969,
+            "snes": "07:BF49",
+            "marker": "42FB",
+            "status": "ok",
+            "output_size": 4102,
+            "consumed_bytes": 456,
+            "window_start": 16201,
+            "window_end_exclusive": 16657,
+            "source_validation": "/home/nivando-soares/asmdump/tools/out/bank7_chunk_validation.json"
+          }
+        }
+      ],
+      "candidate_status": "mapped",
+      "design_pack_manifest": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_7051_inputfix_v1/frame_07059/design_pack.json",
+      "tilemap_json": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_7051_inputfix_v1/frame_07059/tilemaps/bg2_tilemap.json"
+    },
+    {
+      "frame": 7059,
+      "layer_name": "bg3",
+      "layer_index": 2,
+      "bg_mode": 1,
+      "bpp": 2,
+      "active": true,
+      "enabled_on_main": false,
+      "enabled_on_sub": false,
+      "chr_base_words": 24576,
+      "tilemap_base_words": 4096,
+      "tile_index_count": 1,
+      "tile_index_ranges": [
+        {
+          "start": 0,
+          "end": 0,
+          "count": 1
+        }
+      ],
+      "tile_index_examples": [
+        0
+      ],
+      "candidate_chunks": [
+        {
+          "source_snes": "07:BF49",
+          "source_marker": "42FB",
+          "source_provenance": "unclassified",
+          "hit_frame": 7059,
+          "relationship": "runtime-hit",
+          "frame_delta": 0,
+          "destination_snes": "7E:2000",
+          "state_0202": 0,
+          "state_0208": 21,
+          "dp_0054": 104,
+          "chunk_validation": {
+            "bank": 7,
+            "addr": 48969,
+            "snes": "07:BF49",
+            "marker": "42FB",
+            "status": "ok",
+            "output_size": 4102,
+            "consumed_bytes": 456,
+            "window_start": 16201,
+            "window_end_exclusive": 16657,
+            "source_validation": "/home/nivando-soares/asmdump/tools/out/bank7_chunk_validation.json"
+          }
+        }
+      ],
+      "candidate_status": "mapped",
+      "design_pack_manifest": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_7051_inputfix_v1/frame_07059/design_pack.json",
+      "tilemap_json": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_7051_inputfix_v1/frame_07059/tilemaps/bg3_tilemap.json"
+    },
+    {
+      "frame": 7064,
+      "layer_name": "bg1",
+      "layer_index": 0,
+      "bg_mode": 1,
+      "bpp": 4,
+      "active": true,
+      "enabled_on_main": true,
+      "enabled_on_sub": false,
+      "chr_base_words": 8192,
+      "tilemap_base_words": 0,
+      "tile_index_count": 713,
+      "tile_index_ranges": [
+        {
+          "start": 0,
+          "end": 712,
+          "count": 713
+        }
+      ],
+      "tile_index_examples": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "candidate_chunks": [
+        {
+          "source_snes": "07:C112",
+          "source_marker": "26FB",
+          "source_provenance": "unclassified",
+          "hit_frame": 7064,
+          "relationship": "runtime-hit",
+          "frame_delta": 0,
+          "destination_snes": "7E:2000",
+          "state_0202": 0,
+          "state_0208": 21,
+          "dp_0054": 104,
+          "chunk_validation": {
+            "bank": 7,
+            "addr": 49426,
+            "snes": "07:C112",
+            "marker": "26FB",
+            "status": "ok",
+            "output_size": 2832,
+            "consumed_bytes": 2333,
+            "window_start": 16658,
+            "window_end_exclusive": 18991,
+            "source_validation": "/home/nivando-soares/asmdump/tools/out/bank7_chunk_validation.json"
+          }
+        }
+      ],
+      "candidate_status": "mapped",
+      "design_pack_manifest": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_7051_inputfix_v1/frame_07064/design_pack.json",
+      "tilemap_json": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_7051_inputfix_v1/frame_07064/tilemaps/bg1_tilemap.json"
+    },
+    {
+      "frame": 7064,
+      "layer_name": "bg2",
+      "layer_index": 1,
+      "bg_mode": 1,
+      "bpp": 4,
+      "active": true,
+      "enabled_on_main": false,
+      "enabled_on_sub": false,
+      "chr_base_words": 12288,
+      "tilemap_base_words": 4096,
+      "tile_index_count": 1,
+      "tile_index_ranges": [
+        {
+          "start": 0,
+          "end": 0,
+          "count": 1
+        }
+      ],
+      "tile_index_examples": [
+        0
+      ],
+      "candidate_chunks": [
+        {
+          "source_snes": "07:C112",
+          "source_marker": "26FB",
+          "source_provenance": "unclassified",
+          "hit_frame": 7064,
+          "relationship": "runtime-hit",
+          "frame_delta": 0,
+          "destination_snes": "7E:2000",
+          "state_0202": 0,
+          "state_0208": 21,
+          "dp_0054": 104,
+          "chunk_validation": {
+            "bank": 7,
+            "addr": 49426,
+            "snes": "07:C112",
+            "marker": "26FB",
+            "status": "ok",
+            "output_size": 2832,
+            "consumed_bytes": 2333,
+            "window_start": 16658,
+            "window_end_exclusive": 18991,
+            "source_validation": "/home/nivando-soares/asmdump/tools/out/bank7_chunk_validation.json"
+          }
+        }
+      ],
+      "candidate_status": "mapped",
+      "design_pack_manifest": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_7051_inputfix_v1/frame_07064/design_pack.json",
+      "tilemap_json": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_7051_inputfix_v1/frame_07064/tilemaps/bg2_tilemap.json"
+    },
+    {
+      "frame": 7064,
+      "layer_name": "bg3",
+      "layer_index": 2,
+      "bg_mode": 1,
+      "bpp": 2,
+      "active": true,
+      "enabled_on_main": false,
+      "enabled_on_sub": false,
+      "chr_base_words": 24576,
+      "tilemap_base_words": 4096,
+      "tile_index_count": 1,
+      "tile_index_ranges": [
+        {
+          "start": 0,
+          "end": 0,
+          "count": 1
+        }
+      ],
+      "tile_index_examples": [
+        0
+      ],
+      "candidate_chunks": [
+        {
+          "source_snes": "07:C112",
+          "source_marker": "26FB",
+          "source_provenance": "unclassified",
+          "hit_frame": 7064,
+          "relationship": "runtime-hit",
+          "frame_delta": 0,
+          "destination_snes": "7E:2000",
+          "state_0202": 0,
+          "state_0208": 21,
+          "dp_0054": 104,
+          "chunk_validation": {
+            "bank": 7,
+            "addr": 49426,
+            "snes": "07:C112",
+            "marker": "26FB",
+            "status": "ok",
+            "output_size": 2832,
+            "consumed_bytes": 2333,
+            "window_start": 16658,
+            "window_end_exclusive": 18991,
+            "source_validation": "/home/nivando-soares/asmdump/tools/out/bank7_chunk_validation.json"
+          }
+        }
+      ],
+      "candidate_status": "mapped",
+      "design_pack_manifest": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_7051_inputfix_v1/frame_07064/design_pack.json",
+      "tilemap_json": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_7051_inputfix_v1/frame_07064/tilemaps/bg3_tilemap.json"
+    }
+  ]
+}

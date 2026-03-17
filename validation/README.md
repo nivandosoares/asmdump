@@ -10,7 +10,7 @@ Current asset:
 - `run_mesen_probe_boot.sh`: convenience wrapper around the generic launcher for the boot probe
 - `mesen_dump_bg_range.lua`: single-run range dumper for `VRAM + CGRAM + PPU state` and optional screenshots on selected frames
 - `run_mesen_dump_bg_range.sh`: convenience wrapper around the generic launcher for that range dumper
-- `mesen_scanline_step_test.lua`: an experimental scanline-step probe that uses `emu.step(..., ppuScanline)` plus `codeBreak` to sample `emu.getState()` once per visible scanline on a target frame, including the current `ppu.mode7.matrix[*]`, scroll, and center values
+- `mesen_scanline_step_test.lua`: an experimental scanline-step probe that uses `emu.step(..., ppuScanline)` plus `codeBreak` to sample `emu.getState()` once per visible scanline on a target frame; it now also accepts the same seeded savestate/input-window pattern used by the gameplay harnesses, records gameplay-facing layer scroll/callback fields alongside the old `ppu.mode7.*` values, and emits `frame_events` snapshots for traced `start`/`end` frame boundaries
 
 Expected workflow:
 
@@ -184,6 +184,27 @@ python3 tools/run_l001210_probe_matrix.py \
   --total-frames 2200 \
   --timeout-seconds 90
 ```
+
+To recover the later direct-hit cluster on the restored timed-input scenario:
+
+```sh
+TD2_BOOT_PROBE_TOTAL_FRAMES=7065 \
+TD2_BOOT_PROBE_TRACE_L001210=1 \
+TD2_BOOT_PROBE_L001210_MAX_HITS=256 \
+TD2_BOOT_PROBE_INPUT_WINDOWS='6800:start;6900-6920:start,a' \
+MESEN_TIMEOUT_SECONDS=180 \
+./validation/run_mesen_probe_boot.sh ./game.smc
+
+python3 tools/summarize_l001210_trace.py \
+  .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json \
+  --json-out tools/out/l001210_probe_7051_inputfix_summary.json
+```
+
+This is the current headless proof lane for the later direct-hit cluster:
+
+- frame `7051` -> `0D:C4DC`
+- frame `7059` -> `07:BF49`
+- frame `7064` -> `07:C112`
 
 To save a deterministic savestate snapshot at a specific probe frame:
 
@@ -731,6 +752,22 @@ python3 tools/apply_visible_mode7_samples.py \
   tools/out/visible_mode7_1094_1101.json \
   tools/out/mesen_range_1094_1101_v1
 ```
+
+For seeded gameplay visible-phase sampling, the same Lua probe can now be
+driven through a fuller wrapper that preserves every sampled scanline and the
+probe's boundary snapshots:
+
+```sh
+python3 tools/capture_scanline_samples_range.py \
+  86 86 \
+  --savestate .mesen-config/Mesen2/SaveStates/game_11.mss \
+  --input-windows '60-359:b' \
+  --output tools/out/track1_b_hold_scanline_frame_0086_v1.json \
+  --max-samples 224
+```
+
+That path is the current debugger-oriented follow-up for gameplay-era lanes
+where `emu.takeScreenshot()` and end-of-frame raw `PPU` dumps disagree.
 
 Current reading from that `1094..1101` visible-state pass:
 

@@ -1,6 +1,6 @@
 # ROM Archaeology Progress Checkpoints
 
-Snapshot date: `2026-03-13`
+Snapshot date: `2026-03-17`
 
 This file tracks plan progress as checkpoints with objective evidence and the
 next gate needed to advance.
@@ -10,8 +10,8 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; unresolved targets remain |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows now cover `1086..1117`, with `1117` as the current headless confidence edge from the preserved `1101` bank-7 runtime anchor |
-| Lane 3: Gameplay-era frame archaeology | active | a deterministic track-start seed window now exists (`game_11.mss` -> frames `86..93`), but it is still a static scene rather than active driving |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` is now packaged with exact provenance anchors, and the remaining Lane 2 question is whether a small interior sample set is enough to promote that later scene into a contiguous window |
+| Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
 ## Completed Checkpoints
@@ -778,9 +778,520 @@ Blocker reading:
 - per the blocker policy, that exact early raw-bridge lane is now documented and
   parked
 - next useful gameplay follow-up:
-  - use a screenshot-backed moving gameplay manifest from the sweep outputs, or
+  - use the new screenshot-backed `b_hold` cycle as the next binding target, or
   - replace `game_11.mss` with a later gameplay savestate whose raw dump aligns
     cleanly
+
+### CP-27: Screenshot-backed `b_hold` gameplay cycle (`track1`, frames `76..156`)
+
+- Added a capture-log sequence builder:
+  - `tools/build_capture_sequence_manifest.py`
+  - `make -C tools track1-b-hold-cycle`
+- Added the committed gameplay-cycle note:
+  - `rom_analysis/maps/tracks/track1_b_hold_cycle_0076_0156.md`
+- Refreshed the sweep source behind that cycle:
+  - `rom_analysis/maps/tracks/track1_seed_sweep_v2_current.md`
+- Built screenshot-backed runtime artifacts:
+  - `tools/out/track1_b_hold_cycle_0076_0156_v2_sequence.txt`
+  - `tools/out/track1_b_hold_cycle_0076_0156_v2_sequence.json`
+
+Cycle reading:
+
+- the selected `b_hold` window covers script frames `76..155`
+- collapsed runtime artifact:
+  - `5` image entries
+  - `4` distinct screenshot states
+  - `16` frames per state
+- transition frames:
+  - `76`, `92`, `108`, `124`, `140`
+- cadence read:
+  - frame `140` reuses the frame-`76` image
+  - the visible track-start motion therefore closes one screenshot-backed
+    `64`-frame cycle
+- context binding note:
+  - the first state still covers the known screenshot-validated frame `86` from
+    `track1_seed_0086_0093.md`
+  - the screenshot transition at frame `92` is now the next unbound
+    `VRAM/CGRAM/OAM/PPU` / probe edge
+- initial gameplay contract pointers now referenced in the cycle note:
+  - bank 10 external entries from `rom_analysis/code/physics.asm`
+  - bank 11 render/IRQ anchors from `rom_analysis/code/render.asm`
+- practical reading:
+  - gameplay archaeology now has a reusable moving reference artifact even
+    while the early raw-bridge mismatch remains parked
+  - the next best Lane 3 step is to bind one later cycle state (`92` or `108`)
+    back to raw/probe context, or switch to a later gameplay savestate if the
+    current seed keeps diverging there
+
+### CP-28: `game_11.mss` screenshot-vs-raw blocker narrowed at `92/108`
+
+- Refreshed the gameplay sweep on the current harness:
+  - `tools/out/track1_seed_sweep_v2_current/summary.json`
+  - `tools/out/track1_seed_sweep_v2_current/summary.md`
+- Archived the seeded probe follow-up:
+  - `tools/out/track1_b_hold_probe_0086_0108_v1/td2_boot_probe.json`
+- Kept the targeted raw dump artifacts:
+  - `tools/out/track1_b_hold_0086_0108_v1.json`
+  - `tools/out/track1_b_hold_0086_0108_v1_delta_86_92.json`
+  - `tools/out/track1_b_hold_0086_0108_v1_delta_92_108.json`
+
+Current reading:
+
+- refreshed sweep status:
+  - `b_hold`: dynamic (`first_nontrivial = 76`, `first_motion = 92`)
+  - `start_then_b_hold`: `static_after_first_nontrivial` (`64`)
+  - `start_then_a_hold`: `static_after_first_nontrivial` (`64`)
+- raw/probe follow-up on the same `b_hold` seed lane:
+  - raw `VRAM/CGRAM/OAM/PPU` stays identical across `86 -> 92`
+  - raw `VRAM/CGRAM/OAM/PPU` stays identical across `92 -> 108`
+  - probe-side callback/state remains flat at `86`, `92`, and `108`:
+    - `active_main = active_nmi = 00:8029`
+    - tracked `$0200/$0202/$0204/$0206/$0208/$020A/$040A/$0440/$0442/$0444/$1E2C/$0054 = 0`
+- failed but informative experiment:
+  - a one-off attempt to dump raw state directly from `mesen_capture.lua`
+    perturbed the `b_hold` lane into a static post-`86` capture
+  - that code path was reverted in the same turn and should not be reused as
+    evidence
+- practical reading:
+  - the blocker is no longer “find a moving gameplay lane”
+  - the blocker is now “explain why the screenshot lane moves while raw/probe
+    remain static on `game_11.mss`”
+  - the next best step is either a later gameplay savestate or deeper debugger
+    inspection on this seed
+
+### CP-29: Visible-phase gameplay path bound on `game_11.mss`
+
+- Extended the scanline-step probe so it can load a savestate and replay the
+  same seeded input windows used by the gameplay capture harness:
+  - `validation/mesen_scanline_step_test.lua`
+- Added a repeatable full-sample range runner:
+  - `tools/capture_scanline_samples_range.py`
+- Captured seeded visible-phase samples for the first `b_hold` cycle states:
+  - `tools/out/track1_b_hold_scanline_frame_0086_v1.json`
+  - `tools/out/track1_b_hold_scanline_frame_0092_v1.json`
+  - `tools/out/track1_b_hold_scanline_frame_0108_v1.json`
+  - `tools/out/track1_b_hold_scanline_summary_0086_0092_0108_v1.json`
+- Archived the targeted late-scanline register trace:
+  - `tools/out/track1_b_hold_probe_trace_0086_0108_v1/td2_boot_probe.json`
+  - `tools/out/track1_b_hold_probe_trace_0086_0108_v1/td2_boot_probe_mode7_writes.json`
+  - `tools/out/track1_b_hold_probe_trace_0086_0108_v1/td2_boot_probe_mode7_writes_summary.json`
+- Added the lane note:
+  - `rom_analysis/maps/tracks/track1_b_hold_visible_scanline_0086_0108.md`
+
+Current reading:
+
+- the screenshot-vs-raw split on `game_11.mss` is now explained as a phase
+  split:
+  - end-of-frame raw/probe still lands on `00:8029/00:835F` with
+    `ppu.mainScreenLayers = 0x04`
+  - visible-scanline sampling on frames `86`, `92`, and `108` runs under
+    `02:9016` with alternating `01:96A0/01:960D` IRQ behavior and
+    `ppu.mainScreenLayers = 0x13/0x17`
+- the visible frame also carries real split-style motion that the end-of-frame
+  dump misses:
+  - `bg2_hscroll` spans `66` values
+  - `bg2_vscroll` spans `101` values
+  - `bg3_vscroll` toggles between `0x03FF` and `0x0014`
+- late-scanline register tracing over frames `86..108` records a stable
+  `16`-write pattern every frame:
+  - `M7HOFS`, `M7VOFS`, `$210F-$2114`
+  - all at scanlines `225..227`
+  - no DMA writes, no VRAM writes
+- the remaining blocker is now narrower:
+  - the sampled visible-phase `PPU`/callback pattern matches across frames
+    `86`, `92`, and `108`
+  - only `dp_0054` differs (`0x38` at `86`, `0x48` at `92/108`)
+  - screenshot transitions at `92` and `108` therefore still need a deeper
+    producer-side or sprite/color-math explanation
+
+### CP-30: Bank-1 producer-state follow-up stays flat on the visible gameplay lane
+
+- Extended the scanline-step probe with additional producer-side fields used by
+  the bank-1 IRQ path:
+  - `validation/mesen_scanline_step_test.lua`
+- Captured refreshed `v2` scanline samples:
+  - `tools/out/track1_b_hold_scanline_frame_0086_v2.json`
+  - `tools/out/track1_b_hold_scanline_frame_0092_v2.json`
+  - `tools/out/track1_b_hold_scanline_frame_0108_v2.json`
+  - `tools/out/track1_b_hold_scanline_summary_0086_0092_0108_v2.json`
+- Added the bank-1 producer and low-WRAM follow-up to the lane note:
+  - `rom_analysis/maps/tracks/track1_b_hold_visible_scanline_0086_0108.md`
+- Archived start-of-frame WRAM follow-up:
+  - `tools/out/track1_b_hold_wram_frame_0086_v1/td2_boot_probe_startframe_wram.bin`
+  - `tools/out/track1_b_hold_wram_frame_0092_v1/td2_boot_probe_startframe_wram.bin`
+  - `tools/out/track1_b_hold_wram_frame_0108_v1/td2_boot_probe_startframe_wram.bin`
+  - `tools/out/track1_b_hold_wram_queue_0086_0092_0108_v1.json`
+- Archived negative exec/write trace:
+  - `tools/out/track1_b_hold_execwrite_trace_0086_0108_v1/td2_boot_probe.json`
+
+Current reading:
+
+- the added bank-1 producer-side WRAM fields stay identical across frames
+  `86`, `92`, and `108`:
+  - `$1396`
+  - `$13A4/$13A6/$13A8/$13AA/$13AC/$13AE`
+  - `$13B4/$13B6/$13BA`
+  - `$1CE6/$1CEB/$1CEC`
+  - `$1E1C/$1E1E`
+  - `$0F3A`
+- visible window and OAM summary fields also stay identical across those same
+  three frames
+- targeted end-of-frame write/exec tracing against `02:9016`, `01:960D`,
+  `01:96A0`, and the corresponding bank-1 producer-side WRAM addresses records
+  no hits in the traced `86..108` window
+- the low-WRAM queue follow-up is also negative:
+  - the archived `td2_boot_probe_startframe_wram.bin` dumps keep the sampled
+    `0600` region flat across `86`, `92`, and `108`
+  - `tools/out/track1_b_hold_wram_queue_0086_0092_0108_v1.json` therefore has
+    `0` active parsed queue entries for all three frames
+- practical reading:
+  - even after widening the visible-phase probe to bank-1 producer-side state,
+    sampled `dp_0054` remains the only known field that separates frame `86`
+    from frames `92/108`
+  - the next best Lane 3 target is to bind that sampled `dp_0054` field to its
+    real producer/base before spending more time on bank-1 WRAM mirrors
+
+### CP-31: Visible-phase `dp_0054` is a real `7E:0054` WRAM field
+
+- Extended the scanline-step probe with direct-page-base and explicit WRAM
+  mirror samples:
+  - `validation/mesen_scanline_step_test.lua`
+- Captured refreshed `v3/v4` scanline samples:
+  - `tools/out/track1_b_hold_scanline_frame_0086_v3.json`
+  - `tools/out/track1_b_hold_scanline_frame_0092_v3.json`
+  - `tools/out/track1_b_hold_scanline_frame_0108_v3.json`
+  - `tools/out/track1_b_hold_scanline_summary_0086_0092_0108_v3.json`
+  - `tools/out/track1_b_hold_scanline_frame_0086_v4.json`
+  - `tools/out/track1_b_hold_scanline_frame_0092_v4.json`
+  - `tools/out/track1_b_hold_scanline_frame_0108_v4.json`
+  - `tools/out/track1_b_hold_scanline_summary_0086_0092_0108_v4.json`
+- Archived the low-page/WRAM write-trace follow-up:
+  - `tools/out/track1_b_hold_dp54_write_trace_0086_0108_v1/td2_boot_probe.json`
+  - `tools/out/track1_b_hold_dp54_write_trace_0086_0108_v1/td2_boot_probe_write_summary.json`
+
+Current reading:
+
+- `v3` rules out a hidden direct-page-base explanation:
+  - `cpu.d = 0` on all sampled scanlines for frames `86`, `92`, and `108`
+  - the effective direct-page address therefore stays fixed at `0x0054`
+- `v4` binds the sampled value to real WRAM during the visible phase:
+  - visible `00:0054..0056` matches `7E:0054..0056` exactly
+  - frame `86` carries `7E:0054..0056 = 0x38/0x90/0x15`
+  - frames `92` and `108` carry `7E:0054..0056 = 0x48/0x90/0x15`
+  - only `7E:0054` changes across those three frames
+- the end-of-frame write-trace lane remains a negative-but-useful result:
+  - tracked writes hit only late `00:0055 = 0x84` and `00:0056 = 0x17`
+    once per frame at scanline `227`
+  - no writes were observed at `00:0054` or `7E:0054..0056`
+  - end-of-frame frame snapshots at `86/92/108` still read `dp_0054 = 0`
+    under `active_main = 00:8029`
+- practical reading:
+  - the remaining gameplay discriminator is now bound to visible-phase
+    `7E:0054`, not an ambiguous low-page alias
+  - the next best Lane 3 target is to trace the producer/reset path that takes
+    visible-phase `7E:0054` from `0x38 -> 0x48 -> 0x00`
+
+### CP-32: Visible-phase `7E:0053/0054` is a drained queue cursor pair
+
+- Extended the scanline-step probe with explicit queue-cursor and parsed
+  `0600` descriptor summary samples:
+  - `validation/mesen_scanline_step_test.lua`
+- Added a queue-summary helper:
+  - `tools/summarize_scanline_dma_queue.py`
+- Captured refreshed `v5` scanline samples:
+  - `tools/out/track1_b_hold_scanline_frame_0086_v5.json`
+  - `tools/out/track1_b_hold_scanline_frame_0092_v5.json`
+  - `tools/out/track1_b_hold_scanline_frame_0108_v5.json`
+  - `tools/out/track1_b_hold_visible_queue_0086_0092_0108_v1.json`
+- Archived the queue-cursor follow-up trace:
+  - `tools/out/track1_b_hold_queue_cursor_trace_0086_0108_v1/td2_boot_probe.json`
+  - `tools/out/track1_b_hold_queue_cursor_trace_0086_0108_v1/td2_boot_probe_trace_summary.json`
+
+Current reading:
+
+- visible-phase `v5` samples now bind the queue cursor pair directly:
+  - frame `86`: `00:0053 = 00:0054 = 7E:0053 = 7E:0054 = 0x38`
+  - frames `92` and `108`: `00:0053 = 00:0054 = 7E:0053 = 7E:0054 = 0x48`
+  - all three frames keep `7E:0055/0056 = 0x90/0x15`
+- the sampled visible queue window is drained, not growing:
+  - `queue_dma_active_descriptor_count = 0` on all `224` visible scanlines for
+    frames `86`, `92`, and `108`
+  - `queue_dma_nonzero_entry_count = 32`, so the `0600` ring still contains
+    stale descriptor content outside the active read/write window
+- the end-of-frame cursor trace remains negative-but-useful:
+  - tracked writes still hit only late `00:0053 = 0`, `00:0055 = 0x84`, and
+    `00:0056 = 0x17` once per frame at scanline `227`
+  - no writes were observed at `00:0054` or `7E:0053/0054`
+  - end-of-frame snapshots at `86/92/108` still read `dp_0053 = dp_0054 = 0`
+    under `active_main = 00:8029`
+- practical reading:
+  - the old “mystery `7E:0054`” read is now too vague; the sampled gameplay
+    discriminator is the visible-phase queue cursor pair `7E:0053/0054`
+  - the next best Lane 3 target is to trace the bank-0 cursor advance/reset
+    path that takes visible `0x38/0x38` or `0x48/0x48` back to `0x00/0x00`
+
+### CP-33: Late gameplay cursor reset splits into two sampled phases
+
+- Extended the scanline-step range wrapper with optional exec/write trace-point
+  pass-through:
+  - `validation/mesen_scanline_step_test.lua`
+  - `tools/capture_scanline_samples_range.py`
+- Archived the mirrored-bank boot-probe rerun:
+  - `tools/out/track1_b_hold_queue_cursor_trace_0086_0108_v2/td2_boot_probe.json`
+  - `tools/out/track1_b_hold_queue_cursor_trace_0086_0108_v2/td2_boot_probe_trace_summary.json`
+- Captured the widened scanline-local late-phase trace:
+  - `tools/out/track1_b_hold_scanline_frame_0086_trace_v1.json`
+  - `tools/out/track1_b_hold_scanline_frame_0086_trace_v2.json`
+  - `tools/out/track1_b_hold_scanline_frame_0086_trace_v2_summary.json`
+
+Current reading:
+
+- the mirrored-bank boot-probe rerun closes one simple ambiguity:
+  - tracing `80:01AB/021E/04DF/06ED/0715/0798/1A70`, `81:8A7F`, and
+    `82:08B2/09CD` still records `exec_hit_count = 0`
+  - the old negative exec result was therefore not just a `00:` vs `80:`
+    bank-mirror mistake
+- the scanline-local trace adds a new late boundary on frame `86`:
+  - `224`-sample trace (`v1`) records no exec or write hits through the visible
+    phase
+  - `260`-sample trace (`v2`) still records no exec-point hits, but it does
+    catch a write trio at frame `87`, scanline `228`:
+    - `00:0055 = 0x90`
+    - `00:0056 = 0x15`
+    - `00:0053 = 0x38`
+  - at that same late point, `00:0054` still reads `0x38` and
+    `active_main = 02:9016`
+  - sampled scanlines `223`, `224`, `227`, and `259` all still carry
+    `00:0053/0054/0055/0056 = 0x38/0x38/0x90/0x15`
+- practical reading:
+  - the late gameplay reset is now split into at least two sampled phases:
+    - an intermediate post-visible stage still under `02:9016` that preserves
+      the visible cursor/budget tuple
+    - a later end-of-frame stage under `00:8029` that collapses to
+      `00:0053/0055/0056 = 0x00/0x84/0x17`
+  - the next best Lane 3 target is to extend the scanline-local trace farther
+    until that `02:9016 -> 00:8029` handoff is observed directly
+
+### CP-34: Frame-boundary sampling keeps frame `87` on the visible gameplay path
+
+- Extended the scanline-step probe with explicit frame-boundary snapshots:
+  - `validation/mesen_scanline_step_test.lua`
+- Passed the new `frame_events` payload through the range wrapper:
+  - `tools/capture_scanline_samples_range.py`
+- Captured the boundary-aware late-phase reruns:
+  - `tools/out/track1_b_hold_scanline_frame_0086_trace_v3.json`
+  - `tools/out/track1_b_hold_scanline_frame_0086_trace_v4.json`
+  - `tools/out/track1_b_hold_scanline_frame_0086_trace_v4_summary.json`
+
+Current reading:
+
+- `v3` (`260` samples) now records explicit frame-boundary snapshots:
+  - frame `86 start` at scanline `0`
+  - frame `86 end` at scanline `225`
+  - both still read `active_main = 02:9016` and
+    `00:0053/0054/0055/0056 = 0x38/0x38/0x90/0x15`
+- `v4` (`360` samples) extends past the scanline wrap:
+  - frame `87 start` at scanline `0` still reads the same
+    `02:9016` / `0x38/0x38/0x90/0x15` state
+  - the sampled scanline stream wraps at sample `262`
+    (`scanline 261 -> 0`) and still does not leave `02:9016`
+  - the last sampled point is frame `87`, scanline `97`, still with
+    `02:9016` and `00:0053/0054/0055/0056 = 0x38/0x38/0x90/0x15`
+- the only traced late writes in that widened window remain:
+  - frame `87`, scanline `228`
+  - `00:0053 = 0x38`
+  - `00:0055 = 0x90`
+  - `00:0056 = 0x15`
+- practical reading:
+  - the visible gameplay path now survives across frame `86 end`, frame `87`
+    start, and at least through frame `87`, scanline `97`
+  - the remaining `02:9016 -> 00:8029` handoff is therefore later than that
+    boundary
+  - the next best Lane 3 target is to extend the same bounded trace through the
+    rest of frame `87` and into frame `88`
+
+### CP-35: The same late `02:9016` stage survives into frame `89`
+
+- Captured wider boundary-aware late-phase traces:
+  - `tools/out/track1_b_hold_scanline_frame_0086_trace_v5.json`
+  - `tools/out/track1_b_hold_scanline_frame_0086_trace_v5_summary.json`
+  - `tools/out/track1_b_hold_scanline_frame_0087_trace_v1.json`
+  - `tools/out/track1_b_hold_scanline_frame_0087_trace_v1_summary.json`
+
+Current reading:
+
+- `v5` (`target_frame = 86`, `620` samples) now records:
+  - frame `86 end`
+  - frame `87 start`
+  - frame `87 end`
+  - frame `88 start`
+  - all four frame events still read:
+    - `active_main = 02:9016`
+    - `00:0053/0054/0055/0056 = 0x38/0x38/0x90/0x15`
+  - the same late write trio repeats on frame `88`, scanline `227`
+- shifted `v1` (`target_frame = 87`, `620` samples) extends that same result:
+  - frame `87 end`
+  - frame `88 start`
+  - frame `88 end`
+  - frame `89 start`
+  - all four frame events still read the same
+    `02:9016` / `0x38/0x38/0x90/0x15` state
+  - the late write trio repeats again on frame `89`, scanline `228`
+  - the last sampled point is frame `89`, scanline `96`, still on `02:9016`
+    with the same cursor/budget tuple
+- practical reading:
+  - the recurring late gameplay stage under `02:9016` is now proven to survive
+    through frame `89 start` and at least frame `89`, scanline `96`
+  - the `02:9016 -> 00:8029` handoff is therefore later than frame `89`,
+    scanline `96`
+  - the next best Lane 3 target is to advance the same trace one more
+    target-frame window so it covers the rest of frame `89` and enters frame
+    `90`
+
+### CP-36: First direct visible-path `00:0054` producer observed on frame `90`
+
+- Captured the next shifted boundary-aware trace:
+  - `tools/out/track1_b_hold_scanline_frame_0088_trace_v1.json`
+  - `tools/out/track1_b_hold_scanline_frame_0088_trace_v1_summary.json`
+
+Current reading:
+
+- the recurring late `02:9016` stage still survives:
+  - frame `88 start`
+  - frame `88 end`
+  - frame `89 start`
+  - frame `89 end`
+  - frame `90 start`
+  - all of those frame events still read
+    `00:0053/0054/0055/0056 = 0x38/0x38/0x90/0x15`
+- the new result is the first direct producer for `00:0054` on that path:
+  - frame `90`, scanline `30`: `00:0054 = 0x40`
+  - frame `90`, scanline `54`: `00:0054 = 0x48`
+  - those writes happen under `active_main = 02:9016`
+  - `00:0053` still remains `0x38`
+- practical reading:
+  - the visible gameplay lane itself advances the queue write pointer from
+    `0x38 -> 0x40 -> 0x48` before the later sampled `0x48/0x48` state
+  - the next best Lane 3 target is now to trace when and where `00:0053`
+    catches up from `0x38` to `0x48`
+  - the later `00:8029` / `0x00/0x84/0x17` end-of-frame collapse is still open,
+    but it is no longer the closest unexplained edge
+
+### CP-37: `00:0053` catches up on frame `91`, with a transient `0x14B8` budget
+
+- Captured the next shifted boundary-aware trace and helper-side follow-up:
+  - `tools/out/track1_b_hold_scanline_frame_0090_trace_v1.json`
+  - `tools/out/track1_b_hold_scanline_frame_0090_trace_v1_summary.json`
+  - `tools/out/track1_b_hold_scanline_frame_0090_trace_v2.json`
+  - `tools/out/track1_b_hold_scanline_frame_0090_trace_v2_summary.json`
+
+Current reading:
+
+- the visible gameplay lane now has a directly observed equalization path:
+  - frame `90 end`: `00:0053/0054/0055/0056 = 0x38/0x48/0x90/0x15`
+  - frame `91 start`: `00:0053/0054/0055/0056 = 0x48/0x48/0xB8/0x14`
+  - frame `91 end`: `00:0053/0054/0055/0056 = 0x48/0x48/0xB8/0x14`
+  - frame `92 start`: `00:0053/0054/0055/0056 = 0x48/0x48/0x90/0x15`
+- the frame-`91` burst is now explicit:
+  - frame `91`, scanline `228`: `00:0055 = 0x90`, `00:0056 = 0x15`,
+    then `00:0055 = 0x08`, `00:0056 = 0x15`
+  - frame `91`, scanline `229`: `00:0055 = 0xB8`, `00:0056 = 0x14`,
+    `00:0053 = 0x48`
+  - frame `92`, scanline `227`: `00:0055 = 0x90`, `00:0056 = 0x15`,
+    `00:0053 = 0x48`
+- helper-side write tracing against nearby bank-1 sinks stays negative:
+  - added write points at `7E:1E24/1E26/070C/0718`
+  - no writes were recorded at those sinks in the same `90..92` window
+- practical reading:
+  - the old “find the `00:0053` catch-up” question is now closed
+  - the next best Lane 3 target is now the producer/reset path behind the
+    transient frame-`91` `00:0055/0056 = 0xB8/0x14` state and the frame-`92`
+    reset back to `0x90/0x15`
+  - the later `00:8029` / `0x00/0x84/0x17` end-of-frame collapse is still open,
+    but it is again the second boundary, not the first
+
+### CP-38: Later timed-input direct-hit bridge reopened at `7051`
+
+- Extended the Mesen extractor bridge so timed input windows work through the
+  headless frame extractor:
+  - `tools/mesen_ppu_extract/Program.cs`
+  - `tools/extract_mesen_scene_range.py`
+- Added the successful later-scene extraction artifacts:
+  - `tools/out/l001210_probe_7051_inputfix_summary.json`
+  - `rom_analysis/maps/tilemaps/mesen_range_7051_provenance.jsonc`
+- Re-ran the matching targeted `L001210` probe:
+  - `.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json`
+  - `tools/out/l001210_probe_7051_inputfix_summary.json`
+- Added committed provenance outputs:
+  - `rom_analysis/maps/tilemaps/mesen_range_7051_provenance.jsonc`
+  - `rom_analysis/maps/tilemaps/mesen_range_7051_provenance.md`
+- Extended the supporting docs:
+  - `rom_analysis/docs/memory_map.md`
+  - `tools/README.md`
+
+Current reading:
+
+- the extractor bridge no longer stalls when timed input windows are combined
+  with the headless Mesen asset path:
+  - smoke validation `0-3:start` now extracts frame `8`
+  - the previously blocked later-scene path
+    `6800:start;6900-6920:start,a` now extracts frame `7051`
+- the matching targeted probe recovers the later direct-hit cluster on that
+  same scenario:
+  - frame `7051` -> `0D:C4DC` (`26FB`, bank 13)
+  - frame `7059` -> `07:BF49` (`42FB`, bank 7)
+  - frame `7064` -> `07:C112` (`26FB`, bank 7)
+- the new one-frame provenance artifact binds the visible tilemap layers at
+  frame `7051` directly to the bank-13 source:
+  - `bg1` tile indices `0x000..0x2C8` at `CHR 0x2000`
+  - `bg2` tile index `0x000` at `CHR 0x3000`
+  - `bg3` tile index `0x000` at `CHR 0x6000`
+  - all backed by exact `runtime-hit@7051`
+- practical reading:
+  - Lane 2 is no longer blocked on the timed-input extractor bridge
+  - headless proof now extends beyond the old `1117` carry boundary with a
+    later direct runtime anchor
+  - the next best Lane 2 step is to extract/design-pack `7059` and `7064` on
+    the same scenario and decide whether they close a later contiguous
+    provenance window around the recovered `0D:C4DC -> 07:BF49 -> 07:C112`
+    sequence
+
+### CP-39: Later direct-hit cluster packaged, but not yet promoted to a full window
+
+- Extended the recovered later-scene extraction lane to include the remaining
+  direct-hit frames:
+  - `tools/out/l001210_probe_7051_inputfix_summary.json`
+- Added a combined exact-hit provenance artifact:
+  - `rom_analysis/maps/tilemaps/mesen_range_7051_7064_provenance.jsonc`
+  - `rom_analysis/maps/tilemaps/mesen_range_7051_7064_provenance.md`
+- Updated the supporting docs:
+  - `rom_analysis/docs/next_steps_roadmap.md`
+  - `rom_analysis/docs/memory_map.md`
+  - `validation/README.md`
+
+Current reading:
+
+- the recovered later direct-hit cluster is now packaged end-to-end on the same
+  timed-input scenario `6800:start;6900-6920:start,a`:
+  - `7051` -> `0D:C4DC` (`26FB`, bank 13)
+  - `7059` -> `07:BF49` (`42FB`, bank 7)
+  - `7064` -> `07:C112` (`26FB`, bank 7)
+- the extracted design-pack range is stable across those exact-hit frames:
+  - `bgMode = 1`
+  - `mainScreenLayers = 0x11`
+  - `forcedBlank = false`
+  - `bg1` keeps tile indices `0x000..0x2C8` at `CHR 0x2000`
+  - `bg2` and `bg3` each stay on tile index `0x000`
+- practical reading:
+  - this closes the exact later-hit anchors, not the full `7051..7064` window
+  - the source chunk changes at each recovered hit, so promoting a contiguous
+    window still needs at least one interior confirmation per segment rather
+    than a blind carry assumption
+  - the next best Lane 2 step is a minimal interior follow-up:
+    - extract/design-pack `7055` and `7061`
+    - if those mid-segment samples keep the same tile-index block and map
+      cleanly by carry (`7055 <- 7051`, `7061 <- 7059`), promote the later
+      scene into a documented contiguous provenance window
 
 ## Current Checkpoint Metrics
 
@@ -1029,9 +1540,19 @@ Definition of done:
   - initial bank10/bank11 contract pointers
 
 Current status:
-- deterministic seeded movement is now proven from `game_11.mss` at the
-  screenshot level (`b_hold`, `start_then_a_hold`)
-- the current open blocker is raw-surface alignment, not movement discovery
+- refreshed current sweep keeps deterministic screenshot movement only on
+  `b_hold`
+- a committed screenshot-backed `b_hold` cycle now exists for frames `76..156`
+- the current open blocker is the screenshot-vs-raw/probe split on
+  `game_11.mss`, not movement discovery
+- visible-phase scanline work now explains the split itself and narrows the
+  remaining edge to the queue cursor lifecycle:
+  - visible-phase `7E:0053/0054` now has a directly observed equalization path:
+    `00:0054` moves `0x38 -> 0x40 -> 0x48` on frame `90`, and `00:0053`
+    catches up to `0x48` on frame `91`
+  - the active visible `0600` queue window is empty (`read == write`)
+  - late tracing now shows a transient frame-`91` `02:9016` state with
+    `00:0055/0056 = 0xB8/0x14` before the older `00:8029` end-of-frame collapse
 - next defensible target:
-  - screenshot-backed moving gameplay artifact, or
-  - later gameplay savestate with clean raw-dump alignment
+  - deeper debugger work on the frame-`91` burst / frame-`92` reset path, or
+  - later gameplay savestate only if that cursor lane stops narrowing
