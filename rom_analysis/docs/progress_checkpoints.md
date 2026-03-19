@@ -1413,6 +1413,40 @@ Current reading:
   - the next renderer-side work should move to the remaining composition gaps
     rather than this older background-order failure class
 
+### CP-43: Late intro probe-vs-bridge OAM divergence is now machine-readable
+
+- Added a dedicated OAM delta analyzer:
+  - `tools/analyze_oam_delta.py`
+- Added a reproducible late-intro target:
+  - `make -C tools intro-oam-deltas`
+- Evidence:
+  - `tools/out/intro_oam_deltas/frame_986_probe_vs_bridge.json`
+  - `tools/out/intro_oam_deltas/frame_986_probe_vs_bridge.md`
+  - `tools/out/intro_oam_deltas/frame_990_probe_vs_bridge.json`
+  - `tools/out/intro_oam_deltas/frame_990_probe_vs_bridge.md`
+  - `tools/out/intro_oam_deltas/frame_994_variant_compare.json`
+  - `tools/out/intro_oam_deltas/frame_994_variant_compare.md`
+
+Current reading:
+
+- frame `986`:
+  - full `544`-byte OAM delta is `37` bytes (`35` low-table, `2` high-table)
+  - `9` sprites change, and all `9` are visible in the probe dump while the
+    bridge dump carries `0` visible sprites
+  - practical reading: the bridge-visible path has already cleared the whole
+    late overlay by `986`
+- frame `990`:
+  - full `544`-byte OAM delta is `92` bytes (`86` low-table, `6` high-table)
+  - `23` sprites change; visible sprite count drops from `23` in the probe dump
+    to `5` in the bridge dump
+  - practical reading: the first `5` sprites are repositioned/resized into a
+    compact bridge-visible cluster and the remaining `18` probe sprites vanish
+- frame `994`:
+  - the current committed `fromraw990` and `bridgeobj` variants compare at `0`
+    OAM bytes / `0` sprite deltas
+  - practical reading: the remaining screenshot gap at `994` is already
+    downstream of a raw OAM fork in the committed artifact set
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):

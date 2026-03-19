@@ -51,6 +51,7 @@ now constrained by a cross-cutting cleanup track:
    - `958..977` bootstrap
    - `986+` final-screen composition gap
    - callback-family replacement beyond `1093`
+   - the new `intro-oam-deltas` target now proves the late probe-vs-bridge OAM fork at `986/990` and the absence of a distinct committed OAM fork at `994`
 
 Immediate concrete step after the cleanup kickoff:
 
@@ -62,6 +63,7 @@ Immediate concrete step after the cleanup kickoff:
 - keep intro-side work moving in parallel through the cleaned workflow:
   - `958..977` bootstrap
   - `986+` final-screen composition gap
+  - use the new `tools/out/intro_oam_deltas/` reports as the current OAM source of truth before changing late-frame renderer/compositor behavior
 
 ## 1. Consolidate `67FB` Coverage (Now Unblocked)
 

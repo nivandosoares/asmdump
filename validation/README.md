@@ -622,9 +622,12 @@ That extra dump tightened the bootstrap reading:
   - current compare with bridge OAM override: `21` mismatched pixels (`0.036621%`)
   - practical reading: queued VRAM plus staged OAM is enough for the frame-`986` BG path too; the remaining regression is concentrated in Mode 7 OBJ composition
   - the concrete late-frame OAM finding is:
-    - probe OAM and bridge OAM match exactly at frames `978` and `982`
-    - they diverge at frame `986` by `21` bytes
-    - they diverge at frame `990` by `75` bytes
+    - `make -C tools intro-oam-deltas` now writes machine-readable reports under `tools/out/intro_oam_deltas/`
+    - probe OAM and bridge OAM still match exactly at frames `978` and `982`
+    - at frame `986`, the full `544`-byte OAM dumps diverge by `37` bytes (`35` low-table, `2` high-table)
+    - the `986` sprite-level delta is `9` changed visible sprites in the probe dump versus `0` visible sprites in the bridge dump
+    - at frame `990`, the full `544`-byte OAM dumps diverge by `92` bytes (`86` low-table, `6` high-table)
+    - the `990` sprite-level delta is `23` changed visible sprites in the probe dump versus `5` visible sprites in the bridge dump
     - the bad Mode 7 OBJ overlay tracks the probe OAM dump, not the bridge OAM dump
 - `tools/out/intro_bootstrap_986_990_queue.json`
   - frame `990` still runs `01:9FE5` and carries the next WRAM queue delta forward from the bridge-accurate `986` seed
@@ -632,6 +635,7 @@ That extra dump tightened the bootstrap reading:
   - current compare vs the real frame `990` screenshot: `1518` mismatched pixels (`2.647182%`)
   - current compare vs Mesen `main_visible.ppm`: `2` mismatched pixels (`0.003488%`)
   - practical reading: the queue-driven attract path can now advance natively through frame `990` when measured against extracted Mesen scene output, but the final-screen gap after frame `982` is still open
+  - the current committed `994` scene variants (`fromraw990` vs `bridgeobj`) now compare at `0` OAM bytes / `0` sprite deltas, so the remaining `994` screenshot gap is already downstream of raw OAM in the committed artifact set
 - bridge-visible late attract modeling now goes further than the queue replay path:
   - bridge frame extracts for `991..997` show that the visible Mode 7 buffers at `0x4920` and `0x49A0` rotate among three ROM chunks (`1A:AA10`, `1A:AB58`, `1A:ACA0`) instead of exposing the last traced DMA stream directly
   - `tools/build_mode7_source_scene.py` captures that model by seeding from bridge frame `990` VRAM and patching those two visible regions from ROM

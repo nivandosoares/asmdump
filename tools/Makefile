@@ -121,6 +121,13 @@ BANK1_VISIBLE_991_SCENE_JSON := $(BANK1_VISIBLE_991_SCENE_PREFIX).json
 BANK1_VISIBLE_991_SCENE_PPM := $(BANK1_VISIBLE_991_SCENE_PREFIX).ppm
 OBJ_VERTICAL_FLIP_CHECK_OUT_DIR := $(OUT_DIR)/obj_vertical_flip_check
 BG_LAYER_PRIORITY_CHECK_OUT_DIR := $(OUT_DIR)/bg_layer_priority_check
+INTRO_OAM_DELTA_OUT_DIR := $(OUT_DIR)/intro_oam_deltas
+INTRO_OAM_DELTA_986_JSON := $(INTRO_OAM_DELTA_OUT_DIR)/frame_986_probe_vs_bridge.json
+INTRO_OAM_DELTA_986_MD := $(INTRO_OAM_DELTA_OUT_DIR)/frame_986_probe_vs_bridge.md
+INTRO_OAM_DELTA_990_JSON := $(INTRO_OAM_DELTA_OUT_DIR)/frame_990_probe_vs_bridge.json
+INTRO_OAM_DELTA_990_MD := $(INTRO_OAM_DELTA_OUT_DIR)/frame_990_probe_vs_bridge.md
+INTRO_OAM_DELTA_994_JSON := $(INTRO_OAM_DELTA_OUT_DIR)/frame_994_variant_compare.json
+INTRO_OAM_DELTA_994_MD := $(INTRO_OAM_DELTA_OUT_DIR)/frame_994_variant_compare.md
 BANK1_VISIBLE_992_SCENE_PREFIX := $(OUT_DIR)/bank1_mode7_visible_992
 BANK1_VISIBLE_992_SCENE_VRAM := $(BANK1_VISIBLE_992_SCENE_PREFIX)_vram.bin
 BANK1_VISIBLE_992_SCENE_CGRAM := $(BANK1_VISIBLE_992_SCENE_PREFIX)_cgram.bin
@@ -283,7 +290,7 @@ L001210_SAVE_STATE_FRAME ?= 1093
 L001210_SAVE_TOTAL_FRAMES ?= 1120
 L001210_SAVE_STATE_PATH ?= ../tools/out/l001210_state_$(L001210_SAVE_STATE_FRAME).bin
 
-.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank13-headers bank13-validate bank30-headers bank30-validate bank30-registry tilemap-provenance-1086-1093 l001210-probe l001210-save-savestate l001210-probe-matrix l001210-trace-summary track1-seed-sweep track1-b-hold-cycle regression-gates callback-contracts-check obj-vertical-flip-check bg-layer-priority-check clean-generated clean-generated-dry-run bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview bank1-bootstrap-queue-978-preview bank1-bootstrap-queue-982-preview bank1-bootstrap-queue-986-preview bank1-bootstrap-queue-986-noobj-preview bank1-bootstrap-queue-986-bridgeoam-preview bank1-bootstrap-queue-990-bridgeoam-preview bank1-bootstrap-queue-994-bridgeoam-preview bank1-visible-mode7-window-preview intro-bootstrap-deltas intro-bootstrap-queue mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-loop-hybrid-bridge-sequence intro-loop-hybrid-bridge-visible-sequence intro-native-978 intro-native-978-derived intro-native-978-bridge intro-native-978-bridge-visible
+.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank13-headers bank13-validate bank30-headers bank30-validate bank30-registry tilemap-provenance-1086-1093 l001210-probe l001210-save-savestate l001210-probe-matrix l001210-trace-summary track1-seed-sweep track1-b-hold-cycle regression-gates callback-contracts-check obj-vertical-flip-check bg-layer-priority-check intro-oam-deltas clean-generated clean-generated-dry-run bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview bank1-bootstrap-queue-978-preview bank1-bootstrap-queue-982-preview bank1-bootstrap-queue-986-preview bank1-bootstrap-queue-986-noobj-preview bank1-bootstrap-queue-986-bridgeoam-preview bank1-bootstrap-queue-990-bridgeoam-preview bank1-bootstrap-queue-994-bridgeoam-preview bank1-visible-mode7-window-preview intro-bootstrap-deltas intro-bootstrap-queue mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-loop-hybrid-bridge-sequence intro-loop-hybrid-bridge-visible-sequence intro-native-978 intro-native-978-derived intro-native-978-bridge intro-native-978-bridge-visible
 
 all: previews
 
@@ -456,6 +463,44 @@ bg-layer-priority-check:
 	$(PYTHON) check_bg_layer_priority.py \
 		--out-dir $(BG_LAYER_PRIORITY_CHECK_OUT_DIR) \
 		--port-binary ../port/build/td2_port
+
+$(INTRO_OAM_DELTA_OUT_DIR):
+	mkdir -p $@
+
+$(INTRO_OAM_DELTA_986_JSON) $(INTRO_OAM_DELTA_986_MD): analyze_oam_delta.py | $(INTRO_OAM_DELTA_OUT_DIR)
+	$(PYTHON) analyze_oam_delta.py \
+		$(BANK1_QUEUE_986_SCENE_OAM) \
+		$(BANK1_QUEUE_986_BRIDGEOAM_SCENE_OAM) \
+		--state-a $(BANK1_QUEUE_986_SCENE_PPU) \
+		--state-b $(BANK1_QUEUE_986_BRIDGEOAM_SCENE_PPU) \
+		--label-a probe_986 \
+		--label-b bridge_986 \
+		--json-out $(INTRO_OAM_DELTA_986_JSON) \
+		--markdown-out $(INTRO_OAM_DELTA_986_MD)
+
+$(INTRO_OAM_DELTA_990_JSON) $(INTRO_OAM_DELTA_990_MD): analyze_oam_delta.py | $(INTRO_OAM_DELTA_OUT_DIR)
+	$(PYTHON) analyze_oam_delta.py \
+		$(OUT_DIR)/bank1_bootstrap_queue_990_probeobj_oam.bin \
+		$(BANK1_QUEUE_990_BRIDGEOAM_SCENE_OAM) \
+		--state-a $(OUT_DIR)/bank1_bootstrap_queue_990_probeobj_ppu_state.json \
+		--state-b $(BANK1_QUEUE_990_BRIDGEOAM_SCENE_PPU) \
+		--label-a probe_990 \
+		--label-b bridge_990 \
+		--json-out $(INTRO_OAM_DELTA_990_JSON) \
+		--markdown-out $(INTRO_OAM_DELTA_990_MD)
+
+$(INTRO_OAM_DELTA_994_JSON) $(INTRO_OAM_DELTA_994_MD): analyze_oam_delta.py | $(INTRO_OAM_DELTA_OUT_DIR)
+	$(PYTHON) analyze_oam_delta.py \
+		$(OUT_DIR)/bank1_bootstrap_queue_994_fromraw990_oam.bin \
+		$(BANK1_QUEUE_994_BRIDGEOAM_SCENE_OAM) \
+		--state-a $(BANK1_QUEUE_994_BRIDGEOAM_SCENE_PPU) \
+		--state-b $(BANK1_QUEUE_994_BRIDGEOAM_SCENE_PPU) \
+		--label-a variant_994_fromraw990 \
+		--label-b variant_994_bridgeobj \
+		--json-out $(INTRO_OAM_DELTA_994_JSON) \
+		--markdown-out $(INTRO_OAM_DELTA_994_MD)
+
+intro-oam-deltas: $(INTRO_OAM_DELTA_986_JSON) $(INTRO_OAM_DELTA_986_MD) $(INTRO_OAM_DELTA_990_JSON) $(INTRO_OAM_DELTA_990_MD) $(INTRO_OAM_DELTA_994_JSON) $(INTRO_OAM_DELTA_994_MD)
 
 clean-generated:
 	$(PYTHON) clean_generated_artifacts.py

@@ -87,20 +87,33 @@ New useful state beyond the original plan:
   - current compare vs the real frame `986` target: `958` mismatched pixels (`1.670619%`)
   - disabling OBJ on the same derived scene drops that to `21` mismatched pixels (`0.036621%`) via `tools/out/bank1_bootstrap_queue_986_noobj.*`
   - using the clean bridge OAM reaches the same `21`-pixel baseline via `tools/out/bank1_bootstrap_queue_986_bridgeoverride.*`
-  - probe and bridge OAM match at `978/982`, then diverge starting at `986`
+  - dedicated OAM delta artifact:
+    - `tools/out/intro_oam_deltas/frame_986_probe_vs_bridge.json`
+    - `tools/out/intro_oam_deltas/frame_986_probe_vs_bridge.md`
+  - the full `544`-byte OAM dumps diverge by `37` bytes at `986` (`35` low-table, `2` high-table)
+  - sprite-level reading at `986`: the probe dump carries `9` changed visible sprites while the bridge dump carries `0`; the whole late overlay is already cleared in the bridge-visible path
   - practical reading: the next blocker is Mode 7 OBJ composition, not the queued BG/state path
 - the next queue window is now also reproducible against bridge output:
   - `tools/out/intro_bootstrap_986_990_queue.json`
   - `tools/out/bank1_bootstrap_queue_990_bridgeobj.*`
   - current compare vs the real frame `990` screenshot: `1518` mismatched pixels (`2.647182%`)
   - current compare vs Mesen `main_visible.ppm`: `2` mismatched pixels (`0.003488%`)
+  - dedicated OAM delta artifact:
+    - `tools/out/intro_oam_deltas/frame_990_probe_vs_bridge.json`
+    - `tools/out/intro_oam_deltas/frame_990_probe_vs_bridge.md`
+  - the full `544`-byte OAM dumps diverge by `92` bytes at `990` (`86` low-table, `6` high-table)
+  - sprite-level reading at `990`: the probe dump carries `23` changed visible sprites while the bridge dump carries `5`; the first `5` sprites are repositioned/resized into a compact bridge-visible cluster and the remaining `18` probe sprites disappear entirely
   - practical reading: native intro coverage can now move forward through frame `990` when measured against extracted Mesen scene output, but not yet against the final captured screen
 - the next unresolved bridge-native edge is frame `994`:
   - `tools/out/intro_bootstrap_990_994_queue.json`
   - `tools/out/bank1_bootstrap_queue_994_bridgeobj.*`
   - current compare vs the real frame `994` screenshot: `2143` mismatched pixels (`3.737095%`)
   - current compare vs Mesen `main_visible.ppm`: `96` mismatched pixels (`0.167411%`)
-  - practical reading: `994` is close enough to guide the next investigation, but not ready to promote into the native intro splice
+  - current OAM variant compare:
+    - `tools/out/intro_oam_deltas/frame_994_variant_compare.json`
+    - `tools/out/intro_oam_deltas/frame_994_variant_compare.md`
+  - the current committed `994` scene variants (`fromraw990` vs `bridgeobj`) now share identical OAM (`0` raw diff bytes, `0` sprite deltas)
+  - practical reading: by `994`, the remaining screenshot gap in the committed artifacts is no longer explained by a probe-vs-bridge OAM fork
 - the bridge-visible late attract window now has a second, stronger model:
   - `tools/build_mode7_source_scene.py`
   - `tools/out/bank1_mode7_visible_991.*` through `tools/out/bank1_mode7_visible_997.*`
