@@ -26,6 +26,9 @@ Current Sprint 0 tooling:
 - `build_ballistic_callback_asset.py`: generates a compact Ballistic callback asset for direct runtime `ballistic_a39c` playback from helper-scene CGRAM, the ROM ramp, and the inferred class mapping
 - `splice_sequence_manifest.py`: replaces a frame range inside a sequence JSON summary with a new manifest entry, used for hybrid native-plus-sampled intro loops
 - `render_mesen_snes_bg.py`: composes a 256x224 preview directly from Mesen VRAM/CGRAM/state dumps, including Mode 7 and optional OBJ composition from OAM dumps
+- `check_obj_vertical_flip.py`: builds a minimal 16x32 vertically mirrored OBJ fixture and checks the Python renderer plus SDL runtime against one golden PPM for the width-vs-height mirror regression
+- `check_bg_layer_priority.py`: builds a minimal mode-0 four-layer scene and checks BG4 support plus tile-priority ordering against one golden PPM in both the Python renderer and SDL runtime
+- `clean_generated_artifacts.py`: removes always-safe build output, scratch `tools/out` runs (`*smoke*`, `*makecheck*`, `*designtest*`), debugger `game.cdl` junk, and other disposable generated clutter
 - `summarize_mode7_trace.py`: summarizes the tracked register-write traces emitted by `mesen_probe_boot.lua` for Mode 7/TMAIN or DMA/HDMA windows
 - `summarize_l001210_trace.py`: summarizes `L001210` dispatcher execution hits (`$0C/$0E/$10`) captured by `mesen_probe_boot.lua` for chunk provenance, including caller-site coverage and `L00A9*` table-index usage when present
 - `run_l001210_probe_matrix.py`: runs multiple deterministic `mesen_probe_boot.lua` scenarios and aggregates bank30 candidate hit coverage into one matrix report; scenarios may include `extra_env` to inject probe env overrides per run
@@ -139,6 +142,9 @@ Current environment note:
 
 - probe-side savestate save is currently best-effort only; the headless
   `--testRunner` build reports no callable save API on `emu`.
+- `tools/run_mesen_ppu_extract.sh` now resolves `MesenCore.so` from
+  `MESEN_RELEASE_DIR`, or derives that directory from `MESEN_BIN` / `PATH`
+  when possible.
 - `make -C tools regression-gates REGRESSION_GATES_RENDER_DIR=../port/build/regression_frames`
 - `make -C tools callback-contracts-check`
 - `make -C tools track1-b-hold-cycle`

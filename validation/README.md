@@ -26,6 +26,46 @@ For automated headless runs with Mesen2's test runner:
 ./validation/run_mesen_capture.sh
 ```
 
+For the targeted non-square OBJ vertical-mirror regression, build the runtime
+and run:
+
+```sh
+make -C tools obj-vertical-flip-check
+```
+
+That check generates a tiny 16x32 vertically mirrored sprite fixture under
+`tools/out/obj_vertical_flip_check/` and verifies four paths against the same
+golden PPM:
+
+- Python `render_mesen_snes_bg.py` simple OBJ renderer
+- Python `render_mesen_snes_bg.py --obj-renderer mode7-ppu`
+- SDL runtime direct `--snes-bg-*` render in non-Mode-7
+- SDL runtime direct `--snes-bg-*` render in Mode 7
+
+For the BG4 plus tile-priority regression, run:
+
+```sh
+make -C tools bg-layer-priority-check
+```
+
+That check generates a tiny four-layer mode-0 scene under
+`tools/out/bg_layer_priority_check/` and verifies:
+
+- BG4-only visibility
+- low-priority layer ordering
+- high-priority tile ordering over lower-priority foreground tiles
+- the same result in both `render_mesen_snes_bg.py` and the SDL runtime
+
+`run_mesen_capture.sh` now resolves the emulator in this order:
+
+- `MESEN_BIN`
+- `MESEN_RELEASE_DIR/Mesen`
+- `Mesen` or `mesen` on `PATH`
+
+For the bridge extractor path, `tools/run_mesen_ppu_extract.sh` uses
+`MESEN_RELEASE_DIR` to locate `MesenCore.so` and can also derive that directory
+from `MESEN_BIN` or `PATH`.
+
 `mesen_capture.lua` now accepts the same lightweight env-style overrides used by
 the other probes:
 

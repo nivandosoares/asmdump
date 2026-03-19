@@ -11,7 +11,8 @@ enum {
     TARGET_HZ = 60,
     COLORS_PER_PALETTE = 16,
     DEFAULT_WINDOW_SCALE = 3,
-    MODE7_SCANLINE_MAX = 224
+    MODE7_SCANLINE_MAX = 224,
+    SNES_BG_LAYER_COUNT = 4
 };
 
 static const uint8_t OAM_SIZE_TABLE[8][2][2] = {
@@ -114,9 +115,9 @@ typedef struct {
     uint8_t *oam;
     size_t oam_size;
     uint32_t cgram_colors[256];
-    SnesBgLayerState layers[3];
-    uint8_t tile_cache[3][1024][64];
-    uint8_t tile_cache_valid[3][1024];
+    SnesBgLayerState layers[SNES_BG_LAYER_COUNT];
+    uint8_t tile_cache[SNES_BG_LAYER_COUNT][1024][64];
+    uint8_t tile_cache_valid[SNES_BG_LAYER_COUNT][1024];
     /* Per-scanline Mode 7 overrides (NULL = use single-frame params). */
     Mode7ScanlineParams *scanline_params;
     int scanline_param_count;

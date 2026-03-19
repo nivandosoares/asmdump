@@ -161,6 +161,53 @@ Immediate next focus:
 4. Fix the final-screen composition gap after `982`, because the bridge-visible path is now native through frame `1093` but still not screenshot-accurate there.
 5. Keep building standalone extraction formats so later artist/mod tooling can sit on stable data instead of volatile reverse-engineering experiments.
 
+## Execution Reset
+
+Reviewed on `2026-03-19`.
+
+The repo is now operating against a `90`-step cleanup-and-refocus plan instead
+of treating maintainability work as a side quest.
+
+This does **not** replace the current port strategy or archaeology lane order.
+It adds a cross-cutting execution track that is meant to unblock the current
+intro push and make the repo maintainable enough to carry into the actual port.
+
+Immediate refocus rules:
+
+1. Stop the bleeding first:
+   - fix ignore policy
+   - untrack generated bridge/emulator output
+   - remove hard-coded personal machine paths from promoted scripts and
+     Makefiles
+2. Treat renderer correctness gaps as real product work:
+   - mirrored OBJ bugs
+   - BG4 support
+   - tile-priority handling
+   - explicit unsupported-feature boundaries for scenes that still exceed the
+     current renderer
+3. Promote shared contracts:
+   - versioned cross-tool schemas
+   - machine-readable address registry
+   - explicit checkpoint IDs instead of substring matching
+   - pinned Mesen / `MesenCore` compatibility for the bridge path
+4. Isolate validation runs:
+   - stop depending on mutable shared `LuaScriptData` output as the default
+     working surface
+   - move toward per-run outputs and repo-owned templates
+5. Keep intro progress moving in parallel:
+   - close the `958..977` bootstrap gap
+   - fix the `986+` final-screen composition gap
+   - keep replacing sampled attract segments with native callback/state playback
+
+Refocus success criteria:
+
+- no personal paths in promoted scripts or Makefiles
+- no committed bridge build output or mutable `LuaScriptData` output
+- versioned shared formats and explicit checkpoint IDs for validation
+- clearer renderer feature boundaries, with BG4/tile-priority/OBJ correctness
+  tracked as active work
+- intro native coverage pushed beyond `1093` with tighter screenshot parity
+
 ## Delivery Phases
 
 ### Phase 0: Build a Golden Reference

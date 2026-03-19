@@ -11,6 +11,7 @@ from extract_snes_tiles import decode_tile
 
 SCREEN_WIDTH = 256
 SCREEN_HEIGHT = 224
+SNES_BG_LAYER_COUNT = 4
 OAM_SIZE_TABLE = (
     ((1, 1), (2, 2)),
     ((1, 1), (4, 4)),
@@ -23,6 +24,26 @@ OAM_SIZE_TABLE = (
 )
 MODE7_SPRITE_PRIORITIES = (2, 4, 6, 7)
 MODE7_OBJECT_PRIORITY_GROUPS = (1, 2, 3)
+BG_MODE_BPP = (
+    (2, 2, 2, 2),
+    (4, 4, 2, 0),
+    (4, 4, 0, 0),
+    (8, 4, 0, 0),
+    (8, 2, 0, 0),
+    (4, 2, 0, 0),
+    (4, 0, 0, 0),
+    (8, 0, 0, 0),
+)
+BG_RENDER_PASSES = (
+    (3, 0),
+    (2, 0),
+    (1, 0),
+    (0, 0),
+    (3, 1),
+    (2, 1),
+    (1, 1),
+    (0, 1),
+)
 
 
 def normalize_scroll(value: int) -> int:
@@ -66,21 +87,11 @@ def load_cgram_rgb(path: Path) -> list[tuple[int, int, int]]:
 
 
 def bg_bpp(bg_mode: int, layer_index: int) -> int:
-    if bg_mode == 0:
-        return 2
-    if bg_mode == 1:
-        return 2 if layer_index == 2 else 4
-    if bg_mode == 2:
-        return 4
-    if bg_mode == 3:
-        return 8 if layer_index == 0 else 4
-    if bg_mode == 4:
-        return 8 if layer_index == 0 else 2
-    if bg_mode == 5:
-        return 4 if layer_index == 0 else 2
-    if bg_mode == 6:
-        return 4 if layer_index == 0 else 0
-    raise ValueError(f"unsupported bg mode {bg_mode}")
+    if bg_mode < 0 or bg_mode >= len(BG_MODE_BPP):
+        raise ValueError(f"unsupported bg mode {bg_mode}")
+    if layer_index < 0 or layer_index >= SNES_BG_LAYER_COUNT:
+        return 0
+    return BG_MODE_BPP[bg_mode][layer_index]
 
 
 def layer_enabled(mask: int, layer_index: int) -> bool:
@@ -134,6 +145,11 @@ def decode_sprite_row_pixel(chr_low: int, chr_high: int, shift: int) -> int:
     color |= ((chr_high >> shift) & 0x01) << 2
     color |= ((chr_high >> (7 + shift)) & 0x02) << 2
     return color
+
+
+def sprite_vertical_sample(y_offset: int, height: int, vertical_mirror: bool) -> tuple[int, int]:
+    sample_y = (height - 1 - y_offset) if vertical_mirror else y_offset
+    return sample_y & 0x07, sample_y >> 3
 
 
 def render_mode7_layer(
@@ -239,6 +255,7 @@ def render_layer(
     layer_index: int,
     bg_mode: int,
     layer_state: dict,
+    priority_filter: int,
 ) -> None:
     bpp = bg_bpp(bg_mode, layer_index)
     if bpp == 0:
@@ -265,8 +282,12 @@ def render_layer(
             entry = read_tilemap_entry(vram, base, width_tiles, tile_x, tile_y)
             tile_index = entry & 0x03FF
             palette_index = (entry >> 10) & 0x07
+            priority = 1 if (entry & 0x2000) else 0
             hflip = (entry & 0x4000) != 0
             vflip = (entry & 0x8000) != 0
+
+            if priority != priority_filter:
+                continue
 
             pixels = tile_cache.get(tile_index)
             if pixels is None:
@@ -352,16 +373,7 @@ def render_objects(
         tile_column = tile_index_base & 0x0F
 
         for y in range(height):
-            if vertical_mirror:
-                if y < width:
-                    pos = width - 1 - y
-                else:
-                    pos = width * 3 - 1 - y
-                pixel_y = pos & 0x07
-                row_offset = pos >> 3
-            else:
-                pixel_y = y & 0x07
-                row_offset = y >> 3
+            pixel_y, row_offset = sprite_vertical_sample(y, height, vertical_mirror)
 
             row = (tile_row + row_offset) & 0x0F
             y_pos = sprite_y + y
@@ -518,16 +530,7 @@ def render_mode7_objects_ppu_accurate(
                     break
 
                 column_offset -= 1
-                if vertical_mirror:
-                    if y_gap < width:
-                        pos = width - 1 - y_gap
-                    else:
-                        pos = width * 3 - 1 - y_gap
-                    y_offset = pos & 0x07
-                    row_offset = pos >> 3
-                else:
-                    y_offset = y_gap & 0x07
-                    row_offset = y_gap >> 3
+                y_offset, row_offset = sprite_vertical_sample(y_gap, height, vertical_mirror)
 
                 tile_row = (tile_index_base & 0xF0) >> 4
                 tile_column = tile_index_base & 0x0F
@@ -626,7 +629,7 @@ def main() -> int:
     bg_mode = int(state["ppu.bgMode"])
     main_screen_layers = int(state["ppu.mainScreenLayers"])
     layer_states = []
-    for layer_index in range(3):
+    for layer_index in range(SNES_BG_LAYER_COUNT):
         layer_states.append({
             "layer_index": layer_index,
             "tilemapAddress": state[f"ppu.layers[{layer_index}].tilemapAddress"],
@@ -661,9 +664,17 @@ def main() -> int:
                     priority_groups=set(MODE7_OBJECT_PRIORITY_GROUPS),
                 )
     else:
-        for layer_index in range(2, -1, -1):
+        for layer_index, priority_filter in BG_RENDER_PASSES:
             if layer_enabled(main_screen_layers, layer_index):
-                render_layer(rgb, vram, cgram, layer_index, bg_mode, layer_states[layer_index])
+                render_layer(
+                    rgb,
+                    vram,
+                    cgram,
+                    layer_index,
+                    bg_mode,
+                    layer_states[layer_index],
+                    priority_filter,
+                )
 
     if bg_mode != 7 and oam is not None and layer_enabled(main_screen_layers, 4):
         obj_summary = render_objects(rgb, vram, oam, cgram, state)

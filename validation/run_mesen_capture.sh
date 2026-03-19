@@ -2,9 +2,13 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-DEFAULT_MESEN_BIN="/home/nivando-soares/Mesen2/bin/linux-x64/Release/Mesen"
-if [[ ! -x "$DEFAULT_MESEN_BIN" ]]; then
-  DEFAULT_MESEN_BIN="/home/nivando-soares/Downloads/Mesen_2.1.1_Linux_x64/Mesen"
+DEFAULT_MESEN_BIN=""
+if [[ -n "${MESEN_RELEASE_DIR:-}" && -x "${MESEN_RELEASE_DIR}/Mesen" ]]; then
+  DEFAULT_MESEN_BIN="${MESEN_RELEASE_DIR}/Mesen"
+elif command -v Mesen >/dev/null 2>&1; then
+  DEFAULT_MESEN_BIN="$(command -v Mesen)"
+elif command -v mesen >/dev/null 2>&1; then
+  DEFAULT_MESEN_BIN="$(command -v mesen)"
 fi
 MESEN_BIN="${MESEN_BIN:-$DEFAULT_MESEN_BIN}"
 ROM_PATH="${1:-$ROOT_DIR/game.smc}"
@@ -18,6 +22,7 @@ TIMEOUT_SECONDS="${MESEN_TIMEOUT_SECONDS:-20}"
 
 if [[ ! -x "$MESEN_BIN" ]]; then
   echo "error: Mesen binary not found or not executable: $MESEN_BIN" >&2
+  echo "set MESEN_BIN to the Mesen executable, or set MESEN_RELEASE_DIR to the Mesen release directory" >&2
   exit 1
 fi
 

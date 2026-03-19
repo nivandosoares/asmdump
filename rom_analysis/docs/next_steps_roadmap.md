@@ -21,6 +21,48 @@ Validation contract baseline:
 - `rom_analysis/docs/validation_gates.md`
 - Latest run status: callback contracts `18/18` pass; regression gates `6/6` pass.
 
+## Execution Reset (2026-03-19)
+
+The repo is now following a `90`-step cleanup/refocus plan alongside the
+existing archaeology lanes.
+
+Lane order stays the same. The difference is that the next concrete steps are
+now constrained by a cross-cutting cleanup track:
+
+1. Repo hygiene and portability baseline:
+   - fix ignore policy
+   - untrack generated bridge/emulator outputs
+   - remove hard-coded personal Mesen paths from promoted scripts/Makefiles
+   - keep a repo-owned cleanup target for disposable build/scratch output and
+     debugger coverage junk instead of letting those surfaces accumulate
+2. Renderer correctness fixes with targeted tests:
+   - mirrored OBJ regression is now covered by the generated
+     `check_obj_vertical_flip.py` fixture across Python simple, Python
+     `mode7-ppu`, and SDL runtime paths
+   - BG4 and tile-priority are now covered by the generated
+     `check_bg_layer_priority.py` fixture across the Python renderer and SDL
+     runtime
+3. Contract and validation hardening:
+   - schemas
+   - address registry
+   - checkpoint IDs
+   - per-run validation output isolation
+4. Continue intro archaeology in parallel:
+   - `958..977` bootstrap
+   - `986+` final-screen composition gap
+   - callback-family replacement beyond `1093`
+
+Immediate concrete step after the cleanup kickoff:
+
+- clear disposable repo clutter with the new generated-artifact cleanup target
+  before continuing to the next renderer and archaeology slices
+- keep the renderer correctness track moving after the mirrored-OBJ fix:
+  - preserve the new BG4/tile-priority pass ordering while the next renderer
+    slice moves on to remaining composition gaps
+- keep intro-side work moving in parallel through the cleaned workflow:
+  - `958..977` bootstrap
+  - `986+` final-screen composition gap
+
 ## 1. Consolidate `67FB` Coverage (Now Unblocked)
 
 Goal: move from raw marker scans to validated chunk boundaries now that `67FB`

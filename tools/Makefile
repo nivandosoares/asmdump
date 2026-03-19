@@ -1,6 +1,9 @@
 PYTHON ?= python3
 ROM ?= ../game.smc
 OUT_DIR := out
+MESEN_RELEASE_DIR ?=
+MESEN_LD_LIBRARY_PATH ?= $(MESEN_RELEASE_DIR)
+MESEN_EXTRACT_LD_ARGS := $(if $(strip $(MESEN_LD_LIBRARY_PATH)),--ld-library-path $(MESEN_LD_LIBRARY_PATH),)
 PALETTE_JSON := $(OUT_DIR)/bank3_palettes.json
 BOOT_PALETTE_JSON := $(OUT_DIR)/bank1_boot_palettes.json
 BOOT_PALETTE_FLAT_JSON := $(OUT_DIR)/bank1_boot_palettes_flat.json
@@ -116,6 +119,8 @@ BANK1_VISIBLE_991_SCENE_PPU := $(BANK1_VISIBLE_991_SCENE_PREFIX)_ppu_state.json
 BANK1_VISIBLE_991_SCENE_OAM := $(BANK1_VISIBLE_991_SCENE_PREFIX)_oam.bin
 BANK1_VISIBLE_991_SCENE_JSON := $(BANK1_VISIBLE_991_SCENE_PREFIX).json
 BANK1_VISIBLE_991_SCENE_PPM := $(BANK1_VISIBLE_991_SCENE_PREFIX).ppm
+OBJ_VERTICAL_FLIP_CHECK_OUT_DIR := $(OUT_DIR)/obj_vertical_flip_check
+BG_LAYER_PRIORITY_CHECK_OUT_DIR := $(OUT_DIR)/bg_layer_priority_check
 BANK1_VISIBLE_992_SCENE_PREFIX := $(OUT_DIR)/bank1_mode7_visible_992
 BANK1_VISIBLE_992_SCENE_VRAM := $(BANK1_VISIBLE_992_SCENE_PREFIX)_vram.bin
 BANK1_VISIBLE_992_SCENE_CGRAM := $(BANK1_VISIBLE_992_SCENE_PREFIX)_cgram.bin
@@ -173,6 +178,11 @@ TRACK1_SEED_SWEEP_TIMEOUT_SECONDS ?= 60
 TRACK1_SEED_SWEEP_WARMUP_FRAMES ?= 60
 TRACK1_SEED_SWEEP_CAPTURE_FRAMES ?= 300
 TRACK1_SEED_SWEEP_SCREENSHOT_EVERY ?= 1
+TRACK1_B_HOLD_CYCLE_CAPTURE_LOG ?= $(TRACK1_SEED_SWEEP_OUT_DIR)/b_hold/capture_input_log.json
+TRACK1_B_HOLD_CYCLE_START_FRAME ?= 76
+TRACK1_B_HOLD_CYCLE_END_FRAME_EXCLUSIVE ?= 156
+TRACK1_B_HOLD_CYCLE_SEQUENCE := $(OUT_DIR)/track1_b_hold_cycle_0076_0156_sequence.txt
+TRACK1_B_HOLD_CYCLE_SEQUENCE_JSON := $(OUT_DIR)/track1_b_hold_cycle_0076_0156_sequence.json
 MESEN_FRAME ?= 300
 MESEN_FRAME_DIR ?= $(OUT_DIR)/mesen_frame$(MESEN_FRAME)
 MESEN_DESIGN_PACK_DIR ?= $(OUT_DIR)/design_frame$(MESEN_FRAME)
@@ -273,7 +283,7 @@ L001210_SAVE_STATE_FRAME ?= 1093
 L001210_SAVE_TOTAL_FRAMES ?= 1120
 L001210_SAVE_STATE_PATH ?= ../tools/out/l001210_state_$(L001210_SAVE_STATE_FRAME).bin
 
-.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank13-headers bank13-validate bank30-headers bank30-validate bank30-registry tilemap-provenance-1086-1093 l001210-probe l001210-save-savestate l001210-probe-matrix l001210-trace-summary track1-seed-sweep regression-gates callback-contracts-check bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview bank1-bootstrap-queue-978-preview bank1-bootstrap-queue-982-preview bank1-bootstrap-queue-986-preview bank1-bootstrap-queue-986-noobj-preview bank1-bootstrap-queue-986-bridgeoam-preview bank1-bootstrap-queue-990-bridgeoam-preview bank1-bootstrap-queue-994-bridgeoam-preview bank1-visible-mode7-window-preview intro-bootstrap-deltas intro-bootstrap-queue mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-loop-hybrid-bridge-sequence intro-loop-hybrid-bridge-visible-sequence intro-native-978 intro-native-978-derived intro-native-978-bridge intro-native-978-bridge-visible
+.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank13-headers bank13-validate bank30-headers bank30-validate bank30-registry tilemap-provenance-1086-1093 l001210-probe l001210-save-savestate l001210-probe-matrix l001210-trace-summary track1-seed-sweep track1-b-hold-cycle regression-gates callback-contracts-check obj-vertical-flip-check bg-layer-priority-check clean-generated clean-generated-dry-run bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview bank1-bootstrap-queue-978-preview bank1-bootstrap-queue-982-preview bank1-bootstrap-queue-986-preview bank1-bootstrap-queue-986-noobj-preview bank1-bootstrap-queue-986-bridgeoam-preview bank1-bootstrap-queue-990-bridgeoam-preview bank1-bootstrap-queue-994-bridgeoam-preview bank1-visible-mode7-window-preview intro-bootstrap-deltas intro-bootstrap-queue mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-loop-hybrid-bridge-sequence intro-loop-hybrid-bridge-visible-sequence intro-native-978 intro-native-978-derived intro-native-978-bridge intro-native-978-bridge-visible
 
 all: previews
 
@@ -416,6 +426,14 @@ track1-seed-sweep:
 		--capture-frames $(TRACK1_SEED_SWEEP_CAPTURE_FRAMES) \
 		--screenshot-every $(TRACK1_SEED_SWEEP_SCREENSHOT_EVERY)
 
+track1-b-hold-cycle: track1-seed-sweep
+	$(PYTHON) build_capture_sequence_manifest.py \
+		$(TRACK1_B_HOLD_CYCLE_CAPTURE_LOG) \
+		$(TRACK1_B_HOLD_CYCLE_SEQUENCE) \
+		--json-out $(TRACK1_B_HOLD_CYCLE_SEQUENCE_JSON) \
+		--start-frame $(TRACK1_B_HOLD_CYCLE_START_FRAME) \
+		--end-frame-exclusive $(TRACK1_B_HOLD_CYCLE_END_FRAME_EXCLUSIVE)
+
 $(L001210_TRACE_SUMMARY_JSON): summarize_l001210_trace.py $(L001210_TRACE_JSON) | $(OUT_DIR)
 	$(PYTHON) summarize_l001210_trace.py $(L001210_TRACE_JSON) --json-out $(L001210_TRACE_SUMMARY_JSON)
 
@@ -426,6 +444,24 @@ regression-gates:
 		$(REGRESSION_GATES_CONTRACT) \
 		--render-dir $(REGRESSION_GATES_RENDER_DIR) \
 		--json-out $(REGRESSION_GATES_REPORT_JSON)
+
+obj-vertical-flip-check:
+	$(MAKE) -C ../port
+	$(PYTHON) check_obj_vertical_flip.py \
+		--out-dir $(OBJ_VERTICAL_FLIP_CHECK_OUT_DIR) \
+		--port-binary ../port/build/td2_port
+
+bg-layer-priority-check:
+	$(MAKE) -C ../port
+	$(PYTHON) check_bg_layer_priority.py \
+		--out-dir $(BG_LAYER_PRIORITY_CHECK_OUT_DIR) \
+		--port-binary ../port/build/td2_port
+
+clean-generated:
+	$(PYTHON) clean_generated_artifacts.py
+
+clean-generated-dry-run:
+	$(PYTHON) clean_generated_artifacts.py --dry-run
 
 callback-contracts-check:
 	$(PYTHON) validate_callback_contracts.py \
@@ -782,43 +818,43 @@ $(INTRO_LOOP_HYBRID_BASE_SEQUENCE) $(INTRO_LOOP_HYBRID_BASE_JSON): splice_sequen
 		--json-out $(INTRO_LOOP_HYBRID_BASE_JSON)
 
 $(INTRO_NATIVE_978_DIR)/sequence.txt $(INTRO_NATIVE_978_DIR)/sequence.json: extract_mesen_scene_range.py | $(OUT_DIR)
-	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 978 --end-frame 982 --step 4 --out-dir $(INTRO_NATIVE_978_DIR) --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
+	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 978 --end-frame 982 --step 4 --out-dir $(INTRO_NATIVE_978_DIR) $(MESEN_EXTRACT_LD_ARGS)
 
 $(MESEN_RANGE_998_1005_SEQUENCE) $(MESEN_RANGE_998_1005_JSON): extract_mesen_scene_range.py | $(OUT_DIR)
-	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 998 --end-frame 1005 --step 1 --out-dir $(MESEN_RANGE_998_1005_DIR) --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
+	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 998 --end-frame 1005 --step 1 --out-dir $(MESEN_RANGE_998_1005_DIR) $(MESEN_EXTRACT_LD_ARGS)
 
 $(MESEN_RANGE_1006_1013_SEQUENCE) $(MESEN_RANGE_1006_1013_JSON): extract_mesen_scene_range.py | $(OUT_DIR)
-	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1006 --end-frame 1013 --step 1 --out-dir $(MESEN_RANGE_1006_1013_DIR) --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
+	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1006 --end-frame 1013 --step 1 --out-dir $(MESEN_RANGE_1006_1013_DIR) $(MESEN_EXTRACT_LD_ARGS)
 
 $(MESEN_RANGE_1014_1021_SEQUENCE) $(MESEN_RANGE_1014_1021_JSON): extract_mesen_scene_range.py | $(OUT_DIR)
-	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1014 --end-frame 1021 --step 1 --out-dir $(MESEN_RANGE_1014_1021_DIR) --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
+	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1014 --end-frame 1021 --step 1 --out-dir $(MESEN_RANGE_1014_1021_DIR) $(MESEN_EXTRACT_LD_ARGS)
 
 $(MESEN_RANGE_1022_1029_SEQUENCE) $(MESEN_RANGE_1022_1029_JSON): extract_mesen_scene_range.py | $(OUT_DIR)
-	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1022 --end-frame 1029 --step 1 --out-dir $(MESEN_RANGE_1022_1029_DIR) --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
+	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1022 --end-frame 1029 --step 1 --out-dir $(MESEN_RANGE_1022_1029_DIR) $(MESEN_EXTRACT_LD_ARGS)
 
 $(MESEN_RANGE_1030_1037_SEQUENCE) $(MESEN_RANGE_1030_1037_JSON): extract_mesen_scene_range.py | $(OUT_DIR)
-	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1030 --end-frame 1037 --step 1 --out-dir $(MESEN_RANGE_1030_1037_DIR) --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
+	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1030 --end-frame 1037 --step 1 --out-dir $(MESEN_RANGE_1030_1037_DIR) $(MESEN_EXTRACT_LD_ARGS)
 
 $(MESEN_RANGE_1038_1045_SEQUENCE) $(MESEN_RANGE_1038_1045_JSON): extract_mesen_scene_range.py | $(OUT_DIR)
-	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1038 --end-frame 1045 --step 1 --out-dir $(MESEN_RANGE_1038_1045_DIR) --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
+	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1038 --end-frame 1045 --step 1 --out-dir $(MESEN_RANGE_1038_1045_DIR) $(MESEN_EXTRACT_LD_ARGS)
 
 $(MESEN_RANGE_1046_1053_SEQUENCE) $(MESEN_RANGE_1046_1053_JSON): extract_mesen_scene_range.py | $(OUT_DIR)
-	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1046 --end-frame 1053 --step 1 --out-dir $(MESEN_RANGE_1046_1053_DIR) --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
+	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1046 --end-frame 1053 --step 1 --out-dir $(MESEN_RANGE_1046_1053_DIR) $(MESEN_EXTRACT_LD_ARGS)
 
 $(MESEN_RANGE_1054_1061_SEQUENCE) $(MESEN_RANGE_1054_1061_JSON): extract_mesen_scene_range.py | $(OUT_DIR)
-	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1054 --end-frame 1061 --step 1 --out-dir $(MESEN_RANGE_1054_1061_DIR) --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
+	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1054 --end-frame 1061 --step 1 --out-dir $(MESEN_RANGE_1054_1061_DIR) $(MESEN_EXTRACT_LD_ARGS)
 
 $(MESEN_RANGE_1062_1069_SEQUENCE) $(MESEN_RANGE_1062_1069_JSON): extract_mesen_scene_range.py | $(OUT_DIR)
-	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1062 --end-frame 1069 --step 1 --out-dir $(MESEN_RANGE_1062_1069_DIR) --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
+	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1062 --end-frame 1069 --step 1 --out-dir $(MESEN_RANGE_1062_1069_DIR) $(MESEN_EXTRACT_LD_ARGS)
 
 $(MESEN_RANGE_1070_1077_SEQUENCE) $(MESEN_RANGE_1070_1077_JSON): extract_mesen_scene_range.py | $(OUT_DIR)
-	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1070 --end-frame 1077 --step 1 --out-dir $(MESEN_RANGE_1070_1077_DIR) --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
+	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1070 --end-frame 1077 --step 1 --out-dir $(MESEN_RANGE_1070_1077_DIR) $(MESEN_EXTRACT_LD_ARGS)
 
 $(MESEN_RANGE_1078_1085_SEQUENCE) $(MESEN_RANGE_1078_1085_JSON): extract_mesen_scene_range.py | $(OUT_DIR)
-	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1078 --end-frame 1085 --step 1 --out-dir $(MESEN_RANGE_1078_1085_DIR) --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
+	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1078 --end-frame 1085 --step 1 --out-dir $(MESEN_RANGE_1078_1085_DIR) $(MESEN_EXTRACT_LD_ARGS)
 
 $(MESEN_RANGE_1086_1093_SEQUENCE) $(MESEN_RANGE_1086_1093_JSON): extract_mesen_scene_range.py | $(OUT_DIR)
-	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1086 --end-frame 1093 --step 1 --out-dir $(MESEN_RANGE_1086_1093_DIR) --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
+	$(PYTHON) extract_mesen_scene_range.py --rom $(ROM) --start-frame 1086 --end-frame 1093 --step 1 --out-dir $(MESEN_RANGE_1086_1093_DIR) $(MESEN_EXTRACT_LD_ARGS)
 
 $(INTRO_NATIVE_978_DERIVED_SEQUENCE) $(INTRO_NATIVE_978_DERIVED_JSON): $(BANK1_QUEUE_978_SCENE_SEQUENCE) $(BANK1_QUEUE_982_SCENE_SEQUENCE) | $(OUT_DIR)
 	printf '%s\n' '# type duration_frames path_a [path_b path_c path_d]' > $(INTRO_NATIVE_978_DERIVED_SEQUENCE)

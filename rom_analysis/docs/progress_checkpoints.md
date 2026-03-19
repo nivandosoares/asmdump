@@ -1,6 +1,6 @@
 # ROM Archaeology Progress Checkpoints
 
-Snapshot date: `2026-03-17`
+Snapshot date: `2026-03-19`
 
 This file tracks plan progress as checkpoints with objective evidence and the
 next gate needed to advance.
@@ -13,6 +13,24 @@ next gate needed to advance.
 | Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` is now packaged with exact provenance anchors, and the remaining Lane 2 question is whether a small interior sample set is enough to promote that later scene into a contiguous window |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
+
+## Execution Reset (2026-03-19)
+
+- The port plan now treats maintainability cleanup as a first-class execution
+  track alongside the active archaeology lanes.
+- The first cleanup slice is repo hygiene and portability:
+  - fix ignore policy
+  - untrack generated `mesen_ppu_extract` build output
+  - untrack mutable `.mesen-config/Mesen2/LuaScriptData` output
+  - remove hard-coded personal Mesen paths from promoted scripts and Makefiles
+- The first renderer-correctness cleanup checkpoint now exists:
+  - the mirrored non-square OBJ regression is covered by a generated 16x32
+    vertical-flip fixture that validates Python simple, Python `mode7-ppu`,
+    and SDL runtime paths against one golden PPM
+- Repo garbage cleanup is now an explicit maintained tool target instead of an
+  ad hoc manual sweep.
+- This refocus does not replace the lane order; it is intended to unblock the
+  current intro/bootstrap push and make later port work less fragile.
 
 ## Completed Checkpoints
 
@@ -1292,6 +1310,108 @@ Current reading:
     - if those mid-segment samples keep the same tile-index block and map
       cleanly by carry (`7055 <- 7051`, `7061 <- 7059`), promote the later
       scene into a documented contiguous provenance window
+
+### CP-40: Mirrored non-square OBJ regression closed and covered
+
+- Fixed the vertical-mirror row sampling bug in both renderer implementations:
+  - `port/src/td2_ppu.c`
+  - `tools/render_mesen_snes_bg.py`
+- Applied the same height-based fix to both OBJ code paths in each renderer:
+  - the normal OBJ compositor
+  - the Mode 7 scanline/PPU-accurate compositor
+- Added a generated regression fixture and runner:
+  - `tools/check_obj_vertical_flip.py`
+  - `make -C tools obj-vertical-flip-check`
+- Updated the validation docs:
+  - `validation/README.md`
+  - `tools/README.md`
+
+Current reading:
+
+- the old bug only showed up on vertically mirrored non-square sprites because
+  the row-sampling logic incorrectly used `width` where it needed full sprite
+  `height`
+- the new generated fixture is intentionally minimal:
+  - one 16x32 OBJ sprite
+  - four unique tile rows
+  - one shared golden PPM
+- that single fixture now checks four paths:
+  - Python simple OBJ renderer
+  - Python `mode7-ppu` OBJ renderer
+  - SDL non-Mode-7 OBJ renderer
+  - SDL Mode 7 OBJ renderer
+- practical reading:
+  - the mirrored-OBJ correctness gap is now closed and guarded
+  - the next cleanup-side renderer target should move to BG4 support and
+    tile-priority ordering instead of revisiting this bug class ad hoc
+
+### CP-41: Generated-clutter cleanup is now automated
+
+- Added a repo-owned cleanup tool:
+  - `tools/clean_generated_artifacts.py`
+  - `make -C tools clean-generated`
+  - `make -C tools clean-generated-dry-run`
+- The cleanup scope is explicit and conservative:
+  - build output (`port/build`, `tools/mesen_ppu_extract/bin`, `tools/mesen_ppu_extract/obj`)
+  - mutable emulator output (`.mesen-config/Mesen2/LuaScriptData`, `.mesen-runs`)
+  - scratch `tools/out` surfaces (`*smoke*`, `*makecheck*`, `*designtest*`,
+    the vertical-flip fixture output)
+  - debugger coverage junk (`game.cdl`) under `.mesen-config`, `tools/out`,
+    and committed proof bundles
+- Updated tooling/docs:
+  - `tools/Makefile`
+  - `tools/README.md`
+  - `rom_analysis/docs/next_steps_roadmap.md`
+
+Current reading:
+
+- `tools/out` is the dominant local clutter surface (`2.4G` in this snapshot),
+  but most of that tree is still evidence-bearing archaeology output, so the
+  new cleanup target intentionally does **not** blanket-delete it
+- the always-safe/scratch slice already identified here is enough to reclaim
+  build products, smoke outputs, stale design-test packs, and debugger junk
+  without touching referenced proof artifacts
+- practical reading:
+  - repo hygiene now has a repeatable cleanup path instead of one-off manual
+    deletions
+  - the next cleanup-side work can move back to renderer/port progress without
+    letting disposable surfaces keep accumulating
+
+### CP-42: BG4 and tile-priority rendering are now covered
+
+- Expanded the shared renderer model from `3` BG layers to `4`:
+  - `port/src/td2_types.h`
+  - `port/src/td2_ppu.c`
+  - `tools/render_mesen_snes_bg.py`
+- Replaced the old implicit non-Mode-7 layer paint order with explicit ordered
+  BG passes:
+  - low priority `BG4 -> BG3 -> BG2 -> BG1`
+  - then high priority `BG4 -> BG3 -> BG2 -> BG1`
+- Fixed the per-mode BPP table so BG4 is only active in modes that actually
+  expose it.
+- Added a generated regression fixture and runner:
+  - `tools/check_bg_layer_priority.py`
+  - `make -C tools bg-layer-priority-check`
+- Updated docs/cleanup wiring:
+  - `validation/README.md`
+  - `tools/README.md`
+  - `tools/clean_generated_artifacts.py`
+
+Current reading:
+
+- the old non-Mode-7 path had two coupled correctness gaps:
+  - hard-coded `3`-layer scene state
+  - no tile-priority ordering at all
+- the new fixture is intentionally tiny but targeted:
+  - BG4-only cell
+  - low-priority overlap cell
+  - high-priority-over-low cell
+  - high-priority ordering cell
+- practical reading:
+  - BG4 visibility and basic tile-priority ordering are now guarded in both
+    renderers
+  - the next renderer-side work should move to the remaining composition gaps
+    rather than this older background-order failure class
 
 ## Current Checkpoint Metrics
 
