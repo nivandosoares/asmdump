@@ -203,6 +203,11 @@ Current practical reading for this tool:
 - its `GetTilemap` outputs are viewer-oriented layer renders, not a final composed screenshot
 - for frame `300`, the extracted PPU state lands on the expected credits scene state (`bgMode = 1`, `mainScreenLayers = 0x04`, `chrAddress = 0x2000/0x4000/0x6000`)
 - the frame-`300` `*_visible.ppm` outputs do not match the final screenshot pixel-for-pixel, so they should be treated as standalone layer assets, not as golden-frame replacements
+- late timed-input extraction is still environment-sensitive:
+  - the planned `7055` interior retry for scenario `6800:start;6900-6920:start,a`
+    timed out before the late input window on the current local bridge setup
+  - treat later-scene bridge extraction as compatibility-pinned work until a
+    known-good `Mesen`/`MesenCore.so` pair is re-established
 
 `build_mesen_design_pack.py` now adds inspect-and-draw outputs on top of those raw dumps:
 

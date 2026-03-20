@@ -1,6 +1,6 @@
 # ROM Archaeology Progress Checkpoints
 
-Snapshot date: `2026-03-19`
+Snapshot date: `2026-03-20`
 
 This file tracks plan progress as checkpoints with objective evidence and the
 next gate needed to advance.
@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; unresolved targets remain |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` is now packaged with exact provenance anchors, and the remaining Lane 2 question is whether a small interior sample set is enough to promote that later scene into a contiguous window |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` is now packaged with exact provenance anchors, and the planned `7055/7061` interior carry check is currently blocked by a live timed-input bridge timeout regression on the local Mesen setup |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -1604,6 +1604,40 @@ Current reading:
   - the next cleanup-side target should isolate the remaining scanline/gameplay
     wrappers and the lingering doc examples that still assume shared emulator
     output
+
+### CP-48: Later-scene interior carry check is blocked again by bridge timeout regression
+
+- Rebuilt the committed Mesen bridge extractor to retry the later-scene lane:
+  - `dotnet build tools/mesen_ppu_extract/mesen_ppu_extract.csproj --configfile tools/mesen_ppu_extract/NuGet.Config`
+- Retried the planned Lane 2 interior carry extraction on the documented timed-
+  input scenario `6800:start;6900-6920:start,a`:
+  - `python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 7055 --end-frame 7061 --step 6 --out-dir tools/out/mesen_range_7055_7061_inputfix_v1 --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release --input-windows '6800:start;6900-6920:start,a' --frame-timeout-seconds 180`
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release ./tools/run_mesen_ppu_extract.sh --rom game.smc --frame 7055 --out-dir tools/out/mesen_frame_7055_inputfix_retry_v1 --frame-timeout-seconds 300 --input-windows '6800:start;6900-6920:start,a'`
+- Updated the source-of-truth roadmap with the live blocker:
+  - `rom_analysis/docs/next_steps_roadmap.md`
+
+Evidence:
+
+- first retry failed with `System.TimeoutException` waiting for frame `1762`
+  while targeting frame `7055`
+- final bounded retry failed with the same exception earlier, at frame `411`,
+  on the single-frame wrapper path
+- both retries produced only scratch `.mesen-home` output directories and no
+  frame assets under:
+  - `tools/out/mesen_range_7055_7061_inputfix_v1`
+  - `tools/out/mesen_frame_7055_inputfix_retry_v1`
+
+Current reading:
+
+- this is a real regression relative to CP-38/CP-39, which had already
+  recovered the same later-scene timed-input path
+- the current local bridge environment is not healthy enough to promote the
+  `7051..7064` window with the planned `7055/7061` interior confirmation
+- practical reading:
+  - do not claim the later scene as a contiguous provenance window yet
+  - the next defensible move is to pin or recover a known-good
+    `Mesen`/`MesenCore.so` pair for timed-input bridge extraction, then rerun
+    `7055` and `7061`
 
 ## Current Checkpoint Metrics
 

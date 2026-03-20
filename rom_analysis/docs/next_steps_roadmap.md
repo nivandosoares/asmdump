@@ -3,14 +3,14 @@
 This roadmap is the direct follow-up after enabling Mesen design packs with
 decoded tilemaps and sprite visibility metadata.
 
-## Current Status Snapshot (2026-03-17)
+## Current Status Snapshot (2026-03-20)
 
 Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 
 | Roadmap lane | Status | Current reading |
 |---|---|---|
 | 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps are done; targeted `B1F9` prologue traces now prove forced entry context, but unresolved queue still remains (`E91F`, `EE7F`, `DA96`, `9681`). |
-| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`, the later direct-hit cluster `7051/7059/7064` is now packaged with exact provenance anchors, and the next step is to validate one interior frame per segment before promoting that later scene into a contiguous window. |
+| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`, the later direct-hit cluster `7051/7059/7064` is now packaged with exact provenance anchors, and the planned `7055/7061` interior carry check is currently blocked by a live timed-input bridge timeout regression on the local Mesen setup. |
 | 3. Gameplay-frame expansion | in progress | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty. |
 | 4. Bank API contracts | not started | Baseline docs exist; callback/API contracts for bank 30/10/11 are not yet mapped to completion. |
 
@@ -234,11 +234,21 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
     - this is enough to close exact anchors, but not enough to claim a full
       `7051..7064` contiguous window because the source rotates at each direct
       hit and the interior frames are still unextracted
-  - the next best step is now a minimal interior carry check on that same
-    scenario:
-    - extract/design-pack `7055` and `7061`
-    - if those frames keep the same visible tile block and map cleanly by carry,
-      promote the later scene into a contiguous provenance window
+  - the planned minimal interior carry check is now blocked again in the
+    current local bridge environment:
+    - `python3 tools/extract_mesen_scene_range.py ... --start-frame 7055
+      --end-frame 7061 --step 6 --frame-timeout-seconds 180` timed out waiting
+      for frame `1762` before the late input window
+    - `MESEN_RELEASE_DIR=... ./tools/run_mesen_ppu_extract.sh ... --frame 7055
+      --frame-timeout-seconds 300` timed out earlier at frame `411`
+    - both retries only produced scratch `.mesen-home` directories and no frame
+      assets
+  - the next best step is now compatibility-focused instead of provenance-
+    promotion-focused:
+    - pin or recover a known-good `Mesen`/`MesenCore.so` pair for the timed-
+      input extractor bridge
+    - once that bridge is healthy again, rerun `7055` and `7061` before
+      claiming the full `7051..7064` contiguous window
 
 ## 3. Expand Into Gameplay Frames
 
