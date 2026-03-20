@@ -36,14 +36,15 @@ Runner:
 ```sh
 python3 tools/validate_callback_contracts.py \
   rom_analysis/docs/callback_state_contracts.jsonc \
-  .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe.json \
+  tools/out/td2_boot_probe.json \
   --json-out tools/out/callback_state_contracts_report.json
 ```
 
 This validates callback continuity and selected state fields at known frames
 (`01:A39C`, `01:9D69`, `01:9FE5` windows) as first-class machine checks.
 Use a probe capture that matches the contract's expected profile in
-`expected_probe_profile`.
+`expected_probe_profile`, for example a run with
+`TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/td2_boot_probe`.
 
 ## 3) Practical Gate Policy
 

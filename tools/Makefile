@@ -170,14 +170,15 @@ BANK1_VISIBLE_997_SCENE_PPU := $(BANK1_VISIBLE_997_SCENE_PREFIX)_ppu_state.json
 BANK1_VISIBLE_997_SCENE_OAM := $(BANK1_VISIBLE_997_SCENE_PREFIX)_oam.bin
 BANK1_VISIBLE_997_SCENE_JSON := $(BANK1_VISIBLE_997_SCENE_PREFIX).json
 BANK1_VISIBLE_997_SCENE_PPM := $(BANK1_VISIBLE_997_SCENE_PREFIX).ppm
-MESEN_BOOT_FRAME := ../.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_frame.png
-L001210_TRACE_JSON := ../.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json
+BOOT_PROBE_PREFIX ?= $(OUT_DIR)/td2_boot_probe
+MESEN_BOOT_FRAME := $(BOOT_PROBE_PREFIX)_frame.png
+L001210_TRACE_JSON := $(BOOT_PROBE_PREFIX)_l001210_exec.json
 L001210_TRACE_SUMMARY_JSON := $(OUT_DIR)/td2_boot_probe_l001210_summary.json
 REGRESSION_GATES_CONTRACT ?= ../validation/regression_gates_intro.jsonc
 REGRESSION_GATES_RENDER_DIR ?= ../port/build/regression_frames
 REGRESSION_GATES_REPORT_JSON ?= $(OUT_DIR)/regression_gates_intro_report.json
 CALLBACK_CONTRACTS_JSON ?= ../rom_analysis/docs/callback_state_contracts.jsonc
-CALLBACK_PROBE_JSON ?= ../.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe.json
+CALLBACK_PROBE_JSON ?= $(BOOT_PROBE_PREFIX).json
 CALLBACK_CONTRACTS_REPORT_JSON ?= $(OUT_DIR)/callback_state_contracts_report.json
 TRACK1_SEED_SWEEP_SAVESTATE ?= ../.mesen-config/Mesen2/SaveStates/game_11.mss
 TRACK1_SEED_SWEEP_OUT_DIR ?= $(OUT_DIR)/track1_seed_sweep_v1
@@ -403,6 +404,7 @@ tilemap-provenance-1086-1093: mesen-design-pack-range $(BANK13_VALIDATION_JSON)
 
 l001210-probe:
 	TD2_BOOT_PROBE_TOTAL_FRAMES=$(L001210_PROBE_TOTAL_FRAMES) \
+	TD2_BOOT_PROBE_OUTPUT_PREFIX=$(abspath $(BOOT_PROBE_PREFIX)) \
 	TD2_BOOT_PROBE_TRACE_L001210=1 \
 	TD2_BOOT_PROBE_L001210_MAX_HITS=$(L001210_MAX_HITS) \
 	MESEN_TIMEOUT_SECONDS=$(MESEN_TIMEOUT_SECONDS) \
@@ -410,6 +412,7 @@ l001210-probe:
 
 l001210-save-savestate:
 	TD2_BOOT_PROBE_TOTAL_FRAMES=$(L001210_SAVE_TOTAL_FRAMES) \
+	TD2_BOOT_PROBE_OUTPUT_PREFIX=$(abspath $(BOOT_PROBE_PREFIX)) \
 	TD2_BOOT_PROBE_SAVE_SAVESTATE_FRAME=$(L001210_SAVE_STATE_FRAME) \
 	TD2_BOOT_PROBE_SAVE_SAVESTATE=$(abspath $(L001210_SAVE_STATE_PATH)) \
 	MESEN_TIMEOUT_SECONDS=$(MESEN_TIMEOUT_SECONDS) \

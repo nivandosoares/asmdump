@@ -1526,6 +1526,48 @@ Current reading:
   - the next cleanup-side target should be validation-output isolation instead
     of mutable shared `LuaScriptData`
 
+### CP-46: Boot-probe validation output defaults are now repo-owned
+
+- Added a repo-owned boot-probe output prefix:
+  - `validation/mesen_probe_boot.lua` now accepts
+    `TD2_BOOT_PROBE_OUTPUT_PREFIX`
+  - `validation/run_mesen_capture.sh` now creates the parent directory for that
+    prefix before launching Mesen
+- Promoted boot-probe targets now default to repo-owned outputs:
+  - `tools/Makefile` now routes `l001210-probe` and `l001210-save-savestate`
+    through `tools/out/td2_boot_probe*`
+  - `tools/run_l001210_probe_matrix.py` now assigns each scenario its own
+    repo-owned output prefix inside the matrix output directory
+- Updated promoted docs and contract examples:
+  - `tools/README.md`
+  - `validation/README.md`
+  - `rom_analysis/docs/validation_gates.md`
+
+Evidence:
+
+- `bash -n validation/run_mesen_capture.sh validation/run_mesen_probe_boot.sh validation/run_mesen_dump_bg_range.sh`
+- `python3 -m py_compile tools/run_l001210_probe_matrix.py`
+- `make -C tools -n l001210-probe L001210_PROBE_TOTAL_FRAMES=2 MESEN_TIMEOUT_SECONDS=15`
+- `make -C tools -n l001210-save-savestate L001210_SAVE_TOTAL_FRAMES=2 MESEN_TIMEOUT_SECONDS=15`
+- bounded negative runtime check:
+  - both local Linux Mesen binaries abort in `--testRunner` mode with
+    `std::bad_cast` before the probe completes, so live proof of the redirected
+    files remains environment-blocked rather than code-blocked
+
+Current reading:
+
+- the promoted boot-probe lane no longer defaults to shared
+  `.mesen-config/Mesen2/LuaScriptData` for its trace/screenshot/contract paths
+- the matrix harness now keeps per-scenario probe JSON and trace JSON under the
+  scenario output family instead of reading from mutable shared emulator state
+- the remaining gap on this slice is live runtime confirmation once the local
+  Mesen `--testRunner` crash is resolved
+- practical reading:
+  - the cleanup-side output-isolation slice is now closed enough to move on
+  - the next cleanup-side target should push the same repo-owned/per-run policy
+    into the remaining validation surfaces and contract examples that still
+    assume shared emulator output
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):

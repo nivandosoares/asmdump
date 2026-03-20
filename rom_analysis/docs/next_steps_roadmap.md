@@ -61,9 +61,16 @@ Immediate concrete step after the cleanup kickoff:
 - promoted scripts/Makefiles and the main tooling READMEs now avoid hard-coded
   personal Mesen paths, and `make -C tools portability-path-check` guards that
   surface against regression
+- the promoted boot-probe path now defaults to repo-owned outputs:
+  - `validation/mesen_probe_boot.lua` accepts `TD2_BOOT_PROBE_OUTPUT_PREFIX`
+  - `make -C tools l001210-probe` and `l001210-save-savestate` now default to
+    `tools/out/td2_boot_probe*` instead of shared `LuaScriptData`
+  - `tools/run_l001210_probe_matrix.py` now writes per-scenario probe outputs
+    directly under its run directory instead of copying them out of shared
+    emulator state
 - finish the remaining cleanup hardening next:
-  - keep moving validation toward per-run output isolation instead of mutable
-    shared `LuaScriptData`
+  - keep moving validation toward per-run output isolation beyond the boot
+    probe path instead of mutable shared `LuaScriptData`
 - keep the renderer correctness track moving after the mirrored-OBJ fix:
   - preserve the new BG4/tile-priority pass ordering while the next renderer
     slice moves on to remaining composition gaps

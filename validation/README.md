@@ -165,9 +165,12 @@ That produces flat files like:
 - `tools/out/intro_loop.json`
 
 The boot probe writes a JSON timeline and a final screenshot under the script data folder, using the prefix `td2_boot_probe`.
+Set `TD2_BOOT_PROBE_OUTPUT_PREFIX` to move that output into a repo-owned or
+per-run location instead of the shared `LuaScriptData` directory.
 You can also drive it with simple scripted input via environment variables, for example:
 
 ```sh
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/bootprobe_run/td2_boot_probe \
 TD2_BOOT_PROBE_TOTAL_FRAMES=3600 \
 TD2_BOOT_PROBE_INPUT_START_FRAME=240 \
 TD2_BOOT_PROBE_INPUT=start,b \
@@ -212,22 +215,27 @@ TD2_BOOT_PROBE_DUMP_PPU_MEMORY=1 \
 
 That writes:
 
-- `.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe.json`
-- `.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_frame.png`
-- `.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_vram.bin`
-- `.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_cgram.bin`
-- `.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_oam.bin`
-- `.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_ppu_state.json`
+- `tools/out/bootprobe_run/td2_boot_probe.json` when
+  `TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/bootprobe_run/td2_boot_probe`
+- `tools/out/bootprobe_run/td2_boot_probe_frame.png`
+- `tools/out/bootprobe_run/td2_boot_probe_vram.bin`
+- `tools/out/bootprobe_run/td2_boot_probe_cgram.bin`
+- `tools/out/bootprobe_run/td2_boot_probe_oam.bin`
+- `tools/out/bootprobe_run/td2_boot_probe_ppu_state.json`
+
+If `TD2_BOOT_PROBE_OUTPUT_PREFIX` is unset, the legacy fallback still writes to
+`.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe.*`.
 
 To trace chunk-dispatch usage at `00:9210` (`L001210`) with entry-time `$0C/$0E/$10`:
 
 ```sh
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/td2_boot_probe \
 TD2_BOOT_PROBE_TOTAL_FRAMES=3600 \
 TD2_BOOT_PROBE_TRACE_L001210=1 \
 ./validation/run_mesen_probe_boot.sh
 
 python3 tools/summarize_l001210_trace.py \
-  .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json \
+  tools/out/td2_boot_probe_l001210_exec.json \
   --json-out tools/out/td2_boot_probe_l001210_summary.json
 
 python3 tools/run_l001210_probe_matrix.py \
@@ -239,6 +247,7 @@ python3 tools/run_l001210_probe_matrix.py \
 To recover the later direct-hit cluster on the restored timed-input scenario:
 
 ```sh
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/td2_boot_probe \
 TD2_BOOT_PROBE_TOTAL_FRAMES=7065 \
 TD2_BOOT_PROBE_TRACE_L001210=1 \
 TD2_BOOT_PROBE_L001210_MAX_HITS=256 \
@@ -247,7 +256,7 @@ MESEN_TIMEOUT_SECONDS=180 \
 ./validation/run_mesen_probe_boot.sh ./game.smc
 
 python3 tools/summarize_l001210_trace.py \
-  .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json \
+  tools/out/td2_boot_probe_l001210_exec.json \
   --json-out tools/out/l001210_probe_7051_inputfix_summary.json
 ```
 
@@ -434,7 +443,7 @@ To validate callback/state checkpoints as machine-readable contracts:
 ```sh
 python3 tools/validate_callback_contracts.py \
   rom_analysis/docs/callback_state_contracts.jsonc \
-  .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe.json \
+  tools/out/td2_boot_probe.json \
   --json-out tools/out/callback_state_contracts_report.json
 ```
 

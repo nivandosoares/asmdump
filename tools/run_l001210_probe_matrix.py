@@ -12,6 +12,7 @@ from typing import Any
 
 
 INPUT_ENV_KEYS = (
+    "TD2_BOOT_PROBE_OUTPUT_PREFIX",
     "TD2_BOOT_PROBE_INPUT",
     "TD2_BOOT_PROBE_INPUT_START_FRAME",
     "TD2_BOOT_PROBE_INPUT_END_FRAME",
@@ -303,9 +304,6 @@ def main() -> int:
     rom_path = resolve_path(root, args.rom)
     runner_path = resolve_path(root, args.runner)
     out_dir = resolve_path(root, args.out_dir)
-    trace_path = root / ".mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json"
-    probe_path = root / ".mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe.json"
-
     if not rom_path.is_file():
         raise FileNotFoundError(f"ROM not found: {rom_path}")
     if not runner_path.is_file():
@@ -331,6 +329,8 @@ def main() -> int:
             args.timeout_seconds,
             args.max_hits,
         )
+        scenario_output_prefix = out_dir / scenario["_file_name"]
+        env["TD2_BOOT_PROBE_OUTPUT_PREFIX"] = str(scenario_output_prefix)
 
         cmd = [str(runner_path), str(rom_path)]
         if savestate_path is not None:
@@ -342,19 +342,16 @@ def main() -> int:
         )
         subprocess.run(cmd, cwd=root, env=env, check=True)
 
+        trace_path = root / f"{scenario_output_prefix}_l001210_exec.json"
+        probe_path = root / f"{scenario_output_prefix}.json"
         if not trace_path.is_file():
             raise FileNotFoundError(f"expected probe trace not found: {trace_path}")
         payload = json.loads(trace_path.read_text(encoding="utf-8"))
 
-        scenario_trace_path = out_dir / f"{scenario['_file_name']}_l001210_exec.json"
-        scenario_trace_path.write_text(
-            json.dumps(payload, indent=2) + "\n", encoding="utf-8"
-        )
+        scenario_trace_path = trace_path
         scenario_probe_path_rel: str | None = None
         if probe_path.is_file():
-            scenario_probe_path = out_dir / f"{scenario['_file_name']}_probe.json"
-            scenario_probe_path.write_text(probe_path.read_text(encoding="utf-8"), encoding="utf-8")
-            scenario_probe_path_rel = str(scenario_probe_path.relative_to(root))
+            scenario_probe_path_rel = str(probe_path.relative_to(root))
 
         candidates = summarize_bank30_candidates(payload)
         bank30_hits = sum(to_int(item.get("hit_count"), 0) for item in candidates)

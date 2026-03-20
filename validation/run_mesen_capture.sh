@@ -55,6 +55,7 @@ mkdir_parent_if_set() {
 
 mkdir_parent_if_set "${TD2_CAPTURE_OUTPUT_PREFIX:-}"
 mkdir_parent_if_set "${TD2_BG_RANGE_OUTPUT_PREFIX:-}"
+mkdir_parent_if_set "${TD2_BOOT_PROBE_OUTPUT_PREFIX:-}"
 mkdir_parent_if_set "${TD2_BOOT_PROBE_SAVE_SAVESTATE:-}"
 
 mkdir -p "$MESEN_HOME"

@@ -246,7 +246,7 @@ state.b1f9_stage_counts = new_b1f9_stage_counts()
 state.b1f9_stage_frames = new_b1f9_stage_frames()
 
 local script_data_dir = emu.getScriptDataFolder()
-local output_prefix = script_data_dir .. "/td2_boot_probe"
+local output_prefix = os.getenv("TD2_BOOT_PROBE_OUTPUT_PREFIX") or (script_data_dir .. "/td2_boot_probe")
 
 local function resolve_savestate_path()
     local env_path = os.getenv("TD2_CAPTURE_SAVESTATE")
