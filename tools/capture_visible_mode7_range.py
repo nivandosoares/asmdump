@@ -39,8 +39,15 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--script-output",
         type=Path,
-        default=Path(".mesen-config/Mesen2/LuaScriptData/mesen_scanline_step_test/td2_scanline_step_test.json"),
-        help="expected JSON output path from mesen_scanline_step_test.lua",
+        help="explicit JSON output path from mesen_scanline_step_test.lua",
+    )
+    parser.add_argument(
+        "--script-output-prefix",
+        type=Path,
+        help=(
+            "explicit TD2_SCANLINE_TEST_OUTPUT_PREFIX path; defaults to a "
+            "repo-owned per-run prefix derived from --output"
+        ),
     )
     parser.add_argument(
         "--max-samples",
@@ -51,11 +58,48 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def run_frame_sample(root: Path, rom: Path, frame: int, timeout_seconds: int, max_samples: int) -> dict[str, object]:
+def derive_default_script_output_prefix(output_path: Path) -> Path:
+    return output_path.parent / f"{output_path.stem}_scanline_probe" / "td2_scanline_step_test"
+
+
+def resolve_script_output_paths(
+    output_path: Path,
+    script_output: Path | None,
+    script_output_prefix: Path | None,
+) -> tuple[Path, Path]:
+    resolved_output = output_path.resolve()
+
+    if script_output is not None:
+        resolved_script_output = script_output.resolve()
+    else:
+        resolved_script_output = None
+
+    if script_output_prefix is not None:
+        resolved_prefix = script_output_prefix.resolve()
+    elif resolved_script_output is not None:
+        resolved_prefix = resolved_script_output.with_suffix("")
+    else:
+        resolved_prefix = derive_default_script_output_prefix(resolved_output).resolve()
+
+    if resolved_script_output is None:
+        resolved_script_output = Path(f"{resolved_prefix}.json")
+
+    return resolved_prefix, resolved_script_output
+
+
+def run_frame_sample(
+    root: Path,
+    rom: Path,
+    frame: int,
+    timeout_seconds: int,
+    max_samples: int,
+    script_output_prefix: Path,
+) -> None:
     env = os.environ.copy()
     env["MESEN_TIMEOUT_SECONDS"] = str(timeout_seconds)
     env["TD2_SCANLINE_TEST_TARGET_FRAME"] = str(frame)
     env["TD2_SCANLINE_TEST_MAX_SAMPLES"] = str(max_samples)
+    env["TD2_SCANLINE_TEST_OUTPUT_PREFIX"] = str(script_output_prefix)
     subprocess.run(
         [
             "./validation/run_mesen_capture.sh",
@@ -76,14 +120,35 @@ def main() -> int:
     root = Path(__file__).resolve().parents[1]
     rom_path = args.rom if args.rom.is_absolute() else (root / args.rom)
     output_path = args.output if args.output.is_absolute() else (root / args.output)
-    script_output = args.script_output if args.script_output.is_absolute() else (root / args.script_output)
+    raw_script_output = None
+    if args.script_output is not None:
+        raw_script_output = args.script_output if args.script_output.is_absolute() else (root / args.script_output)
+    raw_script_output_prefix = None
+    if args.script_output_prefix is not None:
+        raw_script_output_prefix = (
+            args.script_output_prefix
+            if args.script_output_prefix.is_absolute()
+            else (root / args.script_output_prefix)
+        )
+    script_output_prefix, script_output = resolve_script_output_paths(
+        output_path=output_path,
+        script_output=raw_script_output,
+        script_output_prefix=raw_script_output_prefix,
+    )
     samples: list[dict[str, object]] = []
 
     if args.end_frame < args.start_frame:
         raise SystemExit("error: end_frame must be >= start_frame")
 
     for frame in range(args.start_frame, args.end_frame + 1):
-        run_frame_sample(root, rom_path, frame, args.timeout_seconds, args.max_samples)
+        run_frame_sample(
+            root,
+            rom_path,
+            frame,
+            args.timeout_seconds,
+            args.max_samples,
+            script_output_prefix,
+        )
         payload = json.loads(script_output.read_text(encoding="utf-8"))
         frame_samples = payload.get("samples", [])
         if not frame_samples:
@@ -101,6 +166,8 @@ def main() -> int:
             {
                 "start_frame": args.start_frame,
                 "end_frame": args.end_frame,
+                "scanline_probe_output_prefix": str(script_output_prefix),
+                "scanline_probe_output_json": str(script_output),
                 "samples": samples,
             },
             indent=2,

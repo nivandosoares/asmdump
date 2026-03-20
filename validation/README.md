@@ -797,12 +797,15 @@ Current reading from those traces:
 The scanline-step probe narrows that further for frame `1200`:
 
 ```sh
+TD2_SCANLINE_TEST_OUTPUT_PREFIX=tools/out/scanline_frame_1200/td2_scanline_step_test \
 TD2_SCANLINE_TEST_TARGET_FRAME=1200 \
 TD2_SCANLINE_TEST_MAX_SAMPLES=224 \
 ./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_scanline_step_test.lua
 ```
 
-That writes `.mesen-config/Mesen2/LuaScriptData/mesen_scanline_step_test/td2_scanline_step_test.json`.
+That writes `tools/out/scanline_frame_1200/td2_scanline_step_test.json`.
+If `TD2_SCANLINE_TEST_OUTPUT_PREFIX` is unset, the legacy fallback still writes
+to `.mesen-config/Mesen2/LuaScriptData/mesen_scanline_step_test/td2_scanline_step_test.json`.
 Current reading from that probe:
 
 - all `224` visible scanlines on frame `1200` report the same sampled `ppu.mode7.*` values
@@ -820,6 +823,10 @@ python3 tools/apply_visible_mode7_samples.py \
   tools/out/visible_mode7_1094_1101.json \
   tools/out/mesen_range_1094_1101_v1
 ```
+
+That wrapper now keeps its raw scanline probe JSON in a repo-owned per-run
+scratch prefix beside the aggregate output, by default:
+`tools/out/visible_mode7_1094_1101_scanline_probe/td2_scanline_step_test.json`.
 
 For seeded gameplay visible-phase sampling, the same Lua probe can now be
 driven through a fuller wrapper that preserves every sampled scanline and the

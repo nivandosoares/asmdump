@@ -1568,6 +1568,43 @@ Current reading:
     into the remaining validation surfaces and contract examples that still
     assume shared emulator output
 
+### CP-47: Visible scanline helper output is now repo-owned by default
+
+- Extended the generic Mesen launcher for the scanline probe family:
+  - `validation/run_mesen_capture.sh` now prepares the parent directory for
+    `TD2_SCANLINE_TEST_OUTPUT_PREFIX`
+- Moved the committed visible-range scanline helper off shared emulator output:
+  - `tools/capture_visible_mode7_range.py` now derives a repo-owned per-run
+    `TD2_SCANLINE_TEST_OUTPUT_PREFIX` from `--output`
+  - the helper records that raw probe path in its aggregate JSON payload
+- Updated promoted docs for the scanline path:
+  - `validation/README.md`
+  - `tools/README.md`
+  - `rom_analysis/docs/next_steps_roadmap.md`
+
+Evidence:
+
+- `bash -n validation/run_mesen_capture.sh`
+- `python3 -m py_compile tools/capture_visible_mode7_range.py`
+- `python3 tools/capture_visible_mode7_range.py --help`
+
+Current reading:
+
+- the committed visible-scanline capture helper no longer depends on shared
+  `.mesen-config/Mesen2/LuaScriptData` as its default raw JSON surface
+- direct one-off `mesen_scanline_step_test.lua` runs can now also stay
+  repo-owned when `TD2_SCANLINE_TEST_OUTPUT_PREFIX` is set explicitly
+- scope note:
+  - this checkpoint does not yet change the newer gameplay-specific
+    `capture_scanline_samples_range.py` helper that is currently in the dirty
+    worktree
+  - it closes the committed visible-range scanline helper path only
+- practical reading:
+  - the cleanup-side output-isolation slice is moving, but not finished
+  - the next cleanup-side target should isolate the remaining scanline/gameplay
+    wrappers and the lingering doc examples that still assume shared emulator
+    output
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):

@@ -68,6 +68,12 @@ Immediate concrete step after the cleanup kickoff:
   - `tools/run_l001210_probe_matrix.py` now writes per-scenario probe outputs
     directly under its run directory instead of copying them out of shared
     emulator state
+- the committed scanline validation path now follows the same policy:
+  - `validation/run_mesen_capture.sh` now prepares
+    `TD2_SCANLINE_TEST_OUTPUT_PREFIX`
+  - `tools/capture_visible_mode7_range.py` now defaults its raw probe JSON to
+    a repo-owned per-run prefix derived from `--output` instead of shared
+    `LuaScriptData`
 - finish the remaining cleanup hardening next:
   - keep moving validation toward per-run output isolation beyond the boot
     probe path instead of mutable shared `LuaScriptData`
