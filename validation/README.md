@@ -95,7 +95,7 @@ or `frame:buttons` format as the boot probe, for example:
 
 ```sh
 MESEN_TIMEOUT_SECONDS=60 \
-TD2_CAPTURE_OUTPUT_PREFIX=/home/nivando-soares/asmdump/tools/out/track1_seed_sweep_v1/start_then_b_hold/capture \
+TD2_CAPTURE_OUTPUT_PREFIX=tools/out/track1_seed_sweep_v1/start_then_b_hold/capture \
 TD2_CAPTURE_INPUT_WINDOWS='60:start;61-359:b' \
 ./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_capture.lua ./.mesen-config/Mesen2/SaveStates/game_11.mss
 ```
@@ -120,7 +120,7 @@ TD2_BG_RANGE_START_FRAME=654 \
 TD2_BG_RANGE_END_FRAME=2070 \
 TD2_BG_RANGE_STEP=4 \
 TD2_BG_RANGE_DUMP_SCREENSHOTS=1 \
-TD2_BG_RANGE_OUTPUT_PREFIX=/home/nivando-soares/asmdump/tools/out/intro_loop \
+TD2_BG_RANGE_OUTPUT_PREFIX=tools/out/intro_loop \
 ./validation/run_mesen_dump_bg_range.sh
 ```
 
@@ -137,7 +137,7 @@ TD2_BG_RANGE_DUMP_SCREENSHOTS=1 \
 TD2_BG_RANGE_INPUT_START_FRAME=60 \
 TD2_BG_RANGE_INPUT_END_FRAME=359 \
 TD2_BG_RANGE_INPUT=b \
-TD2_BG_RANGE_OUTPUT_PREFIX=/home/nivando-soares/asmdump/tools/out/track1_seed_0086_0093 \
+TD2_BG_RANGE_OUTPUT_PREFIX=tools/out/track1_seed_0086_0093 \
 ./validation/run_mesen_dump_bg_range.sh ./game.smc ./.mesen-config/Mesen2/SaveStates/game_11.mss
 ```
 
@@ -152,7 +152,7 @@ TD2_BG_RANGE_END_FRAME=68 \
 TD2_BG_RANGE_STEP=1 \
 TD2_BG_RANGE_DUMP_OAM=1 \
 TD2_BG_RANGE_INPUT_WINDOWS='60:start;61-359:a' \
-TD2_BG_RANGE_OUTPUT_PREFIX=/home/nivando-soares/asmdump/tools/out/track1_start_then_a_0061_0068_v1 \
+TD2_BG_RANGE_OUTPUT_PREFIX=tools/out/track1_start_then_a_0061_0068_v1 \
 ./validation/run_mesen_dump_bg_range.sh ./game.smc ./.mesen-config/Mesen2/SaveStates/game_11.mss
 ```
 
@@ -479,7 +479,11 @@ These are useful map points, but they are not yet golden targets in the same sen
   - the remaining delta is consistent with missing OBJ or other non-BG overlay composition rather than a broken Mode 7 transform
 
 The script writes an isolated config to `.mesen-config/Mesen2/settings.json` and capture output under the script data folder inside that config root.
-By default it prefers a local source build at `/home/nivando-soares/Mesen2/bin/linux-x64/Release/Mesen` and falls back to the downloaded binary if needed.
+By default it resolves the emulator in this order:
+
+- `MESEN_BIN`
+- `MESEN_RELEASE_DIR/Mesen`
+- `Mesen` or `mesen` on `PATH`
 
 One useful probe result for the `Ballistic presents` splash is the callback handoff:
 
@@ -857,7 +861,7 @@ Notes:
 
 - The default input pattern uses `b = true` as the candidate accelerate button. Confirm or adjust this once track 1 is wired into the capture workflow.
 - `mesen_capture.lua` now calls `emu.stop(0)` when capture finishes so the `--testRunner` process exits cleanly.
-- In this environment, the downloaded `Mesen_2.1.1_Linux_x64/Mesen` binary crashed with `std::bad_cast` under `--testRunner`, while `/home/nivando-soares/Mesen2/bin/linux-x64/Release/Mesen` completed the capture successfully.
+- In this environment, one downloaded Linux release binary crashed with `std::bad_cast` under `--testRunner`, while a local source-build binary resolved through `MESEN_BIN` completed the same capture successfully.
 - Mesen2's `--testRunner` path does not expose a clean CLI hook for loading a `.mss` savestate before the script runs. The current workaround is a one-shot `emu.addMemoryCallback(..., emu.callbackType.exec, ...)` that calls `emu.loadSavestate(...)` on the first executed instruction.
 - When `run_mesen_capture.sh` is called without a third argument, it exports an empty `TD2_CAPTURE_SAVESTATE` and the script stays on the original power-on plus warm-up flow.
 - The no-savestate path was revalidated after this change. The savestate-loading branch was implemented against Mesen's shipped Lua API documentation, but it was not exercised here because there was no sample savestate file in the workspace.

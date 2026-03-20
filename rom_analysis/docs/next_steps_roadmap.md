@@ -58,8 +58,12 @@ Immediate concrete step after the cleanup kickoff:
 - repo hygiene now suppresses default `tools/out` status noise and the cleanup
   target also removes obvious untracked `tmp*` / `test_*` scratch output
   without touching tracked evidence-bearing archaeology families
-- finish the remaining portability cleanup next:
-  - remove hard-coded personal Mesen paths from promoted scripts and Makefiles
+- promoted scripts/Makefiles and the main tooling READMEs now avoid hard-coded
+  personal Mesen paths, and `make -C tools portability-path-check` guards that
+  surface against regression
+- finish the remaining cleanup hardening next:
+  - keep moving validation toward per-run output isolation instead of mutable
+    shared `LuaScriptData`
 - keep the renderer correctness track moving after the mirrored-OBJ fix:
   - preserve the new BG4/tile-priority pass ordering while the next renderer
     slice moves on to remaining composition gaps

@@ -73,9 +73,9 @@ python3 tools/build_mode7_source_scene.py game.smc tools/out/bank1_mode7_visible
 python3 tools/build_mesen_design_pack.py tools/out/mesen_frame300 tools/out/design_frame300 --clean-out
 python3 tools/build_mesen_design_pack_range.py tools/out/mesen_range_1086_1093_v1 tools/out/design_mesen_range_1086_1093_v1 --clean-out
 python3 tools/build_tilemap_chunk_provenance.py tools/out/design_mesen_range_1086_1093_v1 .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.jsonc --chunk-validation tools/out/bank13_chunk_validation.json --markdown-out rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md
-python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 654 --end-frame 710 --step 4 --out-dir tools/out/ballistic_sequence --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
-python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 978 --end-frame 982 --step 4 --out-dir tools/out/intro_native_978 --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release
-python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 7051 --end-frame 7051 --step 1 --out-dir tools/out/mesen_range_7051_inputfix_v1 --ld-library-path /home/nivando-soares/Mesen2/bin/linux-x64/Release --input-windows '6800:start;6900-6920:start,a' --frame-timeout-seconds 180
+python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 654 --end-frame 710 --step 4 --out-dir tools/out/ballistic_sequence --ld-library-path /path/to/mesen/release
+python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 978 --end-frame 982 --step 4 --out-dir tools/out/intro_native_978 --ld-library-path /path/to/mesen/release
+python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 7051 --end-frame 7051 --step 1 --out-dir tools/out/mesen_range_7051_inputfix_v1 --ld-library-path /path/to/mesen/release --input-windows '6800:start;6900-6920:start,a' --frame-timeout-seconds 180
 python3 tools/build_scene_sequence_manifest.py tools/out/intro_loop.json tools/out/intro_loop_sequence.txt --json-out tools/out/intro_loop_sequence.json --end-frame-exclusive 2072 --prefer-screenshot
 python3 tools/build_indexed_palette_animation.py tools/out/intro_loop.json tools/out/ballistic_native/ballistic_splash.txt --start-frame 654 --end-frame-exclusive 958 --json-out tools/out/ballistic_native/ballistic_splash.json --preview-out tools/out/ballistic_native/ballistic_splash_preview.ppm --sequence-manifest tools/out/ballistic_native_sequence.txt
 python3 tools/build_ballistic_rom_clip.py game.smc tools/out/bank1_l00a35a_scene_cgram.bin tools/out/ballistic_native/ballistic_splash.json tools/out/ballistic_rom/ballistic_splash.txt --json-out tools/out/ballistic_rom/ballistic_splash.json --preview-out tools/out/ballistic_rom/ballistic_splash_preview.ppm --sequence-manifest tools/out/ballistic_rom_sequence.txt
@@ -473,7 +473,13 @@ That queue summary now also feeds a derived scene artifact:
   - current validation against the real frame `978` screenshot: `2` mismatched pixels (`0.003488%`)
   - the SDL runtime matches that derived preview exactly when loaded via `--snes-bg-prefix`
 
-The wrapper expects the local Mesen Linux release at `/home/nivando-soares/Mesen2/bin/linux-x64/Release` by default. Override with `MESEN_RELEASE_DIR=/path/to/release` when needed.
+The wrapper derives the Mesen release directory from `MESEN_BIN`, `MESEN_RELEASE_DIR`, or `PATH`. Set `MESEN_RELEASE_DIR=/path/to/release` when auto-detection is not enough.
+
+To keep the promoted tooling surface portable, run:
+
+```sh
+make -C tools portability-path-check
+```
 
 The JSON output is a nested array:
 

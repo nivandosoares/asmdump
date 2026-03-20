@@ -1488,6 +1488,44 @@ Current reading:
   - intro-side evidence families like `intro_oam_deltas` remain intentionally
     out of the cleaner's delete set
 
+### CP-45: Promoted tooling surfaces are portable by default
+
+- Added a repo-owned portability guard:
+  - `tools/check_portability_paths.py`
+  - `make -C tools portability-path-check`
+- Wired the new check into the promoted tooling surface:
+  - `tools/Makefile`
+- Removed hard-coded personal-path examples from the main tooling docs:
+  - `tools/README.md`
+  - `validation/README.md`
+
+Evidence:
+
+- `make -C tools portability-path-check`
+- `python3 -m py_compile tools/check_portability_paths.py`
+
+Current reading:
+
+- the actual runtime wrappers were already portable:
+  - `validation/run_mesen_capture.sh` resolves via `MESEN_BIN`,
+    `MESEN_RELEASE_DIR`, then `PATH`
+  - `tools/run_mesen_ppu_extract.sh` derives `MESEN_RELEASE_DIR` from
+    `MESEN_BIN` or `PATH`
+- the remaining portability leak was in promoted usage examples and notes that
+  still embedded one personal Linux source-build path
+- the new guard keeps that same issue from re-entering the promoted tooling
+  surface silently
+- scope note:
+  - this closes the roadmap gate for promoted scripts/Makefiles and main
+    tooling docs
+  - historical generated artifacts and long-form docs may still carry absolute
+    paths and should be treated as separate cleanup work rather than current
+    wrapper/Makefile blockers
+- practical reading:
+  - the personal-path portability slice is now closed enough to move on
+  - the next cleanup-side target should be validation-output isolation instead
+    of mutable shared `LuaScriptData`
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):

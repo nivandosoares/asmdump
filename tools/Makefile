@@ -290,7 +290,7 @@ L001210_SAVE_STATE_FRAME ?= 1093
 L001210_SAVE_TOTAL_FRAMES ?= 1120
 L001210_SAVE_STATE_PATH ?= ../tools/out/l001210_state_$(L001210_SAVE_STATE_FRAME).bin
 
-.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank13-headers bank13-validate bank30-headers bank30-validate bank30-registry tilemap-provenance-1086-1093 l001210-probe l001210-save-savestate l001210-probe-matrix l001210-trace-summary track1-seed-sweep track1-b-hold-cycle regression-gates callback-contracts-check obj-vertical-flip-check bg-layer-priority-check intro-oam-deltas clean-generated clean-generated-dry-run bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview bank1-bootstrap-queue-978-preview bank1-bootstrap-queue-982-preview bank1-bootstrap-queue-986-preview bank1-bootstrap-queue-986-noobj-preview bank1-bootstrap-queue-986-bridgeoam-preview bank1-bootstrap-queue-990-bridgeoam-preview bank1-bootstrap-queue-994-bridgeoam-preview bank1-visible-mode7-window-preview intro-bootstrap-deltas intro-bootstrap-queue mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-loop-hybrid-bridge-sequence intro-loop-hybrid-bridge-visible-sequence intro-native-978 intro-native-978-derived intro-native-978-bridge intro-native-978-bridge-visible
+.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank13-headers bank13-validate bank30-headers bank30-validate bank30-registry tilemap-provenance-1086-1093 l001210-probe l001210-save-savestate l001210-probe-matrix l001210-trace-summary track1-seed-sweep track1-b-hold-cycle regression-gates callback-contracts-check portability-path-check obj-vertical-flip-check bg-layer-priority-check intro-oam-deltas clean-generated clean-generated-dry-run bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview bank1-bootstrap-queue-978-preview bank1-bootstrap-queue-982-preview bank1-bootstrap-queue-986-preview bank1-bootstrap-queue-986-noobj-preview bank1-bootstrap-queue-986-bridgeoam-preview bank1-bootstrap-queue-990-bridgeoam-preview bank1-bootstrap-queue-994-bridgeoam-preview bank1-visible-mode7-window-preview intro-bootstrap-deltas intro-bootstrap-queue mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-loop-hybrid-bridge-sequence intro-loop-hybrid-bridge-visible-sequence intro-native-978 intro-native-978-derived intro-native-978-bridge intro-native-978-bridge-visible
 
 all: previews
 
@@ -513,6 +513,9 @@ callback-contracts-check:
 		$(CALLBACK_CONTRACTS_JSON) \
 		$(CALLBACK_PROBE_JSON) \
 		--json-out $(CALLBACK_CONTRACTS_REPORT_JSON)
+
+portability-path-check:
+	$(PYTHON) check_portability_paths.py
 
 $(BANK7_42FB0_BIN) $(BANK7_42FB0_JSON): decompress_td2_chunk.py $(ROM) | $(OUT_DIR)
 	$(PYTHON) decompress_td2_chunk.py $(ROM) $(BANK7_42FB0_BIN) --bank 7 --addr 0x8000 --json-out $(BANK7_42FB0_JSON)
