@@ -55,8 +55,11 @@ now constrained by a cross-cutting cleanup track:
 
 Immediate concrete step after the cleanup kickoff:
 
-- clear disposable repo clutter with the new generated-artifact cleanup target
-  before continuing to the next renderer and archaeology slices
+- repo hygiene now suppresses default `tools/out` status noise and the cleanup
+  target also removes obvious untracked `tmp*` / `test_*` scratch output
+  without touching tracked evidence-bearing archaeology families
+- finish the remaining portability cleanup next:
+  - remove hard-coded personal Mesen paths from promoted scripts and Makefiles
 - keep the renderer correctness track moving after the mirrored-OBJ fix:
   - preserve the new BG4/tile-priority pass ordering while the next renderer
     slice moves on to remaining composition gaps

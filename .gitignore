@@ -13,7 +13,9 @@
 *.dylib
 .mesen-config
 .mesen-config/Mesen2/LuaScriptData/
+.mesen-runs/
 port/build/
+tools/out/
 tools/out/*.ppm
 tools/out/*.bin
 tools/out/*.png
@@ -24,3 +26,4 @@ tools/__pycache__/
 .vscode/
 port/build/td2_port
 .aider*
+.env

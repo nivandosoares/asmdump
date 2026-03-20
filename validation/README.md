@@ -56,6 +56,17 @@ That check generates a tiny four-layer mode-0 scene under
 - high-priority tile ordering over lower-priority foreground tiles
 - the same result in both `render_mesen_snes_bg.py` and the SDL runtime
 
+For routine repo hygiene before switching lanes, run:
+
+```sh
+make -C tools clean-generated-dry-run
+make -C tools clean-generated
+```
+
+`tools/out/` is now git-ignored by default. Existing tracked proof artifacts in
+that tree still behave normally, but newly promoted evidence from `tools/out/`
+should be added explicitly with `git add -f`.
+
 `run_mesen_capture.sh` now resolves the emulator in this order:
 
 - `MESEN_BIN`

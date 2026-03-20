@@ -1447,6 +1447,43 @@ Current reading:
   - practical reading: the remaining screenshot gap at `994` is already
     downstream of a raw OAM fork in the committed artifact set
 
+### CP-44: `tools/out` repo hygiene is now quiet by default
+
+- Updated the ignore policy:
+  - `.gitignore`
+- Tightened the conservative cleanup target:
+  - `tools/clean_generated_artifacts.py`
+  - `make -C tools clean-generated`
+  - `make -C tools clean-generated-dry-run`
+- Updated the workflow docs:
+  - `tools/README.md`
+  - `validation/README.md`
+  - `rom_analysis/docs/next_steps_roadmap.md`
+
+Evidence:
+
+- `make -C tools clean-generated-dry-run`
+- `make -C tools clean-generated`
+- `git status --short`
+
+Current reading:
+
+- `tools/out/` is now git-ignored by default, which removes the normal
+  worktree noise from new local extractor/probe runs without affecting already
+  tracked proof artifacts under that tree
+- promoting a new `tools/out` artifact is now explicit (`git add -f`) instead
+  of accidental
+- the cleanup target now also removes obvious untracked `tmp*` / `test_*`
+  scratch surfaces while skipping any tracked path and staying conservative
+  around evidence-bearing archaeology runs
+- practical reading:
+  - the ignore-policy slice of repo hygiene is now closed enough to move to the
+    remaining portability cleanup
+  - the next cleanup-side step should remove hard-coded personal Mesen paths
+    from promoted scripts and Makefiles
+  - intro-side evidence families like `intro_oam_deltas` remain intentionally
+    out of the cleaner's delete set
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):

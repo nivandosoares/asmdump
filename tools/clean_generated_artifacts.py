@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import shutil
+import subprocess
 from pathlib import Path
 
 
@@ -23,6 +24,8 @@ GLOB_PATTERNS = (
     "tools/out/*smoke*",
     "tools/out/*makecheck*",
     "tools/out/*designtest*",
+    "tools/out/tmp*",
+    "tools/out/test_*",
     "tools/out/**/.mesen-home/Debugger/*.cdl",
     ".mesen-config/Mesen2/Debugger/*.cdl",
     "port/assets/**/.mesen-home/Debugger/*.cdl",
@@ -79,6 +82,21 @@ def format_size(size_bytes: int) -> str:
     return f"{value:.1f}{units[unit_index]}"
 
 
+def contains_tracked_content(repo_dir: Path, path: Path) -> bool:
+    try:
+        relative_path = path.relative_to(repo_dir)
+    except ValueError:
+        return False
+
+    result = subprocess.run(
+        ["git", "-C", str(repo_dir), "ls-files", "--full-name", "--", str(relative_path)],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    return bool(result.stdout.strip())
+
+
 def collect_targets(repo_dir: Path) -> list[Path]:
     found: list[Path] = []
 
@@ -96,6 +114,8 @@ def collect_targets(repo_dir: Path) -> list[Path]:
     collapsed: list[Path] = []
     for path in unique:
         if any(path == kept or is_relative_to(path, kept) for kept in collapsed):
+            continue
+        if contains_tracked_content(repo_dir, path):
             continue
         collapsed.append(path)
     return collapsed
