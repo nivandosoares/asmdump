@@ -46,7 +46,10 @@ For each turn:
 3. Implement the smallest complete change that advances that gate.
 4. Run bounded validation.
 5. Document findings, outputs, and next reading in the project docs.
-6. Continue to the next target unless blocked.
+6. If the work creates a clean checkpoint, commit it and push it.
+7. If the checkpoint is substantive, write a relevant article update and
+   publish it with the existing dev.to automation.
+8. Continue to the next target unless blocked.
 
 ## Target Selection Rules
 
@@ -138,6 +141,9 @@ Ask the user only when blocked by one of these:
 - a strategic plan change requested by the user
 
 Do not ask for routine confirmation to continue.
+Do not ask the user for the next action unless the problem is urgent or
+extreme enough that an autonomous choice would create material risk.
+Otherwise, choose the next best defensible action and keep moving.
 
 ## Git Workflow
 
@@ -148,6 +154,16 @@ Do not ask for routine confirmation to continue.
 - If unrelated dirty worktree changes exist, commit only the files that belong
   to the current checkpoint and leave the rest untouched.
 
+## Publication Workflow
+
+- After docs are updated and bounded validation is done, close clean
+  checkpoints with a commit and push.
+- After a substantive checkpoint is pushed, write a relevant article update and
+  publish it with the existing dev.to automation.
+- Skip article publication only when the checkpoint is too small to matter
+  externally, the automation/credentials are unavailable, or publishing would
+  disclose something unsafe.
+
 ## End-Of-Turn Output Contract
 
 End each substantive turn with these status lines in the final response:
@@ -155,6 +171,7 @@ End each substantive turn with these status lines in the final response:
 - `STATUS: continue`, `blocked`, or `done`
 - `NEXT_GATE: <short gate or target>`
 - `BLOCKER: <none or short reason>`
+- `ARTICLE: <url or none>`
 
 Use `STATUS: continue` whenever the outer automation loop should immediately
 invoke the next turn.

@@ -23,6 +23,10 @@ next gate needed to advance.
   - untrack generated `mesen_ppu_extract` build output
   - untrack mutable `.mesen-config/Mesen2/LuaScriptData` output
   - remove hard-coded personal Mesen paths from promoted scripts and Makefiles
+- The autonomous checkpoint loop is now stricter:
+  - only ask the user for next-action guidance on urgent or extreme problems
+  - otherwise close substantive work through validation, docs, commit/push,
+    and a published dev.to update
 - The first renderer-correctness cleanup checkpoint now exists:
   - the mirrored non-square OBJ regression is covered by a generated 16x32
     vertical-flip fixture that validates Python simple, Python `mode7-ppu`,
