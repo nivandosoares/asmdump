@@ -48,6 +48,8 @@ To make extracted frames easier for artists/designers, use:
 
 - `tools/build_mesen_design_pack.py`
 - `tools/build_mesen_design_pack_range.py` (batch frame folders)
+- `tools/build_mesen_visual_contract.py`
+- `tools/build_mesen_visual_contract_range.py`
 
 It repacks a raw frame dump into:
 
@@ -58,6 +60,20 @@ It repacks a raw frame dump into:
 - `palette/`
 - `raw/`
 - `design_pack.json` (single manifest + quick `ppu_summary` + tilemap/sprite analysis refs)
+
+The visual-contract builders sit one layer above that pack and emit a
+translation-oriented IR:
+
+- BG stays tilemap-driven:
+  - active layer state
+  - unique tile ranges
+  - CHR byte ranges per layer
+  - optional chunk provenance binding from `mesen_range_*_provenance.jsonc`
+- OBJ stays OAM-driven:
+  - visible sprite list
+  - base tile/address ranges
+  - palette/priority/size counts
+  - heuristic horizontal strip candidates for later metasprite archaeology
 
 ## Design Workflow
 
@@ -90,9 +106,42 @@ make -C tools mesen-design-pack-range MESEN_RANGE_FRAMES_DIR=out/mesen_range_108
 - palette: `palette/`
 - editable raw memory basis: `raw/vram.bin`, `raw/cgram.bin`, `raw/oam.bin`
 
+4. Build a visual contract when you want a code-translation surface instead of
+   raw art inspection:
+
+```sh
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_mesen_range_7051_inputfix_v1/frame_07051 \
+  tools/out/visual_contract_7051.json \
+  --provenance-json rom_analysis/maps/tilemaps/mesen_range_7051_provenance.jsonc
+```
+
+For a whole reviewed range:
+
+```sh
+python3 tools/build_mesen_visual_contract_range.py \
+  tools/out/design_mesen_range_7055_7061_inputfix_v2 \
+  tools/out/visual_contract_range_7055_7061 \
+  --provenance-json rom_analysis/maps/tilemaps/mesen_range_7055_7061_provenance.jsonc \
+  --clean-out
+```
+
+That emits:
+
+- `*_visual_contract.json` per frame
+- `visual_contract_range.json` as a compact index
+
+The important contract boundary is explicit:
+
+- BG/CHR reconstruction comes from tilemaps + tilesets + `VRAM`
+- OBJ reconstruction comes from visible sprites + `OAM/CGRAM/PPU`
+- translating assembly against visuals should bind BG layers to chunk
+  provenance first, then bind OBJ producers through breakpoint/write traces
+
 ## Gap to Close Next
 
-1. Link decoded tilemap entries to ROM/chunk provenance tags for archaeology traceability.
+1. Bind producer-side `VRAM/CGRAM/OAM` writes to the new visual contracts so
+   OBJ ownership is tied to callsites instead of only end-frame state.
 2. Add optional round-trip patch manifests (edited tiles/palette back to ROM-space references).
 3. Add design-side layer toggles and diff manifests for frame-range review packs.
 

@@ -3,14 +3,14 @@
 This roadmap is the direct follow-up after enabling Mesen design packs with
 decoded tilemaps and sprite visibility metadata.
 
-## Current Status Snapshot (2026-03-20)
+## Current Status Snapshot (2026-03-21)
 
 Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 
 | Roadmap lane | Status | Current reading |
 |---|---|---|
 | 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps are done; registry tightening now demotes `9681` to `sentinel-control` and `E91F` to `nested-invalid-marker`, leaving active unresolved queue (`EE7F`, `DA96`). |
-| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, but `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry. |
+| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry, and the new visual-contract builders now separate BG/CHR state from OBJ/OAM state with optional provenance binding. |
 | 3. Gameplay-frame expansion | in progress | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty. |
 | 4. Bank API contracts | not started | Baseline docs exist; callback/API contracts for bank 30/10/11 are not yet mapped to completion. |
 
@@ -250,7 +250,15 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
   - current decision:
     - later-scene tilemap provenance is now stronger inside the window, but do
       not promote `7051..7064` as a full-scene contiguous carry block
+  - the new translation-facing IR layer now exists:
+    - `tools/build_mesen_visual_contract.py`
+    - `tools/build_mesen_visual_contract_range.py`
+    - it promotes each design-pack frame into explicit `bg` vs `obj`
+      contracts, keeps OBJ/OAM separate from tilemaps, and can attach current
+      tilemap provenance rows per frame/layer
   - next best step:
+    - bind producer-side `VRAM/CGRAM/OAM` writes or breakpoints into that same
+      visual-contract surface so OBJ ownership can be tied to assembly callsites
     - if you want a machine-generated combined provenance artifact, preserve or
       regenerate the per-hit `td2_boot_probe_l001210_exec.json` for this
       scenario instead of only the summarized singleton source list

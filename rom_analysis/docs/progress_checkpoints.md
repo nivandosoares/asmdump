@@ -1,6 +1,6 @@
 # ROM Archaeology Progress Checkpoints
 
-Snapshot date: `2026-03-20`
+Snapshot date: `2026-03-21`
 
 This file tracks plan progress as checkpoints with objective evidence and the
 next gate needed to advance.
@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; registry tightening now closes `9681` as `sentinel-control` and `E91F` as `nested-invalid-marker`; active unresolved queue remains `EE7F` and `DA96` |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, and the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, and a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -1730,6 +1730,40 @@ Current reading:
   - the new evidence is enough to promote tilemap-side interior carry
   - it is still not enough to promote `7051..7064` as full-scene contiguous
     carry evidence
+
+### CP-51: Translation-facing visual contracts now bridge design packs into BG/OBJ IR
+
+- Added new frame-level IR builders:
+  - `tools/build_mesen_visual_contract.py`
+  - `tools/build_mesen_visual_contract_range.py`
+- The new contract layer is intentionally split along the real rendering
+  boundary:
+  - BG stays tilemap/CHR-driven from decoded `tilemaps/bg*_tilemap.json`
+  - OBJ stays OAM-driven from `sprites/sprites_visible.json` plus raw
+    `oam.bin/cgram.bin/ppu_state.json`
+- The builder can also attach current lane-2 tilemap provenance rows so the
+  translation surface already carries frame/layer -> chunk evidence when that
+  data exists.
+- Updated the design-workbench doc to promote the new contract surface:
+  - `rom_analysis/docs/mesen_debugger_design_workbench.md`
+
+Evidence:
+
+- `python3 -m py_compile tools/build_mesen_visual_contract.py tools/build_mesen_visual_contract_range.py`
+- `python3 tools/build_mesen_visual_contract.py tools/out/design_mesen_range_7051_inputfix_v1/frame_07051 tools/out/visual_contract_7051.json --provenance-json rom_analysis/maps/tilemaps/mesen_range_7051_provenance.jsonc`
+- `python3 tools/build_mesen_visual_contract_range.py tools/out/design_mesen_range_7055_7061_inputfix_v2 tools/out/visual_contract_range_7055_7061 --provenance-json rom_analysis/maps/tilemaps/mesen_range_7055_7061_provenance.jsonc --clean-out`
+
+Current reading:
+
+- the repo now has a machine-readable visual IR that is more useful for later
+  assembly translation than raw design packs alone
+- the IR makes the key architectural split explicit:
+  - BG provenance can already bind to tilemap/chunk evidence
+  - OBJ state still needs producer-side breakpoint/write ownership to become a
+    reliable assembly contract
+- practical reading:
+  - this is the right staging layer for automated CHR/sprite archaeology
+  - it does not replace runtime tracing; it gives tracing a stable target
 
 ## Current Checkpoint Metrics
 
