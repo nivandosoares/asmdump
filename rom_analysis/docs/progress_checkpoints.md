@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; registry tightening now closes `9681` as `sentinel-control` and `E91F` as `nested-invalid-marker`; active unresolved queue remains `EE7F` and `DA96` |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` is now packaged with exact provenance anchors, and the planned `7055/7061` interior carry check is currently blocked by a live timed-input bridge timeout regression on the local Mesen setup |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, and the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -1678,6 +1678,58 @@ Current reading:
   - this does not solve runtime reachability for `EE7F` or `DA96`
   - it does remove two low-signal pseudo-targets from the active queue so the
     next lane-1 work can stay focused on real remaining ambiguity
+
+### CP-50: Later-scene interior tilemap carry check reopened at `7055/7061`
+
+- Patched `tools/mesen_ppu_extract/Program.cs` so timed-input bridge extraction
+  no longer depends on fragile per-frame `Resume/WaitForFrame/Pause` stepping:
+  - switch timed-input advance to debugger `PpuFrame` stepping
+  - wait on the expected frame count directly so fast steps do not false-timeout
+  - chunk long same-input spans into `256`-frame steps to keep the current
+    local `Mesen` / `MesenCore.so` pair stable
+- Rebuilt the committed bridge extractor and reran the previously blocked
+  later-scene lane on scenario `6800:start;6900-6920:start,a`:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release ./tools/run_mesen_ppu_extract.sh --rom game.smc --frame 7055 --out-dir tools/out/mesen_range_7055_7061_inputfix_v2/frame_07055 --frame-timeout-seconds 180 --input-windows '6800:start;6900-6920:start,a'`
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release ./tools/run_mesen_ppu_extract.sh --rom game.smc --frame 7061 --out-dir tools/out/mesen_range_7055_7061_inputfix_v2/frame_07061 --frame-timeout-seconds 180 --input-windows '6800:start;6900-6920:start,a'`
+- Packed the reopened interior frames and promoted tilemap-side evidence:
+  - `tools/out/design_mesen_range_7055_7061_inputfix_v2/design_pack_range.json`
+  - `rom_analysis/maps/tilemaps/mesen_range_7055_7061_provenance.jsonc`
+  - `rom_analysis/maps/tilemaps/mesen_range_7055_7061_provenance.md`
+- Updated the source-of-truth lane docs:
+  - `rom_analysis/docs/memory_map.md`
+  - `rom_analysis/docs/next_steps_roadmap.md`
+
+Evidence:
+
+- `dotnet build tools/mesen_ppu_extract/mesen_ppu_extract.csproj --configfile tools/mesen_ppu_extract/NuGet.Config`
+- `python3 tools/build_mesen_design_pack_range.py tools/out/mesen_range_7055_7061_inputfix_v2 tools/out/design_mesen_range_7055_7061_inputfix_v2 --clean-out`
+- raw/design-pack comparison reading:
+  - `7055` vs `7051`:
+    - `bg1/bg2/bg3` tilemaps: exact match
+    - `vram.bin`: exact match
+    - `cgram.bin`, `ppu_state.json`, `oam.bin`: different
+    - visible sprites: `10 -> 0`
+  - `7061` vs `7059`:
+    - `bg1/bg2/bg3` tilemaps: exact match
+    - `vram.bin`, `oam.bin`: exact match
+    - `cgram.bin`, `ppu_state.json`: different
+    - visible sprites: `0 -> 0`
+
+Current reading:
+
+- the current local timed-input bridge is usable again for the planned later-
+  scene extraction path; the previous compatibility blocker is no longer the
+  active reason Lane 2 was stalled
+- `7055` now closes the intended interior tilemap carry check for
+  `0D:C4DC`, but it does **not** close whole-scene carry because the
+  visible-sprite/OAM composition changes between `7051` and `7055`
+- `7061` now closes the intended interior tilemap carry check for `07:BF49`,
+  and that pair already agrees on visible-sprite emptiness plus raw OAM
+- practical reading:
+  - Lane 2 is no longer blocked on bridge compatibility for this check
+  - the new evidence is enough to promote tilemap-side interior carry
+  - it is still not enough to promote `7051..7064` as full-scene contiguous
+    carry evidence
 
 ## Current Checkpoint Metrics
 

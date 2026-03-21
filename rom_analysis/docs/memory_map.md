@@ -74,9 +74,15 @@ Generated with:
 | `7051` | `bg1` | `0x000..0x2C8` | `0x2000` | `0D:C4DC` (`26FB`) | Direct runtime hit at frame `7051` on the restored timed-input scenario `6800:start;6900-6920:start,a`. |
 | `7051` | `bg2` | `0x000` | `0x3000` | `0D:C4DC` (`26FB`) | Same direct runtime hit at frame `7051`. |
 | `7051` | `bg3` | `0x000` | `0x6000` | `0D:C4DC` (`26FB`) | Same direct runtime hit at frame `7051`. |
+| `7055` | `bg1` | `0x000..0x2C8` | `0x2000` | `0D:C4DC` (`26FB`) | Tilemap carry from frame `7051` (`frame_delta = 4`): `bg1/bg2/bg3` tilemaps and `vram.bin` match, but `CGRAM/PPU/OAM` and visible sprites differ, so this is not full-scene carry. |
+| `7055` | `bg2` | `0x000` | `0x3000` | `0D:C4DC` (`26FB`) | Same tilemap-only carry model as frame `7055/bg1`, anchored to `7051`. |
+| `7055` | `bg3` | `0x000` | `0x6000` | `0D:C4DC` (`26FB`) | Same tilemap-only carry model as frame `7055/bg1`, anchored to `7051`. |
 | `7059` | `bg1` | `0x000..0x2C8` | `0x2000` | `07:BF49` (`42FB`) | Direct runtime hit at frame `7059` on the same restored timed-input scenario. |
 | `7059` | `bg2` | `0x000` | `0x3000` | `07:BF49` (`42FB`) | Same direct runtime hit at frame `7059`. |
 | `7059` | `bg3` | `0x000` | `0x6000` | `07:BF49` (`42FB`) | Same direct runtime hit at frame `7059`. |
+| `7061` | `bg1` | `0x000..0x2C8` | `0x2000` | `07:BF49` (`42FB`) | Tilemap carry from frame `7059` (`frame_delta = 2`): `bg1/bg2/bg3` tilemaps, `vram.bin`, and `oam.bin` match while `CGRAM/PPU` differ. |
+| `7061` | `bg2` | `0x000` | `0x3000` | `07:BF49` (`42FB`) | Same carry model as frame `7061/bg1`, anchored to `7059`. |
+| `7061` | `bg3` | `0x000` | `0x6000` | `07:BF49` (`42FB`) | Same carry model as frame `7061/bg1`, anchored to `7059`. |
 | `7064` | `bg1` | `0x000..0x2C8` | `0x2000` | `07:C112` (`26FB`) | Direct runtime hit at frame `7064` on the same restored timed-input scenario. |
 | `7064` | `bg2` | `0x000` | `0x3000` | `07:C112` (`26FB`) | Same direct runtime hit at frame `7064`. |
 | `7064` | `bg3` | `0x000` | `0x6000` | `07:C112` (`26FB`) | Same direct runtime hit at frame `7064`. |
@@ -95,17 +101,23 @@ Supporting artifacts:
 - `rom_analysis/maps/tilemaps/mesen_range_7051_provenance.md`
 - `rom_analysis/maps/tilemaps/mesen_range_7051_7064_provenance.jsonc`
 - `rom_analysis/maps/tilemaps/mesen_range_7051_7064_provenance.md`
+- `rom_analysis/maps/tilemaps/mesen_range_7055_7061_provenance.jsonc`
+- `rom_analysis/maps/tilemaps/mesen_range_7055_7061_provenance.md`
 - `tools/out/l001210_probe_7051_inputfix_summary.json`
 - `tools/out/bank13_chunk_validation.json` (`0D:C4DC` decode: `output_size=4000`, `consumed=1374`)
 - `tools/out/bank7_chunk_validation.json` (`07:BF49` decode: `output_size=4102`, `consumed=456`; `07:C112` decode: `output_size=2832`, `consumed=2333`)
 
 Current later-scene reading:
 
-- the visible layer setup and tile-index coverage remain stable across exact-hit
-  frames `7051/7059/7064`
-- this is enough to document exact anchors, but not yet enough to promote a
-  full `7051..7064` contiguous window because the source chunk rotates at each
-  direct hit and the interior frames are still unverified
+- the visible layer setup and tile-index coverage now also have interior
+  tilemap carry confirmation at `7055` and `7061`
+- `7055` confirms tilemap carry from `7051` / `0D:C4DC`, but it is not a
+  full-scene carry frame because visible sprites disappear (`10 -> 0`) and
+  `CGRAM/PPU/OAM` differ
+- `7061` confirms tilemap carry from `7059` / `07:BF49`; `OAM` already matches
+  there and only `CGRAM/PPU` differ
+- do not yet promote `7051..7064` as full-scene contiguous composition
+  evidence
 
 ## Open Mapping Priorities
 

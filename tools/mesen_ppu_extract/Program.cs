@@ -8,6 +8,7 @@ internal static class Program
 {
     private static readonly string[] LayerNames = ["bg1", "bg2", "bg3", "bg4", "main", "sub"];
     private static readonly bool TraceEnabled = Environment.GetEnvironmentVariable("MESEN_PPU_EXTRACT_TRACE") == "1";
+    private const int MaxTimedInputStepFrames = 256;
 
     private static int Main(string[] args)
     {
@@ -357,15 +358,28 @@ internal static class Program
             }
 
             DebugControllerState input = options.ResolveInputState(currentFrame);
+            int nextChangeFrame = options.FindNextInputChangeFrame(currentFrame, options.Frame);
+            int framesToAdvance = Math.Min(nextChangeFrame - currentFrame, MaxTimedInputStepFrames);
+            if(framesToAdvance <= 0) {
+                throw new InvalidOperationException(
+                    $"Input change analysis produced a non-positive step span at frame {currentFrame}."
+                );
+            }
+
             MesenCore.SetInputOverrides(0, input);
-            MesenCore.Resume();
-            MesenCore.WaitForFrame(CpuType.Snes, (uint)(currentFrame + 1), remaining);
-            MesenCore.Pause();
+            if(TraceEnabled) {
+                Trace(
+                    $"Step PpuFrame x{framesToAdvance} from frame {currentFrame} " +
+                    $"to {currentFrame + framesToAdvance}"
+                );
+            }
+            MesenCore.Step(CpuType.Snes, framesToAdvance, StepType.PpuFrame);
+            MesenCore.WaitForStepComplete(CpuType.Snes, (uint)(currentFrame + framesToAdvance), remaining);
 
             int nextFrame = checked((int)MesenCore.GetTimingInfo(CpuType.Snes).FrameCount);
-            if(nextFrame != currentFrame + 1) {
+            if(nextFrame != currentFrame + framesToAdvance) {
                 throw new TimeoutException(
-                    $"Timed-input advance overshot from frame {currentFrame} to {nextFrame}; per-frame input windows are not reliable on this bridge path."
+                    $"Timed debugger advance expected frame {currentFrame + framesToAdvance} but reached {nextFrame}; input windows are not reliable on this bridge path."
                 );
             }
             currentFrame = nextFrame;
@@ -457,6 +471,24 @@ internal static class Program
             return compare != 0 ? compare : a.EndFrame.CompareTo(b.EndFrame);
         });
         return windows;
+    }
+
+    internal static bool SameInputState(DebugControllerState left, DebugControllerState right)
+    {
+        return left.A == right.A
+            && left.B == right.B
+            && left.X == right.X
+            && left.Y == right.Y
+            && left.L == right.L
+            && left.R == right.R
+            && left.U == right.U
+            && left.D == right.D
+            && left.Up == right.Up
+            && left.Down == right.Down
+            && left.Left == right.Left
+            && left.Right == right.Right
+            && left.Select == right.Select
+            && left.Start == right.Start;
     }
 
     private static void SavePaletteJson(string path, DebugPaletteInfo info, uint[] rgbPalette)
@@ -730,6 +762,18 @@ internal sealed record Options(
         return default;
     }
 
+    public int FindNextInputChangeFrame(int frame, int targetFrame)
+    {
+        DebugControllerState current = ResolveInputState(frame);
+        for(int candidate = frame + 1; candidate < targetFrame; candidate++) {
+            if(!Program.SameInputState(current, ResolveInputState(candidate))) {
+                return candidate;
+            }
+        }
+
+        return targetFrame;
+    }
+
     public static Options Parse(string[] args)
     {
         string? romPath = null;
@@ -988,21 +1032,18 @@ internal static class MesenCore
         }
     }
 
-    public static void WaitForStepComplete(TimeSpan timeout)
+    public static void WaitForStepComplete(CpuType cpuType, uint minimumFrameCount, TimeSpan timeout)
     {
         DateTime deadline = DateTime.UtcNow + timeout;
-        bool sawRunning = false;
         while(DateTime.UtcNow < deadline) {
-            bool stopped = IsExecutionStopped();
-            if(!stopped) {
-                sawRunning = true;
-            } else if(sawRunning) {
+            TimingInfo timing = GetTimingInfo(cpuType);
+            if(IsExecutionStopped() && timing.FrameCount >= minimumFrameCount) {
                 return;
             }
             Thread.Sleep(1);
         }
 
-        throw new TimeoutException("Timed out waiting for Mesen debugger step to complete.");
+        throw new TimeoutException($"Timed out waiting for debugger step to reach frame {minimumFrameCount}.");
     }
 
     public static void WaitForFrame(CpuType cpuType, uint minimumFrameCount, TimeSpan timeout)

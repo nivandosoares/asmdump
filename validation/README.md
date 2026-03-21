@@ -266,6 +266,28 @@ This is the current headless proof lane for the later direct-hit cluster:
 - frame `7059` -> `07:BF49`
 - frame `7064` -> `07:C112`
 
+The bridge extractor now also reopens the planned interior carry check on the
+same timed-input scenario:
+
+```sh
+MESEN_RELEASE_DIR=/path/to/mesen/release \
+./tools/run_mesen_ppu_extract.sh --rom game.smc --frame 7055 \
+  --out-dir tools/out/mesen_range_7055_7061_inputfix_v2/frame_07055 \
+  --frame-timeout-seconds 180 \
+  --input-windows '6800:start;6900-6920:start,a'
+
+MESEN_RELEASE_DIR=/path/to/mesen/release \
+./tools/run_mesen_ppu_extract.sh --rom game.smc --frame 7061 \
+  --out-dir tools/out/mesen_range_7055_7061_inputfix_v2/frame_07061 \
+  --frame-timeout-seconds 180 \
+  --input-windows '6800:start;6900-6920:start,a'
+```
+
+- `7055` shares the same BG tilemaps and `vram.bin` as `7051`, but it does not
+  share the same sprite/OAM composition (`10` visible sprites -> `0`)
+- `7061` shares the same BG tilemaps as `7059`, and its visible sprite set
+  remains empty at both frames
+
 To save a deterministic savestate snapshot at a specific probe frame:
 
 ```sh

@@ -10,7 +10,7 @@ Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 | Roadmap lane | Status | Current reading |
 |---|---|---|
 | 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps are done; registry tightening now demotes `9681` to `sentinel-control` and `E91F` to `nested-invalid-marker`, leaving active unresolved queue (`EE7F`, `DA96`). |
-| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`, the later direct-hit cluster `7051/7059/7064` is now packaged with exact provenance anchors, and the planned `7055/7061` interior carry check is currently blocked by a live timed-input bridge timeout regression on the local Mesen setup. |
+| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, but `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry. |
 | 3. Gameplay-frame expansion | in progress | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty. |
 | 4. Bank API contracts | not started | Baseline docs exist; callback/API contracts for bank 30/10/11 are not yet mapped to completion. |
 
@@ -224,34 +224,38 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
     - `rom_analysis/maps/tilemaps/mesen_range_7051_provenance.md`
     - `rom_analysis/maps/tilemaps/mesen_range_7051_7064_provenance.jsonc`
     - `rom_analysis/maps/tilemaps/mesen_range_7051_7064_provenance.md`
-    - `tools/out/l001210_probe_7051_inputfix_summary.json`
-  - the timed input-window bridge now succeeds on the previously blocked
-    scenario `6800:start;6900-6920:start,a`
+    - `tools/out/mesen_range_7055_7061_inputfix_v2`
+    - `tools/out/design_mesen_range_7055_7061_inputfix_v2/design_pack_range.json`
+    - `rom_analysis/maps/tilemaps/mesen_range_7055_7061_provenance.jsonc`
+    - `rom_analysis/maps/tilemaps/mesen_range_7055_7061_provenance.md`
+  - the promoted bridge extractor now uses chunked debugger `PpuFrame`
+    stepping for timed-input windows, which reopens the current local
+    `Mesen`/`MesenCore.so` pair on scenario
+    `6800:start;6900-6920:start,a`
   - the matching targeted probe restores the later direct-hit cluster, and the
     extracted design packs keep the same visible layer/tile-index block across
     those exact hits:
     - `7051` -> `0D:C4DC`
     - `7059` -> `07:BF49`
     - `7064` -> `07:C112`
+  - interior carry-check reading:
+    - `7055` keeps the same `bg1/bg2/bg3` tilemaps and `vram.bin` as `7051`,
+      so tilemap carry from `0D:C4DC` now holds at `frame_delta = 4`
+    - `7055` is not a full-scene carry frame:
+      `cgram.bin`, `ppu_state.json`, and `oam.bin` differ and visible sprites
+      drop `10 -> 0`
+    - `7061` keeps the same `bg1/bg2/bg3` tilemaps as `7059`; `vram.bin` and
+      `oam.bin` also match there, so the tilemap carry from `07:BF49` now
+      holds at `frame_delta = 2`
   - current decision:
-    - this is enough to close exact anchors, but not enough to claim a full
-      `7051..7064` contiguous window because the source rotates at each direct
-      hit and the interior frames are still unextracted
-  - the planned minimal interior carry check is now blocked again in the
-    current local bridge environment:
-    - `python3 tools/extract_mesen_scene_range.py ... --start-frame 7055
-      --end-frame 7061 --step 6 --frame-timeout-seconds 180` timed out waiting
-      for frame `1762` before the late input window
-    - `MESEN_RELEASE_DIR=... ./tools/run_mesen_ppu_extract.sh ... --frame 7055
-      --frame-timeout-seconds 300` timed out earlier at frame `411`
-    - both retries only produced scratch `.mesen-home` directories and no frame
-      assets
-  - the next best step is now compatibility-focused instead of provenance-
-    promotion-focused:
-    - pin or recover a known-good `Mesen`/`MesenCore.so` pair for the timed-
-      input extractor bridge
-    - once that bridge is healthy again, rerun `7055` and `7061` before
-      claiming the full `7051..7064` contiguous window
+    - later-scene tilemap provenance is now stronger inside the window, but do
+      not promote `7051..7064` as a full-scene contiguous carry block
+  - next best step:
+    - if you want a machine-generated combined provenance artifact, preserve or
+      regenerate the per-hit `td2_boot_probe_l001210_exec.json` for this
+      scenario instead of only the summarized singleton source list
+    - if you want full-scene continuity, isolate the `7051 -> 7055`
+      sprite/OAM disappearance before claiming composition carry
 
 ## 3. Expand Into Gameplay Frames
 
