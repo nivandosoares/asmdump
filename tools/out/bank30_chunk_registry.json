@@ -1,0 +1,263 @@
+{
+  "bank": 30,
+  "bank_snes": "1E",
+  "inputs": {
+    "headers_json": "tools/out/bank30_headers.json",
+    "validation_json": "tools/out/bank30_chunk_validation.json",
+    "runtime_summary_json": "tools/out/td2_boot_probe_l001210_summary.json"
+  },
+  "total_entries": 8,
+  "status_counts": {
+    "sentinel-control": 1,
+    "67fb-unseen": 1,
+    "runtime-confirmed": 4,
+    "nested-invalid-marker": 1,
+    "table-confirmed-unseen": 1
+  },
+  "entries": [
+    {
+      "index": 0,
+      "offset": 5761,
+      "addr": 38529,
+      "snes": "1E:9681",
+      "marker": "42FB",
+      "pattern": "42fb",
+      "decode_status": "ok",
+      "output_size": 0,
+      "consumed_bytes": 11,
+      "window_start": 5761,
+      "window_end_exclusive": 5772,
+      "overlap_indices": [],
+      "overlap_offsets": [],
+      "table_confirmed": false,
+      "runtime_hit_count": 0,
+      "runtime_first_frame": null,
+      "runtime_last_frame": null,
+      "notes": "zero-output-control-record",
+      "contained_in_successful_window": false,
+      "container_indices": [],
+      "container_snes": [],
+      "status": "sentinel-control",
+      "priority": "done"
+    },
+    {
+      "index": 1,
+      "offset": 23190,
+      "addr": 55958,
+      "snes": "1E:DA96",
+      "marker": "67FB",
+      "pattern": "67fb",
+      "decode_status": "ok",
+      "output_size": 28620,
+      "consumed_bytes": 6429,
+      "window_start": 23190,
+      "window_end_exclusive": 29619,
+      "overlap_indices": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "overlap_offsets": [
+        24428,
+        24633,
+        26431,
+        26624,
+        26911,
+        28287
+      ],
+      "table_confirmed": false,
+      "runtime_hit_count": 0,
+      "runtime_first_frame": null,
+      "runtime_last_frame": null,
+      "notes": "overlaps-larger-window",
+      "contained_in_successful_window": false,
+      "container_indices": [],
+      "container_snes": [],
+      "status": "67fb-unseen",
+      "priority": "P1"
+    },
+    {
+      "index": 2,
+      "offset": 24428,
+      "addr": 57196,
+      "snes": "1E:DF6C",
+      "marker": "26FB",
+      "pattern": "26fb",
+      "decode_status": "ok",
+      "output_size": 1798,
+      "consumed_bytes": 205,
+      "window_start": 24428,
+      "window_end_exclusive": 24633,
+      "overlap_indices": [],
+      "overlap_offsets": [],
+      "table_confirmed": true,
+      "runtime_hit_count": 2,
+      "runtime_first_frame": 1280,
+      "runtime_last_frame": 2698,
+      "notes": "bank1-pointer-table-confirmed, nested-in-successful-window@1E:DA96",
+      "contained_in_successful_window": true,
+      "container_indices": [
+        1
+      ],
+      "container_snes": [
+        "1E:DA96"
+      ],
+      "status": "runtime-confirmed",
+      "priority": "done"
+    },
+    {
+      "index": 3,
+      "offset": 24633,
+      "addr": 57401,
+      "snes": "1E:E039",
+      "marker": "26FB",
+      "pattern": "26fb",
+      "decode_status": "ok",
+      "output_size": 3264,
+      "consumed_bytes": 1395,
+      "window_start": 24633,
+      "window_end_exclusive": 26028,
+      "overlap_indices": [],
+      "overlap_offsets": [],
+      "table_confirmed": true,
+      "runtime_hit_count": 2,
+      "runtime_first_frame": 1282,
+      "runtime_last_frame": 2700,
+      "notes": "bank1-pointer-table-confirmed, nested-in-successful-window@1E:DA96",
+      "contained_in_successful_window": true,
+      "container_indices": [
+        1
+      ],
+      "container_snes": [
+        "1E:DA96"
+      ],
+      "status": "runtime-confirmed",
+      "priority": "done"
+    },
+    {
+      "index": 4,
+      "offset": 26431,
+      "addr": 59199,
+      "snes": "1E:E73F",
+      "marker": "26FB",
+      "pattern": "26fb",
+      "decode_status": "ok",
+      "output_size": 1798,
+      "consumed_bytes": 193,
+      "window_start": 26431,
+      "window_end_exclusive": 26624,
+      "overlap_indices": [],
+      "overlap_offsets": [],
+      "table_confirmed": true,
+      "runtime_hit_count": 2,
+      "runtime_first_frame": 1292,
+      "runtime_last_frame": 2709,
+      "notes": "bank1-pointer-table-confirmed, nested-in-successful-window@1E:DA96",
+      "contained_in_successful_window": true,
+      "container_indices": [
+        1
+      ],
+      "container_snes": [
+        "1E:DA96"
+      ],
+      "status": "runtime-confirmed",
+      "priority": "done"
+    },
+    {
+      "index": 5,
+      "offset": 26624,
+      "addr": 59392,
+      "snes": "1E:E800",
+      "marker": "26FB",
+      "pattern": "26fb",
+      "decode_status": "ok",
+      "output_size": 3168,
+      "consumed_bytes": 1407,
+      "window_start": 26624,
+      "window_end_exclusive": 28031,
+      "overlap_indices": [
+        6
+      ],
+      "overlap_offsets": [
+        26911
+      ],
+      "table_confirmed": true,
+      "runtime_hit_count": 2,
+      "runtime_first_frame": 1294,
+      "runtime_last_frame": 2712,
+      "notes": "bank1-pointer-table-confirmed, overlaps-larger-window, nested-in-successful-window@1E:DA96",
+      "contained_in_successful_window": true,
+      "container_indices": [
+        1
+      ],
+      "container_snes": [
+        "1E:DA96"
+      ],
+      "status": "runtime-confirmed",
+      "priority": "done"
+    },
+    {
+      "index": 6,
+      "offset": 26911,
+      "addr": 59679,
+      "snes": "1E:E91F",
+      "marker": "67FB",
+      "pattern": "67fb",
+      "decode_status": "fail",
+      "output_size": null,
+      "consumed_bytes": null,
+      "window_start": null,
+      "window_end_exclusive": null,
+      "overlap_indices": [],
+      "overlap_offsets": [],
+      "table_confirmed": false,
+      "runtime_hit_count": 0,
+      "runtime_first_frame": null,
+      "runtime_last_frame": null,
+      "notes": "nested-in-successful-window@1E:DA96/1E:E800, 67FB stream ended early while reading byte",
+      "contained_in_successful_window": true,
+      "container_indices": [
+        1,
+        5
+      ],
+      "container_snes": [
+        "1E:DA96",
+        "1E:E800"
+      ],
+      "status": "nested-invalid-marker",
+      "priority": "done"
+    },
+    {
+      "index": 7,
+      "offset": 28287,
+      "addr": 61055,
+      "snes": "1E:EE7F",
+      "marker": "26FB",
+      "pattern": "26fb",
+      "decode_status": "ok",
+      "output_size": 1798,
+      "consumed_bytes": 887,
+      "window_start": 28287,
+      "window_end_exclusive": 29174,
+      "overlap_indices": [],
+      "overlap_offsets": [],
+      "table_confirmed": true,
+      "runtime_hit_count": 0,
+      "runtime_first_frame": null,
+      "runtime_last_frame": null,
+      "notes": "bank1-pointer-table-confirmed, nested-in-successful-window@1E:DA96",
+      "contained_in_successful_window": true,
+      "container_indices": [
+        1
+      ],
+      "container_snes": [
+        "1E:DA96"
+      ],
+      "status": "table-confirmed-unseen",
+      "priority": "P0"
+    }
+  ]
+}

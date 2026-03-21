@@ -9,7 +9,7 @@ next gate needed to advance.
 
 | Lane | Status | Completion read |
 |---|---|---|
-| Lane 1: Bank30 compression provenance | active | core pipeline is in place; unresolved targets remain |
+| Lane 1: Bank30 compression provenance | active | core pipeline is in place; registry tightening now closes `9681` as `sentinel-control` and `E91F` as `nested-invalid-marker`; active unresolved queue remains `EE7F` and `DA96` |
 | Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` is now packaged with exact provenance anchors, and the planned `7055/7061` interior carry check is currently blocked by a live timed-input bridge timeout regression on the local Mesen setup |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
@@ -68,12 +68,15 @@ next gate needed to advance.
   - `tools/out/bank30_chunk_registry.json`
   - `tools/out/bank30_chunk_registry.md`
 
-Current unresolved queue (from registry):
+Current active unresolved queue (from registry):
 
-- `P0`: `1E:E91F` (`67FB`, decode fail)
 - `P0`: `1E:EE7F` (`26FB`, table-confirmed unseen at runtime)
 - `P1`: `1E:DA96` (`67FB`, overlap-window unseen at runtime)
-- `P2`: `1E:9681` (`42FB`, sentinel candidate unseen at runtime)
+
+Closed non-runtime candidates (from the tightened registry):
+
+- `done`: `1E:E91F` (`67FB`, nested-invalid-marker inside successful `1E:DA96/1E:E800` windows)
+- `done`: `1E:9681` (`42FB`, sentinel-control zero-output record)
 
 ### CP-04: Design-team asset handoff proof
 
@@ -1639,6 +1642,43 @@ Current reading:
     `Mesen`/`MesenCore.so` pair for timed-input bridge extraction, then rerun
     `7055` and `7061`
 
+### CP-49: Bank30 unresolved queue is tighter after registry reclassification
+
+- Extended `tools/build_bank30_chunk_registry.py` so the consolidated registry
+  now records whether a candidate sits inside another successful decode window
+  and can classify non-runtime cases more honestly.
+- Regenerated the bank30 registry outputs:
+  - `tools/out/bank30_chunk_registry.json`
+  - `tools/out/bank30_chunk_registry.md`
+- Updated the source-of-truth lane docs:
+  - `rom_analysis/docs/bank30_decompression_report.md`
+  - `rom_analysis/docs/next_steps_roadmap.md`
+
+Evidence:
+
+- `python3 -m py_compile tools/build_bank30_chunk_registry.py`
+- `python3 tools/build_bank30_chunk_registry.py tools/out/bank30_headers.json tools/out/bank30_chunk_validation.json tools/out/td2_boot_probe_l001210_summary.json tools/out/bank30_chunk_registry.json --markdown-out tools/out/bank30_chunk_registry.md`
+
+Current reading:
+
+- `1E:9681` is no longer best treated as a live unresolved content target:
+  - `42FB`
+  - declared output `0`
+  - registry status: `sentinel-control`
+- `1E:E91F` is no longer best treated as a top-level unresolved chunk:
+  - `67FB`
+  - standalone decode still fails with source exhaustion
+  - the marker sits inside the successful `1E:DA96` decode window and also
+    inside the successful `1E:E800` nested window
+  - registry status: `nested-invalid-marker`
+- the active unresolved queue is now tighter and smaller:
+  - `P0`: `1E:EE7F` (`26FB`, table-confirmed unseen)
+  - `P1`: `1E:DA96` (`67FB`, valid top-level decode still unseen at runtime)
+- practical reading:
+  - this does not solve runtime reachability for `EE7F` or `DA96`
+  - it does remove two low-signal pseudo-targets from the active queue so the
+    next lane-1 work can stay focused on real remaining ambiguity
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):
@@ -1826,16 +1866,24 @@ Savestate lane blocker (current environment):
 
 ## Next Advancement Gates
 
-### Gate G1 (Immediate): close P0 unresolved queue
+### Gate G1 (Immediate): close active bank30 unresolved queue
 
 Goal:
-- observe `1E:EE7F` on runtime path and resolve `1E:E91F` decode/runtime state.
+- observe `1E:EE7F` on a real runtime path and resolve reachability for the
+  top-level `1E:DA96` `67FB` stream.
 
 Definition of done:
-- `tools/out/bank30_chunk_registry.json` no longer lists unresolved `P0`.
+- `tools/out/bank30_chunk_registry.json` no longer lists unresolved `P0/P1`
+  entries for bank30.
 
 Current status:
-- still open after matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps; no `E91F`/`EE7F` hits observed.
+- registry tightening has closed two non-runtime queue entries:
+  - `1E:E91F` -> `nested-invalid-marker`
+  - `1E:9681` -> `sentinel-control`
+- the active unresolved queue is now:
+  - `P0`: `1E:EE7F`
+  - `P1`: `1E:DA96`
+- still open after matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps; no runtime hits observed for `EE7F` or `DA96`.
 - caller-family expansion partially succeeded (new callsites `01:8E3C/01:8E59`), but target callsites are still absent:
   - `01:B256`, `01:B273`, `01:B59B`
 - newest telemetry still shows no runtime use of `L00A9*` index `0x20` (`32`) and no bank30 producer beyond indices `28/29`.

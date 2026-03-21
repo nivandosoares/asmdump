@@ -146,17 +146,27 @@ Observed decode geometry:
 4. Overlapping starts are therefore a real pattern in this content region.
 5. Runtime now confirms active usage for `DF6C/E039/E73F/E800` on the no-input
    attract path.
-6. `1E:E91F` remains unconfirmed (`67FB` decode fails with source exhaustion).
-7. `1E:DA96` and `1E:EE7F` remain unobserved in this no-input runtime window.
-8. Consolidated registry (`make -C tools bank30-registry`) now classifies all
+6. `1E:E91F` is now best treated as a nested invalid marker, not as a still-open
+   top-level chunk target:
+   - standalone `67FB` decode fails with source exhaustion
+   - the marker lies inside the successful `1E:DA96` decode window
+   - it also lies inside the successful nested `1E:E800` decode window
+7. `1E:9681` is now best treated as a zero-output control/sentinel record, not
+   as a content-bearing unresolved chunk.
+8. `1E:DA96` and `1E:EE7F` remain unobserved in this no-input runtime window and
+   are now the active unresolved queue.
+9. Consolidated registry (`make -C tools bank30-registry`) now classifies all
    candidates into:
    - `runtime-confirmed`: `4`
-   - unresolved queue: `4` (`P0`: `E91F`, `EE7F`; `P1`: `DA96`; `P2`: `9681`)
+   - `table-confirmed-unseen`: `1` (`P0`: `EE7F`)
+   - `67fb-unseen`: `1` (`P1`: `DA96`)
+   - `nested-invalid-marker`: `1` (`E91F`)
+   - `sentinel-control`: `1` (`9681`)
 
 ## Next Actions
 
 1. Probe deterministic savestate-targeted paths to confirm reachability for
-   `1E:DA96`, `1E:E91F`, and `1E:EE7F`.
+   `1E:DA96` and `1E:EE7F`.
    - current `start,b` scripted-input probe does not reach bank30 candidates.
 2. Build a validated chunk map for bank `30` using:
    - decode success + consumed spans

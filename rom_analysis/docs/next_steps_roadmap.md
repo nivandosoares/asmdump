@@ -9,7 +9,7 @@ Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 
 | Roadmap lane | Status | Current reading |
 |---|---|---|
-| 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps are done; targeted `B1F9` prologue traces now prove forced entry context, but unresolved queue still remains (`E91F`, `EE7F`, `DA96`, `9681`). |
+| 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps are done; registry tightening now demotes `9681` to `sentinel-control` and `E91F` to `nested-invalid-marker`, leaving active unresolved queue (`EE7F`, `DA96`). |
 | 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`, the later direct-hit cluster `7051/7059/7064` is now packaged with exact provenance anchors, and the planned `7055/7061` interior carry check is currently blocked by a live timed-input bridge timeout regression on the local Mesen setup. |
 | 3. Gameplay-frame expansion | in progress | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty. |
 | 4. Bank API contracts | not started | Baseline docs exist; callback/API contracts for bank 30/10/11 are not yet mapped to completion. |
@@ -162,10 +162,13 @@ decode support exists.
   - `make -C tools bank30-registry`
   - Current status counts:
     - `runtime-confirmed`: `4`
-    - `decode-fail`: `1` (`1E:E91F`)
     - `table-confirmed-unseen`: `1` (`1E:EE7F`)
     - `67fb-unseen`: `1` (`1E:DA96`)
-    - `candidate-unseen`: `1` (`1E:9681`)
+    - `nested-invalid-marker`: `1` (`1E:E91F`)
+    - `sentinel-control`: `1` (`1E:9681`)
+  - active unresolved queue is now only:
+    - `P0`: `1E:EE7F`
+    - `P1`: `1E:DA96`
 - Export outputs under:
   - `rom_analysis/graphics/tilesets/`
   - `rom_analysis/maps/tilemaps/`

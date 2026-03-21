@@ -50,7 +50,12 @@ def fmt_snes(bank: int, addr: int) -> str:
 
 def classify(entry: dict[str, Any]) -> str:
     if entry["decode_status"] != "ok":
+        if entry["contained_in_successful_window"] and not entry["table_confirmed"]:
+            return "nested-invalid-marker"
         return "decode-fail"
+    output_size = entry.get("output_size")
+    if output_size is not None and as_int(output_size) == 0 and not entry["table_confirmed"]:
+        return "sentinel-control"
     if entry["runtime_hit_count"] > 0:
         return "runtime-confirmed"
     if entry["table_confirmed"]:
@@ -62,6 +67,10 @@ def classify(entry: dict[str, Any]) -> str:
 
 def priority(entry: dict[str, Any]) -> str:
     status = entry["status"]
+    if status == "nested-invalid-marker":
+        return "done"
+    if status == "sentinel-control":
+        return "done"
     if status == "decode-fail":
         return "P0"
     if status == "table-confirmed-unseen":
@@ -74,14 +83,20 @@ def priority(entry: dict[str, Any]) -> str:
 
 
 def write_markdown(output: Path, registry: dict[str, Any]) -> None:
-    active = [e for e in registry["entries"] if e["runtime_hit_count"] > 0]
-    unresolved = [e for e in registry["entries"] if e["runtime_hit_count"] == 0]
+    active = [e for e in registry["entries"] if e["status"] == "runtime-confirmed"]
+    unresolved = [e for e in registry["entries"] if e["priority"] != "done"]
+    closed_nonruntime = [
+        e
+        for e in registry["entries"]
+        if e["priority"] == "done" and e["status"] != "runtime-confirmed"
+    ]
     lines: list[str] = []
     lines.append("# Bank30 Chunk Registry Summary")
     lines.append("")
     lines.append(f"- total entries: `{registry['total_entries']}`")
     lines.append(f"- runtime-confirmed entries: `{len(active)}`")
     lines.append(f"- unresolved entries: `{len(unresolved)}`")
+    lines.append(f"- closed non-runtime entries: `{len(closed_nonruntime)}`")
     lines.append("")
     lines.append("## Runtime Confirmed")
     lines.append("")
@@ -107,6 +122,17 @@ def write_markdown(output: Path, registry: dict[str, Any]) -> None:
             f"| `{entry['priority']}` | `{entry['snes']}` | `{entry['marker']}` | "
             f"`{entry['decode_status']}` | `{entry['table_confirmed']}` | {note} |"
         )
+    if closed_nonruntime:
+        lines.append("")
+        lines.append("## Closed Non-Runtime Entries")
+        lines.append("")
+        lines.append("| Status | SNES | Marker | Notes |")
+        lines.append("|---|---|---|---|")
+        for entry in sorted(closed_nonruntime, key=lambda e: as_int(e["offset"])):
+            note = entry.get("notes") or ""
+            lines.append(
+                f"| `{entry['status']}` | `{entry['snes']}` | `{entry['marker']}` | {note} |"
+            )
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -143,14 +169,6 @@ def main() -> int:
         table_confirmed = snes in TABLE_CONFIRMED_SNELS
         overlap_indices = [as_int(o.get("index"), -1) for o in v.get("overlaps", [])]
         overlap_with = [as_int(o.get("offset"), -1) for o in v.get("overlaps", [])]
-        notes: list[str] = []
-        if table_confirmed:
-            notes.append("bank1-pointer-table-confirmed")
-        if overlap_with:
-            notes.append("overlaps-larger-window")
-        if decode_status != "ok":
-            notes.append(str(v.get("error", "decode-not-ok")))
-
         entry = {
             "index": as_int(header.get("index"), -1),
             "offset": offset,
@@ -169,11 +187,52 @@ def main() -> int:
             "runtime_hit_count": hit_count,
             "runtime_first_frame": runtime_hit.get("first_frame"),
             "runtime_last_frame": runtime_hit.get("last_frame"),
-            "notes": ", ".join(notes) if notes else "",
+            "notes": "",
         }
+        entries.append(entry)
+
+    for entry in entries:
+        containers: list[dict[str, Any]] = []
+        for other in entries:
+            if other is entry:
+                continue
+            if other.get("decode_status") != "ok":
+                continue
+            other_start = other.get("window_start")
+            other_end = other.get("window_end_exclusive")
+            if other_start is None or other_end is None:
+                continue
+            if as_int(other_start) <= as_int(entry["offset"]) < as_int(other_end):
+                containers.append(
+                    {
+                        "index": other.get("index"),
+                        "offset": other.get("offset"),
+                        "snes": other.get("snes"),
+                        "marker": other.get("marker"),
+                    }
+                )
+        containers.sort(key=lambda c: as_int(c.get("offset")))
+        entry["contained_in_successful_window"] = bool(containers)
+        entry["container_indices"] = [as_int(c.get("index"), -1) for c in containers]
+        entry["container_snes"] = [str(c.get("snes")) for c in containers]
+
+        notes: list[str] = []
+        if entry["table_confirmed"]:
+            notes.append("bank1-pointer-table-confirmed")
+        if entry["overlap_offsets"]:
+            notes.append("overlaps-larger-window")
+        if entry["contained_in_successful_window"]:
+            container_snes = "/".join(entry["container_snes"])
+            notes.append(f"nested-in-successful-window@{container_snes}")
+        if entry["decode_status"] != "ok":
+            notes.append(str(validation_by_offset.get(as_int(entry["offset"]), {}).get("error", "decode-not-ok")))
+        output_size = entry.get("output_size")
+        if output_size is not None and as_int(output_size) == 0:
+            notes.append("zero-output-control-record")
+
+        entry["notes"] = ", ".join(notes) if notes else ""
         entry["status"] = classify(entry)
         entry["priority"] = priority(entry)
-        entries.append(entry)
 
     entries.sort(key=lambda e: as_int(e["offset"]))
     status_counts: dict[str, int] = {}

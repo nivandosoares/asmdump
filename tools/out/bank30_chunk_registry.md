@@ -2,7 +2,8 @@
 
 - total entries: `8`
 - runtime-confirmed entries: `4`
-- unresolved entries: `4`
+- unresolved entries: `2`
+- closed non-runtime entries: `2`
 
 ## Runtime Confirmed
 
@@ -17,7 +18,12 @@
 
 | Priority | SNES | Marker | Decode status | Table confirmed | Notes |
 |---|---|---|---|---|---|
-| `P0` | `1E:E91F` | `67FB` | `fail` | `False` | 67FB stream ended early while reading byte |
-| `P0` | `1E:EE7F` | `26FB` | `ok` | `True` | bank1-pointer-table-confirmed |
+| `P0` | `1E:EE7F` | `26FB` | `ok` | `True` | bank1-pointer-table-confirmed, nested-in-successful-window@1E:DA96 |
 | `P1` | `1E:DA96` | `67FB` | `ok` | `False` | overlaps-larger-window |
-| `P2` | `1E:9681` | `42FB` | `ok` | `False` |  |
+
+## Closed Non-Runtime Entries
+
+| Status | SNES | Marker | Notes |
+|---|---|---|---|
+| `sentinel-control` | `1E:9681` | `42FB` | zero-output-control-record |
+| `nested-invalid-marker` | `1E:E91F` | `67FB` | nested-in-successful-window@1E:DA96/1E:E800, 67FB stream ended early while reading byte |
