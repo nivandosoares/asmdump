@@ -2797,6 +2797,70 @@ Next best step:
 - keep the timed-input `7051` path parked until a reusable later-intro seed or
   savestate exists
 
+### CP-68: Frame `1093` now closes the direct bridge-extracted `1086..1093` ownership block
+
+- Extended the live ownership surface through the twelfth direct
+  bridge-extracted block:
+  - extracted a fresh raw frame dump and design pack for `1093`
+  - ran a bounded live write-point trace for the whole `1086..1093` block
+  - merged that probe into a translation-facing visual contract
+  - materialized a fresh local screenshot for frame `1093` in the same
+    `intro_loop_frame_*` family used by the earlier late-window checkpoints
+- Kept the Mesen-facing steps serialized again:
+  - probe first
+  - screenshot capture second
+- Kept renderer-side validation on the stable Python surface again:
+  - used `render_mesen_snes_bg.py --obj-renderer mode7-ppu`
+  - skipped SDL runtime validation because the local runtime worktree still has
+    unrelated user edits under `port/src/td2_ppu.c`
+
+Evidence:
+
+- `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release make -C tools mesen-design-pack MESEN_FRAME=1093`
+- `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=150 TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_1093_live/td2_boot_probe TD2_BOOT_PROBE_TOTAL_FRAMES=1094 TD2_BOOT_PROBE_TRACE_START_FRAME=1086 TD2_BOOT_PROBE_TRACE_END_FRAME=1093 TD2_BOOT_PROBE_TRACE_WRITE_POINTS='objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122' TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 ./validation/run_mesen_probe_boot.sh`
+- `python3 tools/build_mesen_visual_contract.py tools/out/design_frame1093 tools/out/visual_contract_frame1093_live_probe.json --probe-json tools/out/visual_contract_probe_1093_live/td2_boot_probe.json`
+- produced artifacts:
+  - `tools/out/visual_contract_probe_1093_live/td2_boot_probe.json`
+  - `tools/out/visual_contract_frame1093_live_probe.json`
+
+Targeted validation:
+
+- `python3 tools/compare_frames.py tools/out/intro_loop_frame_01093_frame.png tools/out/mesen_frame1093/main_visible.ppm --diff-out tools/out/mesen_frame1093_vs_intro1093_diff.ppm`
+  - `207` mismatched pixels (`0.360979%`)
+- `python3 tools/render_mesen_snes_bg.py tools/out/mesen_frame1093/vram.bin tools/out/mesen_frame1093/cgram.bin tools/out/mesen_frame1093/ppu_state.json tools/out/mesen_frame1093_mode7ppu.ppm --oam tools/out/mesen_frame1093/oam.bin --obj-renderer mode7-ppu --json-out tools/out/mesen_frame1093_mode7ppu.json`
+- `python3 tools/compare_frames.py tools/out/mesen_frame1093/main_visible.ppm tools/out/mesen_frame1093_mode7ppu.ppm --diff-out tools/out/mesen_frame1093_mode7ppu_vs_mesen1093_diff.ppm`
+  - `129` mismatched pixels (`0.224958%`)
+
+Current reading:
+
+- `tools/out/visual_contract_probe_1093_live/td2_boot_probe.json` records
+  `4368` write hits with `0` drops over `1086..1093`
+- the merged contract preserves exact
+  `producerTrace.traceWindow = 1086..1093`
+- producer domains remain inside a single late `01:9FE5` OAM family:
+  - OAM domain: `4368` writes across frames `1086..1093`
+    - dominant callsites: `00:824F` / `00:8257`
+  - no sampled VRAM writes fire in the bounded `1086..1093` trace window
+- all sampled write hits still run under active main callback `01:9FE5` with
+  active IRQ callback `00:835F`
+- `tools/out/design_frame1093/sprites/sprites_visible.json` reports `61`
+  visible sprites
+- practical reading:
+  - the twelfth direct bridge-extracted `1086..1093` block is now closed by
+    live ownership evidence at its end
+  - the pure-OAM ownership shape survives again, but the screenshot-backed gap
+    now jumps sharply while the callback family still stays flat
+  - `1093` is now the promoted bridge-visible frontier for this callback
+    family
+
+Next best step:
+
+- pivot from ownership extension to the post-`1093` composition/export nuance:
+  explain why the already-documented `1094..1101` visible-state pass still
+  explodes the `main_visible` compare instead of closing it
+- keep the timed-input `7051` path parked until a reusable later-intro seed or
+  savestate exists
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):
