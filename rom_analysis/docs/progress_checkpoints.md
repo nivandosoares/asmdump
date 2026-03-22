@@ -3021,6 +3021,68 @@ Next best step:
 - use the `DOOM-FX` note as a design reference when the project is ready to
   promote a first-class transfer schema or stronger callback/phase contracts
 
+### CP-72: `SNESdev Wiki` now has a lane-oriented knowledge bank
+
+- Surveyed `https://snes.nesdev.org/wiki/SNESdev_Wiki` recursively through the
+  first-layer hardware/reference pages most relevant to this project and one
+  second-layer Mode 7 transform page.
+- Added a local knowledge bank:
+  - `rom_analysis/docs/snesdev_wiki_knowledge_bank.md`
+
+Evidence:
+
+- core pages reviewed:
+  - `Memory map`
+  - `ROM header`
+  - `CPU vectors`
+  - `MMIO registers`
+  - `PPU registers`
+  - `DMA registers`
+  - `Backgrounds`
+  - `Tilemaps`
+  - `Tiles`
+  - `Sprites`
+  - `Palettes`
+  - `Color math`
+  - `Init code`
+  - `VBlank interrupts`
+  - `DMA examples`
+  - `VBlank routine`
+  - `HDMA examples`
+  - `Reading and writing PPU memory`
+  - `Controller reading`
+  - `Standard controller`
+  - second-layer follow-up: `Mode 7 transform`
+
+Current reading:
+
+- the wiki strongly validates the current repo direction:
+  - extraction + validation + native runtime
+  - not direct source translation
+- the most useful pages for active work are not general tutorials:
+  - `VBlank routine`
+  - `Reading and writing PPU memory`
+  - `PPU registers`
+  - `Tilemaps`
+  - `Sprites`
+- the strongest conceptual fit is the producer/consumer model:
+  - main-loop state preparation
+  - shadow variables / buffers / queues
+  - bounded NMI/VBlank upload windows
+- the survey also sharpens several renderer/archeology warnings:
+  - `CGRAM/OAM` write-twice semantics matter
+  - OAM correctness is affected by `OBJSEL`, rotation, and per-line limits, not
+    just by raw `544`-byte dumps
+  - Mode 7 should be treated as base transform plus optional scanline-time
+    modulation and color-math interaction
+
+Next best step:
+
+- keep the current lane order unchanged
+- use the new knowledge bank as a hardware-reference companion while Lane 2
+  continues through the post-`1093` composition/export boundary and while Lane
+  4 later formalizes producer/consumer contracts around NMI-visible surfaces
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):
