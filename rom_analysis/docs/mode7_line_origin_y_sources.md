@@ -174,6 +174,76 @@ Not settled:
   - a coordinate convention
   - or a shorthand for an internal pipeline effect
 
+## Indirect Adjunct Evidence
+
+These sources do not explicitly answer `Mode 7` line-origin `Y`, but they do
+constrain what kinds of explanations remain plausible.
+
+### NESdev thread (`93143`)
+
+Source:
+
+- https://forums.nesdev.org/viewtopic.php?t=15878
+
+Relevant statements:
+
+- `line 0 is used to read OAM for the first actual active display line`
+- `Mode 7 is the same - the PPU just takes the current scroll position, origin and transform matrix ... and uses them to look up tiles and pixels in VRAM`
+- developers `used HDMA to automatically change the Mode 7 parameters after every scanline`
+
+Reading:
+
+- this is indirect support for real per-scanline preparation on the SNES PPU
+- it also suggests a "current state for the line" mental model for `Mode 7`
+- but it does **not** explicitly say whether the first visible `Mode 7`
+  scanline uses:
+  - `line`
+  - `line + 1`
+  - stale previous-line state
+  - prefetched next-line state
+
+Classification:
+
+- INDIRECT
+
+### SNESdev `HDMA_examples`
+
+Source:
+
+- https://snes.nesdev.org/wiki/HDMA_examples
+
+Relevant statements:
+
+- `If HDMA and the Main-Loop are both writing to a write-twice register, the internal latch can be overridden by the HDMA write and corrupt the PPU register write.`
+- `For example, a HDMA write to BG1HOFS can corrupt M7A if the HDMA write occurs in-between two 65816 CPU M7A writes.`
+- `This HDMAEN write must occur during VBlank`
+
+Reading:
+
+- this is indirect proof that scanline-level timing differences and write-twice
+  latch hazards are real on SNES PPU state
+- it keeps `pipeline / early-read / line-start timing hazard` in play as a
+  category
+- but it does **not** explicitly state first-visible-line `Mode 7` `Y`
+  semantics
+
+Classification:
+
+- INDIRECT
+
+## No-Hit Summary
+
+Under the current strict source filter, there is still no explicit source that
+states:
+
+- whether the first visible `Mode 7` scanline uses `line` or `line + 1`
+- whether any observed `line + 1` behavior is:
+  - real hardware pipeline delay
+  - prefetch artifact
+  - or coordinate convention
+- whether `M7SEL` vertical mirroring creates a top-of-screen asymmetry by
+  shifting the effective origin by exactly one line
+
 ## Strict Reading For The Current Gate
 
 From allowed sources only:
@@ -182,9 +252,9 @@ From allowed sources only:
   `SCREEN.Y`
 - `Mesen-S` is the only allowed implementation source here, and it uses the
   current scanline directly
-- the public hardware/test surface currently proves early-read glitches exist,
-  but does not yet prove that the first visible `Mode 7` scanline uses stale or
-  prefetched `Y`
+- the public hardware/test surface currently proves early-read glitches and
+  scanline-timing hazards exist, but does not yet prove that the first visible
+  `Mode 7` scanline uses stale or prefetched `Y`
 
 So the current strict read is:
 

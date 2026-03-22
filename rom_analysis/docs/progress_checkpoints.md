@@ -3357,6 +3357,11 @@ Current reading:
     center term
   - the public `snes-test-roms` surface still has no dedicated first-visible-
     line `Mode 7` test for this question
+  - indirect timing surfaces now also exist but stay below proof level:
+    - the NESdev `93143` discussion suggests per-line preprocessing and a
+      "current state for the line" mental model for `Mode 7`
+    - `SNESdev` `HDMA_examples` proves scanline-level timing/latch hazards are
+      real for write-twice PPU state, including `M7A`
 - the allowed sources still agree on the ordering around `Y`:
   - choose one scanline `Y`
   - apply vertical mirroring before the transform contribution
