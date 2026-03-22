@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; registry tightening now closes `9681` as `sentinel-control` and `E91F` as `nested-invalid-marker`; active unresolved queue remains `EE7F` and `DA96` |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract builders now also merge that activity layer directly, the follow-up `1102..1117` compare summary proves the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, the new `1118..1125` continuation note extends that exact no-DMA surface past the old headless edge, the next sampled compare block now closes the same exact surface through `1133`, and a new wide frontier probe plus narrowed `1164..1172` boundary window now show the first later change is a producer-side reactivation at `1164/1165` inside the same `00:8029` family: `state0204/dp0054` step first, then renewed `00:0700` OAM DMA plus rotating `1A:AB58/ACA0/AA10` VRAM bursts while the visible compare still stays at `0`; provenance is still intentionally capped at `1117`, so the active frontier is now the late `00:8029` producer cycle rather than blind carry extension or more local `bg1_visible` tuning |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract builders now also merge that activity layer directly, the follow-up `1102..1117` compare summary proves the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, the new `1118..1125` continuation note extends that exact no-DMA surface past the old headless edge, the next sampled compare block now closes the same exact surface through `1133`, the wider `1164..1172` boundary window already proved the next later change is a producer-side reactivation rather than a callback switch, and a new blob-cycle report now ties that reactivation to a concrete ownership path `01:B6E3 -> 01:9DC6 -> 00:95BD -> $096A/$0700 -> OAMDATA` while proving every sampled direct `VMDATA` burst in `1134..1200` matches the same `AA10/AB58/ACA0` ROM blob as the paired `DMA0` source and alternates over `VMADD = 0x4920/0x49A0`; that closes the "who owns the late `00:8029` producer cycle?" question and moves the frontier to the later-frame selection/schedule rule for native replacement rather than blind continuity extension or more local `bg1_visible` tuning |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -3800,6 +3800,51 @@ Practical reading:
   - tilemap-to-ROM provenance still stays capped at `1117`, because this
     checkpoint closes continuity and the next upload boundary, not a new direct
     runtime chunk anchor
+
+### CP-87: The late `00:8029` producer cycle now has explicit blob and ownership proof
+
+- Promoted artifacts:
+  - `tools/build_mode7_blob_cycle_report.py`
+  - `tools/out/mode7_blob_cycle_1134_1200/report.json`
+  - `tools/out/mode7_blob_cycle_1134_1200/report.md`
+  - `rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md`
+- Validation:
+  - `python3 -m py_compile tools/build_mode7_blob_cycle_report.py`
+  - `python3 tools/build_mode7_blob_cycle_report.py game.smc tools/out/activity_trace_1134_1200/td2_boot_probe.json tools/out/activity_trace_1134_1200/td2_boot_probe_dma_writes.json tools/out/activity_trace_1134_1200/td2_boot_probe_vram_writes.json tools/out/mode7_blob_cycle_1134_1200/report.json --blob AA10:0x1AAA10:0x100 --blob AB58:0x1AAB58:0x100 --blob ACA0:0x1AACA0:0x100 --markdown-out tools/out/mode7_blob_cycle_1134_1200/report.md`
+- New evidence:
+  - the new report matches every sampled direct `VMDATA` burst frame in
+    `1134..1200` against the same ROM blob label seen on the paired `DMA0`
+    source:
+    - `AA10`
+    - `AB58`
+    - `ACA0`
+  - the direct burst side alternates only between the two earlier late-attract
+    Mode 7 destinations:
+    - `VMADD = 0x4920`
+    - `VMADD = 0x49A0`
+  - `OAM` DMA remains the normal staged path:
+    - source `00:0700`
+    - size `0x0220`
+    - target `OAMDATA`
+  - static ownership is now tied to concrete routines:
+    - `01:B6E3` advances the late state loop and re-enters `01:9DC6`
+    - `01:9DC6` rebuilds the scene/OAM work with repeated `00:9662` calls and
+      always ends in `00:95BD`
+    - `00:95BD` arms `$096A`
+    - the bank-0 NMI path consumes `$096A` and DMAs `$0700 -> OAMDATA`
+  - this also links the late `1165+` cycle back to the already-promoted native
+    bridge-visible model family:
+    - the same `AA10/AB58/ACA0` blobs
+    - the same `0x4920/0x49A0` destinations used by
+      `build_mode7_source_scene.py`
+- Practical reading:
+  - the lane no longer has an open "who owns the late `00:8029` producer
+    cycle?" question
+  - the remaining open question is the later-frame selection/schedule rule that
+    chooses which blob lands on which target for native replacement purposes
+  - tilemap-to-ROM provenance still stays capped at `1117`, because this turn
+    closes producer ownership and blob identity, not a new direct tilemap chunk
+    anchor
 
 ## Current Checkpoint Metrics
 
