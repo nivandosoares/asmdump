@@ -3349,26 +3349,29 @@ Validation:
 
 Current reading:
 
-- direct `line + 1` evidence now exists in both:
-  - `fullsnes`
-  - `Snes9x`
-- direct current-line implementations now exist in:
-  - `Mesen-S`
-  - with matching current-line style also present in `bsnes` / `ares`
-- all renderer families still agree on the important ordering around `Y`:
+- under the stricter allowed-source filter:
+  - `fullsnes` is the only explicit `line + 1` hardware-oriented source
+  - `Mesen-S` is the only allowed implementation comparison and uses
+    current-line `Y`
+  - `SNESdev` confirms only that `M7SEL` owns vertical flip and `M7Y` is the
+    center term
+  - the public `snes-test-roms` surface still has no dedicated first-visible-
+    line `Mode 7` test for this question
+- the allowed sources still agree on the ordering around `Y`:
   - choose one scanline `Y`
   - apply vertical mirroring before the transform contribution
   - keep that `Y` shared across the scanline while `X` advances per pixel
 
 Practical reading:
 
-- the plateau result `screenY + 1 -> 0 mismatched pixels` is no longer a blind
-  tweak; it matches a real source family
-- but the source pass also proves the renderer frontier is now an explicit
-  accuracy conflict, not a settled doc truth
+- the plateau result `screenY + 1 -> 0 mismatched pixels` is still not a blind
+  tweak; it matches the only explicit `line + 1` hardware-oriented source we
+  have under the strict filter
+- but the stricter pass also proves the renderer frontier is still an explicit
+  unresolved conflict, not a settled hardware fact
 - the next step should therefore promote the `line + 1` candidate carefully,
-  while preserving the source split in the docs until another proof surface
-  breaks the tie
+  while preserving the tie in the docs until a hardware-oriented proof surface
+  breaks it
 
 ## Current Checkpoint Metrics
 

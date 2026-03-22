@@ -168,11 +168,11 @@ Documentation ask for the next iteration:
   described as `line + 1`, a prefetch artifact, or another named scanline
   origin rule
 
-The new focused source note now makes the current conflict explicit:
+The new focused source note now makes the current strict conflict explicit:
 
-- `fullsnes` and `Snes9x` use `line + 1`
-- `Mesen-S`, `bsnes`, and `ares` use current-line `Y`
-
+- `fullsnes` documents a `line + 1` style `SCREEN.Y`
+- `Mesen-S` implements current-line `Y`
+- the allowed hardware/test sources do not yet break that tie
 So the next renderer step should preserve that split as an explicit open
 accuracy question rather than pretending the scanline-start rule is already
-settled by documentation alone.
+settled by hardware documentation alone.

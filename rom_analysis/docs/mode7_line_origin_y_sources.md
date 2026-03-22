@@ -1,18 +1,26 @@
-# Mode 7 Line-Origin `Y` Sources for the Static Plateau Gate
+# Strict `Mode 7` Line-Origin `Y` Sources
 
-This note narrows the current `Mode 7/BG1` gate to one question only:
+This note is the strict follow-up for the current `Mode 7/BG1` plateau gate.
 
-- what is the correct scanline-start `Y` term for the late-attract plateau?
+Allowed source classes only:
 
-Only sources that directly touch:
+- hardware-oriented docs
+- test ROMs
+- `Mesen-S` implementation, for comparison only
 
-- `startY` / line-origin semantics
-- vertical mirroring interaction
-- first-line / first-pixel scanline `Y`
+Rejected on purpose:
 
-are included here.
+- `Snes9x`
+- `bsnes`
+- `ares`
+- generic `Mode 7` math notes that do not touch scanline-start behavior
 
-## Direct Evidence
+Target question:
+
+- does the composed-screen plateau point to a real `line + 1` hardware rule, a
+  pipeline/prefetch effect, or only a coordinate-convention mismatch?
+
+## Explicit Evidence
 
 ### `fullsnes`
 
@@ -20,125 +28,26 @@ Source:
 
 - https://problemkaputt.de/fullsnes.htm
 
-Relevant behavior:
+Exact statements / behavior:
 
 - `SCREEN.Y = Display (Target) Y-Coordinate: (1..224 or 1..239) XOR (yflip*FFh)`
 - `IF yflip THEN SCREEN.Y=((1..224/239) XOR FFh), ELSE SCREEN.Y=(1..224/239)`
 - `VRAM.X = VRAM.X + ((M7B*SCREEN.Y) AND NOT 3Fh) + (M7A*SCREEN.X)`
 - `VRAM.Y = VRAM.Y + ((M7D*SCREEN.Y) AND NOT 3Fh) + (M7C*SCREEN.X)`
 - `After calculating the left-most pixel of a scanline, the following pixels on that scanline can be also calculated by increasing VRAM coordinates`
+- `The result is same as on hardware, although the real hardware doesn't seem to use that method`
 
-Reading:
+What this gives:
 
-- direct documentation for `line + 1` style `SCREEN.Y`
-- direct documentation that vertical mirroring applies to the screen-space `Y`
-  term before the transform contribution
-- direct documentation that the `Y` term is shared for the whole scanline,
-  while only the `X` term advances per pixel
-
-Classification:
-
-- direct
-
-### `Snes9x`
-
-Sources:
-
-- https://github.com/snes9xgit/snes9x/blob/master/gfx.cpp
-- https://github.com/snes9xgit/snes9x/blob/master/tileimpl.h
-
-Relevant behavior:
-
-- `RenderLine`: `p->M7HOFS = PPU.M7HOFS`, `p->M7VOFS = PPU.M7VOFS`
-- `tileimpl.h`:
-  - `if (PPU.Mode7VFlip) starty = 255 - (int) (Line + 1); else starty = Line + 1;`
-  - `BB = ((l->MatrixB * starty) & ~63) + ((l->MatrixB * yy) & ~63) + (CentreX << 8);`
-  - `DD = ((l->MatrixD * starty) & ~63) + ((l->MatrixD * yy) & ~63) + (CentreY << 8);`
-
-Reading:
-
-- direct implementation of `line + 1`
-- direct implementation of vertical mirroring before the transform term
-- direct per-scanline snapshotting of `Mode 7` state before draw
+- explicit `line + 1` style screen-space `Y`
+- explicit vertical mirroring on that same `Y`
+- explicit statement that one scanline `Y` is chosen before pixel stepping
+- no explicit claim that `line + 1` is a pipeline delay; it is presented as the
+  coordinate definition used by the formula
 
 Classification:
 
-- direct
-
-### `Mesen-S`
-
-Source:
-
-- https://github.com/SourMesen/Mesen-S/blob/master/Core/Ppu.cpp
-
-Relevant behavior:
-
-- `if(_drawStartX == 0) { _state.Mode7.HScrollLatch = _state.Mode7.HScroll; _state.Mode7.VScrollLatch = _state.Mode7.VScroll; }`
-- `uint16_t realY = _state.Mode7.VerticalMirroring ? (255 - _scanline) : _scanline;`
-- `if(applyMosaic) { realY -= _state.MosaicSize - _mosaicScanlineCounter; }`
-- `((_state.Mode7.Matrix[1] * realY) & ~63)`
-- `((_state.Mode7.Matrix[3] * realY) & ~63)`
-
-Reading:
-
-- direct implementation of current-scanline `Y`, not `line + 1`
-- direct implementation of vertical mirroring before the transform term
-- direct statement that scroll offsets are latched per scanline
-
-Classification:
-
-- direct
-
-### `bsnes`
-
-Source:
-
-- https://github.com/bsnes-emu/bsnes/blob/master/bsnes/sfc/ppu-fast/mode7.cpp
-
-Relevant behavior:
-
-- `int Y = this->y;`
-- `if(self.mosaicEnable) Y -= io.mosaic.size - io.mosaic.counter;`
-- `int y = !io.mode7.vflip ? Y : 255 - Y;`
-- `int originX = ... + (b * y & ~63) + ...`
-- `int originY = ... + (d * y & ~63) + ...`
-
-Reading:
-
-- direct implementation that mirroring applies before the transform term
-- direct implementation that one `y` value seeds the whole scanline origin
-- whether `this->y` is semantically the current scanline index is strong from
-  the surrounding scanline-based renderer structure, but not stated in the
-  snippet itself
-
-Classification:
-
-- inferred for exact `current line` semantics
-
-### `ares`
-
-Source:
-
-- https://github.com/ares-emulator/ares/blob/master/ares/sfc/ppu/mode7.cpp
-
-Relevant behavior:
-
-- `u32 y = self.vcounter();`
-- `if(self.bg1.mosaic.enable) y -= self.mosaic.voffset();`
-- `if(self.io.vflipMode7) y = 255 - y;`
-- `s32 originX = ... + (b * y & ~63) + ...`
-- `s32 originY = ... + (d * y & ~63) + ...`
-
-Reading:
-
-- direct implementation that mirroring applies before the transform term
-- direct implementation that one `y` value seeds the scanline origin
-- `vcounter()` strongly suggests current scanline origin rather than `line + 1`,
-  but that exact semantic is not explained in the snippet itself
-
-Classification:
-
-- inferred for exact `current line` semantics
+- DIRECT
 
 ### `SNESdev PPU registers`
 
@@ -146,72 +55,157 @@ Source:
 
 - https://snes.nesdev.org/wiki/PPU_registers
 
-Relevant behavior:
+Exact statements / behavior:
 
-- `M7SEL ... flip vertical (Y), flip horizontal (X)`
+- `M7SEL ... Mode 7 tilemap repeat (R), fill (F), flip vertical (Y), flip horizontal (X).`
 - `M7Y ... Mode 7 center Y`
 
-Reading:
+What this gives:
 
-- direct register-level confirmation that vertical mirroring is a first-class
-  `Mode 7` control and that `M7Y` is the center term
-- does not specify whether the line-origin `Y` is `line` or `line + 1`
+- explicit register-level confirmation that vertical mirroring is a real
+  hardware control in `M7SEL`
+- explicit confirmation that `M7Y` is the center term
+- no explicit statement about first visible scanline or whether `Y` is
+  `line` or `line + 1`
 
 Classification:
 
-- direct for vertical-mirroring control
+- DIRECT
 
-## Current Conflict Surface
+### `setini-early-read-mode7ex.asm`
 
-The direct sources split into two camps.
+Source:
 
-`line + 1` camp:
+- https://github.com/undisbeliever/snes-test-roms/blob/master/src/hardware-glitch-tests/setini-early-read-mode7ex.asm
 
-- `fullsnes`
-- `Snes9x`
+Exact statements / behavior:
 
-current-line camp:
+- `Tests if the SETINI ($2133) register reads the data-bus too early.`
+- `The glitch appears ~20% of the time`
+- test purpose is to detect whether enabling `Mode 7 EXTBG` sees the wrong bus
+  value at render time
 
-- `Mesen-S`
-- `bsnes`
-- `ares`
+What this gives:
 
-What they still agree on:
+- explicit real-hardware evidence that at least some `Mode 7`-adjacent visible
+  behavior can observe an early-read timing hazard
+- no explicit statement about first visible scanline `Y`
+- useful only as proof that "prefetch / early-read affecting visible output" is
+  a real hardware category, not a fantasy
 
-- one vertical term is chosen once per scanline
-- vertical mirroring is applied before the transform contribution
-- that mirrored/unmirrored `Y` contributes through the `B/D` terms
+Classification:
 
-What they disagree on:
+- DIRECT for existence of early-read behavior
+- INFERRED for relevance to scanline-start `Y`
 
-- whether the scanline-start `Y` is:
-  - current line
-  - or `line + 1`
+### `snes-test-roms` repo scan
 
-## Practical Reading for the Plateau
+Source:
 
-The plateau audit already proved:
+- https://github.com/undisbeliever/snes-test-roms
 
-- `screenY + 1` collapses the composed-screen compare to `0`
-- at both tested plateau ends (`1105`, `1117`)
+Exact relevant result:
 
-This new source read does not settle hardware truth by itself, but it does
-explain why that happened:
+- within the current repo tree, the only direct `Mode 7` hardware-glitch test
+  that surfaced for this gate is `setini-early-read-mode7ex.asm`
+- other `Mode 7` files found in the repo tree are address-remapping or effect
+  tests, not explicit first-visible-line / line-origin tests
 
-- the `screenY + 1` result is not an arbitrary tweak
-- it matches both:
-  - `fullsnes`
-  - `Snes9x`
+What this gives:
 
-The next renderer step should therefore treat `line + 1` as a serious candidate
-for the composed-screen path, while explicitly preserving the source conflict in
-the docs until another proof surface breaks the tie.
+- negative evidence: there is no obvious dedicated public test ROM in this set
+  that directly states first visible scanline `Y = line` or `line + 1`
 
-Documentation ask for the next iteration:
+Classification:
 
-- hardware-oriented notes or test ROMs that say whether the first visible Mode 7
-  scanline uses current-line `Y` or `line + 1`
-- any implementation note that explains the disagreement as:
-  - naming convention only
-  - prefetch/pipeline delay
-  - or an actual emulator accuracy choice
+- DIRECT for test coverage gap
+
+### `Mesen-S`
+
+Source:
+
+- https://github.com/SourMesen/Mesen-S/blob/master/Core/Ppu.cpp
+
+Exact observed behavior:
+
+- `if(_drawStartX == 0) { _state.Mode7.HScrollLatch = _state.Mode7.HScroll; _state.Mode7.VScrollLatch = _state.Mode7.VScroll; }`
+- `uint16_t realY = _state.Mode7.VerticalMirroring ? (255 - _scanline) : _scanline;`
+- `if(applyMosaic) { realY -= _state.MosaicSize - _mosaicScanlineCounter; }`
+- `((_state.Mode7.Matrix[1] * realY) & ~63)`
+- `((_state.Mode7.Matrix[3] * realY) & ~63)`
+- no nearby comment mentions:
+  - `line + 1`
+  - prefetch
+  - pipeline delay
+  - first visible line quirk
+
+What this gives:
+
+- explicit comparison behavior for the current implementation family:
+  - scanline index is used directly
+  - vertical mirroring is applied before the transform term
+  - the `Y` term is chosen once per scanline
+- it does **not** claim to model a hardware quirk here
+
+Classification:
+
+- DIRECT for observed implementation behavior
+- not hardware truth
+
+## What The Allowed Sources Actually Settle
+
+Settled:
+
+- vertical mirroring is a real `Mode 7` hardware control via `M7SEL`
+- `M7Y` is the center `Y` term
+- one scanline `Y` is chosen before the scanline is stepped across pixels
+- at least one real hardware early-read class exists in `Mode 7`-adjacent
+  rendering (`SETINI` / `EXTBG`)
+
+Not settled:
+
+- whether the first visible scanline uses:
+  - `line`
+  - `line + 1`
+  - a latched previous-line value
+  - or a prefetched pipeline value
+- whether `fullsnes` `line + 1` is:
+  - literal hardware timing
+  - a coordinate convention
+  - or a shorthand for an internal pipeline effect
+
+## Strict Reading For The Current Gate
+
+From allowed sources only:
+
+- `fullsnes` is the only explicit source here that states a `line + 1` style
+  `SCREEN.Y`
+- `Mesen-S` is the only allowed implementation source here, and it uses the
+  current scanline directly
+- the public hardware/test surface currently proves early-read glitches exist,
+  but does not yet prove that the first visible `Mode 7` scanline uses stale or
+  prefetched `Y`
+
+So the current strict read is:
+
+- `line + 1` is explicitly documented in `fullsnes`
+- current-line `Y` is explicitly implemented in `Mesen-S`
+- the allowed hardware/test sources do **not** yet break the tie
+
+That means the renderer step can promote the `line + 1` candidate because it
+matches the plateau artifacts, but it must still be documented as:
+
+- hardware-consistent candidate
+- not settled hardware fact
+
+## Documentation Ask
+
+To break the remaining tie, the most valuable complementary material would be:
+
+- hardware notes or test ROMs that explicitly mention the first visible
+  `Mode 7` scanline
+- anything that distinguishes:
+  - coordinate convention
+  - from prefetch/pipeline delay
+- any hardware-oriented note that ties `M7SEL` vertical mirroring to
+  first-line or top-of-screen off-by-one behavior
