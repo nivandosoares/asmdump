@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; registry tightening now closes `9681` as `sentinel-control` and `E91F` as `nested-invalid-marker`; active unresolved queue remains `EE7F` and `DA96` |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/matrix[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract builders now also merge that activity layer directly, and the follow-up `1102..1117` compare summary now proves the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, `main_visible.ppm` stays the top crop of `main.ppm`, the visible-state `Mode 7` disagreement only survives `1102..1104`, and the remaining render gap plateaus at `2698` mismatched pixels from `1105..1117` even after the per-frame `OAM DMA` shuts off at `1114`; the new canonical plateau analyzer now also proves only `4` sprites touch that diff box, `bg1_visible.ppm` freezes across the whole plateau, and a `-1` horizontal shift improves the BG-only compare, so the current Lane 2 frontier is specifically `Mode 7/BG1` horizontal sampling or edge semantics rather than another hidden upload or callback fork |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/matrix[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract builders now also merge that activity layer directly, and the follow-up `1102..1117` compare summary now proves the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, `main_visible.ppm` stays the top crop of `main.ppm`, the visible-state `Mode 7` disagreement only survives `1102..1104`, and the remaining render gap plateaus at `2698` mismatched pixels from `1105..1117` even after the per-frame `OAM DMA` shuts off at `1114`; the new canonical plateau analyzer now also proves only `4` sprites touch that diff box, `bg1_visible.ppm` freezes across the whole plateau, a `-1` horizontal shift improves the BG-only compare, and the new sampling stats plus doc/source cross-check now demote `M7SEL` edge/fill behavior by proving the plateau bbox never leaves the Mode 7 map, so the current Lane 2 frontier is specifically `Mode 7/BG1` X-origin, first-pixel, or visible-latched scroll semantics rather than another hidden upload or callback fork |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -3236,6 +3236,50 @@ Practical reading:
   one canonical static scene
 - the `hscroll +1` result is now a useful clue about the coordinate path, but
   not a drop-in fix
+
+### CP-75: Doc-driven `Mode 7` narrowing demotes `M7SEL` edge handling on canonical `1105`
+
+- Added doc/reference checkpoint:
+  - `rom_analysis/docs/mode7_1105_validation_reference.md`
+- Extended plateau builder:
+  - `tools/build_mode7_plateau_analysis.py`
+  - now reports explicit `Mode 7` sampling stats for the plateau bboxes
+- Rebuilt canonical plateau artifact:
+  - `tools/out/mode7_plateau_1105/analysis.json`
+  - `tools/out/mode7_plateau_1105/analysis.md`
+
+Validation:
+
+- `python3 -m py_compile tools/build_mode7_plateau_analysis.py`
+- `python3 tools/build_mode7_plateau_analysis.py tools/out/post_1093_compare_1102_1117/summary.json tools/out/design_mesen_range_1102_1109_v1 tools/out/design_mesen_range_1110_1117_v1 tools/out/mode7_plateau_1105/analysis.json --markdown-out tools/out/mode7_plateau_1105/analysis.md`
+
+Current reading:
+
+- the external doc/source cross-check now agrees on the important core point:
+  - the repo renderer already follows the same operational `Mode 7` shape used
+    by `fullsnes` and `Mesen-S`
+- the canonical plateau state keeps these features inactive:
+  - `EXTBG`
+  - direct color
+  - color math
+  - subscreen layering
+- the new sampling stats now prove the plateau bbox never touches the outside-map
+  path at all:
+  - main bbox `24,68 -> 232,138`: `outsideMapPixels = 0`
+  - BG bbox `24,67 -> 232,138`: `outsideMapPixels = 0`
+  - best tested BG-only `hscroll +1` variant: still `outsideMapPixels = 0`
+- concrete sample ranges on the BG bbox:
+  - base `hscroll = 0`: `x = 24..232`, `y = 65..137`
+  - best tested BG-only `hscroll = +1`: `x = 25..233`, `y = 65..137`
+
+Practical reading:
+
+- `M7SEL` outside-map fill/transparent behavior is no longer a leading suspect
+  for the canonical plateau
+- the next highest-value renderer checks are now:
+  - X-origin / first-pixel placement
+  - visible-latched `M7HOFS/M7VOFS` timing
+  - only then residual full-scene composition outside the BG-only box
 
 ## Current Checkpoint Metrics
 

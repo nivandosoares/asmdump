@@ -293,11 +293,116 @@ def compute_sprite_overlap(sprites_visible_json: Path, bbox: dict) -> dict:
     }
 
 
+def sign_extend(value: int, bits: int) -> int:
+    sign = 1 << (bits - 1)
+    mask = (1 << bits) - 1
+    value &= mask
+    return (value ^ sign) - sign
+
+
+def mode7_clip(value: int) -> int:
+    return (value | ~0x03FF) if (value & 0x2000) else (value & 0x03FF)
+
+
+def compute_mode7_window_sampling_stats(state: dict, bbox: dict, *, hscroll_override: int | None = None) -> dict:
+    hscroll = sign_extend(int(state.get("ppu.mode7.hscroll", 0)), 13)
+    vscroll = sign_extend(int(state.get("ppu.mode7.vscroll", 0)), 13)
+    center_x = sign_extend(int(state.get("ppu.mode7.centerX", 0)), 13)
+    center_y = sign_extend(int(state.get("ppu.mode7.centerY", 0)), 13)
+    matrix_a = sign_extend(int(state.get("ppu.mode7.matrix[0]", 0)), 16)
+    matrix_b = sign_extend(int(state.get("ppu.mode7.matrix[1]", 0)), 16)
+    matrix_c = sign_extend(int(state.get("ppu.mode7.matrix[2]", 0)), 16)
+    matrix_d = sign_extend(int(state.get("ppu.mode7.matrix[3]", 0)), 16)
+    large_map = bool(state.get("ppu.mode7.largeMap", False))
+    fill_with_tile0 = bool(state.get("ppu.mode7.fillWithTile0", False))
+    horizontal_mirroring = bool(state.get("ppu.mode7.horizontalMirroring", False))
+    vertical_mirroring = bool(state.get("ppu.mode7.verticalMirroring", False))
+
+    if hscroll_override is not None:
+        hscroll = int(hscroll_override)
+
+    x0 = int(bbox["x0"])
+    y0 = int(bbox["y0"])
+    x1 = int(bbox["x1"])
+    y1 = int(bbox["y1"])
+    area = (x1 - x0 + 1) * (y1 - y0 + 1)
+
+    inside_pixels = 0
+    outside_pixels = 0
+    tile0_fill_pixels = 0
+    min_x_offset = None
+    max_x_offset = None
+    min_y_offset = None
+    max_y_offset = None
+
+    for screen_y in range(y0, y1 + 1):
+        real_y = (255 - screen_y) if vertical_mirroring else screen_y
+        x_value = (
+            ((matrix_a * mode7_clip(hscroll - center_x)) & ~63)
+            + ((matrix_b * real_y) & ~63)
+            + ((matrix_b * mode7_clip(vscroll - center_y)) & ~63)
+            + (center_x << 8)
+        )
+        y_value = (
+            ((matrix_c * mode7_clip(hscroll - center_x)) & ~63)
+            + ((matrix_d * real_y) & ~63)
+            + ((matrix_d * mode7_clip(vscroll - center_y)) & ~63)
+            + (center_y << 8)
+        )
+        x_step = matrix_a
+        y_step = matrix_c
+
+        if horizontal_mirroring:
+            x_value += x_step * 255
+            y_value += y_step * 255
+            x_step = -x_step
+            y_step = -y_step
+
+        for screen_x in range(256):
+            x_offset = x_value >> 8
+            y_offset = y_value >> 8
+            x_value += x_step
+            y_value += y_step
+
+            if screen_x < x0 or screen_x > x1:
+                continue
+
+            if min_x_offset is None or x_offset < min_x_offset:
+                min_x_offset = x_offset
+            if max_x_offset is None or x_offset > max_x_offset:
+                max_x_offset = x_offset
+            if min_y_offset is None or y_offset < min_y_offset:
+                min_y_offset = y_offset
+            if max_y_offset is None or y_offset > max_y_offset:
+                max_y_offset = y_offset
+
+            if large_map and (x_offset < 0 or x_offset > 0x03FF or y_offset < 0 or y_offset > 0x03FF):
+                outside_pixels += 1
+                if fill_with_tile0:
+                    tile0_fill_pixels += 1
+            else:
+                inside_pixels += 1
+
+    return {
+        "bbox": bbox,
+        "hscroll": hscroll,
+        "largeMap": large_map,
+        "fillWithTile0": fill_with_tile0,
+        "insidePixels": inside_pixels,
+        "outsideMapPixels": outside_pixels,
+        "outsideMapRatio": (outside_pixels / area) if area else 0.0,
+        "tile0FillPixels": tile0_fill_pixels,
+        "xOffsetRange": {"min": min_x_offset, "max": max_x_offset},
+        "yOffsetRange": {"min": min_y_offset, "max": max_y_offset},
+    }
+
+
 def render_markdown(report: dict) -> str:
     plateau = report["plateau"]
     canonical = report["canonicalFrame"]
     shift_scan = report["bgOnlyShiftScan"]
     hscroll_scan = report["mode7HscrollDeltaScan"]
+    sampling = report["mode7WindowSampling"]
     lines = [
         f"# {report['title']}",
         "",
@@ -326,6 +431,12 @@ def render_markdown(report: dict) -> str:
         "",
         f"- sprites touching plateau diff box: `{canonical['spriteOverlap']['overlappingSpriteCount']}`",
         f"- sprite union inside plateau diff box: `{canonical['spriteOverlap']['unionPixels']}` / `{canonical['spriteOverlap']['bboxAreaPixels']}` (`{canonical['spriteOverlap']['unionRatio']:.6%}`)",
+        "",
+        "## Mode 7 Window Sampling",
+        "",
+        f"- BG bbox at base hscroll stays inside the map: `{sampling['bg1Base']['outsideMapPixels']}` outside-map pixels",
+        f"- BG bbox at best BG-only delta stays inside the map: `{sampling['bg1BestBgDelta']['outsideMapPixels']}` outside-map pixels",
+        f"- BG bbox base offset range: `x={sampling['bg1Base']['xOffsetRange']['min']}..{sampling['bg1Base']['xOffsetRange']['max']}`, `y={sampling['bg1Base']['yOffsetRange']['min']}..{sampling['bg1Base']['yOffsetRange']['max']}`",
         "",
         "## BG shift scan",
         "",
@@ -540,6 +651,20 @@ def main() -> int:
             "bestMainDelta": best_main_delta,
             "bestMainMismatchPixels": best_main_mismatch,
             "rows": hscroll_scan_rows,
+        },
+        "mode7WindowSampling": {
+            "mainBase": compute_mode7_window_sampling_stats(canonical_state, main_diff_bbox),
+            "bg1Base": compute_mode7_window_sampling_stats(canonical_state, bg1_bbox),
+            "bg1BestBgDelta": compute_mode7_window_sampling_stats(
+                canonical_state,
+                bg1_bbox,
+                hscroll_override=int(canonical_state.get("ppu.mode7.hscroll", 0)) + int(best_bg1_delta),
+            ),
+            "mainBestMainDelta": compute_mode7_window_sampling_stats(
+                canonical_state,
+                main_diff_bbox,
+                hscroll_override=int(canonical_state.get("ppu.mode7.hscroll", 0)) + int(best_main_delta),
+            ),
         },
         "bgOnlyPerRowBestShiftCounts": summarize_shift_counts(shift_rows),
         "bgOnlyPerRowBestShifts": shift_rows,

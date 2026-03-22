@@ -246,7 +246,10 @@ static scene and the remaining question is more specific:
 - whether the fixed diff box is mostly `BG` or mostly sprite coverage
 - whether the extracted visible `bg1` surface is also static across the plateau
 - whether a small horizontal shift improves the BG-only compare enough to
-  justify investigating `Mode 7` sampling or edge semantics next
+  justify investigating `Mode 7` sampling next
+- whether the plateau bbox ever touches the `Mode 7` outside-map path at all,
+  which is the quickest way to keep or demote `M7SEL` edge/fill behavior as a
+  live suspect
 
 A current headless proof that uses only repo-relative prefixes is:
 

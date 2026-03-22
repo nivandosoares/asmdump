@@ -1,6 +1,6 @@
 {
   "schema": "td2.mode7_plateau_analysis.v1",
-  "createdUtc": "2026-03-22T16:33:36.379203+00:00",
+  "createdUtc": "2026-03-22T17:48:36.236787+00:00",
   "title": "Canonical Mode 7 plateau analysis",
   "compareSummaryPath": "/home/nivando-soares/asmdump/tools/out/post_1093_compare_1102_1117/summary.json",
   "designFrameRoots": [
@@ -232,6 +232,100 @@
         "bg1VisibleMismatchPixels": 4293
       }
     ]
+  },
+  "mode7WindowSampling": {
+    "mainBase": {
+      "bbox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      },
+      "hscroll": 0,
+      "largeMap": true,
+      "fillWithTile0": false,
+      "insidePixels": 14839,
+      "outsideMapPixels": 0,
+      "outsideMapRatio": 0.0,
+      "tile0FillPixels": 0,
+      "xOffsetRange": {
+        "min": 24,
+        "max": 232
+      },
+      "yOffsetRange": {
+        "min": 66,
+        "max": 137
+      }
+    },
+    "bg1Base": {
+      "bbox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "hscroll": 0,
+      "largeMap": true,
+      "fillWithTile0": false,
+      "insidePixels": 15048,
+      "outsideMapPixels": 0,
+      "outsideMapRatio": 0.0,
+      "tile0FillPixels": 0,
+      "xOffsetRange": {
+        "min": 24,
+        "max": 232
+      },
+      "yOffsetRange": {
+        "min": 65,
+        "max": 137
+      }
+    },
+    "bg1BestBgDelta": {
+      "bbox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "hscroll": 1,
+      "largeMap": true,
+      "fillWithTile0": false,
+      "insidePixels": 15048,
+      "outsideMapPixels": 0,
+      "outsideMapRatio": 0.0,
+      "tile0FillPixels": 0,
+      "xOffsetRange": {
+        "min": 25,
+        "max": 233
+      },
+      "yOffsetRange": {
+        "min": 65,
+        "max": 137
+      }
+    },
+    "mainBestMainDelta": {
+      "bbox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      },
+      "hscroll": 0,
+      "largeMap": true,
+      "fillWithTile0": false,
+      "insidePixels": 14839,
+      "outsideMapPixels": 0,
+      "outsideMapRatio": 0.0,
+      "tile0FillPixels": 0,
+      "xOffsetRange": {
+        "min": 24,
+        "max": 232
+      },
+      "yOffsetRange": {
+        "min": 66,
+        "max": 137
+      }
+    }
   },
   "bgOnlyPerRowBestShiftCounts": [
     {

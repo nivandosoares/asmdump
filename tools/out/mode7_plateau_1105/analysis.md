@@ -26,6 +26,12 @@
 - sprites touching plateau diff box: `4`
 - sprite union inside plateau diff box: `128` / `14839` (`0.862592%`)
 
+## Mode 7 Window Sampling
+
+- BG bbox at base hscroll stays inside the map: `0` outside-map pixels
+- BG bbox at best BG-only delta stays inside the map: `0` outside-map pixels
+- BG bbox base offset range: `x=24..232`, `y=65..137`
+
 ## BG shift scan
 
 - best whole-box horizontal shift: `-1`

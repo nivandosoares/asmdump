@@ -10,7 +10,7 @@ Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 | Roadmap lane | Status | Current reading |
 |---|---|---|
 | 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps are done; registry tightening now demotes `9681` to `sentinel-control` and `E91F` to `nested-invalid-marker`, leaving active unresolved queue (`EE7F`, `DA96`). |
-| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry, the visual-contract builders now separate BG/CHR state from OBJ/OAM state with optional provenance binding, producer-side write-breakpoint summaries now also have real later-window proofs at `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now shows `1094..1101` `main_visible.ppm` is exactly the top `224` lines of `main.ppm` while swapping only visible-scanline `ppu.mode7.matrix[0]/[3]` values worsens the render mismatch from `177..574` to `362..5930`, a new active-trace builder now turns `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract range builders now also merge that activity layer directly, and the new `1102..1117` compare summary proves `main_visible.ppm` stays the top crop of `main.ppm`, the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, the visible-state `Mode 7` disagreement only survives `1102..1104`, and the remaining render gap plateaus at `2698` mismatched pixels from `1105..1117` even after `OAM DMA` shuts off at `1114`; the new canonical plateau analyzer now also proves only `4` visible sprites touch that shared diff box (`128 / 14839` pixels), `bg1_visible.ppm` is itself static from `1105..1117`, a `-1` horizontal shift improves the BG-only compare `3982 -> 3611`, and a direct `ppu.mode7.hscroll +1` perturbation reproduces most of that BG-only gain (`3982 -> 3613`) while still making the full-scene compare worse (`2698 -> 2780`), so the current late-attract frontier is specifically `Mode 7/BG1` horizontal sampling or edge semantics rather than another hidden upload, callback fork, or sprite-ownership split. |
+| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry, the visual-contract builders now separate BG/CHR state from OBJ/OAM state with optional provenance binding, producer-side write-breakpoint summaries now also have real later-window proofs at `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now shows `1094..1101` `main_visible.ppm` is exactly the top `224` lines of `main.ppm` while swapping only visible-scanline `ppu.mode7.matrix[0]/[3]` values worsens the render mismatch from `177..574` to `362..5930`, a new active-trace builder now turns `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract range builders now also merge that activity layer directly, and the new `1102..1117` compare summary proves `main_visible.ppm` stays the top crop of `main.ppm`, the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, the visible-state `Mode 7` disagreement only survives `1102..1104`, and the remaining render gap plateaus at `2698` mismatched pixels from `1105..1117` even after `OAM DMA` shuts off at `1114`; the new canonical plateau analyzer now also proves only `4` visible sprites touch that shared diff box (`128 / 14839` pixels), `bg1_visible.ppm` is itself static from `1105..1117`, a `-1` horizontal shift improves the BG-only compare `3982 -> 3611`, a direct `ppu.mode7.hscroll +1` perturbation reproduces most of that BG-only gain (`3982 -> 3613`) while still making the full-scene compare worse (`2698 -> 2780`), and the new sampling stats plus doc/source cross-check now prove the plateau bbox never leaves the Mode 7 map at either `hscroll = 0` or `hscroll = +1`, which demotes `M7SEL` edge/fill behavior and narrows the late-attract frontier to `Mode 7/BG1` X-origin, first-pixel, or visible-latched scroll semantics rather than another hidden upload, callback fork, or sprite-ownership split. |
 | 3. Gameplay-frame expansion | in progress | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty. |
 | 4. Bank API contracts | not started | Baseline docs exist; callback/API contracts for bank 30/10/11 are not yet mapped to completion. |
 
@@ -841,7 +841,7 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
       - `python3 tools/build_mesen_visual_contract_range.py tools/out/design_mesen_range_1110_1117_v1 tools/out/visual_contract_range_1110_1117_activity --provenance-json rom_analysis/maps/tilemaps/mesen_range_1110_1117_provenance.jsonc --probe-json tools/out/activity_trace_1094_1117/td2_boot_probe.json --activity-trace-json tools/out/activity_trace_1094_1117/activity_trace.json --clean-out`
       - `python3 tools/build_mesen_window_compare.py tools/out/post_1093_compare_1102_1117/summary.json tools/out/mesen_range_1102_1109_v1 tools/out/mesen_range_1110_1117_v1 --activity-trace-json tools/out/activity_trace_1094_1117/activity_trace.json --markdown-out tools/out/post_1093_compare_1102_1117/summary.md`
       - `python3 tools/build_mode7_plateau_analysis.py tools/out/post_1093_compare_1102_1117/summary.json tools/out/design_mesen_range_1102_1109_v1 tools/out/design_mesen_range_1110_1117_v1 tools/out/mode7_plateau_1105/analysis.json --markdown-out tools/out/mode7_plateau_1105/analysis.md`
-      - evidence:
+        - evidence:
         - `tools/out/visual_contract_range_1102_1109_activity/visual_contract_range.json`
         - `tools/out/visual_contract_range_1110_1117_activity/visual_contract_range.json`
         - `tools/out/post_1093_compare_1102_1117/summary.json`
@@ -849,6 +849,7 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
         - `tools/out/mode7_plateau_1105/analysis.json`
         - `tools/out/mode7_plateau_1105/analysis.md`
         - `rom_analysis/docs/intro_00_8029_post_1102_window_1102_1117.md`
+        - `rom_analysis/docs/mode7_1105_validation_reference.md`
       - current reading:
         - the entire `1102..1117` window keeps the same presentation surface:
           - `bgMode = 7`
@@ -896,15 +897,29 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
           - per-row best-shift counts still favor `-1` on `38` rows, so the
             plateau now reads as mostly BG sampling/rounding rather than sprite
             ownership
+          - the new `Mode 7` sampling stats now also prove:
+            - the main and BG-only plateau bboxes stay entirely inside the map
+              (`outsideMapPixels = 0`)
+            - base BG bbox sample range is `x = 24..232`, `y = 65..137`
+            - best tested BG-only delta (`hscroll +1`) still stays inside the
+              map with sample range `x = 25..233`, `y = 65..137`
+          - the doc/source cross-check now agrees with that narrowing:
+            - the repo renderer already matches the main `fullsnes` /
+              `Mesen-S` operational formula shape
+            - canonical `1105` keeps `EXTBG`, direct color, windows, and color
+              math inactive
+            - so the leading frontier is no longer `M7SEL` edge handling
       - next best step:
         - keep `7051` parked
         - stop chasing new ownership forks inside `1105..1117`
         - treat the static `2698`-pixel plateau as the real Lane 2 frontier
         - stop treating sprites or `1114` `OAM DMA` shutdown as likely causes
         - use the `hscroll +1` partial match only as a clue, not as a fix
-        - test which `Mode 7/BG1` coordinate term or edge rule produces that
-          BG-only gain without worsening the full-scene compare on canonical
-          frame `1105`
+        - stop treating outside-map `M7SEL` edge/fill behavior as a leading
+          cause unless a later artifact shows non-zero outside-map samples
+        - test which `Mode 7/BG1` X-origin, first-pixel, or visible-latched
+          scroll rule produces that BG-only gain without worsening the
+          full-scene compare on canonical frame `1105`
 
 ## 3. Expand Into Gameplay Frames
 
