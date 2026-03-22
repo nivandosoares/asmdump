@@ -51,7 +51,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--mode7-line-bias",
         type=int,
-        default=0,
+        default=1,
         help="optional per-scanline Y bias passed through to the Mode 7 renderer",
     )
     return parser.parse_args()
@@ -153,7 +153,7 @@ def render_frame(
     state_path: Path,
     out_path: Path,
     obj_renderer: str,
-    mode7_line_bias: int = 0,
+    mode7_line_bias: int = 1,
 ) -> None:
     cmd = [
         sys.executable,

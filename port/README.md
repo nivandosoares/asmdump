@@ -90,6 +90,21 @@ The SNES BG path accepts either a shared prefix or explicit files:
 
 This uses the extracted VRAM/CGRAM/state directly and renders the BG layers inside the SDL runtime, without going through a prebuilt PPM. When an OAM dump is provided, or when a sibling `oam.bin` is present next to the VRAM dump, the runtime also composites OBJ sprites.
 
+For isolated `--snes-bg-*` validation, also pass an explicit empty sequence so
+the default intro-loop manifest does not overwrite the requested scene:
+
+```sh
+./port/build/td2_port \
+  --sequence /dev/null \
+  --headless \
+  --frames 1 \
+  --dump-prefix ./port/build/frame \
+  --snes-bg-vram ./tools/out/mesen_frame978_assets/vram.bin \
+  --snes-bg-cgram ./tools/out/mesen_frame978_assets/cgram.bin \
+  --snes-bg-state ./tools/out/mesen_frame978_assets/ppu_state.json \
+  --snes-bg-oam ./tools/out/mesen_frame978_assets/oam.bin
+```
+
 That same path now supports Mode 7 BG scenes from live Mesen dumps:
 
 ```sh

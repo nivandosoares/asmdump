@@ -158,7 +158,7 @@ def render_mode7_layer(
     cgram: list[tuple[int, int, int]],
     state: dict,
     *,
-    line_bias: int = 0,
+    line_bias: int = 1,
 ) -> dict:
     hscroll = sign_extend(int(state.get("ppu.mode7.hscroll", 0)), 13)
     vscroll = sign_extend(int(state.get("ppu.mode7.vscroll", 0)), 13)
@@ -622,7 +622,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--mode7-line-bias",
         type=int,
-        default=0,
+        default=1,
         help="optional per-scanline Y bias for Mode 7 sampling (default: %(default)s)",
     )
     parser.add_argument("--json-out", type=Path, default=None, help="optional render summary path")

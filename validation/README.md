@@ -220,6 +220,22 @@ python3 tools/build_mesen_window_compare.py \
   --markdown-out tools/out/post_1093_compare_1102_1117/summary.md
 ```
 
+The Python `Mode 7` compare path now defaults to the promoted scanline-start
+rule `line + 1`:
+
+- `tools/render_mesen_snes_bg.py`
+- `tools/build_mesen_window_compare.py`
+- `tools/build_mode7_plateau_analysis.py`
+
+Use the default for normal Lane 2 evidence generation. Only pass
+`--mode7-line-bias 0` when you want the old current-line counterfactual for a
+targeted validation or source-comparison run.
+
+That promotion is intentionally scoped to the Python/tooling path for now. The
+same rule is not yet committed into the SDL runtime because
+`port/src/td2_ppu.c` currently carries unrelated dirty work and should not be
+mixed with this checkpoint.
+
 That builder automates the same questions that were previously being answered
 by hand:
 

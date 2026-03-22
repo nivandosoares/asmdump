@@ -10,7 +10,7 @@ Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 | Roadmap lane | Status | Current reading |
 |---|---|---|
 | 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps are done; registry tightening now demotes `9681` to `sentinel-control` and `E91F` to `nested-invalid-marker`, leaving active unresolved queue (`EE7F`, `DA96`). |
-| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry, the visual-contract builders now separate BG/CHR state from OBJ/OAM state with optional provenance binding, producer-side write-breakpoint summaries now also have real later-window proofs at `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now shows `1094..1101` `main_visible.ppm` is exactly the top `224` lines of `main.ppm` while swapping only visible-scanline `ppu.mode7.matrix[0]/[3]` values worsens the render mismatch from `177..574` to `362..5930`, a new active-trace builder now turns `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract range builders now also merge that activity layer directly, and the new `1102..1117` compare summary proves `main_visible.ppm` stays the top crop of `main.ppm`, the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, the visible-state `Mode 7` disagreement only survives `1102..1104`, and the old full-scene `2698` plateau is now closed in the promoted Python compare path when `render_mesen_snes_bg.py` / `build_mesen_window_compare.py` run with `--mode7-line-bias 1`; the same promoted path collapses base-render mismatch to `0` across `1102..1117`, collapses visible-state mismatch to `0` from `1105..1117`, and leaves the isolated `bg1_visible` mismatch open (`6032/5966/6176` at `1102/1103/1104`, `2271` on the `1105..1117` plateau), while the updated plateau analyzer now tolerates the zero-diff composed-screen case and keeps the BG-only read alive; under the stricter allowed-source pass, `fullsnes` remains the only explicit `line + 1` hardware-oriented source while `Mesen-S` remains the only allowed implementation comparison and uses current-line `Y`, and the public test-ROM surface still does not break that tie, so the late-attract frontier is now whether the promoted `line + 1` rule should become default renderer behavior plus the separate BG-only/export mismatch that survives after the composed scene is closed. |
+| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry, the visual-contract builders now separate BG/CHR state from OBJ/OAM state with optional provenance binding, producer-side write-breakpoint summaries now also have real later-window proofs at `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now shows `1094..1101` `main_visible.ppm` is exactly the top `224` lines of `main.ppm` while swapping only visible-scanline `ppu.mode7.matrix[0]/[3]` values worsens the render mismatch from `177..574` to `362..5930`, a new active-trace builder now turns `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract range builders now also merge that activity layer directly, and the new `1102..1117` compare summary proves `main_visible.ppm` stays the top crop of `main.ppm`, the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, the visible-state `Mode 7` disagreement only survives `1102..1104`, and the old full-scene `2698` plateau is now closed in both active renderer paths: the default Python compare path after promoting `line + 1` as the official tooling rule, and the shared SDL runtime after a non-overlapping patch in `port/src/td2_ppu.c`; the runtime-side proof closes isolated scene renders at `1102/1105/1117` with `0` mismatched pixels once validation suppresses the default intro-loop manifest via `--sequence /dev/null`, while the same default Python path still leaves the isolated `bg1_visible` mismatch open (`6032/5966/6176` at `1102/1103/1104`, `2271` on the `1105..1117` plateau) and matches the earlier explicit `--mode7-line-bias 1` artifacts modulo metadata-only path/timestamp differences; under the stricter allowed-source pass, `fullsnes` remains the only explicit `line + 1` hardware-oriented source while `Mesen-S` remains the only allowed implementation comparison and uses current-line `Y`, and the public test-ROM surface still does not break that tie, so the late-attract frontier is now the separate BG-only/export mismatch that survives after the composed scene is closed rather than a presumed worktree blocker in the shared runtime file. |
 | 3. Gameplay-frame expansion | in progress | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty. |
 | 4. Bank API contracts | not started | Baseline docs exist; callback/API contracts for bank 30/10/11 are not yet mapped to completion. |
 
@@ -926,8 +926,8 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
             - so the leading frontier is no longer `M7SEL` edge handling
       - next best step:
         - keep `7051` parked
-        - keep using `--mode7-line-bias 1` as the working composed-screen model
-          for the late `00:8029` window
+        - treat `line + 1` as the official Python/tooling `Mode 7` rule for
+          the late `00:8029` window and for the broader compare path
         - stop treating the old `2698` composed-screen plateau as the active
           frontier; it is now closed on the Python compare path
         - do not treat the surviving `1102..1104` visible-state mismatch as a
@@ -939,10 +939,8 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
           - `1103`: `5966`
           - `1104`: `6176`
           - `1105..1117`: `2271`
-        - decide next whether the promoted `line + 1` rule is strong enough to
-          become the default renderer behavior or should remain a controlled
-          validation knob until a stronger hardware-oriented proof surface
-          breaks the `fullsnes` vs `Mesen-S` tie
+        - keep `--mode7-line-bias 0` only as an explicit counterfactual /
+          escape hatch for validation and source-comparison runs
         - current sampled evidence outside `1102..1117` now leans toward
           promotion rather than rollback:
           - frame `978`: `4 -> 0`
@@ -954,11 +952,20 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
           - frame `1080`: `14813 -> 14816`
         - practical reading:
           - `line + 1` is no longer just a late-`00:8029` patch candidate
+          - it is now the official default for the Python renderer/builders
+            that drive Lane 2 evidence and compare artifacts
           - the only sampled regression so far is the tiny `+3` change on the
             already-unsolved frame `1080`
-          - the next concrete choice is whether to promote `line + 1` to the
-            default Python `Mode 7` renderer path while leaving `--mode7-line-bias 0`
-            available as an explicit escape hatch
+          - the shared `td2_ppu.c` file is no longer a presumed blocker for
+            this rule:
+            - the other-process diff does not overlap the `Mode 7` line-origin
+              block
+            - a surgical runtime patch closes isolated scene renders at
+              `1102/1105/1117` to `0`
+          - the remaining caution is operational, not semantic:
+            - use `--sequence /dev/null` for isolated `--snes-bg-*` runtime
+              validation so the default intro-loop manifest does not overwrite
+              the requested scene
 
 ## 3. Expand Into Gameplay Frames
 

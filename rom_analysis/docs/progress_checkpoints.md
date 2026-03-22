@@ -3510,6 +3510,104 @@ Practical reading:
       unresolved, so keeping `--mode7-line-bias 0` as an explicit escape hatch
       would still be prudent if that promotion happens
 
+### CP-81: `line + 1` is now the official Python `Mode 7` rule, with SDL deferred behind a dirty-runtime boundary
+
+- Compared the two active methods in the clean tooling path:
+  - legacy current-line default (`--mode7-line-bias 0`)
+  - promoted `line + 1` default (`--mode7-line-bias 1`)
+- Promoted `line + 1` into the default Python renderer/builders without
+  touching the dirty SDL runtime file:
+  - `tools/render_mesen_snes_bg.py`
+  - `tools/build_mesen_window_compare.py`
+  - `tools/build_mode7_plateau_analysis.py`
+- Validation:
+  - `python3 -m py_compile tools/render_mesen_snes_bg.py tools/build_mesen_window_compare.py tools/build_mode7_plateau_analysis.py`
+  - `python3 tools/build_mesen_window_compare.py tools/out/post_1093_compare_1102_1117_default/summary.json tools/out/mesen_range_1102_1109_v1 tools/out/mesen_range_1110_1117_v1 --activity-trace-json tools/out/activity_trace_1094_1117/activity_trace.json --markdown-out tools/out/post_1093_compare_1102_1117_default/summary.md`
+  - `python3 tools/build_mode7_plateau_analysis.py tools/out/post_1093_compare_1102_1117_default/summary.json tools/out/design_mesen_range_1102_1109_v1 tools/out/design_mesen_range_1110_1117_v1 tools/out/mode7_plateau_1105_default/analysis.json --canonical-frame 1105 --markdown-out tools/out/mode7_plateau_1105_default/analysis.md`
+  - metadata-scrubbed compare against the earlier explicit `--mode7-line-bias 1`
+    artifacts:
+    - compare summary: identical after dropping path/timestamp-only fields
+    - plateau analysis: identical except for the expected `compareSummaryPath`
+      rebinding to the new default summary
+- New evidence:
+  - the no-flag default compare summary now reports the same operational
+    closure as the earlier explicit `line + 1` run:
+    - base render vs `main_visible.ppm`: `0` across `1102..1117`
+    - visible-state render vs `main_visible.ppm`: `6045/5951/6066/0`
+      at `1102/1103/1104/1105..1117`
+  - the no-flag canonical plateau analysis now reports the same solved
+    composed-screen read:
+    - `mode7LineBias = 1`
+    - `mainVisibleCompare.mode7PpuMismatchPixels = 0`
+    - `bg1VisibleCompare.mismatchPixels = 2271`
+    - sampling bbox unchanged: `24,67 -> 231,120`
+  - practical comparison with the older current-line method remains the same as
+    the prior sweep:
+    - `978`: `4 -> 0`
+    - `982`: `4 -> 1`
+    - `986`: `270 -> 266`
+    - `990`: `1641 -> 1638`
+    - `994`: `3232 -> 3228`
+    - `1200`: `5249 -> 2551`
+    - `1080`: `14813 -> 14816`
+- Practical reading:
+  - the project now has one official `Mode 7` rule for the active evidence path:
+    - Python renderer/builders default to `line + 1`
+    - `--mode7-line-bias 0` remains available only for counterfactual runs
+  - that choice is strong enough for the rest of Lane 2 because it reproduces
+    the earlier explicit solved artifacts and keeps the only known downside to
+    a tiny `+3` change on still-unsolved frame `1080`
+  - the same rule is **not** yet promoted into the SDL runtime:
+    - `port/src/td2_ppu.c` is already dirty from another process
+    - changing it here would mix a policy decision with unrelated runtime work
+  - the active frontier therefore stays narrow:
+    - keep using the new default Python rule
+    - isolate the remaining `bg1_visible` mismatch
+    - revisit SDL promotion only after the runtime file is clean
+
+### CP-82: Shared `td2_ppu.c` was patchable after all; the real validation trap was the default sequence manifest
+
+- Re-audited the active worktree conflict around `port/src/td2_ppu.c`.
+- File-level reading:
+  - the other-process delta in `td2_ppu.c` touches:
+    - layer-state JSON loading
+    - ad hoc BG debug logging
+  - it does **not** overlap the `render_snes_mode7_scene()` line-origin block
+    at `screen_y -> real_y`
+- Promoted the same `line + 1` rule into the shared SDL runtime with a
+  surgical patch in `render_snes_mode7_scene()`:
+  - `line_y = screen_y + 1`
+  - `real_y = vertical_mirroring ? (255 - line_y) : line_y`
+- Validation:
+  - `make -C port`
+  - isolated runtime renders, explicitly suppressing the default intro-loop
+    manifest with `--sequence /dev/null`:
+    - `SDL_VIDEODRIVER=dummy ./port/build/td2_port --sequence /dev/null --headless --frames 1 --dump-prefix ./port/build/mode7_1102 --snes-bg-vram ./tools/out/mesen_range_1102_1109_v1/frame_01102/vram.bin --snes-bg-cgram ./tools/out/mesen_range_1102_1109_v1/frame_01102/cgram.bin --snes-bg-state ./tools/out/mesen_range_1102_1109_v1/frame_01102/ppu_state.json --snes-bg-oam ./tools/out/mesen_range_1102_1109_v1/frame_01102/oam.bin`
+    - `SDL_VIDEODRIVER=dummy ./port/build/td2_port --sequence /dev/null --headless --frames 1 --dump-prefix ./port/build/mode7_1105 --snes-bg-vram ./tools/out/mesen_range_1102_1109_v1/frame_01105/vram.bin --snes-bg-cgram ./tools/out/mesen_range_1102_1109_v1/frame_01105/cgram.bin --snes-bg-state ./tools/out/mesen_range_1102_1109_v1/frame_01105/ppu_state.json --snes-bg-oam ./tools/out/mesen_range_1102_1109_v1/frame_01105/oam.bin`
+    - `SDL_VIDEODRIVER=dummy ./port/build/td2_port --sequence /dev/null --headless --frames 1 --dump-prefix ./port/build/mode7_1117 --snes-bg-vram ./tools/out/mesen_range_1110_1117_v1/frame_01117/vram.bin --snes-bg-cgram ./tools/out/mesen_range_1110_1117_v1/frame_01117/cgram.bin --snes-bg-state ./tools/out/mesen_range_1110_1117_v1/frame_01117/ppu_state.json --snes-bg-oam ./tools/out/mesen_range_1110_1117_v1/frame_01117/oam.bin`
+  - compares against extracted `main_visible.ppm`:
+    - `1102`: `0`
+    - `1105`: `0`
+    - `1117`: `0`
+  - temporary `HEAD` rebuild for control:
+    - built `/tmp/td2_port_head` from `HEAD:port/src/td2_ppu.c`
+    - same isolated scene path remains at:
+      - `1102`: `838`
+      - `1105`: `2698`
+- Practical reading:
+  - the shared-file conflict was weaker than it looked:
+    - the other process was active in the same file, but not in the same
+      semantic block
+    - the runtime patch could be merged isonomically without reverting or
+      trampling those edits
+  - the earlier near-full-screen mismatch was a validation trap, not a runtime
+    regression:
+    - `td2_port` auto-loads the default intro sequence unless told otherwise
+    - isolated `--snes-bg-*` validation must therefore neutralize that path
+      with `--sequence /dev/null` (or another empty manifest)
+  - the remaining Lane 2 frontier is again the BG-only/export side, not a
+    worktree blocker in the runtime file
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):

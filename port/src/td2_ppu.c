@@ -649,7 +649,8 @@ static void render_snes_mode7_scene(AppState *app) {
     int matrix_d = snes_sign_extend(scene->mode7_matrix[3], 16);
 
     for (int screen_y = 0; screen_y < SCREEN_HEIGHT; screen_y++) {
-        int real_y = scene->mode7_vertical_mirroring ? (255 - screen_y) : screen_y;
+        int line_y = screen_y + 1;
+        int real_y = scene->mode7_vertical_mirroring ? (255 - line_y) : line_y;
         int x_value = (((matrix_a * snes_mode7_clip(hscroll - center_x)) & ~63) +
                        ((matrix_b * real_y) & ~63) +
                        ((matrix_b * snes_mode7_clip(vscroll - center_y)) & ~63) +
