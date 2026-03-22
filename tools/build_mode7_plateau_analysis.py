@@ -79,6 +79,12 @@ def parse_args() -> argparse.Namespace:
         default="frame_*",
         help="frame directory glob used under each design root (default: %(default)s)",
     )
+    parser.add_argument(
+        "--mode7-line-bias",
+        type=int,
+        default=0,
+        help="optional per-scanline Y bias passed through to the Mode 7 renderer",
+    )
     return parser.parse_args()
 
 
@@ -148,10 +154,18 @@ def render_variant(
     *,
     obj_renderer: str,
     include_oam: bool,
+    mode7_line_bias: int,
 ) -> bytes:
     render_script = Path(__file__).with_name("render_mesen_snes_bg.py").resolve()
     if include_oam:
-        render_frame(render_script, frame_dir, state_path, out_path, obj_renderer)
+        render_frame(
+            render_script,
+            frame_dir,
+            state_path,
+            out_path,
+            obj_renderer,
+            mode7_line_bias,
+        )
     else:
         # Match render_frame without attaching OAM.
         import subprocess
@@ -166,6 +180,8 @@ def render_variant(
             str(out_path),
             "--obj-renderer",
             obj_renderer,
+            "--mode7-line-bias",
+            str(mode7_line_bias),
         ]
         subprocess.run(cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     _, _, pixels = load_ppm(out_path)
@@ -417,7 +433,12 @@ def render_markdown(report: dict) -> str:
         "## Plateau identity",
         "",
         f"- `bg1_visible.ppm` sha1 ranges: `{plateau['bg1VisibleIdentity']['distinctCount']}` distinct",
-        f"- base diff bbox: `{canonical['mainDiffBBox']['x0']},{canonical['mainDiffBBox']['y0']} -> {canonical['mainDiffBBox']['x1']},{canonical['mainDiffBBox']['y1']}`",
+        (
+            f"- base diff bbox: `{canonical['mainDiffBBox']['x0']},{canonical['mainDiffBBox']['y0']} -> "
+            f"{canonical['mainDiffBBox']['x1']},{canonical['mainDiffBBox']['y1']}`"
+            if isinstance(canonical.get("mainDiffBBox"), dict)
+            else "- base diff bbox: `none` (composed-screen compare is exact)"
+        ),
         "",
         "## Canonical compares",
         "",
@@ -429,8 +450,17 @@ def render_markdown(report: dict) -> str:
         "",
         "## Sprite overlap",
         "",
-        f"- sprites touching plateau diff box: `{canonical['spriteOverlap']['overlappingSpriteCount']}`",
-        f"- sprite union inside plateau diff box: `{canonical['spriteOverlap']['unionPixels']}` / `{canonical['spriteOverlap']['bboxAreaPixels']}` (`{canonical['spriteOverlap']['unionRatio']:.6%}`)",
+        (
+            f"- sprites touching plateau diff box: `{canonical['spriteOverlap']['overlappingSpriteCount']}`"
+            if canonical.get("spriteOverlap") is not None
+            else "- sprites touching plateau diff box: `n/a` (composed-screen diff box is absent)"
+        ),
+        (
+            f"- sprite union inside plateau diff box: `{canonical['spriteOverlap']['unionPixels']}` / "
+            f"`{canonical['spriteOverlap']['bboxAreaPixels']}` (`{canonical['spriteOverlap']['unionRatio']:.6%}`)"
+            if canonical.get("spriteOverlap") is not None
+            else "- sprite union inside plateau diff box: `n/a`"
+        ),
         "",
         "## Mode 7 Window Sampling",
         "",
@@ -507,10 +537,6 @@ def main() -> int:
             }
         )
 
-    main_diff_bbox = canonical_row.get("baseRenderDiffBBox")
-    if not isinstance(main_diff_bbox, dict):
-        raise SystemExit("error: canonical compare row is missing baseRenderDiffBBox")
-
     main_visible_path = canonical_frame_dir / "main_visible.ppm"
     bg1_visible_path = canonical_design_dir / "layers" / "bg1_visible.ppm"
     ppu_state_path = canonical_frame_dir / "ppu_state.json"
@@ -535,6 +561,7 @@ def main() -> int:
             temp_root / "mode7_with_oam.ppm",
             obj_renderer="mode7-ppu",
             include_oam=True,
+            mode7_line_bias=args.mode7_line_bias,
         )
         simple_with_oam = render_variant(
             canonical_frame_dir,
@@ -542,6 +569,7 @@ def main() -> int:
             temp_root / "simple_with_oam.ppm",
             obj_renderer="simple",
             include_oam=True,
+            mode7_line_bias=args.mode7_line_bias,
         )
         no_oam = render_variant(
             canonical_frame_dir,
@@ -549,6 +577,7 @@ def main() -> int:
             temp_root / "mode7_no_oam.ppm",
             obj_renderer="mode7-ppu",
             include_oam=False,
+            mode7_line_bias=args.mode7_line_bias,
         )
         base_hscroll = int(canonical_state.get("ppu.mode7.hscroll", 0))
         for delta in hscroll_deltas:
@@ -562,6 +591,7 @@ def main() -> int:
                 temp_root / f"hscroll_{delta:+d}_main.ppm",
                 obj_renderer="mode7-ppu",
                 include_oam=True,
+                mode7_line_bias=args.mode7_line_bias,
             )
             delta_bg1_pixels = render_variant(
                 canonical_frame_dir,
@@ -569,6 +599,7 @@ def main() -> int:
                 temp_root / f"hscroll_{delta:+d}_bg1.ppm",
                 obj_renderer="mode7-ppu",
                 include_oam=False,
+                mode7_line_bias=args.mode7_line_bias,
             )
             delta_main_mismatch = analyze_mismatch(main_visible_pixels, delta_main_pixels, visible_width)["mismatchPixels"]
             delta_bg1_mismatch = analyze_mismatch(bg1_visible_pixels, delta_bg1_pixels, bg1_width)["mismatchPixels"]
@@ -593,6 +624,10 @@ def main() -> int:
     bg1_bbox = bg1_compare["bbox"]
     if not isinstance(bg1_bbox, dict):
         raise SystemExit("error: no bg1 mismatch bbox found for canonical frame")
+    main_diff_bbox = canonical_row.get("baseRenderDiffBBox")
+    if not isinstance(main_diff_bbox, dict):
+        main_diff_bbox = None
+    main_sampling_bbox = main_diff_bbox if main_diff_bbox is not None else bg1_bbox
 
     shift_rows = per_row_best_shifts(bg1_visible_pixels, no_oam, bg1_width, bg1_bbox, args.shift_limit)
     shift_scan_rows = []
@@ -611,6 +646,7 @@ def main() -> int:
         "title": "Canonical Mode 7 plateau analysis",
         "compareSummaryPath": str(compare_summary_path),
         "designFrameRoots": [str(path.resolve()) for path in args.design_frame_roots],
+        "mode7LineBias": int(args.mode7_line_bias),
         "plateau": {
             "startFrame": int(plateau_rows[0]["frame"]),
             "endFrame": int(plateau_rows[-1]["frame"]),
@@ -626,13 +662,18 @@ def main() -> int:
             "frameDir": str(canonical_frame_dir),
             "designFrameDir": str(canonical_design_dir),
             "mainDiffBBox": main_diff_bbox,
+            "mainSamplingBBox": main_sampling_bbox,
             "mainVisibleCompare": {
                 "mode7PpuMismatchPixels": int(canonical_row["baseRenderMismatch"]),
                 "simpleMismatchPixels": simple_main_compare["mismatchPixels"],
                 "noOamMismatchPixels": no_oam_main_compare["mismatchPixels"],
             },
             "bg1VisibleCompare": bg1_compare,
-            "spriteOverlap": compute_sprite_overlap(sprites_visible_json, main_diff_bbox),
+            "spriteOverlap": (
+                compute_sprite_overlap(sprites_visible_json, main_diff_bbox)
+                if main_diff_bbox is not None
+                else None
+            ),
         },
         "bgOnlyShiftScan": {
             "bbox": bg1_bbox,
@@ -653,7 +694,7 @@ def main() -> int:
             "rows": hscroll_scan_rows,
         },
         "mode7WindowSampling": {
-            "mainBase": compute_mode7_window_sampling_stats(canonical_state, main_diff_bbox),
+            "mainBase": compute_mode7_window_sampling_stats(canonical_state, main_sampling_bbox),
             "bg1Base": compute_mode7_window_sampling_stats(canonical_state, bg1_bbox),
             "bg1BestBgDelta": compute_mode7_window_sampling_stats(
                 canonical_state,
@@ -662,7 +703,7 @@ def main() -> int:
             ),
             "mainBestMainDelta": compute_mode7_window_sampling_stats(
                 canonical_state,
-                main_diff_bbox,
+                main_sampling_bbox,
                 hscroll_override=int(canonical_state.get("ppu.mode7.hscroll", 0)) + int(best_main_delta),
             ),
         },

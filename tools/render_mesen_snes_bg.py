@@ -157,6 +157,8 @@ def render_mode7_layer(
     vram: bytes,
     cgram: list[tuple[int, int, int]],
     state: dict,
+    *,
+    line_bias: int = 0,
 ) -> dict:
     hscroll = sign_extend(int(state.get("ppu.mode7.hscroll", 0)), 13)
     vscroll = sign_extend(int(state.get("ppu.mode7.vscroll", 0)), 13)
@@ -177,7 +179,8 @@ def render_mode7_layer(
         return (value | ~0x03FF) if (value & 0x2000) else (value & 0x03FF)
 
     for screen_y in range(SCREEN_HEIGHT):
-        real_y = (255 - screen_y) if vertical_mirroring else screen_y
+        line_y = screen_y + line_bias
+        real_y = (255 - line_y) if vertical_mirroring else line_y
         x_value = (
             ((matrix_a * clip(hscroll - center_x)) & ~63) +
             ((matrix_b * real_y) & ~63) +
@@ -242,6 +245,7 @@ def render_mode7_layer(
         "fill_with_tile0": fill_with_tile0,
         "horizontal_mirroring": horizontal_mirroring,
         "vertical_mirroring": vertical_mirroring,
+        "line_bias": line_bias,
         "debug_start": list(debug_start) if debug_start else [0, 0],
         "debug_end": list(debug_end) if debug_end else [0, 0],
     }
@@ -615,6 +619,12 @@ def parse_args() -> argparse.Namespace:
         default="simple",
         help="object compositor to use when --oam is provided",
     )
+    parser.add_argument(
+        "--mode7-line-bias",
+        type=int,
+        default=0,
+        help="optional per-scanline Y bias for Mode 7 sampling (default: %(default)s)",
+    )
     parser.add_argument("--json-out", type=Path, default=None, help="optional render summary path")
     return parser.parse_args()
 
@@ -650,7 +660,13 @@ def main() -> int:
     obj_summary = None
     if bg_mode == 7:
         if layer_enabled(main_screen_layers, 0):
-            mode7_summary = render_mode7_layer(rgb, vram, cgram, state)
+            mode7_summary = render_mode7_layer(
+                rgb,
+                vram,
+                cgram,
+                state,
+                line_bias=args.mode7_line_bias,
+            )
         if oam is not None and layer_enabled(main_screen_layers, 4):
             if args.obj_renderer == "mode7-ppu":
                 obj_summary = render_mode7_objects_ppu_accurate(rgb, vram, oam, cgram, state)

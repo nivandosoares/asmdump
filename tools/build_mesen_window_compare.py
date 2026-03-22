@@ -48,6 +48,12 @@ def parse_args() -> argparse.Namespace:
         default="frame_*",
         help="frame directory glob used under each root (default: %(default)s)",
     )
+    parser.add_argument(
+        "--mode7-line-bias",
+        type=int,
+        default=0,
+        help="optional per-scanline Y bias passed through to the Mode 7 renderer",
+    )
     return parser.parse_args()
 
 
@@ -147,6 +153,7 @@ def render_frame(
     state_path: Path,
     out_path: Path,
     obj_renderer: str,
+    mode7_line_bias: int = 0,
 ) -> None:
     cmd = [
         sys.executable,
@@ -157,6 +164,8 @@ def render_frame(
         str(out_path),
         "--obj-renderer",
         obj_renderer,
+        "--mode7-line-bias",
+        str(mode7_line_bias),
     ]
     oam_path = frame_dir / "oam.bin"
     if oam_path.is_file():
@@ -314,7 +323,14 @@ def main() -> int:
             bottom_crop_mismatch, bottom_crop_ratio = mismatch_from_buffers(main_bottom_pixels, visible_pixels)
 
             base_render_path = temp_root / f"frame_{frame:05d}_base.ppm"
-            render_frame(render_script, frame_dir, state_path, base_render_path, args.obj_renderer)
+            render_frame(
+                render_script,
+                frame_dir,
+                state_path,
+                base_render_path,
+                args.obj_renderer,
+                args.mode7_line_bias,
+            )
             _, _, base_render_pixels = load_ppm(base_render_path)
             base_render_analysis = analyze_mismatch(visible_pixels, base_render_pixels, visible_width)
             base_render_mismatch = base_render_analysis["mismatchPixels"]
@@ -326,7 +342,14 @@ def main() -> int:
             visible_state_matrix3 = None
             if visible_state_path.is_file():
                 visible_render_path = temp_root / f"frame_{frame:05d}_visible.ppm"
-                render_frame(render_script, frame_dir, visible_state_path, visible_render_path, args.obj_renderer)
+                render_frame(
+                    render_script,
+                    frame_dir,
+                    visible_state_path,
+                    visible_render_path,
+                    args.obj_renderer,
+                    args.mode7_line_bias,
+                )
                 _, _, visible_render_pixels = load_ppm(visible_render_path)
                 visible_render_mismatch, visible_render_ratio = mismatch_from_buffers(visible_pixels, visible_render_pixels)
                 visible_state_json = load_json(visible_state_path)

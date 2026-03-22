@@ -3422,6 +3422,61 @@ Practical reading:
   - no roadmap pivot is justified from this retest; the active Lane 2 gate
     remains the late `Mode 7/BG1` scanline-start semantics around `1102..1117`
 
+### CP-79: Controlled `line + 1` promotion closes the whole composed-screen window and leaves BG1 isolated
+
+- Promoted the `screenY + 1` hypothesis into the Python renderer-side compare
+  path without touching the dirty SDL runtime worktree:
+  - `tools/render_mesen_snes_bg.py`
+  - `tools/build_mesen_window_compare.py`
+  - `tools/build_mode7_plateau_analysis.py`
+- New promoted artifacts:
+  - `tools/out/post_1093_compare_1102_1117_linebias1/summary.json`
+  - `tools/out/post_1093_compare_1102_1117_linebias1/summary.md`
+  - `tools/out/mode7_plateau_1105_linebias1/analysis.json`
+  - `tools/out/mode7_plateau_1105_linebias1/analysis.md`
+- Validation:
+  - `python3 -m py_compile tools/render_mesen_snes_bg.py tools/build_mesen_window_compare.py tools/build_mode7_plateau_analysis.py`
+  - `python3 tools/build_mesen_window_compare.py tools/out/post_1093_compare_1102_1117_linebias1/summary.json tools/out/mesen_range_1102_1109_v1 tools/out/mesen_range_1110_1117_v1 --activity-trace-json tools/out/activity_trace_1094_1117/activity_trace.json --mode7-line-bias 1 --markdown-out tools/out/post_1093_compare_1102_1117_linebias1/summary.md`
+  - `python3 tools/build_mode7_plateau_analysis.py tools/out/post_1093_compare_1102_1117_linebias1/summary.json tools/out/design_mesen_range_1102_1109_v1 tools/out/design_mesen_range_1110_1117_v1 tools/out/mode7_plateau_1105_linebias1/analysis.json --canonical-frame 1105 --mode7-line-bias 1 --markdown-out tools/out/mode7_plateau_1105_linebias1/analysis.md`
+  - direct BG-only spot checks:
+    - frame `1102`: `6031 -> 6032` (`line_bias 0 -> 1`)
+    - frame `1103`: `6003 -> 5966`
+    - frame `1104`: `6353 -> 6176`
+    - frame `1105`: `3982 -> 2271`
+    - frame `1117`: `3982 -> 2271`
+- New evidence:
+  - base render vs `main_visible.ppm` with `--mode7-line-bias 1`:
+    - `1102`: `838 -> 0`
+    - `1103`: `1061 -> 0`
+    - `1104`: `1798 -> 0`
+    - `1105..1117`: `2698 -> 0`
+  - visible-state render vs `main_visible.ppm` with the same bias:
+    - `1102`: `6082 -> 6045`
+    - `1103`: `5958 -> 5951`
+    - `1104`: `6292 -> 6066`
+    - `1105..1117`: `2698 -> 0`
+  - updated canonical `1105` plateau analysis now survives the zero-diff
+    composed-screen case:
+    - `mainDiffBBox = none`
+    - fallback sampling bbox: `24,67 -> 231,120`
+    - `mode7-ppu` with OAM vs `main_visible.ppm`: `0`
+    - `simple` with OAM vs `main_visible.ppm`: `0`
+    - no-`OAM` vs `main_visible.ppm`: `7019`
+    - no-`OAM` vs `bg1_visible.ppm`: `2271`
+    - best tested hscroll delta is now `0` for both full-scene and BG-only
+- Practical reading:
+  - the composed-screen `Mode 7` rule is no longer hypothetical; the regular
+    Python compare path now closes the whole `1102..1117` window under
+    `line + 1`
+  - the surviving `1102..1104` visible-state mismatch is now a narrower
+    state-selection issue, not evidence against the promoted composed-screen
+    rule
+  - the active Lane 2 frontier has moved again:
+    - no longer "which scanline-start term closes the scene?"
+    - now "should `line + 1` become default renderer behavior, and what still
+      explains the isolated `bg1_visible`/layer-export mismatch that remains
+      after the scene is closed?"
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):
