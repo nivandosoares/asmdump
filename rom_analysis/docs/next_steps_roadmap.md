@@ -10,7 +10,7 @@ Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 | Roadmap lane | Status | Current reading |
 |---|---|---|
 | 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps are done; registry tightening now demotes `9681` to `sentinel-control` and `E91F` to `nested-invalid-marker`, leaving active unresolved queue (`EE7F`, `DA96`). |
-| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry, the visual-contract builders now separate BG/CHR state from OBJ/OAM state with optional provenance binding, producer-side write-breakpoint summaries now also have real later-window proofs at `986/990/994/998` under the same `01:9FE5` callback family, and the still-open timed-input ownership follow-up is specifically the `7051` power-on path, which remains locally blocked because two bounded headless attempts exited `255` before emitting probe JSON. |
+| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry, the visual-contract builders now separate BG/CHR state from OBJ/OAM state with optional provenance binding, producer-side write-breakpoint summaries now also have real later-window proofs at `986/990/994/998/1005` under the same `01:9FE5` callback family, and the still-open timed-input ownership follow-up is specifically the `7051` power-on path, which remains locally blocked because two bounded headless attempts exited `255` before emitting probe JSON. |
 | 3. Gameplay-frame expansion | in progress | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty. |
 | 4. Bank API contracts | not started | Baseline docs exist; callback/API contracts for bank 30/10/11 are not yet mapped to completion. |
 
@@ -339,9 +339,9 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
       - next best step after this negative result:
         - do not spend more headless retries on the same power-on `7051` path
           without a new starting surface
-        - keep using the now-proved `986/990/994/998` window as the current
+        - keep using the now-proved `986/990/994/998/1005` window as the current
           later-window ownership anchor and extend the same live proof approach
-          forward into `1005` before coming back to the blocked timed-input
+          forward into `1013` before coming back to the blocked timed-input
           `7051` path
         - recover a reusable later-intro savestate/seed for the `7051..7061`
           window only when you need timed-input ownership, not generic late
@@ -419,6 +419,34 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
             continuity notes
           - producer traffic stays flat from `994` into `998` while the
             visible overlay expands again
+    - promoted forward extension at `1005`:
+      - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release make -C tools mesen-design-pack MESEN_FRAME=1005`
+      - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=150 TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_1005_live/td2_boot_probe TD2_BOOT_PROBE_TOTAL_FRAMES=1006 TD2_BOOT_PROBE_TRACE_START_FRAME=998 TD2_BOOT_PROBE_TRACE_END_FRAME=1005 TD2_BOOT_PROBE_TRACE_WRITE_POINTS='objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122' TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 ./validation/run_mesen_probe_boot.sh`
+      - `python3 tools/build_mesen_visual_contract.py tools/out/design_frame1005 tools/out/visual_contract_frame1005_live_probe.json --probe-json tools/out/visual_contract_probe_1005_live/td2_boot_probe.json`
+      - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=150 TD2_BG_RANGE_START_FRAME=1005 TD2_BG_RANGE_END_FRAME=1005 TD2_BG_RANGE_STEP=1 TD2_BG_RANGE_DUMP_SCREENSHOTS=1 TD2_BG_RANGE_OUTPUT_PREFIX=tools/out/intro_loop ./validation/run_mesen_dump_bg_range.sh`
+      - evidence:
+        - `tools/out/visual_contract_probe_1005_live/td2_boot_probe.json`
+        - `tools/out/visual_contract_frame1005_live_probe.json`
+      - targeted validation:
+        - `python3 tools/compare_frames.py tools/out/intro_loop_frame_01005_frame.png tools/out/mesen_frame1005/main_visible.ppm --diff-out tools/out/mesen_frame1005_vs_intro1005_diff.ppm`
+        - `python3 tools/render_mesen_snes_bg.py tools/out/mesen_frame1005/vram.bin tools/out/mesen_frame1005/cgram.bin tools/out/mesen_frame1005/ppu_state.json tools/out/mesen_frame1005_mode7ppu.ppm --oam tools/out/mesen_frame1005/oam.bin --obj-renderer mode7-ppu --json-out tools/out/mesen_frame1005_mode7ppu.json`
+        - `python3 tools/compare_frames.py tools/out/mesen_frame1005/main_visible.ppm tools/out/mesen_frame1005_mode7ppu.ppm --diff-out tools/out/mesen_frame1005_mode7ppu_vs_mesen1005_diff.ppm`
+      - current reading:
+        - `6432` write hits, `0` drops, exact
+          `producerTrace.traceWindow = 998..1005`
+        - `4368` OAM writes across `998..1005`
+        - `2064` VRAM writes across `998..1005`
+        - `53` visible sprites in the fresh design pack
+        - `4466` pixels vs the fresh local screenshot
+        - `4` pixels vs the repo's Python `mode7-ppu` render of the same frame
+        - the callback family still does not change:
+          - main callback `01:9FE5`
+          - IRQ callback `00:835F`
+        - practical reading:
+          - the first direct bridge-extracted `998..1005` block is now closed
+            by live ownership evidence at both ends
+          - producer traffic remains inside the same callback family while the
+            visible overlay keeps expanding into frame `1005`
 
 ## 3. Expand Into Gameplay Frames
 
