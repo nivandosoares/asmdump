@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; registry tightening now closes `9681` as `sentinel-control` and `E91F` as `nested-invalid-marker`; active unresolved queue remains `EE7F` and `DA96` |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/matrix[3]` values makes the render mismatch worse, and the still-blocked ownership follow-up is specifically the timed-input `7051` power-on path |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/matrix[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, and the first active trace over `1094..1117` proves there are no direct `VRAM/CGRAM` writes in that window, the callback switch lands at `1102` (`01:9FE5 -> 00:8029`), the repeated `00:0700 -> OAMDATA` `544`-byte DMA persists only through `1113`, and the `M7A/M7D` scanline-`231` update disappears after `1101`, which splits the post-`1093` continuation into meaningful subwindows before the still-blocked timed-input `7051` power-on follow-up |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -2969,9 +2969,14 @@ Current reading:
 Next best step:
 
 - keep the timed-input `7051` path parked
-- apply the same compare rubric to `1102..1117`
-- only then decide whether the residual `177..574` mismatch band needs
-  renderer work or a more specific export/composition model
+- use the active-trace follow-up to split the continuation into:
+  - `1102..1113`
+  - `1114..1117`
+- test whether the residual mismatch tracks:
+  - the `01:9FE5 -> 00:8029` callback switch at `1102`
+  - the disappearance of the per-frame `00:0700 -> OAMDATA` DMA at `1114`
+- do not keep searching for hidden direct `VRAM/CGRAM` uploads in this window
+  unless a new targeted trace contradicts the current proof
 
 ### CP-71: `DOOM-FX` now has a local architecture reference note
 
@@ -3082,6 +3087,61 @@ Next best step:
 - use the new knowledge bank as a hardware-reference companion while Lane 2
   continues through the post-`1093` composition/export boundary and while Lane
   4 later formalizes producer/consumer contracts around NMI-visible surfaces
+
+### CP-73: The post-`1093` late-attract window now has an active Mesen behavior trace (`1094..1117`)
+
+- Added a new builder:
+  - `tools/build_mesen_activity_trace.py`
+- Captured a bounded live probe window with `DMA`, direct `VRAM/CGRAM`, and
+  `Mode 7` tracing enabled.
+- Added the current reading note:
+  - `rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md`
+
+Evidence:
+
+- capture command:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=180 TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/activity_trace_1094_1117/td2_boot_probe TD2_BOOT_PROBE_TOTAL_FRAMES=1118 TD2_BOOT_PROBE_TRACE_START_FRAME=1094 TD2_BOOT_PROBE_TRACE_END_FRAME=1117 TD2_BOOT_PROBE_TRACE_DMA=1 TD2_BOOT_PROBE_TRACE_VRAM=1 TD2_BOOT_PROBE_TRACE_MODE7=1 ./validation/run_mesen_probe_boot.sh`
+- normalization command:
+  - `python3 tools/build_mesen_activity_trace.py tools/out/activity_trace_1094_1117/td2_boot_probe.json tools/out/activity_trace_1094_1117/activity_trace.json --markdown-out tools/out/activity_trace_1094_1117/activity_trace.md`
+- produced artifacts:
+  - `tools/out/activity_trace_1094_1117/activity_trace.json`
+  - `tools/out/activity_trace_1094_1117/activity_trace.md`
+  - `rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md`
+
+Current reading:
+
+- there are no direct `VRAM/CGRAM` data writes in `1094..1117`
+  - `td2_boot_probe_vram_writes.json` records `0` writes
+  - normalized direct-write events: `0`
+- there is exactly one repeated `OAM` DMA per frame through `1113`
+  - channel `1`
+  - `DMAEN = 0x02`
+  - target `00:2104` (`OAMDATA`)
+  - source `00:0700`
+  - size `544` bytes
+  - scanline `227`
+- that DMA disappears entirely at `1114..1117`
+- the callback-family switch is now explicit:
+  - `1094..1101`: `01:9FE5`
+  - `1102..1117`: `00:8029`
+- the sampled state tuple stays stable across that switch:
+  - `$0204 = 1`
+  - `$0206 = 13`
+  - `$040A = 17`
+  - `$0054 = 128`
+- the `Mode 7` program narrows after `1101`
+  - `1094..1101`: scanlines `225`, `226`, `227`, and `231`, including `M7A/M7D`
+  - `1102..1117`: scanlines `225`, `226`, `227` only, with no `M7A/M7D`
+
+Practical reading:
+
+- the continuation after `1093` is not one homogeneous block
+- the next useful boundaries are now:
+  - `1102`
+  - `1114`
+- the next compare/composition pass should stop treating `1102..1117` as one
+  unit and should stop searching for hidden direct `VRAM/CGRAM` uploads in
+  this window unless a new targeted trace contradicts the current proof
 
 ## Current Checkpoint Metrics
 

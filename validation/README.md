@@ -155,6 +155,45 @@ python3 tools/build_mesen_visual_contract.py \
 `trace_end_frame` in the main payload, so merged visual contracts can retain an
 exact `producerTrace.traceWindow` instead of only the per-domain frame spans.
 
+For active behavior mapping beyond coarse `write_point_trace` counts, the same
+probe can also emit:
+
+- `*_dma_writes.json`
+- `*_vram_writes.json`
+- `*_mode7_writes.json`
+
+Those traces can be normalized into one frame/callback-oriented activity report
+with `tools/build_mesen_activity_trace.py`:
+
+```sh
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=180 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/activity_trace_1094_1117/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=1118 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=1094 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=1117 \
+TD2_BOOT_PROBE_TRACE_DMA=1 \
+TD2_BOOT_PROBE_TRACE_VRAM=1 \
+TD2_BOOT_PROBE_TRACE_MODE7=1 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_activity_trace.py \
+  tools/out/activity_trace_1094_1117/td2_boot_probe.json \
+  tools/out/activity_trace_1094_1117/activity_trace.json \
+  --markdown-out tools/out/activity_trace_1094_1117/activity_trace.md
+```
+
+This path is useful when the question is no longer just "which domain wrote
+something?" but:
+
+- which callback family owned the writes
+- which scanline they landed on
+- whether the window is doing `DMA`, direct `VRAM/CGRAM` writes, or only
+  repeated register programming
+- whether a later mismatch boundary aligns with a real behavior change
+  (`callback` switch, `OAM` DMA shutdown, `Mode 7` register-set reduction, and
+  so on)
+
 A current headless proof that uses only repo-relative prefixes is:
 
 ```sh

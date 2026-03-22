@@ -10,7 +10,7 @@ Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 | Roadmap lane | Status | Current reading |
 |---|---|---|
 | 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps are done; registry tightening now demotes `9681` to `sentinel-control` and `E91F` to `nested-invalid-marker`, leaving active unresolved queue (`EE7F`, `DA96`). |
-| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry, the visual-contract builders now separate BG/CHR state from OBJ/OAM state with optional provenance binding, producer-side write-breakpoint summaries now also have real later-window proofs at `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now shows `1094..1101` `main_visible.ppm` is exactly the top `224` lines of `main.ppm` while swapping only visible-scanline `ppu.mode7.matrix[0]/[3]` values worsens the render mismatch from `177..574` to `362..5930`, and the still-open timed-input ownership follow-up is specifically the `7051` power-on path, which remains locally blocked because two bounded headless attempts exited `255` before emitting probe JSON. |
+| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry, the visual-contract builders now separate BG/CHR state from OBJ/OAM state with optional provenance binding, producer-side write-breakpoint summaries now also have real later-window proofs at `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now shows `1094..1101` `main_visible.ppm` is exactly the top `224` lines of `main.ppm` while swapping only visible-scanline `ppu.mode7.matrix[0]/[3]` values worsens the render mismatch from `177..574` to `362..5930`, a new active-trace builder now turns `DMA/VRAM/Mode7` probe outputs into frame/callback events, and the first `1094..1117` active trace proves there are no direct `VRAM/CGRAM` writes in that window, the callback switch lands at `1102` (`01:9FE5 -> 00:8029`), the repeated `00:0700 -> OAMDATA` `544`-byte DMA persists only through `1113`, and the late `M7A/M7D` scanline-`231` update disappears after `1101`, which means the continuation should now be reasoned about as `1094..1101`, `1102..1113`, and `1114..1117` rather than one uniform post-`1093` block. |
 | 3. Gameplay-frame expansion | in progress | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty. |
 | 4. Bank API contracts | not started | Baseline docs exist; callback/API contracts for bank 30/10/11 are not yet mapped to completion. |
 
@@ -830,9 +830,16 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
             mismatched pixels
       - next best step:
         - keep `7051` parked
-        - apply the same compare rubric to `1102..1117`
-        - only then decide whether the remaining gap needs renderer work or a
-          narrower export/composition model
+        - use the active-trace boundaries to split the continuation into:
+          - `1102..1113`
+          - `1114..1117`
+        - test whether the remaining gap tracks:
+          - the `01:9FE5 -> 00:8029` callback switch at `1102`
+          - the disappearance of the per-frame `00:0700 -> OAMDATA` DMA at
+            `1114`
+        - do not spend more time searching for hidden direct `VRAM/CGRAM`
+          uploads in this window unless a new targeted trace contradicts the
+          current proof
 
 ## 3. Expand Into Gameplay Frames
 
