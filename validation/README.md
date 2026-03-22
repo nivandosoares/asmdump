@@ -279,6 +279,39 @@ The current exact-hit set is:
 - `pixel 0` origin `+1`
 - scanline `Y + 1`
 
+For the bounded "is there still another small local tweak hiding in the
+`bg1_visible` export?" follow-up after the composed screen is already exact,
+use:
+
+```sh
+python3 tools/build_mode7_bg1_export_audit.py \
+  tools/out/mode7_plateau_1105_default/analysis.json \
+  tools/out/mode7_bg1_export_audit_1105/audit.json \
+  --markdown-out tools/out/mode7_bg1_export_audit_1105/audit.md
+```
+
+That audit scans a small implementation-adjacent grid over:
+
+- `yLineBias`
+- `xOriginBias`
+- `hscrollBias`
+- sample-before vs sample-after increment
+
+and keeps the composed-screen constraint explicit by comparing each candidate
+against both:
+
+- `main_visible.ppm`
+- `layers/bg1_visible.ppm`
+
+Current reading from the promoted `1105` / `1117` audit pair:
+
+- `36` models scanned per endpoint
+- `5` models keep the composed scene at `0`
+- none of those `5` improves the `bg1_visible` mismatch below `2271`
+
+That is strong evidence that the remaining late-attract layer gap is better
+read as export-surface semantics than another small `Mode 7` renderer tweak.
+
 This path is useful when the remaining question is no longer "is there another
 hidden upload?" and has narrowed to:
 

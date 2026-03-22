@@ -3608,6 +3608,53 @@ Practical reading:
   - the remaining Lane 2 frontier is again the BG-only/export side, not a
     worktree blocker in the runtime file
 
+### CP-83: Bounded export audit demotes more local `Mode 7` tweaks as the explanation for `bg1_visible`
+
+- Added a dedicated bounded export-side audit:
+  - `tools/build_mode7_bg1_export_audit.py`
+- Promoted artifacts:
+  - `tools/out/mode7_bg1_export_audit_1105/audit.json`
+  - `tools/out/mode7_bg1_export_audit_1105/audit.md`
+  - `tools/out/mode7_bg1_export_audit_1117/audit.json`
+  - `tools/out/mode7_bg1_export_audit_1117/audit.md`
+  - `rom_analysis/docs/mode7_bg1_export_semantics.md`
+- Validation:
+  - `python3 -m py_compile tools/build_mode7_bg1_export_audit.py`
+  - `python3 tools/build_mode7_bg1_export_audit.py tools/out/mode7_plateau_1105_default/analysis.json tools/out/mode7_bg1_export_audit_1105/audit.json --markdown-out tools/out/mode7_bg1_export_audit_1105/audit.md`
+  - `python3 tools/build_mode7_bg1_export_audit.py tools/out/mode7_plateau_1117/analysis.json tools/out/mode7_bg1_export_audit_1117/audit.json --markdown-out tools/out/mode7_bg1_export_audit_1117/audit.md`
+- Audit grid:
+  - plateau endpoints `1105` and `1117`
+  - `36` models per endpoint
+  - swept dimensions:
+    - `yLineBias = 0/1`
+    - `xOriginBias = -1/0/1`
+    - `hscrollBias = -1/0/1`
+    - sample order `pre/post`
+- New evidence:
+  - both endpoints agree exactly
+  - best BG-only overall:
+    - `base_y+1_x+0_h+0_pre`
+    - BG-only `2271`
+    - main `0`
+  - best BG-only with `main = 0` is the same model
+  - `5 / 36` models keep the composed scene at `0`
+  - none of those `5` models improves the BG-only export below `2271`
+  - tied `main = 0` family:
+    - `base_y+1_x+0_h+0_pre`
+    - `base_y+1_x-1_h+0_post`
+    - `base_y+1_x+0_h-1_post`
+    - `base_y+1_x-1_h+1_pre`
+    - `base_y+1_x+1_h-1_pre`
+    - all still land at BG-only `2271`
+- Practical reading:
+  - once the composed scene is already solved, the remaining `bg1_visible`
+    gap is stable against the obvious next local `Mode 7` perturbations
+  - that makes the frontier sharper:
+    - stop expecting one more small renderer-side `Mode 7` tweak to close the
+      layer export
+    - treat `layers/bg1_visible.ppm` as a separate export-surface semantics
+      problem instead
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):

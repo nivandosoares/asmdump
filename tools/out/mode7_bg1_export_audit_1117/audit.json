@@ -1,0 +1,1133 @@
+{
+  "schema": "td2.mode7_bg1_export_audit.v1",
+  "createdUtc": "2026-03-22T19:38:17.342353+00:00",
+  "title": "Mode 7 BG1 export audit",
+  "plateauAnalysisPath": "/home/nivando-soares/asmdump/tools/out/mode7_plateau_1117/analysis.json",
+  "canonical": {
+    "frame": 1117,
+    "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1110_1117_v1/frame_01117",
+    "designDir": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1110_1117_v1/frame_01117",
+    "bg1VisibleBBox": {
+      "x0": 24,
+      "y0": 67,
+      "x1": 232,
+      "y1": 138
+    },
+    "baseState": {
+      "ppu.mode7.hscroll": 0,
+      "ppu.mode7.vscroll": 8191,
+      "ppu.mode7.centerX": 128,
+      "ppu.mode7.centerY": 112,
+      "ppu.mode7.matrix[0]": 256,
+      "ppu.mode7.matrix[1]": 0,
+      "ppu.mode7.matrix[2]": 0,
+      "ppu.mode7.matrix[3]": 257,
+      "ppu.extBgEnabled": false,
+      "ppu.directColorMode": false,
+      "ppu.colorMathEnabled": 0,
+      "ppu.subScreenLayers": 0
+    },
+    "visibleState": {
+      "ppu.mode7.hscroll": 0,
+      "ppu.mode7.vscroll": 8191,
+      "ppu.mode7.centerX": 128,
+      "ppu.mode7.centerY": 112,
+      "ppu.mode7.matrix[0]": 256,
+      "ppu.mode7.matrix[1]": 0,
+      "ppu.mode7.matrix[2]": 0,
+      "ppu.mode7.matrix[3]": 257,
+      "ppu.extBgEnabled": false,
+      "ppu.directColorMode": false,
+      "ppu.colorMathEnabled": 0,
+      "ppu.subScreenLayers": 0
+    }
+  },
+  "targetScanlines": [
+    67,
+    102,
+    138
+  ],
+  "targetColumns": [
+    0,
+    1,
+    24,
+    25,
+    128
+  ],
+  "visibleStateDifferences": [],
+  "modelCount": 36,
+  "zeroMainModelCount": 5,
+  "bestBgOnlyModel": {
+    "id": "base_y+1_x+0_h+0_pre",
+    "bg1VisibleMismatchPixels": 2271,
+    "mainVisibleMismatchPixels": 0
+  },
+  "bestBgOnlyZeroMainModel": {
+    "id": "base_y+1_x+0_h+0_pre",
+    "bg1VisibleMismatchPixels": 2271,
+    "mainVisibleMismatchPixels": 0
+  },
+  "bestMainSceneModel": {
+    "id": "base_y+1_x-1_h+0_post",
+    "bg1VisibleMismatchPixels": 2271,
+    "mainVisibleMismatchPixels": 0
+  },
+  "topBgOnlyModels": [
+    {
+      "id": "base_y+1_x+0_h+0_pre",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 1,
+      "hscrollBias": 0,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": 0,
+      "bg1VisibleMismatchPixels": 2271,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 231,
+        "y1": 120
+      },
+      "mainVisibleMismatchPixels": 0,
+      "mainVisibleDiffBBox": null
+    },
+    {
+      "id": "base_y+1_x-1_h+0_post",
+      "stateSource": "base",
+      "xOriginBias": -1,
+      "yLineBias": 1,
+      "hscrollBias": 0,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": 0,
+      "bg1VisibleMismatchPixels": 2271,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 231,
+        "y1": 120
+      },
+      "mainVisibleMismatchPixels": 0,
+      "mainVisibleDiffBBox": null
+    },
+    {
+      "id": "base_y+1_x+0_h-1_post",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 1,
+      "hscrollBias": -1,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": -1,
+      "bg1VisibleMismatchPixels": 2271,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 231,
+        "y1": 120
+      },
+      "mainVisibleMismatchPixels": 0,
+      "mainVisibleDiffBBox": null
+    },
+    {
+      "id": "base_y+1_x-1_h+1_pre",
+      "stateSource": "base",
+      "xOriginBias": -1,
+      "yLineBias": 1,
+      "hscrollBias": 1,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": 1,
+      "bg1VisibleMismatchPixels": 2271,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 231,
+        "y1": 120
+      },
+      "mainVisibleMismatchPixels": 0,
+      "mainVisibleDiffBBox": null
+    },
+    {
+      "id": "base_y+1_x+1_h-1_pre",
+      "stateSource": "base",
+      "xOriginBias": 1,
+      "yLineBias": 1,
+      "hscrollBias": -1,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": -1,
+      "bg1VisibleMismatchPixels": 2271,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 231,
+        "y1": 120
+      },
+      "mainVisibleMismatchPixels": 0,
+      "mainVisibleDiffBBox": null
+    },
+    {
+      "id": "base_y+1_x+0_h+0_post",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 1,
+      "hscrollBias": 0,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": 0,
+      "bg1VisibleMismatchPixels": 2503,
+      "bg1VisibleDiffBBox": {
+        "x0": 23,
+        "y0": 67,
+        "x1": 232,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 2509,
+      "mainVisibleDiffBBox": {
+        "x0": 23,
+        "y0": 68,
+        "x1": 232,
+        "y1": 137
+      }
+    },
+    {
+      "id": "base_y+1_x+1_h+0_pre",
+      "stateSource": "base",
+      "xOriginBias": 1,
+      "yLineBias": 1,
+      "hscrollBias": 0,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": 0,
+      "bg1VisibleMismatchPixels": 2503,
+      "bg1VisibleDiffBBox": {
+        "x0": 23,
+        "y0": 67,
+        "x1": 232,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 2509,
+      "mainVisibleDiffBBox": {
+        "x0": 23,
+        "y0": 68,
+        "x1": 232,
+        "y1": 137
+      }
+    },
+    {
+      "id": "base_y+1_x+0_h+1_pre",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 1,
+      "hscrollBias": 1,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": 1,
+      "bg1VisibleMismatchPixels": 2503,
+      "bg1VisibleDiffBBox": {
+        "x0": 23,
+        "y0": 67,
+        "x1": 232,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 2509,
+      "mainVisibleDiffBBox": {
+        "x0": 23,
+        "y0": 68,
+        "x1": 232,
+        "y1": 137
+      }
+    },
+    {
+      "id": "base_y+1_x-1_h+1_post",
+      "stateSource": "base",
+      "xOriginBias": -1,
+      "yLineBias": 1,
+      "hscrollBias": 1,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": 1,
+      "bg1VisibleMismatchPixels": 2503,
+      "bg1VisibleDiffBBox": {
+        "x0": 23,
+        "y0": 67,
+        "x1": 232,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 2509,
+      "mainVisibleDiffBBox": {
+        "x0": 23,
+        "y0": 68,
+        "x1": 232,
+        "y1": 137
+      }
+    },
+    {
+      "id": "base_y+1_x+1_h-1_post",
+      "stateSource": "base",
+      "xOriginBias": 1,
+      "yLineBias": 1,
+      "hscrollBias": -1,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": -1,
+      "bg1VisibleMismatchPixels": 2503,
+      "bg1VisibleDiffBBox": {
+        "x0": 23,
+        "y0": 67,
+        "x1": 232,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 2509,
+      "mainVisibleDiffBBox": {
+        "x0": 23,
+        "y0": 68,
+        "x1": 232,
+        "y1": 137
+      }
+    },
+    {
+      "id": "base_y+1_x-1_h+0_pre",
+      "stateSource": "base",
+      "xOriginBias": -1,
+      "yLineBias": 1,
+      "hscrollBias": 0,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": 0,
+      "bg1VisibleMismatchPixels": 3579,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 233,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 2509,
+      "mainVisibleDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 233,
+        "y1": 137
+      }
+    },
+    {
+      "id": "base_y+1_x+0_h-1_pre",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 1,
+      "hscrollBias": -1,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": -1,
+      "bg1VisibleMismatchPixels": 3579,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 233,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 2509,
+      "mainVisibleDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 233,
+        "y1": 137
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "base_y+0_x-1_h-1_pre",
+      "stateSource": "base",
+      "xOriginBias": -1,
+      "yLineBias": 0,
+      "hscrollBias": -1,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": -1,
+      "bg1VisibleMismatchPixels": 5572,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 234,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 4828,
+      "mainVisibleDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 234,
+        "y1": 138
+      }
+    },
+    {
+      "id": "base_y+0_x-1_h-1_post",
+      "stateSource": "base",
+      "xOriginBias": -1,
+      "yLineBias": 0,
+      "hscrollBias": -1,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": -1,
+      "bg1VisibleMismatchPixels": 4803,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 233,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 3828,
+      "mainVisibleDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 233,
+        "y1": 138
+      }
+    },
+    {
+      "id": "base_y+0_x-1_h+0_pre",
+      "stateSource": "base",
+      "xOriginBias": -1,
+      "yLineBias": 0,
+      "hscrollBias": 0,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": 0,
+      "bg1VisibleMismatchPixels": 4803,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 233,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 3828,
+      "mainVisibleDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 233,
+        "y1": 138
+      }
+    },
+    {
+      "id": "base_y+0_x-1_h+0_post",
+      "stateSource": "base",
+      "xOriginBias": -1,
+      "yLineBias": 0,
+      "hscrollBias": 0,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": 0,
+      "bg1VisibleMismatchPixels": 3982,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 2698,
+      "mainVisibleDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      }
+    },
+    {
+      "id": "base_y+0_x-1_h+1_pre",
+      "stateSource": "base",
+      "xOriginBias": -1,
+      "yLineBias": 0,
+      "hscrollBias": 1,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": 1,
+      "bg1VisibleMismatchPixels": 3982,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 2698,
+      "mainVisibleDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      }
+    },
+    {
+      "id": "base_y+0_x-1_h+1_post",
+      "stateSource": "base",
+      "xOriginBias": -1,
+      "yLineBias": 0,
+      "hscrollBias": 1,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": 1,
+      "bg1VisibleMismatchPixels": 3613,
+      "bg1VisibleDiffBBox": {
+        "x0": 23,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 2780,
+      "mainVisibleDiffBBox": {
+        "x0": 23,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      }
+    },
+    {
+      "id": "base_y+0_x+0_h-1_pre",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 0,
+      "hscrollBias": -1,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": -1,
+      "bg1VisibleMismatchPixels": 4803,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 233,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 3828,
+      "mainVisibleDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 233,
+        "y1": 138
+      }
+    },
+    {
+      "id": "base_y+0_x+0_h-1_post",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 0,
+      "hscrollBias": -1,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": -1,
+      "bg1VisibleMismatchPixels": 3982,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 2698,
+      "mainVisibleDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      }
+    },
+    {
+      "id": "base_y+0_x+0_h+0_pre",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 0,
+      "hscrollBias": 0,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": 0,
+      "bg1VisibleMismatchPixels": 3982,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 2698,
+      "mainVisibleDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      }
+    },
+    {
+      "id": "base_y+0_x+0_h+0_post",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 0,
+      "hscrollBias": 0,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": 0,
+      "bg1VisibleMismatchPixels": 3613,
+      "bg1VisibleDiffBBox": {
+        "x0": 23,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 2780,
+      "mainVisibleDiffBBox": {
+        "x0": 23,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      }
+    },
+    {
+      "id": "base_y+0_x+0_h+1_pre",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 0,
+      "hscrollBias": 1,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": 1,
+      "bg1VisibleMismatchPixels": 3613,
+      "bg1VisibleDiffBBox": {
+        "x0": 23,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 2780,
+      "mainVisibleDiffBBox": {
+        "x0": 23,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      }
+    },
+    {
+      "id": "base_y+0_x+0_h+1_post",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 0,
+      "hscrollBias": 1,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": 1,
+      "bg1VisibleMismatchPixels": 4293,
+      "bg1VisibleDiffBBox": {
+        "x0": 22,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 3829,
+      "mainVisibleDiffBBox": {
+        "x0": 22,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      }
+    },
+    {
+      "id": "base_y+0_x+1_h-1_pre",
+      "stateSource": "base",
+      "xOriginBias": 1,
+      "yLineBias": 0,
+      "hscrollBias": -1,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": -1,
+      "bg1VisibleMismatchPixels": 3982,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 2698,
+      "mainVisibleDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      }
+    },
+    {
+      "id": "base_y+0_x+1_h-1_post",
+      "stateSource": "base",
+      "xOriginBias": 1,
+      "yLineBias": 0,
+      "hscrollBias": -1,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": -1,
+      "bg1VisibleMismatchPixels": 3613,
+      "bg1VisibleDiffBBox": {
+        "x0": 23,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 2780,
+      "mainVisibleDiffBBox": {
+        "x0": 23,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      }
+    },
+    {
+      "id": "base_y+0_x+1_h+0_pre",
+      "stateSource": "base",
+      "xOriginBias": 1,
+      "yLineBias": 0,
+      "hscrollBias": 0,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": 0,
+      "bg1VisibleMismatchPixels": 3613,
+      "bg1VisibleDiffBBox": {
+        "x0": 23,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 2780,
+      "mainVisibleDiffBBox": {
+        "x0": 23,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      }
+    },
+    {
+      "id": "base_y+0_x+1_h+0_post",
+      "stateSource": "base",
+      "xOriginBias": 1,
+      "yLineBias": 0,
+      "hscrollBias": 0,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": 0,
+      "bg1VisibleMismatchPixels": 4293,
+      "bg1VisibleDiffBBox": {
+        "x0": 22,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 3829,
+      "mainVisibleDiffBBox": {
+        "x0": 22,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      }
+    },
+    {
+      "id": "base_y+0_x+1_h+1_pre",
+      "stateSource": "base",
+      "xOriginBias": 1,
+      "yLineBias": 0,
+      "hscrollBias": 1,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": 1,
+      "bg1VisibleMismatchPixels": 4293,
+      "bg1VisibleDiffBBox": {
+        "x0": 22,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 3829,
+      "mainVisibleDiffBBox": {
+        "x0": 22,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      }
+    },
+    {
+      "id": "base_y+0_x+1_h+1_post",
+      "stateSource": "base",
+      "xOriginBias": 1,
+      "yLineBias": 0,
+      "hscrollBias": 1,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": 1,
+      "bg1VisibleMismatchPixels": 4955,
+      "bg1VisibleDiffBBox": {
+        "x0": 21,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 4722,
+      "mainVisibleDiffBBox": {
+        "x0": 21,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      }
+    },
+    {
+      "id": "base_y+1_x-1_h-1_pre",
+      "stateSource": "base",
+      "xOriginBias": -1,
+      "yLineBias": 1,
+      "hscrollBias": -1,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": -1,
+      "bg1VisibleMismatchPixels": 4695,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 234,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 3992,
+      "mainVisibleDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 234,
+        "y1": 137
+      }
+    },
+    {
+      "id": "base_y+1_x-1_h-1_post",
+      "stateSource": "base",
+      "xOriginBias": -1,
+      "yLineBias": 1,
+      "hscrollBias": -1,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": -1,
+      "bg1VisibleMismatchPixels": 3579,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 233,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 2509,
+      "mainVisibleDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 233,
+        "y1": 137
+      }
+    },
+    {
+      "id": "base_y+1_x-1_h+0_pre",
+      "stateSource": "base",
+      "xOriginBias": -1,
+      "yLineBias": 1,
+      "hscrollBias": 0,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": 0,
+      "bg1VisibleMismatchPixels": 3579,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 233,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 2509,
+      "mainVisibleDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 233,
+        "y1": 137
+      }
+    },
+    {
+      "id": "base_y+1_x-1_h+0_post",
+      "stateSource": "base",
+      "xOriginBias": -1,
+      "yLineBias": 1,
+      "hscrollBias": 0,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": 0,
+      "bg1VisibleMismatchPixels": 2271,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 231,
+        "y1": 120
+      },
+      "mainVisibleMismatchPixels": 0,
+      "mainVisibleDiffBBox": null
+    },
+    {
+      "id": "base_y+1_x-1_h+1_pre",
+      "stateSource": "base",
+      "xOriginBias": -1,
+      "yLineBias": 1,
+      "hscrollBias": 1,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": 1,
+      "bg1VisibleMismatchPixels": 2271,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 231,
+        "y1": 120
+      },
+      "mainVisibleMismatchPixels": 0,
+      "mainVisibleDiffBBox": null
+    },
+    {
+      "id": "base_y+1_x-1_h+1_post",
+      "stateSource": "base",
+      "xOriginBias": -1,
+      "yLineBias": 1,
+      "hscrollBias": 1,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": 1,
+      "bg1VisibleMismatchPixels": 2503,
+      "bg1VisibleDiffBBox": {
+        "x0": 23,
+        "y0": 67,
+        "x1": 232,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 2509,
+      "mainVisibleDiffBBox": {
+        "x0": 23,
+        "y0": 68,
+        "x1": 232,
+        "y1": 137
+      }
+    },
+    {
+      "id": "base_y+1_x+0_h-1_pre",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 1,
+      "hscrollBias": -1,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": -1,
+      "bg1VisibleMismatchPixels": 3579,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 233,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 2509,
+      "mainVisibleDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 233,
+        "y1": 137
+      }
+    },
+    {
+      "id": "base_y+1_x+0_h-1_post",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 1,
+      "hscrollBias": -1,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": -1,
+      "bg1VisibleMismatchPixels": 2271,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 231,
+        "y1": 120
+      },
+      "mainVisibleMismatchPixels": 0,
+      "mainVisibleDiffBBox": null
+    },
+    {
+      "id": "base_y+1_x+0_h+0_pre",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 1,
+      "hscrollBias": 0,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": 0,
+      "bg1VisibleMismatchPixels": 2271,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 231,
+        "y1": 120
+      },
+      "mainVisibleMismatchPixels": 0,
+      "mainVisibleDiffBBox": null
+    },
+    {
+      "id": "base_y+1_x+0_h+0_post",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 1,
+      "hscrollBias": 0,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": 0,
+      "bg1VisibleMismatchPixels": 2503,
+      "bg1VisibleDiffBBox": {
+        "x0": 23,
+        "y0": 67,
+        "x1": 232,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 2509,
+      "mainVisibleDiffBBox": {
+        "x0": 23,
+        "y0": 68,
+        "x1": 232,
+        "y1": 137
+      }
+    },
+    {
+      "id": "base_y+1_x+0_h+1_pre",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 1,
+      "hscrollBias": 1,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": 1,
+      "bg1VisibleMismatchPixels": 2503,
+      "bg1VisibleDiffBBox": {
+        "x0": 23,
+        "y0": 67,
+        "x1": 232,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 2509,
+      "mainVisibleDiffBBox": {
+        "x0": 23,
+        "y0": 68,
+        "x1": 232,
+        "y1": 137
+      }
+    },
+    {
+      "id": "base_y+1_x+0_h+1_post",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 1,
+      "hscrollBias": 1,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": 1,
+      "bg1VisibleMismatchPixels": 3667,
+      "bg1VisibleDiffBBox": {
+        "x0": 22,
+        "y0": 67,
+        "x1": 232,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 3992,
+      "mainVisibleDiffBBox": {
+        "x0": 22,
+        "y0": 68,
+        "x1": 232,
+        "y1": 137
+      }
+    },
+    {
+      "id": "base_y+1_x+1_h-1_pre",
+      "stateSource": "base",
+      "xOriginBias": 1,
+      "yLineBias": 1,
+      "hscrollBias": -1,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": -1,
+      "bg1VisibleMismatchPixels": 2271,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 231,
+        "y1": 120
+      },
+      "mainVisibleMismatchPixels": 0,
+      "mainVisibleDiffBBox": null
+    },
+    {
+      "id": "base_y+1_x+1_h-1_post",
+      "stateSource": "base",
+      "xOriginBias": 1,
+      "yLineBias": 1,
+      "hscrollBias": -1,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": -1,
+      "bg1VisibleMismatchPixels": 2503,
+      "bg1VisibleDiffBBox": {
+        "x0": 23,
+        "y0": 67,
+        "x1": 232,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 2509,
+      "mainVisibleDiffBBox": {
+        "x0": 23,
+        "y0": 68,
+        "x1": 232,
+        "y1": 137
+      }
+    },
+    {
+      "id": "base_y+1_x+1_h+0_pre",
+      "stateSource": "base",
+      "xOriginBias": 1,
+      "yLineBias": 1,
+      "hscrollBias": 0,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": 0,
+      "bg1VisibleMismatchPixels": 2503,
+      "bg1VisibleDiffBBox": {
+        "x0": 23,
+        "y0": 67,
+        "x1": 232,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 2509,
+      "mainVisibleDiffBBox": {
+        "x0": 23,
+        "y0": 68,
+        "x1": 232,
+        "y1": 137
+      }
+    },
+    {
+      "id": "base_y+1_x+1_h+0_post",
+      "stateSource": "base",
+      "xOriginBias": 1,
+      "yLineBias": 1,
+      "hscrollBias": 0,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": 0,
+      "bg1VisibleMismatchPixels": 3667,
+      "bg1VisibleDiffBBox": {
+        "x0": 22,
+        "y0": 67,
+        "x1": 232,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 3992,
+      "mainVisibleDiffBBox": {
+        "x0": 22,
+        "y0": 68,
+        "x1": 232,
+        "y1": 137
+      }
+    },
+    {
+      "id": "base_y+1_x+1_h+1_pre",
+      "stateSource": "base",
+      "xOriginBias": 1,
+      "yLineBias": 1,
+      "hscrollBias": 1,
+      "sampleBeforeIncrement": true,
+      "effectiveHscroll": 1,
+      "bg1VisibleMismatchPixels": 3667,
+      "bg1VisibleDiffBBox": {
+        "x0": 22,
+        "y0": 67,
+        "x1": 232,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 3992,
+      "mainVisibleDiffBBox": {
+        "x0": 22,
+        "y0": 68,
+        "x1": 232,
+        "y1": 137
+      }
+    },
+    {
+      "id": "base_y+1_x+1_h+1_post",
+      "stateSource": "base",
+      "xOriginBias": 1,
+      "yLineBias": 1,
+      "hscrollBias": 1,
+      "sampleBeforeIncrement": false,
+      "effectiveHscroll": 1,
+      "bg1VisibleMismatchPixels": 4590,
+      "bg1VisibleDiffBBox": {
+        "x0": 21,
+        "y0": 67,
+        "x1": 232,
+        "y1": 137
+      },
+      "mainVisibleMismatchPixels": 5019,
+      "mainVisibleDiffBBox": {
+        "x0": 21,
+        "y0": 68,
+        "x1": 232,
+        "y1": 137
+      }
+    }
+  ]
+}
