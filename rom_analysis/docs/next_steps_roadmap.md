@@ -943,6 +943,22 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
           become the default renderer behavior or should remain a controlled
           validation knob until a stronger hardware-oriented proof surface
           breaks the `fullsnes` vs `Mesen-S` tie
+        - current sampled evidence outside `1102..1117` now leans toward
+          promotion rather than rollback:
+          - frame `978`: `4 -> 0`
+          - frame `982`: `4 -> 1`
+          - frame `986`: `270 -> 266`
+          - frame `990`: `1641 -> 1638`
+          - frame `994`: `3232 -> 3228`
+          - frame `1200`: `5249 -> 2551`
+          - frame `1080`: `14813 -> 14816`
+        - practical reading:
+          - `line + 1` is no longer just a late-`00:8029` patch candidate
+          - the only sampled regression so far is the tiny `+3` change on the
+            already-unsolved frame `1080`
+          - the next concrete choice is whether to promote `line + 1` to the
+            default Python `Mode 7` renderer path while leaving `--mode7-line-bias 0`
+            available as an explicit escape hatch
 
 ## 3. Expand Into Gameplay Frames
 

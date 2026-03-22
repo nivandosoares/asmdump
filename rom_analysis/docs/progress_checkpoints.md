@@ -3477,6 +3477,39 @@ Practical reading:
       explains the isolated `bg1_visible`/layer-export mismatch that remains
       after the scene is closed?"
 
+### CP-80: Sampled regression sweep makes `line + 1` look broader than the late `00:8029` slice
+
+- Ran a bounded direct render/compare sweep with `render_mesen_snes_bg.py` plus
+  `compare_frames.py` over known `Mode 7` anchors, testing both
+  `--mode7-line-bias 0` and `--mode7-line-bias 1`:
+  - `978`
+  - `982`
+  - `986`
+  - `990`
+  - `994`
+  - `1080`
+  - `1200`
+- New evidence:
+  - frame `978`: `4 -> 0`
+  - frame `982`: `4 -> 1`
+  - frame `986`: `270 -> 266`
+  - frame `990`: `1641 -> 1638`
+  - frame `994`: `3232 -> 3228`
+  - frame `1200`: `5249 -> 2551`
+  - frame `1080`: `14813 -> 14816`
+- Practical reading:
+  - the `line + 1` rule is no longer only a plausible fix for the late
+    `1102..1117` continuation
+  - sampled anchors now show it is either beneficial or effectively neutral on
+    every tested `Mode 7` frame except one tiny `+3` regression on the still-
+    unsolved frame `1080`
+  - that makes the next renderer decision much more concrete:
+    - promotion to the default Python `Mode 7` path is now a defensible
+      engineering move
+    - but the strict hardware-proof tie (`fullsnes` vs `Mesen-S`) is still
+      unresolved, so keeping `--mode7-line-bias 0` as an explicit escape hatch
+      would still be prudent if that promotion happens
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):
