@@ -2973,6 +2973,54 @@ Next best step:
 - only then decide whether the residual `177..574` mismatch band needs
   renderer work or a more specific export/composition model
 
+### CP-71: `DOOM-FX` now has a local architecture reference note
+
+- Cloned `https://github.com/RandalLinden/DOOM-FX` into the ignored local
+  workspace `.external/DOOM-FX` and kept it out of repo status noise via
+  `.git/info/exclude`.
+- Read the external repo as a comparative SNES production reference instead of
+  treating it as a direct porting source for `Test Drive II`.
+- Added a local note:
+  - `rom_analysis/docs/doom_fx_reference.md`
+
+Evidence:
+
+- file makeup from `.external/DOOM-FX/source`:
+  - `.i`: `189`
+  - `.a`: `167`
+  - `.rev`: `161`
+  - `.asm`: `59`
+  - `.c`: `8`
+- key architectural sources:
+  - `.external/DOOM-FX/source/xfer.i`
+  - `.external/DOOM-FX/source/xfer.a`
+  - `.external/DOOM-FX/source/rlgsu.a`
+  - `.external/DOOM-FX/source/rlirq.a`
+  - `.external/DOOM-FX/source/rlram1.a`
+  - `.external/DOOM-FX/source/rlram7.a`
+  - `.external/DOOM-FX/source/title.a`
+  - `.external/DOOM-FX/source/rlstatus.a`
+  - `.external/DOOM-FX/source/rldraw.a`
+  - `.external/DOOM-FX/source/mkray.c`
+
+Current reading:
+
+- `DOOM-FX` is not primarily a portable-C SNES codebase.
+- The reusable value for this repo is architectural:
+  - explicit transfer descriptors for `RAM/VRAM/CGRAM` style uploads
+  - explicit mirrored shared-state blocks across execution domains
+  - explicit phase tables with requirement/post hooks
+  - aggressive offline preprocessing instead of runtime table building
+- This reinforces the current `PORT_PLAN.md` direction:
+  - verified behavior + stable artifacts + native runtime
+  - not literal source translation
+
+Next best step:
+
+- keep Lane 2 on the already-open post-`1093` composition/export boundary
+- use the `DOOM-FX` note as a design reference when the project is ready to
+  promote a first-class transfer schema or stronger callback/phase contracts
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):
