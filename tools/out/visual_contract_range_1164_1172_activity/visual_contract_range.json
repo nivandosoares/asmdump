@@ -1,0 +1,1007 @@
+{
+  "schema": "td2.visual_contract_range.v1",
+  "createdUtc": "2026-03-22T20:40:56.539644+00:00",
+  "sourceDesignPackRangeDir": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1164_1172_v1",
+  "outDir": "/home/nivando-soares/asmdump/tools/out/visual_contract_range_1164_1172_activity",
+  "frameCount": 9,
+  "provenancePath": null,
+  "probePath": "/home/nivando-soares/asmdump/tools/out/activity_trace_1164_1172/td2_boot_probe.json",
+  "probePathPattern": null,
+  "summary": {
+    "frameRange": {
+      "start": 1164,
+      "end": 1172,
+      "frames": [
+        1164,
+        1165,
+        1166,
+        1167,
+        1168,
+        1169,
+        1170,
+        1171,
+        1172
+      ]
+    },
+    "bgModes": [
+      7
+    ],
+    "mainLayerSets": [
+      [
+        "bg1"
+      ]
+    ],
+    "visibleSpriteCount": {
+      "min": 61,
+      "max": 61,
+      "ranges": [
+        {
+          "value": 61,
+          "startFrame": 1164,
+          "endFrame": 1172,
+          "frameCount": 9,
+          "frames": [
+            1164,
+            1165,
+            1166,
+            1167,
+            1168,
+            1169,
+            1170,
+            1171,
+            1172
+          ]
+        }
+      ]
+    },
+    "producerTrace": {
+      "distinctDomains": [],
+      "framesWithoutVramDomain": [
+        1164,
+        1165,
+        1166,
+        1167,
+        1168,
+        1169,
+        1170,
+        1171,
+        1172
+      ]
+    },
+    "callbackState": {
+      "enabledEntryCount": 9,
+      "distinctMainCallbacks": [
+        "00:8029"
+      ],
+      "distinctIrqCallbacks": [
+        "00:835F"
+      ],
+      "distinctNmiCallbacks": [
+        "00:8029"
+      ],
+      "state0204Ranges": [
+        {
+          "value": 2,
+          "startFrame": 1164,
+          "endFrame": 1168,
+          "frameCount": 5,
+          "frames": [
+            1164,
+            1165,
+            1166,
+            1167,
+            1168
+          ]
+        },
+        {
+          "value": 3,
+          "startFrame": 1169,
+          "endFrame": 1170,
+          "frameCount": 2,
+          "frames": [
+            1169,
+            1170
+          ]
+        },
+        {
+          "value": 1,
+          "startFrame": 1171,
+          "endFrame": 1172,
+          "frameCount": 2,
+          "frames": [
+            1171,
+            1172
+          ]
+        }
+      ],
+      "state0206Ranges": [
+        {
+          "value": 13,
+          "startFrame": 1164,
+          "endFrame": 1172,
+          "frameCount": 9,
+          "frames": [
+            1164,
+            1165,
+            1166,
+            1167,
+            1168,
+            1169,
+            1170,
+            1171,
+            1172
+          ]
+        }
+      ],
+      "state040aRanges": [
+        {
+          "value": 17,
+          "startFrame": 1164,
+          "endFrame": 1172,
+          "frameCount": 9,
+          "frames": [
+            1164,
+            1165,
+            1166,
+            1167,
+            1168,
+            1169,
+            1170,
+            1171,
+            1172
+          ]
+        }
+      ],
+      "dp0054Ranges": [
+        {
+          "value": 136,
+          "startFrame": 1164,
+          "endFrame": 1168,
+          "frameCount": 5,
+          "frames": [
+            1164,
+            1165,
+            1166,
+            1167,
+            1168
+          ]
+        },
+        {
+          "value": 144,
+          "startFrame": 1169,
+          "endFrame": 1170,
+          "frameCount": 2,
+          "frames": [
+            1169,
+            1170
+          ]
+        },
+        {
+          "value": 152,
+          "startFrame": 1171,
+          "endFrame": 1172,
+          "frameCount": 2,
+          "frames": [
+            1171,
+            1172
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "frameNumber": 1164,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "00:8029",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 2,
+          "state0206": 13,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 17,
+          "dp0054": 136,
+          "producerTraceDomains": []
+        },
+        {
+          "frameNumber": 1165,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "00:8029",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 2,
+          "state0206": 13,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 17,
+          "dp0054": 136,
+          "producerTraceDomains": []
+        },
+        {
+          "frameNumber": 1166,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "00:8029",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 2,
+          "state0206": 13,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 17,
+          "dp0054": 136,
+          "producerTraceDomains": []
+        },
+        {
+          "frameNumber": 1167,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "00:8029",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 2,
+          "state0206": 13,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 17,
+          "dp0054": 136,
+          "producerTraceDomains": []
+        },
+        {
+          "frameNumber": 1168,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "00:8029",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 2,
+          "state0206": 13,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 17,
+          "dp0054": 136,
+          "producerTraceDomains": []
+        },
+        {
+          "frameNumber": 1169,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "00:8029",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 3,
+          "state0206": 13,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 17,
+          "dp0054": 144,
+          "producerTraceDomains": []
+        },
+        {
+          "frameNumber": 1170,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "00:8029",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 3,
+          "state0206": 13,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 17,
+          "dp0054": 144,
+          "producerTraceDomains": []
+        },
+        {
+          "frameNumber": 1171,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "00:8029",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 1,
+          "state0206": 13,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 17,
+          "dp0054": 152,
+          "producerTraceDomains": []
+        },
+        {
+          "frameNumber": 1172,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "00:8029",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 1,
+          "state0206": 13,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 17,
+          "dp0054": 152,
+          "producerTraceDomains": []
+        }
+      ]
+    },
+    "activityTrace": {
+      "enabledEntryCount": 9,
+      "distinctMainCallbacks": [
+        "00:8029"
+      ],
+      "distinctIrqCallbacks": [
+        "00:835F"
+      ],
+      "dmaEventCountRanges": [
+        {
+          "value": 0,
+          "startFrame": 1164,
+          "endFrame": 1164,
+          "frameCount": 1,
+          "frames": [
+            1164
+          ]
+        },
+        {
+          "value": 2,
+          "startFrame": 1165,
+          "endFrame": 1165,
+          "frameCount": 1,
+          "frames": [
+            1165
+          ]
+        },
+        {
+          "value": 1,
+          "startFrame": 1166,
+          "endFrame": 1169,
+          "frameCount": 4,
+          "frames": [
+            1166,
+            1167,
+            1168,
+            1169
+          ]
+        },
+        {
+          "value": 2,
+          "startFrame": 1170,
+          "endFrame": 1170,
+          "frameCount": 1,
+          "frames": [
+            1170
+          ]
+        },
+        {
+          "value": 1,
+          "startFrame": 1171,
+          "endFrame": 1171,
+          "frameCount": 1,
+          "frames": [
+            1171
+          ]
+        },
+        {
+          "value": 2,
+          "startFrame": 1172,
+          "endFrame": 1172,
+          "frameCount": 1,
+          "frames": [
+            1172
+          ]
+        }
+      ],
+      "directEventCountRanges": [
+        {
+          "value": 0,
+          "startFrame": 1164,
+          "endFrame": 1164,
+          "frameCount": 1,
+          "frames": [
+            1164
+          ]
+        },
+        {
+          "value": 3,
+          "startFrame": 1165,
+          "endFrame": 1165,
+          "frameCount": 1,
+          "frames": [
+            1165
+          ]
+        },
+        {
+          "value": 0,
+          "startFrame": 1166,
+          "endFrame": 1169,
+          "frameCount": 4,
+          "frames": [
+            1166,
+            1167,
+            1168,
+            1169
+          ]
+        },
+        {
+          "value": 3,
+          "startFrame": 1170,
+          "endFrame": 1170,
+          "frameCount": 1,
+          "frames": [
+            1170
+          ]
+        },
+        {
+          "value": 0,
+          "startFrame": 1171,
+          "endFrame": 1171,
+          "frameCount": 1,
+          "frames": [
+            1171
+          ]
+        },
+        {
+          "value": 3,
+          "startFrame": 1172,
+          "endFrame": 1172,
+          "frameCount": 1,
+          "frames": [
+            1172
+          ]
+        }
+      ],
+      "mode7EventCountRanges": [
+        {
+          "value": 3,
+          "startFrame": 1164,
+          "endFrame": 1164,
+          "frameCount": 1,
+          "frames": [
+            1164
+          ]
+        },
+        {
+          "value": 5,
+          "startFrame": 1165,
+          "endFrame": 1165,
+          "frameCount": 1,
+          "frames": [
+            1165
+          ]
+        },
+        {
+          "value": 3,
+          "startFrame": 1166,
+          "endFrame": 1169,
+          "frameCount": 4,
+          "frames": [
+            1166,
+            1167,
+            1168,
+            1169
+          ]
+        },
+        {
+          "value": 5,
+          "startFrame": 1170,
+          "endFrame": 1170,
+          "frameCount": 1,
+          "frames": [
+            1170
+          ]
+        },
+        {
+          "value": 3,
+          "startFrame": 1171,
+          "endFrame": 1171,
+          "frameCount": 1,
+          "frames": [
+            1171
+          ]
+        },
+        {
+          "value": 5,
+          "startFrame": 1172,
+          "endFrame": 1172,
+          "frameCount": 1,
+          "frames": [
+            1172
+          ]
+        }
+      ],
+      "mode7WriteCountRanges": [
+        {
+          "value": 16,
+          "startFrame": 1164,
+          "endFrame": 1164,
+          "frameCount": 1,
+          "frames": [
+            1164
+          ]
+        },
+        {
+          "value": 274,
+          "startFrame": 1165,
+          "endFrame": 1165,
+          "frameCount": 1,
+          "frames": [
+            1165
+          ]
+        },
+        {
+          "value": 16,
+          "startFrame": 1166,
+          "endFrame": 1169,
+          "frameCount": 4,
+          "frames": [
+            1166,
+            1167,
+            1168,
+            1169
+          ]
+        },
+        {
+          "value": 274,
+          "startFrame": 1170,
+          "endFrame": 1170,
+          "frameCount": 1,
+          "frames": [
+            1170
+          ]
+        },
+        {
+          "value": 16,
+          "startFrame": 1171,
+          "endFrame": 1171,
+          "frameCount": 1,
+          "frames": [
+            1171
+          ]
+        },
+        {
+          "value": 274,
+          "startFrame": 1172,
+          "endFrame": 1172,
+          "frameCount": 1,
+          "frames": [
+            1172
+          ]
+        }
+      ],
+      "framesWithDma": [
+        1165,
+        1166,
+        1167,
+        1168,
+        1169,
+        1170,
+        1171,
+        1172
+      ],
+      "framesWithoutDma": [
+        1164
+      ],
+      "timeline": [
+        {
+          "frameNumber": 1164,
+          "activityMainCallbackSnes": "00:8029",
+          "activityIrqCallbackSnes": "00:835F",
+          "activityDmaEventCount": 0,
+          "activityDmaDomains": {},
+          "activityDirectEventCount": 0,
+          "activityMode7EventCount": 3,
+          "activityMode7WriteCount": 16
+        },
+        {
+          "frameNumber": 1165,
+          "activityMainCallbackSnes": "00:8029",
+          "activityIrqCallbackSnes": "00:835F",
+          "activityDmaEventCount": 2,
+          "activityDmaDomains": {
+            "oam": 1,
+            "vram": 1
+          },
+          "activityDirectEventCount": 3,
+          "activityMode7EventCount": 5,
+          "activityMode7WriteCount": 274
+        },
+        {
+          "frameNumber": 1166,
+          "activityMainCallbackSnes": "00:8029",
+          "activityIrqCallbackSnes": "00:835F",
+          "activityDmaEventCount": 1,
+          "activityDmaDomains": {
+            "oam": 1
+          },
+          "activityDirectEventCount": 0,
+          "activityMode7EventCount": 3,
+          "activityMode7WriteCount": 16
+        },
+        {
+          "frameNumber": 1167,
+          "activityMainCallbackSnes": "00:8029",
+          "activityIrqCallbackSnes": "00:835F",
+          "activityDmaEventCount": 1,
+          "activityDmaDomains": {
+            "oam": 1
+          },
+          "activityDirectEventCount": 0,
+          "activityMode7EventCount": 3,
+          "activityMode7WriteCount": 16
+        },
+        {
+          "frameNumber": 1168,
+          "activityMainCallbackSnes": "00:8029",
+          "activityIrqCallbackSnes": "00:835F",
+          "activityDmaEventCount": 1,
+          "activityDmaDomains": {
+            "oam": 1
+          },
+          "activityDirectEventCount": 0,
+          "activityMode7EventCount": 3,
+          "activityMode7WriteCount": 16
+        },
+        {
+          "frameNumber": 1169,
+          "activityMainCallbackSnes": "00:8029",
+          "activityIrqCallbackSnes": "00:835F",
+          "activityDmaEventCount": 1,
+          "activityDmaDomains": {
+            "oam": 1
+          },
+          "activityDirectEventCount": 0,
+          "activityMode7EventCount": 3,
+          "activityMode7WriteCount": 16
+        },
+        {
+          "frameNumber": 1170,
+          "activityMainCallbackSnes": "00:8029",
+          "activityIrqCallbackSnes": "00:835F",
+          "activityDmaEventCount": 2,
+          "activityDmaDomains": {
+            "oam": 1,
+            "vram": 1
+          },
+          "activityDirectEventCount": 3,
+          "activityMode7EventCount": 5,
+          "activityMode7WriteCount": 274
+        },
+        {
+          "frameNumber": 1171,
+          "activityMainCallbackSnes": "00:8029",
+          "activityIrqCallbackSnes": "00:835F",
+          "activityDmaEventCount": 1,
+          "activityDmaDomains": {
+            "oam": 1
+          },
+          "activityDirectEventCount": 0,
+          "activityMode7EventCount": 3,
+          "activityMode7WriteCount": 16
+        },
+        {
+          "frameNumber": 1172,
+          "activityMainCallbackSnes": "00:8029",
+          "activityIrqCallbackSnes": "00:835F",
+          "activityDmaEventCount": 2,
+          "activityDmaDomains": {
+            "oam": 1,
+            "vram": 1
+          },
+          "activityDirectEventCount": 3,
+          "activityMode7EventCount": 5,
+          "activityMode7WriteCount": 274
+        }
+      ]
+    }
+  },
+  "entries": [
+    {
+      "frameDir": "frame_01164",
+      "frameNumber": 1164,
+      "contract": "frame_01164_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "00:8029",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 2,
+      "state0206": 13,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 17,
+      "dp0054": 136,
+      "activityTraceEnabled": true,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 0,
+      "activityDmaDomains": {},
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frameDir": "frame_01165",
+      "frameNumber": 1165,
+      "contract": "frame_01165_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "00:8029",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 2,
+      "state0206": 13,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 17,
+      "dp0054": 136,
+      "activityTraceEnabled": true,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 2,
+      "activityDmaDomains": {
+        "oam": 1,
+        "vram": 1
+      },
+      "activityDirectEventCount": 3,
+      "activityMode7EventCount": 5,
+      "activityMode7WriteCount": 274
+    },
+    {
+      "frameDir": "frame_01166",
+      "frameNumber": 1166,
+      "contract": "frame_01166_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "00:8029",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 2,
+      "state0206": 13,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 17,
+      "dp0054": 136,
+      "activityTraceEnabled": true,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frameDir": "frame_01167",
+      "frameNumber": 1167,
+      "contract": "frame_01167_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "00:8029",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 2,
+      "state0206": 13,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 17,
+      "dp0054": 136,
+      "activityTraceEnabled": true,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frameDir": "frame_01168",
+      "frameNumber": 1168,
+      "contract": "frame_01168_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "00:8029",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 2,
+      "state0206": 13,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 17,
+      "dp0054": 136,
+      "activityTraceEnabled": true,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frameDir": "frame_01169",
+      "frameNumber": 1169,
+      "contract": "frame_01169_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "00:8029",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 3,
+      "state0206": 13,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 17,
+      "dp0054": 144,
+      "activityTraceEnabled": true,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frameDir": "frame_01170",
+      "frameNumber": 1170,
+      "contract": "frame_01170_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "00:8029",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 3,
+      "state0206": 13,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 17,
+      "dp0054": 144,
+      "activityTraceEnabled": true,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 2,
+      "activityDmaDomains": {
+        "oam": 1,
+        "vram": 1
+      },
+      "activityDirectEventCount": 3,
+      "activityMode7EventCount": 5,
+      "activityMode7WriteCount": 274
+    },
+    {
+      "frameDir": "frame_01171",
+      "frameNumber": 1171,
+      "contract": "frame_01171_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "00:8029",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 1,
+      "state0206": 13,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 17,
+      "dp0054": 152,
+      "activityTraceEnabled": true,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frameDir": "frame_01172",
+      "frameNumber": 1172,
+      "contract": "frame_01172_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "00:8029",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 1,
+      "state0206": 13,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 17,
+      "dp0054": 152,
+      "activityTraceEnabled": true,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 2,
+      "activityDmaDomains": {
+        "oam": 1,
+        "vram": 1
+      },
+      "activityDirectEventCount": 3,
+      "activityMode7EventCount": 5,
+      "activityMode7WriteCount": 274
+    }
+  ]
+}

@@ -1,0 +1,2941 @@
+{
+  "schema": "td2.visual_contract.v1",
+  "createdUtc": "2026-03-22T20:40:56.523410+00:00",
+  "source": {
+    "designPackDir": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1164_1172_v1/frame_01172",
+    "designPackManifest": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1164_1172_v1/frame_01172/design_pack.json",
+    "frameNumber": 1172,
+    "provenancePath": null
+  },
+  "frame": {
+    "frameNumber": 1172,
+    "bgMode": 7,
+    "brightness": 15,
+    "forcedBlank": false,
+    "mainScreenLayers": 17,
+    "subScreenLayers": 0,
+    "mainLayerNames": [
+      "bg1"
+    ],
+    "subLayerNames": [],
+    "mode7": {
+      "matrix": [
+        256,
+        0,
+        0,
+        257
+      ],
+      "centerX": 128,
+      "centerY": 112,
+      "hScroll": 0,
+      "vScroll": 8191
+    }
+  },
+  "translationSurface": {
+    "bgSourceOfTruth": "Use tilemaps/bg*_tilemap.json plus tilesets/tiles_bg*.json and raw/vram.bin.",
+    "objSourceOfTruth": "Use sprites/sprites_visible.json plus raw/oam.bin, raw/cgram.bin, and raw/ppu_state.json.",
+    "assemblyBridge": "Bind BG rows to runtime chunk provenance first; bind OBJ producers through breakpoint/write traces next."
+  },
+  "bg": {
+    "layerCount": 4,
+    "activeLayerCount": 1,
+    "layers": [
+      {
+        "name": "bg1",
+        "layer": 0,
+        "bgMode": 7,
+        "bpp": 8,
+        "active": true,
+        "enabledOnMain": true,
+        "enabledOnSub": false,
+        "state": {
+          "tilemapBaseWords": 0,
+          "chrBaseWords": 8192,
+          "doubleWidth": true,
+          "doubleHeight": false,
+          "largeTiles": false,
+          "hscroll": 0,
+          "vscroll": 1023
+        },
+        "grid": {
+          "widthTiles": 64,
+          "heightTiles": 32,
+          "tilemapBaseBytes": 0,
+          "tilemapBaseWords": 0,
+          "chrBaseWords": 8192
+        },
+        "tileUsage": {
+          "uniqueTileCount": 144,
+          "nonZeroTileCount": 143,
+          "tileIndexRanges": [
+            {
+              "start": 0,
+              "end": 3,
+              "count": 4
+            },
+            {
+              "start": 6,
+              "end": 6,
+              "count": 1
+            },
+            {
+              "start": 10,
+              "end": 18,
+              "count": 9
+            },
+            {
+              "start": 20,
+              "end": 23,
+              "count": 4
+            },
+            {
+              "start": 41,
+              "end": 41,
+              "count": 1
+            },
+            {
+              "start": 44,
+              "end": 48,
+              "count": 5
+            },
+            {
+              "start": 53,
+              "end": 55,
+              "count": 3
+            },
+            {
+              "start": 61,
+              "end": 63,
+              "count": 3
+            },
+            {
+              "start": 69,
+              "end": 121,
+              "count": 53
+            },
+            {
+              "start": 123,
+              "end": 140,
+              "count": 18
+            },
+            {
+              "start": 256,
+              "end": 256,
+              "count": 1
+            },
+            {
+              "start": 260,
+              "end": 261,
+              "count": 2
+            },
+            {
+              "start": 263,
+              "end": 265,
+              "count": 3
+            },
+            {
+              "start": 768,
+              "end": 768,
+              "count": 1
+            },
+            {
+              "start": 777,
+              "end": 777,
+              "count": 1
+            },
+            {
+              "start": 787,
+              "end": 787,
+              "count": 1
+            },
+            {
+              "start": 792,
+              "end": 808,
+              "count": 17
+            },
+            {
+              "start": 810,
+              "end": 811,
+              "count": 2
+            },
+            {
+              "start": 817,
+              "end": 820,
+              "count": 4
+            },
+            {
+              "start": 824,
+              "end": 828,
+              "count": 5
+            },
+            {
+              "start": 832,
+              "end": 836,
+              "count": 5
+            },
+            {
+              "start": 890,
+              "end": 890,
+              "count": 1
+            }
+          ],
+          "nonZeroTileIndexRanges": [
+            {
+              "start": 1,
+              "end": 3,
+              "count": 3
+            },
+            {
+              "start": 6,
+              "end": 6,
+              "count": 1
+            },
+            {
+              "start": 10,
+              "end": 18,
+              "count": 9
+            },
+            {
+              "start": 20,
+              "end": 23,
+              "count": 4
+            },
+            {
+              "start": 41,
+              "end": 41,
+              "count": 1
+            },
+            {
+              "start": 44,
+              "end": 48,
+              "count": 5
+            },
+            {
+              "start": 53,
+              "end": 55,
+              "count": 3
+            },
+            {
+              "start": 61,
+              "end": 63,
+              "count": 3
+            },
+            {
+              "start": 69,
+              "end": 121,
+              "count": 53
+            },
+            {
+              "start": 123,
+              "end": 140,
+              "count": 18
+            },
+            {
+              "start": 256,
+              "end": 256,
+              "count": 1
+            },
+            {
+              "start": 260,
+              "end": 261,
+              "count": 2
+            },
+            {
+              "start": 263,
+              "end": 265,
+              "count": 3
+            },
+            {
+              "start": 768,
+              "end": 768,
+              "count": 1
+            },
+            {
+              "start": 777,
+              "end": 777,
+              "count": 1
+            },
+            {
+              "start": 787,
+              "end": 787,
+              "count": 1
+            },
+            {
+              "start": 792,
+              "end": 808,
+              "count": 17
+            },
+            {
+              "start": 810,
+              "end": 811,
+              "count": 2
+            },
+            {
+              "start": 817,
+              "end": 820,
+              "count": 4
+            },
+            {
+              "start": 824,
+              "end": 828,
+              "count": 5
+            },
+            {
+              "start": 832,
+              "end": 836,
+              "count": 5
+            },
+            {
+              "start": 890,
+              "end": 890,
+              "count": 1
+            }
+          ],
+          "paletteIndices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "priorityCounts": {
+            "0": 2048
+          },
+          "hflipCount": 0,
+          "vflipCount": 0,
+          "topTiles": [
+            {
+              "tileIndex": 0,
+              "count": 1183
+            },
+            {
+              "tileIndex": 768,
+              "count": 482
+            },
+            {
+              "tileIndex": 256,
+              "count": 241
+            },
+            {
+              "tileIndex": 126,
+              "count": 2
+            },
+            {
+              "tileIndex": 1,
+              "count": 1
+            },
+            {
+              "tileIndex": 2,
+              "count": 1
+            },
+            {
+              "tileIndex": 3,
+              "count": 1
+            },
+            {
+              "tileIndex": 260,
+              "count": 1
+            },
+            {
+              "tileIndex": 261,
+              "count": 1
+            },
+            {
+              "tileIndex": 6,
+              "count": 1
+            },
+            {
+              "tileIndex": 263,
+              "count": 1
+            },
+            {
+              "tileIndex": 264,
+              "count": 1
+            },
+            {
+              "tileIndex": 265,
+              "count": 1
+            },
+            {
+              "tileIndex": 10,
+              "count": 1
+            },
+            {
+              "tileIndex": 11,
+              "count": 1
+            },
+            {
+              "tileIndex": 12,
+              "count": 1
+            }
+          ]
+        },
+        "chrUsage": {
+          "bytesPerTile": 64,
+          "chrBaseBytes": 16384,
+          "byteRanges": [
+            {
+              "tileStart": 0,
+              "tileEnd": 3,
+              "count": 4,
+              "byteStart": 16384,
+              "byteEndExclusive": 16640
+            },
+            {
+              "tileStart": 6,
+              "tileEnd": 6,
+              "count": 1,
+              "byteStart": 16768,
+              "byteEndExclusive": 16832
+            },
+            {
+              "tileStart": 10,
+              "tileEnd": 18,
+              "count": 9,
+              "byteStart": 17024,
+              "byteEndExclusive": 17600
+            },
+            {
+              "tileStart": 20,
+              "tileEnd": 23,
+              "count": 4,
+              "byteStart": 17664,
+              "byteEndExclusive": 17920
+            },
+            {
+              "tileStart": 41,
+              "tileEnd": 41,
+              "count": 1,
+              "byteStart": 19008,
+              "byteEndExclusive": 19072
+            },
+            {
+              "tileStart": 44,
+              "tileEnd": 48,
+              "count": 5,
+              "byteStart": 19200,
+              "byteEndExclusive": 19520
+            },
+            {
+              "tileStart": 53,
+              "tileEnd": 55,
+              "count": 3,
+              "byteStart": 19776,
+              "byteEndExclusive": 19968
+            },
+            {
+              "tileStart": 61,
+              "tileEnd": 63,
+              "count": 3,
+              "byteStart": 20288,
+              "byteEndExclusive": 20480
+            },
+            {
+              "tileStart": 69,
+              "tileEnd": 121,
+              "count": 53,
+              "byteStart": 20800,
+              "byteEndExclusive": 24192
+            },
+            {
+              "tileStart": 123,
+              "tileEnd": 140,
+              "count": 18,
+              "byteStart": 24256,
+              "byteEndExclusive": 25408
+            },
+            {
+              "tileStart": 256,
+              "tileEnd": 256,
+              "count": 1,
+              "byteStart": 32768,
+              "byteEndExclusive": 32832
+            },
+            {
+              "tileStart": 260,
+              "tileEnd": 261,
+              "count": 2,
+              "byteStart": 33024,
+              "byteEndExclusive": 33152
+            },
+            {
+              "tileStart": 263,
+              "tileEnd": 265,
+              "count": 3,
+              "byteStart": 33216,
+              "byteEndExclusive": 33408
+            },
+            {
+              "tileStart": 768,
+              "tileEnd": 768,
+              "count": 1,
+              "byteStart": 65536,
+              "byteEndExclusive": 65600
+            },
+            {
+              "tileStart": 777,
+              "tileEnd": 777,
+              "count": 1,
+              "byteStart": 66112,
+              "byteEndExclusive": 66176
+            },
+            {
+              "tileStart": 787,
+              "tileEnd": 787,
+              "count": 1,
+              "byteStart": 66752,
+              "byteEndExclusive": 66816
+            },
+            {
+              "tileStart": 792,
+              "tileEnd": 808,
+              "count": 17,
+              "byteStart": 67072,
+              "byteEndExclusive": 68160
+            },
+            {
+              "tileStart": 810,
+              "tileEnd": 811,
+              "count": 2,
+              "byteStart": 68224,
+              "byteEndExclusive": 68352
+            },
+            {
+              "tileStart": 817,
+              "tileEnd": 820,
+              "count": 4,
+              "byteStart": 68672,
+              "byteEndExclusive": 68928
+            },
+            {
+              "tileStart": 824,
+              "tileEnd": 828,
+              "count": 5,
+              "byteStart": 69120,
+              "byteEndExclusive": 69440
+            },
+            {
+              "tileStart": 832,
+              "tileEnd": 836,
+              "count": 5,
+              "byteStart": 69632,
+              "byteEndExclusive": 69952
+            },
+            {
+              "tileStart": 890,
+              "tileEnd": 890,
+              "count": 1,
+              "byteStart": 73344,
+              "byteEndExclusive": 73408
+            }
+          ]
+        }
+      },
+      {
+        "name": "bg2",
+        "layer": 1,
+        "bgMode": 7,
+        "bpp": 0,
+        "active": false,
+        "enabledOnMain": false,
+        "enabledOnSub": false,
+        "state": {
+          "tilemapBaseWords": 2048,
+          "chrBaseWords": 16384,
+          "doubleWidth": true,
+          "doubleHeight": false,
+          "largeTiles": false,
+          "hscroll": 0,
+          "vscroll": 1023
+        },
+        "grid": {
+          "widthTiles": 64,
+          "heightTiles": 32,
+          "tilemapBaseBytes": 4096,
+          "tilemapBaseWords": 2048,
+          "chrBaseWords": 16384
+        },
+        "tileUsage": {
+          "uniqueTileCount": 0,
+          "nonZeroTileCount": 0,
+          "tileIndexRanges": [],
+          "nonZeroTileIndexRanges": [],
+          "paletteIndices": [],
+          "priorityCounts": {},
+          "hflipCount": 0,
+          "vflipCount": 0,
+          "topTiles": [],
+          "note": "Layer is inactive in this frame; raw tilemap memory is not promoted as active visual usage."
+        },
+        "chrUsage": {
+          "bytesPerTile": 0,
+          "chrBaseBytes": 32768,
+          "byteRanges": []
+        }
+      },
+      {
+        "name": "bg3",
+        "layer": 2,
+        "bgMode": 7,
+        "bpp": 0,
+        "active": false,
+        "enabledOnMain": false,
+        "enabledOnSub": false,
+        "state": {
+          "tilemapBaseWords": 4096,
+          "chrBaseWords": 24576,
+          "doubleWidth": true,
+          "doubleHeight": false,
+          "largeTiles": false,
+          "hscroll": 0,
+          "vscroll": 1023
+        },
+        "grid": {
+          "widthTiles": 64,
+          "heightTiles": 32,
+          "tilemapBaseBytes": 8192,
+          "tilemapBaseWords": 4096,
+          "chrBaseWords": 24576
+        },
+        "tileUsage": {
+          "uniqueTileCount": 0,
+          "nonZeroTileCount": 0,
+          "tileIndexRanges": [],
+          "nonZeroTileIndexRanges": [],
+          "paletteIndices": [],
+          "priorityCounts": {},
+          "hflipCount": 0,
+          "vflipCount": 0,
+          "topTiles": [],
+          "note": "Layer is inactive in this frame; raw tilemap memory is not promoted as active visual usage."
+        },
+        "chrUsage": {
+          "bytesPerTile": 0,
+          "chrBaseBytes": 49152,
+          "byteRanges": []
+        }
+      },
+      {
+        "name": "bg4",
+        "layer": 3,
+        "bgMode": 7,
+        "bpp": 0,
+        "active": false,
+        "enabledOnMain": false,
+        "enabledOnSub": false,
+        "state": {
+          "tilemapBaseWords": 0,
+          "chrBaseWords": 0,
+          "doubleWidth": false,
+          "doubleHeight": false,
+          "largeTiles": false,
+          "hscroll": 0,
+          "vscroll": 1023
+        },
+        "grid": {
+          "widthTiles": 32,
+          "heightTiles": 32,
+          "tilemapBaseBytes": 0,
+          "tilemapBaseWords": 0,
+          "chrBaseWords": 0
+        },
+        "tileUsage": {
+          "uniqueTileCount": 0,
+          "nonZeroTileCount": 0,
+          "tileIndexRanges": [],
+          "nonZeroTileIndexRanges": [],
+          "paletteIndices": [],
+          "priorityCounts": {},
+          "hflipCount": 0,
+          "vflipCount": 0,
+          "topTiles": [],
+          "note": "Layer is inactive in this frame; raw tilemap memory is not promoted as active visual usage."
+        },
+        "chrUsage": {
+          "bytesPerTile": 0,
+          "chrBaseBytes": 0,
+          "byteRanges": []
+        }
+      }
+    ]
+  },
+  "obj": {
+    "enabled": true,
+    "state": {
+      "oamBaseAddress": 16384,
+      "oamAddressOffset": 4096,
+      "oamMode": 0
+    },
+    "visibleCount": 61,
+    "baseTileUsage": {
+      "tileIndexRanges": [
+        {
+          "start": 0,
+          "end": 0,
+          "count": 1
+        },
+        {
+          "start": 2,
+          "end": 2,
+          "count": 1
+        },
+        {
+          "start": 4,
+          "end": 4,
+          "count": 1
+        },
+        {
+          "start": 6,
+          "end": 6,
+          "count": 1
+        },
+        {
+          "start": 8,
+          "end": 8,
+          "count": 1
+        },
+        {
+          "start": 10,
+          "end": 10,
+          "count": 1
+        },
+        {
+          "start": 12,
+          "end": 12,
+          "count": 1
+        },
+        {
+          "start": 14,
+          "end": 14,
+          "count": 1
+        },
+        {
+          "start": 32,
+          "end": 32,
+          "count": 1
+        },
+        {
+          "start": 34,
+          "end": 34,
+          "count": 1
+        },
+        {
+          "start": 36,
+          "end": 36,
+          "count": 1
+        },
+        {
+          "start": 38,
+          "end": 38,
+          "count": 1
+        },
+        {
+          "start": 40,
+          "end": 40,
+          "count": 1
+        },
+        {
+          "start": 42,
+          "end": 42,
+          "count": 1
+        },
+        {
+          "start": 44,
+          "end": 44,
+          "count": 1
+        },
+        {
+          "start": 46,
+          "end": 46,
+          "count": 1
+        },
+        {
+          "start": 64,
+          "end": 64,
+          "count": 1
+        },
+        {
+          "start": 66,
+          "end": 66,
+          "count": 1
+        },
+        {
+          "start": 68,
+          "end": 68,
+          "count": 1
+        },
+        {
+          "start": 70,
+          "end": 70,
+          "count": 1
+        },
+        {
+          "start": 72,
+          "end": 72,
+          "count": 1
+        },
+        {
+          "start": 74,
+          "end": 74,
+          "count": 1
+        },
+        {
+          "start": 76,
+          "end": 76,
+          "count": 1
+        },
+        {
+          "start": 78,
+          "end": 78,
+          "count": 1
+        },
+        {
+          "start": 96,
+          "end": 96,
+          "count": 1
+        },
+        {
+          "start": 98,
+          "end": 98,
+          "count": 1
+        },
+        {
+          "start": 100,
+          "end": 100,
+          "count": 1
+        },
+        {
+          "start": 102,
+          "end": 102,
+          "count": 1
+        },
+        {
+          "start": 104,
+          "end": 104,
+          "count": 1
+        },
+        {
+          "start": 106,
+          "end": 106,
+          "count": 1
+        },
+        {
+          "start": 108,
+          "end": 108,
+          "count": 1
+        },
+        {
+          "start": 110,
+          "end": 110,
+          "count": 1
+        },
+        {
+          "start": 128,
+          "end": 128,
+          "count": 1
+        },
+        {
+          "start": 130,
+          "end": 138,
+          "count": 9
+        },
+        {
+          "start": 154,
+          "end": 161,
+          "count": 8
+        }
+      ],
+      "tileAddressRangesByBpp": {
+        "4": [
+          {
+            "start": 32768,
+            "end": 32768,
+            "count": 1,
+            "endExclusive": 32800
+          },
+          {
+            "start": 32832,
+            "end": 32832,
+            "count": 1,
+            "endExclusive": 32864
+          },
+          {
+            "start": 32896,
+            "end": 32896,
+            "count": 1,
+            "endExclusive": 32928
+          },
+          {
+            "start": 32960,
+            "end": 32960,
+            "count": 1,
+            "endExclusive": 32992
+          },
+          {
+            "start": 33024,
+            "end": 33024,
+            "count": 1,
+            "endExclusive": 33056
+          },
+          {
+            "start": 33088,
+            "end": 33088,
+            "count": 1,
+            "endExclusive": 33120
+          },
+          {
+            "start": 33152,
+            "end": 33152,
+            "count": 1,
+            "endExclusive": 33184
+          },
+          {
+            "start": 33216,
+            "end": 33216,
+            "count": 1,
+            "endExclusive": 33248
+          },
+          {
+            "start": 33792,
+            "end": 33792,
+            "count": 1,
+            "endExclusive": 33824
+          },
+          {
+            "start": 33856,
+            "end": 33856,
+            "count": 1,
+            "endExclusive": 33888
+          },
+          {
+            "start": 33920,
+            "end": 33920,
+            "count": 1,
+            "endExclusive": 33952
+          },
+          {
+            "start": 33984,
+            "end": 33984,
+            "count": 1,
+            "endExclusive": 34016
+          },
+          {
+            "start": 34048,
+            "end": 34048,
+            "count": 1,
+            "endExclusive": 34080
+          },
+          {
+            "start": 34112,
+            "end": 34112,
+            "count": 1,
+            "endExclusive": 34144
+          },
+          {
+            "start": 34176,
+            "end": 34176,
+            "count": 1,
+            "endExclusive": 34208
+          },
+          {
+            "start": 34240,
+            "end": 34240,
+            "count": 1,
+            "endExclusive": 34272
+          },
+          {
+            "start": 34816,
+            "end": 34816,
+            "count": 1,
+            "endExclusive": 34848
+          },
+          {
+            "start": 34880,
+            "end": 34880,
+            "count": 1,
+            "endExclusive": 34912
+          },
+          {
+            "start": 34944,
+            "end": 34944,
+            "count": 1,
+            "endExclusive": 34976
+          },
+          {
+            "start": 35008,
+            "end": 35008,
+            "count": 1,
+            "endExclusive": 35040
+          },
+          {
+            "start": 35072,
+            "end": 35072,
+            "count": 1,
+            "endExclusive": 35104
+          },
+          {
+            "start": 35136,
+            "end": 35136,
+            "count": 1,
+            "endExclusive": 35168
+          },
+          {
+            "start": 35200,
+            "end": 35200,
+            "count": 1,
+            "endExclusive": 35232
+          },
+          {
+            "start": 35264,
+            "end": 35264,
+            "count": 1,
+            "endExclusive": 35296
+          },
+          {
+            "start": 35840,
+            "end": 35840,
+            "count": 1,
+            "endExclusive": 35872
+          },
+          {
+            "start": 35904,
+            "end": 35904,
+            "count": 1,
+            "endExclusive": 35936
+          },
+          {
+            "start": 35968,
+            "end": 35968,
+            "count": 1,
+            "endExclusive": 36000
+          },
+          {
+            "start": 36032,
+            "end": 36032,
+            "count": 1,
+            "endExclusive": 36064
+          },
+          {
+            "start": 36096,
+            "end": 36096,
+            "count": 1,
+            "endExclusive": 36128
+          },
+          {
+            "start": 36160,
+            "end": 36160,
+            "count": 1,
+            "endExclusive": 36192
+          },
+          {
+            "start": 36224,
+            "end": 36224,
+            "count": 1,
+            "endExclusive": 36256
+          },
+          {
+            "start": 36288,
+            "end": 36288,
+            "count": 1,
+            "endExclusive": 36320
+          },
+          {
+            "start": 36864,
+            "end": 36864,
+            "count": 1,
+            "endExclusive": 36896
+          },
+          {
+            "start": 36928,
+            "end": 37184,
+            "count": 9,
+            "endExclusive": 37216
+          },
+          {
+            "start": 37696,
+            "end": 37920,
+            "count": 8,
+            "endExclusive": 37952
+          }
+        ]
+      }
+    },
+    "paletteCounts": {
+      "0": 52,
+      "1": 9
+    },
+    "priorityCounts": {
+      "Number2": 52,
+      "Number3": 9
+    },
+    "sizeCounts": {
+      "16x16": 36,
+      "8x8": 25
+    },
+    "stripCandidates": [
+      {
+        "kind": "horizontal_strip_candidate",
+        "memberCount": 4,
+        "spriteIndices": [
+          57,
+          58,
+          59,
+          60
+        ],
+        "tileIndexRanges": [
+          {
+            "start": 106,
+            "end": 106,
+            "count": 1
+          },
+          {
+            "start": 108,
+            "end": 108,
+            "count": 1
+          },
+          {
+            "start": 110,
+            "end": 110,
+            "count": 1
+          },
+          {
+            "start": 128,
+            "end": 128,
+            "count": 1
+          }
+        ],
+        "bounds": {
+          "x": 112,
+          "y": 137,
+          "width": 64,
+          "height": 16
+        },
+        "sharedFields": {
+          "priorityName": "Number2",
+          "priorityNumber": 2,
+          "palette": 0,
+          "bpp": 4,
+          "horizontalMirror": false,
+          "verticalMirror": false
+        }
+      },
+      {
+        "kind": "horizontal_strip_candidate",
+        "memberCount": 10,
+        "spriteIndices": [
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56
+        ],
+        "tileIndexRanges": [
+          {
+            "start": 70,
+            "end": 70,
+            "count": 1
+          },
+          {
+            "start": 72,
+            "end": 72,
+            "count": 1
+          },
+          {
+            "start": 74,
+            "end": 74,
+            "count": 1
+          },
+          {
+            "start": 76,
+            "end": 76,
+            "count": 1
+          },
+          {
+            "start": 78,
+            "end": 78,
+            "count": 1
+          },
+          {
+            "start": 96,
+            "end": 96,
+            "count": 1
+          },
+          {
+            "start": 98,
+            "end": 98,
+            "count": 1
+          },
+          {
+            "start": 100,
+            "end": 100,
+            "count": 1
+          },
+          {
+            "start": 102,
+            "end": 102,
+            "count": 1
+          },
+          {
+            "start": 104,
+            "end": 104,
+            "count": 1
+          }
+        ],
+        "bounds": {
+          "x": 59,
+          "y": 153,
+          "width": 160,
+          "height": 16
+        },
+        "sharedFields": {
+          "priorityName": "Number2",
+          "priorityNumber": 2,
+          "palette": 0,
+          "bpp": 4,
+          "horizontalMirror": false,
+          "verticalMirror": false
+        }
+      },
+      {
+        "kind": "horizontal_strip_candidate",
+        "memberCount": 11,
+        "spriteIndices": [
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46
+        ],
+        "tileIndexRanges": [
+          {
+            "start": 34,
+            "end": 34,
+            "count": 1
+          },
+          {
+            "start": 36,
+            "end": 36,
+            "count": 1
+          },
+          {
+            "start": 38,
+            "end": 38,
+            "count": 1
+          },
+          {
+            "start": 40,
+            "end": 40,
+            "count": 1
+          },
+          {
+            "start": 42,
+            "end": 42,
+            "count": 1
+          },
+          {
+            "start": 42,
+            "end": 42,
+            "count": 1
+          },
+          {
+            "start": 44,
+            "end": 44,
+            "count": 1
+          },
+          {
+            "start": 46,
+            "end": 46,
+            "count": 1
+          },
+          {
+            "start": 64,
+            "end": 64,
+            "count": 1
+          },
+          {
+            "start": 66,
+            "end": 66,
+            "count": 1
+          },
+          {
+            "start": 68,
+            "end": 68,
+            "count": 1
+          }
+        ],
+        "bounds": {
+          "x": 46,
+          "y": 169,
+          "width": 176,
+          "height": 16
+        },
+        "sharedFields": {
+          "priorityName": "Number2",
+          "priorityNumber": 2,
+          "palette": 0,
+          "bpp": 4,
+          "horizontalMirror": false,
+          "verticalMirror": false
+        }
+      },
+      {
+        "kind": "horizontal_strip_candidate",
+        "memberCount": 2,
+        "spriteIndices": [
+          15,
+          16
+        ],
+        "tileIndexRanges": [
+          {
+            "start": 160,
+            "end": 161,
+            "count": 2
+          }
+        ],
+        "bounds": {
+          "x": 75,
+          "y": 174,
+          "width": 16,
+          "height": 8
+        },
+        "sharedFields": {
+          "priorityName": "Number2",
+          "priorityNumber": 2,
+          "palette": 0,
+          "bpp": 4,
+          "horizontalMirror": false,
+          "verticalMirror": false
+        }
+      },
+      {
+        "kind": "horizontal_strip_candidate",
+        "memberCount": 2,
+        "spriteIndices": [
+          23,
+          24
+        ],
+        "tileIndexRanges": [
+          {
+            "start": 160,
+            "end": 161,
+            "count": 2
+          }
+        ],
+        "bounds": {
+          "x": 170,
+          "y": 174,
+          "width": 16,
+          "height": 8
+        },
+        "sharedFields": {
+          "priorityName": "Number2",
+          "priorityNumber": 2,
+          "palette": 0,
+          "bpp": 4,
+          "horizontalMirror": false,
+          "verticalMirror": false
+        }
+      },
+      {
+        "kind": "horizontal_strip_candidate",
+        "memberCount": 3,
+        "spriteIndices": [
+          12,
+          13,
+          14
+        ],
+        "tileIndexRanges": [
+          {
+            "start": 157,
+            "end": 159,
+            "count": 3
+          }
+        ],
+        "bounds": {
+          "x": 73,
+          "y": 182,
+          "width": 24,
+          "height": 8
+        },
+        "sharedFields": {
+          "priorityName": "Number2",
+          "priorityNumber": 2,
+          "palette": 0,
+          "bpp": 4,
+          "horizontalMirror": false,
+          "verticalMirror": false
+        }
+      },
+      {
+        "kind": "horizontal_strip_candidate",
+        "memberCount": 3,
+        "spriteIndices": [
+          20,
+          21,
+          22
+        ],
+        "tileIndexRanges": [
+          {
+            "start": 157,
+            "end": 159,
+            "count": 3
+          }
+        ],
+        "bounds": {
+          "x": 168,
+          "y": 182,
+          "width": 24,
+          "height": 8
+        },
+        "sharedFields": {
+          "priorityName": "Number2",
+          "priorityNumber": 2,
+          "palette": 0,
+          "bpp": 4,
+          "horizontalMirror": false,
+          "verticalMirror": false
+        }
+      },
+      {
+        "kind": "horizontal_strip_candidate",
+        "memberCount": 11,
+        "spriteIndices": [
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35
+        ],
+        "tileIndexRanges": [
+          {
+            "start": 0,
+            "end": 0,
+            "count": 1
+          },
+          {
+            "start": 2,
+            "end": 2,
+            "count": 1
+          },
+          {
+            "start": 4,
+            "end": 4,
+            "count": 1
+          },
+          {
+            "start": 4,
+            "end": 4,
+            "count": 1
+          },
+          {
+            "start": 6,
+            "end": 6,
+            "count": 1
+          },
+          {
+            "start": 8,
+            "end": 8,
+            "count": 1
+          },
+          {
+            "start": 8,
+            "end": 8,
+            "count": 1
+          },
+          {
+            "start": 10,
+            "end": 10,
+            "count": 1
+          },
+          {
+            "start": 12,
+            "end": 12,
+            "count": 1
+          },
+          {
+            "start": 14,
+            "end": 14,
+            "count": 1
+          },
+          {
+            "start": 32,
+            "end": 32,
+            "count": 1
+          }
+        ],
+        "bounds": {
+          "x": 46,
+          "y": 185,
+          "width": 176,
+          "height": 16
+        },
+        "sharedFields": {
+          "priorityName": "Number2",
+          "priorityNumber": 2,
+          "palette": 0,
+          "bpp": 4,
+          "horizontalMirror": false,
+          "verticalMirror": false
+        }
+      },
+      {
+        "kind": "horizontal_strip_candidate",
+        "memberCount": 3,
+        "spriteIndices": [
+          9,
+          10,
+          11
+        ],
+        "tileIndexRanges": [
+          {
+            "start": 154,
+            "end": 156,
+            "count": 3
+          }
+        ],
+        "bounds": {
+          "x": 73,
+          "y": 190,
+          "width": 24,
+          "height": 8
+        },
+        "sharedFields": {
+          "priorityName": "Number2",
+          "priorityNumber": 2,
+          "palette": 0,
+          "bpp": 4,
+          "horizontalMirror": false,
+          "verticalMirror": false
+        }
+      },
+      {
+        "kind": "horizontal_strip_candidate",
+        "memberCount": 3,
+        "spriteIndices": [
+          17,
+          18,
+          19
+        ],
+        "tileIndexRanges": [
+          {
+            "start": 154,
+            "end": 156,
+            "count": 3
+          }
+        ],
+        "bounds": {
+          "x": 168,
+          "y": 190,
+          "width": 24,
+          "height": 8
+        },
+        "sharedFields": {
+          "priorityName": "Number2",
+          "priorityNumber": 2,
+          "palette": 0,
+          "bpp": 4,
+          "horizontalMirror": false,
+          "verticalMirror": false
+        }
+      },
+      {
+        "kind": "horizontal_strip_candidate",
+        "memberCount": 4,
+        "spriteIndices": [
+          5,
+          6,
+          7,
+          8
+        ],
+        "tileIndexRanges": [
+          {
+            "start": 135,
+            "end": 138,
+            "count": 4
+          }
+        ],
+        "bounds": {
+          "x": 123,
+          "y": 147,
+          "width": 32,
+          "height": 8
+        },
+        "sharedFields": {
+          "priorityName": "Number3",
+          "priorityNumber": 3,
+          "palette": 1,
+          "bpp": 4,
+          "horizontalMirror": false,
+          "verticalMirror": false
+        }
+      },
+      {
+        "kind": "horizontal_strip_candidate",
+        "memberCount": 5,
+        "spriteIndices": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "tileIndexRanges": [
+          {
+            "start": 130,
+            "end": 134,
+            "count": 5
+          }
+        ],
+        "bounds": {
+          "x": 120,
+          "y": 155,
+          "width": 40,
+          "height": 8
+        },
+        "sharedFields": {
+          "priorityName": "Number3",
+          "priorityNumber": 3,
+          "palette": 1,
+          "bpp": 4,
+          "horizontalMirror": false,
+          "verticalMirror": false
+        }
+      }
+    ],
+    "sprites": [
+      {
+        "spriteIndex": 57,
+        "x": 112,
+        "y": 137,
+        "rawX": 112,
+        "rawY": 137,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 106,
+        "tileAddress": 36160,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_057.ppm"
+      },
+      {
+        "spriteIndex": 58,
+        "x": 128,
+        "y": 137,
+        "rawX": 128,
+        "rawY": 137,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 108,
+        "tileAddress": 36224,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_058.ppm"
+      },
+      {
+        "spriteIndex": 59,
+        "x": 144,
+        "y": 137,
+        "rawX": 144,
+        "rawY": 137,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 110,
+        "tileAddress": 36288,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_059.ppm"
+      },
+      {
+        "spriteIndex": 60,
+        "x": 160,
+        "y": 137,
+        "rawX": 160,
+        "rawY": 137,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 128,
+        "tileAddress": 36864,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_060.ppm"
+      },
+      {
+        "spriteIndex": 47,
+        "x": 59,
+        "y": 153,
+        "rawX": 59,
+        "rawY": 153,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 70,
+        "tileAddress": 35008,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_047.ppm"
+      },
+      {
+        "spriteIndex": 48,
+        "x": 75,
+        "y": 153,
+        "rawX": 75,
+        "rawY": 153,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 72,
+        "tileAddress": 35072,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_048.ppm"
+      },
+      {
+        "spriteIndex": 49,
+        "x": 91,
+        "y": 153,
+        "rawX": 91,
+        "rawY": 153,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 74,
+        "tileAddress": 35136,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_049.ppm"
+      },
+      {
+        "spriteIndex": 50,
+        "x": 107,
+        "y": 153,
+        "rawX": 107,
+        "rawY": 153,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 76,
+        "tileAddress": 35200,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_050.ppm"
+      },
+      {
+        "spriteIndex": 51,
+        "x": 123,
+        "y": 153,
+        "rawX": 123,
+        "rawY": 153,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 78,
+        "tileAddress": 35264,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_051.ppm"
+      },
+      {
+        "spriteIndex": 52,
+        "x": 139,
+        "y": 153,
+        "rawX": 139,
+        "rawY": 153,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 96,
+        "tileAddress": 35840,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_052.ppm"
+      },
+      {
+        "spriteIndex": 53,
+        "x": 155,
+        "y": 153,
+        "rawX": 155,
+        "rawY": 153,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 98,
+        "tileAddress": 35904,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_053.ppm"
+      },
+      {
+        "spriteIndex": 54,
+        "x": 171,
+        "y": 153,
+        "rawX": 171,
+        "rawY": 153,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 100,
+        "tileAddress": 35968,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_054.ppm"
+      },
+      {
+        "spriteIndex": 55,
+        "x": 187,
+        "y": 153,
+        "rawX": 187,
+        "rawY": 153,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 102,
+        "tileAddress": 36032,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_055.ppm"
+      },
+      {
+        "spriteIndex": 56,
+        "x": 203,
+        "y": 153,
+        "rawX": 203,
+        "rawY": 153,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 104,
+        "tileAddress": 36096,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_056.ppm"
+      },
+      {
+        "spriteIndex": 36,
+        "x": 46,
+        "y": 169,
+        "rawX": 46,
+        "rawY": 169,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 34,
+        "tileAddress": 33856,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_036.ppm"
+      },
+      {
+        "spriteIndex": 37,
+        "x": 62,
+        "y": 169,
+        "rawX": 62,
+        "rawY": 169,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 36,
+        "tileAddress": 33920,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_037.ppm"
+      },
+      {
+        "spriteIndex": 38,
+        "x": 78,
+        "y": 169,
+        "rawX": 78,
+        "rawY": 169,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 38,
+        "tileAddress": 33984,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_038.ppm"
+      },
+      {
+        "spriteIndex": 39,
+        "x": 94,
+        "y": 169,
+        "rawX": 94,
+        "rawY": 169,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 40,
+        "tileAddress": 34048,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_039.ppm"
+      },
+      {
+        "spriteIndex": 40,
+        "x": 110,
+        "y": 169,
+        "rawX": 110,
+        "rawY": 169,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 42,
+        "tileAddress": 34112,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_040.ppm"
+      },
+      {
+        "spriteIndex": 41,
+        "x": 126,
+        "y": 169,
+        "rawX": 126,
+        "rawY": 169,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 42,
+        "tileAddress": 34112,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_041.ppm"
+      },
+      {
+        "spriteIndex": 42,
+        "x": 142,
+        "y": 169,
+        "rawX": 142,
+        "rawY": 169,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 44,
+        "tileAddress": 34176,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_042.ppm"
+      },
+      {
+        "spriteIndex": 43,
+        "x": 158,
+        "y": 169,
+        "rawX": 158,
+        "rawY": 169,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 46,
+        "tileAddress": 34240,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_043.ppm"
+      },
+      {
+        "spriteIndex": 44,
+        "x": 174,
+        "y": 169,
+        "rawX": 174,
+        "rawY": 169,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 64,
+        "tileAddress": 34816,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_044.ppm"
+      },
+      {
+        "spriteIndex": 45,
+        "x": 190,
+        "y": 169,
+        "rawX": 190,
+        "rawY": 169,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 66,
+        "tileAddress": 34880,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_045.ppm"
+      },
+      {
+        "spriteIndex": 46,
+        "x": 206,
+        "y": 169,
+        "rawX": 206,
+        "rawY": 169,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 68,
+        "tileAddress": 34944,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_046.ppm"
+      },
+      {
+        "spriteIndex": 15,
+        "x": 75,
+        "y": 174,
+        "rawX": 75,
+        "rawY": 174,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 160,
+        "tileAddress": 37888,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_015.ppm"
+      },
+      {
+        "spriteIndex": 16,
+        "x": 83,
+        "y": 174,
+        "rawX": 83,
+        "rawY": 174,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 161,
+        "tileAddress": 37920,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_016.ppm"
+      },
+      {
+        "spriteIndex": 23,
+        "x": 170,
+        "y": 174,
+        "rawX": 170,
+        "rawY": 174,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 160,
+        "tileAddress": 37888,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_023.ppm"
+      },
+      {
+        "spriteIndex": 24,
+        "x": 178,
+        "y": 174,
+        "rawX": 178,
+        "rawY": 174,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 161,
+        "tileAddress": 37920,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_024.ppm"
+      },
+      {
+        "spriteIndex": 12,
+        "x": 73,
+        "y": 182,
+        "rawX": 73,
+        "rawY": 182,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 157,
+        "tileAddress": 37792,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_012.ppm"
+      },
+      {
+        "spriteIndex": 13,
+        "x": 81,
+        "y": 182,
+        "rawX": 81,
+        "rawY": 182,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 158,
+        "tileAddress": 37824,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_013.ppm"
+      },
+      {
+        "spriteIndex": 14,
+        "x": 89,
+        "y": 182,
+        "rawX": 89,
+        "rawY": 182,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 159,
+        "tileAddress": 37856,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_014.ppm"
+      },
+      {
+        "spriteIndex": 20,
+        "x": 168,
+        "y": 182,
+        "rawX": 168,
+        "rawY": 182,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 157,
+        "tileAddress": 37792,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_020.ppm"
+      },
+      {
+        "spriteIndex": 21,
+        "x": 176,
+        "y": 182,
+        "rawX": 176,
+        "rawY": 182,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 158,
+        "tileAddress": 37824,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_021.ppm"
+      },
+      {
+        "spriteIndex": 22,
+        "x": 184,
+        "y": 182,
+        "rawX": 184,
+        "rawY": 182,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 159,
+        "tileAddress": 37856,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_022.ppm"
+      },
+      {
+        "spriteIndex": 25,
+        "x": 46,
+        "y": 185,
+        "rawX": 46,
+        "rawY": 185,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 0,
+        "tileAddress": 32768,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_025.ppm"
+      },
+      {
+        "spriteIndex": 26,
+        "x": 62,
+        "y": 185,
+        "rawX": 62,
+        "rawY": 185,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 2,
+        "tileAddress": 32832,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_026.ppm"
+      },
+      {
+        "spriteIndex": 27,
+        "x": 78,
+        "y": 185,
+        "rawX": 78,
+        "rawY": 185,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 4,
+        "tileAddress": 32896,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_027.ppm"
+      },
+      {
+        "spriteIndex": 28,
+        "x": 94,
+        "y": 185,
+        "rawX": 94,
+        "rawY": 185,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 6,
+        "tileAddress": 32960,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_028.ppm"
+      },
+      {
+        "spriteIndex": 29,
+        "x": 110,
+        "y": 185,
+        "rawX": 110,
+        "rawY": 185,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 8,
+        "tileAddress": 33024,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_029.ppm"
+      },
+      {
+        "spriteIndex": 30,
+        "x": 126,
+        "y": 185,
+        "rawX": 126,
+        "rawY": 185,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 8,
+        "tileAddress": 33024,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_030.ppm"
+      },
+      {
+        "spriteIndex": 31,
+        "x": 142,
+        "y": 185,
+        "rawX": 142,
+        "rawY": 185,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 10,
+        "tileAddress": 33088,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_031.ppm"
+      },
+      {
+        "spriteIndex": 32,
+        "x": 158,
+        "y": 185,
+        "rawX": 158,
+        "rawY": 185,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 12,
+        "tileAddress": 33152,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_032.ppm"
+      },
+      {
+        "spriteIndex": 33,
+        "x": 174,
+        "y": 185,
+        "rawX": 174,
+        "rawY": 185,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 4,
+        "tileAddress": 32896,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_033.ppm"
+      },
+      {
+        "spriteIndex": 34,
+        "x": 190,
+        "y": 185,
+        "rawX": 190,
+        "rawY": 185,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 14,
+        "tileAddress": 33216,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_034.ppm"
+      },
+      {
+        "spriteIndex": 35,
+        "x": 206,
+        "y": 185,
+        "rawX": 206,
+        "rawY": 185,
+        "width": 16,
+        "height": 16,
+        "tileIndex": 32,
+        "tileAddress": 33792,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_035.ppm"
+      },
+      {
+        "spriteIndex": 9,
+        "x": 73,
+        "y": 190,
+        "rawX": 73,
+        "rawY": 190,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 154,
+        "tileAddress": 37696,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_009.ppm"
+      },
+      {
+        "spriteIndex": 10,
+        "x": 81,
+        "y": 190,
+        "rawX": 81,
+        "rawY": 190,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 155,
+        "tileAddress": 37728,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_010.ppm"
+      },
+      {
+        "spriteIndex": 11,
+        "x": 89,
+        "y": 190,
+        "rawX": 89,
+        "rawY": 190,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 156,
+        "tileAddress": 37760,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_011.ppm"
+      },
+      {
+        "spriteIndex": 17,
+        "x": 168,
+        "y": 190,
+        "rawX": 168,
+        "rawY": 190,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 154,
+        "tileAddress": 37696,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_017.ppm"
+      },
+      {
+        "spriteIndex": 18,
+        "x": 176,
+        "y": 190,
+        "rawX": 176,
+        "rawY": 190,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 155,
+        "tileAddress": 37728,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_018.ppm"
+      },
+      {
+        "spriteIndex": 19,
+        "x": 184,
+        "y": 190,
+        "rawX": 184,
+        "rawY": 190,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 156,
+        "tileAddress": 37760,
+        "palette": 0,
+        "paletteAddress": 128,
+        "bpp": 4,
+        "priorityName": "Number2",
+        "priorityNumber": 2,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_019.ppm"
+      },
+      {
+        "spriteIndex": 5,
+        "x": 123,
+        "y": 147,
+        "rawX": 123,
+        "rawY": 147,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 135,
+        "tileAddress": 37088,
+        "palette": 1,
+        "paletteAddress": 144,
+        "bpp": 4,
+        "priorityName": "Number3",
+        "priorityNumber": 3,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_005.ppm"
+      },
+      {
+        "spriteIndex": 6,
+        "x": 131,
+        "y": 147,
+        "rawX": 131,
+        "rawY": 147,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 136,
+        "tileAddress": 37120,
+        "palette": 1,
+        "paletteAddress": 144,
+        "bpp": 4,
+        "priorityName": "Number3",
+        "priorityNumber": 3,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_006.ppm"
+      },
+      {
+        "spriteIndex": 7,
+        "x": 139,
+        "y": 147,
+        "rawX": 139,
+        "rawY": 147,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 137,
+        "tileAddress": 37152,
+        "palette": 1,
+        "paletteAddress": 144,
+        "bpp": 4,
+        "priorityName": "Number3",
+        "priorityNumber": 3,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_007.ppm"
+      },
+      {
+        "spriteIndex": 8,
+        "x": 147,
+        "y": 147,
+        "rawX": 147,
+        "rawY": 147,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 138,
+        "tileAddress": 37184,
+        "palette": 1,
+        "paletteAddress": 144,
+        "bpp": 4,
+        "priorityName": "Number3",
+        "priorityNumber": 3,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_008.ppm"
+      },
+      {
+        "spriteIndex": 0,
+        "x": 120,
+        "y": 155,
+        "rawX": 120,
+        "rawY": 155,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 130,
+        "tileAddress": 36928,
+        "palette": 1,
+        "paletteAddress": 144,
+        "bpp": 4,
+        "priorityName": "Number3",
+        "priorityNumber": 3,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_000.ppm"
+      },
+      {
+        "spriteIndex": 1,
+        "x": 128,
+        "y": 155,
+        "rawX": 128,
+        "rawY": 155,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 131,
+        "tileAddress": 36960,
+        "palette": 1,
+        "paletteAddress": 144,
+        "bpp": 4,
+        "priorityName": "Number3",
+        "priorityNumber": 3,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_001.ppm"
+      },
+      {
+        "spriteIndex": 2,
+        "x": 136,
+        "y": 155,
+        "rawX": 136,
+        "rawY": 155,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 132,
+        "tileAddress": 36992,
+        "palette": 1,
+        "paletteAddress": 144,
+        "bpp": 4,
+        "priorityName": "Number3",
+        "priorityNumber": 3,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_002.ppm"
+      },
+      {
+        "spriteIndex": 3,
+        "x": 144,
+        "y": 155,
+        "rawX": 144,
+        "rawY": 155,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 133,
+        "tileAddress": 37024,
+        "palette": 1,
+        "paletteAddress": 144,
+        "bpp": 4,
+        "priorityName": "Number3",
+        "priorityNumber": 3,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_003.ppm"
+      },
+      {
+        "spriteIndex": 4,
+        "x": 152,
+        "y": 155,
+        "rawX": 152,
+        "rawY": 155,
+        "width": 8,
+        "height": 8,
+        "tileIndex": 134,
+        "tileAddress": 37056,
+        "palette": 1,
+        "paletteAddress": 144,
+        "bpp": 4,
+        "priorityName": "Number3",
+        "priorityNumber": 3,
+        "mode": "Undefined",
+        "horizontalMirror": false,
+        "verticalMirror": false,
+        "previewFile": "sprite_previews/sprite_004.ppm"
+      }
+    ],
+    "translationHints": {
+      "sourceOfTruth": "OBJ is OAM-driven. Use sprites_visible.json plus raw/oam.bin, raw/cgram.bin, and raw/ppu_state.json.",
+      "tilemapNote": "Visible OBJ state is not derivable from BG tilemaps alone."
+    }
+  },
+  "provenance": {
+    "enabled": false,
+    "runtimeReference": null,
+    "chunkValidationInputs": [],
+    "summary": null
+  },
+  "producerTrace": {
+    "enabled": true,
+    "traceWindow": {
+      "startFrame": 1164,
+      "endFrame": 1172
+    },
+    "writePointHitCount": 0,
+    "droppedHits": 0,
+    "domains": [],
+    "sourceProbeJson": "/home/nivando-soares/asmdump/tools/out/activity_trace_1164_1172/td2_boot_probe.json"
+  },
+  "callbackState": {
+    "enabled": true,
+    "frame": 1172,
+    "callbacks": {
+      "mainSnes": "00:8029",
+      "irqSnes": "00:835F",
+      "nmiSnes": "00:8029"
+    },
+    "selectors": {
+      "1c78": 1,
+      "1c80": 0,
+      "1c86": 0,
+      "1ca8": 0,
+      "1cac": 0,
+      "1cae": 0
+    },
+    "state": {
+      "0202": 1,
+      "0204": 1,
+      "0206": 13,
+      "0208": 13,
+      "020a": 40131,
+      "040a": 17,
+      "0440": 0,
+      "0442": 0,
+      "0444": 0,
+      "1d10": 0,
+      "1e2c": 0
+    },
+    "directPage": {
+      "0053": 152,
+      "0054": 152,
+      "0055": 5660,
+      "0056": 22
+    },
+    "sourceProbeJson": "/home/nivando-soares/asmdump/tools/out/activity_trace_1164_1172/td2_boot_probe.json"
+  },
+  "activityTrace": {
+    "enabled": true,
+    "frame": 1172,
+    "callbacks": {
+      "mainSnes": "00:8029",
+      "irqSnes": "00:835F"
+    },
+    "state": {
+      "0202": 1,
+      "0204": 1,
+      "0206": 13,
+      "0208": 13,
+      "020a": 40131,
+      "040a": 17,
+      "0054": 152
+    },
+    "dma": {
+      "eventCount": 2,
+      "domains": {
+        "oam": 1,
+        "vram": 1
+      }
+    },
+    "directWrites": {
+      "eventCount": 3,
+      "writeCounts": {
+        "vram_data": 256
+      }
+    },
+    "mode7": {
+      "eventCount": 5,
+      "writeCount": 274
+    },
+    "traceWindow": {
+      "startFrame": 1164,
+      "endFrame": 1172
+    },
+    "sourceActivityTraceJson": "/home/nivando-soares/asmdump/tools/out/activity_trace_1164_1172/activity_trace.json"
+  }
+}

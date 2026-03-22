@@ -1,0 +1,688 @@
+{
+  "schema": "td2.mesen_window_compare.v1",
+  "createdUtc": "2026-03-22T20:41:10.037038+00:00",
+  "title": "Post-1093 continuation compare summary",
+  "sourceFrameRoots": [
+    "/home/nivando-soares/asmdump/tools/out/mesen_range_1164_1172_v1"
+  ],
+  "activityTracePath": "/home/nivando-soares/asmdump/tools/out/activity_trace_1164_1172/activity_trace.json",
+  "frameRange": {
+    "start": 1164,
+    "end": 1172,
+    "count": 9
+  },
+  "topCropMismatch": {
+    "min": 0,
+    "max": 0,
+    "ranges": [
+      {
+        "value": 0,
+        "startFrame": 1164,
+        "endFrame": 1172
+      }
+    ]
+  },
+  "bottomCropMismatch": {
+    "min": 21258,
+    "max": 21300,
+    "ranges": [
+      {
+        "value": 21300,
+        "startFrame": 1164,
+        "endFrame": 1168
+      },
+      {
+        "value": 21266,
+        "startFrame": 1169,
+        "endFrame": 1170
+      },
+      {
+        "value": 21262,
+        "startFrame": 1171,
+        "endFrame": 1171
+      },
+      {
+        "value": 21258,
+        "startFrame": 1172,
+        "endFrame": 1172
+      }
+    ]
+  },
+  "baseRenderMismatch": {
+    "min": 0,
+    "max": 0,
+    "ranges": [
+      {
+        "value": 0,
+        "startFrame": 1164,
+        "endFrame": 1172
+      }
+    ]
+  },
+  "visibleRenderMismatch": {
+    "min": null,
+    "max": null,
+    "ranges": []
+  },
+  "activitySummary": {
+    "distinctMainCallbacks": [
+      "00:8029"
+    ],
+    "framesWithDma": [
+      1165,
+      1166,
+      1167,
+      1168,
+      1169,
+      1170,
+      1171,
+      1172
+    ],
+    "framesWithoutDma": [
+      1164
+    ],
+    "dmaEventCountRanges": [
+      {
+        "value": 0,
+        "startFrame": 1164,
+        "endFrame": 1164
+      },
+      {
+        "value": 2,
+        "startFrame": 1165,
+        "endFrame": 1165
+      },
+      {
+        "value": 1,
+        "startFrame": 1166,
+        "endFrame": 1169
+      },
+      {
+        "value": 2,
+        "startFrame": 1170,
+        "endFrame": 1170
+      },
+      {
+        "value": 1,
+        "startFrame": 1171,
+        "endFrame": 1171
+      },
+      {
+        "value": 2,
+        "startFrame": 1172,
+        "endFrame": 1172
+      }
+    ],
+    "mode7EventCountRanges": [
+      {
+        "value": 3,
+        "startFrame": 1164,
+        "endFrame": 1164
+      },
+      {
+        "value": 5,
+        "startFrame": 1165,
+        "endFrame": 1165
+      },
+      {
+        "value": 3,
+        "startFrame": 1166,
+        "endFrame": 1169
+      },
+      {
+        "value": 5,
+        "startFrame": 1170,
+        "endFrame": 1170
+      },
+      {
+        "value": 3,
+        "startFrame": 1171,
+        "endFrame": 1171
+      },
+      {
+        "value": 5,
+        "startFrame": 1172,
+        "endFrame": 1172
+      }
+    ],
+    "mode7WriteCountRanges": [
+      {
+        "value": 16,
+        "startFrame": 1164,
+        "endFrame": 1164
+      },
+      {
+        "value": 274,
+        "startFrame": 1165,
+        "endFrame": 1165
+      },
+      {
+        "value": 16,
+        "startFrame": 1166,
+        "endFrame": 1169
+      },
+      {
+        "value": 274,
+        "startFrame": 1170,
+        "endFrame": 1170
+      },
+      {
+        "value": 16,
+        "startFrame": 1171,
+        "endFrame": 1171
+      },
+      {
+        "value": 274,
+        "startFrame": 1172,
+        "endFrame": 1172
+      }
+    ]
+  },
+  "baseRenderDiffIdentity": {
+    "distinctMaskSha1": [
+      "9ac352c38bb6a94ab949aced3d8ef6c302cf5cd3"
+    ],
+    "distinctDiffSha1": [
+      "ff0de078f2ba2b1392b6f9a01200bf1c5b1e4b3c"
+    ],
+    "maskSha1Ranges": [
+      {
+        "value": "9ac352c38bb6a94ab949aced3d8ef6c302cf5cd3",
+        "startFrame": 1164,
+        "endFrame": 1172
+      }
+    ],
+    "diffSha1Ranges": [
+      {
+        "value": "ff0de078f2ba2b1392b6f9a01200bf1c5b1e4b3c",
+        "startFrame": 1164,
+        "endFrame": 1172
+      }
+    ],
+    "bboxRanges": []
+  },
+  "sourceIdentity": {
+    "mainVisibleSha1Ranges": [
+      {
+        "value": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+        "startFrame": 1164,
+        "endFrame": 1168
+      },
+      {
+        "value": "8d4b4c6d2d4fc41c3032552f21bfd081a5b02ed2",
+        "startFrame": 1169,
+        "endFrame": 1170
+      },
+      {
+        "value": "eb3b014e02c05c83f16d29296ff5be4ad96921fc",
+        "startFrame": 1171,
+        "endFrame": 1171
+      },
+      {
+        "value": "40fd12cf3ee3af00d56b4542295fce6640de7eac",
+        "startFrame": 1172,
+        "endFrame": 1172
+      }
+    ],
+    "vramSha1Ranges": [
+      {
+        "value": "26efe07cea19ad1718045a140eec1452bf286b66",
+        "startFrame": 1164,
+        "endFrame": 1168
+      },
+      {
+        "value": "452740a1139bf7f456da13b83d20a270e0ef9371",
+        "startFrame": 1169,
+        "endFrame": 1172
+      }
+    ],
+    "cgramSha1Ranges": [
+      {
+        "value": "3785327438c405ec717a09c59836370ceaa0d351",
+        "startFrame": 1164,
+        "endFrame": 1164
+      },
+      {
+        "value": "24b54ee9dca7307d93b9099eb2095ee03d172da0",
+        "startFrame": 1165,
+        "endFrame": 1165
+      },
+      {
+        "value": "18e6bab9e40f34adf1d37fa46aa28164a3f50367",
+        "startFrame": 1166,
+        "endFrame": 1166
+      },
+      {
+        "value": "1118516ccfb41d1ccd46bee813c38cc6b3cd9cfa",
+        "startFrame": 1167,
+        "endFrame": 1167
+      },
+      {
+        "value": "595ef9f1f776089497f81a88c42f227ae023df56",
+        "startFrame": 1168,
+        "endFrame": 1168
+      },
+      {
+        "value": "993a865de8e689ba214e72ad3c45ba4ca403e2b6",
+        "startFrame": 1169,
+        "endFrame": 1169
+      },
+      {
+        "value": "e3cc3b1ea49a15278976f89a96e3c9738c2bd1e9",
+        "startFrame": 1170,
+        "endFrame": 1170
+      },
+      {
+        "value": "82b1107ba6dcde0175729f1a177358146e2766b5",
+        "startFrame": 1171,
+        "endFrame": 1171
+      },
+      {
+        "value": "4cda44cb095409458079067bfeb8f014cf2ece1b",
+        "startFrame": 1172,
+        "endFrame": 1172
+      }
+    ],
+    "oamSha1Ranges": [
+      {
+        "value": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+        "startFrame": 1164,
+        "endFrame": 1168
+      },
+      {
+        "value": "5e45cf7bfb70bccd594a00c6459b84d6064ff418",
+        "startFrame": 1169,
+        "endFrame": 1170
+      },
+      {
+        "value": "6dc90899ba5f521fcc8caa9ab49fa8724e6a2d99",
+        "startFrame": 1171,
+        "endFrame": 1171
+      },
+      {
+        "value": "3c1e606deb05195ffccae904afcb84f671ef354d",
+        "startFrame": 1172,
+        "endFrame": 1172
+      }
+    ],
+    "ppuStateSha1Ranges": [
+      {
+        "value": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
+        "startFrame": 1164,
+        "endFrame": 1172
+      }
+    ]
+  },
+  "frames": [
+    {
+      "frame": 1164,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1164_1172_v1/frame_01164",
+      "mainVisibleSha1": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "3785327438c405ec717a09c59836370ceaa0d351",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21300,
+      "bottomCropRatio": 0.37144252232142855,
+      "baseRenderMismatch": 0,
+      "baseRenderRatio": 0.0,
+      "baseRenderDiffBBox": null,
+      "baseRenderDiffMaskSha1": "9ac352c38bb6a94ab949aced3d8ef6c302cf5cd3",
+      "baseRenderDiffSha1": "ff0de078f2ba2b1392b6f9a01200bf1c5b1e4b3c",
+      "visibleRenderMismatch": null,
+      "visibleRenderRatio": null,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": null,
+      "visibleStateMatrix3": null,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 0,
+      "activityDmaDomains": {},
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1165,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1164_1172_v1/frame_01165",
+      "mainVisibleSha1": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "24b54ee9dca7307d93b9099eb2095ee03d172da0",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21300,
+      "bottomCropRatio": 0.37144252232142855,
+      "baseRenderMismatch": 0,
+      "baseRenderRatio": 0.0,
+      "baseRenderDiffBBox": null,
+      "baseRenderDiffMaskSha1": "9ac352c38bb6a94ab949aced3d8ef6c302cf5cd3",
+      "baseRenderDiffSha1": "ff0de078f2ba2b1392b6f9a01200bf1c5b1e4b3c",
+      "visibleRenderMismatch": null,
+      "visibleRenderRatio": null,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": null,
+      "visibleStateMatrix3": null,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 2,
+      "activityDmaDomains": {
+        "oam": 1,
+        "vram": 1
+      },
+      "activityDirectEventCount": 3,
+      "activityMode7EventCount": 5,
+      "activityMode7WriteCount": 274
+    },
+    {
+      "frame": 1166,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1164_1172_v1/frame_01166",
+      "mainVisibleSha1": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "18e6bab9e40f34adf1d37fa46aa28164a3f50367",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21300,
+      "bottomCropRatio": 0.37144252232142855,
+      "baseRenderMismatch": 0,
+      "baseRenderRatio": 0.0,
+      "baseRenderDiffBBox": null,
+      "baseRenderDiffMaskSha1": "9ac352c38bb6a94ab949aced3d8ef6c302cf5cd3",
+      "baseRenderDiffSha1": "ff0de078f2ba2b1392b6f9a01200bf1c5b1e4b3c",
+      "visibleRenderMismatch": null,
+      "visibleRenderRatio": null,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": null,
+      "visibleStateMatrix3": null,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1167,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1164_1172_v1/frame_01167",
+      "mainVisibleSha1": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "1118516ccfb41d1ccd46bee813c38cc6b3cd9cfa",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21300,
+      "bottomCropRatio": 0.37144252232142855,
+      "baseRenderMismatch": 0,
+      "baseRenderRatio": 0.0,
+      "baseRenderDiffBBox": null,
+      "baseRenderDiffMaskSha1": "9ac352c38bb6a94ab949aced3d8ef6c302cf5cd3",
+      "baseRenderDiffSha1": "ff0de078f2ba2b1392b6f9a01200bf1c5b1e4b3c",
+      "visibleRenderMismatch": null,
+      "visibleRenderRatio": null,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": null,
+      "visibleStateMatrix3": null,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1168,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1164_1172_v1/frame_01168",
+      "mainVisibleSha1": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "595ef9f1f776089497f81a88c42f227ae023df56",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21300,
+      "bottomCropRatio": 0.37144252232142855,
+      "baseRenderMismatch": 0,
+      "baseRenderRatio": 0.0,
+      "baseRenderDiffBBox": null,
+      "baseRenderDiffMaskSha1": "9ac352c38bb6a94ab949aced3d8ef6c302cf5cd3",
+      "baseRenderDiffSha1": "ff0de078f2ba2b1392b6f9a01200bf1c5b1e4b3c",
+      "visibleRenderMismatch": null,
+      "visibleRenderRatio": null,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": null,
+      "visibleStateMatrix3": null,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1169,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1164_1172_v1/frame_01169",
+      "mainVisibleSha1": "8d4b4c6d2d4fc41c3032552f21bfd081a5b02ed2",
+      "vramSha1": "452740a1139bf7f456da13b83d20a270e0ef9371",
+      "cgramSha1": "993a865de8e689ba214e72ad3c45ba4ca403e2b6",
+      "oamSha1": "5e45cf7bfb70bccd594a00c6459b84d6064ff418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21266,
+      "bottomCropRatio": 0.370849609375,
+      "baseRenderMismatch": 0,
+      "baseRenderRatio": 0.0,
+      "baseRenderDiffBBox": null,
+      "baseRenderDiffMaskSha1": "9ac352c38bb6a94ab949aced3d8ef6c302cf5cd3",
+      "baseRenderDiffSha1": "ff0de078f2ba2b1392b6f9a01200bf1c5b1e4b3c",
+      "visibleRenderMismatch": null,
+      "visibleRenderRatio": null,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": null,
+      "visibleStateMatrix3": null,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1170,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1164_1172_v1/frame_01170",
+      "mainVisibleSha1": "8d4b4c6d2d4fc41c3032552f21bfd081a5b02ed2",
+      "vramSha1": "452740a1139bf7f456da13b83d20a270e0ef9371",
+      "cgramSha1": "e3cc3b1ea49a15278976f89a96e3c9738c2bd1e9",
+      "oamSha1": "5e45cf7bfb70bccd594a00c6459b84d6064ff418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21266,
+      "bottomCropRatio": 0.370849609375,
+      "baseRenderMismatch": 0,
+      "baseRenderRatio": 0.0,
+      "baseRenderDiffBBox": null,
+      "baseRenderDiffMaskSha1": "9ac352c38bb6a94ab949aced3d8ef6c302cf5cd3",
+      "baseRenderDiffSha1": "ff0de078f2ba2b1392b6f9a01200bf1c5b1e4b3c",
+      "visibleRenderMismatch": null,
+      "visibleRenderRatio": null,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": null,
+      "visibleStateMatrix3": null,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 2,
+      "activityDmaDomains": {
+        "oam": 1,
+        "vram": 1
+      },
+      "activityDirectEventCount": 3,
+      "activityMode7EventCount": 5,
+      "activityMode7WriteCount": 274
+    },
+    {
+      "frame": 1171,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1164_1172_v1/frame_01171",
+      "mainVisibleSha1": "eb3b014e02c05c83f16d29296ff5be4ad96921fc",
+      "vramSha1": "452740a1139bf7f456da13b83d20a270e0ef9371",
+      "cgramSha1": "82b1107ba6dcde0175729f1a177358146e2766b5",
+      "oamSha1": "6dc90899ba5f521fcc8caa9ab49fa8724e6a2d99",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21262,
+      "bottomCropRatio": 0.3707798549107143,
+      "baseRenderMismatch": 0,
+      "baseRenderRatio": 0.0,
+      "baseRenderDiffBBox": null,
+      "baseRenderDiffMaskSha1": "9ac352c38bb6a94ab949aced3d8ef6c302cf5cd3",
+      "baseRenderDiffSha1": "ff0de078f2ba2b1392b6f9a01200bf1c5b1e4b3c",
+      "visibleRenderMismatch": null,
+      "visibleRenderRatio": null,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": null,
+      "visibleStateMatrix3": null,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1172,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1164_1172_v1/frame_01172",
+      "mainVisibleSha1": "40fd12cf3ee3af00d56b4542295fce6640de7eac",
+      "vramSha1": "452740a1139bf7f456da13b83d20a270e0ef9371",
+      "cgramSha1": "4cda44cb095409458079067bfeb8f014cf2ece1b",
+      "oamSha1": "3c1e606deb05195ffccae904afcb84f671ef354d",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21258,
+      "bottomCropRatio": 0.37071010044642855,
+      "baseRenderMismatch": 0,
+      "baseRenderRatio": 0.0,
+      "baseRenderDiffBBox": null,
+      "baseRenderDiffMaskSha1": "9ac352c38bb6a94ab949aced3d8ef6c302cf5cd3",
+      "baseRenderDiffSha1": "ff0de078f2ba2b1392b6f9a01200bf1c5b1e4b3c",
+      "visibleRenderMismatch": null,
+      "visibleRenderRatio": null,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": null,
+      "visibleStateMatrix3": null,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 2,
+      "activityDmaDomains": {
+        "oam": 1,
+        "vram": 1
+      },
+      "activityDirectEventCount": 3,
+      "activityMode7EventCount": 5,
+      "activityMode7WriteCount": 274
+    }
+  ]
+}
