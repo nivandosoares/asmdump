@@ -228,6 +228,26 @@ by hand:
 - whether the compare boundary lines up with a real activity boundary like
   `callback` change or `OAM DMA` shutdown
 
+For the narrower static-plateau follow-up after the compare summary already
+exists, use:
+
+```sh
+python3 tools/build_mode7_plateau_analysis.py \
+  tools/out/post_1093_compare_1102_1117/summary.json \
+  tools/out/design_mesen_range_1102_1109_v1 \
+  tools/out/design_mesen_range_1110_1117_v1 \
+  tools/out/mode7_plateau_1105/analysis.json \
+  --markdown-out tools/out/mode7_plateau_1105/analysis.md
+```
+
+This path is useful once a late-attract window has already collapsed to one
+static scene and the remaining question is more specific:
+
+- whether the fixed diff box is mostly `BG` or mostly sprite coverage
+- whether the extracted visible `bg1` surface is also static across the plateau
+- whether a small horizontal shift improves the BG-only compare enough to
+  justify investigating `Mode 7` sampling or edge semantics next
+
 A current headless proof that uses only repo-relative prefixes is:
 
 ```sh
