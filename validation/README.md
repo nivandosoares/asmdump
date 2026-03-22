@@ -180,7 +180,7 @@ producer domains. Narrower late windows can still return `write_point_trace`
 signal rather than a launcher failure.
 
 A promoted later-window proof chain now also exists at frames `986`, `990`,
-`994`, `998`, `1005`, `1013`, `1021`, `1029`, and `1037`:
+`994`, `998`, `1005`, `1013`, `1021`, `1029`, `1037`, and `1045`:
 
 ```sh
 MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
@@ -609,6 +609,59 @@ Current reading for that `1037` proof:
   `tools/out/mesen_frame1037/main_visible.ppm`
 - `tools/out/mesen_frame1037_mode7ppu.ppm` is `8` pixels from
   `tools/out/mesen_frame1037/main_visible.ppm`
+- the callback family still does not change:
+  - main callback `01:9FE5`
+  - IRQ callback `00:835F`
+
+The same ownership path now also closes the direct bridge-extracted
+`1038..1045` block at frame `1045`:
+
+```sh
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+make -C tools mesen-design-pack MESEN_FRAME=1045
+
+# Do not run this probe and the screenshot dumper in parallel against the same
+# isolated config; that bounded attempt ended with exit 255 locally.
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=150 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_1045_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=1046 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=1038 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=1045 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS='objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122' \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame1045 \
+  tools/out/visual_contract_frame1045_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_1045_live/td2_boot_probe.json
+
+python3 tools/render_mesen_snes_bg.py \
+  tools/out/mesen_frame1045/vram.bin \
+  tools/out/mesen_frame1045/cgram.bin \
+  tools/out/mesen_frame1045/ppu_state.json \
+  tools/out/mesen_frame1045_mode7ppu.ppm \
+  --oam tools/out/mesen_frame1045/oam.bin \
+  --obj-renderer mode7-ppu \
+  --json-out tools/out/mesen_frame1045_mode7ppu.json
+```
+
+Current reading for that `1045` proof:
+
+- `tools/out/visual_contract_probe_1045_live/td2_boot_probe.json` records
+  `4948` write hits with `0` drops
+- the merged contract keeps exact
+  `producerTrace.traceWindow = 1038..1045`
+- producer domains:
+  - OAM writes across `1038..1045`
+  - VRAM writes at `1038` and `1042`
+- `tools/out/design_frame1045/sprites/sprites_visible.json` reports `61`
+  visible sprites
+- `tools/out/intro_loop_frame_01045_frame.png` is `34` pixels from
+  `tools/out/mesen_frame1045/main_visible.ppm`
+- `tools/out/mesen_frame1045_mode7ppu.ppm` is `15` pixels from
+  `tools/out/mesen_frame1045/main_visible.ppm`
 - the callback family still does not change:
   - main callback `01:9FE5`
   - IRQ callback `00:835F`
