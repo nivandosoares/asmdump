@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; registry tightening now closes `9681` as `sentinel-control` and `E91F` as `nested-invalid-marker`; active unresolved queue remains `EE7F` and `DA96` |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract builders now also merge that activity layer directly, the follow-up `1102..1117` compare summary proves the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, the new `1118..1125` continuation note extends that exact no-DMA surface past the old headless edge, the next sampled compare block now closes the same exact surface through `1133`, the wider `1164..1172` boundary window already proved the next later change is a producer-side reactivation rather than a callback switch, and a new blob-cycle report now ties that reactivation to a concrete ownership path `01:B6E3 -> 01:9DC6 -> 00:95BD -> $096A/$0700 -> OAMDATA` while proving every sampled direct `VMDATA` burst in `1134..1200` matches the same `AA10/AB58/ACA0` ROM blob as the paired `DMA0` source and alternates over `VMADD = 0x4920/0x49A0`; that closes the "who owns the late `00:8029` producer cycle?" question and moves the frontier to the later-frame selection/schedule rule for native replacement rather than blind continuity extension or more local `bg1_visible` tuning |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | resume from `rom_analysis/docs/intro_00_8029_next_agent_handoff.md`; extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract builders now also merge that activity layer directly, the follow-up `1102..1117` compare summary proves the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, the new `1118..1125` continuation note extends that exact no-DMA surface past the old headless edge, the next sampled compare block now closes the same exact surface through `1133`, the wider `1164..1172` boundary window already proved the next later change is a producer-side reactivation rather than a callback switch, and a new blob-cycle report now ties that reactivation to a concrete ownership path `01:B6E3 -> 01:9DC6 -> 00:95BD -> $096A/$0700 -> OAMDATA` while proving every sampled direct `VMDATA` burst in `1134..1200` matches the same `AA10/AB58/ACA0` ROM blob as the paired `DMA0` source and alternates over `VMADD = 0x4920/0x49A0`; that closes the "who owns the late `00:8029` producer cycle?" question and moves the frontier to the later-frame selection/schedule rule for native replacement rather than blind continuity extension or more local `bg1_visible` tuning |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -3845,6 +3845,31 @@ Practical reading:
   - tilemap-to-ROM provenance still stays capped at `1117`, because this turn
     closes producer ownership and blob identity, not a new direct tilemap chunk
     anchor
+
+### CP-88: Lane 2 now has an explicit next-agent handoff after `00:8029` ownership closure
+
+- Promoted artifacts:
+  - `rom_analysis/docs/intro_00_8029_next_agent_handoff.md`
+- Validation:
+  - `git diff --check -- rom_analysis/docs/intro_00_8029_next_agent_handoff.md rom_analysis/docs/next_steps_roadmap.md rom_analysis/docs/progress_checkpoints.md`
+- New evidence:
+  - the lane now has one direct resume note that pins:
+    - what is already closed
+    - what should not be reopened
+    - which artifacts to read first
+    - which experiment should come next
+  - the handoff fixes the current frontier explicitly at the later-frame
+    selection/schedule rule for `AA10/AB58/ACA0` over `0x4920/0x49A0`, not at
+    basic ownership, callback continuity, or `bg1_visible` semantics
+  - the handoff also records the exact checkpoint trail to resume from:
+    - `6cccf8e`
+    - `e4eaada`
+    - `87e3167`
+- Practical reading:
+  - the next agent can resume Lane 2 from one note instead of reconstructing
+    the late `00:8029` state from multiple prior turns
+  - this turn is documentation-only; it does not change the technical frontier
+    beyond making the current boundary and next gate explicit
 
 ## Current Checkpoint Metrics
 
