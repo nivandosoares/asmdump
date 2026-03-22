@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; registry tightening now closes `9681` as `sentinel-control` and `E91F` as `nested-invalid-marker`; active unresolved queue remains `EE7F` and `DA96` |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, and the still-blocked ownership follow-up is specifically the timed-input `7051` power-on path |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, and the still-blocked ownership follow-up is specifically the timed-input `7051` power-on path |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -2147,6 +2147,69 @@ Next best step:
 
 - extend the same live ownership surface to frame `1013`, which closes the
   next direct bridge-extracted `1006..1013` block under the same callback
+  family
+- keep the timed-input `7051` path parked until a reusable later-intro seed or
+  savestate exists
+
+### CP-58: Frame `1013` now closes the next direct bridge-extracted `1006..1013` ownership block
+
+- Extended the live ownership surface through the second direct
+  bridge-extracted block:
+  - extracted a fresh raw frame dump and design pack for `1013`
+  - ran a bounded live write-point trace for the whole `1006..1013` block
+  - merged that probe into a translation-facing visual contract
+  - materialized a fresh local screenshot for frame `1013` in the same
+    `intro_loop_frame_*` family used by the earlier late-window checkpoints
+- Kept renderer-side validation on the stable Python surface again:
+  - used `render_mesen_snes_bg.py --obj-renderer mode7-ppu`
+  - skipped SDL runtime validation because the local runtime worktree still has
+    unrelated user edits under `port/src/td2_ppu.c`
+
+Evidence:
+
+- `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release make -C tools mesen-design-pack MESEN_FRAME=1013`
+- `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=150 TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_1013_live/td2_boot_probe TD2_BOOT_PROBE_TOTAL_FRAMES=1014 TD2_BOOT_PROBE_TRACE_START_FRAME=1006 TD2_BOOT_PROBE_TRACE_END_FRAME=1013 TD2_BOOT_PROBE_TRACE_WRITE_POINTS='objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122' TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 ./validation/run_mesen_probe_boot.sh`
+- `python3 tools/build_mesen_visual_contract.py tools/out/design_frame1013 tools/out/visual_contract_frame1013_live_probe.json --probe-json tools/out/visual_contract_probe_1013_live/td2_boot_probe.json`
+- produced artifacts:
+  - `tools/out/visual_contract_probe_1013_live/td2_boot_probe.json`
+  - `tools/out/visual_contract_frame1013_live_probe.json`
+
+Targeted validation:
+
+- `python3 tools/compare_frames.py tools/out/intro_loop_frame_01013_frame.png tools/out/mesen_frame1013/main_visible.ppm --diff-out tools/out/mesen_frame1013_vs_intro1013_diff.ppm`
+  - `4638` mismatched pixels (`8.088030%`)
+- `python3 tools/render_mesen_snes_bg.py tools/out/mesen_frame1013/vram.bin tools/out/mesen_frame1013/cgram.bin tools/out/mesen_frame1013/ppu_state.json tools/out/mesen_frame1013_mode7ppu.ppm --oam tools/out/mesen_frame1013/oam.bin --obj-renderer mode7-ppu --json-out tools/out/mesen_frame1013_mode7ppu.json`
+- `python3 tools/compare_frames.py tools/out/mesen_frame1013/main_visible.ppm tools/out/mesen_frame1013_mode7ppu.ppm --diff-out tools/out/mesen_frame1013_mode7ppu_vs_mesen1013_diff.ppm`
+  - `10` mismatched pixels (`0.017439%`)
+
+Current reading:
+
+- `tools/out/visual_contract_probe_1013_live/td2_boot_probe.json` records
+  `6174` write hits with `0` drops over `1006..1013`
+- the merged contract preserves exact
+  `producerTrace.traceWindow = 1006..1013`
+- producer domains still stay inside the same late `01:9FE5` family:
+  - OAM domain: `4368` writes across frames `1006..1013`
+    - dominant callsites: `00:824F` / `00:8257`
+  - VRAM domain: `1806` writes across frames `1006..1012`
+    - dominant callsites: `00:81E5` / `00:81F2`
+- all sampled write hits still run under active main callback `01:9FE5` with
+  active IRQ callback `00:835F`
+- `tools/out/design_frame1013/sprites/sprites_visible.json` reports `61`
+  visible sprites
+- practical reading:
+  - the second direct bridge-extracted `1006..1013` block is now closed by
+    live ownership evidence at its end
+  - compared with `1005`, OAM activity stays flat, visible sprites keep
+    growing (`53 -> 61`), and the notable contract change is that bounded VRAM
+    writes stop one frame earlier (`1006..1012`, not `1006..1013`)
+  - the Python `mode7-ppu` renderer rises to the same `10`-pixel practical
+    surface that earlier bridge-visible docs already report for frame `1013`
+
+Next best step:
+
+- extend the same live ownership surface to frame `1021`, which closes the
+  next direct bridge-extracted `1014..1021` block under the same callback
   family
 - keep the timed-input `7051` path parked until a reusable later-intro seed or
   savestate exists
