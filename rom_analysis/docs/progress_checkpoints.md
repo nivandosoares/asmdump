@@ -3336,6 +3336,40 @@ Practical reading:
   renderer/compare path and then re-check `1102..1104` plus the isolated
   `bg1_visible` export semantics
 
+### CP-77: Vertical line-origin source pass isolates the remaining `Y` conflict
+
+- Added focused source note:
+  - `rom_analysis/docs/mode7_line_origin_y_sources.md`
+- Updated plateau audit note:
+  - `rom_analysis/docs/mode7_plateau_first_pixel_audit.md`
+
+Validation:
+
+- source-only checkpoint; no local runtime/tool behavior changed
+
+Current reading:
+
+- direct `line + 1` evidence now exists in both:
+  - `fullsnes`
+  - `Snes9x`
+- direct current-line implementations now exist in:
+  - `Mesen-S`
+  - with matching current-line style also present in `bsnes` / `ares`
+- all renderer families still agree on the important ordering around `Y`:
+  - choose one scanline `Y`
+  - apply vertical mirroring before the transform contribution
+  - keep that `Y` shared across the scanline while `X` advances per pixel
+
+Practical reading:
+
+- the plateau result `screenY + 1 -> 0 mismatched pixels` is no longer a blind
+  tweak; it matches a real source family
+- but the source pass also proves the renderer frontier is now an explicit
+  accuracy conflict, not a settled doc truth
+- the next step should therefore promote the `line + 1` candidate carefully,
+  while preserving the source split in the docs until another proof surface
+  breaks the tie
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):

@@ -12,6 +12,7 @@ Target question:
 Primary artifacts:
 
 - `rom_analysis/docs/mode7_1105_exact_hit_sources.md`
+- `rom_analysis/docs/mode7_line_origin_y_sources.md`
 - `tools/build_mode7_first_pixel_audit.py`
 - `tools/out/mode7_first_pixel_1105/audit.json`
 - `tools/out/mode7_first_pixel_1105/audit.md`
@@ -166,3 +167,12 @@ Documentation ask for the next iteration:
 - implementation notes that explain whether the hardware behavior is better
   described as `line + 1`, a prefetch artifact, or another named scanline
   origin rule
+
+The new focused source note now makes the current conflict explicit:
+
+- `fullsnes` and `Snes9x` use `line + 1`
+- `Mesen-S`, `bsnes`, and `ares` use current-line `Y`
+
+So the next renderer step should preserve that split as an explicit open
+accuracy question rather than pretending the scanline-start rule is already
+settled by documentation alone.
