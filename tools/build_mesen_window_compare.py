@@ -228,8 +228,40 @@ def format_ratio(value: float | None) -> str:
     return f"{value:.6%}"
 
 
+def summarize_metric(rows: list[dict], key: str) -> dict:
+    values = [row[key] for row in rows]
+    return {
+        "min": min(values),
+        "max": max(values),
+        "ranges": collapse_value_ranges(rows, key),
+    }
+
+
+def summarize_optional_metric(rows: list[dict], key: str) -> dict:
+    filtered_rows = [row for row in rows if row.get(key) is not None]
+    if not filtered_rows:
+        return {
+            "min": None,
+            "max": None,
+            "ranges": [],
+        }
+    values = [row[key] for row in filtered_rows]
+    return {
+        "min": min(values),
+        "max": max(values),
+        "ranges": collapse_value_ranges(filtered_rows, key),
+    }
+
+
 def render_markdown(summary: dict) -> str:
     frame_rows = summary.get("frames", [])
+    visible_render_summary = summary.get("visibleRenderMismatch", {})
+    visible_render_min = visible_render_summary.get("min")
+    visible_render_max = visible_render_summary.get("max")
+    if visible_render_min is None or visible_render_max is None:
+        visible_render_text = "`n/a`"
+    else:
+        visible_render_text = f"`{visible_render_min}..{visible_render_max}`"
     lines = [
         f"# {summary.get('title', 'Mesen window compare summary')}",
         "",
@@ -244,7 +276,7 @@ def render_markdown(summary: dict) -> str:
         f"- top-crop mismatches: `{summary['topCropMismatch']['min']}..{summary['topCropMismatch']['max']}`",
         f"- bottom-crop mismatches: `{summary['bottomCropMismatch']['min']}..{summary['bottomCropMismatch']['max']}`",
         f"- base-render mismatches vs `main_visible.ppm`: `{summary['baseRenderMismatch']['min']}..{summary['baseRenderMismatch']['max']}`",
-        f"- visible-state render mismatches vs `main_visible.ppm`: `{summary['visibleRenderMismatch']['min']}..{summary['visibleRenderMismatch']['max']}`",
+        f"- visible-state render mismatches vs `main_visible.ppm`: {visible_render_text}",
     ]
 
     activity = summary.get("activitySummary", {})
@@ -406,26 +438,10 @@ def main() -> int:
             "end": rows[-1]["frame"],
             "count": len(rows),
         },
-        "topCropMismatch": {
-            "min": min(row["topCropMismatch"] for row in rows),
-            "max": max(row["topCropMismatch"] for row in rows),
-            "ranges": collapse_value_ranges(rows, "topCropMismatch"),
-        },
-        "bottomCropMismatch": {
-            "min": min(row["bottomCropMismatch"] for row in rows),
-            "max": max(row["bottomCropMismatch"] for row in rows),
-            "ranges": collapse_value_ranges(rows, "bottomCropMismatch"),
-        },
-        "baseRenderMismatch": {
-            "min": min(row["baseRenderMismatch"] for row in rows),
-            "max": max(row["baseRenderMismatch"] for row in rows),
-            "ranges": collapse_value_ranges(rows, "baseRenderMismatch"),
-        },
-        "visibleRenderMismatch": {
-            "min": min(row["visibleRenderMismatch"] for row in rows if row["visibleRenderMismatch"] is not None),
-            "max": max(row["visibleRenderMismatch"] for row in rows if row["visibleRenderMismatch"] is not None),
-            "ranges": collapse_value_ranges(rows, "visibleRenderMismatch"),
-        },
+        "topCropMismatch": summarize_metric(rows, "topCropMismatch"),
+        "bottomCropMismatch": summarize_metric(rows, "bottomCropMismatch"),
+        "baseRenderMismatch": summarize_metric(rows, "baseRenderMismatch"),
+        "visibleRenderMismatch": summarize_optional_metric(rows, "visibleRenderMismatch"),
         "activitySummary": {
             "distinctMainCallbacks": sorted(
                 {
