@@ -2,6 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+CALLER_CWD="$(pwd -P)"
 DEFAULT_MESEN_BIN=""
 if [[ -n "${MESEN_RELEASE_DIR:-}" && -x "${MESEN_RELEASE_DIR}/Mesen" ]]; then
   DEFAULT_MESEN_BIN="${MESEN_RELEASE_DIR}/Mesen"
@@ -19,6 +20,33 @@ MESEN_HOME="$CONFIG_ROOT/Mesen2"
 SETTINGS_TEMPLATE="${MESEN_SETTINGS_TEMPLATE:-$HOME/.config/Mesen2/settings.json}"
 SETTINGS_PATH="$MESEN_HOME/settings.json"
 TIMEOUT_SECONDS="${MESEN_TIMEOUT_SECONDS:-20}"
+
+make_absolute_from() {
+  local base_dir="$1"
+  local path="$2"
+
+  if [[ -z "$path" ]]; then
+    printf '%s' ""
+    return
+  fi
+
+  case "$path" in
+    /*) printf '%s\n' "$path" ;;
+    *) printf '%s/%s\n' "$base_dir" "$path" ;;
+  esac
+}
+
+ROM_PATH="$(make_absolute_from "$CALLER_CWD" "$ROM_PATH")"
+SCRIPT_PATH="$(make_absolute_from "$CALLER_CWD" "$SCRIPT_PATH")"
+if [[ -n "$SAVESTATE_PATH" ]]; then
+  SAVESTATE_PATH="$(make_absolute_from "$CALLER_CWD" "$SAVESTATE_PATH")"
+fi
+
+TD2_CAPTURE_OUTPUT_PREFIX_ABS="$(make_absolute_from "$ROOT_DIR" "${TD2_CAPTURE_OUTPUT_PREFIX:-}")"
+TD2_BG_RANGE_OUTPUT_PREFIX_ABS="$(make_absolute_from "$ROOT_DIR" "${TD2_BG_RANGE_OUTPUT_PREFIX:-}")"
+TD2_BOOT_PROBE_OUTPUT_PREFIX_ABS="$(make_absolute_from "$ROOT_DIR" "${TD2_BOOT_PROBE_OUTPUT_PREFIX:-}")"
+TD2_SCANLINE_TEST_OUTPUT_PREFIX_ABS="$(make_absolute_from "$ROOT_DIR" "${TD2_SCANLINE_TEST_OUTPUT_PREFIX:-}")"
+TD2_BOOT_PROBE_SAVE_SAVESTATE_ABS="$(make_absolute_from "$ROOT_DIR" "${TD2_BOOT_PROBE_SAVE_SAVESTATE:-}")"
 
 if [[ ! -x "$MESEN_BIN" ]]; then
   echo "error: Mesen binary not found or not executable: $MESEN_BIN" >&2
@@ -53,11 +81,11 @@ mkdir_parent_if_set() {
   fi
 }
 
-mkdir_parent_if_set "${TD2_CAPTURE_OUTPUT_PREFIX:-}"
-mkdir_parent_if_set "${TD2_BG_RANGE_OUTPUT_PREFIX:-}"
-mkdir_parent_if_set "${TD2_BOOT_PROBE_OUTPUT_PREFIX:-}"
-mkdir_parent_if_set "${TD2_SCANLINE_TEST_OUTPUT_PREFIX:-}"
-mkdir_parent_if_set "${TD2_BOOT_PROBE_SAVE_SAVESTATE:-}"
+mkdir_parent_if_set "$TD2_CAPTURE_OUTPUT_PREFIX_ABS"
+mkdir_parent_if_set "$TD2_BG_RANGE_OUTPUT_PREFIX_ABS"
+mkdir_parent_if_set "$TD2_BOOT_PROBE_OUTPUT_PREFIX_ABS"
+mkdir_parent_if_set "$TD2_SCANLINE_TEST_OUTPUT_PREFIX_ABS"
+mkdir_parent_if_set "$TD2_BOOT_PROBE_SAVE_SAVESTATE_ABS"
 
 mkdir -p "$MESEN_HOME"
 cp "$SETTINGS_TEMPLATE" "$SETTINGS_PATH"
@@ -74,6 +102,21 @@ fi
 
 (
   cd "$ROOT_DIR"
+  if [[ -n "$TD2_CAPTURE_OUTPUT_PREFIX_ABS" ]]; then
+    export TD2_CAPTURE_OUTPUT_PREFIX="$TD2_CAPTURE_OUTPUT_PREFIX_ABS"
+  fi
+  if [[ -n "$TD2_BG_RANGE_OUTPUT_PREFIX_ABS" ]]; then
+    export TD2_BG_RANGE_OUTPUT_PREFIX="$TD2_BG_RANGE_OUTPUT_PREFIX_ABS"
+  fi
+  if [[ -n "$TD2_BOOT_PROBE_OUTPUT_PREFIX_ABS" ]]; then
+    export TD2_BOOT_PROBE_OUTPUT_PREFIX="$TD2_BOOT_PROBE_OUTPUT_PREFIX_ABS"
+  fi
+  if [[ -n "$TD2_SCANLINE_TEST_OUTPUT_PREFIX_ABS" ]]; then
+    export TD2_SCANLINE_TEST_OUTPUT_PREFIX="$TD2_SCANLINE_TEST_OUTPUT_PREFIX_ABS"
+  fi
+  if [[ -n "$TD2_BOOT_PROBE_SAVE_SAVESTATE_ABS" ]]; then
+    export TD2_BOOT_PROBE_SAVE_SAVESTATE="$TD2_BOOT_PROBE_SAVE_SAVESTATE_ABS"
+  fi
   XDG_CONFIG_HOME="$CONFIG_ROOT" \
     TD2_CAPTURE_SAVESTATE="$SAVESTATE_PATH" \
     "$MESEN_BIN" \

@@ -73,6 +73,18 @@ should be added explicitly with `git add -f`.
 - `MESEN_RELEASE_DIR/Mesen`
 - `Mesen` or `mesen` on `PATH`
 
+The shared launcher now also normalizes these paths before invoking
+`Mesen --testRunner`:
+
+- ROM path and Lua script path: relative to the caller's current directory
+- optional savestate path: relative to the caller's current directory
+- repo-facing output prefixes like `tools/out/...`: relative to the repo root
+
+This matters because the Mesen test runner resolves Lua relative file I/O under
+the isolated config tree (`.mesen-config/Mesen2`), not the repo cwd. Without
+that normalization, nested repo-relative prefixes can time out after silent
+write failures inside the config directory.
+
 For the bridge extractor path, `tools/run_mesen_ppu_extract.sh` uses
 `MESEN_RELEASE_DIR` to locate `MesenCore.so` and can also derive that directory
 from `MESEN_BIN` or `PATH`.
@@ -138,6 +150,30 @@ python3 tools/build_mesen_visual_contract.py \
   --provenance-json rom_analysis/maps/tilemaps/mesen_range_7051_provenance.jsonc \
   --probe-json tools/out/visual_contract_probe_7051/td2_boot_probe.json
 ```
+
+A current headless proof that uses only repo-relative prefixes is:
+
+```sh
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=30 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/frame300_live_probe_cap2048/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=301 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=0 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=300 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS='objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122' \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=2048 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  port/assets/test_dump_frame300/design_pack \
+  tools/out/visual_contract_frame300_live_probe_cap2048.json \
+  --probe-json tools/out/frame300_live_probe_cap2048/td2_boot_probe.json
+```
+
+That proof currently yields live `vram`, `cgram`, `oam`, and `obj_state`
+producer domains. Narrower late windows can still return `write_point_trace`
+`0` hits if no writes occur there, so an empty trace is now a window-selection
+signal rather than a launcher failure.
 
 To dump a whole intro range in one emulator run:
 

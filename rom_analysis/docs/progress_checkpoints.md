@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; registry tightening now closes `9681` as `sentinel-control` and `E91F` as `nested-invalid-marker`; active unresolved queue remains `EE7F` and `DA96` |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, and a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, and live headless producer-trace capture is working again after fixing repo-relative path normalization in the shared Mesen launcher |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -1806,6 +1806,48 @@ Current reading:
 - the merge path itself is validated
 - the current blocker is not the contract schema anymore; it is the local
   headless boot-probe runner
+
+### CP-53: Headless producer-trace capture reopened by absolute path normalization
+
+- Updated the shared headless launcher:
+  - `validation/run_mesen_capture.sh`
+  - ROM path, Lua script path, optional savestate path, and repo-facing output
+    prefixes are now normalized to absolute paths before invoking
+    `Mesen --testRunner`
+- Root cause of the earlier `exit 255` / no-output reports:
+  - `Mesen --testRunner` resolves relative Lua file I/O under the isolated
+    config root (`.mesen-config/Mesen2`), not the repo working directory
+  - repo-relative nested prefixes like `tools/out/...` therefore targeted
+    missing directories inside the config tree and the Lua callbacks timed out
+    before they could reach `emu.stop(0)`
+- Revalidated the previously failing relative-prefix smoke paths:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=10 TD2_CAPTURE_WARMUP_FRAMES=0 TD2_CAPTURE_FRAMES=1 TD2_CAPTURE_SCREENSHOT_EVERY=1 TD2_CAPTURE_OUTPUT_PREFIX=tools/out/capture_smoke/cap ./validation/run_mesen_capture.sh`
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=15 TD2_BG_RANGE_START_FRAME=0 TD2_BG_RANGE_END_FRAME=0 TD2_BG_RANGE_STEP=1 TD2_BG_RANGE_OUTPUT_PREFIX=tools/out/dump_bg_smoke/intro ./validation/run_mesen_dump_bg_range.sh`
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=15 TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_baseline/td2_boot_probe TD2_BOOT_PROBE_TOTAL_FRAMES=2 ./validation/run_mesen_probe_boot.sh`
+- Promoted a real live producer-trace proof instead of relying only on the
+  synthetic merge fixture:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=30 TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/frame300_live_probe_cap2048/td2_boot_probe TD2_BOOT_PROBE_TOTAL_FRAMES=301 TD2_BOOT_PROBE_TRACE_START_FRAME=0 TD2_BOOT_PROBE_TRACE_END_FRAME=300 TD2_BOOT_PROBE_TRACE_WRITE_POINTS='objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122' TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=2048 ./validation/run_mesen_probe_boot.sh`
+  - `python3 tools/build_mesen_visual_contract.py port/assets/test_dump_frame300/design_pack tools/out/visual_contract_frame300_live_probe_cap2048.json --probe-json tools/out/frame300_live_probe_cap2048/td2_boot_probe.json`
+- Produced evidence:
+  - `tools/out/frame300_live_probe_cap2048/td2_boot_probe.json`
+  - `tools/out/visual_contract_frame300_live_probe_cap2048.json`
+
+Current reading:
+
+- the old blocker is closed; the headless runner can now emit repo-owned probe
+  and capture outputs reliably with the documented relative `tools/out/...`
+  prefixes
+- the promoted frame-`300` proof records `2048` retained write hits with
+  `133427` dropped by cap and yields live producer domains for:
+  - `vram`
+  - `cgram`
+  - `oam`
+  - `obj_state`
+- the current limitation has narrowed:
+  - a narrow `296..300` write window on the same frame emits `0` hits
+  - that means the next problem is choosing producer-active windows for later
+    scene ownership (`986`, `7051`, `7055`, `7059`, `7061`), not reviving the
+    runner itself
 
 ## Current Checkpoint Metrics
 

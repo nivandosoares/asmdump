@@ -78,6 +78,11 @@ translation-oriented IR:
   - summarized `VRAM/CGRAM/OAM` write-breakpoint domains from `mesen_probe_boot.lua`
   - top write callsites and active callbacks per domain
 
+The shared headless launcher now normalizes repo-relative output prefixes like
+`tools/out/...` to absolute repo paths before invoking `Mesen --testRunner`,
+so the probe/contract commands below land in the repo again instead of the
+isolated config tree.
+
 ## Design Workflow
 
 1. Extract one frame from Mesen:
@@ -145,10 +150,21 @@ The important contract boundary is explicit:
 - translating assembly against visuals should bind BG layers to chunk
   provenance first, then bind OBJ producers through breakpoint/write traces
 
+A current live headless proof artifact for that producer side exists at:
+
+- `tools/out/frame300_live_probe_cap2048/td2_boot_probe.json`
+- `tools/out/visual_contract_frame300_live_probe_cap2048.json`
+
+That frame-`300` proof is intentionally early and broad: it closes the headless
+path itself and proves live `vram/cgram/oam/obj_state` domains. It does not yet
+answer the later-scene ownership questions around `986` or `7051`.
+
 ## Gap to Close Next
 
-1. Bind producer-side `VRAM/CGRAM/OAM` writes to the new visual contracts so
-   OBJ ownership is tied to callsites instead of only end-frame state.
+1. Reapply the now-working producer-side `VRAM/CGRAM/OAM` trace path to later
+   translation-facing windows (`986`, `7051`, `7055`, `7059`, `7061`) so OBJ
+   ownership is tied to the right callsites instead of only early proof frames
+   or end-frame state.
 2. Add optional round-trip patch manifests (edited tiles/palette back to ROM-space references).
 3. Add design-side layer toggles and diff manifests for frame-range review packs.
 

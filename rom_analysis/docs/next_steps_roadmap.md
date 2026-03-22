@@ -10,7 +10,7 @@ Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 | Roadmap lane | Status | Current reading |
 |---|---|---|
 | 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps are done; registry tightening now demotes `9681` to `sentinel-control` and `E91F` to `nested-invalid-marker`, leaving active unresolved queue (`EE7F`, `DA96`). |
-| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry, the visual-contract builders now separate BG/CHR state from OBJ/OAM state with optional provenance binding, and producer-side write-breakpoint summaries can now attach to that IR even though live capture is currently blocked by a local `mesen_probe_boot.lua` headless runner regression. |
+| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry, the visual-contract builders now separate BG/CHR state from OBJ/OAM state with optional provenance binding, and producer-side write-breakpoint summaries now attach to that IR from real headless captures again after fixing repo-relative path normalization in the shared Mesen launcher. |
 | 3. Gameplay-frame expansion | in progress | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty. |
 | 4. Bank API contracts | not started | Baseline docs exist; callback/API contracts for bank 30/10/11 are not yet mapped to completion. |
 
@@ -258,10 +258,29 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
       tilemap provenance rows per frame/layer
     - it can now also attach summarized producer-side write-breakpoint domains
       from `mesen_probe_boot.lua` via optional `--probe-json`
+  - headless producer-trace capture is live again:
+    - `validation/run_mesen_capture.sh` now rewrites repo-relative output
+      prefixes like `tools/out/...` to absolute repo paths before invoking
+      `Mesen --testRunner`
+    - the local root cause was not the probe schema; it was that `Mesen`
+      resolves relative Lua I/O under `.mesen-config/Mesen2`, so nested
+      repo-relative prefixes were timing out after silent write failures
+    - promoted live proof artifact:
+      - `tools/out/frame300_live_probe_cap2048/td2_boot_probe.json`
+      - `tools/out/visual_contract_frame300_live_probe_cap2048.json`
+    - current proof reading:
+      - the frame-`300` full-range trace records `2048` retained write hits with
+        `133427` dropped by cap
+      - the merged visual contract now carries live `vram`, `cgram`, `oam`,
+        and `obj_state` producer domains
   - next best step:
-    - isolate the current local `mesen_probe_boot.lua` headless exit-255/no-output
-      regression so the new producer-trace contract path can be validated
-      against live captures instead of the current offline fixture
+    - retarget the now-working producer-trace path at later translation-facing
+      windows (`986`, `7051`, `7055`, `7059`, `7061`) instead of the early
+      frame-`300` proof window
+    - keep trace windows producer-active; the narrow frame-`296..300` proof
+      attempt emitted `0` write hits even though the full `0..300` window
+      works, so empty traces are now a window-selection problem rather than a
+      runner problem
     - if you want a machine-generated combined provenance artifact, preserve or
       regenerate the per-hit `td2_boot_probe_l001210_exec.json` for this
       scenario instead of only the summarized singleton source list
