@@ -10,7 +10,7 @@ Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 | Roadmap lane | Status | Current reading |
 |---|---|---|
 | 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps are done; registry tightening now demotes `9681` to `sentinel-control` and `E91F` to `nested-invalid-marker`, leaving active unresolved queue (`EE7F`, `DA96`). |
-| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry, and the new visual-contract builders now separate BG/CHR state from OBJ/OAM state with optional provenance binding. |
+| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry, the visual-contract builders now separate BG/CHR state from OBJ/OAM state with optional provenance binding, and producer-side write-breakpoint summaries can now attach to that IR even though live capture is currently blocked by a local `mesen_probe_boot.lua` headless runner regression. |
 | 3. Gameplay-frame expansion | in progress | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty. |
 | 4. Bank API contracts | not started | Baseline docs exist; callback/API contracts for bank 30/10/11 are not yet mapped to completion. |
 
@@ -256,9 +256,12 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
     - it promotes each design-pack frame into explicit `bg` vs `obj`
       contracts, keeps OBJ/OAM separate from tilemaps, and can attach current
       tilemap provenance rows per frame/layer
+    - it can now also attach summarized producer-side write-breakpoint domains
+      from `mesen_probe_boot.lua` via optional `--probe-json`
   - next best step:
-    - bind producer-side `VRAM/CGRAM/OAM` writes or breakpoints into that same
-      visual-contract surface so OBJ ownership can be tied to assembly callsites
+    - isolate the current local `mesen_probe_boot.lua` headless exit-255/no-output
+      regression so the new producer-trace contract path can be validated
+      against live captures instead of the current offline fixture
     - if you want a machine-generated combined provenance artifact, preserve or
       regenerate the per-hit `td2_boot_probe_l001210_exec.json` for this
       scenario instead of only the summarized singleton source list

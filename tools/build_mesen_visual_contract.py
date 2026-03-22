@@ -36,6 +36,14 @@ def parse_args() -> argparse.Namespace:
             "runtime chunk evidence to matching BG layers."
         ),
     )
+    parser.add_argument(
+        "--probe-json",
+        type=Path,
+        help=(
+            "Optional mesen_probe_boot output JSON used to attach producer-side "
+            "write-breakpoint ownership to the visual contract."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -513,6 +521,147 @@ def build_obj_contract(sprites_visible_json: dict | None, ppu_summary: dict, fra
     return result
 
 
+def format_snes_pc(bank: int, pc: int) -> str:
+    return f"{bank & 0xFF:02X}:{pc & 0xFFFF:04X}"
+
+
+def trace_domain_for_point_snes(point_snes: object) -> str:
+    if not isinstance(point_snes, str):
+        return "unclassified"
+    if point_snes in ("00:2102", "00:2103", "00:2104"):
+        return "oam"
+    if point_snes in ("00:2115", "00:2116", "00:2117", "00:2118", "00:2119"):
+        return "vram"
+    if point_snes in ("00:2121", "00:2122"):
+        return "cgram"
+    if point_snes in ("00:2101",):
+        return "obj_state"
+    return "unclassified"
+
+
+def top_counter_rows(counter: Counter[str], limit: int = 12) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for key, count in counter.most_common(limit):
+        rows.append({"id": key, "count": count})
+    return rows
+
+
+def summarize_probe_trace(probe_json: object) -> dict:
+    if not isinstance(probe_json, dict):
+        return {
+            "enabled": False,
+            "reason": "probe json missing or invalid",
+        }
+
+    write_point_trace = probe_json.get("write_point_trace")
+    if not isinstance(write_point_trace, dict):
+        return {
+            "enabled": False,
+            "reason": "probe json has no write_point_trace",
+        }
+
+    raw_hits = write_point_trace.get("hits")
+    if not isinstance(raw_hits, list):
+        return {
+            "enabled": False,
+            "reason": "probe write_point_trace has no hits array",
+        }
+
+    domains: dict[str, dict[str, object]] = {}
+    total_hits = 0
+    for row in raw_hits:
+        if not isinstance(row, dict):
+            continue
+
+        total_hits += 1
+        point_snes = row.get("point_snes")
+        domain = trace_domain_for_point_snes(point_snes)
+        domain_entry = domains.setdefault(
+            domain,
+            {
+                "domain": domain,
+                "writeCount": 0,
+                "pointCounts": Counter(),
+                "callsiteCounts": Counter(),
+                "activeMainCallbackCounts": Counter(),
+                "activeIrqCallbackCounts": Counter(),
+                "frames": set(),
+                "sampleHits": [],
+            },
+        )
+
+        point_id = str(row.get("point_id", point_snes or "unknown"))
+        cpu_pc_snes = format_snes_pc(to_int(row.get("cpu_k")), to_int(row.get("cpu_pc")))
+        active_main_callback_snes = format_snes_pc(
+            to_int(row.get("active_main_callback_bank")),
+            to_int(row.get("active_main_callback_addr")),
+        )
+        active_irq_callback_snes = format_snes_pc(
+            to_int(row.get("active_irq_callback_bank")),
+            to_int(row.get("active_irq_callback_addr")),
+        )
+
+        domain_entry["writeCount"] = to_int(domain_entry["writeCount"]) + 1
+        domain_entry["pointCounts"][point_id] += 1  # type: ignore[index]
+        domain_entry["callsiteCounts"][cpu_pc_snes] += 1  # type: ignore[index]
+        domain_entry["activeMainCallbackCounts"][active_main_callback_snes] += 1  # type: ignore[index]
+        domain_entry["activeIrqCallbackCounts"][active_irq_callback_snes] += 1  # type: ignore[index]
+        domain_entry["frames"].add(to_int(row.get("frame")))  # type: ignore[union-attr]
+
+        sample_hits = domain_entry["sampleHits"]
+        if isinstance(sample_hits, list) and len(sample_hits) < 16:
+            sample_hits.append(
+                {
+                    "frame": to_int(row.get("frame")),
+                    "scanline": to_int(row.get("scanline")),
+                    "pointId": point_id,
+                    "pointSnes": point_snes,
+                    "value": to_int(row.get("value")),
+                    "cpuPcSnes": cpu_pc_snes,
+                    "cpuA": to_int(row.get("cpu_a")),
+                    "cpuX": to_int(row.get("cpu_x")),
+                    "cpuY": to_int(row.get("cpu_y")),
+                    "activeMainCallbackSnes": active_main_callback_snes,
+                    "activeIrqCallbackSnes": active_irq_callback_snes,
+                    "bgMode": to_int(row.get("bg_mode")),
+                    "mainScreenLayers": to_int(row.get("main_screen_layers")),
+                    "subScreenLayers": to_int(row.get("sub_screen_layers")),
+                }
+            )
+
+    summarized_domains: list[dict] = []
+    for domain_name in sorted(domains):
+        entry = domains[domain_name]
+        frames = sorted(entry["frames"])  # type: ignore[arg-type]
+        summarized_domains.append(
+            {
+                "domain": domain_name,
+                "writeCount": entry["writeCount"],
+                "frameRange": {
+                    "start": frames[0] if frames else None,
+                    "end": frames[-1] if frames else None,
+                    "frames": frames,
+                },
+                "pointCounts": top_counter_rows(entry["pointCounts"]),  # type: ignore[arg-type]
+                "callsiteCounts": top_counter_rows(entry["callsiteCounts"]),  # type: ignore[arg-type]
+                "activeMainCallbackCounts": top_counter_rows(entry["activeMainCallbackCounts"]),  # type: ignore[arg-type]
+                "activeIrqCallbackCounts": top_counter_rows(entry["activeIrqCallbackCounts"]),  # type: ignore[arg-type]
+                "sampleHits": entry["sampleHits"],
+            }
+        )
+
+    return {
+        "enabled": True,
+        "traceWindow": {
+            "startFrame": probe_json.get("trace_start_frame"),
+            "endFrame": probe_json.get("trace_end_frame"),
+        },
+        "writePointHitCount": total_hits,
+        "droppedHits": write_point_trace.get("dropped_hits"),
+        "domains": summarized_domains,
+    }
+
+
 def resolve_optional_json(base_dir: Path, relative_path: str | None) -> dict | None:
     if not relative_path:
         return None
@@ -547,6 +696,15 @@ def main() -> int:
     if args.provenance_json:
         provenance_json = load_json_like(args.provenance_json.resolve())
         provenance_lookup = build_provenance_lookup(provenance_json, frame_number)
+
+    producer_trace = {
+        "enabled": False,
+        "reason": "probe json not provided",
+    }
+    if args.probe_json:
+        probe_json = load_json_like(args.probe_json.resolve())
+        producer_trace = summarize_probe_trace(probe_json)
+        producer_trace["sourceProbeJson"] = str(args.probe_json.resolve())
 
     ppu_summary = manifest.get("ppu_summary")
     if not isinstance(ppu_summary, dict):
@@ -629,6 +787,7 @@ def main() -> int:
             "chunkValidationInputs": provenance_lookup.get("chunkValidationInputs", []),
             "summary": provenance_lookup.get("summary"),
         },
+        "producerTrace": producer_trace,
     }
 
     out_json.parent.mkdir(parents=True, exist_ok=True)

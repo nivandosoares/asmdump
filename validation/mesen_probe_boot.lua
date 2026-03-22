@@ -1205,6 +1205,15 @@ local function make_write_point_callback(point)
         end
 
         local snapshot = emu.getState()
+        local reg_a = mask_u16(snapshot["cpu.a"])
+        local reg_x = mask_u16(snapshot["cpu.x"])
+        local reg_y = mask_u16(snapshot["cpu.y"])
+        local reg_pc = mask_u16(snapshot["cpu.pc"])
+        local reg_sp = mask_u16(snapshot["cpu.sp"])
+        local reg_ps = mask_u16(snapshot["cpu.ps"])
+        local reg_d = mask_u16(snapshot["cpu.d"])
+        local reg_dbr = mask_u16(snapshot["cpu.dbr"])
+        local reg_k = mask_u16(snapshot["cpu.k"])
         state.write_point_hits[#state.write_point_hits + 1] = {
             frame = state.frame,
             point_id = point.id,
@@ -1215,8 +1224,20 @@ local function make_write_point_callback(point)
             scanline = snapshot["ppu.scanline"],
             bg_mode = snapshot["ppu.bgMode"],
             main_screen_layers = snapshot["ppu.mainScreenLayers"],
+            sub_screen_layers = snapshot["ppu.subScreenLayers"],
+            cpu_a = reg_a,
+            cpu_x = reg_x,
+            cpu_y = reg_y,
+            cpu_pc = reg_pc,
+            cpu_sp = reg_sp,
+            cpu_ps = reg_ps,
+            cpu_d = reg_d,
+            cpu_dbr = reg_dbr,
+            cpu_k = reg_k,
             active_main_callback_addr = read_u16(0x000038),
             active_main_callback_bank = read_u8(0x00003A),
+            active_irq_callback_addr = read_u16(0x00003E),
+            active_irq_callback_bank = read_u8(0x000040),
             selector_1c78 = read_u16(0x7E1C78),
             selector_1c80 = read_u16(0x7E1C80),
             selector_1ca8 = read_u16(0x7E1CA8),

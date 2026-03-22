@@ -112,6 +112,33 @@ To inspect the boot/title selectors directly:
 ./validation/run_mesen_probe_boot.sh
 ```
 
+For producer-side visual ownership tracing, the same probe can now carry
+write-breakpoint hits for `VRAM/CGRAM/OAM`-related registers. The resulting
+`td2_boot_probe.json` can be fed into
+`tools/build_mesen_visual_contract.py --probe-json ...`:
+
+```sh
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=75 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_986/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=987 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=982 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=986 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS='objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122' \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+```
+
+Then merge that probe payload into a visual contract:
+
+```sh
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_mesen_range_7051_inputfix_v1/frame_07051 \
+  tools/out/visual_contract_7051_with_probe.json \
+  --provenance-json rom_analysis/maps/tilemaps/mesen_range_7051_provenance.jsonc \
+  --probe-json tools/out/visual_contract_probe_7051/td2_boot_probe.json
+```
+
 To dump a whole intro range in one emulator run:
 
 ```sh

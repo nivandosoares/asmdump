@@ -1765,6 +1765,48 @@ Current reading:
   - this is the right staging layer for automated CHR/sprite archaeology
   - it does not replace runtime tracing; it gives tracing a stable target
 
+### CP-52: Visual contracts now accept producer-side write-breakpoint ownership
+
+- Extended `validation/mesen_probe_boot.lua` generic write-point trace payload:
+  - CPU regs/PC now ride along with each write hit
+  - active IRQ callback bank/addr now ride along with each write hit
+- Extended the visual-contract builders:
+  - `tools/build_mesen_visual_contract.py` now accepts `--probe-json`
+  - `tools/build_mesen_visual_contract_range.py` now forwards `--probe-json`
+    and exposes `producerTraceEnabled` in the range index
+- The merged contract now emits `producerTrace` by write domain:
+  - `vram`
+  - `cgram`
+  - `oam`
+  - `obj_state`
+  - each domain carries top write callsites and active callbacks, plus sample
+    hits
+- Updated the design-workbench doc so the contract workflow now includes
+  producer-side ownership as a first-class input:
+  - `rom_analysis/docs/mesen_debugger_design_workbench.md`
+
+Evidence:
+
+- `python3 -m py_compile tools/build_mesen_visual_contract.py tools/build_mesen_visual_contract_range.py`
+- synthetic merge validation:
+  - `tools/out/visual_contract_probe_fixture.json`
+  - `python3 tools/build_mesen_visual_contract.py tools/out/design_mesen_range_7051_inputfix_v1/frame_07051 tools/out/visual_contract_7051_with_probe.json --provenance-json rom_analysis/maps/tilemaps/mesen_range_7051_provenance.jsonc --probe-json tools/out/visual_contract_probe_fixture.json`
+  - `python3 tools/build_mesen_visual_contract_range.py tools/out/design_mesen_range_7051_inputfix_v1 tools/out/visual_contract_range_7051_with_probe --frame-glob frame_07051 --provenance-json rom_analysis/maps/tilemaps/mesen_range_7051_provenance.jsonc --probe-json tools/out/visual_contract_probe_fixture.json --clean-out`
+- negative live validation in the current local environment:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=15 TD2_BOOT_PROBE_TOTAL_FRAMES=2 ./validation/run_mesen_probe_boot.sh`
+  - the same baseline with write points enabled and longer attempts at `986`
+    and `7051`
+  - all three headless runs exited without emitting the expected probe JSON,
+    and the short baseline surfaced exit code `255`
+
+Current reading:
+
+- the IR surface is now ready to carry producer-side ownership once a probe
+  capture exists
+- the merge path itself is validated
+- the current blocker is not the contract schema anymore; it is the local
+  headless boot-probe runner
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):

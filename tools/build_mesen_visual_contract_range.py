@@ -39,6 +39,11 @@ def parse_args() -> argparse.Namespace:
         help="Optional shared provenance artifact applied to every frame in the range.",
     )
     parser.add_argument(
+        "--probe-json",
+        type=Path,
+        help="Optional shared mesen_probe_boot JSON applied to every frame in the range.",
+    )
+    parser.add_argument(
         "--clean-out",
         action="store_true",
         help="Delete out_dir before building.",
@@ -81,6 +86,8 @@ def main() -> int:
         cmd = [sys.executable, str(builder_script), str(frame_dir), str(out_path)]
         if args.provenance_json:
             cmd.extend(["--provenance-json", str(args.provenance_json.resolve())])
+        if args.probe_json:
+            cmd.extend(["--probe-json", str(args.probe_json.resolve())])
         subprocess.run(cmd, check=True)
 
         contract = json.loads(out_path.read_text(encoding="utf-8"))
@@ -92,6 +99,7 @@ def main() -> int:
                 "bgLayerCount": contract.get("bg", {}).get("layerCount"),
                 "visibleSpriteCount": contract.get("obj", {}).get("visibleCount"),
                 "provenanceEnabled": contract.get("provenance", {}).get("enabled"),
+                "producerTraceEnabled": contract.get("producerTrace", {}).get("enabled"),
             }
         )
 
@@ -102,6 +110,7 @@ def main() -> int:
         "outDir": str(out_dir),
         "frameCount": len(entries),
         "provenancePath": str(args.provenance_json.resolve()) if args.provenance_json else None,
+        "probePath": str(args.probe_json.resolve()) if args.probe_json else None,
         "entries": entries,
     }
 

@@ -74,6 +74,9 @@ translation-oriented IR:
   - base tile/address ranges
   - palette/priority/size counts
   - heuristic horizontal strip candidates for later metasprite archaeology
+- optional producer-side ownership:
+  - summarized `VRAM/CGRAM/OAM` write-breakpoint domains from `mesen_probe_boot.lua`
+  - top write callsites and active callbacks per domain
 
 ## Design Workflow
 
@@ -113,7 +116,8 @@ make -C tools mesen-design-pack-range MESEN_RANGE_FRAMES_DIR=out/mesen_range_108
 python3 tools/build_mesen_visual_contract.py \
   tools/out/design_mesen_range_7051_inputfix_v1/frame_07051 \
   tools/out/visual_contract_7051.json \
-  --provenance-json rom_analysis/maps/tilemaps/mesen_range_7051_provenance.jsonc
+  --provenance-json rom_analysis/maps/tilemaps/mesen_range_7051_provenance.jsonc \
+  --probe-json tools/out/visual_contract_probe_7051/td2_boot_probe.json
 ```
 
 For a whole reviewed range:
@@ -123,6 +127,7 @@ python3 tools/build_mesen_visual_contract_range.py \
   tools/out/design_mesen_range_7055_7061_inputfix_v2 \
   tools/out/visual_contract_range_7055_7061 \
   --provenance-json rom_analysis/maps/tilemaps/mesen_range_7055_7061_provenance.jsonc \
+  --probe-json tools/out/visual_contract_probe_7055_7061/td2_boot_probe.json \
   --clean-out
 ```
 
@@ -135,6 +140,8 @@ The important contract boundary is explicit:
 
 - BG/CHR reconstruction comes from tilemaps + tilesets + `VRAM`
 - OBJ reconstruction comes from visible sprites + `OAM/CGRAM/PPU`
+- producer ownership comes from write-breakpoint traces, not from end-frame
+  pixels alone
 - translating assembly against visuals should bind BG layers to chunk
   provenance first, then bind OBJ producers through breakpoint/write traces
 
