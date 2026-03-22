@@ -2727,8 +2727,72 @@ Current reading:
 
 Next best step:
 
-- extend the same live ownership surface to frame `1085`, which closes the
-  next direct bridge-extracted `1078..1085` block under the same callback
+- extend the same live ownership surface to frame `1093`, which closes the
+  next direct bridge-extracted `1086..1093` block under the same callback
+  family
+- keep the timed-input `7051` path parked until a reusable later-intro seed or
+  savestate exists
+
+### CP-67: Frame `1085` now closes the direct bridge-extracted `1078..1085` ownership block
+
+- Extended the live ownership surface through the eleventh direct
+  bridge-extracted block:
+  - extracted a fresh raw frame dump and design pack for `1085`
+  - ran a bounded live write-point trace for the whole `1078..1085` block
+  - merged that probe into a translation-facing visual contract
+  - materialized a fresh local screenshot for frame `1085` in the same
+    `intro_loop_frame_*` family used by the earlier late-window checkpoints
+- Kept the Mesen-facing steps serialized again:
+  - probe first
+  - screenshot capture second
+- Kept renderer-side validation on the stable Python surface again:
+  - used `render_mesen_snes_bg.py --obj-renderer mode7-ppu`
+  - skipped SDL runtime validation because the local runtime worktree still has
+    unrelated user edits under `port/src/td2_ppu.c`
+
+Evidence:
+
+- `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release make -C tools mesen-design-pack MESEN_FRAME=1085`
+- `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=150 TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_1085_live/td2_boot_probe TD2_BOOT_PROBE_TOTAL_FRAMES=1086 TD2_BOOT_PROBE_TRACE_START_FRAME=1078 TD2_BOOT_PROBE_TRACE_END_FRAME=1085 TD2_BOOT_PROBE_TRACE_WRITE_POINTS='objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122' TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 ./validation/run_mesen_probe_boot.sh`
+- `python3 tools/build_mesen_visual_contract.py tools/out/design_frame1085 tools/out/visual_contract_frame1085_live_probe.json --probe-json tools/out/visual_contract_probe_1085_live/td2_boot_probe.json`
+- produced artifacts:
+  - `tools/out/visual_contract_probe_1085_live/td2_boot_probe.json`
+  - `tools/out/visual_contract_frame1085_live_probe.json`
+
+Targeted validation:
+
+- `python3 tools/compare_frames.py tools/out/intro_loop_frame_01085_frame.png tools/out/mesen_frame1085/main_visible.ppm --diff-out tools/out/mesen_frame1085_vs_intro1085_diff.ppm`
+  - `74` mismatched pixels (`0.129046%`)
+- `python3 tools/render_mesen_snes_bg.py tools/out/mesen_frame1085/vram.bin tools/out/mesen_frame1085/cgram.bin tools/out/mesen_frame1085/ppu_state.json tools/out/mesen_frame1085_mode7ppu.ppm --oam tools/out/mesen_frame1085/oam.bin --obj-renderer mode7-ppu --json-out tools/out/mesen_frame1085_mode7ppu.json`
+- `python3 tools/compare_frames.py tools/out/mesen_frame1085/main_visible.ppm tools/out/mesen_frame1085_mode7ppu.ppm --diff-out tools/out/mesen_frame1085_mode7ppu_vs_mesen1085_diff.ppm`
+  - `69` mismatched pixels (`0.120326%`)
+
+Current reading:
+
+- `tools/out/visual_contract_probe_1085_live/td2_boot_probe.json` records
+  `4368` write hits with `0` drops over `1078..1085`
+- the merged contract preserves exact
+  `producerTrace.traceWindow = 1078..1085`
+- producer domains now collapse to a single late `01:9FE5` OAM family:
+  - OAM domain: `4368` writes across frames `1078..1085`
+    - dominant callsites: `00:824F` / `00:8257`
+  - no sampled VRAM writes fire in the bounded `1078..1085` trace window
+- all sampled write hits still run under active main callback `01:9FE5` with
+  active IRQ callback `00:835F`
+- `tools/out/design_frame1085/sprites/sprites_visible.json` reports `61`
+  visible sprites
+- practical reading:
+  - the eleventh direct bridge-extracted `1078..1085` block is now closed by
+    live ownership evidence at its end
+  - compared with `1077`, the narrow VRAM pulse disappears entirely, leaving a
+    pure-OAM ownership block under the same callback family
+  - the screenshot-backed and Python `mode7-ppu` gaps now both land in the
+    high double digits inside the same callback family
+
+Next best step:
+
+- extend the same live ownership surface to frame `1093`, which closes the
+  next direct bridge-extracted `1086..1093` block under the same callback
   family
 - keep the timed-input `7051` path parked until a reusable later-intro seed or
   savestate exists
