@@ -10,6 +10,9 @@ Primary artifacts:
 - `tools/out/mode7_bg1_export_audit_1105/audit.md`
 - `tools/out/mode7_bg1_export_audit_1117/audit.json`
 - `tools/out/mode7_bg1_export_audit_1117/audit.md`
+- `tools/build_mesen_visible_crop_audit.py`
+- `tools/out/mode7_bg1_visible_crop_audit_1102_1105_1117/audit.json`
+- `tools/out/mode7_bg1_visible_crop_audit_1102_1105_1117/audit.md`
 
 Builder path:
 
@@ -69,6 +72,42 @@ Everything else is worse in one of two ways:
 - it reopens the composed scene (`2509` or worse)
 - or it worsens the BG-only export while still not improving the composed scene
 
+## Extractor Path Proof
+
+The export-side question is now closed by both source and artifact evidence.
+
+In `tools/mesen_ppu_extract/Program.cs`, the bridge path is:
+
+- `GetTilemap(...)` -> save full layer render as `bg1.ppm`
+- `NormalizeScroll(info.ScrollX, size.Width)`
+- `NormalizeScroll(info.ScrollY, size.Height)`
+- `CropVisibleRegion(...)`
+- save the result as `bg1_visible.ppm`
+
+The new visible-crop audit reproduces that exact `NormalizeScroll +
+CropVisibleRegion` path against promoted design-pack assets:
+
+- `python3 -m py_compile tools/build_mesen_visible_crop_audit.py`
+- `python3 tools/build_mesen_visible_crop_audit.py tools/out/mode7_bg1_visible_crop_audit_1102_1105_1117/audit.json tools/out/design_mesen_range_1102_1109_v1/frame_01102 tools/out/design_mesen_range_1102_1109_v1/frame_01105 tools/out/design_mesen_range_1110_1117_v1/frame_01117 --markdown-out tools/out/mode7_bg1_visible_crop_audit_1102_1105_1117/audit.md`
+
+That audit lands at `0` mismatched pixels for all three tested frames:
+
+- `1102`
+- `1105`
+- `1117`
+
+and preserves the extractor metadata exactly:
+
+- full size: `1024x1024`
+- visible size: `256x224`
+- raw scroll: `0,8191`
+- normalized scroll: `0,0`
+
+So the remaining `bg1_visible` gap is no longer just “probably export-side”.
+It is now explained concretely: `bg1_visible.ppm` is a viewer-style viewport
+crop of the full `GetTilemap` layer render, not a promise of exact on-screen
+`BG1` contribution semantics.
+
 ## What This Proves
 
 ### 1. The remaining `bg1_visible` mismatch is stable against small local renderer tweaks
@@ -112,15 +151,27 @@ So the next defensible read is:
 - treat `bg1_visible.ppm` as a separate export-surface question
 - stop expecting another near-neighbor `Mode 7` tweak to close it
 
+### 4. The late-attract `bg1_visible` ambiguity is now closed enough to demote as a frontier
+
+Between the bounded `36`-model audit and the extractor-path crop audit, the
+remaining late-attract `bg1_visible` mismatch no longer blocks the composed
+scene or the active `Mode 7` renderer rule.
+
+The strong practical rule is now:
+
+- use `main_visible.ppm` for renderer parity on this slice
+- treat `layers/bg1_visible.ppm` as a viewer/export surface unless the task is
+  specifically about bridge/extractor semantics
+
 ## Next Best Step
 
 Do not spend the next iteration on more local `Mode 7` perturbations of the
-same family.
+same family or on trying to force `layers/bg1_visible.ppm` into an on-screen
+parity target it was never meant to be.
 
-Instead, compare export semantics directly:
+Resume Lane 2 on the next real continuity target instead:
 
-- how `mesen_ppu_extract` produces `layers/bg1_visible.ppm`
-- whether it is a viewer-style surface rather than the exact on-screen `BG1`
-  contribution
-- whether its crop/origin rules differ from the real composed screen even when
-  `main_visible.ppm` is exact
+- continue later-window callback/provenance/native replacement work beyond
+  `1117`
+- keep `main_visible.ppm` as the composed-scene parity surface for renderer
+  checks

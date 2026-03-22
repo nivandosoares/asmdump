@@ -1,0 +1,96 @@
+{
+  "schema": "td2.mesen_visible_crop_audit.v1",
+  "createdUtc": "2026-03-22T19:45:07.191219+00:00",
+  "title": "Mesen visible crop audit",
+  "layer": "bg1",
+  "rows": [
+    {
+      "frame": 1102,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1102_1109_v1/frame_01102",
+      "layer": "bg1",
+      "fullSize": {
+        "width": 1024,
+        "height": 1024
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "scrollRaw": {
+        "x": 0,
+        "y": 8191
+      },
+      "scrollNormalized": {
+        "x": 0,
+        "y": 0
+      },
+      "compare": {
+        "mismatchPixels": 0,
+        "mismatchRatio": 0.0,
+        "bbox": null,
+        "maskSha1": "9ac352c38bb6a94ab949aced3d8ef6c302cf5cd3",
+        "diffSha1": "ff0de078f2ba2b1392b6f9a01200bf1c5b1e4b3c"
+      },
+      "exactMatch": true
+    },
+    {
+      "frame": 1105,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1102_1109_v1/frame_01105",
+      "layer": "bg1",
+      "fullSize": {
+        "width": 1024,
+        "height": 1024
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "scrollRaw": {
+        "x": 0,
+        "y": 8191
+      },
+      "scrollNormalized": {
+        "x": 0,
+        "y": 0
+      },
+      "compare": {
+        "mismatchPixels": 0,
+        "mismatchRatio": 0.0,
+        "bbox": null,
+        "maskSha1": "9ac352c38bb6a94ab949aced3d8ef6c302cf5cd3",
+        "diffSha1": "ff0de078f2ba2b1392b6f9a01200bf1c5b1e4b3c"
+      },
+      "exactMatch": true
+    },
+    {
+      "frame": 1117,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1110_1117_v1/frame_01117",
+      "layer": "bg1",
+      "fullSize": {
+        "width": 1024,
+        "height": 1024
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "scrollRaw": {
+        "x": 0,
+        "y": 8191
+      },
+      "scrollNormalized": {
+        "x": 0,
+        "y": 0
+      },
+      "compare": {
+        "mismatchPixels": 0,
+        "mismatchRatio": 0.0,
+        "bbox": null,
+        "maskSha1": "9ac352c38bb6a94ab949aced3d8ef6c302cf5cd3",
+        "diffSha1": "ff0de078f2ba2b1392b6f9a01200bf1c5b1e4b3c"
+      },
+      "exactMatch": true
+    }
+  ],
+  "exactMatchCount": 3
+}

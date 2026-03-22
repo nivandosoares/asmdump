@@ -312,6 +312,34 @@ Current reading from the promoted `1105` / `1117` audit pair:
 That is strong evidence that the remaining late-attract layer gap is better
 read as export-surface semantics than another small `Mode 7` renderer tweak.
 
+That export-side ambiguity is now closed more directly too:
+
+- `tools/mesen_ppu_extract/Program.cs` writes `layers/bg1.ppm` from
+  `GetTilemap(...)` and then derives `layers/bg1_visible.ppm` via
+  `NormalizeScroll(...) + CropVisibleRegion(...)`
+- `tools/build_mesen_visible_crop_audit.py` proves that path against promoted
+  late-attract design packs:
+
+```sh
+python3 tools/build_mesen_visible_crop_audit.py \
+  tools/out/mode7_bg1_visible_crop_audit_1102_1105_1117/audit.json \
+  tools/out/design_mesen_range_1102_1109_v1/frame_01102 \
+  tools/out/design_mesen_range_1102_1109_v1/frame_01105 \
+  tools/out/design_mesen_range_1110_1117_v1/frame_01117 \
+  --markdown-out tools/out/mode7_bg1_visible_crop_audit_1102_1105_1117/audit.md
+```
+
+Current result from that audit:
+
+- `1102/1105/1117` all land at `0` mismatched pixels
+- raw layer scroll `0,8191` normalizes to `0,0`
+
+Use that reading operationally:
+
+- `main_visible.ppm` stays the renderer-parity surface
+- `layers/*_visible.ppm` should be treated as viewer/export surfaces unless a
+  task is explicitly about the bridge extractor itself
+
 This path is useful when the remaining question is no longer "is there another
 hidden upload?" and has narrowed to:
 
