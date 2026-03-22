@@ -179,7 +179,8 @@ producer domains. Narrower late windows can still return `write_point_trace`
 `0` hits if no writes occur there, so an empty trace is now a window-selection
 signal rather than a launcher failure.
 
-A promoted later-window proof now also exists at frame `986`:
+A promoted later-window proof chain now also exists at frames `986`, `990`,
+and `994`:
 
 ```sh
 MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
@@ -213,6 +214,89 @@ Current reading for that `986` proof:
 - `tools/out/design_frame986/sprites/sprites_visible.json` reports `0`
   visible sprites, which matches the late-overlay-cleared reading for frame
   `986`
+
+The same proof path now also reaches `990` and `994`. If `994` times out while
+another Mesen job is running, extract the raw frame standalone first with
+`--frame-timeout-seconds 120` and then build the design pack:
+
+```sh
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+make -C tools mesen-design-pack MESEN_FRAME=990
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=120 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_990_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=991 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=986 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=990 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS='objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122' \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame990 \
+  tools/out/visual_contract_frame990_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_990_live/td2_boot_probe.json
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+./tools/run_mesen_ppu_extract.sh \
+  --rom ./game.smc \
+  --frame 994 \
+  --frame-timeout-seconds 120 \
+  --out-dir ./tools/out/mesen_frame994
+
+python3 tools/build_mesen_design_pack.py \
+  tools/out/mesen_frame994 \
+  tools/out/design_frame994 \
+  --clean-out
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=120 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_994_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=995 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=990 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=994 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS='objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122' \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame994 \
+  tools/out/visual_contract_frame994_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_994_live/td2_boot_probe.json
+```
+
+Current reading for those `990/994` proofs:
+
+- frame `990`:
+  - `tools/out/visual_contract_probe_990_live/td2_boot_probe.json` records
+    `3762` write hits with `0` drops
+  - the merged contract keeps exact
+    `producerTrace.traceWindow = 986..990`
+  - producer domains:
+    - OAM writes across frames `986..990`
+    - VRAM writes across frames `986/988/989/990`
+  - `tools/out/design_frame990/sprites/sprites_visible.json` reports `5`
+    visible sprites
+  - `tools/out/mesen_frame990/main_visible.ppm` is `1516` pixels from the
+    local frame-`990` screenshot and `2` pixels from
+    `tools/out/bank1_bootstrap_queue_990_bridgeobj.ppm`
+- frame `994`:
+  - `tools/out/visual_contract_probe_994_live/td2_boot_probe.json` records
+    `4020` write hits with `0` drops
+  - the merged contract keeps exact
+    `producerTrace.traceWindow = 990..994`
+  - producer domains:
+    - OAM writes across frames `990..994`
+    - VRAM writes across frames `990..994`
+  - `tools/out/design_frame994/sprites/sprites_visible.json` reports `19`
+    visible sprites
+  - `tools/out/mesen_frame994/main_visible.ppm` is `2622` pixels from the
+    local frame-`994` screenshot and `96` pixels from
+    `tools/out/bank1_bootstrap_queue_994_bridgeobj.ppm`
+- both windows stay on the same late callback family:
+  - main callback `01:9FE5`
+  - IRQ callback `00:835F`
 
 To dump a whole intro range in one emulator run:
 
