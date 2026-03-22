@@ -10,7 +10,7 @@ Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 | Roadmap lane | Status | Current reading |
 |---|---|---|
 | 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps are done; registry tightening now demotes `9681` to `sentinel-control` and `E91F` to `nested-invalid-marker`, leaving active unresolved queue (`EE7F`, `DA96`). |
-| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry, the visual-contract builders now separate BG/CHR state from OBJ/OAM state with optional provenance binding, and producer-side write-breakpoint summaries now attach to that IR from real headless captures again after fixing repo-relative path normalization in the shared Mesen launcher. |
+| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry, the visual-contract builders now separate BG/CHR state from OBJ/OAM state with optional provenance binding, producer-side write-breakpoint summaries still attach to that IR on the proven frame-`300` path, and the first later-window power-on follow-up (`7051`) is still locally blocked because two bounded headless probe attempts exited `255` before emitting probe JSON. |
 | 3. Gameplay-frame expansion | in progress | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty. |
 | 4. Bank API contracts | not started | Baseline docs exist; callback/API contracts for bank 30/10/11 are not yet mapped to completion. |
 
@@ -286,6 +286,29 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
       scenario instead of only the summarized singleton source list
     - if you want full-scene continuity, isolate the `7051 -> 7055`
       sprite/OAM disappearance before claiming composition carry
+    - bounded 2026-03-21 follow-up in this environment:
+      - `MESEN_TIMEOUT_SECONDS=120`, `TD2_BOOT_PROBE_TOTAL_FRAMES=7062`,
+        `TD2_BOOT_PROBE_TRACE_START_FRAME=7048`,
+        `TD2_BOOT_PROBE_TRACE_END_FRAME=7061`,
+        `TD2_BOOT_PROBE_INPUT_WINDOWS='6800:start;6900-6920:start,a'` ->
+        `exit 255`, no
+        `tools/out/visual_contract_probe_7051_7061_live/td2_boot_probe.json`
+      - `MESEN_TIMEOUT_SECONDS=120`, `TD2_BOOT_PROBE_TOTAL_FRAMES=7052`,
+        `TD2_BOOT_PROBE_TRACE_START_FRAME=7048`,
+        `TD2_BOOT_PROBE_TRACE_END_FRAME=7051`,
+        `TD2_BOOT_PROBE_INPUT_WINDOWS='6800:start;6900-6920:start,a'` ->
+        `exit 255`, no
+        `tools/out/visual_contract_probe_7051_live/td2_boot_probe.json`
+      - practical reading:
+        - the frame-`300` live producer-trace proof remains valid
+        - later power-on timed-input ownership traces are still blocked locally
+          before artifact emission
+      - next best step after this negative result:
+        - do not spend more headless retries on the same power-on `7051` path
+          without a new starting surface
+        - either recover a reusable later-intro savestate/seed for the
+          `7051..7061` window or promote a cheaper later design-pack target
+          such as `986` before retrying live producer-trace ownership
 
 ## 3. Expand Into Gameplay Frames
 

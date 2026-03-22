@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; registry tightening now closes `9681` as `sentinel-control` and `E91F` as `nested-invalid-marker`; active unresolved queue remains `EE7F` and `DA96` |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, and live headless producer-trace capture is working again after fixing repo-relative path normalization in the shared Mesen launcher |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, and the first later-window power-on ownership follow-up (`7051`) remains locally blocked because two bounded headless probe attempts still exited `255` before emitting JSON |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -1848,6 +1848,35 @@ Current reading:
   - that means the next problem is choosing producer-active windows for later
     scene ownership (`986`, `7051`, `7055`, `7059`, `7061`), not reviving the
     runner itself
+- bounded 2026-03-21 follow-up on the later timed-input `7051` path:
+  - attempted longer live ownership trace:
+    - `MESEN_TIMEOUT_SECONDS=120`
+    - `TD2_BOOT_PROBE_TOTAL_FRAMES=7062`
+    - `TD2_BOOT_PROBE_TRACE_START_FRAME=7048`
+    - `TD2_BOOT_PROBE_TRACE_END_FRAME=7061`
+    - `TD2_BOOT_PROBE_INPUT_WINDOWS='6800:start;6900-6920:start,a'`
+    - result: `exit 255`, no
+      `tools/out/visual_contract_probe_7051_7061_live/td2_boot_probe.json`
+  - attempted narrowed live ownership trace:
+    - `MESEN_TIMEOUT_SECONDS=120`
+    - `TD2_BOOT_PROBE_TOTAL_FRAMES=7052`
+    - `TD2_BOOT_PROBE_TRACE_START_FRAME=7048`
+    - `TD2_BOOT_PROBE_TRACE_END_FRAME=7051`
+    - `TD2_BOOT_PROBE_INPUT_WINDOWS='6800:start;6900-6920:start,a'`
+    - result: `exit 255`, no
+      `tools/out/visual_contract_probe_7051_live/td2_boot_probe.json`
+  - practical reading:
+    - later power-on timed-input producer traces are still not reproducible
+      headlessly in this environment even though the early frame-`300` proof is
+      reproducible
+    - this is an informative negative result, not evidence against the visual
+      contract merge path itself
+  - next best step:
+    - do not spend more retries on the same power-on `7051` path without a new
+      starting surface
+    - recover a reusable later-intro savestate/seed for the `7051..7061`
+      window, or promote a cheaper later design-pack target such as `986`
+      before retrying live producer-trace ownership
 
 ## Current Checkpoint Metrics
 
