@@ -194,6 +194,40 @@ something?" but:
   (`callback` switch, `OAM` DMA shutdown, `Mode 7` register-set reduction, and
   so on)
 
+The visual-contract builders can now also merge that normalized activity layer
+directly with `--activity-trace-json`, so a range summary can carry
+`callback/state + BG/OBJ surface + DMA/direct/Mode7 activity` in the same
+artifact:
+
+```sh
+python3 tools/build_mesen_visual_contract_range.py \
+  tools/out/design_mesen_range_1102_1109_v1 \
+  tools/out/visual_contract_range_1102_1109_activity \
+  --provenance-json rom_analysis/maps/tilemaps/mesen_range_1102_1109_provenance.jsonc \
+  --probe-json tools/out/activity_trace_1094_1117/td2_boot_probe.json \
+  --activity-trace-json tools/out/activity_trace_1094_1117/activity_trace.json \
+  --clean-out
+```
+
+For the post-`1093` compare rubric itself, use:
+
+```sh
+python3 tools/build_mesen_window_compare.py \
+  tools/out/post_1093_compare_1102_1117/summary.json \
+  tools/out/mesen_range_1102_1109_v1 \
+  tools/out/mesen_range_1110_1117_v1 \
+  --activity-trace-json tools/out/activity_trace_1094_1117/activity_trace.json \
+  --markdown-out tools/out/post_1093_compare_1102_1117/summary.md
+```
+
+That builder automates the same questions that were previously being answered
+by hand:
+
+- whether `main_visible.ppm` is still the top crop of `main.ppm`
+- whether a visible-state `ppu_state_visible.json` render helps or hurts
+- whether the compare boundary lines up with a real activity boundary like
+  `callback` change or `OAM DMA` shutdown
+
 A current headless proof that uses only repo-relative prefixes is:
 
 ```sh

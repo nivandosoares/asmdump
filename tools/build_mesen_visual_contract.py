@@ -44,6 +44,15 @@ def parse_args() -> argparse.Namespace:
             "write-breakpoint ownership to the visual contract."
         ),
     )
+    parser.add_argument(
+        "--activity-trace-json",
+        type=Path,
+        help=(
+            "Optional normalized activity trace JSON from "
+            "build_mesen_activity_trace.py used to attach per-frame DMA/direct/"
+            "Mode 7 activity to the visual contract."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -746,6 +755,80 @@ def resolve_optional_json(base_dir: Path, relative_path: str | None) -> dict | N
     return data if isinstance(data, dict) else None
 
 
+def summarize_activity_trace_frame(activity_json: object, frame_number: int | None) -> dict:
+    if not isinstance(activity_json, dict):
+        return {
+            "enabled": False,
+            "reason": "activity trace json is not an object",
+        }
+
+    frame_activity = activity_json.get("frameActivity")
+    if not isinstance(frame_activity, list):
+        return {
+            "enabled": False,
+            "reason": "activity trace json has no frameActivity array",
+        }
+
+    row = None
+    fallback_row = None
+    for candidate in frame_activity:
+        if not isinstance(candidate, dict):
+            continue
+        fallback_row = candidate
+        if frame_number is not None and to_int(candidate.get("frame"), -1) == frame_number:
+            row = candidate
+            break
+
+    if row is None:
+        row = fallback_row
+    if not isinstance(row, dict):
+        return {
+            "enabled": False,
+            "reason": "activity trace json has no matching frame row",
+        }
+
+    state = row.get("state")
+    if not isinstance(state, dict):
+        state = {}
+    dma_domains = row.get("dmaDomains")
+    if not isinstance(dma_domains, dict):
+        dma_domains = {}
+    direct_write_counts = row.get("directWriteCounts")
+    if not isinstance(direct_write_counts, dict):
+        direct_write_counts = {}
+
+    return {
+        "enabled": True,
+        "frame": to_int(row.get("frame")),
+        "callbacks": {
+            "mainSnes": row.get("activeMainCallbackSnes"),
+            "irqSnes": row.get("activeIrqCallbackSnes"),
+        },
+        "state": {
+            "0202": to_int(state.get("0202")),
+            "0204": to_int(state.get("0204")),
+            "0206": to_int(state.get("0206")),
+            "0208": to_int(state.get("0208")),
+            "020a": to_int(state.get("020a")),
+            "040a": to_int(state.get("040a")),
+            "0054": to_int(state.get("0054")),
+        },
+        "dma": {
+            "eventCount": to_int(row.get("dmaEventCount"), 0),
+            "domains": {str(key): to_int(value, 0) for key, value in dma_domains.items()},
+        },
+        "directWrites": {
+            "eventCount": to_int(row.get("directEventCount"), 0),
+            "writeCounts": {str(key): to_int(value, 0) for key, value in direct_write_counts.items()},
+        },
+        "mode7": {
+            "eventCount": to_int(row.get("mode7EventCount"), 0),
+            "writeCount": to_int(row.get("mode7WriteCount"), 0),
+        },
+        "traceWindow": activity_json.get("traceWindow"),
+    }
+
+
 def main() -> int:
     args = parse_args()
     design_pack_dir = args.design_pack_dir.resolve()
@@ -779,12 +862,20 @@ def main() -> int:
         "enabled": False,
         "reason": "probe json not provided",
     }
+    activity_trace = {
+        "enabled": False,
+        "reason": "activity trace json not provided",
+    }
     if args.probe_json:
         probe_json = load_json_like(args.probe_json.resolve())
         producer_trace = summarize_probe_trace(probe_json)
         producer_trace["sourceProbeJson"] = str(args.probe_json.resolve())
         callback_state = summarize_probe_frame_state(probe_json, frame_number)
         callback_state["sourceProbeJson"] = str(args.probe_json.resolve())
+    if args.activity_trace_json:
+        activity_json = load_json_like(args.activity_trace_json.resolve())
+        activity_trace = summarize_activity_trace_frame(activity_json, frame_number)
+        activity_trace["sourceActivityTraceJson"] = str(args.activity_trace_json.resolve())
 
     ppu_summary = manifest.get("ppu_summary")
     if not isinstance(ppu_summary, dict):
@@ -869,6 +960,7 @@ def main() -> int:
         },
         "producerTrace": producer_trace,
         "callbackState": callback_state,
+        "activityTrace": activity_trace,
     }
 
     out_json.parent.mkdir(parents=True, exist_ok=True)

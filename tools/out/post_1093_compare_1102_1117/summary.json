@@ -1,0 +1,677 @@
+{
+  "schema": "td2.mesen_window_compare.v1",
+  "createdUtc": "2026-03-22T15:03:41.847052+00:00",
+  "title": "Post-1093 continuation compare summary",
+  "sourceFrameRoots": [
+    "/home/nivando-soares/asmdump/tools/out/mesen_range_1102_1109_v1",
+    "/home/nivando-soares/asmdump/tools/out/mesen_range_1110_1117_v1"
+  ],
+  "activityTracePath": "/home/nivando-soares/asmdump/tools/out/activity_trace_1094_1117/activity_trace.json",
+  "frameRange": {
+    "start": 1102,
+    "end": 1117,
+    "count": 16
+  },
+  "topCropMismatch": {
+    "min": 0,
+    "max": 0,
+    "ranges": [
+      {
+        "value": 0,
+        "startFrame": 1102,
+        "endFrame": 1117
+      }
+    ]
+  },
+  "bottomCropMismatch": {
+    "min": 14901,
+    "max": 21300,
+    "ranges": [
+      {
+        "value": 14901,
+        "startFrame": 1102,
+        "endFrame": 1102
+      },
+      {
+        "value": 15400,
+        "startFrame": 1103,
+        "endFrame": 1103
+      },
+      {
+        "value": 18457,
+        "startFrame": 1104,
+        "endFrame": 1104
+      },
+      {
+        "value": 21300,
+        "startFrame": 1105,
+        "endFrame": 1117
+      }
+    ]
+  },
+  "baseRenderMismatch": {
+    "min": 838,
+    "max": 2698,
+    "ranges": [
+      {
+        "value": 838,
+        "startFrame": 1102,
+        "endFrame": 1102
+      },
+      {
+        "value": 1061,
+        "startFrame": 1103,
+        "endFrame": 1103
+      },
+      {
+        "value": 1798,
+        "startFrame": 1104,
+        "endFrame": 1104
+      },
+      {
+        "value": 2698,
+        "startFrame": 1105,
+        "endFrame": 1117
+      }
+    ]
+  },
+  "visibleRenderMismatch": {
+    "min": 2698,
+    "max": 6292,
+    "ranges": [
+      {
+        "value": 6082,
+        "startFrame": 1102,
+        "endFrame": 1102
+      },
+      {
+        "value": 5958,
+        "startFrame": 1103,
+        "endFrame": 1103
+      },
+      {
+        "value": 6292,
+        "startFrame": 1104,
+        "endFrame": 1104
+      },
+      {
+        "value": 2698,
+        "startFrame": 1105,
+        "endFrame": 1117
+      }
+    ]
+  },
+  "activitySummary": {
+    "distinctMainCallbacks": [
+      "00:8029"
+    ],
+    "framesWithDma": [
+      1102,
+      1103,
+      1104,
+      1105,
+      1106,
+      1107,
+      1108,
+      1109,
+      1110,
+      1111,
+      1112,
+      1113
+    ],
+    "framesWithoutDma": [
+      1114,
+      1115,
+      1116,
+      1117
+    ],
+    "dmaEventCountRanges": [
+      {
+        "value": 1,
+        "startFrame": 1102,
+        "endFrame": 1113
+      },
+      {
+        "value": 0,
+        "startFrame": 1114,
+        "endFrame": 1117
+      }
+    ],
+    "mode7EventCountRanges": [
+      {
+        "value": 3,
+        "startFrame": 1102,
+        "endFrame": 1117
+      }
+    ],
+    "mode7WriteCountRanges": [
+      {
+        "value": 16,
+        "startFrame": 1102,
+        "endFrame": 1117
+      }
+    ]
+  },
+  "frames": [
+    {
+      "frame": 1102,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1102_1109_v1/frame_01102",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 14901,
+      "bottomCropRatio": 0.25985281808035715,
+      "baseRenderMismatch": 838,
+      "baseRenderRatio": 0.014613560267857142,
+      "visibleRenderMismatch": 6082,
+      "visibleRenderRatio": 0.10606166294642858,
+      "baseStateMatrix0": 640,
+      "baseStateMatrix3": 514,
+      "visibleStateMatrix0": 256,
+      "visibleStateMatrix3": 257,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1103,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1102_1109_v1/frame_01103",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 15400,
+      "bottomCropRatio": 0.2685546875,
+      "baseRenderMismatch": 1061,
+      "baseRenderRatio": 0.018502371651785716,
+      "visibleRenderMismatch": 5958,
+      "visibleRenderRatio": 0.10389927455357142,
+      "baseStateMatrix0": 512,
+      "baseStateMatrix3": 514,
+      "visibleStateMatrix0": 256,
+      "visibleStateMatrix3": 257,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1104,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1102_1109_v1/frame_01104",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 18457,
+      "bottomCropRatio": 0.32186453683035715,
+      "baseRenderMismatch": 1798,
+      "baseRenderRatio": 0.03135463169642857,
+      "visibleRenderMismatch": 6292,
+      "visibleRenderRatio": 0.10972377232142858,
+      "baseStateMatrix0": 384,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": 256,
+      "visibleStateMatrix3": 257,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1105,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1102_1109_v1/frame_01105",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21300,
+      "bottomCropRatio": 0.37144252232142855,
+      "baseRenderMismatch": 2698,
+      "baseRenderRatio": 0.04704938616071429,
+      "visibleRenderMismatch": 2698,
+      "visibleRenderRatio": 0.04704938616071429,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": 256,
+      "visibleStateMatrix3": 257,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1106,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1102_1109_v1/frame_01106",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21300,
+      "bottomCropRatio": 0.37144252232142855,
+      "baseRenderMismatch": 2698,
+      "baseRenderRatio": 0.04704938616071429,
+      "visibleRenderMismatch": 2698,
+      "visibleRenderRatio": 0.04704938616071429,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": 256,
+      "visibleStateMatrix3": 257,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1107,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1102_1109_v1/frame_01107",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21300,
+      "bottomCropRatio": 0.37144252232142855,
+      "baseRenderMismatch": 2698,
+      "baseRenderRatio": 0.04704938616071429,
+      "visibleRenderMismatch": 2698,
+      "visibleRenderRatio": 0.04704938616071429,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": 256,
+      "visibleStateMatrix3": 257,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1108,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1102_1109_v1/frame_01108",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21300,
+      "bottomCropRatio": 0.37144252232142855,
+      "baseRenderMismatch": 2698,
+      "baseRenderRatio": 0.04704938616071429,
+      "visibleRenderMismatch": 2698,
+      "visibleRenderRatio": 0.04704938616071429,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": 256,
+      "visibleStateMatrix3": 257,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1109,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1102_1109_v1/frame_01109",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21300,
+      "bottomCropRatio": 0.37144252232142855,
+      "baseRenderMismatch": 2698,
+      "baseRenderRatio": 0.04704938616071429,
+      "visibleRenderMismatch": 2698,
+      "visibleRenderRatio": 0.04704938616071429,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": 256,
+      "visibleStateMatrix3": 257,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1110,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1110_1117_v1/frame_01110",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21300,
+      "bottomCropRatio": 0.37144252232142855,
+      "baseRenderMismatch": 2698,
+      "baseRenderRatio": 0.04704938616071429,
+      "visibleRenderMismatch": 2698,
+      "visibleRenderRatio": 0.04704938616071429,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": 256,
+      "visibleStateMatrix3": 257,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1111,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1110_1117_v1/frame_01111",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21300,
+      "bottomCropRatio": 0.37144252232142855,
+      "baseRenderMismatch": 2698,
+      "baseRenderRatio": 0.04704938616071429,
+      "visibleRenderMismatch": 2698,
+      "visibleRenderRatio": 0.04704938616071429,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": 256,
+      "visibleStateMatrix3": 257,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1112,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1110_1117_v1/frame_01112",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21300,
+      "bottomCropRatio": 0.37144252232142855,
+      "baseRenderMismatch": 2698,
+      "baseRenderRatio": 0.04704938616071429,
+      "visibleRenderMismatch": 2698,
+      "visibleRenderRatio": 0.04704938616071429,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": 256,
+      "visibleStateMatrix3": 257,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1113,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1110_1117_v1/frame_01113",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21300,
+      "bottomCropRatio": 0.37144252232142855,
+      "baseRenderMismatch": 2698,
+      "baseRenderRatio": 0.04704938616071429,
+      "visibleRenderMismatch": 2698,
+      "visibleRenderRatio": 0.04704938616071429,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": 256,
+      "visibleStateMatrix3": 257,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 1,
+      "activityDmaDomains": {
+        "oam": 1
+      },
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1114,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1110_1117_v1/frame_01114",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21300,
+      "bottomCropRatio": 0.37144252232142855,
+      "baseRenderMismatch": 2698,
+      "baseRenderRatio": 0.04704938616071429,
+      "visibleRenderMismatch": 2698,
+      "visibleRenderRatio": 0.04704938616071429,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": 256,
+      "visibleStateMatrix3": 257,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 0,
+      "activityDmaDomains": {},
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1115,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1110_1117_v1/frame_01115",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21300,
+      "bottomCropRatio": 0.37144252232142855,
+      "baseRenderMismatch": 2698,
+      "baseRenderRatio": 0.04704938616071429,
+      "visibleRenderMismatch": 2698,
+      "visibleRenderRatio": 0.04704938616071429,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": 256,
+      "visibleStateMatrix3": 257,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 0,
+      "activityDmaDomains": {},
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1116,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1110_1117_v1/frame_01116",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21300,
+      "bottomCropRatio": 0.37144252232142855,
+      "baseRenderMismatch": 2698,
+      "baseRenderRatio": 0.04704938616071429,
+      "visibleRenderMismatch": 2698,
+      "visibleRenderRatio": 0.04704938616071429,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": 256,
+      "visibleStateMatrix3": 257,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 0,
+      "activityDmaDomains": {},
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    },
+    {
+      "frame": 1117,
+      "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1110_1117_v1/frame_01117",
+      "mainSize": {
+        "width": 256,
+        "height": 239
+      },
+      "visibleSize": {
+        "width": 256,
+        "height": 224
+      },
+      "topCropMismatch": 0,
+      "topCropRatio": 0.0,
+      "bottomCropMismatch": 21300,
+      "bottomCropRatio": 0.37144252232142855,
+      "baseRenderMismatch": 2698,
+      "baseRenderRatio": 0.04704938616071429,
+      "visibleRenderMismatch": 2698,
+      "visibleRenderRatio": 0.04704938616071429,
+      "baseStateMatrix0": 256,
+      "baseStateMatrix3": 257,
+      "visibleStateMatrix0": 256,
+      "visibleStateMatrix3": 257,
+      "activityMainCallbackSnes": "00:8029",
+      "activityIrqCallbackSnes": "00:835F",
+      "activityDmaEventCount": 0,
+      "activityDmaDomains": {},
+      "activityDirectEventCount": 0,
+      "activityMode7EventCount": 3,
+      "activityMode7WriteCount": 16
+    }
+  ]
+}

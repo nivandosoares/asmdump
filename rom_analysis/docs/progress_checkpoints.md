@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; registry tightening now closes `9681` as `sentinel-control` and `E91F` as `nested-invalid-marker`; active unresolved queue remains `EE7F` and `DA96` |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/matrix[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, and the first active trace over `1094..1117` proves there are no direct `VRAM/CGRAM` writes in that window, the callback switch lands at `1102` (`01:9FE5 -> 00:8029`), the repeated `00:0700 -> OAMDATA` `544`-byte DMA persists only through `1113`, and the `M7A/M7D` scanline-`231` update disappears after `1101`, which splits the post-`1093` continuation into meaningful subwindows before the still-blocked timed-input `7051` power-on follow-up |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/matrix[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract builders now also merge that activity layer directly, and the follow-up `1102..1117` compare summary now proves the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, `main_visible.ppm` stays the top crop of `main.ppm`, the visible-state `Mode 7` disagreement only survives `1102..1104`, and the remaining render gap plateaus at `2698` mismatched pixels from `1105..1117` even after the per-frame `OAM DMA` shuts off at `1114`, so the current Lane 2 frontier is the stable `1105..1117` renderer/composition plateau rather than another hidden upload or callback fork |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -3142,6 +3142,62 @@ Practical reading:
 - the next compare/composition pass should stop treating `1102..1117` as one
   unit and should stop searching for hidden direct `VRAM/CGRAM` uploads in
   this window unless a new targeted trace contradicts the current proof
+
+### CP-74: The `00:8029` continuation is now closed as one stable surface with one remaining compare plateau (`1102..1117`)
+
+- Extended the visual-contract builders:
+  - `tools/build_mesen_visual_contract.py`
+  - `tools/build_mesen_visual_contract_range.py`
+  - both now accept `--activity-trace-json`
+- Added a reusable compare-summary builder:
+  - `tools/build_mesen_window_compare.py`
+- Added the current reading note:
+  - `rom_analysis/docs/intro_00_8029_post_1102_window_1102_1117.md`
+
+Evidence:
+
+- activity-merged range contracts:
+  - `python3 tools/build_mesen_visual_contract_range.py tools/out/design_mesen_range_1102_1109_v1 tools/out/visual_contract_range_1102_1109_activity --provenance-json rom_analysis/maps/tilemaps/mesen_range_1102_1109_provenance.jsonc --probe-json tools/out/activity_trace_1094_1117/td2_boot_probe.json --activity-trace-json tools/out/activity_trace_1094_1117/activity_trace.json --clean-out`
+  - `python3 tools/build_mesen_visual_contract_range.py tools/out/design_mesen_range_1110_1117_v1 tools/out/visual_contract_range_1110_1117_activity --provenance-json rom_analysis/maps/tilemaps/mesen_range_1110_1117_provenance.jsonc --probe-json tools/out/activity_trace_1094_1117/td2_boot_probe.json --activity-trace-json tools/out/activity_trace_1094_1117/activity_trace.json --clean-out`
+- compare summary:
+  - `python3 tools/build_mesen_window_compare.py tools/out/post_1093_compare_1102_1117/summary.json tools/out/mesen_range_1102_1109_v1 tools/out/mesen_range_1110_1117_v1 --activity-trace-json tools/out/activity_trace_1094_1117/activity_trace.json --markdown-out tools/out/post_1093_compare_1102_1117/summary.md`
+- produced artifacts:
+  - `tools/out/visual_contract_range_1102_1109_activity/visual_contract_range.json`
+  - `tools/out/visual_contract_range_1110_1117_activity/visual_contract_range.json`
+  - `tools/out/post_1093_compare_1102_1117/summary.json`
+  - `tools/out/post_1093_compare_1102_1117/summary.md`
+  - `rom_analysis/docs/intro_00_8029_post_1102_window_1102_1117.md`
+
+Current reading:
+
+- `1102..1117` keeps the same visible surface:
+  - `bgMode = 7`
+  - main-screen layer `bg1`
+  - `61` visible sprites
+  - main callback `00:8029`
+- the export surface explanation now survives through the whole tail:
+  - `main_visible.ppm` is the top `224` lines of `main.ppm` on every frame
+  - bottom-crop compare stays bad (`14901..21300` mismatched pixels)
+- the internal activity split is narrower than the visible surface split:
+  - `1102..1113`: `1` per-frame `OAM` DMA, no direct `VRAM/CGRAM` writes,
+    `3` `Mode 7` events / `16` writes
+  - `1114..1117`: no DMA, still no direct `VRAM/CGRAM` writes, same `Mode 7`
+    event shape
+- visible-state `Mode 7` substitution is only still wrong at:
+  - `1102..1104`
+- by `1105`, the base and visible-state matrices already agree
+  (`matrix[0]/matrix[3] = 256/257`)
+- the remaining renderer gap is now one stable plateau:
+  - `1105..1117` -> `2698` mismatched pixels against `main_visible.ppm`
+
+Practical reading:
+
+- the late `00:8029` continuation no longer looks like an ownership or upload
+  mystery
+- the best current Lane 2 frontier is the stable `2698`-pixel
+  renderer/composition plateau shared by `1105..1117`
+- the `1114` `OAM DMA` shutdown is now proven not to be the cause of that
+  plateau
 
 ## Current Checkpoint Metrics
 

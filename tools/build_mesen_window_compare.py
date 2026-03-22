@@ -1,0 +1,368 @@
+#!/usr/bin/env python3
+"""Build a compare summary for a range of extracted Mesen frame folders."""
+
+from __future__ import annotations
+
+import argparse
+import datetime as dt
+import json
+import re
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+from compare_frames import compare_images, load_ppm
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Compare extracted Mesen frame folders against their visible export "
+            "and local renderer output."
+        )
+    )
+    parser.add_argument("out_json", type=Path, help="output JSON summary path")
+    parser.add_argument(
+        "frame_roots",
+        nargs="+",
+        type=Path,
+        help="one or more directories that contain frame_XXXXX folders",
+    )
+    parser.add_argument("--markdown-out", type=Path, default=None, help="optional markdown summary path")
+    parser.add_argument(
+        "--activity-trace-json",
+        type=Path,
+        default=None,
+        help="optional normalized activity-trace JSON used to enrich per-frame rows",
+    )
+    parser.add_argument(
+        "--obj-renderer",
+        default="mode7-ppu",
+        choices=("simple", "mode7-ppu"),
+        help="object compositor to use for renderer-side compares (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--frame-glob",
+        default="frame_*",
+        help="frame directory glob used under each root (default: %(default)s)",
+    )
+    return parser.parse_args()
+
+
+def parse_frame_number(path: Path) -> int | None:
+    match = re.search(r"(\d+)", path.name)
+    if not match:
+        return None
+    return int(match.group(1))
+
+
+def load_json(path: Path) -> dict:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"expected JSON object: {path}")
+    return payload
+
+
+def load_activity_lookup(path: Path | None) -> dict[int, dict]:
+    if path is None:
+        return {}
+    payload = load_json(path)
+    rows = payload.get("frameActivity")
+    if not isinstance(rows, list):
+        return {}
+    lookup: dict[int, dict] = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        frame = row.get("frame")
+        if isinstance(frame, int):
+            lookup[frame] = row
+    return lookup
+
+
+def mismatch_from_buffers(expected: bytes, actual: bytes) -> tuple[int, float]:
+    result = compare_images(expected, actual)
+    pixels = int(result["pixel_count"])
+    mismatches = int(result["mismatch_pixels"])
+    ratio = (mismatches / pixels) if pixels else 0.0
+    return mismatches, ratio
+
+
+def crop_ppm_rows(path: Path, row_start: int, height: int) -> tuple[int, int, bytes]:
+    width, full_height, pixels = load_ppm(path)
+    if row_start < 0 or height < 0 or (row_start + height) > full_height:
+        raise ValueError(f"crop {row_start}:{row_start + height} is out of bounds for {path} ({full_height} rows)")
+    row_bytes = width * 3
+    start = row_start * row_bytes
+    end = start + (height * row_bytes)
+    return width, height, pixels[start:end]
+
+
+def render_frame(
+    render_script: Path,
+    frame_dir: Path,
+    state_path: Path,
+    out_path: Path,
+    obj_renderer: str,
+) -> None:
+    cmd = [
+        sys.executable,
+        str(render_script),
+        str(frame_dir / "vram.bin"),
+        str(frame_dir / "cgram.bin"),
+        str(state_path),
+        str(out_path),
+        "--obj-renderer",
+        obj_renderer,
+    ]
+    oam_path = frame_dir / "oam.bin"
+    if oam_path.is_file():
+        cmd.extend(["--oam", str(oam_path)])
+    subprocess.run(cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+
+def collect_frame_dirs(frame_roots: list[Path], frame_glob: str) -> list[Path]:
+    frame_dirs: dict[int, Path] = {}
+    for root in frame_roots:
+        resolved_root = root.resolve()
+        for path in resolved_root.glob(frame_glob):
+            if not path.is_dir():
+                continue
+            frame = parse_frame_number(path)
+            if frame is None:
+                continue
+            frame_dirs[frame] = path
+    return [frame_dirs[frame] for frame in sorted(frame_dirs)]
+
+
+def collapse_value_ranges(rows: list[dict], key: str) -> list[dict]:
+    values = [row for row in rows if row.get(key) is not None]
+    if not values:
+        return []
+
+    ranges: list[dict] = []
+    current = values[0][key]
+    start = values[0]["frame"]
+    end = values[0]["frame"]
+    for row in values[1:]:
+        frame = row["frame"]
+        value = row[key]
+        if value == current and frame == end + 1:
+            end = frame
+            continue
+        ranges.append({"value": current, "startFrame": start, "endFrame": end})
+        current = value
+        start = frame
+        end = frame
+    ranges.append({"value": current, "startFrame": start, "endFrame": end})
+    return ranges
+
+
+def format_ratio(value: float | None) -> str:
+    if value is None:
+        return "n/a"
+    return f"{value:.6%}"
+
+
+def render_markdown(summary: dict) -> str:
+    frame_rows = summary.get("frames", [])
+    lines = [
+        f"# {summary.get('title', 'Mesen window compare summary')}",
+        "",
+        "## Window",
+        "",
+        f"- frame range: `{summary['frameRange']['start']}..{summary['frameRange']['end']}`",
+        f"- frame count: `{summary['frameRange']['count']}`",
+        f"- roots: {', '.join(f'`{root}`' for root in summary.get('sourceFrameRoots', []))}",
+        "",
+        "## Summary",
+        "",
+        f"- top-crop mismatches: `{summary['topCropMismatch']['min']}..{summary['topCropMismatch']['max']}`",
+        f"- bottom-crop mismatches: `{summary['bottomCropMismatch']['min']}..{summary['bottomCropMismatch']['max']}`",
+        f"- base-render mismatches vs `main_visible.ppm`: `{summary['baseRenderMismatch']['min']}..{summary['baseRenderMismatch']['max']}`",
+        f"- visible-state render mismatches vs `main_visible.ppm`: `{summary['visibleRenderMismatch']['min']}..{summary['visibleRenderMismatch']['max']}`",
+    ]
+
+    activity = summary.get("activitySummary", {})
+    if activity:
+        lines.extend(
+            [
+                f"- activity main callbacks: {', '.join(f'`{value}`' for value in activity.get('distinctMainCallbacks', [])) or '`none`'}",
+                f"- frames with DMA: {', '.join(str(frame) for frame in activity.get('framesWithDma', [])) or 'none'}",
+                f"- frames without DMA: {', '.join(str(frame) for frame in activity.get('framesWithoutDma', [])) or 'none'}",
+            ]
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Per-frame rows",
+            "",
+            "| frame | main callback | top crop | bottom crop | base render | visible render | dma | mode7 events | mode7 writes |",
+            "|---|---|---:|---:|---:|---:|---:|---:|---:|",
+        ]
+    )
+    for row in frame_rows:
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    str(row.get("frame")),
+                    str(row.get("activityMainCallbackSnes") or "n/a"),
+                    str(row.get("topCropMismatch")),
+                    str(row.get("bottomCropMismatch")),
+                    str(row.get("baseRenderMismatch")),
+                    str(row.get("visibleRenderMismatch")),
+                    str(row.get("activityDmaEventCount")),
+                    str(row.get("activityMode7EventCount")),
+                    str(row.get("activityMode7WriteCount")),
+                ]
+            )
+            + " |"
+        )
+    lines.append("")
+    return "\n".join(lines)
+
+
+def main() -> int:
+    args = parse_args()
+    out_json = args.out_json.resolve()
+    frame_dirs = collect_frame_dirs(args.frame_roots, args.frame_glob)
+    if not frame_dirs:
+        raise SystemExit("error: no frame directories matched")
+
+    render_script = Path(__file__).with_name("render_mesen_snes_bg.py").resolve()
+    activity_lookup = load_activity_lookup(args.activity_trace_json.resolve() if args.activity_trace_json else None)
+
+    rows: list[dict] = []
+    with tempfile.TemporaryDirectory(prefix="mesen-window-compare-") as temp_root_raw:
+        temp_root = Path(temp_root_raw)
+        for frame_dir in frame_dirs:
+            frame = parse_frame_number(frame_dir)
+            if frame is None:
+                continue
+
+            main_path = frame_dir / "main.ppm"
+            visible_path = frame_dir / "main_visible.ppm"
+            state_path = frame_dir / "ppu_state.json"
+            visible_state_path = frame_dir / "ppu_state_visible.json"
+
+            main_width, main_height, _ = load_ppm(main_path)
+            visible_width, visible_height, visible_pixels = load_ppm(visible_path)
+            _, _, main_top_pixels = crop_ppm_rows(main_path, 0, visible_height)
+            _, _, main_bottom_pixels = crop_ppm_rows(main_path, main_height - visible_height, visible_height)
+
+            top_crop_mismatch, top_crop_ratio = mismatch_from_buffers(main_top_pixels, visible_pixels)
+            bottom_crop_mismatch, bottom_crop_ratio = mismatch_from_buffers(main_bottom_pixels, visible_pixels)
+
+            base_render_path = temp_root / f"frame_{frame:05d}_base.ppm"
+            render_frame(render_script, frame_dir, state_path, base_render_path, args.obj_renderer)
+            _, _, base_render_pixels = load_ppm(base_render_path)
+            base_render_mismatch, base_render_ratio = mismatch_from_buffers(visible_pixels, base_render_pixels)
+
+            visible_render_mismatch = None
+            visible_render_ratio = None
+            visible_state_matrix0 = None
+            visible_state_matrix3 = None
+            if visible_state_path.is_file():
+                visible_render_path = temp_root / f"frame_{frame:05d}_visible.ppm"
+                render_frame(render_script, frame_dir, visible_state_path, visible_render_path, args.obj_renderer)
+                _, _, visible_render_pixels = load_ppm(visible_render_path)
+                visible_render_mismatch, visible_render_ratio = mismatch_from_buffers(visible_pixels, visible_render_pixels)
+                visible_state_json = load_json(visible_state_path)
+                visible_state_matrix0 = visible_state_json.get("ppu.mode7.matrix[0]")
+                visible_state_matrix3 = visible_state_json.get("ppu.mode7.matrix[3]")
+
+            state_json = load_json(state_path)
+            activity = activity_lookup.get(frame, {})
+
+            rows.append(
+                {
+                    "frame": frame,
+                    "frameDir": str(frame_dir),
+                    "mainSize": {"width": main_width, "height": main_height},
+                    "visibleSize": {"width": visible_width, "height": visible_height},
+                    "topCropMismatch": top_crop_mismatch,
+                    "topCropRatio": top_crop_ratio,
+                    "bottomCropMismatch": bottom_crop_mismatch,
+                    "bottomCropRatio": bottom_crop_ratio,
+                    "baseRenderMismatch": base_render_mismatch,
+                    "baseRenderRatio": base_render_ratio,
+                    "visibleRenderMismatch": visible_render_mismatch,
+                    "visibleRenderRatio": visible_render_ratio,
+                    "baseStateMatrix0": state_json.get("ppu.mode7.matrix[0]"),
+                    "baseStateMatrix3": state_json.get("ppu.mode7.matrix[3]"),
+                    "visibleStateMatrix0": visible_state_matrix0,
+                    "visibleStateMatrix3": visible_state_matrix3,
+                    "activityMainCallbackSnes": activity.get("activeMainCallbackSnes"),
+                    "activityIrqCallbackSnes": activity.get("activeIrqCallbackSnes"),
+                    "activityDmaEventCount": activity.get("dmaEventCount", 0),
+                    "activityDmaDomains": activity.get("dmaDomains", {}),
+                    "activityDirectEventCount": activity.get("directEventCount", 0),
+                    "activityMode7EventCount": activity.get("mode7EventCount", 0),
+                    "activityMode7WriteCount": activity.get("mode7WriteCount", 0),
+                }
+            )
+
+    summary = {
+        "schema": "td2.mesen_window_compare.v1",
+        "createdUtc": dt.datetime.now(dt.UTC).isoformat(),
+        "title": "Post-1093 continuation compare summary",
+        "sourceFrameRoots": [str(path.resolve()) for path in args.frame_roots],
+        "activityTracePath": str(args.activity_trace_json.resolve()) if args.activity_trace_json else None,
+        "frameRange": {
+            "start": rows[0]["frame"],
+            "end": rows[-1]["frame"],
+            "count": len(rows),
+        },
+        "topCropMismatch": {
+            "min": min(row["topCropMismatch"] for row in rows),
+            "max": max(row["topCropMismatch"] for row in rows),
+            "ranges": collapse_value_ranges(rows, "topCropMismatch"),
+        },
+        "bottomCropMismatch": {
+            "min": min(row["bottomCropMismatch"] for row in rows),
+            "max": max(row["bottomCropMismatch"] for row in rows),
+            "ranges": collapse_value_ranges(rows, "bottomCropMismatch"),
+        },
+        "baseRenderMismatch": {
+            "min": min(row["baseRenderMismatch"] for row in rows),
+            "max": max(row["baseRenderMismatch"] for row in rows),
+            "ranges": collapse_value_ranges(rows, "baseRenderMismatch"),
+        },
+        "visibleRenderMismatch": {
+            "min": min(row["visibleRenderMismatch"] for row in rows if row["visibleRenderMismatch"] is not None),
+            "max": max(row["visibleRenderMismatch"] for row in rows if row["visibleRenderMismatch"] is not None),
+            "ranges": collapse_value_ranges(rows, "visibleRenderMismatch"),
+        },
+        "activitySummary": {
+            "distinctMainCallbacks": sorted(
+                {
+                    row["activityMainCallbackSnes"]
+                    for row in rows
+                    if isinstance(row.get("activityMainCallbackSnes"), str)
+                }
+            ),
+            "framesWithDma": [row["frame"] for row in rows if row.get("activityDmaEventCount", 0) > 0],
+            "framesWithoutDma": [row["frame"] for row in rows if row.get("activityDmaEventCount", 0) == 0],
+            "dmaEventCountRanges": collapse_value_ranges(rows, "activityDmaEventCount"),
+            "mode7EventCountRanges": collapse_value_ranges(rows, "activityMode7EventCount"),
+            "mode7WriteCountRanges": collapse_value_ranges(rows, "activityMode7WriteCount"),
+        },
+        "frames": rows,
+    }
+
+    out_json.parent.mkdir(parents=True, exist_ok=True)
+    out_json.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+    if args.markdown_out:
+        args.markdown_out.resolve().write_text(render_markdown(summary) + "\n", encoding="utf-8")
+    print(
+        f"wrote compare summary -> {out_json} "
+        f"({summary['frameRange']['start']}..{summary['frameRange']['end']})"
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
