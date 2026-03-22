@@ -3378,6 +3378,50 @@ Practical reading:
   while preserving the tie in the docs until a hardware-oriented proof surface
   breaks it
 
+### CP-78: Frame-`300` regolden keeps the builder exact and the old SDL runtime gap unchanged
+
+- Re-tested the promoted frame-`300` credits scene against the current local
+  worktree without touching the existing committed builder artifacts:
+  - `python3 tools/build_bank1_credits_scene.py game.smc tools/out/bank1_credits_scene_regolden_20260322`
+  - `python3 tools/compare_frames.py tools/out/td2_boot_probe_frame_300.png tools/out/bank1_credits_scene_regolden_20260322.ppm --diff-out tools/out/bank1_credits_scene_regolden_20260322_vs_mesen_diff.ppm`
+  - `python3 tools/render_mesen_snes_bg.py tools/out/bank1_credits_scene_regolden_20260322_vram.bin tools/out/bank1_credits_scene_regolden_20260322_cgram.bin tools/out/bank1_credits_scene_regolden_20260322_ppu_state.json tools/out/bank1_credits_scene_regolden_20260322_python.ppm`
+  - `python3 tools/compare_frames.py tools/out/td2_boot_probe_frame_300.png tools/out/bank1_credits_scene_regolden_20260322_python.ppm --diff-out tools/out/bank1_credits_scene_regolden_20260322_python_vs_mesen_diff.ppm`
+  - `make -C port`
+  - `SDL_VIDEODRIVER=dummy ./port/build/td2_port --headless --snes-bg-prefix ./tools/out/bank1_credits_scene_regolden_20260322 --frames 1 --dump-prefix ./port/build/credits_regolden_20260322`
+  - `python3 tools/compare_frames.py tools/out/td2_boot_probe_frame_300.png port/build/credits_regolden_20260322_00000.ppm --diff-out tools/out/credits_regolden_20260322_vs_mesen_diff.ppm`
+  - `python3 tools/compare_frames.py tools/out/bank1_credits_scene_regolden_20260322.ppm port/build/credits_regolden_20260322_00000.ppm --diff-out tools/out/credits_regolden_20260322_vs_builder_diff.ppm`
+- New evidence:
+  - all canonical frame-`300` screenshot PNGs still hash to the same payload:
+    - `tools/out/td2_boot_probe_frame_300.png`
+    - `tools/out/frame300_live_probe/td2_boot_probe_frame.png`
+    - `tools/out/frame300_live_probe_cap2048/td2_boot_probe_frame.png`
+    - `tools/out/frame300_live_probe_fulltrace/td2_boot_probe_frame.png`
+  - rebuilt ROM-side credits scene stays exact:
+    - screenshot vs `bank1_credits_scene_regolden_20260322.ppm`: `0`
+      mismatched pixels
+  - Python renderer stays exact on the rebuilt artifacts:
+    - screenshot vs `bank1_credits_scene_regolden_20260322_python.ppm`: `0`
+      mismatched pixels
+    - rebuilt builder PPM vs Python renderer PPM: `0` mismatched pixels
+  - SDL runtime output is unchanged from the old local gap:
+    - screenshot vs `port/build/credits_regolden_20260322_00000.ppm`:
+      `7244` mismatched pixels (`12.632533%`)
+    - builder PPM vs the same runtime dump: `7244` mismatched pixels
+    - mismatch bbox: `16,56 -> 222,167`
+    - the newly generated diff files are byte-identical to the pre-existing
+      `tools/out/bank1_credits_scene_vs_runtime_diff.ppm`
+    - the runtime output hash matches the older local `credits_native*` dumps
+- Practical reading:
+  - the frame-`300` golden point itself has not regressed
+  - the exact solved surface still covers:
+    - captured screenshot
+    - ROM-side builder
+    - Python SNES BG renderer
+  - the SDL runtime still carries the same historical credits-scene gap, so
+    frame `300` should not be described as a zero-diff runtime parity milestone
+  - no roadmap pivot is justified from this retest; the active Lane 2 gate
+    remains the late `Mode 7/BG1` scanline-start semantics around `1102..1117`
+
 ## Current Checkpoint Metrics
 
 - `L001210` no-input attract probe (`3600` frames):

@@ -1476,6 +1476,26 @@ This makes the frame-`300` credits scene the best current “golden” screen fo
 
 That target is no longer dump-only. `tools/build_bank1_credits_scene.py` now rebuilds the same screen directly from ROM by following the `L009D1C` helper trio (`L00A9A0(0)`, `L00A9CB(0)`, `L00A9F2(0)`) and currently compares against the captured frame with `0` mismatched pixels.
 
+A bounded 2026-03-22 re-test in the current worktree keeps that reading intact for the
+capture/build side, but not for the SDL runtime:
+
+- `python3 tools/build_bank1_credits_scene.py game.smc tools/out/bank1_credits_scene_regolden_20260322`
+- `python3 tools/compare_frames.py tools/out/td2_boot_probe_frame_300.png tools/out/bank1_credits_scene_regolden_20260322.ppm --diff-out tools/out/bank1_credits_scene_regolden_20260322_vs_mesen_diff.ppm`
+  - `0` mismatched pixels
+- `python3 tools/render_mesen_snes_bg.py tools/out/bank1_credits_scene_regolden_20260322_vram.bin tools/out/bank1_credits_scene_regolden_20260322_cgram.bin tools/out/bank1_credits_scene_regolden_20260322_ppu_state.json tools/out/bank1_credits_scene_regolden_20260322_python.ppm`
+- `python3 tools/compare_frames.py tools/out/td2_boot_probe_frame_300.png tools/out/bank1_credits_scene_regolden_20260322_python.ppm --diff-out tools/out/bank1_credits_scene_regolden_20260322_python_vs_mesen_diff.ppm`
+  - `0` mismatched pixels
+- `SDL_VIDEODRIVER=dummy ./port/build/td2_port --headless --snes-bg-prefix ./tools/out/bank1_credits_scene_regolden_20260322 --frames 1 --dump-prefix ./port/build/credits_regolden_20260322`
+- `python3 tools/compare_frames.py tools/out/td2_boot_probe_frame_300.png port/build/credits_regolden_20260322_00000.ppm --diff-out tools/out/credits_regolden_20260322_vs_mesen_diff.ppm`
+  - `7244` mismatched pixels (`12.632533%`)
+  - mismatch bbox: `16,56 -> 222,167`
+  - the generated diff is byte-identical to the pre-existing `tools/out/bank1_credits_scene_vs_runtime_diff.ppm`
+
+Practical reading:
+
+- frame `300` remains the promoted golden target for live capture, ROM-side scene rebuild, and the Python SNES BG renderer
+- frame `300` is **not** yet a zero-diff SDL runtime parity gate; the current runtime output still lands on the same historical credits-scene diff surface
+
 Later no-input power-on probing now shows the next attract/front-end signatures as well:
 
 - frame `654`: this is now the first clean `Ballistic presents` anchor on the no-input path

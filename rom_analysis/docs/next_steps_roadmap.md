@@ -332,8 +332,23 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
         `TD2_BOOT_PROBE_INPUT_WINDOWS='6800:start;6900-6920:start,a'` ->
         `exit 255`, no
         `tools/out/visual_contract_probe_7051_live/td2_boot_probe.json`
-      - practical reading:
+    - practical reading:
         - the frame-`300` live producer-trace proof remains valid
+        - bounded 2026-03-22 regolden checks also keep the screenshot/build
+          target intact:
+          - `build_bank1_credits_scene.py` -> `0` mismatched pixels vs
+            `tools/out/td2_boot_probe_frame_300.png`
+          - `render_mesen_snes_bg.py` on the rebuilt
+            `bank1_credits_scene_regolden_20260322_*` files -> `0`
+            mismatched pixels vs the same screenshot
+          - `td2_port --headless --snes-bg-prefix` still lands at `7244`
+            mismatched pixels (`12.632533%`), identical to the historical
+            `tools/out/bank1_credits_scene_vs_runtime_diff.ppm`
+        - practical routing:
+          - keep frame `300` as a solved capture/ROM/Python golden point
+          - do not treat it as a zero-diff SDL runtime milestone yet
+          - do not pivot Lane 2 away from the current `Mode 7` scanline-start
+            gate just because the old credits-scene runtime gap still exists
         - later power-on timed-input ownership traces are still blocked locally
           before artifact emission
       - next best step after this negative result:
