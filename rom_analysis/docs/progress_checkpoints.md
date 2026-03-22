@@ -1,6 +1,6 @@
 # ROM Archaeology Progress Checkpoints
 
-Snapshot date: `2026-03-21`
+Snapshot date: `2026-03-22`
 
 This file tracks plan progress as checkpoints with objective evidence and the
 next gate needed to advance.
@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; registry tightening now closes `9681` as `sentinel-control` and `E91F` as `nested-invalid-marker`; active unresolved queue remains `EE7F` and `DA96` |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, and the still-blocked ownership follow-up is specifically the timed-input `7051` power-on path |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/matrix[3]` values makes the render mismatch worse, and the still-blocked ownership follow-up is specifically the timed-input `7051` power-on path |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -2860,6 +2860,118 @@ Next best step:
   explodes the `main_visible` compare instead of closing it
 - keep the timed-input `7051` path parked until a reusable later-intro seed or
   savestate exists
+
+### CP-69: The late `01:9FE5` window now has a consolidated callback/state range summary (`986..1093`)
+
+- Promoted the existing per-frame live ownership proofs into one reproducible
+  range artifact instead of leaving the window split across `16` isolated frame
+  contracts.
+- Extended the visual-contract builders so the per-frame contract can now carry
+  the matching probe frame's callback/state snapshot, and the range builder can
+  now map per-frame probes with `--probe-pattern`.
+- Built a consolidated range index over the already-promoted late intro frames:
+  - `986`, `990`, `994`, `998`, `1005`, `1013`, `1021`, `1029`, `1037`,
+    `1045`, `1053`, `1061`, `1069`, `1077`, `1085`, `1093`
+
+Evidence:
+
+- `python3 -m py_compile tools/build_mesen_visual_contract.py tools/build_mesen_visual_contract_range.py`
+- `python3 tools/build_mesen_visual_contract_range.py tools/out tools/out/visual_contract_range_986_1093_live --frame-glob 'design_frame*' --probe-pattern 'tools/out/visual_contract_probe_{frame}_live/td2_boot_probe.json' --clean-out`
+- produced artifacts:
+  - `tools/out/visual_contract_range_986_1093_live/visual_contract_range.json`
+  - `rom_analysis/docs/intro_01_9fe5_window_986_1093.md`
+
+Current reading:
+
+- the sampled late window stays on one callback family for every promoted frame:
+  - main callback: `01:9FE5`
+  - IRQ callback: `00:835F`
+- the visible presentation surface also stays fixed:
+  - `bgMode = 7`
+  - main-screen layers: `bg1` only
+- visible OBJ growth is now explicit as one progression instead of separate
+  frame notes:
+  - `0` sprites at `986`
+  - `5` at `990`
+  - `19` at `994`
+  - `32` at `998`
+  - `53` at `1005`
+  - `61` from `1013` through `1093`
+- the later state ramp is now explicit in one timeline:
+  - `$0206` stays `0` through `1021`
+  - then rises `1,3,5,7,9,11,13` from `1029` through `1077`
+  - `$040A` rises `6,8,10,12,14,16,17` over the same sampled frames
+  - `$0054` plateaus at `128` from `1077` through `1093`
+- producer ownership remains late-window-local:
+  - distinct producer domains across the whole range: `oam`, `vram`
+  - sampled frames with no `vram` domain: `1029`, `1085`, `1093`
+- practical reading:
+  - the `986..1093` surface is now strong enough to serve as the current
+    callback-family anchor for the late attract path
+  - the next unresolved question is no longer "what family is this?"
+  - it is "what changes after `1093` that breaks the already-closed ownership
+    story into a worse final-screen compare?"
+
+Next best step:
+
+- keep the timed-input `7051` path parked
+- use the consolidated `986..1093` range summary as the source of truth while
+  explaining the post-`1093` composition/export nuance and the `1094..1101`
+  mismatch jump
+
+### CP-70: The first post-`1093` continuation block is now reduced to an export/composition problem (`1094..1101`)
+
+- Built a matching visual-contract range for the first failing continuation
+  block after the promoted `1093` frontier.
+- Measured the actual exported surface against the visible surface and the two
+  current render candidates instead of treating `ppu_state_visible.json` as an
+  assumed fix.
+
+Evidence:
+
+- `python3 tools/build_mesen_visual_contract_range.py tools/out/design_mesen_range_1094_1101_v1 tools/out/visual_contract_range_1094_1101 --provenance-json rom_analysis/maps/tilemaps/mesen_range_1094_1101_provenance.jsonc --clean-out`
+- per frame `1094..1101`:
+  - `python3 tools/render_mesen_snes_bg.py ... frame_xxxxx/ppu_state.json ...`
+  - `python3 tools/render_mesen_snes_bg.py ... frame_xxxxx/ppu_state_visible.json ...`
+  - `python3 tools/compare_frames.py ...`
+- produced artifacts:
+  - `tools/out/visual_contract_range_1094_1101/visual_contract_range.json`
+  - `tools/out/post_1093_compare/summary.json`
+  - `tools/out/post_1093_compare/summary.md`
+  - `rom_analysis/docs/intro_01_9fe5_post_1093_window_1094_1101.md`
+
+Current reading:
+
+- `1094..1101` keeps the same late visible surface shape:
+  - `bgMode = 7`
+  - main-screen layers: `bg1`
+  - visible OBJ count: `61`
+- the visible export boundary is now explicit:
+  - `main.ppm` is `256x239`
+  - `main_visible.ppm` is exactly the top `224` lines of `main.ppm` for all
+    `8` frames
+  - the bottom `224`-line crop diverges by `13155..14143` pixels, so it is
+    not the right comparison surface
+- only two sampled Mode 7 fields differ between `ppu_state.json` and
+  `ppu_state_visible.json`:
+  - `ppu.mode7.matrix[0]`
+  - `ppu.mode7.matrix[3]`
+- visible-state substitution is now directly falsified:
+  - base render vs `main_visible.ppm` lands at `177..574` mismatched pixels
+  - visible-state render vs `main_visible.ppm` lands at `362..5930`
+    mismatched pixels
+- practical reading:
+  - callback/layer/OBJ continuity is not the blocker after `1093`
+  - export surface selection is now explained
+  - the remaining open issue is the narrower render/composition behavior after
+    the `1093 -> 1094` boundary
+
+Next best step:
+
+- keep the timed-input `7051` path parked
+- apply the same compare rubric to `1102..1117`
+- only then decide whether the residual `177..574` mismatch band needs
+  renderer work or a more specific export/composition model
 
 ## Current Checkpoint Metrics
 

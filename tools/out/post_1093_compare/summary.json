@@ -1,0 +1,442 @@
+[
+  {
+    "frame": 1094,
+    "main_top224_vs_main_visible": {
+      "mismatch_pixels": 0,
+      "mismatch_ratio": "0.000000%",
+      "max_channel_diff": 0,
+      "mean_abs_channel_diff": 0.0,
+      "rmse": 0.0
+    },
+    "main_bottom224_vs_main_visible": {
+      "mismatch_pixels": 13155,
+      "mismatch_ratio": "22.940499%",
+      "max_channel_diff": 247,
+      "mean_abs_channel_diff": 18.58052,
+      "rmse": 46.269335
+    },
+    "base_render_vs_main_visible": {
+      "mismatch_pixels": 177,
+      "mismatch_ratio": "0.308664%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 0.341123,
+      "rmse": 7.443466
+    },
+    "visible_render_vs_main_visible": {
+      "mismatch_pixels": 362,
+      "mismatch_ratio": "0.631278%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 0.664975,
+      "rmse": 10.40998
+    },
+    "base_render_vs_main_top224": {
+      "mismatch_pixels": 177,
+      "mismatch_ratio": "0.308664%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 0.341123,
+      "rmse": 7.443466
+    },
+    "visible_render_vs_main_top224": {
+      "mismatch_pixels": 362,
+      "mismatch_ratio": "0.631278%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 0.664975,
+      "rmse": 10.40998
+    },
+    "mode7_state_deltas": {
+      "ppu.mode7.matrix[0]": {
+        "base": 1664,
+        "visible": 1152
+      },
+      "ppu.mode7.matrix[3]": {
+        "base": 1542,
+        "visible": 1028
+      }
+    }
+  },
+  {
+    "frame": 1095,
+    "main_top224_vs_main_visible": {
+      "mismatch_pixels": 0,
+      "mismatch_ratio": "0.000000%",
+      "max_channel_diff": 0,
+      "mean_abs_channel_diff": 0.0,
+      "rmse": 0.0
+    },
+    "main_bottom224_vs_main_visible": {
+      "mismatch_pixels": 13191,
+      "mismatch_ratio": "23.003278%",
+      "max_channel_diff": 247,
+      "mean_abs_channel_diff": 18.650484,
+      "rmse": 46.392112
+    },
+    "base_render_vs_main_visible": {
+      "mismatch_pixels": 197,
+      "mismatch_ratio": "0.343541%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 0.378406,
+      "rmse": 7.866305
+    },
+    "visible_render_vs_main_visible": {
+      "mismatch_pixels": 414,
+      "mismatch_ratio": "0.721959%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 0.75014,
+      "rmse": 11.027217
+    },
+    "base_render_vs_main_top224": {
+      "mismatch_pixels": 197,
+      "mismatch_ratio": "0.343541%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 0.378406,
+      "rmse": 7.866305
+    },
+    "visible_render_vs_main_top224": {
+      "mismatch_pixels": 414,
+      "mismatch_ratio": "0.721959%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 0.75014,
+      "rmse": 11.027217
+    },
+    "mode7_state_deltas": {
+      "ppu.mode7.matrix[0]": {
+        "base": 1536,
+        "visible": 1024
+      },
+      "ppu.mode7.matrix[3]": {
+        "base": 1542,
+        "visible": 1028
+      }
+    }
+  },
+  {
+    "frame": 1096,
+    "main_top224_vs_main_visible": {
+      "mismatch_pixels": 0,
+      "mismatch_ratio": "0.000000%",
+      "max_channel_diff": 0,
+      "mean_abs_channel_diff": 0.0,
+      "rmse": 0.0
+    },
+    "main_bottom224_vs_main_visible": {
+      "mismatch_pixels": 13263,
+      "mismatch_ratio": "23.128836%",
+      "max_channel_diff": 247,
+      "mean_abs_channel_diff": 18.782529,
+      "rmse": 46.618927
+    },
+    "base_render_vs_main_visible": {
+      "mismatch_pixels": 227,
+      "mismatch_ratio": "0.395857%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 0.436175,
+      "rmse": 8.423466
+    },
+    "visible_render_vs_main_visible": {
+      "mismatch_pixels": 606,
+      "mismatch_ratio": "1.056780%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 1.081287,
+      "rmse": 13.023062
+    },
+    "base_render_vs_main_top224": {
+      "mismatch_pixels": 227,
+      "mismatch_ratio": "0.395857%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 0.436175,
+      "rmse": 8.423466
+    },
+    "visible_render_vs_main_top224": {
+      "mismatch_pixels": 606,
+      "mismatch_ratio": "1.056780%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 1.081287,
+      "rmse": 13.023062
+    },
+    "mode7_state_deltas": {
+      "ppu.mode7.matrix[0]": {
+        "base": 1408,
+        "visible": 896
+      },
+      "ppu.mode7.matrix[3]": {
+        "base": 1285,
+        "visible": 771
+      }
+    }
+  },
+  {
+    "frame": 1097,
+    "main_top224_vs_main_visible": {
+      "mismatch_pixels": 0,
+      "mismatch_ratio": "0.000000%",
+      "max_channel_diff": 0,
+      "mean_abs_channel_diff": 0.0,
+      "rmse": 0.0
+    },
+    "main_bottom224_vs_main_visible": {
+      "mismatch_pixels": 13325,
+      "mismatch_ratio": "23.236956%",
+      "max_channel_diff": 247,
+      "mean_abs_channel_diff": 18.886975,
+      "rmse": 46.785286
+    },
+    "base_render_vs_main_visible": {
+      "mismatch_pixels": 266,
+      "mismatch_ratio": "0.463867%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 0.518927,
+      "rmse": 9.231039
+    },
+    "visible_render_vs_main_visible": {
+      "mismatch_pixels": 700,
+      "mismatch_ratio": "1.220703%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 1.298811,
+      "rmse": 14.459831
+    },
+    "base_render_vs_main_top224": {
+      "mismatch_pixels": 266,
+      "mismatch_ratio": "0.463867%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 0.518927,
+      "rmse": 9.231039
+    },
+    "visible_render_vs_main_top224": {
+      "mismatch_pixels": 700,
+      "mismatch_ratio": "1.220703%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 1.298811,
+      "rmse": 14.459831
+    },
+    "mode7_state_deltas": {
+      "ppu.mode7.matrix[0]": {
+        "base": 1280,
+        "visible": 768
+      },
+      "ppu.mode7.matrix[3]": {
+        "base": 1285,
+        "visible": 771
+      }
+    }
+  },
+  {
+    "frame": 1098,
+    "main_top224_vs_main_visible": {
+      "mismatch_pixels": 0,
+      "mismatch_ratio": "0.000000%",
+      "max_channel_diff": 0,
+      "mean_abs_channel_diff": 0.0,
+      "rmse": 0.0
+    },
+    "main_bottom224_vs_main_visible": {
+      "mismatch_pixels": 13493,
+      "mismatch_ratio": "23.529925%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 19.163795,
+      "rmse": 47.235167
+    },
+    "base_render_vs_main_visible": {
+      "mismatch_pixels": 330,
+      "mismatch_ratio": "0.575474%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 0.621047,
+      "rmse": 9.907095
+    },
+    "visible_render_vs_main_visible": {
+      "mismatch_pixels": 1244,
+      "mismatch_ratio": "2.169364%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 2.267601,
+      "rmse": 19.122184
+    },
+    "base_render_vs_main_top224": {
+      "mismatch_pixels": 330,
+      "mismatch_ratio": "0.575474%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 0.621047,
+      "rmse": 9.907095
+    },
+    "visible_render_vs_main_top224": {
+      "mismatch_pixels": 1244,
+      "mismatch_ratio": "2.169364%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 2.267601,
+      "rmse": 19.122184
+    },
+    "mode7_state_deltas": {
+      "ppu.mode7.matrix[0]": {
+        "base": 1152,
+        "visible": 640
+      },
+      "ppu.mode7.matrix[3]": {
+        "base": 1028,
+        "visible": 514
+      }
+    }
+  },
+  {
+    "frame": 1099,
+    "main_top224_vs_main_visible": {
+      "mismatch_pixels": 0,
+      "mismatch_ratio": "0.000000%",
+      "max_channel_diff": 0,
+      "mean_abs_channel_diff": 0.0,
+      "rmse": 0.0
+    },
+    "main_bottom224_vs_main_visible": {
+      "mismatch_pixels": 13575,
+      "mismatch_ratio": "23.672921%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 19.29877,
+      "rmse": 47.44539
+    },
+    "base_render_vs_main_visible": {
+      "mismatch_pixels": 380,
+      "mismatch_ratio": "0.662667%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 0.709415,
+      "rmse": 10.638791
+    },
+    "visible_render_vs_main_visible": {
+      "mismatch_pixels": 1515,
+      "mismatch_ratio": "2.641950%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 2.657872,
+      "rmse": 20.368112
+    },
+    "base_render_vs_main_top224": {
+      "mismatch_pixels": 380,
+      "mismatch_ratio": "0.662667%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 0.709415,
+      "rmse": 10.638791
+    },
+    "visible_render_vs_main_top224": {
+      "mismatch_pixels": 1515,
+      "mismatch_ratio": "2.641950%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 2.657872,
+      "rmse": 20.368112
+    },
+    "mode7_state_deltas": {
+      "ppu.mode7.matrix[0]": {
+        "base": 1024,
+        "visible": 512
+      },
+      "ppu.mode7.matrix[3]": {
+        "base": 1028,
+        "visible": 514
+      }
+    }
+  },
+  {
+    "frame": 1100,
+    "main_top224_vs_main_visible": {
+      "mismatch_pixels": 0,
+      "mismatch_ratio": "0.000000%",
+      "max_channel_diff": 0,
+      "mean_abs_channel_diff": 0.0,
+      "rmse": 0.0
+    },
+    "main_bottom224_vs_main_visible": {
+      "mismatch_pixels": 13968,
+      "mismatch_ratio": "24.358259%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 20.018369,
+      "rmse": 48.647128
+    },
+    "base_render_vs_main_visible": {
+      "mismatch_pixels": 498,
+      "mismatch_ratio": "0.868443%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 0.930769,
+      "rmse": 11.962619
+    },
+    "visible_render_vs_main_visible": {
+      "mismatch_pixels": 3962,
+      "mismatch_ratio": "6.909180%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 6.975557,
+      "rmse": 33.048538
+    },
+    "base_render_vs_main_top224": {
+      "mismatch_pixels": 498,
+      "mismatch_ratio": "0.868443%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 0.930769,
+      "rmse": 11.962619
+    },
+    "visible_render_vs_main_top224": {
+      "mismatch_pixels": 3962,
+      "mismatch_ratio": "6.909180%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 6.975557,
+      "rmse": 33.048538
+    },
+    "mode7_state_deltas": {
+      "ppu.mode7.matrix[0]": {
+        "base": 896,
+        "visible": 384
+      },
+      "ppu.mode7.matrix[3]": {
+        "base": 771,
+        "visible": 257
+      }
+    }
+  },
+  {
+    "frame": 1101,
+    "main_top224_vs_main_visible": {
+      "mismatch_pixels": 0,
+      "mismatch_ratio": "0.000000%",
+      "max_channel_diff": 0,
+      "mean_abs_channel_diff": 0.0,
+      "rmse": 0.0
+    },
+    "main_bottom224_vs_main_visible": {
+      "mismatch_pixels": 14143,
+      "mismatch_ratio": "24.663435%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 20.340274,
+      "rmse": 49.181615
+    },
+    "base_render_vs_main_visible": {
+      "mismatch_pixels": 574,
+      "mismatch_ratio": "1.000977%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 1.096017,
+      "rmse": 13.083351
+    },
+    "visible_render_vs_main_visible": {
+      "mismatch_pixels": 5930,
+      "mismatch_ratio": "10.341099%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 10.437105,
+      "rmse": 40.414143
+    },
+    "base_render_vs_main_top224": {
+      "mismatch_pixels": 574,
+      "mismatch_ratio": "1.000977%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 1.096017,
+      "rmse": 13.083351
+    },
+    "visible_render_vs_main_top224": {
+      "mismatch_pixels": 5930,
+      "mismatch_ratio": "10.341099%",
+      "max_channel_diff": 255,
+      "mean_abs_channel_diff": 10.437105,
+      "rmse": 40.414143
+    },
+    "mode7_state_deltas": {
+      "ppu.mode7.matrix[0]": {
+        "base": 768,
+        "visible": 256
+      },
+      "ppu.mode7.matrix[3]": {
+        "base": 771,
+        "visible": 257
+      }
+    }
+  }
+]

@@ -1,0 +1,1213 @@
+{
+  "schema": "td2.visual_contract_range.v1",
+  "createdUtc": "2026-03-22T12:58:20.357474+00:00",
+  "sourceDesignPackRangeDir": "/home/nivando-soares/asmdump/tools/out",
+  "outDir": "/home/nivando-soares/asmdump/tools/out/visual_contract_range_986_1093_live",
+  "frameCount": 16,
+  "provenancePath": null,
+  "probePath": null,
+  "probePathPattern": "tools/out/visual_contract_probe_{frame}_live/td2_boot_probe.json",
+  "summary": {
+    "frameRange": {
+      "start": 986,
+      "end": 1093,
+      "frames": [
+        986,
+        990,
+        994,
+        998,
+        1005,
+        1013,
+        1021,
+        1029,
+        1037,
+        1045,
+        1053,
+        1061,
+        1069,
+        1077,
+        1085,
+        1093
+      ]
+    },
+    "bgModes": [
+      7
+    ],
+    "mainLayerSets": [
+      [
+        "bg1"
+      ]
+    ],
+    "visibleSpriteCount": {
+      "min": 0,
+      "max": 61,
+      "ranges": [
+        {
+          "value": 0,
+          "startFrame": 986,
+          "endFrame": 986,
+          "frameCount": 1,
+          "frames": [
+            986
+          ]
+        },
+        {
+          "value": 5,
+          "startFrame": 990,
+          "endFrame": 990,
+          "frameCount": 1,
+          "frames": [
+            990
+          ]
+        },
+        {
+          "value": 19,
+          "startFrame": 994,
+          "endFrame": 994,
+          "frameCount": 1,
+          "frames": [
+            994
+          ]
+        },
+        {
+          "value": 32,
+          "startFrame": 998,
+          "endFrame": 998,
+          "frameCount": 1,
+          "frames": [
+            998
+          ]
+        },
+        {
+          "value": 53,
+          "startFrame": 1005,
+          "endFrame": 1005,
+          "frameCount": 1,
+          "frames": [
+            1005
+          ]
+        },
+        {
+          "value": 61,
+          "startFrame": 1013,
+          "endFrame": 1093,
+          "frameCount": 11,
+          "frames": [
+            1013,
+            1021,
+            1029,
+            1037,
+            1045,
+            1053,
+            1061,
+            1069,
+            1077,
+            1085,
+            1093
+          ]
+        }
+      ]
+    },
+    "producerTrace": {
+      "distinctDomains": [
+        "oam",
+        "vram"
+      ],
+      "framesWithoutVramDomain": [
+        1029,
+        1085,
+        1093
+      ]
+    },
+    "callbackState": {
+      "enabledEntryCount": 16,
+      "distinctMainCallbacks": [
+        "01:9FE5"
+      ],
+      "distinctIrqCallbacks": [
+        "00:835F"
+      ],
+      "distinctNmiCallbacks": [
+        "00:8029"
+      ],
+      "state0204Ranges": [
+        {
+          "value": 3,
+          "startFrame": 986,
+          "endFrame": 986,
+          "frameCount": 1,
+          "frames": [
+            986
+          ]
+        },
+        {
+          "value": 2,
+          "startFrame": 990,
+          "endFrame": 990,
+          "frameCount": 1,
+          "frames": [
+            990
+          ]
+        },
+        {
+          "value": 1,
+          "startFrame": 994,
+          "endFrame": 994,
+          "frameCount": 1,
+          "frames": [
+            994
+          ]
+        },
+        {
+          "value": 2,
+          "startFrame": 998,
+          "endFrame": 998,
+          "frameCount": 1,
+          "frames": [
+            998
+          ]
+        },
+        {
+          "value": 3,
+          "startFrame": 1005,
+          "endFrame": 1005,
+          "frameCount": 1,
+          "frames": [
+            1005
+          ]
+        },
+        {
+          "value": 1,
+          "startFrame": 1013,
+          "endFrame": 1093,
+          "frameCount": 11,
+          "frames": [
+            1013,
+            1021,
+            1029,
+            1037,
+            1045,
+            1053,
+            1061,
+            1069,
+            1077,
+            1085,
+            1093
+          ]
+        }
+      ],
+      "state0206Ranges": [
+        {
+          "value": 0,
+          "startFrame": 986,
+          "endFrame": 1021,
+          "frameCount": 7,
+          "frames": [
+            986,
+            990,
+            994,
+            998,
+            1005,
+            1013,
+            1021
+          ]
+        },
+        {
+          "value": 1,
+          "startFrame": 1029,
+          "endFrame": 1029,
+          "frameCount": 1,
+          "frames": [
+            1029
+          ]
+        },
+        {
+          "value": 3,
+          "startFrame": 1037,
+          "endFrame": 1037,
+          "frameCount": 1,
+          "frames": [
+            1037
+          ]
+        },
+        {
+          "value": 5,
+          "startFrame": 1045,
+          "endFrame": 1045,
+          "frameCount": 1,
+          "frames": [
+            1045
+          ]
+        },
+        {
+          "value": 7,
+          "startFrame": 1053,
+          "endFrame": 1053,
+          "frameCount": 1,
+          "frames": [
+            1053
+          ]
+        },
+        {
+          "value": 9,
+          "startFrame": 1061,
+          "endFrame": 1061,
+          "frameCount": 1,
+          "frames": [
+            1061
+          ]
+        },
+        {
+          "value": 11,
+          "startFrame": 1069,
+          "endFrame": 1069,
+          "frameCount": 1,
+          "frames": [
+            1069
+          ]
+        },
+        {
+          "value": 13,
+          "startFrame": 1077,
+          "endFrame": 1093,
+          "frameCount": 3,
+          "frames": [
+            1077,
+            1085,
+            1093
+          ]
+        }
+      ],
+      "state040aRanges": [
+        {
+          "value": 5,
+          "startFrame": 986,
+          "endFrame": 1021,
+          "frameCount": 7,
+          "frames": [
+            986,
+            990,
+            994,
+            998,
+            1005,
+            1013,
+            1021
+          ]
+        },
+        {
+          "value": 6,
+          "startFrame": 1029,
+          "endFrame": 1029,
+          "frameCount": 1,
+          "frames": [
+            1029
+          ]
+        },
+        {
+          "value": 8,
+          "startFrame": 1037,
+          "endFrame": 1037,
+          "frameCount": 1,
+          "frames": [
+            1037
+          ]
+        },
+        {
+          "value": 10,
+          "startFrame": 1045,
+          "endFrame": 1045,
+          "frameCount": 1,
+          "frames": [
+            1045
+          ]
+        },
+        {
+          "value": 12,
+          "startFrame": 1053,
+          "endFrame": 1053,
+          "frameCount": 1,
+          "frames": [
+            1053
+          ]
+        },
+        {
+          "value": 14,
+          "startFrame": 1061,
+          "endFrame": 1061,
+          "frameCount": 1,
+          "frames": [
+            1061
+          ]
+        },
+        {
+          "value": 16,
+          "startFrame": 1069,
+          "endFrame": 1069,
+          "frameCount": 1,
+          "frames": [
+            1069
+          ]
+        },
+        {
+          "value": 17,
+          "startFrame": 1077,
+          "endFrame": 1093,
+          "frameCount": 3,
+          "frames": [
+            1077,
+            1085,
+            1093
+          ]
+        }
+      ],
+      "dp0054Ranges": [
+        {
+          "value": 56,
+          "startFrame": 986,
+          "endFrame": 986,
+          "frameCount": 1,
+          "frames": [
+            986
+          ]
+        },
+        {
+          "value": 88,
+          "startFrame": 990,
+          "endFrame": 990,
+          "frameCount": 1,
+          "frames": [
+            990
+          ]
+        },
+        {
+          "value": 120,
+          "startFrame": 994,
+          "endFrame": 994,
+          "frameCount": 1,
+          "frames": [
+            994
+          ]
+        },
+        {
+          "value": 152,
+          "startFrame": 998,
+          "endFrame": 998,
+          "frameCount": 1,
+          "frames": [
+            998
+          ]
+        },
+        {
+          "value": 208,
+          "startFrame": 1005,
+          "endFrame": 1005,
+          "frameCount": 1,
+          "frames": [
+            1005
+          ]
+        },
+        {
+          "value": 8,
+          "startFrame": 1013,
+          "endFrame": 1013,
+          "frameCount": 1,
+          "frames": [
+            1013
+          ]
+        },
+        {
+          "value": 32,
+          "startFrame": 1021,
+          "endFrame": 1021,
+          "frameCount": 1,
+          "frames": [
+            1021
+          ]
+        },
+        {
+          "value": 40,
+          "startFrame": 1029,
+          "endFrame": 1029,
+          "frameCount": 1,
+          "frames": [
+            1029
+          ]
+        },
+        {
+          "value": 56,
+          "startFrame": 1037,
+          "endFrame": 1037,
+          "frameCount": 1,
+          "frames": [
+            1037
+          ]
+        },
+        {
+          "value": 72,
+          "startFrame": 1045,
+          "endFrame": 1045,
+          "frameCount": 1,
+          "frames": [
+            1045
+          ]
+        },
+        {
+          "value": 88,
+          "startFrame": 1053,
+          "endFrame": 1053,
+          "frameCount": 1,
+          "frames": [
+            1053
+          ]
+        },
+        {
+          "value": 104,
+          "startFrame": 1061,
+          "endFrame": 1061,
+          "frameCount": 1,
+          "frames": [
+            1061
+          ]
+        },
+        {
+          "value": 120,
+          "startFrame": 1069,
+          "endFrame": 1069,
+          "frameCount": 1,
+          "frames": [
+            1069
+          ]
+        },
+        {
+          "value": 128,
+          "startFrame": 1077,
+          "endFrame": 1093,
+          "frameCount": 3,
+          "frames": [
+            1077,
+            1085,
+            1093
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "frameNumber": 986,
+          "visibleSpriteCount": 0,
+          "mainCallbackSnes": "01:9FE5",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 3,
+          "state0206": 0,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 5,
+          "dp0054": 56,
+          "producerTraceDomains": [
+            "oam",
+            "vram"
+          ]
+        },
+        {
+          "frameNumber": 990,
+          "visibleSpriteCount": 5,
+          "mainCallbackSnes": "01:9FE5",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 2,
+          "state0206": 0,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 5,
+          "dp0054": 88,
+          "producerTraceDomains": [
+            "oam",
+            "vram"
+          ]
+        },
+        {
+          "frameNumber": 994,
+          "visibleSpriteCount": 19,
+          "mainCallbackSnes": "01:9FE5",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 1,
+          "state0206": 0,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 5,
+          "dp0054": 120,
+          "producerTraceDomains": [
+            "oam",
+            "vram"
+          ]
+        },
+        {
+          "frameNumber": 998,
+          "visibleSpriteCount": 32,
+          "mainCallbackSnes": "01:9FE5",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 2,
+          "state0206": 0,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 5,
+          "dp0054": 152,
+          "producerTraceDomains": [
+            "oam",
+            "vram"
+          ]
+        },
+        {
+          "frameNumber": 1005,
+          "visibleSpriteCount": 53,
+          "mainCallbackSnes": "01:9FE5",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 3,
+          "state0206": 0,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 5,
+          "dp0054": 208,
+          "producerTraceDomains": [
+            "oam",
+            "vram"
+          ]
+        },
+        {
+          "frameNumber": 1013,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "01:9FE5",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 1,
+          "state0206": 0,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 5,
+          "dp0054": 8,
+          "producerTraceDomains": [
+            "oam",
+            "vram"
+          ]
+        },
+        {
+          "frameNumber": 1021,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "01:9FE5",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 1,
+          "state0206": 0,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 5,
+          "dp0054": 32,
+          "producerTraceDomains": [
+            "oam",
+            "vram"
+          ]
+        },
+        {
+          "frameNumber": 1029,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "01:9FE5",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 1,
+          "state0206": 1,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 6,
+          "dp0054": 40,
+          "producerTraceDomains": [
+            "oam"
+          ]
+        },
+        {
+          "frameNumber": 1037,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "01:9FE5",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 1,
+          "state0206": 3,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 8,
+          "dp0054": 56,
+          "producerTraceDomains": [
+            "oam",
+            "vram"
+          ]
+        },
+        {
+          "frameNumber": 1045,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "01:9FE5",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 1,
+          "state0206": 5,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 10,
+          "dp0054": 72,
+          "producerTraceDomains": [
+            "oam",
+            "vram"
+          ]
+        },
+        {
+          "frameNumber": 1053,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "01:9FE5",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 1,
+          "state0206": 7,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 12,
+          "dp0054": 88,
+          "producerTraceDomains": [
+            "oam",
+            "vram"
+          ]
+        },
+        {
+          "frameNumber": 1061,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "01:9FE5",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 1,
+          "state0206": 9,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 14,
+          "dp0054": 104,
+          "producerTraceDomains": [
+            "oam",
+            "vram"
+          ]
+        },
+        {
+          "frameNumber": 1069,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "01:9FE5",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 1,
+          "state0206": 11,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 16,
+          "dp0054": 120,
+          "producerTraceDomains": [
+            "oam",
+            "vram"
+          ]
+        },
+        {
+          "frameNumber": 1077,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "01:9FE5",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 1,
+          "state0206": 13,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 17,
+          "dp0054": 128,
+          "producerTraceDomains": [
+            "oam",
+            "vram"
+          ]
+        },
+        {
+          "frameNumber": 1085,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "01:9FE5",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 1,
+          "state0206": 13,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 17,
+          "dp0054": 128,
+          "producerTraceDomains": [
+            "oam"
+          ]
+        },
+        {
+          "frameNumber": 1093,
+          "visibleSpriteCount": 61,
+          "mainCallbackSnes": "01:9FE5",
+          "irqCallbackSnes": "00:835F",
+          "state0202": 1,
+          "state0204": 1,
+          "state0206": 13,
+          "state0208": 13,
+          "state020a": 40131,
+          "state040a": 17,
+          "dp0054": 128,
+          "producerTraceDomains": [
+            "oam"
+          ]
+        }
+      ]
+    }
+  },
+  "entries": [
+    {
+      "frameDir": "design_frame986",
+      "frameNumber": 986,
+      "contract": "design_frame986_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 0,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [
+        "oam",
+        "vram"
+      ],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "01:9FE5",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 3,
+      "state0206": 0,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 5,
+      "dp0054": 56
+    },
+    {
+      "frameDir": "design_frame990",
+      "frameNumber": 990,
+      "contract": "design_frame990_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 5,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [
+        "oam",
+        "vram"
+      ],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "01:9FE5",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 2,
+      "state0206": 0,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 5,
+      "dp0054": 88
+    },
+    {
+      "frameDir": "design_frame994",
+      "frameNumber": 994,
+      "contract": "design_frame994_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 19,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [
+        "oam",
+        "vram"
+      ],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "01:9FE5",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 1,
+      "state0206": 0,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 5,
+      "dp0054": 120
+    },
+    {
+      "frameDir": "design_frame998",
+      "frameNumber": 998,
+      "contract": "design_frame998_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 32,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [
+        "oam",
+        "vram"
+      ],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "01:9FE5",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 2,
+      "state0206": 0,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 5,
+      "dp0054": 152
+    },
+    {
+      "frameDir": "design_frame1005",
+      "frameNumber": 1005,
+      "contract": "design_frame1005_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 53,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [
+        "oam",
+        "vram"
+      ],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "01:9FE5",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 3,
+      "state0206": 0,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 5,
+      "dp0054": 208
+    },
+    {
+      "frameDir": "design_frame1013",
+      "frameNumber": 1013,
+      "contract": "design_frame1013_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [
+        "oam",
+        "vram"
+      ],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "01:9FE5",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 1,
+      "state0206": 0,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 5,
+      "dp0054": 8
+    },
+    {
+      "frameDir": "design_frame1021",
+      "frameNumber": 1021,
+      "contract": "design_frame1021_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [
+        "oam",
+        "vram"
+      ],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "01:9FE5",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 1,
+      "state0206": 0,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 5,
+      "dp0054": 32
+    },
+    {
+      "frameDir": "design_frame1029",
+      "frameNumber": 1029,
+      "contract": "design_frame1029_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [
+        "oam"
+      ],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "01:9FE5",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 1,
+      "state0206": 1,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 6,
+      "dp0054": 40
+    },
+    {
+      "frameDir": "design_frame1037",
+      "frameNumber": 1037,
+      "contract": "design_frame1037_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [
+        "oam",
+        "vram"
+      ],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "01:9FE5",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 1,
+      "state0206": 3,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 8,
+      "dp0054": 56
+    },
+    {
+      "frameDir": "design_frame1045",
+      "frameNumber": 1045,
+      "contract": "design_frame1045_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [
+        "oam",
+        "vram"
+      ],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "01:9FE5",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 1,
+      "state0206": 5,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 10,
+      "dp0054": 72
+    },
+    {
+      "frameDir": "design_frame1053",
+      "frameNumber": 1053,
+      "contract": "design_frame1053_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [
+        "oam",
+        "vram"
+      ],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "01:9FE5",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 1,
+      "state0206": 7,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 12,
+      "dp0054": 88
+    },
+    {
+      "frameDir": "design_frame1061",
+      "frameNumber": 1061,
+      "contract": "design_frame1061_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [
+        "oam",
+        "vram"
+      ],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "01:9FE5",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 1,
+      "state0206": 9,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 14,
+      "dp0054": 104
+    },
+    {
+      "frameDir": "design_frame1069",
+      "frameNumber": 1069,
+      "contract": "design_frame1069_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [
+        "oam",
+        "vram"
+      ],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "01:9FE5",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 1,
+      "state0206": 11,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 16,
+      "dp0054": 120
+    },
+    {
+      "frameDir": "design_frame1077",
+      "frameNumber": 1077,
+      "contract": "design_frame1077_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [
+        "oam",
+        "vram"
+      ],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "01:9FE5",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 1,
+      "state0206": 13,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 17,
+      "dp0054": 128
+    },
+    {
+      "frameDir": "design_frame1085",
+      "frameNumber": 1085,
+      "contract": "design_frame1085_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [
+        "oam"
+      ],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "01:9FE5",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 1,
+      "state0206": 13,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 17,
+      "dp0054": 128
+    },
+    {
+      "frameDir": "design_frame1093",
+      "frameNumber": 1093,
+      "contract": "design_frame1093_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": false,
+      "producerTraceEnabled": true,
+      "producerTraceDomains": [
+        "oam"
+      ],
+      "callbackStateEnabled": true,
+      "mainCallbackSnes": "01:9FE5",
+      "irqCallbackSnes": "00:835F",
+      "nmiCallbackSnes": "00:8029",
+      "state0202": 1,
+      "state0204": 1,
+      "state0206": 13,
+      "state0208": 13,
+      "state020a": 40131,
+      "state040a": 17,
+      "dp0054": 128
+    }
+  ]
+}

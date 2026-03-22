@@ -1,0 +1,282 @@
+{
+  "schema": "td2.visual_contract_range.v1",
+  "createdUtc": "2026-03-22T13:19:47.783570+00:00",
+  "sourceDesignPackRangeDir": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1094_1101_v1",
+  "outDir": "/home/nivando-soares/asmdump/tools/out/visual_contract_range_1094_1101",
+  "frameCount": 8,
+  "provenancePath": "/home/nivando-soares/asmdump/rom_analysis/maps/tilemaps/mesen_range_1094_1101_provenance.jsonc",
+  "probePath": null,
+  "probePathPattern": null,
+  "summary": {
+    "frameRange": {
+      "start": 1094,
+      "end": 1101,
+      "frames": [
+        1094,
+        1095,
+        1096,
+        1097,
+        1098,
+        1099,
+        1100,
+        1101
+      ]
+    },
+    "bgModes": [
+      7
+    ],
+    "mainLayerSets": [
+      [
+        "bg1"
+      ]
+    ],
+    "visibleSpriteCount": {
+      "min": 61,
+      "max": 61,
+      "ranges": [
+        {
+          "value": 61,
+          "startFrame": 1094,
+          "endFrame": 1101,
+          "frameCount": 8,
+          "frames": [
+            1094,
+            1095,
+            1096,
+            1097,
+            1098,
+            1099,
+            1100,
+            1101
+          ]
+        }
+      ]
+    },
+    "producerTrace": {
+      "distinctDomains": [],
+      "framesWithoutVramDomain": [
+        1094,
+        1095,
+        1096,
+        1097,
+        1098,
+        1099,
+        1100,
+        1101
+      ]
+    },
+    "callbackState": {
+      "enabledEntryCount": 0,
+      "distinctMainCallbacks": [],
+      "distinctIrqCallbacks": [],
+      "distinctNmiCallbacks": [],
+      "state0204Ranges": [],
+      "state0206Ranges": [],
+      "state040aRanges": [],
+      "dp0054Ranges": [],
+      "timeline": []
+    }
+  },
+  "entries": [
+    {
+      "frameDir": "frame_01094",
+      "frameNumber": 1094,
+      "contract": "frame_01094_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": true,
+      "producerTraceEnabled": false,
+      "producerTraceDomains": [],
+      "callbackStateEnabled": false,
+      "mainCallbackSnes": null,
+      "irqCallbackSnes": null,
+      "nmiCallbackSnes": null,
+      "state0202": null,
+      "state0204": null,
+      "state0206": null,
+      "state0208": null,
+      "state020a": null,
+      "state040a": null,
+      "dp0054": null
+    },
+    {
+      "frameDir": "frame_01095",
+      "frameNumber": 1095,
+      "contract": "frame_01095_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": true,
+      "producerTraceEnabled": false,
+      "producerTraceDomains": [],
+      "callbackStateEnabled": false,
+      "mainCallbackSnes": null,
+      "irqCallbackSnes": null,
+      "nmiCallbackSnes": null,
+      "state0202": null,
+      "state0204": null,
+      "state0206": null,
+      "state0208": null,
+      "state020a": null,
+      "state040a": null,
+      "dp0054": null
+    },
+    {
+      "frameDir": "frame_01096",
+      "frameNumber": 1096,
+      "contract": "frame_01096_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": true,
+      "producerTraceEnabled": false,
+      "producerTraceDomains": [],
+      "callbackStateEnabled": false,
+      "mainCallbackSnes": null,
+      "irqCallbackSnes": null,
+      "nmiCallbackSnes": null,
+      "state0202": null,
+      "state0204": null,
+      "state0206": null,
+      "state0208": null,
+      "state020a": null,
+      "state040a": null,
+      "dp0054": null
+    },
+    {
+      "frameDir": "frame_01097",
+      "frameNumber": 1097,
+      "contract": "frame_01097_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": true,
+      "producerTraceEnabled": false,
+      "producerTraceDomains": [],
+      "callbackStateEnabled": false,
+      "mainCallbackSnes": null,
+      "irqCallbackSnes": null,
+      "nmiCallbackSnes": null,
+      "state0202": null,
+      "state0204": null,
+      "state0206": null,
+      "state0208": null,
+      "state020a": null,
+      "state040a": null,
+      "dp0054": null
+    },
+    {
+      "frameDir": "frame_01098",
+      "frameNumber": 1098,
+      "contract": "frame_01098_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": true,
+      "producerTraceEnabled": false,
+      "producerTraceDomains": [],
+      "callbackStateEnabled": false,
+      "mainCallbackSnes": null,
+      "irqCallbackSnes": null,
+      "nmiCallbackSnes": null,
+      "state0202": null,
+      "state0204": null,
+      "state0206": null,
+      "state0208": null,
+      "state020a": null,
+      "state040a": null,
+      "dp0054": null
+    },
+    {
+      "frameDir": "frame_01099",
+      "frameNumber": 1099,
+      "contract": "frame_01099_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": true,
+      "producerTraceEnabled": false,
+      "producerTraceDomains": [],
+      "callbackStateEnabled": false,
+      "mainCallbackSnes": null,
+      "irqCallbackSnes": null,
+      "nmiCallbackSnes": null,
+      "state0202": null,
+      "state0204": null,
+      "state0206": null,
+      "state0208": null,
+      "state020a": null,
+      "state040a": null,
+      "dp0054": null
+    },
+    {
+      "frameDir": "frame_01100",
+      "frameNumber": 1100,
+      "contract": "frame_01100_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": true,
+      "producerTraceEnabled": false,
+      "producerTraceDomains": [],
+      "callbackStateEnabled": false,
+      "mainCallbackSnes": null,
+      "irqCallbackSnes": null,
+      "nmiCallbackSnes": null,
+      "state0202": null,
+      "state0204": null,
+      "state0206": null,
+      "state0208": null,
+      "state020a": null,
+      "state040a": null,
+      "dp0054": null
+    },
+    {
+      "frameDir": "frame_01101",
+      "frameNumber": 1101,
+      "contract": "frame_01101_visual_contract.json",
+      "bgMode": 7,
+      "mainLayerNames": [
+        "bg1"
+      ],
+      "bgLayerCount": 4,
+      "visibleSpriteCount": 61,
+      "provenanceEnabled": true,
+      "producerTraceEnabled": false,
+      "producerTraceDomains": [],
+      "callbackStateEnabled": false,
+      "mainCallbackSnes": null,
+      "irqCallbackSnes": null,
+      "nmiCallbackSnes": null,
+      "state0202": null,
+      "state0204": null,
+      "state0206": null,
+      "state0208": null,
+      "state020a": null,
+      "state040a": null,
+      "dp0054": null
+    }
+  ]
+}

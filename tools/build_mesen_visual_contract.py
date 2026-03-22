@@ -662,6 +662,80 @@ def summarize_probe_trace(probe_json: object) -> dict:
     }
 
 
+def find_probe_frame_row(probe_json: object, frame_number: int | None) -> dict | None:
+    if not isinstance(probe_json, dict):
+        return None
+
+    frames = probe_json.get("frames")
+    if not isinstance(frames, list) or not frames:
+        return None
+
+    fallback_row: dict | None = None
+    for row in frames:
+        if not isinstance(row, dict):
+            continue
+        fallback_row = row
+        if frame_number is not None and to_int(row.get("frame"), -1) == frame_number:
+            return row
+
+    return fallback_row
+
+
+def summarize_probe_frame_state(probe_json: object, frame_number: int | None) -> dict:
+    row = find_probe_frame_row(probe_json, frame_number)
+    if not isinstance(row, dict):
+        return {
+            "enabled": False,
+            "reason": "probe json has no matching frame snapshot",
+        }
+
+    return {
+        "enabled": True,
+        "frame": to_int(row.get("frame")),
+        "callbacks": {
+            "mainSnes": format_snes_pc(
+                to_int(row.get("active_main_callback_bank")),
+                to_int(row.get("active_main_callback_addr")),
+            ),
+            "irqSnes": format_snes_pc(
+                to_int(row.get("active_irq_callback_bank")),
+                to_int(row.get("active_irq_callback_addr")),
+            ),
+            "nmiSnes": format_snes_pc(
+                to_int(row.get("active_nmi_callback_bank")),
+                to_int(row.get("active_nmi_callback_addr")),
+            ),
+        },
+        "selectors": {
+            "1c78": to_int(row.get("selector_1c78")),
+            "1c80": to_int(row.get("selector_1c80")),
+            "1c86": to_int(row.get("state_1c86")),
+            "1ca8": to_int(row.get("selector_1ca8")),
+            "1cac": to_int(row.get("selector_1cac")),
+            "1cae": to_int(row.get("selector_1cae")),
+        },
+        "state": {
+            "0202": to_int(row.get("state_0202")),
+            "0204": to_int(row.get("state_0204")),
+            "0206": to_int(row.get("state_0206")),
+            "0208": to_int(row.get("state_0208")),
+            "020a": to_int(row.get("state_020a")),
+            "040a": to_int(row.get("state_040a")),
+            "0440": to_int(row.get("state_0440")),
+            "0442": to_int(row.get("state_0442")),
+            "0444": to_int(row.get("state_0444")),
+            "1d10": to_int(row.get("state_1d10")),
+            "1e2c": to_int(row.get("state_1e2c")),
+        },
+        "directPage": {
+            "0053": to_int(row.get("dp_0053")),
+            "0054": to_int(row.get("dp_0054")),
+            "0055": to_int(row.get("dp_0055")),
+            "0056": to_int(row.get("dp_0056")),
+        },
+    }
+
+
 def resolve_optional_json(base_dir: Path, relative_path: str | None) -> dict | None:
     if not relative_path:
         return None
@@ -701,10 +775,16 @@ def main() -> int:
         "enabled": False,
         "reason": "probe json not provided",
     }
+    callback_state = {
+        "enabled": False,
+        "reason": "probe json not provided",
+    }
     if args.probe_json:
         probe_json = load_json_like(args.probe_json.resolve())
         producer_trace = summarize_probe_trace(probe_json)
         producer_trace["sourceProbeJson"] = str(args.probe_json.resolve())
+        callback_state = summarize_probe_frame_state(probe_json, frame_number)
+        callback_state["sourceProbeJson"] = str(args.probe_json.resolve())
 
     ppu_summary = manifest.get("ppu_summary")
     if not isinstance(ppu_summary, dict):
@@ -788,6 +868,7 @@ def main() -> int:
             "summary": provenance_lookup.get("summary"),
         },
         "producerTrace": producer_trace,
+        "callbackState": callback_state,
     }
 
     out_json.parent.mkdir(parents=True, exist_ok=True)
