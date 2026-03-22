@@ -1,0 +1,1094 @@
+{
+  "schema": "td2.mode7_first_pixel_audit.v1",
+  "createdUtc": "2026-03-22T18:22:43.078794+00:00",
+  "title": "Mode 7 first-pixel audit",
+  "plateauAnalysisPath": "/home/nivando-soares/asmdump/tools/out/mode7_plateau_1117/analysis.json",
+  "canonical": {
+    "frame": 1117,
+    "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1110_1117_v1/frame_01117",
+    "designDir": "/home/nivando-soares/asmdump/tools/out/design_mesen_range_1110_1117_v1/frame_01117",
+    "bg1VisibleBBox": {
+      "x0": 24,
+      "y0": 67,
+      "x1": 232,
+      "y1": 138
+    },
+    "baseState": {
+      "ppu.mode7.hscroll": 0,
+      "ppu.mode7.vscroll": 8191,
+      "ppu.mode7.centerX": 128,
+      "ppu.mode7.centerY": 112,
+      "ppu.mode7.matrix[0]": 256,
+      "ppu.mode7.matrix[1]": 0,
+      "ppu.mode7.matrix[2]": 0,
+      "ppu.mode7.matrix[3]": 257,
+      "ppu.extBgEnabled": false,
+      "ppu.directColorMode": false,
+      "ppu.colorMathEnabled": 0,
+      "ppu.subScreenLayers": 0
+    },
+    "visibleState": {
+      "ppu.mode7.hscroll": 0,
+      "ppu.mode7.vscroll": 8191,
+      "ppu.mode7.centerX": 128,
+      "ppu.mode7.centerY": 112,
+      "ppu.mode7.matrix[0]": 256,
+      "ppu.mode7.matrix[1]": 0,
+      "ppu.mode7.matrix[2]": 0,
+      "ppu.mode7.matrix[3]": 257,
+      "ppu.extBgEnabled": false,
+      "ppu.directColorMode": false,
+      "ppu.colorMathEnabled": 0,
+      "ppu.subScreenLayers": 0
+    }
+  },
+  "targetScanlines": [
+    67,
+    102,
+    138
+  ],
+  "targetColumns": [
+    0,
+    1,
+    24,
+    25,
+    128
+  ],
+  "visibleStateDifferences": [],
+  "models": [
+    {
+      "id": "base_current",
+      "label": "Base current renderer",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 0,
+      "sampleBeforeIncrement": true,
+      "bg1VisibleMismatchPixels": 3982,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 2698,
+      "mainVisibleDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      },
+      "bg1VisibleSha1": "c1a5fb45ceb74b8597bbd4f2a71434bf28f53c6a",
+      "mainVisibleSha1": "a77ee847fb6804983742af938e55cadecebf25d5",
+      "mode7": {
+        "hscroll": 0,
+        "vscroll": -1,
+        "centerX": 128,
+        "centerY": 112,
+        "matrix": [
+          256,
+          0,
+          0,
+          257
+        ],
+        "xOriginBias": 0,
+        "yLineBias": 0,
+        "sampleBeforeIncrement": true,
+        "scanlineSamples": [
+          {
+            "screenY": 67,
+            "realY": 67,
+            "initialXValue": 0,
+            "initialYValue": 16832,
+            "xStep": 256,
+            "yStep": 0,
+            "samples": [
+              {
+                "screenX": 0,
+                "sourceX": 0,
+                "sourceY": 65,
+                "sampleXValue": 0,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              },
+              {
+                "screenX": 1,
+                "sourceX": 1,
+                "sourceY": 65,
+                "sampleXValue": 256,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              },
+              {
+                "screenX": 24,
+                "sourceX": 24,
+                "sourceY": 65,
+                "sampleXValue": 6144,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              },
+              {
+                "screenX": 25,
+                "sourceX": 25,
+                "sourceY": 65,
+                "sampleXValue": 6400,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              },
+              {
+                "screenX": 128,
+                "sourceX": 128,
+                "sourceY": 65,
+                "sampleXValue": 32768,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              }
+            ]
+          },
+          {
+            "screenY": 102,
+            "realY": 102,
+            "initialXValue": 0,
+            "initialYValue": 25792,
+            "xStep": 256,
+            "yStep": 0,
+            "samples": [
+              {
+                "screenX": 0,
+                "sourceX": 0,
+                "sourceY": 100,
+                "sampleXValue": 0,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              },
+              {
+                "screenX": 1,
+                "sourceX": 1,
+                "sourceY": 100,
+                "sampleXValue": 256,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              },
+              {
+                "screenX": 24,
+                "sourceX": 24,
+                "sourceY": 100,
+                "sampleXValue": 6144,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              },
+              {
+                "screenX": 25,
+                "sourceX": 25,
+                "sourceY": 100,
+                "sampleXValue": 6400,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              },
+              {
+                "screenX": 128,
+                "sourceX": 128,
+                "sourceY": 100,
+                "sampleXValue": 32768,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              }
+            ]
+          },
+          {
+            "screenY": 138,
+            "realY": 138,
+            "initialXValue": 0,
+            "initialYValue": 35072,
+            "xStep": 256,
+            "yStep": 0,
+            "samples": [
+              {
+                "screenX": 0,
+                "sourceX": 0,
+                "sourceY": 137,
+                "sampleXValue": 0,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              },
+              {
+                "screenX": 1,
+                "sourceX": 1,
+                "sourceY": 137,
+                "sampleXValue": 256,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              },
+              {
+                "screenX": 24,
+                "sourceX": 24,
+                "sourceY": 137,
+                "sampleXValue": 6144,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              },
+              {
+                "screenX": 25,
+                "sourceX": 25,
+                "sourceY": 137,
+                "sampleXValue": 6400,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              },
+              {
+                "screenX": 128,
+                "sourceX": 128,
+                "sourceY": 137,
+                "sampleXValue": 32768,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              }
+            ]
+          }
+        ]
+      },
+      "obj": {
+        "oam_mode": 0,
+        "oam_base_address": 16384,
+        "oam_address_offset": 4096,
+        "enable_oam_priority": false,
+        "internal_oam_address": 0,
+        "lines_with_sprites": 64,
+        "visible_sprites_total": 776,
+        "drawn_pixels": 7019,
+        "dropped_tiles": 0,
+        "method": "mode7_scanline_ppu"
+      }
+    },
+    {
+      "id": "visible_state_current",
+      "label": "Visible-state current renderer",
+      "stateSource": "visible",
+      "xOriginBias": 0,
+      "yLineBias": 0,
+      "sampleBeforeIncrement": true,
+      "bg1VisibleMismatchPixels": 3982,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 2698,
+      "mainVisibleDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      },
+      "bg1VisibleSha1": "c1a5fb45ceb74b8597bbd4f2a71434bf28f53c6a",
+      "mainVisibleSha1": "a77ee847fb6804983742af938e55cadecebf25d5",
+      "mode7": {
+        "hscroll": 0,
+        "vscroll": -1,
+        "centerX": 128,
+        "centerY": 112,
+        "matrix": [
+          256,
+          0,
+          0,
+          257
+        ],
+        "xOriginBias": 0,
+        "yLineBias": 0,
+        "sampleBeforeIncrement": true,
+        "scanlineSamples": [
+          {
+            "screenY": 67,
+            "realY": 67,
+            "initialXValue": 0,
+            "initialYValue": 16832,
+            "xStep": 256,
+            "yStep": 0,
+            "samples": [
+              {
+                "screenX": 0,
+                "sourceX": 0,
+                "sourceY": 65,
+                "sampleXValue": 0,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              },
+              {
+                "screenX": 1,
+                "sourceX": 1,
+                "sourceY": 65,
+                "sampleXValue": 256,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              },
+              {
+                "screenX": 24,
+                "sourceX": 24,
+                "sourceY": 65,
+                "sampleXValue": 6144,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              },
+              {
+                "screenX": 25,
+                "sourceX": 25,
+                "sourceY": 65,
+                "sampleXValue": 6400,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              },
+              {
+                "screenX": 128,
+                "sourceX": 128,
+                "sourceY": 65,
+                "sampleXValue": 32768,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              }
+            ]
+          },
+          {
+            "screenY": 102,
+            "realY": 102,
+            "initialXValue": 0,
+            "initialYValue": 25792,
+            "xStep": 256,
+            "yStep": 0,
+            "samples": [
+              {
+                "screenX": 0,
+                "sourceX": 0,
+                "sourceY": 100,
+                "sampleXValue": 0,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              },
+              {
+                "screenX": 1,
+                "sourceX": 1,
+                "sourceY": 100,
+                "sampleXValue": 256,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              },
+              {
+                "screenX": 24,
+                "sourceX": 24,
+                "sourceY": 100,
+                "sampleXValue": 6144,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              },
+              {
+                "screenX": 25,
+                "sourceX": 25,
+                "sourceY": 100,
+                "sampleXValue": 6400,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              },
+              {
+                "screenX": 128,
+                "sourceX": 128,
+                "sourceY": 100,
+                "sampleXValue": 32768,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              }
+            ]
+          },
+          {
+            "screenY": 138,
+            "realY": 138,
+            "initialXValue": 0,
+            "initialYValue": 35072,
+            "xStep": 256,
+            "yStep": 0,
+            "samples": [
+              {
+                "screenX": 0,
+                "sourceX": 0,
+                "sourceY": 137,
+                "sampleXValue": 0,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              },
+              {
+                "screenX": 1,
+                "sourceX": 1,
+                "sourceY": 137,
+                "sampleXValue": 256,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              },
+              {
+                "screenX": 24,
+                "sourceX": 24,
+                "sourceY": 137,
+                "sampleXValue": 6144,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              },
+              {
+                "screenX": 25,
+                "sourceX": 25,
+                "sourceY": 137,
+                "sampleXValue": 6400,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              },
+              {
+                "screenX": 128,
+                "sourceX": 128,
+                "sourceY": 137,
+                "sampleXValue": 32768,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              }
+            ]
+          }
+        ]
+      },
+      "obj": {
+        "oam_mode": 0,
+        "oam_base_address": 16384,
+        "oam_address_offset": 4096,
+        "enable_oam_priority": false,
+        "internal_oam_address": 0,
+        "lines_with_sprites": 64,
+        "visible_sprites_total": 776,
+        "drawn_pixels": 7019,
+        "dropped_tiles": 0,
+        "method": "mode7_scanline_ppu"
+      }
+    },
+    {
+      "id": "sample_after_increment",
+      "label": "Increment before sample",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 0,
+      "sampleBeforeIncrement": false,
+      "bg1VisibleMismatchPixels": 3613,
+      "bg1VisibleDiffBBox": {
+        "x0": 23,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 2780,
+      "mainVisibleDiffBBox": {
+        "x0": 23,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      },
+      "bg1VisibleSha1": "95a6227e97dcaa5faff761a6ca043ae327d3fa90",
+      "mainVisibleSha1": "44c75a04e77f0886a52009cd0922bac408ac811d",
+      "mode7": {
+        "hscroll": 0,
+        "vscroll": -1,
+        "centerX": 128,
+        "centerY": 112,
+        "matrix": [
+          256,
+          0,
+          0,
+          257
+        ],
+        "xOriginBias": 0,
+        "yLineBias": 0,
+        "sampleBeforeIncrement": false,
+        "scanlineSamples": [
+          {
+            "screenY": 67,
+            "realY": 67,
+            "initialXValue": 0,
+            "initialYValue": 16832,
+            "xStep": 256,
+            "yStep": 0,
+            "samples": [
+              {
+                "screenX": 0,
+                "sourceX": 1,
+                "sourceY": 65,
+                "sampleXValue": 256,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              },
+              {
+                "screenX": 1,
+                "sourceX": 2,
+                "sourceY": 65,
+                "sampleXValue": 512,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              },
+              {
+                "screenX": 24,
+                "sourceX": 25,
+                "sourceY": 65,
+                "sampleXValue": 6400,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              },
+              {
+                "screenX": 25,
+                "sourceX": 26,
+                "sourceY": 65,
+                "sampleXValue": 6656,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              },
+              {
+                "screenX": 128,
+                "sourceX": 129,
+                "sourceY": 65,
+                "sampleXValue": 33024,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              }
+            ]
+          },
+          {
+            "screenY": 102,
+            "realY": 102,
+            "initialXValue": 0,
+            "initialYValue": 25792,
+            "xStep": 256,
+            "yStep": 0,
+            "samples": [
+              {
+                "screenX": 0,
+                "sourceX": 1,
+                "sourceY": 100,
+                "sampleXValue": 256,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              },
+              {
+                "screenX": 1,
+                "sourceX": 2,
+                "sourceY": 100,
+                "sampleXValue": 512,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              },
+              {
+                "screenX": 24,
+                "sourceX": 25,
+                "sourceY": 100,
+                "sampleXValue": 6400,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              },
+              {
+                "screenX": 25,
+                "sourceX": 26,
+                "sourceY": 100,
+                "sampleXValue": 6656,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              },
+              {
+                "screenX": 128,
+                "sourceX": 129,
+                "sourceY": 100,
+                "sampleXValue": 33024,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              }
+            ]
+          },
+          {
+            "screenY": 138,
+            "realY": 138,
+            "initialXValue": 0,
+            "initialYValue": 35072,
+            "xStep": 256,
+            "yStep": 0,
+            "samples": [
+              {
+                "screenX": 0,
+                "sourceX": 1,
+                "sourceY": 137,
+                "sampleXValue": 256,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              },
+              {
+                "screenX": 1,
+                "sourceX": 2,
+                "sourceY": 137,
+                "sampleXValue": 512,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              },
+              {
+                "screenX": 24,
+                "sourceX": 25,
+                "sourceY": 137,
+                "sampleXValue": 6400,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              },
+              {
+                "screenX": 25,
+                "sourceX": 26,
+                "sourceY": 137,
+                "sampleXValue": 6656,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              },
+              {
+                "screenX": 128,
+                "sourceX": 129,
+                "sourceY": 137,
+                "sampleXValue": 33024,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              }
+            ]
+          }
+        ]
+      },
+      "obj": {
+        "oam_mode": 0,
+        "oam_base_address": 16384,
+        "oam_address_offset": 4096,
+        "enable_oam_priority": false,
+        "internal_oam_address": 0,
+        "lines_with_sprites": 64,
+        "visible_sprites_total": 776,
+        "drawn_pixels": 7019,
+        "dropped_tiles": 0,
+        "method": "mode7_scanline_ppu"
+      }
+    },
+    {
+      "id": "x_origin_plus1",
+      "label": "Pixel-0 origin +1",
+      "stateSource": "base",
+      "xOriginBias": 1,
+      "yLineBias": 0,
+      "sampleBeforeIncrement": true,
+      "bg1VisibleMismatchPixels": 3613,
+      "bg1VisibleDiffBBox": {
+        "x0": 23,
+        "y0": 67,
+        "x1": 232,
+        "y1": 138
+      },
+      "mainVisibleMismatchPixels": 2780,
+      "mainVisibleDiffBBox": {
+        "x0": 23,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      },
+      "bg1VisibleSha1": "95a6227e97dcaa5faff761a6ca043ae327d3fa90",
+      "mainVisibleSha1": "44c75a04e77f0886a52009cd0922bac408ac811d",
+      "mode7": {
+        "hscroll": 0,
+        "vscroll": -1,
+        "centerX": 128,
+        "centerY": 112,
+        "matrix": [
+          256,
+          0,
+          0,
+          257
+        ],
+        "xOriginBias": 1,
+        "yLineBias": 0,
+        "sampleBeforeIncrement": true,
+        "scanlineSamples": [
+          {
+            "screenY": 67,
+            "realY": 67,
+            "initialXValue": 256,
+            "initialYValue": 16832,
+            "xStep": 256,
+            "yStep": 0,
+            "samples": [
+              {
+                "screenX": 0,
+                "sourceX": 1,
+                "sourceY": 65,
+                "sampleXValue": 256,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              },
+              {
+                "screenX": 1,
+                "sourceX": 2,
+                "sourceY": 65,
+                "sampleXValue": 512,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              },
+              {
+                "screenX": 24,
+                "sourceX": 25,
+                "sourceY": 65,
+                "sampleXValue": 6400,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              },
+              {
+                "screenX": 25,
+                "sourceX": 26,
+                "sourceY": 65,
+                "sampleXValue": 6656,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              },
+              {
+                "screenX": 128,
+                "sourceX": 129,
+                "sourceY": 65,
+                "sampleXValue": 33024,
+                "sampleYValue": 16832,
+                "outsideMap": false
+              }
+            ]
+          },
+          {
+            "screenY": 102,
+            "realY": 102,
+            "initialXValue": 256,
+            "initialYValue": 25792,
+            "xStep": 256,
+            "yStep": 0,
+            "samples": [
+              {
+                "screenX": 0,
+                "sourceX": 1,
+                "sourceY": 100,
+                "sampleXValue": 256,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              },
+              {
+                "screenX": 1,
+                "sourceX": 2,
+                "sourceY": 100,
+                "sampleXValue": 512,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              },
+              {
+                "screenX": 24,
+                "sourceX": 25,
+                "sourceY": 100,
+                "sampleXValue": 6400,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              },
+              {
+                "screenX": 25,
+                "sourceX": 26,
+                "sourceY": 100,
+                "sampleXValue": 6656,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              },
+              {
+                "screenX": 128,
+                "sourceX": 129,
+                "sourceY": 100,
+                "sampleXValue": 33024,
+                "sampleYValue": 25792,
+                "outsideMap": false
+              }
+            ]
+          },
+          {
+            "screenY": 138,
+            "realY": 138,
+            "initialXValue": 256,
+            "initialYValue": 35072,
+            "xStep": 256,
+            "yStep": 0,
+            "samples": [
+              {
+                "screenX": 0,
+                "sourceX": 1,
+                "sourceY": 137,
+                "sampleXValue": 256,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              },
+              {
+                "screenX": 1,
+                "sourceX": 2,
+                "sourceY": 137,
+                "sampleXValue": 512,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              },
+              {
+                "screenX": 24,
+                "sourceX": 25,
+                "sourceY": 137,
+                "sampleXValue": 6400,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              },
+              {
+                "screenX": 25,
+                "sourceX": 26,
+                "sourceY": 137,
+                "sampleXValue": 6656,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              },
+              {
+                "screenX": 128,
+                "sourceX": 129,
+                "sourceY": 137,
+                "sampleXValue": 33024,
+                "sampleYValue": 35072,
+                "outsideMap": false
+              }
+            ]
+          }
+        ]
+      },
+      "obj": {
+        "oam_mode": 0,
+        "oam_base_address": 16384,
+        "oam_address_offset": 4096,
+        "enable_oam_priority": false,
+        "internal_oam_address": 0,
+        "lines_with_sprites": 64,
+        "visible_sprites_total": 776,
+        "drawn_pixels": 7019,
+        "dropped_tiles": 0,
+        "method": "mode7_scanline_ppu"
+      }
+    },
+    {
+      "id": "line_plus1",
+      "label": "Scanline Y +1",
+      "stateSource": "base",
+      "xOriginBias": 0,
+      "yLineBias": 1,
+      "sampleBeforeIncrement": true,
+      "bg1VisibleMismatchPixels": 2271,
+      "bg1VisibleDiffBBox": {
+        "x0": 24,
+        "y0": 67,
+        "x1": 231,
+        "y1": 120
+      },
+      "mainVisibleMismatchPixels": 0,
+      "mainVisibleDiffBBox": null,
+      "bg1VisibleSha1": "7ed67166920cf069363e8ba6b1161f11ac4840f0",
+      "mainVisibleSha1": "3de8602f142066a8f46e850689ff77b433802561",
+      "mode7": {
+        "hscroll": 0,
+        "vscroll": -1,
+        "centerX": 128,
+        "centerY": 112,
+        "matrix": [
+          256,
+          0,
+          0,
+          257
+        ],
+        "xOriginBias": 0,
+        "yLineBias": 1,
+        "sampleBeforeIncrement": true,
+        "scanlineSamples": [
+          {
+            "screenY": 67,
+            "realY": 68,
+            "initialXValue": 0,
+            "initialYValue": 17088,
+            "xStep": 256,
+            "yStep": 0,
+            "samples": [
+              {
+                "screenX": 0,
+                "sourceX": 0,
+                "sourceY": 66,
+                "sampleXValue": 0,
+                "sampleYValue": 17088,
+                "outsideMap": false
+              },
+              {
+                "screenX": 1,
+                "sourceX": 1,
+                "sourceY": 66,
+                "sampleXValue": 256,
+                "sampleYValue": 17088,
+                "outsideMap": false
+              },
+              {
+                "screenX": 24,
+                "sourceX": 24,
+                "sourceY": 66,
+                "sampleXValue": 6144,
+                "sampleYValue": 17088,
+                "outsideMap": false
+              },
+              {
+                "screenX": 25,
+                "sourceX": 25,
+                "sourceY": 66,
+                "sampleXValue": 6400,
+                "sampleYValue": 17088,
+                "outsideMap": false
+              },
+              {
+                "screenX": 128,
+                "sourceX": 128,
+                "sourceY": 66,
+                "sampleXValue": 32768,
+                "sampleYValue": 17088,
+                "outsideMap": false
+              }
+            ]
+          },
+          {
+            "screenY": 102,
+            "realY": 103,
+            "initialXValue": 0,
+            "initialYValue": 26048,
+            "xStep": 256,
+            "yStep": 0,
+            "samples": [
+              {
+                "screenX": 0,
+                "sourceX": 0,
+                "sourceY": 101,
+                "sampleXValue": 0,
+                "sampleYValue": 26048,
+                "outsideMap": false
+              },
+              {
+                "screenX": 1,
+                "sourceX": 1,
+                "sourceY": 101,
+                "sampleXValue": 256,
+                "sampleYValue": 26048,
+                "outsideMap": false
+              },
+              {
+                "screenX": 24,
+                "sourceX": 24,
+                "sourceY": 101,
+                "sampleXValue": 6144,
+                "sampleYValue": 26048,
+                "outsideMap": false
+              },
+              {
+                "screenX": 25,
+                "sourceX": 25,
+                "sourceY": 101,
+                "sampleXValue": 6400,
+                "sampleYValue": 26048,
+                "outsideMap": false
+              },
+              {
+                "screenX": 128,
+                "sourceX": 128,
+                "sourceY": 101,
+                "sampleXValue": 32768,
+                "sampleYValue": 26048,
+                "outsideMap": false
+              }
+            ]
+          },
+          {
+            "screenY": 138,
+            "realY": 139,
+            "initialXValue": 0,
+            "initialYValue": 35328,
+            "xStep": 256,
+            "yStep": 0,
+            "samples": [
+              {
+                "screenX": 0,
+                "sourceX": 0,
+                "sourceY": 138,
+                "sampleXValue": 0,
+                "sampleYValue": 35328,
+                "outsideMap": false
+              },
+              {
+                "screenX": 1,
+                "sourceX": 1,
+                "sourceY": 138,
+                "sampleXValue": 256,
+                "sampleYValue": 35328,
+                "outsideMap": false
+              },
+              {
+                "screenX": 24,
+                "sourceX": 24,
+                "sourceY": 138,
+                "sampleXValue": 6144,
+                "sampleYValue": 35328,
+                "outsideMap": false
+              },
+              {
+                "screenX": 25,
+                "sourceX": 25,
+                "sourceY": 138,
+                "sampleXValue": 6400,
+                "sampleYValue": 35328,
+                "outsideMap": false
+              },
+              {
+                "screenX": 128,
+                "sourceX": 128,
+                "sourceY": 138,
+                "sampleXValue": 32768,
+                "sampleYValue": 35328,
+                "outsideMap": false
+              }
+            ]
+          }
+        ]
+      },
+      "obj": {
+        "oam_mode": 0,
+        "oam_base_address": 16384,
+        "oam_address_offset": 4096,
+        "enable_oam_priority": false,
+        "internal_oam_address": 0,
+        "lines_with_sprites": 64,
+        "visible_sprites_total": 776,
+        "drawn_pixels": 7019,
+        "dropped_tiles": 0,
+        "method": "mode7_scanline_ppu"
+      }
+    }
+  ],
+  "bestBgOnlyModel": {
+    "id": "line_plus1",
+    "bg1VisibleMismatchPixels": 2271,
+    "mainVisibleMismatchPixels": 0
+  },
+  "bestMainSceneModel": {
+    "id": "line_plus1",
+    "bg1VisibleMismatchPixels": 2271,
+    "mainVisibleMismatchPixels": 0
+  },
+  "equivalentModelPairs": [
+    {
+      "left": "base_current",
+      "right": "visible_state_current",
+      "bg1VisibleMismatchPixels": 3982,
+      "mainVisibleMismatchPixels": 2698
+    },
+    {
+      "left": "sample_after_increment",
+      "right": "x_origin_plus1",
+      "bg1VisibleMismatchPixels": 3613,
+      "mainVisibleMismatchPixels": 2780
+    }
+  ]
+}

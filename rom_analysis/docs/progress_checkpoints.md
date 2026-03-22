@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; registry tightening now closes `9681` as `sentinel-control` and `E91F` as `nested-invalid-marker`; active unresolved queue remains `EE7F` and `DA96` |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/matrix[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract builders now also merge that activity layer directly, and the follow-up `1102..1117` compare summary now proves the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, `main_visible.ppm` stays the top crop of `main.ppm`, the visible-state `Mode 7` disagreement only survives `1102..1104`, and the remaining render gap plateaus at `2698` mismatched pixels from `1105..1117` even after the per-frame `OAM DMA` shuts off at `1114`; the new canonical plateau analyzer now also proves only `4` sprites touch that diff box, `bg1_visible.ppm` freezes across the whole plateau, a `-1` horizontal shift improves the BG-only compare, and the new sampling stats plus doc/source cross-check now demote `M7SEL` edge/fill behavior by proving the plateau bbox never leaves the Mode 7 map, so the current Lane 2 frontier is specifically `Mode 7/BG1` X-origin, first-pixel, or visible-latched scroll semantics rather than another hidden upload or callback fork |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/matrix[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract builders now also merge that activity layer directly, and the follow-up `1102..1117` compare summary now proves the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, `main_visible.ppm` stays the top crop of `main.ppm`, the visible-state `Mode 7` disagreement only survives `1102..1104`, and the remaining render gap plateaus at `2698` mismatched pixels from `1105..1117` even after the per-frame `OAM DMA` shuts off at `1114`; the new canonical plateau analyzer now also proves only `4` sprites touch that diff box, `bg1_visible.ppm` freezes across the whole plateau, a `-1` horizontal shift improves the BG-only compare, the new sampling stats plus doc/source cross-check now demote `M7SEL` edge/fill behavior by proving the plateau bbox never leaves the Mode 7 map, and the follow-up first-pixel audit now proves there is no remaining focused `Mode 7` delta between `ppu_state.json` and `ppu_state_visible.json` on plateau endpoints `1105/1117`, `increment-before-sample` collapses exactly to `X-origin +1` on this state, and `screenY + 1` is the first tested rule that collapses the full-scene compare to `0` at both plateau ends, so the current Lane 2 frontier has narrowed from generic `X-origin / visible-latch` suspicion to the exact scanline-start rule used by the composed-screen `Mode 7` renderer |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -3280,6 +3280,61 @@ Practical reading:
   - X-origin / first-pixel placement
   - visible-latched `M7HOFS/M7VOFS` timing
   - only then residual full-scene composition outside the BG-only box
+
+### CP-76: Exact-hit first-pixel audit promotes `screenY + 1` to the leading plateau fix
+
+- Added exact-hit source note:
+  - `rom_analysis/docs/mode7_1105_exact_hit_sources.md`
+- Added first-pixel audit tool:
+  - `tools/build_mode7_first_pixel_audit.py`
+- Added plateau audit note:
+  - `rom_analysis/docs/mode7_plateau_first_pixel_audit.md`
+- Added canonical audit artifacts:
+  - `tools/out/mode7_first_pixel_1105/audit.json`
+  - `tools/out/mode7_first_pixel_1105/audit.md`
+- Added plateau-tail confirmation artifacts:
+  - `tools/out/mode7_plateau_1117/analysis.json`
+  - `tools/out/mode7_plateau_1117/analysis.md`
+  - `tools/out/mode7_first_pixel_1117/audit.json`
+  - `tools/out/mode7_first_pixel_1117/audit.md`
+
+Validation:
+
+- `python3 -m py_compile tools/build_mode7_first_pixel_audit.py`
+- `python3 tools/build_mode7_first_pixel_audit.py tools/out/mode7_plateau_1105/analysis.json tools/out/mode7_first_pixel_1105/audit.json --markdown-out tools/out/mode7_first_pixel_1105/audit.md`
+- `python3 tools/build_mode7_plateau_analysis.py tools/out/post_1093_compare_1102_1117/summary.json tools/out/design_mesen_range_1102_1109_v1 tools/out/design_mesen_range_1110_1117_v1 tools/out/mode7_plateau_1117/analysis.json --canonical-frame 1117 --markdown-out tools/out/mode7_plateau_1117/analysis.md`
+- `python3 tools/build_mode7_first_pixel_audit.py tools/out/mode7_plateau_1117/analysis.json tools/out/mode7_first_pixel_1117/audit.json --markdown-out tools/out/mode7_first_pixel_1117/audit.md`
+
+Current reading:
+
+- focused visible-state `Mode 7` deltas are absent on both tested plateau ends:
+  - `ppu_state.json`
+  - `ppu_state_visible.json`
+  - no focused `Mode 7` key differs in either audit
+- `increment-before-sample` and `X-origin +1` collapse to the same result on
+  this plateau state:
+  - full scene `2780`
+  - BG-only `3613`
+  - equivalence is expected here because the canonical plateau keeps
+    `M7A = 256` and `M7C = 0`
+- the first tested rule that actually closes the composed scene is
+  `screenY + 1`:
+  - frame `1105`: full-scene compare `2698 -> 0`
+  - frame `1117`: full-scene compare `2698 -> 0`
+- the same rule does **not** close the isolated layer export:
+  - `bg1_visible` compare improves `3982 -> 2271`
+  - so the composed-screen fix and the isolated-layer export mismatch are now
+    separate questions
+
+Practical reading:
+
+- the static plateau is no longer best read as an `M7HOFS/M7VOFS`
+  visible-latch problem
+- the strongest renderer candidate is now the scanline-start term used by the
+  composed-screen `Mode 7` path
+- the next defensible step is to promote the `screenY + 1` candidate into the
+  renderer/compare path and then re-check `1102..1104` plus the isolated
+  `bg1_visible` export semantics
 
 ## Current Checkpoint Metrics
 

@@ -29,6 +29,11 @@ Primary sources used:
 - bbbradsmith `extbgtest`
   - https://github.com/bbbradsmith/SNES_stuff/tree/main/extbgtest
 
+Related narrowed note:
+
+- `rom_analysis/docs/mode7_1105_exact_hit_sources.md`
+- `rom_analysis/docs/mode7_plateau_first_pixel_audit.md`
+
 ## Source Triaging
 
 | Source | Immediate value | What it proves for this gate |
@@ -197,6 +202,41 @@ Smallest useful test:
 
 - split the `hscroll +1` delta map into pixels touched by sprites and pixels
   untouched by sprites
+
+## Exact-Hit Audit Outcome
+
+The direct first-pixel audit now changes the ranking of those hypotheses for
+the static plateau itself.
+
+Primary evidence:
+
+- `tools/out/mode7_first_pixel_1105/audit.json`
+- `tools/out/mode7_first_pixel_1117/audit.json`
+
+What changed:
+
+- no focused `Mode 7` state delta remains between:
+  - `ppu_state.json`
+  - `ppu_state_visible.json`
+- `sample-after-increment` and `X-origin +1` collapse to the same output on the
+  canonical plateau because the current state keeps:
+  - `M7A = 256`
+  - `M7C = 0`
+- the first model that closes the composed screen is not horizontal:
+  - `screenY + 1` collapses the full-scene compare to `0` at both tested
+    plateau endpoints (`1105` and `1117`)
+
+Practical reading:
+
+- the plateau is no longer best described as a live `M7HOFS/M7VOFS`
+  visible-state problem
+- the highest-value renderer frontier is now the scanline-start / `startY`
+  rule used by the `Mode 7` path
+- `X-origin` / `pixel 0` still explain the earlier partial BG-only gains, but
+  they are no longer the leading composed-screen fix
+- the remaining isolated `bg1_visible` mismatch after `screenY + 1`
+  (`2271` pixels) should be treated as a separate layer-export question unless
+  a later artifact reconnects it to the composed-screen path
 
 ## Lowest-Value Hypotheses Right Now
 

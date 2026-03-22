@@ -240,6 +240,37 @@ python3 tools/build_mode7_plateau_analysis.py \
   --markdown-out tools/out/mode7_plateau_1105/analysis.md
 ```
 
+For the exact-hit `pixel 0 / X-origin / scanline-start` follow-up on the same
+canonical plateau, use:
+
+```sh
+python3 tools/build_mode7_first_pixel_audit.py \
+  tools/out/mode7_plateau_1105/analysis.json \
+  tools/out/mode7_first_pixel_1105/audit.json \
+  --markdown-out tools/out/mode7_first_pixel_1105/audit.md
+```
+
+That builder compares a small set of direct model candidates against both:
+
+- `main_visible.ppm`
+- `layers/bg1_visible.ppm`
+
+The current exact-hit set is:
+
+- base current renderer
+- visible-state current renderer
+- increment-before-sample
+- `pixel 0` origin `+1`
+- scanline `Y + 1`
+
+This path is useful when the remaining question is no longer "is there another
+hidden upload?" and has narrowed to:
+
+- whether `ppu_state_visible.json` actually differs on the canonical frame
+- whether `sample-after-increment` collapses to the same output as `X-origin +1`
+- whether the missing composed-screen rule is horizontal or actually a
+  scanline-start term
+
 This path is useful once a late-attract window has already collapsed to one
 static scene and the remaining question is more specific:
 
