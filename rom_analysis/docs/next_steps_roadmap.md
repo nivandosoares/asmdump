@@ -10,7 +10,7 @@ Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 | Roadmap lane | Status | Current reading |
 |---|---|---|
 | 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps are done; registry tightening now demotes `9681` to `sentinel-control` and `E91F` to `nested-invalid-marker`, leaving active unresolved queue (`EE7F`, `DA96`). |
-| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry, the visual-contract builders now separate BG/CHR state from OBJ/OAM state with optional provenance binding, producer-side write-breakpoint summaries still attach to that IR on the proven frame-`300` path, and the first later-window power-on follow-up (`7051`) is still locally blocked because two bounded headless probe attempts exited `255` before emitting probe JSON. |
+| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry, the visual-contract builders now separate BG/CHR state from OBJ/OAM state with optional provenance binding, producer-side write-breakpoint summaries now also have a real later-window proof at `986`, and the still-open timed-input ownership follow-up is specifically the `7051` power-on path, which remains locally blocked because two bounded headless attempts exited `255` before emitting probe JSON. |
 | 3. Gameplay-frame expansion | in progress | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty. |
 | 4. Bank API contracts | not started | Baseline docs exist; callback/API contracts for bank 30/10/11 are not yet mapped to completion. |
 
@@ -277,6 +277,39 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
     - retarget the now-working producer-trace path at later translation-facing
       windows (`986`, `7051`, `7055`, `7059`, `7061`) instead of the early
       frame-`300` proof window
+    - promoted cheaper later-window proof:
+      - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release make -C tools mesen-design-pack MESEN_FRAME=986`
+      - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=120 TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_986_live/td2_boot_probe TD2_BOOT_PROBE_TOTAL_FRAMES=987 TD2_BOOT_PROBE_TRACE_START_FRAME=982 TD2_BOOT_PROBE_TRACE_END_FRAME=986 TD2_BOOT_PROBE_TRACE_WRITE_POINTS='objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122' TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 ./validation/run_mesen_probe_boot.sh`
+      - `python3 tools/build_mesen_visual_contract.py tools/out/design_frame986 tools/out/visual_contract_frame986_live_probe.json --probe-json tools/out/visual_contract_probe_986_live/td2_boot_probe.json`
+      - evidence:
+        - `tools/out/design_frame986/design_pack.json`
+        - `tools/out/visual_contract_probe_986_live/td2_boot_probe.json`
+        - `tools/out/visual_contract_frame986_live_probe.json`
+      - targeted validation:
+        - `python3 tools/compare_frames.py tools/out/intro_loop_frame_00986_frame.png tools/out/mesen_frame986/main_visible.ppm --diff-out tools/out/mesen_frame986_vs_intro986_diff.ppm`
+        - `python3 tools/compare_frames.py tools/out/mesen_frame986/main_visible.ppm tools/out/bank1_bootstrap_queue_986_bridgeoverride.ppm --diff-out tools/out/mesen_frame986_vs_bridgeoverride986_diff.ppm`
+      - current reading:
+        - the extracted `mesen_frame986/main_visible.ppm` is `267` pixels from
+          the local frame-`986` screenshot and only `2` pixels from the
+          committed `bank1_bootstrap_queue_986_bridgeoverride.ppm`
+        - the frame-`986` design pack reports `bgMode = 7`,
+          `mainScreenLayers = 0x11`, active `bg1`, and `0` visible sprites
+        - the live producer trace records `3246` write hits with no drops:
+          `2730` OAM writes across frames `982..986` plus `516` VRAM writes at
+          frames `984` and `986`
+        - dominant write callsites are IRQ/NMI-side helpers, not mainline game
+          logic:
+          - OAM: `00:824F/00:8257`
+          - VRAM: `00:81E5/00:81F2`
+        - all sampled write hits in this window still run under active main
+          callback `01:9FE5`
+        - no `CGRAM` or `OBJSEL` writes were observed inside `982..986`
+        - practical reading: by `986`, the visible late overlay is already
+          gone (`0` visible sprites) even though OAM upload traffic is still
+          active in the same callback family
+        - contract hardening side effect: `td2_boot_probe.json` now preserves
+          `trace_start_frame` and `trace_end_frame`, so the merged visual
+          contract can carry an exact `producerTrace.traceWindow`
     - keep trace windows producer-active; the narrow frame-`296..300` proof
       attempt emitted `0` write hits even though the full `0..300` window
       works, so empty traces are now a window-selection problem rather than a
@@ -306,9 +339,12 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
       - next best step after this negative result:
         - do not spend more headless retries on the same power-on `7051` path
           without a new starting surface
-        - either recover a reusable later-intro savestate/seed for the
-          `7051..7061` window or promote a cheaper later design-pack target
-          such as `986` before retrying live producer-trace ownership
+        - keep using `986` as the current later-window ownership anchor and
+          extend the same live proof approach forward into `990` and `994`
+          before coming back to the blocked timed-input `7051` path
+        - recover a reusable later-intro savestate/seed for the `7051..7061`
+          window only when you need timed-input ownership, not generic late
+          attract ownership
 
 ## 3. Expand Into Gameplay Frames
 

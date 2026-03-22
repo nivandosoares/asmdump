@@ -151,6 +151,10 @@ python3 tools/build_mesen_visual_contract.py \
   --probe-json tools/out/visual_contract_probe_7051/td2_boot_probe.json
 ```
 
+`td2_boot_probe.json` now also preserves `trace_start_frame` and
+`trace_end_frame` in the main payload, so merged visual contracts can retain an
+exact `producerTrace.traceWindow` instead of only the per-domain frame spans.
+
 A current headless proof that uses only repo-relative prefixes is:
 
 ```sh
@@ -174,6 +178,41 @@ That proof currently yields live `vram`, `cgram`, `oam`, and `obj_state`
 producer domains. Narrower late windows can still return `write_point_trace`
 `0` hits if no writes occur there, so an empty trace is now a window-selection
 signal rather than a launcher failure.
+
+A promoted later-window proof now also exists at frame `986`:
+
+```sh
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+make -C tools mesen-design-pack MESEN_FRAME=986
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=120 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_986_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=987 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=982 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=986 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS='objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122' \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame986 \
+  tools/out/visual_contract_frame986_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_986_live/td2_boot_probe.json
+```
+
+Current reading for that `986` proof:
+
+- `tools/out/visual_contract_probe_986_live/td2_boot_probe.json` records
+  `3246` write hits with `0` drops
+- the merged contract shows:
+  - exact `producerTrace.traceWindow = 982..986`
+  - OAM writes across frames `982..986`
+  - VRAM writes at frames `984` and `986`
+  - no `CGRAM` or `OBJSEL` writes in that bounded late window
+- `tools/out/design_frame986/sprites/sprites_visible.json` reports `0`
+  visible sprites, which matches the late-overlay-cleared reading for frame
+  `986`
 
 To dump a whole intro range in one emulator run:
 

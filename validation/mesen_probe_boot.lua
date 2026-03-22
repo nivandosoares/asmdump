@@ -683,6 +683,8 @@ local function save_probe_log()
         total_frames = config.total_frames,
         screenshot_frame = config.screenshot_frame,
         save_savestate_frame = config.save_savestate_frame,
+        trace_start_frame = config.trace_start_frame,
+        trace_end_frame = config.trace_end_frame,
         trace_exec_points = config.trace_exec_points,
         exec_point_max_hits = config.exec_point_max_hits,
         exec_point_max_hits_per_point = config.exec_point_max_hits_per_point,

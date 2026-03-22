@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; registry tightening now closes `9681` as `sentinel-control` and `E91F` as `nested-invalid-marker`; active unresolved queue remains `EE7F` and `DA96` |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, and the first later-window power-on ownership follow-up (`7051`) remains locally blocked because two bounded headless probe attempts still exited `255` before emitting JSON |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frame `986` now also has a live producer-trace-backed visual contract, and the still-blocked ownership follow-up is specifically the timed-input `7051` power-on path |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -1877,6 +1877,69 @@ Current reading:
     - recover a reusable later-intro savestate/seed for the `7051..7061`
       window, or promote a cheaper later design-pack target such as `986`
       before retrying live producer-trace ownership
+
+### CP-54: Frame `986` now has a live producer-trace-backed visual contract
+
+- Promoted a cheaper later-window ownership proof before retrying the blocked
+  timed-input `7051` path:
+  - extracted a fresh raw frame dump and design pack for `986`
+  - ran a bounded live write-point trace for frames `982..986`
+  - merged that probe into a translation-facing visual contract
+- Hardened the probe/contract schema at the same time:
+  - `validation/mesen_probe_boot.lua` now writes
+    `trace_start_frame` / `trace_end_frame` into the main
+    `td2_boot_probe.json` payload, which lets merged visual contracts preserve
+    an exact `producerTrace.traceWindow`
+
+Evidence:
+
+- `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release make -C tools mesen-design-pack MESEN_FRAME=986`
+- `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=120 TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_986_live/td2_boot_probe TD2_BOOT_PROBE_TOTAL_FRAMES=987 TD2_BOOT_PROBE_TRACE_START_FRAME=982 TD2_BOOT_PROBE_TRACE_END_FRAME=986 TD2_BOOT_PROBE_TRACE_WRITE_POINTS='objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122' TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 ./validation/run_mesen_probe_boot.sh`
+- `python3 tools/build_mesen_visual_contract.py tools/out/design_frame986 tools/out/visual_contract_frame986_live_probe.json --probe-json tools/out/visual_contract_probe_986_live/td2_boot_probe.json`
+- produced artifacts:
+  - `tools/out/design_frame986/design_pack.json`
+  - `tools/out/visual_contract_probe_986_live/td2_boot_probe.json`
+  - `tools/out/visual_contract_frame986_live_probe.json`
+
+Targeted validation:
+
+- `python3 tools/compare_frames.py tools/out/intro_loop_frame_00986_frame.png tools/out/mesen_frame986/main_visible.ppm --diff-out tools/out/mesen_frame986_vs_intro986_diff.ppm`
+  - `267` mismatched pixels (`0.465611%`)
+- `python3 tools/compare_frames.py tools/out/mesen_frame986/main_visible.ppm tools/out/bank1_bootstrap_queue_986_bridgeoverride.ppm --diff-out tools/out/mesen_frame986_vs_bridgeoverride986_diff.ppm`
+  - `2` mismatched pixels (`0.003488%`)
+
+Current reading:
+
+- the cheap `986` frame target is reproducible in the promoted extractor path
+  and lands on the same practical surface as the committed bridgeoverride scene
+- the fresh design pack reports:
+  - `frame_number = 986`
+  - `bgMode = 7`
+  - `mainScreenLayers = 0x11`
+  - active visible BG layer: `bg1`
+  - visible sprite count: `0`
+- the live write-point trace records `3246` writes with `0` drops:
+  - OAM domain: `2730` writes across frames `982..986`
+    - dominant callsites: `00:824F` / `00:8257`
+  - VRAM domain: `516` writes at frames `984` and `986`
+    - dominant callsites: `00:81E5` / `00:81F2`
+- all sampled write hits in this late window still run under active main
+  callback `01:9FE5`
+- no `CGRAM` or `OBJSEL` writes were observed inside `982..986`
+- practical reading:
+  - by `986`, the visible late overlay is already gone (`0` visible sprites),
+    but OAM upload traffic is still active in the same callback family
+  - the live ownership proof now exists for a real later intro window without
+    needing the blocked timed-input `7051` path
+  - the contract hardening change is immediately useful because
+    `producerTrace.traceWindow` now carries the exact `982..986` span
+
+Next best step:
+
+- extend the same live ownership path forward into `990` and then `994`, where
+  the late OAM/visible-composition boundaries are already documented
+- keep the timed-input `7051` path parked until a reusable later-intro seed or
+  savestate exists
 
 ## Current Checkpoint Metrics
 

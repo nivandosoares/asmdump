@@ -1,0 +1,1320 @@
+{
+  "schema": "td2.visual_contract.v1",
+  "createdUtc": "2026-03-22T00:59:19.459102+00:00",
+  "source": {
+    "designPackDir": "/home/nivando-soares/asmdump/tools/out/design_frame986",
+    "designPackManifest": "/home/nivando-soares/asmdump/tools/out/design_frame986/design_pack.json",
+    "frameNumber": 986,
+    "provenancePath": null
+  },
+  "frame": {
+    "frameNumber": 986,
+    "bgMode": 7,
+    "brightness": 15,
+    "forcedBlank": false,
+    "mainScreenLayers": 17,
+    "subScreenLayers": 0,
+    "mainLayerNames": [
+      "bg1"
+    ],
+    "subLayerNames": [],
+    "mode7": {
+      "matrix": [
+        15488,
+        0,
+        0,
+        15420
+      ],
+      "centerX": 128,
+      "centerY": 112,
+      "hScroll": 0,
+      "vScroll": 8191
+    }
+  },
+  "translationSurface": {
+    "bgSourceOfTruth": "Use tilemaps/bg*_tilemap.json plus tilesets/tiles_bg*.json and raw/vram.bin.",
+    "objSourceOfTruth": "Use sprites/sprites_visible.json plus raw/oam.bin, raw/cgram.bin, and raw/ppu_state.json.",
+    "assemblyBridge": "Bind BG rows to runtime chunk provenance first; bind OBJ producers through breakpoint/write traces next."
+  },
+  "bg": {
+    "layerCount": 4,
+    "activeLayerCount": 1,
+    "layers": [
+      {
+        "name": "bg1",
+        "layer": 0,
+        "bgMode": 7,
+        "bpp": 8,
+        "active": true,
+        "enabledOnMain": true,
+        "enabledOnSub": false,
+        "state": {
+          "tilemapBaseWords": 0,
+          "chrBaseWords": 8192,
+          "doubleWidth": true,
+          "doubleHeight": false,
+          "largeTiles": false,
+          "hscroll": 0,
+          "vscroll": 1023
+        },
+        "grid": {
+          "widthTiles": 64,
+          "heightTiles": 32,
+          "tilemapBaseBytes": 0,
+          "tilemapBaseWords": 0,
+          "chrBaseWords": 8192
+        },
+        "tileUsage": {
+          "uniqueTileCount": 144,
+          "nonZeroTileCount": 143,
+          "tileIndexRanges": [
+            {
+              "start": 0,
+              "end": 3,
+              "count": 4
+            },
+            {
+              "start": 6,
+              "end": 6,
+              "count": 1
+            },
+            {
+              "start": 10,
+              "end": 18,
+              "count": 9
+            },
+            {
+              "start": 20,
+              "end": 23,
+              "count": 4
+            },
+            {
+              "start": 41,
+              "end": 41,
+              "count": 1
+            },
+            {
+              "start": 44,
+              "end": 48,
+              "count": 5
+            },
+            {
+              "start": 53,
+              "end": 55,
+              "count": 3
+            },
+            {
+              "start": 61,
+              "end": 63,
+              "count": 3
+            },
+            {
+              "start": 69,
+              "end": 121,
+              "count": 53
+            },
+            {
+              "start": 123,
+              "end": 140,
+              "count": 18
+            },
+            {
+              "start": 256,
+              "end": 256,
+              "count": 1
+            },
+            {
+              "start": 260,
+              "end": 261,
+              "count": 2
+            },
+            {
+              "start": 263,
+              "end": 265,
+              "count": 3
+            },
+            {
+              "start": 768,
+              "end": 768,
+              "count": 1
+            },
+            {
+              "start": 777,
+              "end": 777,
+              "count": 1
+            },
+            {
+              "start": 787,
+              "end": 787,
+              "count": 1
+            },
+            {
+              "start": 792,
+              "end": 808,
+              "count": 17
+            },
+            {
+              "start": 810,
+              "end": 811,
+              "count": 2
+            },
+            {
+              "start": 817,
+              "end": 820,
+              "count": 4
+            },
+            {
+              "start": 824,
+              "end": 828,
+              "count": 5
+            },
+            {
+              "start": 832,
+              "end": 836,
+              "count": 5
+            },
+            {
+              "start": 890,
+              "end": 890,
+              "count": 1
+            }
+          ],
+          "nonZeroTileIndexRanges": [
+            {
+              "start": 1,
+              "end": 3,
+              "count": 3
+            },
+            {
+              "start": 6,
+              "end": 6,
+              "count": 1
+            },
+            {
+              "start": 10,
+              "end": 18,
+              "count": 9
+            },
+            {
+              "start": 20,
+              "end": 23,
+              "count": 4
+            },
+            {
+              "start": 41,
+              "end": 41,
+              "count": 1
+            },
+            {
+              "start": 44,
+              "end": 48,
+              "count": 5
+            },
+            {
+              "start": 53,
+              "end": 55,
+              "count": 3
+            },
+            {
+              "start": 61,
+              "end": 63,
+              "count": 3
+            },
+            {
+              "start": 69,
+              "end": 121,
+              "count": 53
+            },
+            {
+              "start": 123,
+              "end": 140,
+              "count": 18
+            },
+            {
+              "start": 256,
+              "end": 256,
+              "count": 1
+            },
+            {
+              "start": 260,
+              "end": 261,
+              "count": 2
+            },
+            {
+              "start": 263,
+              "end": 265,
+              "count": 3
+            },
+            {
+              "start": 768,
+              "end": 768,
+              "count": 1
+            },
+            {
+              "start": 777,
+              "end": 777,
+              "count": 1
+            },
+            {
+              "start": 787,
+              "end": 787,
+              "count": 1
+            },
+            {
+              "start": 792,
+              "end": 808,
+              "count": 17
+            },
+            {
+              "start": 810,
+              "end": 811,
+              "count": 2
+            },
+            {
+              "start": 817,
+              "end": 820,
+              "count": 4
+            },
+            {
+              "start": 824,
+              "end": 828,
+              "count": 5
+            },
+            {
+              "start": 832,
+              "end": 836,
+              "count": 5
+            },
+            {
+              "start": 890,
+              "end": 890,
+              "count": 1
+            }
+          ],
+          "paletteIndices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "priorityCounts": {
+            "0": 2048
+          },
+          "hflipCount": 0,
+          "vflipCount": 0,
+          "topTiles": [
+            {
+              "tileIndex": 0,
+              "count": 1183
+            },
+            {
+              "tileIndex": 768,
+              "count": 482
+            },
+            {
+              "tileIndex": 256,
+              "count": 241
+            },
+            {
+              "tileIndex": 126,
+              "count": 2
+            },
+            {
+              "tileIndex": 1,
+              "count": 1
+            },
+            {
+              "tileIndex": 2,
+              "count": 1
+            },
+            {
+              "tileIndex": 3,
+              "count": 1
+            },
+            {
+              "tileIndex": 260,
+              "count": 1
+            },
+            {
+              "tileIndex": 261,
+              "count": 1
+            },
+            {
+              "tileIndex": 6,
+              "count": 1
+            },
+            {
+              "tileIndex": 263,
+              "count": 1
+            },
+            {
+              "tileIndex": 264,
+              "count": 1
+            },
+            {
+              "tileIndex": 265,
+              "count": 1
+            },
+            {
+              "tileIndex": 10,
+              "count": 1
+            },
+            {
+              "tileIndex": 11,
+              "count": 1
+            },
+            {
+              "tileIndex": 12,
+              "count": 1
+            }
+          ]
+        },
+        "chrUsage": {
+          "bytesPerTile": 64,
+          "chrBaseBytes": 16384,
+          "byteRanges": [
+            {
+              "tileStart": 0,
+              "tileEnd": 3,
+              "count": 4,
+              "byteStart": 16384,
+              "byteEndExclusive": 16640
+            },
+            {
+              "tileStart": 6,
+              "tileEnd": 6,
+              "count": 1,
+              "byteStart": 16768,
+              "byteEndExclusive": 16832
+            },
+            {
+              "tileStart": 10,
+              "tileEnd": 18,
+              "count": 9,
+              "byteStart": 17024,
+              "byteEndExclusive": 17600
+            },
+            {
+              "tileStart": 20,
+              "tileEnd": 23,
+              "count": 4,
+              "byteStart": 17664,
+              "byteEndExclusive": 17920
+            },
+            {
+              "tileStart": 41,
+              "tileEnd": 41,
+              "count": 1,
+              "byteStart": 19008,
+              "byteEndExclusive": 19072
+            },
+            {
+              "tileStart": 44,
+              "tileEnd": 48,
+              "count": 5,
+              "byteStart": 19200,
+              "byteEndExclusive": 19520
+            },
+            {
+              "tileStart": 53,
+              "tileEnd": 55,
+              "count": 3,
+              "byteStart": 19776,
+              "byteEndExclusive": 19968
+            },
+            {
+              "tileStart": 61,
+              "tileEnd": 63,
+              "count": 3,
+              "byteStart": 20288,
+              "byteEndExclusive": 20480
+            },
+            {
+              "tileStart": 69,
+              "tileEnd": 121,
+              "count": 53,
+              "byteStart": 20800,
+              "byteEndExclusive": 24192
+            },
+            {
+              "tileStart": 123,
+              "tileEnd": 140,
+              "count": 18,
+              "byteStart": 24256,
+              "byteEndExclusive": 25408
+            },
+            {
+              "tileStart": 256,
+              "tileEnd": 256,
+              "count": 1,
+              "byteStart": 32768,
+              "byteEndExclusive": 32832
+            },
+            {
+              "tileStart": 260,
+              "tileEnd": 261,
+              "count": 2,
+              "byteStart": 33024,
+              "byteEndExclusive": 33152
+            },
+            {
+              "tileStart": 263,
+              "tileEnd": 265,
+              "count": 3,
+              "byteStart": 33216,
+              "byteEndExclusive": 33408
+            },
+            {
+              "tileStart": 768,
+              "tileEnd": 768,
+              "count": 1,
+              "byteStart": 65536,
+              "byteEndExclusive": 65600
+            },
+            {
+              "tileStart": 777,
+              "tileEnd": 777,
+              "count": 1,
+              "byteStart": 66112,
+              "byteEndExclusive": 66176
+            },
+            {
+              "tileStart": 787,
+              "tileEnd": 787,
+              "count": 1,
+              "byteStart": 66752,
+              "byteEndExclusive": 66816
+            },
+            {
+              "tileStart": 792,
+              "tileEnd": 808,
+              "count": 17,
+              "byteStart": 67072,
+              "byteEndExclusive": 68160
+            },
+            {
+              "tileStart": 810,
+              "tileEnd": 811,
+              "count": 2,
+              "byteStart": 68224,
+              "byteEndExclusive": 68352
+            },
+            {
+              "tileStart": 817,
+              "tileEnd": 820,
+              "count": 4,
+              "byteStart": 68672,
+              "byteEndExclusive": 68928
+            },
+            {
+              "tileStart": 824,
+              "tileEnd": 828,
+              "count": 5,
+              "byteStart": 69120,
+              "byteEndExclusive": 69440
+            },
+            {
+              "tileStart": 832,
+              "tileEnd": 836,
+              "count": 5,
+              "byteStart": 69632,
+              "byteEndExclusive": 69952
+            },
+            {
+              "tileStart": 890,
+              "tileEnd": 890,
+              "count": 1,
+              "byteStart": 73344,
+              "byteEndExclusive": 73408
+            }
+          ]
+        }
+      },
+      {
+        "name": "bg2",
+        "layer": 1,
+        "bgMode": 7,
+        "bpp": 0,
+        "active": false,
+        "enabledOnMain": false,
+        "enabledOnSub": false,
+        "state": {
+          "tilemapBaseWords": 2048,
+          "chrBaseWords": 16384,
+          "doubleWidth": true,
+          "doubleHeight": false,
+          "largeTiles": false,
+          "hscroll": 0,
+          "vscroll": 1023
+        },
+        "grid": {
+          "widthTiles": 64,
+          "heightTiles": 32,
+          "tilemapBaseBytes": 4096,
+          "tilemapBaseWords": 2048,
+          "chrBaseWords": 16384
+        },
+        "tileUsage": {
+          "uniqueTileCount": 0,
+          "nonZeroTileCount": 0,
+          "tileIndexRanges": [],
+          "nonZeroTileIndexRanges": [],
+          "paletteIndices": [],
+          "priorityCounts": {},
+          "hflipCount": 0,
+          "vflipCount": 0,
+          "topTiles": [],
+          "note": "Layer is inactive in this frame; raw tilemap memory is not promoted as active visual usage."
+        },
+        "chrUsage": {
+          "bytesPerTile": 0,
+          "chrBaseBytes": 32768,
+          "byteRanges": []
+        }
+      },
+      {
+        "name": "bg3",
+        "layer": 2,
+        "bgMode": 7,
+        "bpp": 0,
+        "active": false,
+        "enabledOnMain": false,
+        "enabledOnSub": false,
+        "state": {
+          "tilemapBaseWords": 4096,
+          "chrBaseWords": 24576,
+          "doubleWidth": true,
+          "doubleHeight": false,
+          "largeTiles": false,
+          "hscroll": 0,
+          "vscroll": 1023
+        },
+        "grid": {
+          "widthTiles": 64,
+          "heightTiles": 32,
+          "tilemapBaseBytes": 8192,
+          "tilemapBaseWords": 4096,
+          "chrBaseWords": 24576
+        },
+        "tileUsage": {
+          "uniqueTileCount": 0,
+          "nonZeroTileCount": 0,
+          "tileIndexRanges": [],
+          "nonZeroTileIndexRanges": [],
+          "paletteIndices": [],
+          "priorityCounts": {},
+          "hflipCount": 0,
+          "vflipCount": 0,
+          "topTiles": [],
+          "note": "Layer is inactive in this frame; raw tilemap memory is not promoted as active visual usage."
+        },
+        "chrUsage": {
+          "bytesPerTile": 0,
+          "chrBaseBytes": 49152,
+          "byteRanges": []
+        }
+      },
+      {
+        "name": "bg4",
+        "layer": 3,
+        "bgMode": 7,
+        "bpp": 0,
+        "active": false,
+        "enabledOnMain": false,
+        "enabledOnSub": false,
+        "state": {
+          "tilemapBaseWords": 0,
+          "chrBaseWords": 0,
+          "doubleWidth": false,
+          "doubleHeight": false,
+          "largeTiles": false,
+          "hscroll": 0,
+          "vscroll": 1023
+        },
+        "grid": {
+          "widthTiles": 32,
+          "heightTiles": 32,
+          "tilemapBaseBytes": 0,
+          "tilemapBaseWords": 0,
+          "chrBaseWords": 0
+        },
+        "tileUsage": {
+          "uniqueTileCount": 0,
+          "nonZeroTileCount": 0,
+          "tileIndexRanges": [],
+          "nonZeroTileIndexRanges": [],
+          "paletteIndices": [],
+          "priorityCounts": {},
+          "hflipCount": 0,
+          "vflipCount": 0,
+          "topTiles": [],
+          "note": "Layer is inactive in this frame; raw tilemap memory is not promoted as active visual usage."
+        },
+        "chrUsage": {
+          "bytesPerTile": 0,
+          "chrBaseBytes": 0,
+          "byteRanges": []
+        }
+      }
+    ]
+  },
+  "obj": {
+    "enabled": true,
+    "state": {
+      "oamBaseAddress": 16384,
+      "oamAddressOffset": 4096,
+      "oamMode": 0
+    },
+    "visibleCount": 0,
+    "baseTileUsage": {
+      "tileIndexRanges": [],
+      "tileAddressRangesByBpp": {}
+    },
+    "paletteCounts": {},
+    "priorityCounts": {},
+    "sizeCounts": {},
+    "stripCandidates": [],
+    "sprites": [],
+    "translationHints": {
+      "sourceOfTruth": "OBJ is OAM-driven. Use sprites_visible.json plus raw/oam.bin, raw/cgram.bin, and raw/ppu_state.json.",
+      "tilemapNote": "Visible OBJ state is not derivable from BG tilemaps alone."
+    }
+  },
+  "provenance": {
+    "enabled": false,
+    "runtimeReference": null,
+    "chunkValidationInputs": [],
+    "summary": null
+  },
+  "producerTrace": {
+    "enabled": true,
+    "traceWindow": {
+      "startFrame": 982,
+      "endFrame": 986
+    },
+    "writePointHitCount": 3246,
+    "droppedHits": 0,
+    "domains": [
+      {
+        "domain": "oam",
+        "writeCount": 2730,
+        "frameRange": {
+          "start": 982,
+          "end": 986,
+          "frames": [
+            982,
+            983,
+            984,
+            985,
+            986
+          ]
+        },
+        "pointCounts": [
+          {
+            "id": "oamdata",
+            "count": 2720
+          },
+          {
+            "id": "oamaddl",
+            "count": 5
+          },
+          {
+            "id": "oamaddh",
+            "count": 5
+          }
+        ],
+        "callsiteCounts": [
+          {
+            "id": "00:8257",
+            "count": 2720
+          },
+          {
+            "id": "00:824F",
+            "count": 10
+          }
+        ],
+        "activeMainCallbackCounts": [
+          {
+            "id": "01:9FE5",
+            "count": 2730
+          }
+        ],
+        "activeIrqCallbackCounts": [
+          {
+            "id": "00:835F",
+            "count": 2730
+          }
+        ],
+        "sampleHits": [
+          {
+            "frame": 982,
+            "scanline": 227,
+            "pointId": "oamaddl",
+            "pointSnes": "00:2102",
+            "value": 0,
+            "cpuPcSnes": "00:824F",
+            "cpuA": 544,
+            "cpuX": 40,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 982,
+            "scanline": 227,
+            "pointId": "oamaddh",
+            "pointSnes": "00:2103",
+            "value": 0,
+            "cpuPcSnes": "00:824F",
+            "cpuA": 544,
+            "cpuX": 40,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 982,
+            "scanline": 227,
+            "pointId": "oamdata",
+            "pointSnes": "00:2104",
+            "value": 0,
+            "cpuPcSnes": "00:8257",
+            "cpuA": 514,
+            "cpuX": 40,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 982,
+            "scanline": 227,
+            "pointId": "oamdata",
+            "pointSnes": "00:2104",
+            "value": 225,
+            "cpuPcSnes": "00:8257",
+            "cpuA": 514,
+            "cpuX": 40,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 982,
+            "scanline": 227,
+            "pointId": "oamdata",
+            "pointSnes": "00:2104",
+            "value": 0,
+            "cpuPcSnes": "00:8257",
+            "cpuA": 514,
+            "cpuX": 40,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 982,
+            "scanline": 227,
+            "pointId": "oamdata",
+            "pointSnes": "00:2104",
+            "value": 0,
+            "cpuPcSnes": "00:8257",
+            "cpuA": 514,
+            "cpuX": 40,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 982,
+            "scanline": 227,
+            "pointId": "oamdata",
+            "pointSnes": "00:2104",
+            "value": 0,
+            "cpuPcSnes": "00:8257",
+            "cpuA": 514,
+            "cpuX": 40,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 982,
+            "scanline": 227,
+            "pointId": "oamdata",
+            "pointSnes": "00:2104",
+            "value": 225,
+            "cpuPcSnes": "00:8257",
+            "cpuA": 514,
+            "cpuX": 40,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 982,
+            "scanline": 227,
+            "pointId": "oamdata",
+            "pointSnes": "00:2104",
+            "value": 0,
+            "cpuPcSnes": "00:8257",
+            "cpuA": 514,
+            "cpuX": 40,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 982,
+            "scanline": 227,
+            "pointId": "oamdata",
+            "pointSnes": "00:2104",
+            "value": 0,
+            "cpuPcSnes": "00:8257",
+            "cpuA": 514,
+            "cpuX": 40,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 982,
+            "scanline": 227,
+            "pointId": "oamdata",
+            "pointSnes": "00:2104",
+            "value": 0,
+            "cpuPcSnes": "00:8257",
+            "cpuA": 514,
+            "cpuX": 40,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 982,
+            "scanline": 227,
+            "pointId": "oamdata",
+            "pointSnes": "00:2104",
+            "value": 225,
+            "cpuPcSnes": "00:8257",
+            "cpuA": 514,
+            "cpuX": 40,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 982,
+            "scanline": 227,
+            "pointId": "oamdata",
+            "pointSnes": "00:2104",
+            "value": 0,
+            "cpuPcSnes": "00:8257",
+            "cpuA": 514,
+            "cpuX": 40,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 982,
+            "scanline": 227,
+            "pointId": "oamdata",
+            "pointSnes": "00:2104",
+            "value": 0,
+            "cpuPcSnes": "00:8257",
+            "cpuA": 514,
+            "cpuX": 40,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 982,
+            "scanline": 227,
+            "pointId": "oamdata",
+            "pointSnes": "00:2104",
+            "value": 0,
+            "cpuPcSnes": "00:8257",
+            "cpuA": 514,
+            "cpuX": 40,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 982,
+            "scanline": 227,
+            "pointId": "oamdata",
+            "pointSnes": "00:2104",
+            "value": 225,
+            "cpuPcSnes": "00:8257",
+            "cpuA": 514,
+            "cpuX": 40,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          }
+        ]
+      },
+      {
+        "domain": "vram",
+        "writeCount": 516,
+        "frameRange": {
+          "start": 984,
+          "end": 986,
+          "frames": [
+            984,
+            986
+          ]
+        },
+        "pointCounts": [
+          {
+            "id": "vmdatal",
+            "count": 256
+          },
+          {
+            "id": "vmdatah",
+            "count": 256
+          },
+          {
+            "id": "vmaddl",
+            "count": 2
+          },
+          {
+            "id": "vmaddh",
+            "count": 2
+          }
+        ],
+        "callsiteCounts": [
+          {
+            "id": "00:81F2",
+            "count": 512
+          },
+          {
+            "id": "00:81E5",
+            "count": 4
+          }
+        ],
+        "activeMainCallbackCounts": [
+          {
+            "id": "01:9FE5",
+            "count": 516
+          }
+        ],
+        "activeIrqCallbackCounts": [
+          {
+            "id": "00:835F",
+            "count": 516
+          }
+        ],
+        "sampleHits": [
+          {
+            "frame": 984,
+            "scanline": 227,
+            "pointId": "vmaddl",
+            "pointSnes": "00:2116",
+            "value": 32,
+            "cpuPcSnes": "00:81E5",
+            "cpuA": 18720,
+            "cpuX": 40,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 984,
+            "scanline": 227,
+            "pointId": "vmaddh",
+            "pointSnes": "00:2117",
+            "value": 73,
+            "cpuPcSnes": "00:81E5",
+            "cpuA": 18720,
+            "cpuX": 40,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 984,
+            "scanline": 227,
+            "pointId": "vmdatal",
+            "pointSnes": "00:2118",
+            "value": 108,
+            "cpuPcSnes": "00:81F2",
+            "cpuA": 18689,
+            "cpuX": 48,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 984,
+            "scanline": 227,
+            "pointId": "vmdatah",
+            "pointSnes": "00:2119",
+            "value": 180,
+            "cpuPcSnes": "00:81F2",
+            "cpuA": 18689,
+            "cpuX": 48,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 984,
+            "scanline": 227,
+            "pointId": "vmdatal",
+            "pointSnes": "00:2118",
+            "value": 52,
+            "cpuPcSnes": "00:81F2",
+            "cpuA": 18689,
+            "cpuX": 48,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 984,
+            "scanline": 227,
+            "pointId": "vmdatah",
+            "pointSnes": "00:2119",
+            "value": 252,
+            "cpuPcSnes": "00:81F2",
+            "cpuA": 18689,
+            "cpuX": 48,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 984,
+            "scanline": 227,
+            "pointId": "vmdatal",
+            "pointSnes": "00:2118",
+            "value": 59,
+            "cpuPcSnes": "00:81F2",
+            "cpuA": 18689,
+            "cpuX": 48,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 984,
+            "scanline": 227,
+            "pointId": "vmdatah",
+            "pointSnes": "00:2119",
+            "value": 91,
+            "cpuPcSnes": "00:81F2",
+            "cpuA": 18689,
+            "cpuX": 48,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 984,
+            "scanline": 227,
+            "pointId": "vmdatal",
+            "pointSnes": "00:2118",
+            "value": 54,
+            "cpuPcSnes": "00:81F2",
+            "cpuA": 18689,
+            "cpuX": 48,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 984,
+            "scanline": 227,
+            "pointId": "vmdatah",
+            "pointSnes": "00:2119",
+            "value": 119,
+            "cpuPcSnes": "00:81F2",
+            "cpuA": 18689,
+            "cpuX": 48,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 984,
+            "scanline": 228,
+            "pointId": "vmdatal",
+            "pointSnes": "00:2118",
+            "value": 29,
+            "cpuPcSnes": "00:81F2",
+            "cpuA": 18689,
+            "cpuX": 48,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 984,
+            "scanline": 228,
+            "pointId": "vmdatah",
+            "pointSnes": "00:2119",
+            "value": 49,
+            "cpuPcSnes": "00:81F2",
+            "cpuA": 18689,
+            "cpuX": 48,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 984,
+            "scanline": 228,
+            "pointId": "vmdatal",
+            "pointSnes": "00:2118",
+            "value": 3,
+            "cpuPcSnes": "00:81F2",
+            "cpuA": 18689,
+            "cpuX": 48,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 984,
+            "scanline": 228,
+            "pointId": "vmdatah",
+            "pointSnes": "00:2119",
+            "value": 24,
+            "cpuPcSnes": "00:81F2",
+            "cpuA": 18689,
+            "cpuX": 48,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 984,
+            "scanline": 228,
+            "pointId": "vmdatal",
+            "pointSnes": "00:2118",
+            "value": 2,
+            "cpuPcSnes": "00:81F2",
+            "cpuA": 18689,
+            "cpuX": 48,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          },
+          {
+            "frame": 984,
+            "scanline": 228,
+            "pointId": "vmdatah",
+            "pointSnes": "00:2119",
+            "value": 14,
+            "cpuPcSnes": "00:81F2",
+            "cpuA": 18689,
+            "cpuX": 48,
+            "cpuY": 7,
+            "activeMainCallbackSnes": "01:9FE5",
+            "activeIrqCallbackSnes": "00:835F",
+            "bgMode": 7,
+            "mainScreenLayers": 17,
+            "subScreenLayers": 0
+          }
+        ]
+      }
+    ],
+    "sourceProbeJson": "/home/nivando-soares/asmdump/tools/out/visual_contract_probe_986_live/td2_boot_probe.json"
+  }
+}
