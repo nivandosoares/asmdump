@@ -1,6 +1,6 @@
 {
   "schema": "td2.mesen_window_compare.v1",
-  "createdUtc": "2026-03-22T15:10:28.282025+00:00",
+  "createdUtc": "2026-03-22T16:00:43.203039+00:00",
   "title": "Post-1093 continuation compare summary",
   "sourceFrameRoots": [
     "/home/nivando-soares/asmdump/tools/out/mesen_range_1102_1109_v1",
@@ -232,10 +232,157 @@
       }
     ]
   },
+  "sourceIdentity": {
+    "mainVisibleSha1Ranges": [
+      {
+        "value": "33cbccc02084fd80c80540618bb2c9dba359cb8c",
+        "startFrame": 1102,
+        "endFrame": 1102
+      },
+      {
+        "value": "d2dd42be76bee07cc76d2ffd4fb727bb6279b15b",
+        "startFrame": 1103,
+        "endFrame": 1103
+      },
+      {
+        "value": "7f858fb484e8c3bedaa4c7f339a2cf9f593e2686",
+        "startFrame": 1104,
+        "endFrame": 1104
+      },
+      {
+        "value": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+        "startFrame": 1105,
+        "endFrame": 1117
+      }
+    ],
+    "vramSha1Ranges": [
+      {
+        "value": "26efe07cea19ad1718045a140eec1452bf286b66",
+        "startFrame": 1102,
+        "endFrame": 1117
+      }
+    ],
+    "cgramSha1Ranges": [
+      {
+        "value": "41ede0856b79e52216dca5bb06a1531c5ef2f9c3",
+        "startFrame": 1102,
+        "endFrame": 1102
+      },
+      {
+        "value": "c2636ebfa9504a424bc134642448e0b587ad1528",
+        "startFrame": 1103,
+        "endFrame": 1103
+      },
+      {
+        "value": "6e1440720a20809c06f3fb5ef5b4c8b8a8b23060",
+        "startFrame": 1104,
+        "endFrame": 1104
+      },
+      {
+        "value": "d4e6a3869a92f6428232048f06b01411302e73bf",
+        "startFrame": 1105,
+        "endFrame": 1105
+      },
+      {
+        "value": "864d035c22d4b46d436c4714d905f5f5de302be3",
+        "startFrame": 1106,
+        "endFrame": 1106
+      },
+      {
+        "value": "c7bc8db4f060e8d86de367037bc18d60c303a7b1",
+        "startFrame": 1107,
+        "endFrame": 1107
+      },
+      {
+        "value": "6e24da2cdb10e58df2d31fbefe3d6bf4b82e15f0",
+        "startFrame": 1108,
+        "endFrame": 1108
+      },
+      {
+        "value": "2aff3a6e489752e291466af846fecaf02cec0cf9",
+        "startFrame": 1109,
+        "endFrame": 1109
+      },
+      {
+        "value": "3ab8d40a0006d726f28c9231eea90ede0466a1ff",
+        "startFrame": 1110,
+        "endFrame": 1110
+      },
+      {
+        "value": "6bc44302b9e6b69ffb223ee7dc7cbac1db18a9bd",
+        "startFrame": 1111,
+        "endFrame": 1111
+      },
+      {
+        "value": "80cdb9e537dae060774a9346efbe5f5391390ffc",
+        "startFrame": 1112,
+        "endFrame": 1112
+      },
+      {
+        "value": "1a9039ec41de92bd285c916beec9fd07f6b209cd",
+        "startFrame": 1113,
+        "endFrame": 1113
+      },
+      {
+        "value": "980517d5bf63f0924287c7977ba2b34d452a3d02",
+        "startFrame": 1114,
+        "endFrame": 1114
+      },
+      {
+        "value": "05a3c5b52a14f82fdd483dd27f2af41eb657204c",
+        "startFrame": 1115,
+        "endFrame": 1115
+      },
+      {
+        "value": "d4b4bd8b22dcbd0cb7a8716f24f4a866e480abb9",
+        "startFrame": 1116,
+        "endFrame": 1116
+      },
+      {
+        "value": "4935eb6ad851354dc213a4cfbbcfbf434cc8a1ea",
+        "startFrame": 1117,
+        "endFrame": 1117
+      }
+    ],
+    "oamSha1Ranges": [
+      {
+        "value": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+        "startFrame": 1102,
+        "endFrame": 1117
+      }
+    ],
+    "ppuStateSha1Ranges": [
+      {
+        "value": "50f15ed2baf18a0b9b2b90b773f4308cfa4b0083",
+        "startFrame": 1102,
+        "endFrame": 1102
+      },
+      {
+        "value": "8d24b3f334174846d43fbdbce066d86f34bcd6ff",
+        "startFrame": 1103,
+        "endFrame": 1103
+      },
+      {
+        "value": "e260cef7ee32625d7b308ed8f4df05f5d266ee63",
+        "startFrame": 1104,
+        "endFrame": 1104
+      },
+      {
+        "value": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
+        "startFrame": 1105,
+        "endFrame": 1117
+      }
+    ]
+  },
   "frames": [
     {
       "frame": 1102,
       "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1102_1109_v1/frame_01102",
+      "mainVisibleSha1": "33cbccc02084fd80c80540618bb2c9dba359cb8c",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "41ede0856b79e52216dca5bb06a1531c5ef2f9c3",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "50f15ed2baf18a0b9b2b90b773f4308cfa4b0083",
       "mainSize": {
         "width": 256,
         "height": 239
@@ -277,6 +424,11 @@
     {
       "frame": 1103,
       "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1102_1109_v1/frame_01103",
+      "mainVisibleSha1": "d2dd42be76bee07cc76d2ffd4fb727bb6279b15b",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "c2636ebfa9504a424bc134642448e0b587ad1528",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "8d24b3f334174846d43fbdbce066d86f34bcd6ff",
       "mainSize": {
         "width": 256,
         "height": 239
@@ -318,6 +470,11 @@
     {
       "frame": 1104,
       "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1102_1109_v1/frame_01104",
+      "mainVisibleSha1": "7f858fb484e8c3bedaa4c7f339a2cf9f593e2686",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "6e1440720a20809c06f3fb5ef5b4c8b8a8b23060",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "e260cef7ee32625d7b308ed8f4df05f5d266ee63",
       "mainSize": {
         "width": 256,
         "height": 239
@@ -359,6 +516,11 @@
     {
       "frame": 1105,
       "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1102_1109_v1/frame_01105",
+      "mainVisibleSha1": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "d4e6a3869a92f6428232048f06b01411302e73bf",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
       "mainSize": {
         "width": 256,
         "height": 239
@@ -400,6 +562,11 @@
     {
       "frame": 1106,
       "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1102_1109_v1/frame_01106",
+      "mainVisibleSha1": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "864d035c22d4b46d436c4714d905f5f5de302be3",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
       "mainSize": {
         "width": 256,
         "height": 239
@@ -441,6 +608,11 @@
     {
       "frame": 1107,
       "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1102_1109_v1/frame_01107",
+      "mainVisibleSha1": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "c7bc8db4f060e8d86de367037bc18d60c303a7b1",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
       "mainSize": {
         "width": 256,
         "height": 239
@@ -482,6 +654,11 @@
     {
       "frame": 1108,
       "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1102_1109_v1/frame_01108",
+      "mainVisibleSha1": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "6e24da2cdb10e58df2d31fbefe3d6bf4b82e15f0",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
       "mainSize": {
         "width": 256,
         "height": 239
@@ -523,6 +700,11 @@
     {
       "frame": 1109,
       "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1102_1109_v1/frame_01109",
+      "mainVisibleSha1": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "2aff3a6e489752e291466af846fecaf02cec0cf9",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
       "mainSize": {
         "width": 256,
         "height": 239
@@ -564,6 +746,11 @@
     {
       "frame": 1110,
       "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1110_1117_v1/frame_01110",
+      "mainVisibleSha1": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "3ab8d40a0006d726f28c9231eea90ede0466a1ff",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
       "mainSize": {
         "width": 256,
         "height": 239
@@ -605,6 +792,11 @@
     {
       "frame": 1111,
       "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1110_1117_v1/frame_01111",
+      "mainVisibleSha1": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "6bc44302b9e6b69ffb223ee7dc7cbac1db18a9bd",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
       "mainSize": {
         "width": 256,
         "height": 239
@@ -646,6 +838,11 @@
     {
       "frame": 1112,
       "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1110_1117_v1/frame_01112",
+      "mainVisibleSha1": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "80cdb9e537dae060774a9346efbe5f5391390ffc",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
       "mainSize": {
         "width": 256,
         "height": 239
@@ -687,6 +884,11 @@
     {
       "frame": 1113,
       "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1110_1117_v1/frame_01113",
+      "mainVisibleSha1": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "1a9039ec41de92bd285c916beec9fd07f6b209cd",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
       "mainSize": {
         "width": 256,
         "height": 239
@@ -728,6 +930,11 @@
     {
       "frame": 1114,
       "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1110_1117_v1/frame_01114",
+      "mainVisibleSha1": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "980517d5bf63f0924287c7977ba2b34d452a3d02",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
       "mainSize": {
         "width": 256,
         "height": 239
@@ -767,6 +974,11 @@
     {
       "frame": 1115,
       "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1110_1117_v1/frame_01115",
+      "mainVisibleSha1": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "05a3c5b52a14f82fdd483dd27f2af41eb657204c",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
       "mainSize": {
         "width": 256,
         "height": 239
@@ -806,6 +1018,11 @@
     {
       "frame": 1116,
       "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1110_1117_v1/frame_01116",
+      "mainVisibleSha1": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "d4b4bd8b22dcbd0cb7a8716f24f4a866e480abb9",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
       "mainSize": {
         "width": 256,
         "height": 239
@@ -845,6 +1062,11 @@
     {
       "frame": 1117,
       "frameDir": "/home/nivando-soares/asmdump/tools/out/mesen_range_1110_1117_v1/frame_01117",
+      "mainVisibleSha1": "55e5f828bfe4010ca350bb7761d30ae185ec200c",
+      "vramSha1": "26efe07cea19ad1718045a140eec1452bf286b66",
+      "cgramSha1": "4935eb6ad851354dc213a4cfbbcfbf434cc8a1ea",
+      "oamSha1": "51f32729ffc1fec93be0c3a97ae66a0f27947418",
+      "ppuStateSha1": "a2c81c1d8c35bc47705b19acdad48f905c21bab3",
       "mainSize": {
         "width": 256,
         "height": 239

@@ -3194,6 +3194,16 @@ Current reading:
   - same diff-mask hash
   - same diff payload hash
   - same bounding box `24,68 -> 232,138`
+- the same compare artifact now also proves that from `1105..1117`:
+  - `main_visible.ppm` is byte-identical
+  - `vram.bin` is byte-identical
+  - `oam.bin` is byte-identical
+  - `ppu_state.json` is byte-identical
+  - only `cgram.bin` keeps changing frame to frame
+- canonical frame-`1105` object checks now read:
+  - `mode7-ppu`: `2698` mismatched pixels
+  - `simple`: `2698`
+  - no-`OAM`: `9717`
 
 Practical reading:
 
@@ -3203,6 +3213,8 @@ Practical reading:
   renderer/composition plateau shared by `1105..1117`
 - the `1114` `OAM DMA` shutdown is now proven not to be the cause of that
   plateau
+- the remaining narrowing now points away from an OBJ-renderer fork and toward
+  fixed BG/composition/color-math semantics inside one canonical static scene
 
 ## Current Checkpoint Metrics
 

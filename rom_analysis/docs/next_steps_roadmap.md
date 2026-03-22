@@ -868,13 +868,22 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
           - same diff-mask hash
           - same diff payload hash
           - same bounding box `24,68 -> 232,138`
+        - the same compare artifact now also proves the plateau is driven by
+          one canonical extracted scene state from `1105..1117`:
+          - `main_visible.ppm`, `vram.bin`, `oam.bin`, and `ppu_state.json`
+            are byte-identical from `1105..1117`
+          - only `cgram.bin` continues to change frame to frame
+        - canonical frame-`1105` object sanity checks now show:
+          - current `mode7-ppu` render: `2698` mismatched pixels
+          - `simple` OBJ render: `2698`
+          - no-`OAM` render: `9717`
       - next best step:
         - keep `7051` parked
         - stop chasing new ownership forks inside `1105..1117`
         - treat the static `2698`-pixel plateau as the real Lane 2 frontier
-        - investigate renderer/composition semantics that survive unchanged
-          across both sides of the `1114` DMA shutdown and reproduce the fixed
-          diff box `24,68 -> 232,138`
+        - investigate fixed BG/composition/color-math semantics that survive
+          unchanged across both sides of the `1114` DMA shutdown and reproduce
+          the fixed diff box `24,68 -> 232,138`
 
 ## 3. Expand Into Gameplay Frames
 

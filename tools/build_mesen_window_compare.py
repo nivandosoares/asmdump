@@ -125,6 +125,12 @@ def analyze_mismatch(expected: bytes, actual: bytes, width: int) -> dict:
     }
 
 
+def sha1_file(path: Path | None) -> str | None:
+    if path is None or not path.is_file():
+        return None
+    return hashlib.sha1(path.read_bytes()).hexdigest()
+
+
 def crop_ppm_rows(path: Path, row_start: int, height: int) -> tuple[int, int, bytes]:
     width, full_height, pixels = load_ppm(path)
     if row_start < 0 or height < 0 or (row_start + height) > full_height:
@@ -295,6 +301,9 @@ def main() -> int:
             visible_path = frame_dir / "main_visible.ppm"
             state_path = frame_dir / "ppu_state.json"
             visible_state_path = frame_dir / "ppu_state_visible.json"
+            vram_path = frame_dir / "vram.bin"
+            cgram_path = frame_dir / "cgram.bin"
+            oam_path = frame_dir / "oam.bin"
 
             main_width, main_height, _ = load_ppm(main_path)
             visible_width, visible_height, visible_pixels = load_ppm(visible_path)
@@ -331,6 +340,11 @@ def main() -> int:
                 {
                     "frame": frame,
                     "frameDir": str(frame_dir),
+                    "mainVisibleSha1": sha1_file(visible_path),
+                    "vramSha1": sha1_file(vram_path),
+                    "cgramSha1": sha1_file(cgram_path),
+                    "oamSha1": sha1_file(oam_path),
+                    "ppuStateSha1": sha1_file(state_path),
                     "mainSize": {"width": main_width, "height": main_height},
                     "visibleSize": {"width": visible_width, "height": visible_height},
                     "topCropMismatch": top_crop_mismatch,
@@ -418,6 +432,13 @@ def main() -> int:
                 ],
                 "baseRenderDiffBBoxKey",
             ),
+        },
+        "sourceIdentity": {
+            "mainVisibleSha1Ranges": collapse_value_ranges(rows, "mainVisibleSha1"),
+            "vramSha1Ranges": collapse_value_ranges(rows, "vramSha1"),
+            "cgramSha1Ranges": collapse_value_ranges(rows, "cgramSha1"),
+            "oamSha1Ranges": collapse_value_ranges(rows, "oamSha1"),
+            "ppuStateSha1Ranges": collapse_value_ranges(rows, "ppuStateSha1"),
         },
         "frames": rows,
     }
