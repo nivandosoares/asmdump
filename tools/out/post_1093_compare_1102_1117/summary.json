@@ -1,6 +1,6 @@
 {
   "schema": "td2.mesen_window_compare.v1",
-  "createdUtc": "2026-03-22T15:03:41.847052+00:00",
+  "createdUtc": "2026-03-22T15:10:28.282025+00:00",
   "title": "Post-1093 continuation compare summary",
   "sourceFrameRoots": [
     "/home/nivando-soares/asmdump/tools/out/mesen_range_1102_1109_v1",
@@ -152,6 +152,86 @@
       }
     ]
   },
+  "baseRenderDiffIdentity": {
+    "distinctMaskSha1": [
+      "4c828a8298adde64796d971fcf63799f1a3c565b",
+      "4f95ad0a5d2391a551e561ec8200bdc10430b1e9",
+      "681cd8d4102ddbaef8baf25db205c317c54de5d0",
+      "8b3c3e21be575f5fd356cccc4f780917352c83f2"
+    ],
+    "distinctDiffSha1": [
+      "546e11fe1b086753af4a8b276adaf2a5c5fefe08",
+      "93f81bb7ede36633d41beaf60e295825ee720388",
+      "9ee73d9fced1f41d62bc129f521f490c0a4e1dd7",
+      "c71230ac8b2f49179412e3f625e2aa8e7cb52b5d"
+    ],
+    "maskSha1Ranges": [
+      {
+        "value": "681cd8d4102ddbaef8baf25db205c317c54de5d0",
+        "startFrame": 1102,
+        "endFrame": 1102
+      },
+      {
+        "value": "4f95ad0a5d2391a551e561ec8200bdc10430b1e9",
+        "startFrame": 1103,
+        "endFrame": 1103
+      },
+      {
+        "value": "4c828a8298adde64796d971fcf63799f1a3c565b",
+        "startFrame": 1104,
+        "endFrame": 1104
+      },
+      {
+        "value": "8b3c3e21be575f5fd356cccc4f780917352c83f2",
+        "startFrame": 1105,
+        "endFrame": 1117
+      }
+    ],
+    "diffSha1Ranges": [
+      {
+        "value": "9ee73d9fced1f41d62bc129f521f490c0a4e1dd7",
+        "startFrame": 1102,
+        "endFrame": 1102
+      },
+      {
+        "value": "546e11fe1b086753af4a8b276adaf2a5c5fefe08",
+        "startFrame": 1103,
+        "endFrame": 1103
+      },
+      {
+        "value": "93f81bb7ede36633d41beaf60e295825ee720388",
+        "startFrame": 1104,
+        "endFrame": 1104
+      },
+      {
+        "value": "c71230ac8b2f49179412e3f625e2aa8e7cb52b5d",
+        "startFrame": 1105,
+        "endFrame": 1117
+      }
+    ],
+    "bboxRanges": [
+      {
+        "value": "87,90,169,126",
+        "startFrame": 1102,
+        "endFrame": 1102
+      },
+      {
+        "value": "76,90,180,126",
+        "startFrame": 1103,
+        "endFrame": 1103
+      },
+      {
+        "value": "59,68,197,138",
+        "startFrame": 1104,
+        "endFrame": 1104
+      },
+      {
+        "value": "24,68,232,138",
+        "startFrame": 1105,
+        "endFrame": 1117
+      }
+    ]
+  },
   "frames": [
     {
       "frame": 1102,
@@ -170,6 +250,14 @@
       "bottomCropRatio": 0.25985281808035715,
       "baseRenderMismatch": 838,
       "baseRenderRatio": 0.014613560267857142,
+      "baseRenderDiffBBox": {
+        "x0": 87,
+        "y0": 90,
+        "x1": 169,
+        "y1": 126
+      },
+      "baseRenderDiffMaskSha1": "681cd8d4102ddbaef8baf25db205c317c54de5d0",
+      "baseRenderDiffSha1": "9ee73d9fced1f41d62bc129f521f490c0a4e1dd7",
       "visibleRenderMismatch": 6082,
       "visibleRenderRatio": 0.10606166294642858,
       "baseStateMatrix0": 640,
@@ -203,6 +291,14 @@
       "bottomCropRatio": 0.2685546875,
       "baseRenderMismatch": 1061,
       "baseRenderRatio": 0.018502371651785716,
+      "baseRenderDiffBBox": {
+        "x0": 76,
+        "y0": 90,
+        "x1": 180,
+        "y1": 126
+      },
+      "baseRenderDiffMaskSha1": "4f95ad0a5d2391a551e561ec8200bdc10430b1e9",
+      "baseRenderDiffSha1": "546e11fe1b086753af4a8b276adaf2a5c5fefe08",
       "visibleRenderMismatch": 5958,
       "visibleRenderRatio": 0.10389927455357142,
       "baseStateMatrix0": 512,
@@ -236,6 +332,14 @@
       "bottomCropRatio": 0.32186453683035715,
       "baseRenderMismatch": 1798,
       "baseRenderRatio": 0.03135463169642857,
+      "baseRenderDiffBBox": {
+        "x0": 59,
+        "y0": 68,
+        "x1": 197,
+        "y1": 138
+      },
+      "baseRenderDiffMaskSha1": "4c828a8298adde64796d971fcf63799f1a3c565b",
+      "baseRenderDiffSha1": "93f81bb7ede36633d41beaf60e295825ee720388",
       "visibleRenderMismatch": 6292,
       "visibleRenderRatio": 0.10972377232142858,
       "baseStateMatrix0": 384,
@@ -269,6 +373,14 @@
       "bottomCropRatio": 0.37144252232142855,
       "baseRenderMismatch": 2698,
       "baseRenderRatio": 0.04704938616071429,
+      "baseRenderDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      },
+      "baseRenderDiffMaskSha1": "8b3c3e21be575f5fd356cccc4f780917352c83f2",
+      "baseRenderDiffSha1": "c71230ac8b2f49179412e3f625e2aa8e7cb52b5d",
       "visibleRenderMismatch": 2698,
       "visibleRenderRatio": 0.04704938616071429,
       "baseStateMatrix0": 256,
@@ -302,6 +414,14 @@
       "bottomCropRatio": 0.37144252232142855,
       "baseRenderMismatch": 2698,
       "baseRenderRatio": 0.04704938616071429,
+      "baseRenderDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      },
+      "baseRenderDiffMaskSha1": "8b3c3e21be575f5fd356cccc4f780917352c83f2",
+      "baseRenderDiffSha1": "c71230ac8b2f49179412e3f625e2aa8e7cb52b5d",
       "visibleRenderMismatch": 2698,
       "visibleRenderRatio": 0.04704938616071429,
       "baseStateMatrix0": 256,
@@ -335,6 +455,14 @@
       "bottomCropRatio": 0.37144252232142855,
       "baseRenderMismatch": 2698,
       "baseRenderRatio": 0.04704938616071429,
+      "baseRenderDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      },
+      "baseRenderDiffMaskSha1": "8b3c3e21be575f5fd356cccc4f780917352c83f2",
+      "baseRenderDiffSha1": "c71230ac8b2f49179412e3f625e2aa8e7cb52b5d",
       "visibleRenderMismatch": 2698,
       "visibleRenderRatio": 0.04704938616071429,
       "baseStateMatrix0": 256,
@@ -368,6 +496,14 @@
       "bottomCropRatio": 0.37144252232142855,
       "baseRenderMismatch": 2698,
       "baseRenderRatio": 0.04704938616071429,
+      "baseRenderDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      },
+      "baseRenderDiffMaskSha1": "8b3c3e21be575f5fd356cccc4f780917352c83f2",
+      "baseRenderDiffSha1": "c71230ac8b2f49179412e3f625e2aa8e7cb52b5d",
       "visibleRenderMismatch": 2698,
       "visibleRenderRatio": 0.04704938616071429,
       "baseStateMatrix0": 256,
@@ -401,6 +537,14 @@
       "bottomCropRatio": 0.37144252232142855,
       "baseRenderMismatch": 2698,
       "baseRenderRatio": 0.04704938616071429,
+      "baseRenderDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      },
+      "baseRenderDiffMaskSha1": "8b3c3e21be575f5fd356cccc4f780917352c83f2",
+      "baseRenderDiffSha1": "c71230ac8b2f49179412e3f625e2aa8e7cb52b5d",
       "visibleRenderMismatch": 2698,
       "visibleRenderRatio": 0.04704938616071429,
       "baseStateMatrix0": 256,
@@ -434,6 +578,14 @@
       "bottomCropRatio": 0.37144252232142855,
       "baseRenderMismatch": 2698,
       "baseRenderRatio": 0.04704938616071429,
+      "baseRenderDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      },
+      "baseRenderDiffMaskSha1": "8b3c3e21be575f5fd356cccc4f780917352c83f2",
+      "baseRenderDiffSha1": "c71230ac8b2f49179412e3f625e2aa8e7cb52b5d",
       "visibleRenderMismatch": 2698,
       "visibleRenderRatio": 0.04704938616071429,
       "baseStateMatrix0": 256,
@@ -467,6 +619,14 @@
       "bottomCropRatio": 0.37144252232142855,
       "baseRenderMismatch": 2698,
       "baseRenderRatio": 0.04704938616071429,
+      "baseRenderDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      },
+      "baseRenderDiffMaskSha1": "8b3c3e21be575f5fd356cccc4f780917352c83f2",
+      "baseRenderDiffSha1": "c71230ac8b2f49179412e3f625e2aa8e7cb52b5d",
       "visibleRenderMismatch": 2698,
       "visibleRenderRatio": 0.04704938616071429,
       "baseStateMatrix0": 256,
@@ -500,6 +660,14 @@
       "bottomCropRatio": 0.37144252232142855,
       "baseRenderMismatch": 2698,
       "baseRenderRatio": 0.04704938616071429,
+      "baseRenderDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      },
+      "baseRenderDiffMaskSha1": "8b3c3e21be575f5fd356cccc4f780917352c83f2",
+      "baseRenderDiffSha1": "c71230ac8b2f49179412e3f625e2aa8e7cb52b5d",
       "visibleRenderMismatch": 2698,
       "visibleRenderRatio": 0.04704938616071429,
       "baseStateMatrix0": 256,
@@ -533,6 +701,14 @@
       "bottomCropRatio": 0.37144252232142855,
       "baseRenderMismatch": 2698,
       "baseRenderRatio": 0.04704938616071429,
+      "baseRenderDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      },
+      "baseRenderDiffMaskSha1": "8b3c3e21be575f5fd356cccc4f780917352c83f2",
+      "baseRenderDiffSha1": "c71230ac8b2f49179412e3f625e2aa8e7cb52b5d",
       "visibleRenderMismatch": 2698,
       "visibleRenderRatio": 0.04704938616071429,
       "baseStateMatrix0": 256,
@@ -566,6 +742,14 @@
       "bottomCropRatio": 0.37144252232142855,
       "baseRenderMismatch": 2698,
       "baseRenderRatio": 0.04704938616071429,
+      "baseRenderDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      },
+      "baseRenderDiffMaskSha1": "8b3c3e21be575f5fd356cccc4f780917352c83f2",
+      "baseRenderDiffSha1": "c71230ac8b2f49179412e3f625e2aa8e7cb52b5d",
       "visibleRenderMismatch": 2698,
       "visibleRenderRatio": 0.04704938616071429,
       "baseStateMatrix0": 256,
@@ -597,6 +781,14 @@
       "bottomCropRatio": 0.37144252232142855,
       "baseRenderMismatch": 2698,
       "baseRenderRatio": 0.04704938616071429,
+      "baseRenderDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      },
+      "baseRenderDiffMaskSha1": "8b3c3e21be575f5fd356cccc4f780917352c83f2",
+      "baseRenderDiffSha1": "c71230ac8b2f49179412e3f625e2aa8e7cb52b5d",
       "visibleRenderMismatch": 2698,
       "visibleRenderRatio": 0.04704938616071429,
       "baseStateMatrix0": 256,
@@ -628,6 +820,14 @@
       "bottomCropRatio": 0.37144252232142855,
       "baseRenderMismatch": 2698,
       "baseRenderRatio": 0.04704938616071429,
+      "baseRenderDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      },
+      "baseRenderDiffMaskSha1": "8b3c3e21be575f5fd356cccc4f780917352c83f2",
+      "baseRenderDiffSha1": "c71230ac8b2f49179412e3f625e2aa8e7cb52b5d",
       "visibleRenderMismatch": 2698,
       "visibleRenderRatio": 0.04704938616071429,
       "baseStateMatrix0": 256,
@@ -659,6 +859,14 @@
       "bottomCropRatio": 0.37144252232142855,
       "baseRenderMismatch": 2698,
       "baseRenderRatio": 0.04704938616071429,
+      "baseRenderDiffBBox": {
+        "x0": 24,
+        "y0": 68,
+        "x1": 232,
+        "y1": 138
+      },
+      "baseRenderDiffMaskSha1": "8b3c3e21be575f5fd356cccc4f780917352c83f2",
+      "baseRenderDiffSha1": "c71230ac8b2f49179412e3f625e2aa8e7cb52b5d",
       "visibleRenderMismatch": 2698,
       "visibleRenderRatio": 0.04704938616071429,
       "baseStateMatrix0": 256,

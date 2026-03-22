@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import hashlib
 import json
 import re
 import subprocess
@@ -89,6 +90,41 @@ def mismatch_from_buffers(expected: bytes, actual: bytes) -> tuple[int, float]:
     return mismatches, ratio
 
 
+def analyze_mismatch(expected: bytes, actual: bytes, width: int) -> dict:
+    result = compare_images(expected, actual)
+    pixels = int(result["pixel_count"])
+    mismatches = int(result["mismatch_pixels"])
+    ratio = (mismatches / pixels) if pixels else 0.0
+    diff_rgb = result["diff_rgb"]
+    xs: list[int] = []
+    ys: list[int] = []
+    mask = bytearray()
+    for offset in range(0, len(diff_rgb), 3):
+        pixel_index = offset // 3
+        x = pixel_index % width
+        y = pixel_index // width
+        mismatch = 1 if (diff_rgb[offset] or diff_rgb[offset + 1] or diff_rgb[offset + 2]) else 0
+        mask.append(mismatch)
+        if mismatch:
+            xs.append(x)
+            ys.append(y)
+    bbox = None
+    if xs and ys:
+        bbox = {
+            "x0": min(xs),
+            "y0": min(ys),
+            "x1": max(xs),
+            "y1": max(ys),
+        }
+    return {
+        "mismatchPixels": mismatches,
+        "mismatchRatio": ratio,
+        "bbox": bbox,
+        "maskSha1": hashlib.sha1(bytes(mask)).hexdigest(),
+        "diffSha1": hashlib.sha1(diff_rgb).hexdigest(),
+    }
+
+
 def crop_ppm_rows(path: Path, row_start: int, height: int) -> tuple[int, int, bytes]:
     width, full_height, pixels = load_ppm(path)
     if row_start < 0 or height < 0 or (row_start + height) > full_height:
@@ -157,6 +193,18 @@ def collapse_value_ranges(rows: list[dict], key: str) -> list[dict]:
         end = frame
     ranges.append({"value": current, "startFrame": start, "endFrame": end})
     return ranges
+
+
+def normalize_bbox_key(value: object) -> str | None:
+    if not isinstance(value, dict):
+        return None
+    x0 = value.get("x0")
+    y0 = value.get("y0")
+    x1 = value.get("x1")
+    y1 = value.get("y1")
+    if not all(isinstance(item, int) for item in (x0, y0, x1, y1)):
+        return None
+    return f"{x0},{y0},{x1},{y1}"
 
 
 def format_ratio(value: float | None) -> str:
@@ -259,7 +307,9 @@ def main() -> int:
             base_render_path = temp_root / f"frame_{frame:05d}_base.ppm"
             render_frame(render_script, frame_dir, state_path, base_render_path, args.obj_renderer)
             _, _, base_render_pixels = load_ppm(base_render_path)
-            base_render_mismatch, base_render_ratio = mismatch_from_buffers(visible_pixels, base_render_pixels)
+            base_render_analysis = analyze_mismatch(visible_pixels, base_render_pixels, visible_width)
+            base_render_mismatch = base_render_analysis["mismatchPixels"]
+            base_render_ratio = base_render_analysis["mismatchRatio"]
 
             visible_render_mismatch = None
             visible_render_ratio = None
@@ -289,6 +339,9 @@ def main() -> int:
                     "bottomCropRatio": bottom_crop_ratio,
                     "baseRenderMismatch": base_render_mismatch,
                     "baseRenderRatio": base_render_ratio,
+                    "baseRenderDiffBBox": base_render_analysis["bbox"],
+                    "baseRenderDiffMaskSha1": base_render_analysis["maskSha1"],
+                    "baseRenderDiffSha1": base_render_analysis["diffSha1"],
                     "visibleRenderMismatch": visible_render_mismatch,
                     "visibleRenderRatio": visible_render_ratio,
                     "baseStateMatrix0": state_json.get("ppu.mode7.matrix[0]"),
@@ -349,6 +402,22 @@ def main() -> int:
             "dmaEventCountRanges": collapse_value_ranges(rows, "activityDmaEventCount"),
             "mode7EventCountRanges": collapse_value_ranges(rows, "activityMode7EventCount"),
             "mode7WriteCountRanges": collapse_value_ranges(rows, "activityMode7WriteCount"),
+        },
+        "baseRenderDiffIdentity": {
+            "distinctMaskSha1": sorted({row["baseRenderDiffMaskSha1"] for row in rows}),
+            "distinctDiffSha1": sorted({row["baseRenderDiffSha1"] for row in rows}),
+            "maskSha1Ranges": collapse_value_ranges(rows, "baseRenderDiffMaskSha1"),
+            "diffSha1Ranges": collapse_value_ranges(rows, "baseRenderDiffSha1"),
+            "bboxRanges": collapse_value_ranges(
+                [
+                    {
+                        **row,
+                        "baseRenderDiffBBoxKey": normalize_bbox_key(row.get("baseRenderDiffBBox")),
+                    }
+                    for row in rows
+                ],
+                "baseRenderDiffBBoxKey",
+            ),
         },
         "frames": rows,
     }

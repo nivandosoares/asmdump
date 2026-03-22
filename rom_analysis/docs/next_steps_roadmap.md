@@ -10,7 +10,7 @@ Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
 | Roadmap lane | Status | Current reading |
 |---|---|---|
 | 1. Consolidate `67FB` coverage | in progress | Decoder + runtime tracing + consolidated registry + matrix v1/v2/v3/v5/v6/v7/v10a/v10b/v11/v11b/v12/v12b/v13/v14 sweeps are done; registry tightening now demotes `9681` to `sentinel-control` and `E91F` to `nested-invalid-marker`, leaving active unresolved queue (`EE7F`, `DA96`). |
-| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry, the visual-contract builders now separate BG/CHR state from OBJ/OAM state with optional provenance binding, producer-side write-breakpoint summaries now also have real later-window proofs at `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now shows `1094..1101` `main_visible.ppm` is exactly the top `224` lines of `main.ppm` while swapping only visible-scanline `ppu.mode7.matrix[0]/[3]` values worsens the render mismatch from `177..574` to `362..5930`, a new active-trace builder now turns `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract range builders now also merge that activity layer directly, and the new `1102..1117` compare summary proves `main_visible.ppm` stays the top crop of `main.ppm`, the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, the visible-state `Mode 7` disagreement only survives `1102..1104`, and the remaining render gap plateaus at `2698` mismatched pixels from `1105..1117` even after `OAM DMA` shuts off at `1114`, so the current late-attract frontier is now that stable renderer/composition plateau rather than another hidden upload or callback fork. |
+| 2. Tilemap-to-ROM provenance | in progress | Contiguous provenance still covers `1086..1117`; the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061` via the reopened timed-input bridge, `7055` still diverges from `7051` in visible-sprite/OAM composition so the gain is tilemap-only, not full-scene carry, the visual-contract builders now separate BG/CHR state from OBJ/OAM state with optional provenance binding, producer-side write-breakpoint summaries now also have real later-window proofs at `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now shows `1094..1101` `main_visible.ppm` is exactly the top `224` lines of `main.ppm` while swapping only visible-scanline `ppu.mode7.matrix[0]/[3]` values worsens the render mismatch from `177..574` to `362..5930`, a new active-trace builder now turns `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract range builders now also merge that activity layer directly, and the new `1102..1117` compare summary proves `main_visible.ppm` stays the top crop of `main.ppm`, the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, the visible-state `Mode 7` disagreement only survives `1102..1104`, and the remaining render gap plateaus at `2698` mismatched pixels from `1105..1117` even after `OAM DMA` shuts off at `1114`; the updated compare artifact now also proves that `1105..1117` gap is the exact same diff mask and exact same diff payload inside one shared box (`24,68 -> 232,138`), so the current late-attract frontier is a static renderer/composition plateau rather than another hidden upload or callback fork. |
 | 3. Gameplay-frame expansion | in progress | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty. |
 | 4. Bank API contracts | not started | Baseline docs exist; callback/API contracts for bank 30/10/11 are not yet mapped to completion. |
 
@@ -863,12 +863,18 @@ Goal: tie frame-visible tilemap entries back to ROM/chunk origin.
           and then converges by `1105`
         - the remaining renderer gap stabilizes at `2698` mismatched pixels for
           every frame `1105..1117`
+        - the updated compare artifact now proves that plateau is spatially and
+          byte-wise identical from `1105..1117`:
+          - same diff-mask hash
+          - same diff payload hash
+          - same bounding box `24,68 -> 232,138`
       - next best step:
         - keep `7051` parked
         - stop chasing new ownership forks inside `1105..1117`
-        - treat the stable `2698`-pixel plateau as the real Lane 2 frontier
+        - treat the static `2698`-pixel plateau as the real Lane 2 frontier
         - investigate renderer/composition semantics that survive unchanged
-          across both sides of the `1114` DMA shutdown
+          across both sides of the `1114` DMA shutdown and reproduce the fixed
+          diff box `24,68 -> 232,138`
 
 ## 3. Expand Into Gameplay Frames
 

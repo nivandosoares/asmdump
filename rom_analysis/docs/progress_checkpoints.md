@@ -3189,12 +3189,17 @@ Current reading:
   (`matrix[0]/matrix[3] = 256/257`)
 - the remaining renderer gap is now one stable plateau:
   - `1105..1117` -> `2698` mismatched pixels against `main_visible.ppm`
+- the updated compare summary now proves that plateau is exactly the same
+  spatial/content diff on every frame `1105..1117`:
+  - same diff-mask hash
+  - same diff payload hash
+  - same bounding box `24,68 -> 232,138`
 
 Practical reading:
 
 - the late `00:8029` continuation no longer looks like an ownership or upload
   mystery
-- the best current Lane 2 frontier is the stable `2698`-pixel
+- the best current Lane 2 frontier is the static `2698`-pixel
   renderer/composition plateau shared by `1105..1117`
 - the `1114` `OAM DMA` shutdown is now proven not to be the cause of that
   plateau
