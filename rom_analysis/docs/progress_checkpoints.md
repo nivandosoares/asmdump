@@ -38,6 +38,27 @@ next gate needed to advance.
 
 ## Completed Checkpoints
 
+### CP-12: Experimental Mesen lab backend MVP pass
+
+- Added an off-plan backend runner in the local `Mesen2` tree:
+  - `UI/Utilities/LabRunner.cs`
+- Added repo-side launcher:
+  - `validation/run_mesen_lab_backend.sh`
+- Added architecture note:
+  - `rom_analysis/docs/mesen_instrumented_backend_architecture.md`
+
+Current state:
+
+- source-mapped architecture and CLI plan are documented
+- the first SNES-only vertical slice exists in code
+- savestate probing verifies `.mesen-config/Mesen2/SaveStates/game_11.mss`
+  starts at frame `18030`
+- the first exact-range runtime test exposed a real frame-boundary mismatch in
+  the debugger-stepping contract (`expected 18031, got 18030`)
+- the follow-up stepping correction is implemented in source but not yet
+  revalidated end-to-end in this repo turn due local build instability/noise in
+  the `Mesen2` incremental compile path
+
 ### CP-01: Bank30 decode support baseline
 
 - Added `67FB` decode support in `tools/decompress_td2_chunk.py`.

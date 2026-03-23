@@ -26,6 +26,88 @@ For automated headless runs with Mesen2's test runner:
 ./validation/run_mesen_capture.sh
 ```
 
+For short review windows where you want a reproducible bundle of visual
+artifacts instead of a one-off capture, use:
+
+```sh
+python3 tools/run_mesen_guided_export.py \
+  intro_mode7_rotation \
+  1094 \
+  1101 \
+  --input-windows '6800:start;6900-6920:start,a' \
+  --question 'Is this window rotating the same Mode 7 source blob or switching producers?'
+```
+
+That wrapper assembles the repo's current high-signal review surfaces in one
+place:
+
+- bridge-extracted frame folders under `tools/out/<slug>_<start>_<end>_frames/`
+- design packs under `tools/out/<slug>_<start>_<end>_design/`
+- a boot probe with `DMA/VRAM/Mode7` traces plus producer-side
+  `write_point_trace`
+- normalized activity trace JSON/Markdown
+- visual contracts for the whole range
+- a Markdown note skeleton under `rom_analysis/docs/`
+
+Useful options:
+
+- `--savestate <path>`: seed the probe from a deterministic state
+- `--with-provenance --chunk-validation tools/out/bank13_chunk_validation.json`:
+  also build a tilemap provenance artifact from the generated
+  `td2_boot_probe_l001210_exec.json`
+- `--dry-run`: print the exact commands and paths without executing Mesen
+- `--skip-*`: reuse existing extracted frames or probes while rebuilding later
+  stages
+
+The default probe configuration is intentionally review-oriented rather than
+minimal: it enables `DMA`, direct `VRAM`, `Mode 7`, and
+`OAM/VRAM/CGRAM` register write tracing so the resulting visual-contract bundle
+is useful for later callback/state attribution instead of only pixel review.
+
+For the experimental instrumented-Mesen backend path, use:
+
+```sh
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=90 \
+./validation/run_mesen_lab_backend.sh \
+  ./game.smc \
+  --load-state ./.mesen-config/Mesen2/SaveStates/game_11.mss \
+  --run-range 18030:18032 \
+  --probe-set frame_core_probe,dma_vram_probe,mode7_probe \
+  --export-dir tools/out/mesen_lab_mvp_18030_18032
+```
+
+That launcher:
+
+- prepares the same isolated `XDG_CONFIG_HOME=.mesen-config` setup used by the
+  Lua-based runners
+- calls the local `Mesen --labRunner` backend mode directly instead of the Lua
+  test runner
+- normalizes `--load-state`, `--export-dir`, and `--manifest-out` paths
+- enforces an outer shell timeout via `MESEN_TIMEOUT_SECONDS`
+
+Current MVP capture semantics for `--labRunner` are explicit on purpose:
+
+- the runner aligns to a frame boundary first
+- each exported frame stores both `startBoundary` and `endBoundary`
+- the event snapshot is taken at the end boundary with
+  `ShowPreviousFrameEvents = true`
+- `frame.json` therefore preserves both state surfaces instead of pretending
+  the step landed on a single canonical instant
+
+Current bundle layout:
+
+- `manifest.json`
+- `summary.json`
+- `frame_XXXXXX/frame.json`
+- `frame_XXXXXX/events.json`
+- optional `frame_XXXXXX/vram.bin`, `cgram.bin`, `oam.bin` for
+  `dma_vram_probe`
+
+See also:
+
+- `rom_analysis/docs/mesen_instrumented_backend_architecture.md`
+
 For the targeted non-square OBJ vertical-mirror regression, build the runtime
 and run:
 
