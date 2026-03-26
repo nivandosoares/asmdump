@@ -123,10 +123,34 @@ Relevant DOS contracts:
 - Notes:
   - The strongest remaining gap is a name-bearing asset or debugger-backed
     menu trace.
-  - The current simple `build_bank1_helper_scene.py` path also fails on helper
-    indices `9..11` because the `L00A9CB` `26FB` decode length does not match
-    the expected bulk size, so the preview extractor for this domain is not
-    complete yet.
+  - The raw helper assets for indices `9..11` are now reachable through the
+    partial-bulk extractor; the remaining gap is runtime composition, not raw
+    decode reachability.
+
+### CLAIM AUDIT
+
+- Claim: The one-shot ROM-side preview extractor now rebuilds helper indices
+  `9..11` despite early-ending `26FB` bulk streams, and the clean
+  isolated-layer model only renders non-backdrop content for helper `9` on
+  `BG2`.
+- Classification: VERIFIED
+- Evidence:
+  - Strict `decode_26fb` on `0E:8000` still raises
+    `got 11348 bytes, expected 16640`, while `strict_length = False` returns
+    the `11348` decoded bytes.
+  - `tools/build_bank1_helper_scene.py` now routes the `L0006C9` bulk path
+    through `allow_partial_26fb = True` and records
+    `declared_output_size/actual_output_size/length_mismatch`.
+  - [tools/out/bank1_preview_helper_9_11_summary.json](/home/nivando-soares/asmdump/tools/out/bank1_preview_helper_9_11_summary.json)
+    records clean one-shot rebuilds with:
+    - `BG1` non-backdrop `0/0/0`
+    - `BG2` non-backdrop `14336/0/0`
+    - helper order `9/10/11`
+- Notes:
+  - This closes the previous extractor blind spot for helpers `9..11`.
+  - It does not prove the full animated menu composition.
+  - The remaining preview unknown is why helpers `10` and `11` stay blank in
+    the clean one-shot model.
 
 ### CLAIM AUDIT
 

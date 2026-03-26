@@ -46,7 +46,22 @@
           "The three preview helper bundles are distinct: index 9 uses L00A9A0 00:B0AB, L00A9CB 0E:8000, L00A9F2 02:FC11; index 10 uses 00:B6B2, 0E:91FE, 02:FBF3; index 11 uses 00:BCBA, 0E:A428, 0D:C98F.",
           "An adjacent front-end UI helper later uses $00 = $0202 + 0x0008 against the shared $1E80 buffer via L00179B."
         ],
-        "notes": "This is the strongest current preview-asset resolver. The domain is still not named explicitly, and the current simple helper-scene builder fails on helper indices 9..11 because the L00A9CB 26FB decode length does not match the expected bulk size."
+        "notes": "This is the strongest current preview-asset resolver. The domain is still not named explicitly, but the raw helper assets for indices 9..11 are now recoverable through the partial-bulk extractor."
+      }
+    },
+    {
+      "id": "preview_helper_extractor_partial_26fb",
+      "dos_contract": "DOS derives preview assets from selected IDs.",
+      "mapping_status": "extractor_recovered_runtime_composition_open",
+      "claim_audit": {
+        "claim": "The current one-shot SNES helper extractor can now materialize preview helper indices 9..11 by accepting early-ending 26FB bulk streams, and in the clean isolated-layer model only helper 9 yields a non-backdrop BG2 surface.",
+        "classification": "VERIFIED",
+        "evidence": [
+          "decode_26fb still raises on 0E:8000 in strict mode (got 11348 bytes, expected 16640) but returns a partial buffer in non-strict mode.",
+          "tools/build_bank1_helper_scene.py now passes allow_partial_26fb=True for the L0006C9 bulk path and records declared_output_size/actual_output_size/length_mismatch in the scene summary.",
+          "tools/out/bank1_preview_helper_9_11_summary.json records clean rebuilds for helpers 9/10/11: BG1 non_backdrop_pixels = 0/0/0 and BG2 non_backdrop_pixels = 14336/0/0."
+        ],
+        "notes": "This verifies the extractor/model surface, not the full animated runtime composition. Helpers 10 and 11 may still need follow-up callbacks, a different layer mix, or additional state to become visible in-game."
       }
     },
     {

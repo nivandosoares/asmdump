@@ -79,7 +79,14 @@ def read_l0005ac_blob(rom_bytes: bytes, source_bank: int, source_addr: int, comp
     return blob[:expected_size], source_meta
 
 
-def read_l0006c9_blob(rom_bytes: bytes, source_bank: int, source_addr: int, compression: dict | None) -> tuple[bytes, dict]:
+def read_l0006c9_blob(
+    rom_bytes: bytes,
+    source_bank: int,
+    source_addr: int,
+    compression: dict | None,
+    *,
+    allow_partial_26fb: bool = False,
+) -> tuple[bytes, dict]:
     window, rom_offset = load_rom_window(rom_bytes, source_bank, source_addr)
     compression_header = compression.get("header") if compression else None
 
@@ -91,11 +98,14 @@ def read_l0006c9_blob(rom_bytes: bytes, source_bank: int, source_addr: int, comp
             "compressed_bytes_consumed": decode_summary["compressed_bytes_consumed"],
         }
     elif compression_header == "26FB":
-        blob, decode_summary = decode_26fb(window)
+        blob, decode_summary = decode_26fb(window, strict_length=not allow_partial_26fb)
         source_meta = {
             "kind": "26FB",
             "compressed_rom_offset": f"0x{rom_offset:06X}",
             "compressed_bytes_consumed": decode_summary["compressed_bytes_consumed"],
+            "declared_output_size": decode_summary["declared_output_size"],
+            "actual_output_size": decode_summary["actual_output_size"],
+            "length_mismatch": decode_summary["length_mismatch"],
         }
     elif compression_header is None:
         blob = window

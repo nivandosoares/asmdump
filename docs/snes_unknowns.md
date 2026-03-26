@@ -24,9 +24,29 @@ DOS-driven SNES correlation pass.
   - The preview and commit behavior are direct code evidence.
   - The domain label car still needs a name-bearing asset or debugger-backed
     menu trace.
-  - The current simple helper-scene builder does not yet extract these preview
-    bundles cleanly; helper indices `9..11` currently fail with an
-    `L00A9CB` `26FB` length mismatch (`11348` bytes vs expected `16640`).
+  - The raw helper bundles are now extractable; the remaining uncertainty is
+    runtime composition and naming.
+
+### CLAIM AUDIT
+
+- Claim: The one-shot helper extractor for preview indices `9..11` is now
+  recovered, but the clean isolated-layer model only shows visible `BG2`
+  content for helper `9`.
+- Classification: VERIFIED
+- Evidence:
+  - Strict `decode_26fb` on `0E:8000` raises
+    `26FB decode length mismatch: got 11348 bytes, expected 16640`.
+  - The patched `L0006C9` extraction path accepts partial `26FB` output and
+    records both declared and actual bulk sizes.
+  - [tools/out/bank1_preview_helper_9_11_summary.json](/home/nivando-soares/asmdump/tools/out/bank1_preview_helper_9_11_summary.json)
+    records clean one-shot rebuilds with `BG1` non-backdrop `0/0/0` and `BG2`
+    non-backdrop `14336/0/0` for helpers `9/10/11`.
+- Notes:
+  - This is extractor/model evidence, not a proof of final runtime
+    presentation.
+  - The next unknown is whether helpers `10` and `11` need follow-up
+    callbacks, a different PPU layer mix, or are intentionally blank at this
+    stage.
 
 ### CLAIM AUDIT
 
@@ -83,8 +103,11 @@ DOS-driven SNES correlation pass.
 
 - Get a deterministic post-attract or menu savestate where `$1CAC/$1CCA/$1CE*`
   are nonzero, then rerun the boot probe to capture a richer selector block.
-- Extend the preview extractor for helper indices `9..11`, because the current
-  simple helper-scene path fails on the `L00A9CB` `26FB` bulk decode.
+- Capture live menu `TMAIN/BG1SC/BG2SC/BG12NBA` around the preview cycle so the
+  clean one-shot helper builds can be compared against the real layer mix.
+- Trace the follow-up callback/composition path after the helper `9/10/11`
+  bundle build to explain why helpers `10` and `11` stay blank in the current
+  isolated-layer model.
 - Keep decoding the `01:8016..01:8330` table families into named rows so
   `$1C7C`, `$1CAC`, and `$1CCA` can be tied to concrete assets instead of raw
   indices.

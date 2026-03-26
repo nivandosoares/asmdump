@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "created": "2026-03-26",
+  "scope": "One-shot bank1 helper-scene summary for preview indices 9..11 after enabling partial 26FB bulk decode.",
+  "entries": [
+    {
+      "helper_index": 9,
+      "layer": "bg1",
+      "compressed_rom_offset": "0x070000",
+      "declared_output_size": 16640,
+      "actual_output_size": 11348,
+      "length_mismatch": true,
+      "backdrop_rgb": [
+        74,
+        0,
+        82
+      ],
+      "non_backdrop_pixels": 0,
+      "distinct_rgb_colors": 1
+    },
+    {
+      "helper_index": 9,
+      "layer": "bg2",
+      "compressed_rom_offset": "0x070000",
+      "declared_output_size": 16640,
+      "actual_output_size": 11348,
+      "length_mismatch": true,
+      "backdrop_rgb": [
+        74,
+        0,
+        82
+      ],
+      "non_backdrop_pixels": 14336,
+      "distinct_rgb_colors": 2
+    },
+    {
+      "helper_index": 10,
+      "layer": "bg1",
+      "compressed_rom_offset": "0x0711FE",
+      "declared_output_size": 16640,
+      "actual_output_size": 13111,
+      "length_mismatch": true,
+      "backdrop_rgb": [
+        0,
+        0,
+        0
+      ],
+      "non_backdrop_pixels": 0,
+      "distinct_rgb_colors": 1
+    },
+    {
+      "helper_index": 10,
+      "layer": "bg2",
+      "compressed_rom_offset": "0x0711FE",
+      "declared_output_size": 16640,
+      "actual_output_size": 13111,
+      "length_mismatch": true,
+      "backdrop_rgb": [
+        0,
+        0,
+        0
+      ],
+      "non_backdrop_pixels": 0,
+      "distinct_rgb_colors": 1
+    },
+    {
+      "helper_index": 11,
+      "layer": "bg1",
+      "compressed_rom_offset": "0x072428",
+      "declared_output_size": 17024,
+      "actual_output_size": 4117,
+      "length_mismatch": true,
+      "backdrop_rgb": [
+        148,
+        132,
+        255
+      ],
+      "non_backdrop_pixels": 0,
+      "distinct_rgb_colors": 1
+    },
+    {
+      "helper_index": 11,
+      "layer": "bg2",
+      "compressed_rom_offset": "0x072428",
+      "declared_output_size": 17024,
+      "actual_output_size": 4117,
+      "length_mismatch": true,
+      "backdrop_rgb": [
+        148,
+        132,
+        255
+      ],
+      "non_backdrop_pixels": 0,
+      "distinct_rgb_colors": 1
+    }
+  ],
+  "pairwise_diffs": [
+    {
+      "layer": "bg1",
+      "a": 9,
+      "b": 10,
+      "diff_pixels": 57344
+    },
+    {
+      "layer": "bg1",
+      "a": 9,
+      "b": 11,
+      "diff_pixels": 57344
+    },
+    {
+      "layer": "bg1",
+      "a": 10,
+      "b": 11,
+      "diff_pixels": 57344
+    },
+    {
+      "layer": "bg2",
+      "a": 9,
+      "b": 10,
+      "diff_pixels": 57344
+    },
+    {
+      "layer": "bg2",
+      "a": 9,
+      "b": 11,
+      "diff_pixels": 57344
+    },
+    {
+      "layer": "bg2",
+      "a": 10,
+      "b": 11,
+      "diff_pixels": 57344
+    }
+  ],
+  "notes": [
+    "The builder models a one-shot helper scene rather than the full animated menu runtime.",
+    "Length-mismatch entries mean the 26FB stream ended before the declared output size; the current helper builder copies only the decoded bytes into VRAM."
+  ]
+}

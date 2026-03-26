@@ -4152,6 +4152,47 @@ Next best step:
   deterministic menu savestate, and extend the preview extractor for helper
   indices `9..11`
 
+### CP-91: partial `26FB` preview-helper extraction
+
+- patched the ROM-side helper extractor so the `L0006C9` path can keep partial
+  `26FB` payloads instead of aborting the whole scene build on early end
+  markers:
+  - `tools/decompress_td2_chunk.py`
+  - `tools/build_boot_vram.py`
+  - `tools/build_bank1_helper_scene.py`
+- added compact validation artifacts:
+  - `tools/out/bank1_preview_helper_9_11_summary.json`
+  - `tools/out/bank1_preview_helper_9_11_summary.md`
+- bounded validation:
+  - strict `26FB` decode still fails on `0E:8000` as expected:
+    - `got 11348 bytes, expected 16640`
+  - non-strict decode now returns the partial payload instead of aborting:
+    - `11348 / 16640` bytes for `0E:8000`
+  - clean helper-scene rebuilds now succeed for helpers `9/10/11` on both
+    isolated `BG1` and isolated `BG2` surfaces
+- current clean-model reading from the committed summary artifact:
+  - helper `9`:
+    - `BG1` blank
+    - `BG2` non-backdrop `14336`
+  - helper `10`:
+    - `BG1` blank
+    - `BG2` blank
+  - helper `11`:
+    - `BG1` blank
+    - `BG2` blank
+- practical reading:
+  - the previous blind spot is now closed at the extractor level
+  - the remaining unknown moved from raw bulk decode failure to runtime
+    composition/state:
+    - why helper `9` already lights `BG2` in the clean model
+    - why helpers `10/11` still need follow-up explanation
+
+Next best step:
+
+- capture the live preview-menu layer mix and follow-up callback activity so
+  helper `10/11` can be explained as either deferred composition or genuinely
+  blank one-shot states
+
 Savestate lane blocker (current environment):
 
 - `mesen_probe_boot.lua` can load savestates, but headless `--testRunner` does not expose

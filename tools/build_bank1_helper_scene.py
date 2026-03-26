@@ -228,6 +228,15 @@ def build_ppu_state(
             "hscroll": 0,
             "vscroll": DEFAULT_SCROLL,
         },
+        {
+            "tilemapAddress": 0,
+            "chrAddress": 0,
+            "doubleWidth": False,
+            "doubleHeight": False,
+            "largeTiles": False,
+            "hscroll": 0,
+            "vscroll": 0,
+        },
     ]
 
     state: dict[str, int | bool] = {
@@ -289,6 +298,7 @@ def build_scene(
         bulk_source_bank,
         bulk_source_addr,
         bulk_compression,
+        allow_partial_26fb=True,
     )
     bulk_apply_meta = apply_l0006c9_bytes(vram, bulk_blob, bulk_vram_dest, len(bulk_blob))
 
@@ -353,6 +363,7 @@ def build_scene(
         "notes": [
             "This builder models the one-shot helper trio only.",
             "Animated follow-up callbacks can diverge from the static setup frame after the scene is built.",
+            "The L0006C9 path accepts early-ending 26FB streams and copies only the decoded bytes into VRAM.",
         ],
     }
     return bytes(vram), bytes(cgram), summary, rgb

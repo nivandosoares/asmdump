@@ -197,7 +197,7 @@ def decode_42fb(chunk: bytes) -> tuple[bytes, dict]:
     return bytes(output), summary
 
 
-def decode_26fb(chunk: bytes) -> tuple[bytes, dict]:
+def decode_26fb(chunk: bytes, *, strict_length: bool = True) -> tuple[bytes, dict]:
     if len(chunk) < 8 or chunk[:2] != b"\x26\xfb":
         raise ValueError("chunk is not a 26FB block")
 
@@ -366,7 +366,8 @@ def decode_26fb(chunk: bytes) -> tuple[bytes, dict]:
             end_marker_hit = True
             break
 
-    if len(output) != declared_output_size:
+    length_mismatch = len(output) != declared_output_size
+    if strict_length and length_mismatch:
         raise ValueError(
             f"26FB decode length mismatch: got {len(output)} bytes, expected {declared_output_size}"
         )
@@ -374,6 +375,9 @@ def decode_26fb(chunk: bytes) -> tuple[bytes, dict]:
     summary = {
         "format": "26FB",
         "declared_output_size": declared_output_size,
+        "actual_output_size": len(output),
+        "length_mismatch": length_mismatch,
+        "strict_length": strict_length,
         "initial_state": initial_state,
         "special_symbol": special_symbol,
         "special_short_bits": special_short_bits,
