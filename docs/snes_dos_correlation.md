@@ -312,14 +312,22 @@ Relevant DOS contract:
   - Forced `01:9568` and `01:95AD` probes each reach `01:B1F9` once at frame
     `1201`, with `stack_return_rts = 0x9575 / 0x95B7` and `state_0f77 = 1 / 0`
     respectively.
-  - The same forced `1200..1300` trace window records no writes to
+  - The original forced `1200..1300` trace window records no writes to
     `7E:096C..0971` and no exec hit at `02:9016`.
+  - Short-force follow-ups that inject `01:9568/01:95AD` only on frames
+    `1200..1201` still leave `active_main` pinned on `01:9568/01:95AD`
+    through frame `2199`, with no traced writes to `7E:096C..0971` and no
+    exec hit at `01:B226/B638/B6A3/B6E3/B755/01:9D69/02:9016/02:8F3C`.
+  - Static bank-1 reading still shows the explicit `02:9016/02:8F3C` install
+    at `01:902D..01:9034`, while the later explicit callback stage inside
+    `L00B1F9` is `01:9D69` at `01:B6A3`.
 - Notes:
   - The control-flow boundary is verified.
   - Its equivalence to the DOS dual-catalog gameplay gate is still inferred.
-  - The immediate callback-promotion step was not observed in the narrow
-    forced trace window, so the missing proof is now about timing, not branch
-    reachability.
+  - The missing proof is no longer just “use a wider trace window”.
+  - Direct active-main forcing itself produces a sticky bank-1 surface, so the
+    remaining gap is now about richer preconditions for observing organic
+    promotion, not about whether the branch entry is real.
 
 ### CLAIM AUDIT
 

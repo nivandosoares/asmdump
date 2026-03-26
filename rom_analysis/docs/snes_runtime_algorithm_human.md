@@ -63,8 +63,10 @@ already grounded in code reads, probes, or generated artifacts.
     - `$1C7C = 3` -> `West Coast - Hardest`
 11. After the front-end bundle is accepted and built, the strongest currently
     proven gameplay-facing corridor is still the bank-1 path that stages
-    `02:9016` (main) and `02:8F3C` (NMI). That corridor is real, but the exact
-    promotion timing around `01:9568/01:95AD -> 02:9016` is still open.
+    `02:9016` (main) and `02:8F3C` (NMI) at `01:902D..01:9034`. That corridor
+    is real, but direct headless forcing of `01:9568/01:95AD` does not yet
+    promote into it: short-force probes still pin `active_main` on
+    `01:9568/01:95AD` through frame `2199` with no staged callback writes.
 
 ## Short Version
 
@@ -83,7 +85,7 @@ If you strip away the assembly details, the proven logic is:
 ## Open Edges
 
 - the car-facing label rows `8..10` are still not named
-- the exact callback-promotion timing into the `02:9016/02:8F3C` gameplay lane
-  is still not closed
+- the exact organic callback-promotion timing into the `02:9016/02:8F3C`
+  gameplay lane is still not closed
 - late attract producer scheduling after `1133` is materially narrowed, but the
   native replacement schedule is still a live archaeology target

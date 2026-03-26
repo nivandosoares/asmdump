@@ -96,13 +96,18 @@ DOS-driven SNES correlation pass.
     `L00B75E`.
   - Forced `01:9568` and `01:95AD` probes each reach `01:B1F9` once at frame
     `1201`, with stack returns `0x9575 / 0x95B7` and `state_0f77 = 1 / 0`.
-  - The same forced `1200..1300` trace window records no writes to
+  - The original forced `1200..1300` trace window records no writes to
     `7E:096C..0971` and no exec hit at `02:9016`.
+  - Short-force follow-ups that inject `01:9568/01:95AD` only on frames
+    `1200..1201` still keep `active_main` pinned on `01:9568/01:95AD`
+    through frame `2199`, with no traced writes to `7E:096C..0971` and no
+    exec hit at `01:B226/B638/B6A3/B6E3/B755/01:9D69/02:9016/02:8F3C`.
 - Notes:
   - This is the strongest current boundary candidate.
   - It is still not a verified dual-catalog validity gate.
-  - The missing proof is now the callback-promotion timing around that
-    boundary, not whether the bank-1 branch entry itself is real.
+  - The branch entry itself is real.
+  - The remaining proof gap is now an organic-promotion capture problem rather
+    than a simple “trace a wider forced window” problem.
 
 ## Next Probes
 
@@ -121,6 +126,6 @@ DOS-driven SNES correlation pass.
   indices.
 - Trace the `$1C7C`-seeded descriptor rows to name-bearing assets or gameplay
   windows to prove whether that selector is track/scenery-facing.
-- Widen the forced `01:9568/01:95AD` trace window around callback promotion so
-  `$096C-$0971` and `02:9016` can be observed, or disproven, closer to the
-  bank-1 boundary itself.
+- Prefer a richer selector-bearing savestate or live debugger capture over
+  more direct-force headless windows, because short-force probes now stay
+  pinned on `01:9568/01:95AD` without ever staging `$096C-$0971`.

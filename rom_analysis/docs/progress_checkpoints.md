@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; registry tightening now closes `9681` as `sentinel-control` and `E91F` as `nested-invalid-marker`; active unresolved queue remains `EE7F` and `DA96` |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | resume from `rom_analysis/docs/intro_00_8029_next_agent_handoff.md`; extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract builders now also merge that activity layer directly, the follow-up `1102..1117` compare summary proves the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, the new `1118..1125` continuation note extends that exact no-DMA surface past the old headless edge, the next sampled compare block now closes the same exact surface through `1133`, the wider `1164..1172` boundary window already proved the next later change is a producer-side reactivation rather than a callback switch, a new blob-cycle report now ties that reactivation to a concrete ownership path `01:B6E3 -> 01:9DC6 -> 00:95BD -> $096A/$0700 -> OAMDATA` while proving every sampled direct `VMDATA` burst in `1134..1200` matches the same `AA10/AB58/ACA0` ROM blob as the paired `DMA0` source and alternates over `VMADD = 0x4920/0x49A0`, and the previously open `$1C7C` naming frontier is now closed by rendered descriptor rows `11..14`: `Desert Blast - Easy`, `City Bound - Medium`, `East Coast - Hard`, `West Coast - Hardest`; the next Lane 2 frontier is no longer top-level phase naming but the callback-promotion corridor around `01:9568/01:95AD -> 02:9016/02:8F3C` and the still-open car-facing rows `8..10` |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | resume from `rom_analysis/docs/intro_00_8029_next_agent_handoff.md`; extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract builders now also merge that activity layer directly, the follow-up `1102..1117` compare summary proves the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, the new `1118..1125` continuation note extends that exact no-DMA surface past the old headless edge, the next sampled compare block now closes the same exact surface through `1133`, the wider `1164..1172` boundary window already proved the next later change is a producer-side reactivation rather than a callback switch, a new blob-cycle report now ties that reactivation to a concrete ownership path `01:B6E3 -> 01:9DC6 -> 00:95BD -> $096A/$0700 -> OAMDATA` while proving every sampled direct `VMDATA` burst in `1134..1200` matches the same `AA10/AB58/ACA0` ROM blob as the paired `DMA0` source and alternates over `VMADD = 0x4920/0x49A0`, and the previously open `$1C7C` naming frontier is now closed by rendered descriptor rows `11..14`: `Desert Blast - Easy`, `City Bound - Medium`, `East Coast - Hard`, `West Coast - Hardest`; short-force callback probes now show the next headless limit more clearly: after one real `01:B1F9` entry at frame `1201`, `01:9568/01:95AD` stay pinned as `active_main` through frame `2199` with no `7E:096C..0971` writes and no exec hit at `01:B226/B638/B6A3/B6E3/B755/01:9D69/02:9016/02:8F3C`, so direct-force callback promotion is low-yield and the still-open car-facing rows `8..10` are now the stronger purely headless Lane 2 surface unless a richer selector/savestate capture appears. |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -4320,6 +4320,61 @@ Savestate lane blocker (current environment):
   a callable save API (`saveSavestate/saveState/serializeState` absent on `emu` table).
 - probe JSON currently reports:
   - `saved_savestate_error = "no supported savestate API found on emu table"`
+
+### CP-95: Short-force `01:9568/01:95AD` probes stay pinned after `B1F9`
+
+- Added edge-release artifacts:
+  - `tools/out/b1f9_edge_release_9568/td2_boot_probe.json`
+  - `tools/out/b1f9_edge_release_9568/td2_boot_probe_l001210_exec.json`
+  - `tools/out/b1f9_edge_release_95ad/td2_boot_probe.json`
+  - `tools/out/b1f9_edge_release_95ad/td2_boot_probe_l001210_exec.json`
+- bounded validation:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=120 ... TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/b1f9_edge_release_9568/td2_boot_probe ./validation/run_mesen_probe_boot.sh ./game.smc`
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=120 ... TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/b1f9_edge_release_95ad/td2_boot_probe ./validation/run_mesen_probe_boot.sh ./game.smc`
+- probe shape:
+  - force `active_main` only on frames `1200..1201`
+  - re-apply selectors at the `01:B1F9` exec point
+  - trace frames `1200..2200`
+  - watch exec at `01:B1F9/B226/B638/B6A3/B6E3/B755`, return sites
+    `01:9575/01:95B7`, and candidate follow-up callbacks `01:9D69`,
+    `02:9016`, `02:8F3C`
+  - watch writes to `7E:096C..0971`, `7E:0200/0202`, `7E:1E2C`,
+    `7E:0440/0442/0444`, and `7E:040A`
+- observed result on both lanes:
+  - `01:9568` and `01:95AD` still reach `01:B1F9` exactly once at frame
+    `1201`
+  - stack returns remain concrete and lane-specific:
+    - `01:9568` -> `0x9575`
+    - `01:95AD` -> `0x95B7`
+  - no traced writes hit `7E:096C..0971`
+  - no traced writes hit the expected `L00B608/L00B6A3` state surface
+    (`7E:0200/0202`, `7E:1E2C`, `7E:0440/0442/0444`, `7E:040A`)
+  - no exec hits are seen at `01:B226`, `01:B638`, `01:B6A3`, `01:B6E3`,
+    `01:B755`, `01:9D69`, `02:9016`, or `02:8F3C`
+  - after the forced-entry edge, `active_main` stays pinned on the injected
+    callback through the end of the run:
+    - `01:9568` through frame `2199`
+    - `01:95AD` through frame `2199`
+- static cross-check:
+  - the only explicit `02:9016/02:8F3C` staging site currently recovered in
+    bank 1 is still `01:902D..01:9034`
+  - the later explicit callback stage inside `L00B1F9` is `01:9D69` at
+    `01:B6A3`, not `02:9016`
+- practical reading:
+  - the old “just widen the window” reading is no longer sufficient
+  - direct active-main forcing itself produces a sticky bank-1 surface and is
+    not enough to observe an organic callback promotion
+  - the headless proof gap has narrowed from “find a wider trace window” to
+    “obtain richer preconditions than raw callback injection”
+
+Next best step:
+
+- treat direct-force callback promotion as low-yield in headless mode:
+  - if a richer selector-bearing savestate or live debugger session becomes
+    available, return to organic `01:9568/01:95AD -> 02:9016/02:8F3C`
+    promotion capture
+  - otherwise keep Lane 2 moving on the still-open car-facing descriptor rows
+    `8..10`
 
 ## Next Advancement Gates
 
