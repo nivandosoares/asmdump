@@ -14,7 +14,8 @@
           "L00BAE8 rotates $1C6A over 0..2 before returning to L008B26.",
           "L00BBCB drives a 3-choice preview through $0202, and L008B57 commits $0202 back into $1C78.",
           "L00C20B edits $1C70 as a 2-bit field and L00BE76 rotates $1C7C modulo 4.",
-          "L008B87 derives $1C74/$1C76/$1C7A/$1C7E/$1C80 from $1C6C/$1C70/$1C78/$1C7C/$1C90 before the descriptor build at L008C10."
+          "L008B87 derives $1C74/$1C76/$1C7A/$1C7E/$1C80 from $1C6C/$1C70/$1C78/$1C7C/$1C90 before the descriptor build at L008C10.",
+          "Unlabeled front-end UI helpers later feed L00179B from slot families $0202 + 0x0008 and $1C7C + 0x000B against the shared $1E80 buffer."
         ],
         "notes": "The live SNES state is clearly field-oriented inside one WRAM neighborhood. A compact vector overlay analogous to DOS 0x8a1c has not been recovered."
       }

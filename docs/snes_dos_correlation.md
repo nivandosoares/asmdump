@@ -11,10 +11,10 @@ bank-0/bank-1 archaeology or direct ROM-header evidence.
 | Selection vector | Flattened WRAM selector block around `$1C6A..$1C90`, not a proven slot-indexed vector | `VERIFIED` |
 | Car/scenery materializers | One verified shared descriptor materializer; no recovered split into dedicated car and scenery builders yet | `VERIFIED` |
 | Car-specific working set | Customizer UI plus live parameter fields exist | `VERIFIED` |
-| Preview asset resolution | Verified 3-choice animated preview rebuilder through `$0202` | `VERIFIED` |
-| Track/scenery selector | `$1C7C` is the strongest current 4-state bundle selector candidate | `PROBABLE` |
+| Preview asset resolution | Verified 3-choice animated preview rebuilder through `$0202`; strongest current car-facing selector domain is `$0202/$1C78` | `VERIFIED` / `PROBABLE` |
+| Track/scenery selector | Verified 4-state descriptor groups `[0, 5, 11, 18] / [5, 6, 7, 8]`; domain label still most likely track/scenery | `PROBABLE` |
 | Selector persistence | No cart SRAM in ROM header | `VERIFIED` |
-| DOS-style play-session gate | No verified dual-catalog equivalent yet; closest surfaces are `L008B26` and `L009568/L0095AD` | `VERIFIED` / `PROBABLE` |
+| DOS-style play-session gate | No verified dual-catalog equivalent yet; same corridor stages `02:9016/02:8F3C`, and `L009568/L0095AD` remains the strongest bank-1 boundary | `VERIFIED` / `PROBABLE` |
 
 ## Selection State
 
@@ -36,6 +36,8 @@ Relevant DOS contract:
   - `L00BE76` rotates `$1C7C` modulo `4`.
   - `L008B87` derives `$1C74/$1C76/$1C7A/$1C7E/$1C80` from
     `$1C6C/$1C70/$1C78/$1C7C/$1C90`.
+  - Unlabeled front-end UI helpers later feed `L00179B` from slot families
+    `$0202 + 0x0008` and `$1C7C + 0x000B` against the shared `$1E80` buffer.
 - Notes:
   - This is a flattened named-field block, not a proven compact selector
     vector like DOS `0x8a1c`.
@@ -99,19 +101,48 @@ Relevant DOS contracts:
   - `L008B57` commits the final `$0202` value into `$1C78`.
 - Notes:
   - This is the strongest current preview-asset resolver.
-  - Its domain is likely car-facing, but that domain label is still inferred.
+  - Its domain is still not named directly by this routine alone.
 
 ### CLAIM AUDIT
 
-- Claim: `$1C7C` is the strongest current scenery or track selector candidate
-  because it rotates over four states and seeds the base/count pair used by
-  the shared descriptor materializer.
+- Claim: `$0202/$1C78` is the strongest current car-facing selector domain in
+  the SNES front end.
+- Classification: PROBABLE
+- Evidence:
+  - `L00BBCB` cycles `$0202` over `0..2` and commits the final value into
+    `$1C78`.
+  - The three preview helper bundles are distinct:
+    - index `9` -> `L00A9A0 00:B0AB`, `L00A9CB 0E:8000`, `L00A9F2 02:FC11`
+    - index `10` -> `00:B6B2`, `0E:91FE`, `02:FBF3`
+    - index `11` -> `00:BCBA`, `0E:A428`, `0D:C98F`
+  - An adjacent front-end UI helper later uses `$00 = $0202 + 0x0008`
+    against the shared `$1E80` buffer through `L00179B`.
+  - A separate verified `CUSTOMIZE CAR` surface exists in the same front-end
+    corridor, and later bank-1 paths keep indexing auxiliary tables through
+    `$1C78`.
+- Notes:
+  - The strongest remaining gap is a name-bearing asset or debugger-backed
+    menu trace.
+  - The current simple `build_bank1_helper_scene.py` path also fails on helper
+    indices `9..11` because the `L00A9CB` `26FB` decode length does not match
+    the expected bulk size, so the preview extractor for this domain is not
+    complete yet.
+
+### CLAIM AUDIT
+
+- Claim: `$1C7C` is a verified four-state descriptor-group selector with
+  bases/counts `[0, 5, 11, 18] / [5, 6, 7, 8]`, and it remains the strongest
+  current scenery or track candidate.
 - Classification: PROBABLE
 - Evidence:
   - `L00BE76` rotates `$1C7C` modulo `4`.
   - `L008B87` uses `$1C7C` to read `$1C7E/$1C80` from `01:8000`.
+  - Raw table decode at `01:8000/01:8008` yields group bases
+    `[0, 5, 11, 18]` and counts `[5, 6, 7, 8]`.
   - `L008C10` immediately uses `$1C82 = $1CA8 + $1C7E` to derive the live
     descriptor row.
+  - An adjacent front-end UI helper uses `$00 = $1C7C + 0x000B` against the
+    shared `$1E80` buffer through `L00179B`.
 - Notes:
   - The selector behavior is direct code evidence.
   - The track/scenery label still needs a name-bearing asset or gameplay-side
@@ -173,6 +204,25 @@ Relevant DOS contract:
 
 ### CLAIM AUDIT
 
+- Claim: The same bank-1 setup corridor explicitly stages the known gameplay
+  callback chain `02:9016` (main) and `02:8F3C` (NMI) before entering the
+  bank-1 loop at `L009111`.
+- Classification: VERIFIED
+- Evidence:
+  - At `01:902D..01:9033`, the path loads `A = 0x0002` and stages
+    `X = 0x9016` through `L000385`, then `X = 0x8F3C` through `L0003A0`.
+  - [docs/bank0_flow.md](/home/nivando-soares/asmdump/docs/bank0_flow.md)
+    confirms `L000385` writes the staged main callback to `$096C-$096E` and
+    `L0003A0` writes the staged NMI callback to `$096F-$0971`.
+  - Control continues directly into `L009111` afterward.
+- Notes:
+  - This proves adjacency to the later gameplay callback family already
+    observed as `active_main = 02:9016`.
+  - It still does not prove that `L009568/L0095AD` are the exact DOS-style
+    both-catalogs gate.
+
+### CLAIM AUDIT
+
 - Claim: `L009568/L0095AD` form the strongest current SNES gameplay-handoff
   candidate because they advance `$1CA8`, compare it against `$1C80`, and
   either rebuild the next descriptor row via `L008C10` or unwind back to
@@ -183,9 +233,17 @@ Relevant DOS contract:
   - `L0095D0` compares `$1CA8` against `$1C80`; equality branches to
     `L0095AD`, otherwise control jumps back to `L008C10`.
   - The unwind path goes through `L00A5AE/L00A3CC` and returns to `L008B31`.
+  - Forced `01:9568` and `01:95AD` probes each reach `01:B1F9` once at frame
+    `1201`, with `stack_return_rts = 0x9575 / 0x95B7` and `state_0f77 = 1 / 0`
+    respectively.
+  - The same forced `1200..1300` trace window records no writes to
+    `7E:096C..0971` and no exec hit at `02:9016`.
 - Notes:
   - The control-flow boundary is verified.
   - Its equivalence to the DOS dual-catalog gameplay gate is still inferred.
+  - The immediate callback-promotion step was not observed in the narrow
+    forced trace window, so the missing proof is now about timing, not branch
+    reachability.
 
 ### CLAIM AUDIT
 
@@ -194,7 +252,9 @@ Relevant DOS contract:
 - Classification: VERIFIED
 - Evidence:
   - Current recovered gate surfaces are the front-end success gate at `L008B26`
-    and the descriptor-progression boundary at `L009568/L0095AD`.
+    and the descriptor-progression boundary at `L009568/L0095AD`, plus the
+    explicit callback install of `02:9016/02:8F3C` from the same bank-1
+    corridor.
   - Neither recovered surface directly proves validation of separate car and
     scenery working sets before gameplay.
 - Notes:

@@ -42,9 +42,11 @@
         "evidence": [
           "L00BBCB seeds one preview with index 0x0007, then rebuilds a second bundle from index 0x0009 + $0202 inside L00BC0F.",
           "The same routine cycles $0202 over 0..2 and re-enters L00BC0F when directional input is accepted.",
-          "L008B57 copies the final $0202 value into $1C78."
+          "L008B57 copies the final $0202 value into $1C78.",
+          "The three preview helper bundles are distinct: index 9 uses L00A9A0 00:B0AB, L00A9CB 0E:8000, L00A9F2 02:FC11; index 10 uses 00:B6B2, 0E:91FE, 02:FBF3; index 11 uses 00:BCBA, 0E:A428, 0D:C98F.",
+          "An adjacent front-end UI helper later uses $00 = $0202 + 0x0008 against the shared $1E80 buffer via L00179B."
         ],
-        "notes": "This is the strongest current preview-asset resolver. The domain is likely car-facing, but the code does not name it explicitly."
+        "notes": "This is the strongest current preview-asset resolver. The domain is still not named explicitly, and the current simple helper-scene builder fails on helper indices 9..11 because the L00A9CB 26FB decode length does not match the expected bulk size."
       }
     },
     {
@@ -52,12 +54,14 @@
       "dos_contract": "DOS car selection and scenery selection are separate materialization handlers.",
       "mapping_status": "closest_current_scenery_candidate",
       "claim_audit": {
-        "claim": "$1C7C is the strongest current scenery or track selector candidate because it rotates over four states and seeds the base/count pair used by the shared descriptor materializer.",
+        "claim": "$1C7C is a verified four-state descriptor-group selector with bases/counts [0, 5, 11, 18] / [5, 6, 7, 8], and it remains the strongest current scenery or track candidate.",
         "classification": "PROBABLE",
         "evidence": [
           "L00BE76 rotates $1C7C modulo 4 in response to directional input.",
           "L008B87 uses $1C7C to read $1C7E/$1C80 from table 01:8000.",
-          "L008C10 immediately uses $1C82 = $1CA8 + $1C7E to derive the live descriptor row."
+          "Raw table decode at 01:8000/01:8008 yields group bases [0, 5, 11, 18] and counts [5, 6, 7, 8].",
+          "L008C10 immediately uses $1C82 = $1CA8 + $1C7E to derive the live descriptor row.",
+          "An adjacent front-end UI helper uses $00 = $1C7C + 0x000B against the shared $1E80 buffer via L00179B."
         ],
         "notes": "The selector behavior is verified. The domain label track/scenery is still inferred from downstream bundle use rather than named code/data."
       }
@@ -80,11 +84,11 @@
   "questions_answered": [
     {
       "question": "Is there still a split between full catalogs and menu working sets?",
-      "answer": "Not yet as two verified domains. The current verified model is one shared bundle materializer fed by several selector fields."
+      "answer": "Not yet as two verified domains. The current verified model is one shared bundle materializer fed by several selector fields, with a separate 3-bundle $0202/$1C78 preview domain and a 4-group $1C7C descriptor domain."
     },
     {
       "question": "Does the track record include a bank or source selector equivalent to DOS play_disk?",
-      "answer": "A source-selector-like descriptor family exists at $1CAC/$1CCA/$1CE2/$1CE4/$1CE6, but its exact track/scenery semantics are not yet proven."
+      "answer": "A source-selector-like descriptor family exists at $1CAC/$1CCA/$1CE2/$1CE4/$1CE6, and $1C7C now has verified base/count groups [0, 5, 11, 18] / [5, 6, 7, 8], but the exact track/scenery semantics are not yet proven."
     },
     {
       "question": "Does the SNES menu use tiny layout descriptors analogous to DOS .SS sidecars?",

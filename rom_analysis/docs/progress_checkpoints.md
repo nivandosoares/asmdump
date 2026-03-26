@@ -4107,6 +4107,51 @@ Next best step:
   name-bearing assets or debugger-backed menu traces, then follow
   `L009568/L0095AD` into the first confirmed gameplay callback chain
 
+### CP-90: selector-domain decode and forced `B1F9` callback narrowing
+
+- tightened the selector-domain read with new static decode:
+  - `01:8000/01:8008` now explicitly decodes to `$1C7C` group
+    bases/counts `[0, 5, 11, 18] / [5, 6, 7, 8]`
+  - unlabeled front-end UI helpers now also show the slot split directly:
+    - `$0202 + 0x0008`
+    - `$1C7C + 0x000B`
+    - both feed the shared `$1E80` text/UI buffer through `L00179B`
+- tightened the `$0202/$1C78` preview read:
+  - helper indices `9/10/11` now resolve to distinct bundle triples
+    (`L00A9A0`, `L00A9CB`, `L00A9F2`)
+  - current negative result:
+    - the simple `tools/build_bank1_helper_scene.py` path does not yet rebuild
+      that preview cleanly because helper indices `9..11` fail on an
+      `L00A9CB` `26FB` length mismatch (`11348` vs expected `16640`)
+- bounded forced callback probes are now recorded under:
+  - `tools/out/tmp_b1f9_9568/td2_boot_probe.json`
+  - `tools/out/tmp_b1f9_95ad/td2_boot_probe.json`
+- current forced-lane reading:
+  - both `01:9568` and `01:95AD` reach `01:B1F9` exactly once at frame `1201`
+  - return sites now re-confirm the sibling split:
+    - `0x9575`
+    - `0x95B7`
+  - state split also persists:
+    - `state_0f77 = 1` on the `01:9568` lane
+    - `state_0f77 = 0` on the `01:95AD` lane
+  - immediate callback promotion is still not observed in the narrow window:
+    - no writes to `7E:096C..0971`
+    - no exec hit at `02:9016`
+    - trace window: `1200..1300`
+- practical reading:
+  - `$0202/$1C78` is now a stronger car-facing selector candidate, but still
+    needs a name-bearing asset or debugger-backed menu proof
+  - `$1C7C` is now a verified four-group descriptor selector, while the
+    track/scenery label remains probable
+  - the missing handoff proof is now narrowed to callback-promotion timing
+    around the real `B1F9` branch entry, not branch reachability itself
+
+Next best step:
+
+- widen around the `01:9568/01:95AD` callback-promotion window or get a richer
+  deterministic menu savestate, and extend the preview extractor for helper
+  indices `9..11`
+
 Savestate lane blocker (current environment):
 
 - `mesen_probe_boot.lua` can load savestates, but headless `--testRunner` does not expose
