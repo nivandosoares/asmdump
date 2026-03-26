@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "created": "2026-03-26",
+  "scope": "First-pass DOS-driven SNES catalog/materialization correlation baseline.",
+  "contracts": [
+    {
+      "id": "shared_bundle_materializer",
+      "dos_contract": "DOS runtime car records and scene records carry source-selector metadata that is not present on disk.",
+      "mapping_status": "partial_equivalent",
+      "claim_audit": {
+        "claim": "After menu stabilization, SNES bank 1 collapses selector state into one derived content descriptor at $1CAC/$1CCA/$1CFA/$1CAA/$1CE2/$1CE4/$1CE6/... and materializes assets from that shared descriptor.",
+        "classification": "VERIFIED",
+        "evidence": [
+          "L008C10 computes $1C82 = $1CA8 + $1C7E and indexes bank-1 tables at 01:8016..01:8330.",
+          "L008C10 writes $1CAC/$1CCA/$1CFA/$1CAA/$1CE2/$1CE4/$1CE6/$1CB8/$1CBE/$1CBA/$1CBC/$1CC2/$1CCC/$1CCE/$1CD0.",
+          "L008CA2 consumes those fields through L00A9A0/L00A9CB/L00A9F2, L0005AC, L0006C9, and L001210."
+        ],
+        "notes": "This is a verified front-end bundle materializer. It is not yet split into proven separate car and scenery catalog builders."
+      }
+    },
+    {
+      "id": "car_customize_surface",
+      "dos_contract": "DOS car IDs bind logic blobs, layout descriptors, and multiple visual asset roles through a single shared stem.",
+      "mapping_status": "partial_equivalent",
+      "claim_audit": {
+        "claim": "SNES has a verified car-specific customization surface with dedicated parameter fields, anchored by the string CUSTOMIZE CAR at 01:880D.",
+        "classification": "VERIFIED",
+        "evidence": [
+          "L008A50 prints the string block starting at 01:880D (CUSTOMIZE CAR, Autoshift, Car Height, Drag Coeff, Accel Coeff, Brake Coeff, Max G Force, Scrub Rate, 0-60, 0-100, 1/4 Mile, 1/4 Speed, Top Speed, Top Time, Lives).",
+          "L008784 enters that surface, runs the editor loop at L0089AD, then copies $1406/$1444/$1446/$1408/$1442/$1416 into $1470/$1472/$1474/$1476/$1478/$147A before returning to L008CA2."
+        ],
+        "notes": "This proves car-specific working parameters and UI, but not a full named car catalog or DOS-style stem table."
+      }
+    },
+    {
+      "id": "three_choice_preview_rebuilder",
+      "dos_contract": "DOS derives preview assets from selected IDs.",
+      "mapping_status": "partial_equivalent",
+      "claim_audit": {
+        "claim": "SNES has a verified 3-choice animated preview rebuilder driven by $0202.",
+        "classification": "VERIFIED",
+        "evidence": [
+          "L00BBCB seeds one preview with index 0x0007, then rebuilds a second bundle from index 0x0009 + $0202 inside L00BC0F.",
+          "The same routine cycles $0202 over 0..2 and re-enters L00BC0F when directional input is accepted.",
+          "L008B57 copies the final $0202 value into $1C78."
+        ],
+        "notes": "This is the strongest current preview-asset resolver. The domain is likely car-facing, but the code does not name it explicitly."
+      }
+    },
+    {
+      "id": "four_state_bundle_selector_candidate",
+      "dos_contract": "DOS car selection and scenery selection are separate materialization handlers.",
+      "mapping_status": "closest_current_scenery_candidate",
+      "claim_audit": {
+        "claim": "$1C7C is the strongest current scenery or track selector candidate because it rotates over four states and seeds the base/count pair used by the shared descriptor materializer.",
+        "classification": "PROBABLE",
+        "evidence": [
+          "L00BE76 rotates $1C7C modulo 4 in response to directional input.",
+          "L008B87 uses $1C7C to read $1C7E/$1C80 from table 01:8000.",
+          "L008C10 immediately uses $1C82 = $1CA8 + $1C7E to derive the live descriptor row."
+        ],
+        "notes": "The selector behavior is verified. The domain label track/scenery is still inferred from downstream bundle use rather than named code/data."
+      }
+    },
+    {
+      "id": "separate_car_and_scenery_builders",
+      "dos_contract": "DOS car selection and scenery selection are separate materialization handlers.",
+      "mapping_status": "not_yet_found",
+      "claim_audit": {
+        "claim": "No verified split between dedicated SNES car-catalog and scenery-catalog materializers has been recovered yet; current evidence points to one shared descriptor build fed by multiple selectors.",
+        "classification": "VERIFIED",
+        "evidence": [
+          "The recovered bundle builder is L008C10/L008CA2.",
+          "Selector-specific routines L00BBCB and L00BE76 only prove preview/UI surfaces and selector mutation, not separate final materializers."
+        ],
+        "notes": "This is a statement about the current recovered evidence, not a proof that the ROM lacks a deeper split elsewhere."
+      }
+    }
+  ],
+  "questions_answered": [
+    {
+      "question": "Is there still a split between full catalogs and menu working sets?",
+      "answer": "Not yet as two verified domains. The current verified model is one shared bundle materializer fed by several selector fields."
+    },
+    {
+      "question": "Does the track record include a bank or source selector equivalent to DOS play_disk?",
+      "answer": "A source-selector-like descriptor family exists at $1CAC/$1CCA/$1CE2/$1CE4/$1CE6, but its exact track/scenery semantics are not yet proven."
+    },
+    {
+      "question": "Does the SNES menu use tiny layout descriptors analogous to DOS .SS sidecars?",
+      "answer": "No direct equivalent is verified yet. The current evidence favors table-driven bundle descriptors and preview builders rather than a named token stream."
+    }
+  ]
+}

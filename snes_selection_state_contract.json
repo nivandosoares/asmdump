@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "created": "2026-03-26",
+  "scope": "First-pass DOS-driven SNES selection-state correlation baseline.",
+  "contracts": [
+    {
+      "id": "front_end_selection_block",
+      "dos_contract": "DOS live menu state is a selector vector rooted at 0x8a1c, with persisted subset 0x8a1e/0x8a20/0x8a22.",
+      "mapping_status": "partial_equivalent",
+      "claim_audit": {
+        "claim": "SNES front-end selection state is a contiguous WRAM block of named fields centered on $1C6A..$1C90, not a proven DOS-style slot-indexed selector vector.",
+        "classification": "VERIFIED",
+        "evidence": [
+          "L00BAE8 rotates $1C6A over 0..2 before returning to L008B26.",
+          "L00BBCB drives a 3-choice preview through $0202, and L008B57 commits $0202 back into $1C78.",
+          "L00C20B edits $1C70 as a 2-bit field and L00BE76 rotates $1C7C modulo 4.",
+          "L008B87 derives $1C74/$1C76/$1C7A/$1C7E/$1C80 from $1C6C/$1C70/$1C78/$1C7C/$1C90 before the descriptor build at L008C10."
+        ],
+        "notes": "The live SNES state is clearly field-oriented inside one WRAM neighborhood. A compact vector overlay analogous to DOS 0x8a1c has not been recovered."
+      }
+    },
+    {
+      "id": "selector_persistence_surface",
+      "dos_contract": "DOS persistence stores three numeric selectors plus three IDs in select.dat.",
+      "mapping_status": "no_cart_sram_equivalent_found",
+      "claim_audit": {
+        "claim": "The SNES ROM header declares no cart SRAM, so DOS-style battery-backed selector persistence is not evidenced on the cartridge.",
+        "classification": "VERIFIED",
+        "evidence": [
+          "LoROM header title block at 0x7FC0 reports cart_type = 0x00.",
+          "LoROM header byte 0x7FD8 reports sram_size = 0x00."
+        ],
+        "notes": "This rules out battery-backed cart SRAM on the shipped ROM image. It does not rule out transient WRAM state or an unproven non-SRAM persistence mechanism."
+      }
+    }
+  ],
+  "questions_answered": [
+    {
+      "question": "Does the SNES version also use a selector vector, or did it flatten the state into named fields?",
+      "answer": "Current verified evidence favors flattened named WRAM fields inside one contiguous front-end state block."
+    },
+    {
+      "question": "Are chosen IDs persisted directly, or are they replaced with compact indices in SRAM?",
+      "answer": "No cart SRAM is advertised by the ROM header, so direct DOS-style battery-backed persistence is not currently evidenced."
+    }
+  ]
+}

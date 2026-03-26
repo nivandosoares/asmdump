@@ -4070,6 +4070,43 @@ Practical reading:
   - `make -C tools regression-gates REGRESSION_GATES_RENDER_DIR=../port/build/regression_frames_v2`
   - result: `6/6` checks passed (`0` mismatched pixels each)
 
+### CP-89: DOS-driven SNES front-end correlation baseline
+
+- Added required machine-readable outputs:
+  - `snes_selection_state_contract.json`
+  - `snes_catalog_contracts.json`
+  - `snes_play_session_gate.json`
+- Added correlation docs:
+  - `docs/snes_dos_correlation.md`
+  - `docs/snes_unknowns.md`
+
+Current read:
+
+- selection state is now formalized as a verified SNES WRAM block centered on
+  `$1C6A..$1C90`, with flattened named fields instead of a proven DOS-style
+  slot-indexed selector vector
+- the front-end bundle materializer is now explicit in one place:
+  - `L008C10/L008CA2` builds one derived descriptor from selector fields
+    instead of a recovered split between separate car and scenery builders
+- the strongest current domain-specific menu surfaces are now separated:
+  - verified car-customize screen at `01:880D` (`CUSTOMIZE CAR`)
+  - verified `3`-choice preview rebuilder through `$0202`
+  - probable `4`-state track/scenery selector through `$1C7C`
+- persistence reading tightened materially:
+  - the ROM header reports `sram_size = 0x00`, so no battery-backed
+    DOS-style selector persistence is evidenced on cartridge
+- gameplay-gate reading is now explicit:
+  - verified front-end success gate at `L008B26`
+  - probable play-session boundary candidate at `L009568/L0095AD`
+  - no verified SNES equivalent of the DOS `0x6064` dual-catalog refusal gate
+    has been recovered yet
+
+Next best step:
+
+- prove the `$0202/$1C78` preview domain and the `$1C7C` four-state domain with
+  name-bearing assets or debugger-backed menu traces, then follow
+  `L009568/L0095AD` into the first confirmed gameplay callback chain
+
 Savestate lane blocker (current environment):
 
 - `mesen_probe_boot.lua` can load savestates, but headless `--testRunner` does not expose

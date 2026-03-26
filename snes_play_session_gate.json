@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "created": "2026-03-26",
+  "scope": "First-pass DOS-driven SNES gameplay-handoff gate correlation baseline.",
+  "contracts": [
+    {
+      "id": "front_end_success_gate",
+      "dos_contract": "DOS play-session assembly is guarded by a non-graphics gate that requires both car and scenery catalogs.",
+      "mapping_status": "front_end_gate_only",
+      "claim_audit": {
+        "claim": "SNES bank 1 will not derive or build the final front-end descriptor until the helper chain rooted at L008B26 returns success.",
+        "classification": "VERIFIED",
+        "evidence": [
+          "L008B26 calls L009C3E, L00BAE8, L00BBCB, L00C20B, and L00BE76 in sequence.",
+          "A 0xFFFF return from L00BAE8/L00BBCB/L00C20B/L00BE76 branches back to earlier points in the loop instead of falling through to L008B87/L008C10.",
+          "Only the success path reaches the descriptor derivation at L008B87 and the build/materialization path at L008C10/L008CA2."
+        ],
+        "notes": "This is a verified selection gate, but not yet a verified DOS-style dual-catalog gameplay gate."
+      }
+    },
+    {
+      "id": "descriptor_progression_boundary",
+      "dos_contract": "DOS play-session assembly is guarded by a non-graphics gate that requires both car and scenery catalogs.",
+      "mapping_status": "strongest_current_play_session_candidate",
+      "claim_audit": {
+        "claim": "L009568/L0095AD form the strongest current SNES gameplay-handoff candidate because they advance $1CA8, compare it against $1C80, and either rebuild the next descriptor row via L008C10 or unwind back to L008B31.",
+        "classification": "PROBABLE",
+        "evidence": [
+          "L009568 and L0095AD both increment $1CA8 before calling L00B1F9.",
+          "L0095D0 compares $1CA8 against $1C80; equality branches to L0095AD, otherwise control jumps back to L008C10 for another descriptor row.",
+          "After the L00B1F9/L00B75E family, the unwind path goes through L00A5AE/L00A3CC and returns to L008B31."
+        ],
+        "notes": "The control-flow boundary is verified. Its equivalence to the DOS dual-catalog gameplay gate remains inferred rather than proven."
+      }
+    },
+    {
+      "id": "dual_catalog_refusal_gate",
+      "dos_contract": "DOS play-session assembly is guarded by a non-graphics gate that requires both car and scenery catalogs.",
+      "mapping_status": "not_yet_found",
+      "claim_audit": {
+        "claim": "No verified SNES refusal branch equivalent to the DOS 0x6064 both-catalogs-required gate has been recovered yet.",
+        "classification": "VERIFIED",
+        "evidence": [
+          "Current recovered gate surfaces are the front-end success gate at L008B26 and the descriptor-progression boundary at L009568/L0095AD.",
+          "Neither recovered surface directly proves validation of separate car and scenery working sets before gameplay."
+        ],
+        "notes": "This is a statement about the present evidence state. It is not a proof that no such gate exists elsewhere in the ROM."
+      }
+    }
+  ],
+  "questions_answered": [
+    {
+      "question": "Is there a gameplay gate equivalent to DOS 0x6064, even if the error messaging differs?",
+      "answer": "No verified dual-catalog gate is recovered yet. The closest verified SNES boundaries are the L008B26 front-end success gate and the L009568/L0095AD descriptor-progression boundary."
+    }
+  ]
+}
