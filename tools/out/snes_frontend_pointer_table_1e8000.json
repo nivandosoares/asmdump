@@ -1,0 +1,266 @@
+{
+  "version": 1,
+  "created": "2026-03-26",
+  "rom": "game.smc",
+  "table_base": {
+    "bank": "1E",
+    "addr": "0x8000",
+    "file_offset": "0x0F0000"
+  },
+  "claim": "The bank-1 front-end helpers do not materialize a WRAM table at $1E80. The overlapping stores to $10/$11/$12 construct the long ROM pointer 1E:8000, and L00179B/L001662 then dereference rows from that table directly.",
+  "code_sites": [
+    {
+      "site": "01:BDF4",
+      "selector_expr": "$0202 + 0x0008",
+      "helper": "L001662",
+      "expected_index_range": [
+        8,
+        10
+      ]
+    },
+    {
+      "site": "01:BE53",
+      "selector_expr": "$1C7C + 0x000B",
+      "helper": "L00179B",
+      "expected_index_range": [
+        11,
+        14
+      ]
+    },
+    {
+      "site": "01:BAC3",
+      "selector_expr": "$1C6A + 0x000F",
+      "helper": "L00179B",
+      "expected_index_range": [
+        15,
+        17
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "index": 8,
+      "entry_bytes": "cc1a0008",
+      "table_file_offset": "0x0F0020",
+      "selector_surface": "car-facing adjacent helper ($0202 + 0x0008)",
+      "target_bank": "1E",
+      "target_addr": "0x9ACC",
+      "target_file_offset": "0x0F1ACC",
+      "header_words": [
+        "0x0008",
+        "0x0008",
+        "0x09F7",
+        "0xFBE7"
+      ],
+      "object_count": 8,
+      "header_flags": {
+        "bit_15_set": false,
+        "bit_14_set": false,
+        "bit_13_set": false,
+        "bit_12_set": false
+      },
+      "first_payload_words": [
+        "0xFFF7",
+        "0xFFE7",
+        "0x0400",
+        "0x0000",
+        "0xFFFF",
+        "0xFFE7",
+        "0x0401",
+        "0x0000"
+      ]
+    },
+    {
+      "index": 9,
+      "entry_bytes": "141c0008",
+      "table_file_offset": "0x0F0024",
+      "selector_surface": "car-facing adjacent helper ($0202 + 0x0008)",
+      "target_bank": "1E",
+      "target_addr": "0x9C14",
+      "target_file_offset": "0x0F1C14",
+      "header_words": [
+        "0x0008",
+        "0x0008",
+        "0x09F7",
+        "0xFBE7"
+      ],
+      "object_count": 8,
+      "header_flags": {
+        "bit_15_set": false,
+        "bit_14_set": false,
+        "bit_13_set": false,
+        "bit_12_set": false
+      },
+      "first_payload_words": [
+        "0xFFF7",
+        "0xFFE7",
+        "0x0400",
+        "0x0000",
+        "0xFFFF",
+        "0xFFE7",
+        "0x0401",
+        "0x0000"
+      ]
+    },
+    {
+      "index": 10,
+      "entry_bytes": "5c1d0008",
+      "table_file_offset": "0x0F0028",
+      "selector_surface": "car-facing adjacent helper ($0202 + 0x0008)",
+      "target_bank": "1E",
+      "target_addr": "0x9D5C",
+      "target_file_offset": "0x0F1D5C",
+      "header_words": [
+        "0x0008",
+        "0x0008",
+        "0x09F7",
+        "0xFBE7"
+      ],
+      "object_count": 8,
+      "header_flags": {
+        "bit_15_set": false,
+        "bit_14_set": false,
+        "bit_13_set": false,
+        "bit_12_set": false
+      },
+      "first_payload_words": [
+        "0xFFF7",
+        "0xFFE7",
+        "0x0400",
+        "0x0000",
+        "0xFFFF",
+        "0xFFE7",
+        "0x0401",
+        "0x0000"
+      ]
+    },
+    {
+      "index": 11,
+      "entry_bytes": "a41e0089",
+      "table_file_offset": "0x0F002C",
+      "selector_surface": "track-facing adjacent helper ($1C7C + 0x000B)",
+      "target_bank": "1E",
+      "target_addr": "0x9EA4",
+      "target_file_offset": "0x0F1EA4",
+      "header_words": [
+        "0x8009",
+        "0x0024",
+        "0xC73F",
+        "0x3728"
+      ],
+      "object_count": 9,
+      "header_flags": {
+        "bit_15_set": true,
+        "bit_14_set": false,
+        "bit_13_set": false,
+        "bit_12_set": false
+      },
+      "first_payload_words": [
+        "0x003F",
+        "0x0028",
+        "0x0000",
+        "0x0000",
+        "0x004F",
+        "0x0028",
+        "0x0002",
+        "0x0000"
+      ]
+    },
+    {
+      "index": 12,
+      "entry_bytes": "7423008a",
+      "table_file_offset": "0x0F0030",
+      "selector_surface": "track-facing adjacent helper ($1C7C + 0x000B)",
+      "target_bank": "1E",
+      "target_addr": "0xA374",
+      "target_file_offset": "0x0F2374",
+      "header_words": [
+        "0x800A",
+        "0x0028",
+        "0xCB2F",
+        "0x6556"
+      ],
+      "object_count": 10,
+      "header_flags": {
+        "bit_15_set": true,
+        "bit_14_set": false,
+        "bit_13_set": false,
+        "bit_12_set": false
+      },
+      "first_payload_words": [
+        "0x002F",
+        "0x0056",
+        "0x0000",
+        "0x0000",
+        "0x003F",
+        "0x0056",
+        "0x0002",
+        "0x0000"
+      ]
+    },
+    {
+      "index": 13,
+      "entry_bytes": "cc280088",
+      "table_file_offset": "0x0F0034",
+      "selector_surface": "track-facing adjacent helper ($1C7C + 0x000B)",
+      "target_bank": "1E",
+      "target_addr": "0xA8CC",
+      "target_file_offset": "0x0F28CC",
+      "header_words": [
+        "0x8008",
+        "0x0020",
+        "0xC347",
+        "0x9084"
+      ],
+      "object_count": 8,
+      "header_flags": {
+        "bit_15_set": true,
+        "bit_14_set": false,
+        "bit_13_set": false,
+        "bit_12_set": false
+      },
+      "first_payload_words": [
+        "0x0047",
+        "0x0084",
+        "0x0000",
+        "0x0000",
+        "0x0057",
+        "0x0084",
+        "0x0002",
+        "0x0000"
+      ]
+    },
+    {
+      "index": 14,
+      "entry_bytes": "142d008a",
+      "table_file_offset": "0x0F0038",
+      "selector_surface": "track-facing adjacent helper ($1C7C + 0x000B)",
+      "target_bank": "1E",
+      "target_addr": "0xAD14",
+      "target_file_offset": "0x0F2D14",
+      "header_words": [
+        "0x800A",
+        "0x0028",
+        "0xD437",
+        "0xBEB2"
+      ],
+      "object_count": 10,
+      "header_flags": {
+        "bit_15_set": true,
+        "bit_14_set": false,
+        "bit_13_set": false,
+        "bit_12_set": false
+      },
+      "first_payload_words": [
+        "0x0037",
+        "0x00B2",
+        "0x0000",
+        "0x0000",
+        "0x0047",
+        "0x00B2",
+        "0x0002",
+        "0x0000"
+      ]
+    }
+  ]
+}

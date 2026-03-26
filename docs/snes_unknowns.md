@@ -16,7 +16,7 @@ DOS-driven SNES correlation pass.
   - `L00BDAC` and `L00BDD0` wrap the selection across all three slots without
     a recovered lock condition.
   - An adjacent front-end UI helper uses `$00 = $0202 + 0x0008` against the
-    shared `$1E80` buffer through `L00179B`.
+    ROM descriptor table rooted at `1E:8000` through `L00179B/L001662`.
   - The three preview helper bundles are distinct:
     - index `9` -> `00:B0AB`, `0E:8000`, `02:FC11`
     - index `10` -> `00:B6B2`, `0E:91FE`, `02:FBF3`
@@ -66,7 +66,7 @@ DOS-driven SNES correlation pass.
   - `L008C10` uses the resulting base/count pair to choose the live descriptor
     row.
   - An adjacent front-end UI helper uses `$00 = $1C7C + 0x000B` against the
-    shared `$1E80` buffer through `L00179B`.
+    ROM descriptor table rooted at `1E:8000` through `L00179B`.
 - Notes:
   - The selector mechanics and `4`-slot cardinality are verified.
   - The remaining gap is the human-readable name mapping for the four slots.
@@ -113,9 +113,9 @@ DOS-driven SNES correlation pass.
 - Trace the follow-up callback/composition path after the helper `9/10/11`
   bundle build to explain why helpers `10` and `11` stay blank in the current
   isolated-layer model.
-- Find the exact writer/materializer for the `$1E80` descriptor table, because
-  simple no-input and coarse `start`-pulse probes still leave `$1E80..$1FFF`
-  zero in the sampled front-end windows.
+- Decode and render the `1E:8000` descriptor rows `8..14` so the current
+  car-facing and track-facing adjacent menu surfaces can be tied to concrete
+  labels instead of raw descriptor headers.
 - Keep decoding the `01:8016..01:8330` table families into named rows so
   `$1C7C`, `$1CAC`, and `$1CCA` can be tied to concrete assets instead of raw
   indices.

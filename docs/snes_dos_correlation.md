@@ -14,6 +14,7 @@ bank-0/bank-1 archaeology or direct ROM-header evidence.
 | Car-specific working set | Customizer UI plus live parameter fields exist | `VERIFIED` |
 | Preview asset resolution | Verified 3-choice animated preview rebuilder through `$0202`; strongest current car-facing selector domain is `$0202/$1C78` | `VERIFIED` / `PROBABLE` |
 | Track/scenery selector | Verified `4`-slot top-level selector through `$1C7C` with groups `[0, 5, 11, 18] / [5, 6, 7, 8]`; track names still unrecovered from ROM text | `VERIFIED` / `PROBABLE` |
+| UI descriptor rows | Adjacent menu helpers build a long ROM pointer rooted at `1E:8000`; current car-facing rows are `8..10`, current track-facing rows are `11..14` | `VERIFIED` |
 | Selector persistence | No cart SRAM in ROM header | `VERIFIED` |
 | DOS-style play-session gate | No verified dual-catalog equivalent yet; same corridor stages `02:9016/02:8F3C`, and `L009568/L0095AD` remains the strongest bank-1 boundary | `VERIFIED` / `PROBABLE` |
 
@@ -37,8 +38,9 @@ Relevant DOS contract:
   - `L00BE76` rotates `$1C7C` modulo `4`.
   - `L008B87` derives `$1C74/$1C76/$1C7A/$1C7E/$1C80` from
     `$1C6C/$1C70/$1C78/$1C7C/$1C90`.
-  - Unlabeled front-end UI helpers later feed `L00179B` from slot families
-    `$0202 + 0x0008` and `$1C7C + 0x000B` against the shared `$1E80` buffer.
+  - Unlabeled front-end UI helpers later feed `L00179B/L001662` from slot
+    families `$0202 + 0x0008` and `$1C7C + 0x000B` by constructing the long
+    ROM pointer `1E:8000`.
 - Notes:
   - This is a flattened named-field block, not a proven compact selector
     vector like DOS `0x8a1c`.
@@ -54,6 +56,28 @@ Relevant DOS contracts:
 - DOS runtime car records and scene records carry source-selector metadata that
   is not present on disk.
 - DOS derives preview assets from selected IDs.
+
+### CLAIM AUDIT
+
+- Claim: The adjacent front-end UI helpers previously read as `$1E80` buffer
+  users actually construct the long ROM pointer `1E:8000` and dereference
+  descriptor rows directly from that table.
+- Classification: VERIFIED
+- Evidence:
+  - The helpers at `01:BDF4`, `01:BE53`, and `01:BAC3` all use the overlapping
+    sequence `lda #$1E80 ; sta $11 ; lda #$8000 ; sta $10` before calling
+    `L00179B` or `L001662`.
+  - In `L00179B`, `[$10]` is treated as a long base pointer table, with the
+    selected row resolved by adding the four-byte entry at `index * 4` to the
+    base pointer.
+  - [tools/out/snes_frontend_pointer_table_1e8000.json](/home/nivando-soares/asmdump/tools/out/snes_frontend_pointer_table_1e8000.json)
+    decodes the current adjacent menu rows:
+    - car-facing selector surface -> rows `8..10`
+    - track-facing selector surface -> rows `11..14`
+- Notes:
+  - This closes the old WRAM-materializer assumption around `$1E80`.
+  - The remaining gap is payload naming and runtime composition, not locating a
+    writer for `7E:1E80`.
 
 ### CLAIM AUDIT
 
@@ -137,7 +161,7 @@ Relevant DOS contracts:
     - index `10` -> `00:B6B2`, `0E:91FE`, `02:FBF3`
     - index `11` -> `00:BCBA`, `0E:A428`, `0D:C98F`
   - An adjacent front-end UI helper later uses `$00 = $0202 + 0x0008`
-    against the shared `$1E80` buffer through `L00179B`.
+    against the ROM pointer table rooted at `1E:8000` through `L00179B`.
   - A separate verified `CUSTOMIZE CAR` surface exists in the same front-end
     corridor, and later bank-1 paths keep indexing auxiliary tables through
     `$1C78`.
@@ -187,7 +211,7 @@ Relevant DOS contracts:
   - `L008C10` immediately uses `$1C82 = $1CA8 + $1C7E` to derive the live
     descriptor row.
   - An adjacent front-end UI helper uses `$00 = $1C7C + 0x000B` against the
-    shared `$1E80` buffer through `L00179B`.
+    ROM pointer table rooted at `1E:8000` through `L00179B`.
 - Notes:
   - The selector behavior and cardinality are direct code evidence.
   - The final human-readable track names still need a name-bearing asset or a

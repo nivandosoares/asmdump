@@ -4230,6 +4230,42 @@ Next best step:
 - trace the exact path that populates or bypasses `$1E80` for the menu-label
   descriptors, then tie the `4` `$1C7C` slots to concrete track names
 
+### CP-93: front-end descriptor table base closure
+
+- closed the old `$1E80` WRAM-table assumption with direct static decode:
+  - the helper sites at `01:BDF4`, `01:BE53`, and `01:BAC3` all use the
+    overlapping sequence:
+    - `lda #$1E80 ; sta $11`
+    - `lda #$8000 ; sta $10`
+  - that sequence constructs the long ROM pointer `1E:8000`, not a WRAM
+    buffer at `7E:1E80`
+  - `L00179B/L001662` then dereference four-byte rows from that table directly
+- promoted a reusable extractor and compact artifact:
+  - `tools/decode_frontend_pointer_table.py`
+  - `tools/out/snes_frontend_pointer_table_1e8000.json`
+  - `tools/out/snes_frontend_pointer_table_1e8000.md`
+- decoded current adjacent menu rows:
+  - car-facing helper surface:
+    - `$0202 + 0x0008` -> rows `8..10`
+    - targets `1E:9ACC`, `1E:9C14`, `1E:9D5C`
+    - header counts `8/8/8`
+  - track-facing helper surface:
+    - `$1C7C + 0x000B` -> rows `11..14`
+    - targets `1E:9EA4`, `1E:A374`, `1E:A8CC`, `1E:AD14`
+    - header counts `9/10/8/10`
+- practical reading:
+  - the previous WRAM probe result remains true as a negative observation, but
+    it no longer defines the gate because `L00179B` was never waiting for a
+    writer to `7E:1E80`
+  - the active naming frontier is now the ROM descriptor payloads themselves
+    and any live overlay/composition layered on top of them
+
+Next best step:
+
+- decode or render the `1E:8000` row payloads `11..14` far enough to tie the
+  four `$1C7C` slots to concrete track names, then widen callback promotion
+  only if a live overlay still obscures that mapping
+
 Savestate lane blocker (current environment):
 
 - `mesen_probe_boot.lua` can load savestates, but headless `--testRunner` does not expose

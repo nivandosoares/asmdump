@@ -1,7 +1,7 @@
 {
   "version": 1,
   "created": "2026-03-26",
-  "scope": "SNES front-end selector cardinality from recovered bank1 code and bounded WRAM probes.",
+  "scope": "SNES front-end selector cardinality from recovered bank1 code, with the old $1E80 WRAM-table assumption demoted by the later 1E:8000 pointer-table decode.",
   "claims": [
     {
       "id": "car_selector_3_slots_no_frontend_gate",
@@ -28,18 +28,20 @@
       "notes": "This verifies the four-slot top-level selector. The human-readable track names are still not recovered from ROM text."
     },
     {
-      "id": "wram_1e80_not_materialized_in_simple_start_pulse_lane",
+      "id": "ui_helpers_use_rom_pointer_table_1e8000",
       "classification": "VERIFIED",
-      "claim": "Simple start-pulse front-end probes are not sufficient to materialize the $1E80 descriptor table used by L00179B.",
+      "claim": "The adjacent front-end UI helpers use a long ROM pointer table rooted at 1E:8000, so the old expectation of a WRAM descriptor table at $1E80 was misplaced.",
       "evidence": [
-        "Bounded probes with start pulses at frames 240, 900, and 1200 leave WRAM $1E80..$1FFF zero at screenshot frames 1200 and 1400.",
-        "The same lane transiently reaches active main callback 01:BAB3 at frame 1200 with state_1c6a/state_1c70/selector_1c78/selector_1c7c = 1/0/1/0."
+        "The helper sites at 01:BDF4, 01:BE53, and 01:BAC3 all use the overlapping sequence lda #$1E80 ; sta $11 ; lda #$8000 ; sta $10 before calling L00179B or L001662.",
+        "L00179B resolves rows by dereferencing [$10] as a long base pointer table, which makes the resulting base 1E:8000 rather than 7E:1E80.",
+        "tools/out/snes_frontend_pointer_table_1e8000.json decodes the current adjacent rows as car-facing indices 8..10 and track-facing indices 11..14."
       ],
-      "notes": "This is a useful negative result: the name-bearing descriptor materializer is still on a narrower path than these coarse front-end pulses."
+      "notes": "The old WRAM probe remains a factual negative result, but it no longer defines the active gate because the relevant label/layout rows already live in ROM."
     }
   ],
   "bounded_validation": [
     "ASCII scan of bank1 confirms the customization block at 01:880D..01:889B is plain text.",
-    "The same ASCII scan did not recover plain ASCII track names in that scanned bank1 surface."
+    "The same ASCII scan did not recover plain ASCII track names in that scanned bank1 surface.",
+    "tools/decode_frontend_pointer_table.py reproduces the 1E:8000 table base and the current rows 8..14."
   ]
 }
