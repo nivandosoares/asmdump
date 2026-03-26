@@ -1,6 +1,6 @@
 # ROM Archaeology Progress Checkpoints
 
-Snapshot date: `2026-03-22`
+Snapshot date: `2026-03-26`
 
 This file tracks plan progress as checkpoints with objective evidence and the
 next gate needed to advance.
@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; registry tightening now closes `9681` as `sentinel-control` and `E91F` as `nested-invalid-marker`; active unresolved queue remains `EE7F` and `DA96` |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | resume from `rom_analysis/docs/intro_00_8029_next_agent_handoff.md`; extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract builders now also merge that activity layer directly, the follow-up `1102..1117` compare summary proves the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, the new `1118..1125` continuation note extends that exact no-DMA surface past the old headless edge, the next sampled compare block now closes the same exact surface through `1133`, the wider `1164..1172` boundary window already proved the next later change is a producer-side reactivation rather than a callback switch, and a new blob-cycle report now ties that reactivation to a concrete ownership path `01:B6E3 -> 01:9DC6 -> 00:95BD -> $096A/$0700 -> OAMDATA` while proving every sampled direct `VMDATA` burst in `1134..1200` matches the same `AA10/AB58/ACA0` ROM blob as the paired `DMA0` source and alternates over `VMADD = 0x4920/0x49A0`; that closes the "who owns the late `00:8029` producer cycle?" question and moves the frontier to the later-frame selection/schedule rule for native replacement rather than blind continuity extension or more local `bg1_visible` tuning |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | resume from `rom_analysis/docs/intro_00_8029_next_agent_handoff.md`; extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract builders now also merge that activity layer directly, the follow-up `1102..1117` compare summary proves the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, the new `1118..1125` continuation note extends that exact no-DMA surface past the old headless edge, the next sampled compare block now closes the same exact surface through `1133`, the wider `1164..1172` boundary window already proved the next later change is a producer-side reactivation rather than a callback switch, a new blob-cycle report now ties that reactivation to a concrete ownership path `01:B6E3 -> 01:9DC6 -> 00:95BD -> $096A/$0700 -> OAMDATA` while proving every sampled direct `VMDATA` burst in `1134..1200` matches the same `AA10/AB58/ACA0` ROM blob as the paired `DMA0` source and alternates over `VMADD = 0x4920/0x49A0`, and the previously open `$1C7C` naming frontier is now closed by rendered descriptor rows `11..14`: `Desert Blast - Easy`, `City Bound - Medium`, `East Coast - Hard`, `West Coast - Hardest`; the next Lane 2 frontier is no longer top-level phase naming but the callback-promotion corridor around `01:9568/01:95AD -> 02:9016/02:8F3C` and the still-open car-facing rows `8..10` |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -4265,6 +4265,54 @@ Next best step:
 - decode or render the `1E:8000` row payloads `11..14` far enough to tie the
   four `$1C7C` slots to concrete track names, then widen callback promotion
   only if a live overlay still obscures that mapping
+
+### CP-94: `$1C7C` top-level phase-name rows closed through rendered descriptors
+
+- extended the reusable decoder so it now closes the descriptor payload format
+  instead of stopping at the row headers:
+  - `tools/decode_frontend_pointer_table.py`
+  - parses each row into:
+    - object list
+    - descriptor-local `4bpp` OBJ blob
+    - staged-tile layout (`contiguous` vs `split_row_padded`)
+  - emits monochrome preview strips plus tile sheets for selected rows
+- promoted concrete evidence artifacts for the active four-slot surface:
+  - `tools/out/snes_frontend_pointer_table_tracks.json`
+  - `tools/out/snes_frontend_pointer_table_tracks.md`
+  - `tools/out/snes_frontend_pointer_table_tracks/frontend_row_11_preview.ppm`
+  - `tools/out/snes_frontend_pointer_table_tracks/frontend_row_12_preview.ppm`
+  - `tools/out/snes_frontend_pointer_table_tracks/frontend_row_13_preview.ppm`
+  - `tools/out/snes_frontend_pointer_table_tracks/frontend_row_14_preview.ppm`
+- bounded validation:
+  - `python3 -m py_compile tools/decode_frontend_pointer_table.py`
+  - `python3 tools/decode_frontend_pointer_table.py game.smc --indices 11-14 --render-dir tools/out/snes_frontend_pointer_table_tracks --json-out tools/out/snes_frontend_pointer_table_tracks.json --md-out tools/out/snes_frontend_pointer_table_tracks.md`
+- recovered exact `$1C7C -> row -> rendered label` mapping:
+  - `$1C7C = 0` -> row `11` -> `Desert Blast - Easy`
+  - `$1C7C = 1` -> row `12` -> `City Bound - Medium`
+  - `$1C7C = 2` -> row `13` -> `East Coast - Hard`
+  - `$1C7C = 3` -> row `14` -> `West Coast - Hardest`
+- descriptor-format reading tightened materially:
+  - all four top-level rows are now proven to be OBJ label strips, not hidden
+    WRAM text or a separate live string materializer
+  - rows `11/12/14` use the negative-layout `split_row_padded` staging rule
+    inferred from `L0015E1/L001945`
+  - row `13` is the aligned `32`-tile `contiguous` case
+- practical reading:
+  - the old “probable track/scenery selector” read is now concrete phase-name
+    evidence with explicit difficulty suffixes baked into the descriptor rows
+  - the active Lane 2 naming frontier has moved away from `$1C7C`; the next
+    open naming surface is the car-facing row family `8..10`
+  - callback-promotion archaeology can now resume without the old top-level
+    phase-name blocker
+
+Next best step:
+
+- return to the bank-1 callback-promotion corridor with the top-level phase
+  surface now closed:
+  - widen the real promotion window around `01:9568/01:95AD`
+  - keep watching for the first concrete `02:9016/02:8F3C` handoff
+  - only reopen front-end naming if the still-open car-facing rows `8..10`
+    become the stronger blocker
 
 Savestate lane blocker (current environment):
 
