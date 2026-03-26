@@ -33,6 +33,22 @@
       }
     },
     {
+      "id": "three_car_front_end_surface",
+      "dos_contract": "DOS derives preview assets from selected IDs.",
+      "mapping_status": "reduced_roster_front_end_surface",
+      "claim_audit": {
+        "claim": "The recovered SNES front-end car-selection surface exposes exactly three reachable slots through $0202/$1C78, and the current loop shows no separate front-end restriction on the third slot.",
+        "classification": "VERIFIED",
+        "evidence": [
+          "L008B3E sets $1C84 = 3, copies $1C78 into $0202, and enters L00BBCB.",
+          "L00BDAC increments $0202, wraps 2 -> 0, and immediately re-enters L00BC0F.",
+          "L00BDD0 decrements $0202, wraps 0 -> 2, and immediately re-enters L00BC0F.",
+          "The three reachable bundle indices 0x0009 + $0202 map to distinct helper triples for indices 9, 10, and 11."
+        ],
+        "notes": "This is a verified statement about the recovered front-end selector loop. It does not rule out some unrelated later gameplay-mode restriction elsewhere, but no front-end lock condition is recovered here."
+      }
+    },
+    {
       "id": "three_choice_preview_rebuilder",
       "dos_contract": "DOS derives preview assets from selected IDs.",
       "mapping_status": "partial_equivalent",
@@ -67,18 +83,19 @@
     {
       "id": "four_state_bundle_selector_candidate",
       "dos_contract": "DOS car selection and scenery selection are separate materialization handlers.",
-      "mapping_status": "closest_current_scenery_candidate",
+      "mapping_status": "verified_four_slot_top_level_selector",
       "claim_audit": {
-        "claim": "$1C7C is a verified four-state descriptor-group selector with bases/counts [0, 5, 11, 18] / [5, 6, 7, 8], and it remains the strongest current scenery or track candidate.",
-        "classification": "PROBABLE",
+        "claim": "$1C7C is a verified four-slot top-level front-end selector with descriptor-group bases/counts [0, 5, 11, 18] / [5, 6, 7, 8].",
+        "classification": "VERIFIED",
         "evidence": [
+          "L008B6F sets $1C84 = 4 before entering L00BE76.",
           "L00BE76 rotates $1C7C modulo 4 in response to directional input.",
           "L008B87 uses $1C7C to read $1C7E/$1C80 from table 01:8000.",
           "Raw table decode at 01:8000/01:8008 yields group bases [0, 5, 11, 18] and counts [5, 6, 7, 8].",
           "L008C10 immediately uses $1C82 = $1CA8 + $1C7E to derive the live descriptor row.",
           "An adjacent front-end UI helper uses $00 = $1C7C + 0x000B against the shared $1E80 buffer via L00179B."
         ],
-        "notes": "The selector behavior is verified. The domain label track/scenery is still inferred from downstream bundle use rather than named code/data."
+        "notes": "The four-slot selector behavior is direct code evidence. The final human-readable track names are still not recovered from ROM text."
       }
     },
     {
@@ -99,11 +116,11 @@
   "questions_answered": [
     {
       "question": "Is there still a split between full catalogs and menu working sets?",
-      "answer": "Not yet as two verified domains. The current verified model is one shared bundle materializer fed by several selector fields, with a separate 3-bundle $0202/$1C78 preview domain and a 4-group $1C7C descriptor domain."
+      "answer": "Not yet as two verified domains. The current verified model is one shared bundle materializer fed by several selector fields, with a separate 3-slot $0202/$1C78 car-facing surface and a 4-slot $1C7C top-level selector."
     },
     {
       "question": "Does the track record include a bank or source selector equivalent to DOS play_disk?",
-      "answer": "A source-selector-like descriptor family exists at $1CAC/$1CCA/$1CE2/$1CE4/$1CE6, and $1C7C now has verified base/count groups [0, 5, 11, 18] / [5, 6, 7, 8], but the exact track/scenery semantics are not yet proven."
+      "answer": "A source-selector-like descriptor family exists at $1CAC/$1CCA/$1CE2/$1CE4/$1CE6, and $1C7C now has verified four-slot base/count groups [0, 5, 11, 18] / [5, 6, 7, 8], but the exact human-readable track names are not yet proven from ROM text."
     },
     {
       "question": "Does the SNES menu use tiny layout descriptors analogous to DOS .SS sidecars?",

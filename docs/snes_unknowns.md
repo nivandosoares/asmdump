@@ -13,6 +13,8 @@ DOS-driven SNES correlation pass.
 - Evidence:
   - `L00BBCB` cycles `$0202` over `0..2`, rebuilds one bundle from
     `0x0009 + $0202`, and `L008B57` commits `$0202 -> $1C78`.
+  - `L00BDAC` and `L00BDD0` wrap the selection across all three slots without
+    a recovered lock condition.
   - An adjacent front-end UI helper uses `$00 = $0202 + 0x0008` against the
     shared `$1E80` buffer through `L00179B`.
   - The three preview helper bundles are distinct:
@@ -24,6 +26,9 @@ DOS-driven SNES correlation pass.
   - The preview and commit behavior are direct code evidence.
   - The domain label car still needs a name-bearing asset or debugger-backed
     menu trace.
+  - The current recovered loop already exposes all three front-end slots; the
+    remaining gap is naming, not a recovered front-end restriction on the
+    third slot.
   - The raw helper bundles are now extractable; the remaining uncertainty is
     runtime composition and naming.
 
@@ -53,6 +58,7 @@ DOS-driven SNES correlation pass.
 - Claim: `$1C7C` is the best current track or scenery selector candidate.
 - Classification: PROBABLE
 - Evidence:
+  - `L008B6F` sets `$1C84 = 4` before `L00BE76`.
   - `L00BE76` rotates `$1C7C` over `4` states.
   - `01:8000/01:8008` decodes to group bases/counts
     `[0, 5, 11, 18] / [5, 6, 7, 8]`.
@@ -62,9 +68,8 @@ DOS-driven SNES correlation pass.
   - An adjacent front-end UI helper uses `$00 = $1C7C + 0x000B` against the
     shared `$1E80` buffer through `L00179B`.
 - Notes:
-  - The selector mechanics are verified.
-  - The track/scenery label still needs a direct ID, name, or gameplay-side
-    confirmation.
+  - The selector mechanics and `4`-slot cardinality are verified.
+  - The remaining gap is the human-readable name mapping for the four slots.
 
 ### CLAIM AUDIT
 
@@ -108,6 +113,9 @@ DOS-driven SNES correlation pass.
 - Trace the follow-up callback/composition path after the helper `9/10/11`
   bundle build to explain why helpers `10` and `11` stay blank in the current
   isolated-layer model.
+- Find the exact writer/materializer for the `$1E80` descriptor table, because
+  simple no-input and coarse `start`-pulse probes still leave `$1E80..$1FFF`
+  zero in the sampled front-end windows.
 - Keep decoding the `01:8016..01:8330` table families into named rows so
   `$1C7C`, `$1CAC`, and `$1CCA` can be tied to concrete assets instead of raw
   indices.

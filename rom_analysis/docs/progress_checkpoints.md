@@ -4193,6 +4193,43 @@ Next best step:
   helper `10/11` can be explained as either deferred composition or genuinely
   blank one-shot states
 
+### CP-92: front-end selector cardinality tightening
+
+- tightened the recovered SNES front-end cardinality with direct code evidence:
+  - car surface:
+    - `L008B3E` sets `$1C84 = 3`
+    - `L00BBCB` wraps `$0202` across `0..2`
+    - helper indices `9/10/11` are the three reachable bundle triples
+    - no separate front-end restriction branch on the third slot is recovered
+      in this loop
+  - top-level track surface:
+    - `L008B6F` sets `$1C84 = 4`
+    - `L00BE76` wraps `$1C7C` across `0..3`
+    - `L008B87` then resolves descriptor groups
+      `[0, 5, 11, 18] / [5, 6, 7, 8]`
+- added compact evidence artifact:
+  - `tools/out/snes_frontend_selector_cardinality.json`
+  - `tools/out/snes_frontend_selector_cardinality.md`
+- bounded validation and narrowing:
+  - bank-1 ASCII scan confirms the customization block at `01:880D..01:889B`
+    is plain text and shows no plain ASCII track names in that scanned bank-1
+    surface
+  - simple start-pulse WRAM probes at frames `1200` and `1400` still leave
+    `$1E80..$1FFF` zero, even when frame `1200` transiently reaches active main
+    callback `01:BAB3`
+- practical reading:
+  - the current recovered front-end loop already supports all `3` car slots;
+    the unresolved gap is the human-readable naming path, not a hidden
+    front-end restriction on the third slot
+  - `$1C7C` is now better read as the verified `4`-slot top-level track
+    surface, while the specific track names still need the descriptor/text
+    materializer path
+
+Next best step:
+
+- trace the exact path that populates or bypasses `$1E80` for the menu-label
+  descriptors, then tie the `4` `$1C7C` slots to concrete track names
+
 Savestate lane blocker (current environment):
 
 - `mesen_probe_boot.lua` can load savestates, but headless `--testRunner` does not expose

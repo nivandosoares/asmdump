@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "created": "2026-03-26",
+  "scope": "SNES front-end selector cardinality from recovered bank1 code and bounded WRAM probes.",
+  "claims": [
+    {
+      "id": "car_selector_3_slots_no_frontend_gate",
+      "classification": "VERIFIED",
+      "claim": "The recovered SNES front-end car-selection surface exposes exactly three reachable slots through $0202/$1C78, and no separate front-end restriction on the third slot is present in that loop.",
+      "evidence": [
+        "L008B3E sets $1C84 = 3, copies $1C78 into $0202, and enters L00BBCB.",
+        "L00BDAC increments $0202, wraps 2 -> 0, and immediately re-enters L00BC0F.",
+        "L00BDD0 decrements $0202, wraps 0 -> 2, and immediately re-enters L00BC0F.",
+        "The three reachable bundle indices 0x0009 + $0202 map to distinct helper triples for indices 9, 10, and 11."
+      ],
+      "notes": "This is a verified statement about the recovered front-end selector loop. It does not rule out some unrelated later gameplay-mode restriction elsewhere."
+    },
+    {
+      "id": "track_selector_4_slots_top_level",
+      "classification": "VERIFIED",
+      "claim": "The recovered SNES top-level track surface exposes four slots through $1C7C before descriptor materialization.",
+      "evidence": [
+        "L008B6F sets $1C84 = 4 before entering L00BE76.",
+        "L00BE76 increments and decrements $1C7C with wraparound across 0..3.",
+        "L008B87 reads $1C7E/$1C80 from 01:8000/01:8008.",
+        "The resulting descriptor-group bases/counts are [0, 5, 11, 18] / [5, 6, 7, 8]."
+      ],
+      "notes": "This verifies the four-slot top-level selector. The human-readable track names are still not recovered from ROM text."
+    },
+    {
+      "id": "wram_1e80_not_materialized_in_simple_start_pulse_lane",
+      "classification": "VERIFIED",
+      "claim": "Simple start-pulse front-end probes are not sufficient to materialize the $1E80 descriptor table used by L00179B.",
+      "evidence": [
+        "Bounded probes with start pulses at frames 240, 900, and 1200 leave WRAM $1E80..$1FFF zero at screenshot frames 1200 and 1400.",
+        "The same lane transiently reaches active main callback 01:BAB3 at frame 1200 with state_1c6a/state_1c70/selector_1c78/selector_1c7c = 1/0/1/0."
+      ],
+      "notes": "This is a useful negative result: the name-bearing descriptor materializer is still on a narrower path than these coarse front-end pulses."
+    }
+  ],
+  "bounded_validation": [
+    "ASCII scan of bank1 confirms the customization block at 01:880D..01:889B is plain text.",
+    "The same ASCII scan did not recover plain ASCII track names in that scanned bank1 surface."
+  ]
+}

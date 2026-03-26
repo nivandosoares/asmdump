@@ -10,9 +10,10 @@ bank-0/bank-1 archaeology or direct ROM-header evidence.
 | --- | --- | --- |
 | Selection vector | Flattened WRAM selector block around `$1C6A..$1C90`, not a proven slot-indexed vector | `VERIFIED` |
 | Car/scenery materializers | One verified shared descriptor materializer; no recovered split into dedicated car and scenery builders yet | `VERIFIED` |
+| Car roster size | Verified `3`-slot front-end surface through `$0202/$1C78`; no recovered front-end restriction on the third slot in the current menu loop | `VERIFIED` |
 | Car-specific working set | Customizer UI plus live parameter fields exist | `VERIFIED` |
 | Preview asset resolution | Verified 3-choice animated preview rebuilder through `$0202`; strongest current car-facing selector domain is `$0202/$1C78` | `VERIFIED` / `PROBABLE` |
-| Track/scenery selector | Verified 4-state descriptor groups `[0, 5, 11, 18] / [5, 6, 7, 8]`; domain label still most likely track/scenery | `PROBABLE` |
+| Track/scenery selector | Verified `4`-slot top-level selector through `$1C7C` with groups `[0, 5, 11, 18] / [5, 6, 7, 8]`; track names still unrecovered from ROM text | `VERIFIED` / `PROBABLE` |
 | Selector persistence | No cart SRAM in ROM header | `VERIFIED` |
 | DOS-style play-session gate | No verified dual-catalog equivalent yet; same corridor stages `02:9016/02:8F3C`, and `L009568/L0095AD` remains the strongest bank-1 boundary | `VERIFIED` / `PROBABLE` |
 
@@ -91,6 +92,26 @@ Relevant DOS contracts:
 
 ### CLAIM AUDIT
 
+- Claim: The recovered SNES front-end car-selection surface exposes exactly
+  `3` reachable slots through `$0202/$1C78`, and the current loop shows no
+  separate front-end restriction on the third slot.
+- Classification: VERIFIED
+- Evidence:
+  - `L008B3E` sets `$1C84 = 3`, copies `$1C78 -> $0202`, and enters
+    `L00BBCB`.
+  - `L00BDAC` increments `$0202`, wraps `2 -> 0`, and immediately re-enters
+    `L00BC0F`.
+  - `L00BDD0` decrements `$0202`, wraps `0 -> 2`, and immediately re-enters
+    `L00BC0F`.
+  - The three reachable bundle indices `0x0009 + $0202` map to distinct
+    helper triples for indices `9`, `10`, and `11`.
+- Notes:
+  - This is a verified statement about the recovered front-end selector loop.
+  - It does not rule out some unrelated later gameplay-mode restriction
+    elsewhere, but no front-end lock condition is recovered here.
+
+### CLAIM AUDIT
+
 - Claim: SNES has a verified `3`-choice animated preview rebuilder driven by
   `$0202`.
 - Classification: VERIFIED
@@ -154,11 +175,11 @@ Relevant DOS contracts:
 
 ### CLAIM AUDIT
 
-- Claim: `$1C7C` is a verified four-state descriptor-group selector with
-  bases/counts `[0, 5, 11, 18] / [5, 6, 7, 8]`, and it remains the strongest
-  current scenery or track candidate.
-- Classification: PROBABLE
+- Claim: `$1C7C` is a verified `4`-slot top-level front-end selector with
+  bases/counts `[0, 5, 11, 18] / [5, 6, 7, 8]`.
+- Classification: VERIFIED
 - Evidence:
+  - `L008B6F` sets `$1C84 = 4` before entering `L00BE76`.
   - `L00BE76` rotates `$1C7C` modulo `4`.
   - `L008B87` uses `$1C7C` to read `$1C7E/$1C80` from `01:8000`.
   - Raw table decode at `01:8000/01:8008` yields group bases
@@ -168,9 +189,9 @@ Relevant DOS contracts:
   - An adjacent front-end UI helper uses `$00 = $1C7C + 0x000B` against the
     shared `$1E80` buffer through `L00179B`.
 - Notes:
-  - The selector behavior is direct code evidence.
-  - The track/scenery label still needs a name-bearing asset or gameplay-side
-    proof.
+  - The selector behavior and cardinality are direct code evidence.
+  - The final human-readable track names still need a name-bearing asset or a
+    more specific materialized menu state.
 
 ### CLAIM AUDIT
 
