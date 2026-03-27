@@ -24,13 +24,27 @@ DOS-driven SNES correlation pass.
   - A separate verified car-customize surface exists at `01:880D`.
 - Notes:
   - The preview and commit behavior are direct code evidence.
-  - The domain label car still needs a name-bearing asset or debugger-backed
-    menu trace.
+  - The domain label still needs a separate name-bearing asset or
+    debugger-backed menu trace.
   - The current recovered loop already exposes all three front-end slots; the
     remaining gap is naming, not a recovered front-end restriction on the
     third slot.
-  - The raw helper bundles are now extractable; the remaining uncertainty is
-    runtime composition and naming.
+  - The raw helper bundles are now extractable.
+  - Normalized `1E:8000` row previews strongly suggest rows `8..10` are
+    rolling-tire phases rather than car names, so the remaining uncertainty is
+    where the separate name-bearing surface lives.
+
+### CLAIM AUDIT
+
+- Claim: rows `0x15..0x1B` in the `1E:8000` front-end table belong to the
+  control/sound settings surface, not the car-name surface.
+- Classification: VERIFIED
+- Evidence:
+  - [tools/out/snes_frontend_pointer_table_controls_15_1b.json](/home/nivando-soares/asmdump/tools/out/snes_frontend_pointer_table_controls_15_1b.json)
+    renders `Brake`, `Throttle`, `Horn`, `Upshift`, `Downshift`,
+    `Steering/Pause`, and `stereo`.
+- Notes:
+  - This closes one nearby false lead in the front-end naming hunt.
 
 ### CLAIM AUDIT
 
@@ -118,9 +132,10 @@ DOS-driven SNES correlation pass.
 - Trace the follow-up callback/composition path after the helper `9/10/11`
   bundle build to explain why helpers `10` and `11` stay blank in the current
   isolated-layer model.
-- Decode and render the `1E:8000` descriptor rows `8..14` so the current
-  car-facing and track-facing adjacent menu surfaces can be tied to concrete
-  labels instead of raw descriptor headers.
+- Stop treating rows `8..10` as a naming target and locate the separate
+  car-name text surface instead.
+- Use the now-decoded `0x15..0x1B` settings labels to identify the exact
+  front-end submenu/callsite that owns that control/sound surface.
 - Keep decoding the `01:8016..01:8330` table families into named rows so
   `$1C7C`, `$1CAC`, and `$1CCA` can be tied to concrete assets instead of raw
   indices.

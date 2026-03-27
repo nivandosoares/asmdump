@@ -85,11 +85,17 @@ def read_word_le(blob: bytes, offset: int) -> int:
     return blob[offset] | (blob[offset + 1] << 8)
 
 
+def signed_word(value: int) -> int:
+    return value - 0x10000 if value & 0x8000 else value
+
+
 def selector_surface_for_index(index: int) -> str:
     if 8 <= index <= 10:
-        return "car-facing adjacent helper ($0202 + 0x0008)"
+        return "front-end rolling-tire helper ($0202 + 0x0008)"
     if 11 <= index <= 14:
         return "track-facing adjacent helper ($1C7C + 0x000B)"
+    if 0x15 <= index <= 0x1B:
+        return "front-end control/sound labels"
     return "unclassified current lane"
 
 
@@ -102,6 +108,10 @@ def decode_descriptor_object(rom: bytes, offset: int, slot: int) -> dict[str, st
         "slot": slot,
         "x": x,
         "y": y,
+        "x_signed": signed_word(x),
+        "y_signed": signed_word(y),
+        "x_word": f"0x{x:04X}",
+        "y_word": f"0x{y:04X}",
         "tile_word": f"0x{tile_word:04X}",
         "tile_index": tile_word & 0x00FF,
         "tile_attr_high": f"0x{(tile_word >> 8) & 0x00FF:02X}",
@@ -169,15 +179,24 @@ def render_descriptor_preview(
     staged_blob: bytes,
     *,
     large_sprites: bool,
-) -> bytes:
-    rgb = bytearray(SCREEN_WIDTH * SCREEN_HEIGHT * 3)
+) -> dict[str, int | bytes]:
     width = 16 if large_sprites else 8
     height = 16 if large_sprites else 8
+    padding = 4
+    min_x = min(int(row["x_signed"]) for row in objects)
+    min_y = min(int(row["y_signed"]) for row in objects)
+    max_x = max(int(row["x_signed"]) + width - 1 for row in objects)
+    max_y = max(int(row["y_signed"]) + height - 1 for row in objects)
+    canvas_width = (max_x - min_x + 1) + (padding * 2)
+    canvas_height = (max_y - min_y + 1) + (padding * 2)
+    origin_x = padding - min_x
+    origin_y = padding - min_y
+    rgb = bytearray(canvas_width * canvas_height * 3)
     tile_cache: dict[int, list[int]] = {}
 
     for row in objects:
-        x_pos = int(row["x"])
-        y_pos = int(row["y"])
+        x_pos = int(row["x_signed"]) + origin_x
+        y_pos = int(row["y_signed"]) + origin_y
         tile_word = int(str(row["tile_word"]), 16)
         tile_index_base = tile_word & 0x00FF
         horizontal_flip = bool(row["horizontal_flip"])
@@ -188,7 +207,7 @@ def render_descriptor_preview(
             row_offset = source_y >> 3
             pixel_y = source_y & 0x07
             dst_y = y_pos + y_offset
-            if dst_y < 0 or dst_y >= SCREEN_HEIGHT:
+            if dst_y < 0 or dst_y >= canvas_height:
                 continue
 
             for x_offset in range(width):
@@ -209,47 +228,13 @@ def render_descriptor_preview(
                     continue
 
                 dst_x = x_pos + x_offset
-                if dst_x < 0 or dst_x >= SCREEN_WIDTH:
+                if dst_x < 0 or dst_x >= canvas_width:
                     continue
 
                 value = min(255, 40 + (color_index * 14))
-                dst = ((dst_y * SCREEN_WIDTH) + dst_x) * 3
+                dst = ((dst_y * canvas_width) + dst_x) * 3
                 rgb[dst:dst + 3] = bytes((value, value, value))
-    return bytes(rgb)
-
-
-def crop_rgb(rgb: bytes, width: int, height: int, padding: int = 4) -> dict[str, int | bytes]:
-    min_x = width
-    min_y = height
-    max_x = -1
-    max_y = -1
-    for y in range(height):
-        row_start = y * width * 3
-        for x in range(width):
-            pixel = rgb[row_start + (x * 3):row_start + (x * 3) + 3]
-            if pixel != b"\x00\x00\x00":
-                min_x = min(min_x, x)
-                min_y = min(min_y, y)
-                max_x = max(max_x, x)
-                max_y = max(max_y, y)
-
-    if max_x < min_x or max_y < min_y:
-        return {"width": width, "height": height, "rgb": rgb}
-
-    min_x = max(0, min_x - padding)
-    min_y = max(0, min_y - padding)
-    max_x = min(width - 1, max_x + padding)
-    max_y = min(height - 1, max_y + padding)
-    crop_width = max_x - min_x + 1
-    crop_height = max_y - min_y + 1
-    cropped = bytearray(crop_width * crop_height * 3)
-
-    for y in range(crop_height):
-        src_start = ((min_y + y) * width + min_x) * 3
-        src_end = src_start + (crop_width * 3)
-        dst_start = y * crop_width * 3
-        cropped[dst_start:dst_start + (crop_width * 3)] = rgb[src_start:src_end]
-    return {"width": crop_width, "height": crop_height, "rgb": bytes(cropped)}
+    return {"width": canvas_width, "height": canvas_height, "rgb": bytes(rgb)}
 
 
 def scale_rgb(rgb: bytes, width: int, height: int, scale: int) -> bytes:
@@ -361,22 +346,21 @@ def decode_entry(
 
         preview_ppm_path = render_dir / f"frontend_row_{index:02d}_preview.ppm"
         preview_ppm = str(preview_ppm_path)
-        preview_rgb = render_descriptor_preview(
+        preview = render_descriptor_preview(
             objects,
             staged_blob,
             large_sprites=bool(header[0] & 0x8000),
         )
-        preview_crop = crop_rgb(preview_rgb, SCREEN_WIDTH, SCREEN_HEIGHT)
         preview_scaled = scale_rgb(
-            preview_crop["rgb"],
-            int(preview_crop["width"]),
-            int(preview_crop["height"]),
+            preview["rgb"],
+            int(preview["width"]),
+            int(preview["height"]),
             render_scale,
         )
         write_ppm(
             preview_ppm_path,
-            int(preview_crop["width"]) * render_scale,
-            int(preview_crop["height"]) * render_scale,
+            int(preview["width"]) * render_scale,
+            int(preview["height"]) * render_scale,
             preview_scaled,
         )
 
@@ -441,7 +425,7 @@ def build_report(
         for index in indices
     ]
     return {
-        "version": 2,
+        "version": 3,
         "created": date.today().isoformat(),
         "rom": str(rom_path),
         "table_base": {
@@ -459,9 +443,10 @@ def build_report(
             "render_dir": str(render_dir) if render_dir is not None else None,
             "render_scale": render_scale if render_dir is not None else None,
             "preview_note": (
-                "Rendered previews treat nonzero 4bpp pixels as grayscale and "
-                "replay the descriptor-local OBJ blob staging rules inferred "
-                "from L0015E1/L001945."
+                "Rendered previews treat nonzero 4bpp pixels as grayscale, "
+                "reinterpret descriptor x/y words as signed local offsets, "
+                "and normalize the preview origin to the descriptor bounds "
+                "before replaying the staged 4bpp OBJ blob."
             ),
         },
         "code_sites": [
@@ -558,16 +543,16 @@ def write_markdown(report: dict, path: Path) -> None:
         lines.extend(
             [
                 "- Object records:",
-                "| Slot | X | Y | Tile Word | Aux |",
-                "| ---: | ---: | ---: | --- | --- |",
+                "| Slot | X (raw/signed) | Y (raw/signed) | Tile Word | Aux |",
+                "| ---: | --- | --- | --- | --- |",
             ]
         )
         for row in entry["objects"]:
             lines.append(
                 "| "
                 f"{row['slot']} | "
-                f"{row['x']} | "
-                f"{row['y']} | "
+                f"{row['x_word']} / {row['x_signed']} | "
+                f"{row['y_word']} / {row['y_signed']} | "
                 f"{row['tile_word']} | "
                 f"{row['aux_word']} |"
             )
@@ -577,8 +562,9 @@ def write_markdown(report: dict, path: Path) -> None:
         [
             "## Notes",
             "",
-            "- Indices `8..10` are the current car-facing adjacent helper rows.",
+            "- Indices `8..10` are the current front-end rolling-tire helper rows.",
             "- Indices `11..14` are the current track-facing adjacent helper rows.",
+            "- Indices `0x15..0x1B` are now decoded as front-end control/sound labels.",
             "- The descriptor payload format is now closed enough to split "
             "each row into an object list plus a descriptor-local 4bpp OBJ blob.",
             "- Negative-layout rows (`bit_15_set`) use a split staged-tile "

@@ -14,7 +14,7 @@ bank-0/bank-1 archaeology or direct ROM-header evidence.
 | Car-specific working set | Customizer UI plus live parameter fields exist | `VERIFIED` |
 | Preview asset resolution | Verified 3-choice animated preview rebuilder through `$0202`; strongest current car-facing selector domain is `$0202/$1C78` | `VERIFIED` / `PROBABLE` |
 | Track/scenery selector | Verified `4`-slot top-level selector through `$1C7C` with groups `[0, 5, 11, 18] / [5, 6, 7, 8]`; rendered rows `11..14` now recover `Desert Blast - Easy`, `City Bound - Medium`, `East Coast - Hard`, `West Coast - Hardest` | `VERIFIED` |
-| UI descriptor rows | Adjacent menu helpers build a long ROM pointer rooted at `1E:8000`; current car-facing rows are `8..10`, current track-facing rows are `11..14` | `VERIFIED` |
+| UI descriptor rows | Adjacent menu helpers build a long ROM pointer rooted at `1E:8000`; rows `8..10` now read as a rolling-tire helper cycle, rows `11..14` as track labels, and rows `0x15..0x1B` as control/sound labels | `VERIFIED` / `PROBABLE` |
 | Selector persistence | No cart SRAM in ROM header | `VERIFIED` |
 | DOS-style play-session gate | No verified dual-catalog equivalent yet; same corridor stages `02:9016/02:8F3C`, and `L009568/L0095AD` remains the strongest bank-1 boundary | `VERIFIED` / `PROBABLE` |
 
@@ -77,8 +77,10 @@ Relevant DOS contracts:
 - Notes:
   - This closes the old WRAM-materializer assumption around `$1E80`.
   - The remaining gap is no longer payload naming for the top-level `$1C7C`
-    surface; it is the still-open car-facing naming surface and later runtime
-    composition/promotion questions.
+    surface.
+  - Normalized row previews now also show that the nearby car-facing rows
+    `8..10` are not name-bearing text; they are a three-phase rolling-tire
+    helper, so the actual car-name surface must live elsewhere.
 
 ### CLAIM AUDIT
 
@@ -167,11 +169,31 @@ Relevant DOS contracts:
     corridor, and later bank-1 paths keep indexing auxiliary tables through
     `$1C78`.
 - Notes:
-  - The strongest remaining gap is a name-bearing asset or debugger-backed
-    menu trace.
+  - The strongest remaining gap is now the actual car-name text surface, not
+    whether rows `8..10` themselves are names.
   - The raw helper assets for indices `9..11` are now reachable through the
     partial-bulk extractor; the remaining gap is runtime composition, not raw
     decode reachability.
+
+### CLAIM AUDIT
+
+- Claim: the later `1E:8000` rows `0x15..0x1B` are front-end control/sound
+  labels rather than car-facing assets.
+- Classification: VERIFIED
+- Evidence:
+  - [tools/out/snes_frontend_pointer_table_controls_15_1b.json](/home/nivando-soares/asmdump/tools/out/snes_frontend_pointer_table_controls_15_1b.json)
+    and its Markdown companion decode direct text previews for:
+    - `Brake`
+    - `Throttle`
+    - `Horn`
+    - `Upshift`
+    - `Downshift`
+    - `Steering`, `Pause`
+    - `stereo`
+- Notes:
+  - This removes `0x15..0x1B` from the car-name search space.
+  - The next front-end naming frontier is now a different family than both
+    rows `8..10` and rows `0x15..0x1B`.
 
 ### CLAIM AUDIT
 
@@ -222,7 +244,8 @@ Relevant DOS contracts:
 - Notes:
   - The selector behavior and cardinality are direct code evidence.
   - The remaining uncertainty is no longer the top-level labels themselves.
-  - The next front-end naming frontier is the car-facing row family `8..10`.
+  - The next front-end naming frontier is a different family than rows
+    `8..10`, because those now read as rolling-tire phases.
 
 ### CLAIM AUDIT
 

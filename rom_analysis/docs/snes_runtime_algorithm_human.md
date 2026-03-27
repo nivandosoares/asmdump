@@ -61,7 +61,11 @@ already grounded in code reads, probes, or generated artifacts.
     - `$1C7C = 1` -> `City Bound - Medium`
     - `$1C7C = 2` -> `East Coast - Hard`
     - `$1C7C = 3` -> `West Coast - Hardest`
-11. After the front-end bundle is accepted and built, the strongest currently
+11. The nearby front-end row families now split more cleanly than before:
+    - rows `8..10` are a rolling-tire helper cycle, not names
+    - rows `0x15..0x1B` are control/sound settings labels
+    - the actual car-name text surface has not been located yet
+12. After the front-end bundle is accepted and built, the strongest currently
     proven gameplay-facing corridor is still the bank-1 path that stages
     `02:9016` (main) and `02:8F3C` (NMI) at `01:902D..01:9034`. That corridor
     is real, but direct headless forcing of `01:9568/01:95AD` does not yet
@@ -84,7 +88,7 @@ If you strip away the assembly details, the proven logic is:
 
 ## Open Edges
 
-- the car-facing label rows `8..10` are still not named
+- the actual front-end car-name text surface is still not located
 - the exact organic callback-promotion timing into the `02:9016/02:8F3C`
   gameplay lane is still not closed
 - late attract producer scheduling after `1133` is materially narrowed, but the
