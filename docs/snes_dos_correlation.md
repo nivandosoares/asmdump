@@ -17,7 +17,7 @@ bank-0/bank-1 archaeology or direct ROM-header evidence.
 | Track/scenery selector | Verified `4`-slot top-level selector through `$1C7C` with groups `[0, 5, 11, 18] / [5, 6, 7, 8]`; rendered rows `11..14` now recover `Desert Blast - Easy`, `City Bound - Medium`, `East Coast - Hard`, `West Coast - Hardest` | `VERIFIED` |
 | UI descriptor rows | Adjacent menu helpers build a long ROM pointer rooted at `1E:8000`; rows `8..10` read as a rolling-tire helper cycle, rows `11..14` as track labels, rows `15..17` as top-level signboard labels, and rows `0x15..0x1B` as control/sound labels | `VERIFIED` |
 | Selector persistence | No cart SRAM in ROM header | `VERIFIED` |
-| DOS-style play-session gate | No verified dual-catalog equivalent yet; no-force timed-input probes now recover the default rival path `L00C20B -> 01:C1D2 -> L00BE76 -> L008B87 -> 01:902D`, followed later by `active_main = 02:9016`, and a callback-relative `be43+17-22:start` confirm now also recovers the no-opponent fourth-slot path into the same later corridor while preserving `$1C70 = 3` / `$1C76 = 0`; `L009568/L0095AD` remains the strongest bank-1 boundary | `VERIFIED` / `PROBABLE` |
+| DOS-style play-session gate | No verified dual-catalog equivalent yet; no-force timed-input probes now recover the default rival path `L00C20B -> 01:C1D2 -> L00BE76 -> L008B87 -> 01:902D`, followed later by `active_main = 02:9016`, and a callback-relative `be43+17-22:start` confirm now also recovers the no-opponent fourth-slot path into the same later corridor while preserving `$1C70 = 3` / `$1C76 = 0`; a direct `2044..2199` compare keeps the same `02:9016/01:96A0/02:8F3C` callback surface and narrows the remaining post-handoff split to `14` sampled fields, with `state_09a2/state_09a8` the strongest non-selector deltas; `L009568/L0095AD` remains the strongest bank-1 boundary | `VERIFIED` / `PROBABLE` |
 
 ## Selection State
 
@@ -561,6 +561,29 @@ Relevant DOS contract:
   - This closes the later no-opponent confirm/promotion path itself.
   - The remaining open edge is now the gameplay-facing divergence after the
     shared `02:9016` corridor begins.
+
+### CLAIM AUDIT
+
+- Claim: The first shared `02:9016` window of the recovered rival and
+  no-opponent paths keeps identical `main/irq/nmi` callbacks but narrows the
+  remaining observed state split to `14` sampled fields, with the strongest
+  non-selector deltas in `state_09a2` and `state_09a8`.
+- Classification: VERIFIED
+- Evidence:
+  - [tools/out/snes_select_opponent_post_9016_state_compare.json](/home/nivando-soares/asmdump/tools/out/snes_select_opponent_post_9016_state_compare.json)
+    compares frames `2044..2199` of the default-rival and no-opponent runs.
+  - The compare keeps the same callback surface across the whole window:
+    `main = 02:9016`, `irq = 01:96A0`, `nmi = 02:8F3C`.
+  - The same compare reports `54` unchanged sampled fields and only `14`
+    differing fields in the whole window.
+  - Stable whole-window differences are limited to `$1C70 = 0 -> 3` and
+    `$1C76 = 1 -> 0`, plus DP cadence fields `$0053/$0054`; the strongest
+    non-selector downstream deltas are `state_09a2` (`77` differing frames,
+    `38/40 -> 34`) and `state_09a8` (`11` differing frames, `2 -> 10`).
+- Notes:
+  - This is a narrowing result, not a semantic decode of those fields.
+  - The next useful target is ownership or visibility for `09A2/09A8` and the
+    paired DP scratch fields inside the shared `02:9016` corridor.
 
 ### CLAIM AUDIT
 

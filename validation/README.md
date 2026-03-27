@@ -229,6 +229,25 @@ TD2_BOOT_PROBE_TRIGGER_INPUT_WINDOWS='c1d2+1-6:right,down;c1d2+8-13:start' \
 The probe JSON now records both `trigger_input_windows` and the first traced
 frame for each exec-point id under `exec_point_trace.first_frames`.
 
+For direct state-window comparison between two recovered boot probes, use
+`tools/compare_boot_probe_windows.py`:
+
+```sh
+python3 tools/compare_boot_probe_windows.py \
+  tools/out/select_opponent_clock_path_v2/td2_boot_probe.json \
+  tools/out/select_opponent_clock_path_v7_be43_confirm/td2_boot_probe.json \
+  tools/out/snes_select_opponent_post_9016_state_compare.json \
+  --markdown-out tools/out/snes_select_opponent_post_9016_state_compare.md \
+  --label-a default_rival \
+  --label-b no_opponent_clock \
+  --start-frame 2044 \
+  --end-frame 2199
+```
+
+That compare is useful when both lanes already share the same callback family
+and you want to narrow the remaining WRAM split instead of rerunning Mesen
+blindly.
+
 For producer-side visual ownership tracing, the same probe can now carry
 write-breakpoint hits for `VRAM/CGRAM/OAM`-related registers. The resulting
 `td2_boot_probe.json` can be fed into

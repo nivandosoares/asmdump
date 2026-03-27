@@ -436,6 +436,29 @@ DOS-driven SNES correlation pass.
     `02:9016` corridor begins, especially HUD/opponent-side differences tied
     to `$1C76 = 0`.
 
+### CLAIM AUDIT
+
+- Claim: The first shared `02:9016` window of the recovered rival and
+  no-opponent paths keeps identical `main/irq/nmi` callbacks but narrows the
+  remaining observed state split to `14` sampled fields, with the strongest
+  non-selector deltas in `state_09a2` and `state_09a8`.
+- Classification: VERIFIED
+- Evidence:
+  - [tools/out/snes_select_opponent_post_9016_state_compare.json](/home/nivando-soares/asmdump/tools/out/snes_select_opponent_post_9016_state_compare.json)
+    compares frames `2044..2199` of the default-rival and no-opponent runs.
+  - The compare keeps the same callback surface across the whole window:
+    `main = 02:9016`, `irq = 01:96A0`, `nmi = 02:8F3C`.
+  - The same compare reports `54` unchanged sampled fields and only `14`
+    differing fields in the whole window.
+  - Stable whole-window differences are limited to `$1C70 = 0 -> 3` and
+    `$1C76 = 1 -> 0`, plus DP cadence fields `$0053/$0054`; the strongest
+    non-selector downstream deltas are `state_09a2` (`77` differing frames,
+    `38/40 -> 34`) and `state_09a8` (`11` differing frames, `2 -> 10`).
+- Notes:
+  - This is a narrowing result, not a semantic decode of those fields.
+  - The next useful target is ownership or visibility for `09A2/09A8` and the
+    paired DP scratch fields inside the shared `02:9016` corridor.
+
 ## Next Probes
 
 - Get a deterministic post-attract or menu savestate where `$1CAC/$1CCA/$1CE*`
@@ -456,10 +479,10 @@ DOS-driven SNES correlation pass.
   car-name text surface instead.
 - Use the now-decoded `0x15..0x1B` settings labels to identify the exact
   front-end submenu/callsite that owns that control/sound surface.
-- Use the now-closed no-opponent path to capture and compare the first
-  post-`02:9016` gameplay-facing window against the recovered default-rival
-  baseline, focusing on state fields and later bank1/bank2 branches gated by
-  `$1C76 = 0`.
+- Use the now-closed no-opponent path plus the `2044..2199` compare artifact
+  to target ownership for `state_09a2`, `state_09a8`, and the paired DP
+  scratch fields (`$0020/$0022`, `$0053/$0054`) inside the shared
+  post-`02:9016` corridor.
 - Keep decoding the `01:8016..01:8330` table families into named rows so
   `$1C7C`, `$1CAC`, and `$1CCA` can be tied to concrete assets instead of raw
   indices.

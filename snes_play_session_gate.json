@@ -101,6 +101,22 @@
       }
     },
     {
+      "id": "post_9016_window_compare",
+      "dos_contract": "DOS play-session assembly is guarded by a non-graphics gate that requires both car and scenery catalogs.",
+      "mapping_status": "post_handoff_divergence_narrowed",
+      "claim_audit": {
+        "claim": "The first shared 02:9016 window of the recovered rival and no-opponent paths keeps identical main/irq/nmi callbacks but preserves only 14 differing sampled fields, with the stable split still rooted at $1C70/$1C76 and the strongest remaining non-selector deltas in state_09a2/state_09a8.",
+        "classification": "VERIFIED",
+        "evidence": [
+          "tools/out/snes_select_opponent_post_9016_state_compare.json compares frames 2044..2199 of tools/out/select_opponent_clock_path_v2/td2_boot_probe.json against tools/out/select_opponent_clock_path_v7_be43_confirm/td2_boot_probe.json.",
+          "The compare keeps the same callbacks across the whole window: main = 02:9016, irq = 01:96A0, nmi = 02:8F3C.",
+          "The same compare keeps 54 shared sampled fields unchanged and narrows differences to 14 fields total.",
+          "Stable whole-window differences are limited to state_1c70 = 0 -> 3 and state_1c76 = 1 -> 0, while the strongest non-selector downstream differences are state_09a2 (77 frames, 38/40 -> 34) and state_09a8 (11 frames, 2 -> 10)."
+        ],
+        "notes": "This does not yet assign semantics to 09A2/09A8 or the DP scratch fields. It narrows the next proving target to a small set of post-handoff states inside the shared 02:9016 corridor."
+      }
+    },
+    {
       "id": "descriptor_progression_boundary",
       "dos_contract": "DOS play-session assembly is guarded by a non-graphics gate that requires both car and scenery catalogs.",
       "mapping_status": "strongest_current_play_session_candidate",
