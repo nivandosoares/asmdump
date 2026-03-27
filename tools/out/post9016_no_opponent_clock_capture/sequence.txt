@@ -1,6 +1,4 @@
 # type duration_frames path_a
-image 4 sequence_images/frame_02044.ppm
-image 28 sequence_images/frame_02048.ppm
-image 4 sequence_images/frame_02076.ppm
-image 4 sequence_images/frame_02080.ppm
-image 1 sequence_images/frame_02084.ppm
+image 8 sequence_images/frame_02048.ppm
+image 32 sequence_images/frame_02056.ppm
+image 1 sequence_images/frame_02048.ppm

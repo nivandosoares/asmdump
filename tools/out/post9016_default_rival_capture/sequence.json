@@ -1,8 +1,8 @@
 {
   "capture_log_json": "/home/nivando-soares/asmdump/tools/out/post9016_default_rival_capture/capture_input_log.json",
-  "first_frame": 2044,
-  "last_frame_inclusive": 2084,
-  "end_frame_exclusive": 2085,
+  "first_frame": 2048,
+  "last_frame_inclusive": 2088,
+  "end_frame_exclusive": 2089,
   "collapse_identical": true,
   "screenshot_every": 4,
   "input_windows": [
@@ -26,22 +26,44 @@
       "buttons": [
         "start"
       ]
+    },
+    {
+      "start_frame": 1584,
+      "end_frame": 1589,
+      "buttons": [
+        "down",
+        "right"
+      ]
+    },
+    {
+      "start_frame": 1640,
+      "end_frame": 1645,
+      "buttons": [
+        "start"
+      ]
+    },
+    {
+      "start_frame": 1730,
+      "end_frame": 1735,
+      "buttons": [
+        "start"
+      ]
     }
   ],
   "selected_screenshot_count": 11,
-  "entry_count": 5,
-  "distinct_hash_count": 5,
+  "entry_count": 4,
+  "distinct_hash_count": 4,
   "total_duration_frames": 41,
   "entries": [
     {
       "type": "image",
-      "frame": 2044,
+      "frame": 2048,
       "capture_index": 0,
       "duration_frames": 4,
-      "hash": "afbfcf81e8eb50fd7899af9049e9a55ba3aa41fdc4badd8a5f311b804a626b3c",
-      "image": "sequence_images/frame_02044.ppm",
+      "hash": "5f6918475c039153a193317c44ce6db2d3c9f41b4e530a55c1b96418002edeee",
+      "image": "sequence_images/frame_02048.ppm",
       "source_frames": [
-        2044
+        2048
       ],
       "source_capture_indices": [
         0
@@ -52,87 +74,73 @@
     },
     {
       "type": "image",
-      "frame": 2048,
+      "frame": 2052,
       "capture_index": 4,
-      "duration_frames": 28,
-      "hash": "2cbbeef1249170a43854962fa5b19fba628470c70beb9ce23e15a0f05cb891f2",
-      "image": "sequence_images/frame_02048.ppm",
+      "duration_frames": 16,
+      "hash": "e9e8bd1bfbdc6a9c796746e6fbac0b673991cbcd2cc56e3e5afdd7c6cfd14517",
+      "image": "sequence_images/frame_02052.ppm",
       "source_frames": [
-        2048,
         2052,
         2056,
         2060,
-        2064,
-        2068,
-        2072
+        2064
       ],
       "source_capture_indices": [
         4,
         8,
         12,
-        16,
-        20,
-        24,
-        28
+        16
       ],
       "source_screenshots": [
         "/home/nivando-soares/asmdump/tools/out/post9016_default_rival_capture/capture_frame_00004.png",
         "/home/nivando-soares/asmdump/tools/out/post9016_default_rival_capture/capture_frame_00008.png",
         "/home/nivando-soares/asmdump/tools/out/post9016_default_rival_capture/capture_frame_00012.png",
-        "/home/nivando-soares/asmdump/tools/out/post9016_default_rival_capture/capture_frame_00016.png",
-        "/home/nivando-soares/asmdump/tools/out/post9016_default_rival_capture/capture_frame_00020.png",
-        "/home/nivando-soares/asmdump/tools/out/post9016_default_rival_capture/capture_frame_00024.png",
-        "/home/nivando-soares/asmdump/tools/out/post9016_default_rival_capture/capture_frame_00028.png"
+        "/home/nivando-soares/asmdump/tools/out/post9016_default_rival_capture/capture_frame_00016.png"
       ]
     },
     {
       "type": "image",
-      "frame": 2076,
-      "capture_index": 32,
-      "duration_frames": 4,
-      "hash": "b0a700869521c1ff0ebbfa966b7d3bb071b8d9d828a91faa01e12725bc062e8c",
-      "image": "sequence_images/frame_02076.ppm",
+      "frame": 2068,
+      "capture_index": 20,
+      "duration_frames": 16,
+      "hash": "a2941808baaaf2f24a4978e319f4a9599bdc8fc46319b84b1148a803fffb076d",
+      "image": "sequence_images/frame_02068.ppm",
       "source_frames": [
-        2076
+        2068,
+        2072,
+        2076,
+        2080
       ],
       "source_capture_indices": [
+        20,
+        24,
+        28,
         32
       ],
       "source_screenshots": [
+        "/home/nivando-soares/asmdump/tools/out/post9016_default_rival_capture/capture_frame_00020.png",
+        "/home/nivando-soares/asmdump/tools/out/post9016_default_rival_capture/capture_frame_00024.png",
+        "/home/nivando-soares/asmdump/tools/out/post9016_default_rival_capture/capture_frame_00028.png",
         "/home/nivando-soares/asmdump/tools/out/post9016_default_rival_capture/capture_frame_00032.png"
       ]
     },
     {
       "type": "image",
-      "frame": 2080,
-      "capture_index": 36,
-      "duration_frames": 4,
-      "hash": "70d92604606b56deff4384740ea1affe6bc69dd9041a9458b2afe55d69392d12",
-      "image": "sequence_images/frame_02080.ppm",
-      "source_frames": [
-        2080
-      ],
-      "source_capture_indices": [
-        36
-      ],
-      "source_screenshots": [
-        "/home/nivando-soares/asmdump/tools/out/post9016_default_rival_capture/capture_frame_00036.png"
-      ]
-    },
-    {
-      "type": "image",
       "frame": 2084,
-      "capture_index": 40,
-      "duration_frames": 1,
-      "hash": "ac58de7dcc487d130cdab0e2ae5e449506052fdaa7e147d919e7284993d8a3ce",
+      "capture_index": 36,
+      "duration_frames": 5,
+      "hash": "197dccaa8c62ed63f771ec8a2fa441859b8c6d98dc650088c379da96bc50a12a",
       "image": "sequence_images/frame_02084.ppm",
       "source_frames": [
-        2084
+        2084,
+        2088
       ],
       "source_capture_indices": [
+        36,
         40
       ],
       "source_screenshots": [
+        "/home/nivando-soares/asmdump/tools/out/post9016_default_rival_capture/capture_frame_00036.png",
         "/home/nivando-soares/asmdump/tools/out/post9016_default_rival_capture/capture_frame_00040.png"
       ]
     }

@@ -307,12 +307,9 @@ local function on_input_polled()
         return
     end
 
-    local active_start = config.warmup_frames
-    local active_end = config.warmup_frames + config.capture_frames
-    local active = state.frame >= active_start and state.frame < active_end
     local input_pattern = resolve_active_input_pattern(state.frame)
 
-    if active and input_pattern ~= nil then
+    if input_pattern ~= nil then
         emu.setInput(input_pattern, config.player)
     end
 end

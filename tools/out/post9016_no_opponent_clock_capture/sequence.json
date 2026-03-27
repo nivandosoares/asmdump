@@ -1,8 +1,8 @@
 {
   "capture_log_json": "/home/nivando-soares/asmdump/tools/out/post9016_no_opponent_clock_capture/capture_input_log.json",
-  "first_frame": 2044,
-  "last_frame_inclusive": 2084,
-  "end_frame_exclusive": 2085,
+  "first_frame": 2048,
+  "last_frame_inclusive": 2088,
+  "end_frame_exclusive": 2089,
   "collapse_identical": true,
   "screenshot_every": 4,
   "input_windows": [
@@ -51,105 +51,77 @@
     }
   ],
   "selected_screenshot_count": 11,
-  "entry_count": 5,
-  "distinct_hash_count": 5,
+  "entry_count": 3,
+  "distinct_hash_count": 2,
   "total_duration_frames": 41,
   "entries": [
     {
       "type": "image",
-      "frame": 2044,
+      "frame": 2048,
       "capture_index": 0,
-      "duration_frames": 4,
-      "hash": "afbfcf81e8eb50fd7899af9049e9a55ba3aa41fdc4badd8a5f311b804a626b3c",
-      "image": "sequence_images/frame_02044.ppm",
+      "duration_frames": 8,
+      "hash": "b1537d4111782f0d6e789641400ad6e07527710577c3720c55af853d40e1d33d",
+      "image": "sequence_images/frame_02048.ppm",
       "source_frames": [
-        2044
+        2048,
+        2052
       ],
       "source_capture_indices": [
-        0
+        0,
+        4
       ],
       "source_screenshots": [
-        "/home/nivando-soares/asmdump/tools/out/post9016_no_opponent_clock_capture/capture_frame_00000.png"
+        "/home/nivando-soares/asmdump/tools/out/post9016_no_opponent_clock_capture/capture_frame_00000.png",
+        "/home/nivando-soares/asmdump/tools/out/post9016_no_opponent_clock_capture/capture_frame_00004.png"
       ]
     },
     {
       "type": "image",
-      "frame": 2048,
-      "capture_index": 4,
-      "duration_frames": 28,
-      "hash": "2cbbeef1249170a43854962fa5b19fba628470c70beb9ce23e15a0f05cb891f2",
-      "image": "sequence_images/frame_02048.ppm",
+      "frame": 2056,
+      "capture_index": 8,
+      "duration_frames": 32,
+      "hash": "92a15fe51c1c0a1088c36591ba73508f083831991ddd3d3cd39be1b0b58847c5",
+      "image": "sequence_images/frame_02056.ppm",
       "source_frames": [
-        2048,
-        2052,
         2056,
         2060,
         2064,
         2068,
-        2072
+        2072,
+        2076,
+        2080,
+        2084
       ],
       "source_capture_indices": [
-        4,
         8,
         12,
         16,
         20,
         24,
-        28
+        28,
+        32,
+        36
       ],
       "source_screenshots": [
-        "/home/nivando-soares/asmdump/tools/out/post9016_no_opponent_clock_capture/capture_frame_00004.png",
         "/home/nivando-soares/asmdump/tools/out/post9016_no_opponent_clock_capture/capture_frame_00008.png",
         "/home/nivando-soares/asmdump/tools/out/post9016_no_opponent_clock_capture/capture_frame_00012.png",
         "/home/nivando-soares/asmdump/tools/out/post9016_no_opponent_clock_capture/capture_frame_00016.png",
         "/home/nivando-soares/asmdump/tools/out/post9016_no_opponent_clock_capture/capture_frame_00020.png",
         "/home/nivando-soares/asmdump/tools/out/post9016_no_opponent_clock_capture/capture_frame_00024.png",
-        "/home/nivando-soares/asmdump/tools/out/post9016_no_opponent_clock_capture/capture_frame_00028.png"
-      ]
-    },
-    {
-      "type": "image",
-      "frame": 2076,
-      "capture_index": 32,
-      "duration_frames": 4,
-      "hash": "b0a700869521c1ff0ebbfa966b7d3bb071b8d9d828a91faa01e12725bc062e8c",
-      "image": "sequence_images/frame_02076.ppm",
-      "source_frames": [
-        2076
-      ],
-      "source_capture_indices": [
-        32
-      ],
-      "source_screenshots": [
-        "/home/nivando-soares/asmdump/tools/out/post9016_no_opponent_clock_capture/capture_frame_00032.png"
-      ]
-    },
-    {
-      "type": "image",
-      "frame": 2080,
-      "capture_index": 36,
-      "duration_frames": 4,
-      "hash": "70d92604606b56deff4384740ea1affe6bc69dd9041a9458b2afe55d69392d12",
-      "image": "sequence_images/frame_02080.ppm",
-      "source_frames": [
-        2080
-      ],
-      "source_capture_indices": [
-        36
-      ],
-      "source_screenshots": [
+        "/home/nivando-soares/asmdump/tools/out/post9016_no_opponent_clock_capture/capture_frame_00028.png",
+        "/home/nivando-soares/asmdump/tools/out/post9016_no_opponent_clock_capture/capture_frame_00032.png",
         "/home/nivando-soares/asmdump/tools/out/post9016_no_opponent_clock_capture/capture_frame_00036.png"
       ]
     },
     {
       "type": "image",
-      "frame": 2084,
+      "frame": 2088,
       "capture_index": 40,
       "duration_frames": 1,
-      "hash": "ac58de7dcc487d130cdab0e2ae5e449506052fdaa7e147d919e7284993d8a3ce",
-      "image": "sequence_images/frame_02084.ppm",
+      "hash": "b1537d4111782f0d6e789641400ad6e07527710577c3720c55af853d40e1d33d",
+      "image": "sequence_images/frame_02048.ppm",
       "source_frames": [
-        2084
+        2088
       ],
       "source_capture_indices": [
         40

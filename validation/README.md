@@ -210,18 +210,18 @@ and no-opponent paths:
 
 ```sh
 MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
-MESEN_TIMEOUT_SECONDS=180 \
+MESEN_TIMEOUT_SECONDS=400 \
 TD2_CAPTURE_OUTPUT_PREFIX=tools/out/post9016_default_rival_capture/capture \
-TD2_CAPTURE_WARMUP_FRAMES=2044 \
+TD2_CAPTURE_WARMUP_FRAMES=2048 \
 TD2_CAPTURE_FRAMES=41 \
 TD2_CAPTURE_SCREENSHOT_EVERY=4 \
-TD2_CAPTURE_INPUT_WINDOWS='1200:start;1280:start;1505-1510:start' \
+TD2_CAPTURE_INPUT_WINDOWS='1200:start;1280:start;1505-1510:start;1584-1589:right,down;1640-1645:start;1730-1735:start' \
 ./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_capture.lua
 
 MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
-MESEN_TIMEOUT_SECONDS=180 \
+MESEN_TIMEOUT_SECONDS=400 \
 TD2_CAPTURE_OUTPUT_PREFIX=tools/out/post9016_no_opponent_clock_capture/capture \
-TD2_CAPTURE_WARMUP_FRAMES=2044 \
+TD2_CAPTURE_WARMUP_FRAMES=2048 \
 TD2_CAPTURE_FRAMES=41 \
 TD2_CAPTURE_SCREENSHOT_EVERY=4 \
 TD2_CAPTURE_INPUT_WINDOWS='1200:start;1280:start;1505-1510:start;1629-1634:right,down;1636-1641:start;1730-1735:start' \
@@ -231,19 +231,22 @@ python3 tools/build_capture_sequence_manifest.py \
   tools/out/post9016_default_rival_capture/capture_input_log.json \
   tools/out/post9016_default_rival_capture/sequence.txt \
   --json-out tools/out/post9016_default_rival_capture/sequence.json \
-  --start-frame 2044 \
-  --end-frame-exclusive 2085
+  --start-frame 2048 \
+  --end-frame-exclusive 2089
 
 python3 tools/build_capture_sequence_manifest.py \
   tools/out/post9016_no_opponent_clock_capture/capture_input_log.json \
   tools/out/post9016_no_opponent_clock_capture/sequence.txt \
   --json-out tools/out/post9016_no_opponent_clock_capture/sequence.json \
-  --start-frame 2044 \
-  --end-frame-exclusive 2085
+  --start-frame 2048 \
+  --end-frame-exclusive 2089
 ```
 
 The resulting PNG pairs can then be reviewed directly, with an external
-question sheet such as `tools/out/post9016_compare_questions.md`.
+question sheet such as `tools/out/post9016_compare_questions.md`. The capture
+runner now applies `TD2_CAPTURE_INPUT_WINDOWS` during warmup as well as during
+the explicit screenshot phase; without that, long power-on paths silently miss
+their early `start/right/down` confirms.
 
 To inspect the boot/title selectors directly:
 
@@ -273,6 +276,11 @@ TD2_BOOT_PROBE_TRIGGER_INPUT_WINDOWS='c1d2+1-6:right,down;c1d2+8-13:start' \
 
 The probe JSON now records both `trigger_input_windows` and the first traced
 frame for each exec-point id under `exec_point_trace.first_frames`.
+
+When using `TD2_BOOT_PROBE_TRIGGER_INPUT_WINDOWS`, make the trace window start
+before the trigger point can first execute. If `TD2_BOOT_PROBE_TRACE_START_FRAME`
+defaults to the screenshot frame, the probe will only learn `first_frames` too
+late for callback-relative input to fire.
 
 For direct state-window comparison between two recovered boot probes, use
 `tools/compare_boot_probe_windows.py`:

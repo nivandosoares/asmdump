@@ -1,0 +1,139 @@
+{
+  "window_start_frame": 2048,
+  "window_end_frame": 2088,
+  "sample_step": 4,
+  "first_nonzero_diff": {
+    "capture_png": "capture_frame_00000.png",
+    "boot_frame": 2048,
+    "diff_pixels": 125,
+    "bbox": [
+      11,
+      11,
+      194,
+      21
+    ]
+  },
+  "pairs": [
+    {
+      "capture_png": "capture_frame_00000.png",
+      "boot_frame": 2048,
+      "diff_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "capture_png": "capture_frame_00004.png",
+      "boot_frame": 2052,
+      "diff_pixels": 137,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "capture_png": "capture_frame_00008.png",
+      "boot_frame": 2056,
+      "diff_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "capture_png": "capture_frame_00012.png",
+      "boot_frame": 2060,
+      "diff_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "capture_png": "capture_frame_00016.png",
+      "boot_frame": 2064,
+      "diff_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "capture_png": "capture_frame_00020.png",
+      "boot_frame": 2068,
+      "diff_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "capture_png": "capture_frame_00024.png",
+      "boot_frame": 2072,
+      "diff_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "capture_png": "capture_frame_00028.png",
+      "boot_frame": 2076,
+      "diff_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "capture_png": "capture_frame_00032.png",
+      "boot_frame": 2080,
+      "diff_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "capture_png": "capture_frame_00036.png",
+      "boot_frame": 2084,
+      "diff_pixels": 137,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "capture_png": "capture_frame_00040.png",
+      "boot_frame": 2088,
+      "diff_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    }
+  ]
+}
