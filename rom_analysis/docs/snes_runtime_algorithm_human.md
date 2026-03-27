@@ -21,6 +21,9 @@ already grounded in code reads, probes, or generated artifacts.
    - `$1C6A` drives a separate `3`-option top-level signboard gate
    - `$0202/$1C78` drives the `3`-slot car-facing preview domain
    - `$1C7C` drives the `4`-slot top-level phase domain
+   - semantically, the top-level `$1C6A` branches are now closed as:
+     `Game Options -> L00C0C7`, `Play TDII -> downstream $0202 corridor`,
+     `High Score -> L00A3CC`
 3. The top-level bank-1 success corridor does not fall straight into a build.
    It first requires the helper chain rooted at `L008B26` to return success.
    If any helper returns `0xFFFF`, bank 1 loops back to an earlier menu point

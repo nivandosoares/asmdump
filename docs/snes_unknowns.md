@@ -131,6 +131,28 @@ DOS-driven SNES correlation pass.
 
 ### CLAIM AUDIT
 
+- Claim: the `$1C6A` signboard menu now has closed branch semantics:
+  `Game Options` enters the configuration loop, `Play TDII` advances into the
+  downstream `$0202` corridor, and `High Score` enters the `L00A3CC` surface.
+- Classification: VERIFIED
+- Evidence:
+  - At `01:BB7F`, `L00BAE8` branches on `$1C6A`.
+  - `$1C6A = 0` reaches `01:BB8D`, which does `jsr L00C0C7 ; jmp L00BAE8`.
+  - `$1C6A = 2` reaches `01:BB93`, which does `lda #$FFFF ; jsr L00A3CC ;
+    jmp L00BAE8`.
+  - The remaining `$1C6A = 1` path returns success from `L00BAE8`, and the
+    caller `L008B31` then falls through to `L008B3E`, entering the separate
+    `$0202/$1C78` front-end corridor.
+  - [tools/out/snes_frontend_top_menu_transitions.json](/home/nivando-soares/asmdump/tools/out/snes_frontend_top_menu_transitions.json)
+    records the closed mapping in one artifact.
+- Notes:
+  - This closes the semantic meaning of the top-level menu, not just the
+    rendered signboard text.
+  - `Game Options` is now directly tied to the already decoded settings-label
+    surface rather than only to a user-guided longplay reading.
+
+### CLAIM AUDIT
+
 - Claim: rows `15..17` in the `1E:8000` front-end table are the top-level
   signboard labels for the separate `$1C6A` menu gate.
 - Classification: VERIFIED

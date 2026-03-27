@@ -1,0 +1,37 @@
+{
+  "schema": "td2.snes_frontend_top_menu_transitions.v1",
+  "created": "2026-03-27",
+  "claim": "The top-level $1C6A signboard menu has closed branch semantics: Game Options enters the configuration loop, Play TDII advances into the downstream $0202 corridor, and High Score enters the L00A3CC surface before returning to the top menu.",
+  "entry_routine": "01:BAE8",
+  "decision_site": "01:BB7F",
+  "transitions": [
+    {
+      "selector_value": 0,
+      "label": "Game Options",
+      "row_index": 15,
+      "decision_site": "01:BB8D",
+      "action": "jsr L00C0C7 ; jmp L00BAE8",
+      "semantic_target": "configuration_menu_loop",
+      "callback_install": "01:BF7A",
+      "follow_on_surface": "The installed callback uses 1E:8000 rows 0x15..0x1B for the control/sound settings labels."
+    },
+    {
+      "selector_value": 1,
+      "label": "Play TDII",
+      "row_index": 16,
+      "decision_site": "01:BB7F",
+      "action": "lda #$0000 ; rts",
+      "semantic_target": "downstream_play_setup_corridor",
+      "follow_on_surface": "L008B31 falls through to L008B3E and enters the separate $0202/$1C78 three-slot front-end corridor."
+    },
+    {
+      "selector_value": 2,
+      "label": "High Score",
+      "row_index": 17,
+      "decision_site": "01:BB93",
+      "action": "lda #$FFFF ; jsr L00A3CC ; jmp L00BAE8",
+      "semantic_target": "high_score_surface",
+      "follow_on_surface": "The high-score path enters L00A3CC and then returns to the top menu loop."
+    }
+  ]
+}

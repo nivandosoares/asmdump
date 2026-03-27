@@ -230,6 +230,29 @@ Relevant DOS contracts:
 
 ### CLAIM AUDIT
 
+- Claim: the top-level `$1C6A` signboard menu now has closed branch semantics:
+  `Game Options` enters the configuration loop, `Play TDII` is the only
+  branch that advances into the downstream `$0202` corridor, and `High Score`
+  enters `L00A3CC` before returning to the top menu.
+- Classification: VERIFIED
+- Evidence:
+  - `L00BAE8` branches on `$1C6A` at `01:BB7F`.
+  - `$1C6A = 0` reaches `01:BB8D`, which does `jsr L00C0C7 ; jmp L00BAE8`.
+  - `$1C6A = 2` reaches `01:BB93`, which does `lda #$FFFF ; jsr L00A3CC ;
+    jmp L00BAE8`.
+  - The remaining top-level branch returns success to `L008B31`, which then
+    falls through to `L008B3E` and enters the separate `$0202/$1C78`
+    front-end corridor.
+  - [tools/out/snes_frontend_top_menu_transitions.json](/home/nivando-soares/asmdump/tools/out/snes_frontend_top_menu_transitions.json)
+    records the closed mapping in one artifact.
+- Notes:
+  - This resolves the semantic meaning of the three signboards, not just their
+    rendered labels.
+  - It also gives the settings-menu path a direct static anchor from the
+    initial top-level menu.
+
+### CLAIM AUDIT
+
 - Claim: the `1E:8000` rows `15..17` are the visible signboard labels for the
   separate top-level `$1C6A` menu gate.
 - Classification: VERIFIED
