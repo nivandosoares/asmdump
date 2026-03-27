@@ -34,6 +34,23 @@
       }
     },
     {
+      "id": "select_opponent_mode_split",
+      "dos_contract": "DOS play-session assembly is guarded by a non-graphics gate that requires both car and scenery catalogs.",
+      "mapping_status": "no_opponent_split_recovered",
+      "claim_audit": {
+        "claim": "The downstream Select Opponent choice already changes gameplay-handoff state at L008B87: selector values 0..2 preserve a rival-car index through $1C7A with $1C76 = 1, while selector value 3 forces $1C76 = 0 and resets $1C7A to 0.",
+        "classification": "VERIFIED",
+        "evidence": [
+          "At L008B87, the code loads X = 0x0001 and A = $1C70, then only on $1C70 == 3 executes dex and lda #$0000 before storing X -> $1C76 and A -> $1C7A.",
+          "When $1C70 != 3, the same path stores $1C76 = 1 and preserves the rival index in $1C7A.",
+          "$1C7A is later consumed by rival-facing table loads in bank1.asm:1820-1837, bank1.asm:1965-1975, and bank2.asm:2675-2702.",
+          "$1C76 gates downstream opponent-side branches in bank1.asm:2403-2405 and bank2.asm:2943-2958 / 4118-4129 / 4671-4682.",
+          "tools/out/snes_frontend_select_opponent_mode_split.json consolidates the split and downstream branch sites."
+        ],
+        "notes": "This closes the first gameplay-handoff distinction between the three rival-car cells and the fourth clock slot. It still does not directly prove the exact timer or HUD behavior of the no-opponent branch once gameplay is fully live."
+      }
+    },
+    {
       "id": "descriptor_progression_boundary",
       "dos_contract": "DOS play-session assembly is guarded by a non-graphics gate that requires both car and scenery catalogs.",
       "mapping_status": "strongest_current_play_session_candidate",
@@ -58,7 +75,7 @@
         "claim": "No verified SNES refusal branch equivalent to the DOS 0x6064 both-catalogs-required gate has been recovered yet.",
         "classification": "VERIFIED",
         "evidence": [
-          "Current recovered gate surfaces are the front-end success gate at L008B26, the explicit callback install of 02:9016/02:8F3C from the same bank-1 corridor, and the descriptor-progression boundary at L009568/L0095AD.",
+          "Current recovered gate surfaces are the front-end success gate at L008B26, the verified Select Opponent mode split at L008B87, the explicit callback install of 02:9016/02:8F3C from the same bank-1 corridor, and the descriptor-progression boundary at L009568/L0095AD.",
           "Neither recovered surface directly proves validation of separate car and scenery working sets before gameplay."
         ],
         "notes": "This is a statement about the present evidence state. It is not a proof that no such gate exists elsewhere in the ROM."
@@ -68,7 +85,7 @@
   "questions_answered": [
     {
       "question": "Is there a gameplay gate equivalent to DOS 0x6064, even if the error messaging differs?",
-      "answer": "No verified dual-catalog gate is recovered yet. The closest verified SNES surfaces are the L008B26 front-end success gate and the explicit 02:9016/02:8F3C callback install from the same bank-1 corridor, while L009568/L0095AD remains the strongest bank-1-side pregame boundary."
+      "answer": "No verified dual-catalog gate is recovered yet. The closest verified SNES surfaces are the L008B26 front-end success gate, the L008B87 no-opponent-vs-rival split that comes out of Select Opponent, and the explicit 02:9016/02:8F3C callback install from the same bank-1 corridor, while L009568/L0095AD remains the strongest bank-1-side pregame boundary."
     }
   ]
 }

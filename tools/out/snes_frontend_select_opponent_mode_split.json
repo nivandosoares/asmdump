@@ -1,0 +1,102 @@
+{
+  "schema": "td2.snes_frontend_select_opponent_mode_split.v1",
+  "created": "2026-03-27",
+  "claim": "The four-state Select Opponent surface at $1C70 already collapses into a downstream gameplay-handoff split at L008B87: selector values 0..2 enable an opponent car by setting $1C76 = 1 and preserving the rival index in $1C7A, while selector value 3 disables opponent-side branches by setting $1C76 = 0 and forcing $1C7A back to 0 as a reused placeholder.",
+  "classification": {
+    "mode_split": "VERIFIED",
+    "clock_time_only_semantics": "PROBABLE"
+  },
+  "selector_surface": {
+    "field": "$1C70",
+    "domain": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "collapse_site": "L008B87",
+    "upstream_surface": "tools/out/snes_frontend_rival_selection_grid.json"
+  },
+  "collapse_cases": [
+    {
+      "selector_values": [
+        0,
+        1,
+        2
+      ],
+      "role": "car_opponent",
+      "writes": {
+        "$1C76": 1,
+        "$1C7A": "$1C70"
+      },
+      "classification": "VERIFIED",
+      "notes": "The three car cells keep opponent mode enabled and preserve the selected rival index."
+    },
+    {
+      "selector_values": [
+        3
+      ],
+      "role": "clock_slot",
+      "writes": {
+        "$1C76": 0,
+        "$1C7A": 0
+      },
+      "classification": "VERIFIED",
+      "notes": "The clock slot disables opponent-side branches and reuses rival index 0 as a placeholder instead of carrying a distinct fourth car index."
+    }
+  ],
+  "downstream_consumers": [
+    {
+      "field": "$1C7A",
+      "site": "bank1.asm:1820-1837",
+      "effect": "Selects an 8-byte record from 01:8384..01:838A before the CGRAM upload at 0x00A0.",
+      "classification": "VERIFIED"
+    },
+    {
+      "field": "$1C7A",
+      "site": "bank1.asm:1965-1975",
+      "effect": "Selects a 0x20-byte block from 01:8614 + ($1C7A << 5) for VRAM 0x60C0.",
+      "classification": "VERIFIED"
+    },
+    {
+      "field": "$1C7A",
+      "site": "bank2.asm:2675-2702",
+      "effect": "Selects the bank-2 tables at 02:8306 / 02:830C that feed the 14DC and 13FC buffers.",
+      "classification": "VERIFIED"
+    },
+    {
+      "field": "$1C76",
+      "site": "bank1.asm:2403-2405",
+      "effect": "Branches to L00948A when opponent mode is enabled and jumps to L009568 when it is disabled.",
+      "classification": "VERIFIED"
+    },
+    {
+      "field": "$1C76",
+      "site": "bank2.asm:2943-2958",
+      "effect": "Gates the extra opponent-side initialization of 129B/1283/11E1/11F3/125F/1271.",
+      "classification": "VERIFIED"
+    },
+    {
+      "field": "$1C76",
+      "site": "bank2.asm:4118-4129",
+      "effect": "Gates the second actor/path update through the y = 2 branch.",
+      "classification": "VERIFIED"
+    },
+    {
+      "field": "$1C76",
+      "site": "bank2.asm:4671-4682",
+      "effect": "Gates later opponent-side runtime work before the path falls through toward L0127B8.",
+      "classification": "VERIFIED"
+    }
+  ],
+  "evidence": [
+    "At L008B87, the code loads X = 1 and A = $1C70, then only on $1C70 == 3 executes dex and lda #$0000 before storing X -> $1C76 and A -> $1C7A.",
+    "For selector values 0..2, the same path stores $1C76 = 1 and preserves A = $1C70 into $1C7A.",
+    "The fourth Select Opponent slot is already visually closed as a helper-8 BG1 stopwatch/clock surface in tools/out/snes_frontend_select_opponent_clock_summary.json.",
+    "$1C7A is later consumed by rival-facing table loads in bank 1 and bank 2, while $1C76 gates opponent-side branches in both banks."
+  ],
+  "notes": [
+    "This closes the immediate handoff distinction between the three rival-car cells and the fourth clock slot.",
+    "The exact timer or HUD behavior of the no-opponent branch is still not directly observed in a live gameplay capture, so the stronger reading is 'no-opponent split verified, full time-only semantics still probable'."
+  ]
+}

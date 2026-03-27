@@ -4,7 +4,8 @@
   "claim": "L00C20B owns a verified downstream 4-state 2x2 front-end selection surface on $1C70. The hidden callback at 01:C1D2 redraws 1E:8000 row 0x1D as a selection box, while the setup code lays out three explicit rear-car cells from 16:8000/18:8000/1B:8000 row 6. The fourth cell is carried separately by helper 8 on BG1 as a stopwatch/clock icon under the Select Opponent banner.",
   "classification": {
     "structure": "VERIFIED",
-    "user_guided_rival_clock_semantics": "PROBABLE"
+    "user_guided_rival_clock_semantics": "PROBABLE",
+    "downstream_mode_split": "VERIFIED"
   },
   "state_selector": {
     "field": "$1C70",
@@ -103,7 +104,7 @@
         "summary_json": "tools/out/snes_frontend_select_opponent_clock_summary.json"
       },
       "classification": "VERIFIED",
-      "notes": "The fourth cell is not a fourth OAM car row. It is carried by the isolated BG1 helper-8 scene as a separate stopwatch/clock slot in the bottom-right quadrant."
+      "notes": "The fourth cell is not a fourth OAM car row. It is carried by the isolated BG1 helper-8 scene as a separate stopwatch/clock slot in the bottom-right quadrant. L008B87 later collapses this selector value into $1C76 = 0 and $1C7A = 0, unlike the three car cells."
     }
   ],
   "evidence": [
@@ -112,6 +113,7 @@
     "L00C20B itself draws row 6 from 16:8000, 18:8000, and 1B:8000 at the first three grid coordinates before entering the input loop.",
     "The isolated helper-8 BG1 rebuild shows the Select Opponent banner plus a separate stopwatch/clock icon in the bottom-right quadrant, matching the same out-of-band fourth slot.",
     "The input loop edits $1C70 as a 2-bit field: bit 0 controls left/right and bit 1 controls top/bottom.",
-    "The next downstream call in the static front-end flow is L00BE76, the already-closed 4-track selector."
+    "The next downstream call in the static front-end flow is L00BE76, the already-closed 4-track selector.",
+    "L008B87 later collapses $1C70 into $1C76/$1C7A, with selector values 0..2 preserving rival-car state and selector value 3 forcing the no-opponent branch."
   ]
 }

@@ -13,7 +13,7 @@ bank-0/bank-1 archaeology or direct ROM-header evidence.
 | Car roster size | Verified `3`-slot front-end surface through `$0202/$1C78`; no recovered front-end restriction on the third slot in the current menu loop | `VERIFIED` |
 | Car-specific working set | Customizer UI plus live parameter fields exist | `VERIFIED` |
 | Preview asset resolution | Verified 3-choice animated preview rebuilder through `$0202`; the per-car bases at `01:9C77` now calibrate as Porsche 959 / Lamborghini Diablo / Ferrari F40 OBJ catalogs, while exact-frame raw dumps from the current front-end car-presentation corridor keep the visible name/info box on BG without OAM and narrow the per-car tilemap delta to the top title row | `VERIFIED` / `PROBABLE` |
-| Opponent/time selector | Verified downstream `4`-state `2x2` surface through `$1C70`, with a `1E:8000` row `0x1D` selection box, three explicit rear-car cells from `16:8000/18:8000/1B:8000`, and a separate `BG1` `Select Opponent` stopwatch/clock slot from helper `8` | `VERIFIED` |
+| Opponent/time selector | Verified downstream `4`-state `2x2` surface through `$1C70`, with a `1E:8000` row `0x1D` selection box, three explicit rear-car cells from `16:8000/18:8000/1B:8000`, a separate `BG1` `Select Opponent` stopwatch/clock slot from helper `8`, and a later `L008B87` collapse into opponent-enabled `$1C76 = 1` / rival-index `$1C7A` for slots `0..2` versus no-opponent `$1C76 = 0` for slot `3` | `VERIFIED` |
 | Track/scenery selector | Verified `4`-slot top-level selector through `$1C7C` with groups `[0, 5, 11, 18] / [5, 6, 7, 8]`; rendered rows `11..14` now recover `Desert Blast - Easy`, `City Bound - Medium`, `East Coast - Hard`, `West Coast - Hardest` | `VERIFIED` |
 | UI descriptor rows | Adjacent menu helpers build a long ROM pointer rooted at `1E:8000`; rows `8..10` read as a rolling-tire helper cycle, rows `11..14` as track labels, rows `15..17` as top-level signboard labels, and rows `0x15..0x1B` as control/sound labels | `VERIFIED` |
 | Selector persistence | No cart SRAM in ROM header | `VERIFIED` |
@@ -39,6 +39,9 @@ Relevant DOS contract:
   - `L00BE76` rotates `$1C7C` modulo `4`.
   - `L008B87` derives `$1C74/$1C76/$1C7A/$1C7E/$1C80` from
     `$1C6C/$1C70/$1C78/$1C7C/$1C90`.
+  - The same `L008B87` path already distinguishes the fourth `Select
+    Opponent` slot from the three car slots by forcing `$1C76 = 0` and
+    `$1C7A = 0` only when `$1C70 == 3`.
   - Unlabeled front-end UI helpers later feed `L00179B/L001662` from slot
     families `$0202 + 0x0008` and `$1C7C + 0x000B` by constructing the long
     ROM pointer `1E:8000`.
@@ -48,6 +51,8 @@ Relevant DOS contract:
   - The fields are still clearly clustered in one WRAM neighborhood.
   - The downstream `$1C70` surface is now structurally closed as a `2x2` grid
     rather than only as an unlabeled `2`-bit field.
+  - That same surface now also has a verified downstream collapse into
+    no-opponent vs rival-enabled handoff fields.
 
 ### CLAIM AUDIT
 
@@ -75,6 +80,9 @@ Relevant DOS contract:
   - The fourth slot is no longer an unresolved “missing car row”; it is a
     separate BG-carried clock surface.
   - This is the strongest current post-car, pre-track front-end surface.
+  - `L008B87` now closes the first downstream semantic split of that same
+    surface: the three car cells preserve rival state, while the fourth slot
+    forces the no-opponent branch.
 
 ## Catalog And Working-Set Materialization
 
@@ -449,6 +457,31 @@ Relevant DOS contract:
 
 ### CLAIM AUDIT
 
+- Claim: The `Select Opponent` clock slot is already a verified no-opponent
+  handoff split at `L008B87`, not only a visual `BG1` icon.
+- Classification: VERIFIED
+- Evidence:
+  - At `L008B87`, the code loads `X = 1` and `A = $1C70`; only on
+    `$1C70 == 3` does it execute `dex` and `lda #$0000` before storing
+    `X -> $1C76` and `A -> $1C7A`.
+  - For selector values `0..2`, the same path stores `$1C76 = 1` and
+    preserves `$1C7A = $1C70`.
+  - `$1C7A` later selects rival-facing tables in `bank1.asm:1820-1837`,
+    `bank1.asm:1965-1975`, and `bank2.asm:2675-2702`.
+  - `$1C76` later gates the branch to `L00948A` vs `L009568` in
+    `bank1.asm:2403-2405` and opponent-side runtime work in
+    `bank2.asm:2943-2958`, `bank2.asm:4118-4129`, and `bank2.asm:4671-4682`.
+  - [tools/out/snes_frontend_select_opponent_mode_split.json](/home/nivando-soares/asmdump/tools/out/snes_frontend_select_opponent_mode_split.json)
+    consolidates the collapse and downstream consumers.
+- Notes:
+  - This closes the first gameplay-facing distinction between the fourth clock
+    slot and the three rival-car slots.
+  - The remaining open edge is narrower:
+    exact timer/HUD behavior for the no-opponent branch is still not directly
+    captured in live gameplay.
+
+### CLAIM AUDIT
+
 - Claim: `L009568/L0095AD` form the strongest current SNES gameplay-handoff
   candidate because they advance `$1CA8`, compare it against `$1C80`, and
   either rebuild the next descriptor row via `L008C10` or unwind back to
@@ -485,10 +518,10 @@ Relevant DOS contract:
   both-catalogs-required gate has been recovered yet.
 - Classification: VERIFIED
 - Evidence:
-  - Current recovered gate surfaces are the front-end success gate at `L008B26`
-    and the descriptor-progression boundary at `L009568/L0095AD`, plus the
-    explicit callback install of `02:9016/02:8F3C` from the same bank-1
-    corridor.
+  - Current recovered gate surfaces are the front-end success gate at `L008B26`,
+    the verified `L008B87` no-opponent-vs-rival split, and the
+    descriptor-progression boundary at `L009568/L0095AD`, plus the explicit
+    callback install of `02:9016/02:8F3C` from the same bank-1 corridor.
   - Neither recovered surface directly proves validation of separate car and
     scenery working sets before gameplay.
 - Notes:

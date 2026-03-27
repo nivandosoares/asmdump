@@ -77,6 +77,9 @@ already grounded in code reads, probes, or generated artifacts.
         `1B:8000` row `6`
       - the bottom-right cell is carried separately by helper `8` on `BG1` as
         a `Select Opponent` stopwatch/clock slot
+      - `L008B87` then collapses that same choice into a derived handoff:
+        `0..2 -> $1C76 = 1`, `$1C7A = rival index`
+        `3 -> $1C76 = 0`, `$1C7A = 0`
     - the per-car bases at `01:9C77` are now better read as OBJ catalogs for
       Porsche 959, Lamborghini Diablo, and Ferrari F40 body/wheel/canopy
       animation pieces
@@ -100,15 +103,19 @@ If you strip away the assembly details, the proven logic is:
 2. Refuse to advance until the helper chain says the current selection state is
    valid.
 3. Collapse the accepted selectors into one derived content bundle.
-4. Build VRAM, CGRAM, and OBJ label content from ROM tables and compressed
+4. Split the downstream opponent/time choice into opponent-enabled vs
+   no-opponent derived fields before deeper setup.
+5. Build VRAM, CGRAM, and OBJ label content from ROM tables and compressed
    sources.
-5. Stage OAM in WRAM and let NMI upload it to the PPU.
-6. Continue running the current callback family until the later callback
+6. Stage OAM in WRAM and let NMI upload it to the PPU.
+7. Continue running the current callback family until the later callback
    promotion rules take over.
 
 ## Open Edges
 
 - the actual front-end car-name text surface is still not located
+- the exact organic runtime/HUD divergence between `$1C76 = 0` and
+  `$1C76 = 1` is still not captured
 - the exact organic callback-promotion timing into the `02:9016/02:8F3C`
   gameplay lane is still not closed
 - late attract producer scheduling after `1133` is materially narrowed, but the

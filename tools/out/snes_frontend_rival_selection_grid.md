@@ -50,3 +50,6 @@
 - This closes the geometry and visible ownership of all four slots.
 - The extra semantic step from “clock icon” to “time-only gameplay branch”
   remains a downstream reading, but the fourth slot itself is no longer open.
+- The later handoff split is now explicit in code:
+  `L008B87` turns `$1C70 = 3` into `$1C76 = 0` / `$1C7A = 0`, while
+  `$1C70 = 0..2` keeps opponent mode enabled and preserves the rival index.

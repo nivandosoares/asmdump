@@ -92,11 +92,36 @@ DOS-driven SNES correlation pass.
   - Three of the four cells are explicit rear-car renders.
   - The fourth slot is now directly visible on helper `8` as a `BG1`
     stopwatch/clock icon under the `Select Opponent` banner.
+  - `L008B87` later collapses the same selector into downstream handoff fields:
+    `$1C70 = 0..2 -> $1C76 = 1, $1C7A = $1C70`, while
+    `$1C70 = 3 -> $1C76 = 0, $1C7A = 0`.
 - Notes:
   - The open semantic edge is now narrower:
-    the icon is closed as a clock/stopwatch slot, while the exact gameplay
-    handoff semantics after choosing it still belong to the later play-session
-    boundary lane.
+    the icon and first no-opponent split are both closed, while the exact live
+    gameplay/HUD behavior after choosing it still belongs to the later
+    play-session boundary lane.
+
+### CLAIM AUDIT
+
+- Claim: The fourth `Select Opponent` slot already collapses into a verified
+  no-opponent handoff split through `$1C76/$1C7A`.
+- Classification: VERIFIED
+- Evidence:
+  - `L008B87` only executes `dex ; lda #$0000` when `$1C70 == 3`, then stores
+    `X -> $1C76` and `A -> $1C7A`.
+  - For selector values `0..2`, the same path stores `$1C76 = 1` and
+    preserves `$1C7A = $1C70`.
+  - `$1C7A` later selects rival-facing tables in `bank1.asm:1820-1837`,
+    `bank1.asm:1965-1975`, and `bank2.asm:2675-2702`.
+  - `$1C76` gates later branch work in `bank1.asm:2403-2405` and
+    `bank2.asm:2943-2958`, `bank2.asm:4118-4129`, and `bank2.asm:4671-4682`.
+  - [tools/out/snes_frontend_select_opponent_mode_split.json](/home/nivando-soares/asmdump/tools/out/snes_frontend_select_opponent_mode_split.json)
+    now consolidates the split and branch sites.
+- Notes:
+  - This closes the immediate handoff distinction between the fourth clock slot
+    and the three rival-car cells.
+  - The unresolved part is no longer whether the branch exists.
+  - The unresolved part is how that branch manifests later in live gameplay.
 
 ### CLAIM AUDIT
 
@@ -305,8 +330,9 @@ DOS-driven SNES correlation pass.
   - This is the strongest current boundary candidate.
   - It is still not a verified dual-catalog validity gate.
   - The branch entry itself is real.
-  - The remaining proof gap is now an organic-promotion capture problem rather
-    than a simple “trace a wider forced window” problem.
+  - The remaining proof gap is now an organic-promotion and live no-opponent
+    capture problem rather than a simple “trace a wider forced window”
+    problem.
 
 ## Next Probes
 
@@ -328,6 +354,8 @@ DOS-driven SNES correlation pass.
   car-name text surface instead.
 - Use the now-decoded `0x15..0x1B` settings labels to identify the exact
   front-end submenu/callsite that owns that control/sound surface.
+- Capture or derive a richer post-selection state where `$1C76 = 0` and
+  `$1C76 = 1` can diverge organically without forced `active_main` pinning.
 - Keep decoding the `01:8016..01:8330` table families into named rows so
   `$1C7C`, `$1CAC`, and `$1CCA` can be tied to concrete assets instead of raw
   indices.

@@ -15,13 +15,15 @@
           "L00BBCB drives a 3-choice preview through $0202, and L008B57 commits $0202 back into $1C78.",
           "L00C20B edits $1C70 as a 2-bit field and L00BE76 rotates $1C7C modulo 4.",
           "L008B87 derives $1C74/$1C76/$1C7A/$1C7E/$1C80 from $1C6C/$1C70/$1C78/$1C7C/$1C90 before the descriptor build at L008C10.",
+          "The same L008B87 collapse already distinguishes the fourth Select Opponent slot from the three car slots by forcing $1C76 = 0 and $1C7A = 0 only when $1C70 == 3; otherwise it leaves $1C76 = 1 and preserves $1C7A = $1C70.",
           "Adjacent front-end UI helpers feed L00179B/L001662 from selector families $1C6A + 0x000F, $0202 + 0x0008, and $1C7C + 0x000B against the long ROM pointer table rooted at 1E:8000.",
           "tools/out/snes_frontend_top_menu_labels.json now closes the visible $1C6A signboard rows as Game Options / Play TDII / High Score.",
           "tools/out/snes_frontend_top_menu_transitions.json now closes the branch semantics of those same three top-level options.",
           "tools/out/snes_frontend_rival_selection_grid.json now closes the downstream $1C70 surface structurally as a 4-state 2x2 grid with a 1E:8000 row 0x1D selection box, three explicit rear-car cells, and a separate BG1 stopwatch/clock slot.",
-          "tools/out/snes_frontend_select_opponent_bg1.png isolates helper 8 on BG1 and visibly renders the Select Opponent banner plus the fourth-slot stopwatch/clock icon."
+          "tools/out/snes_frontend_select_opponent_bg1.png isolates helper 8 on BG1 and visibly renders the Select Opponent banner plus the fourth-slot stopwatch/clock icon.",
+          "tools/out/snes_frontend_select_opponent_mode_split.json now closes the first downstream handoff semantics of that same $1C70 surface."
         ],
-        "notes": "The live SNES state is clearly field-oriented inside one WRAM neighborhood. A compact vector overlay analogous to DOS 0x8a1c has not been recovered, but the top-level $1C6A surface is now both human-readable and semantically mapped through the 1E:8000 signboard rows, and the downstream $1C70 field is no longer just a raw bitfield: it now has a closed 2x2 grid structure with a separate BG1 clock slot."
+        "notes": "The live SNES state is clearly field-oriented inside one WRAM neighborhood. A compact vector overlay analogous to DOS 0x8a1c has not been recovered, but the top-level $1C6A surface is now both human-readable and semantically mapped through the 1E:8000 signboard rows, and the downstream $1C70 field is no longer just a raw bitfield: it now has a closed 2x2 grid structure with a separate BG1 clock slot and a verified no-opponent collapse into $1C76/$1C7A."
       }
     },
     {
@@ -42,7 +44,7 @@
   "questions_answered": [
     {
       "question": "Does the SNES version also use a selector vector, or did it flatten the state into named fields?",
-      "answer": "Current verified evidence favors flattened named WRAM fields inside one contiguous front-end state block, with $1C6A tied to the visible top-level signboard labels Game Options / Play TDII / High Score and the downstream $1C70 field now structurally closed as a 4-state 2x2 Select Opponent surface with three OAM car cells plus a separate BG1 clock slot."
+      "answer": "Current verified evidence favors flattened named WRAM fields inside one contiguous front-end state block, with $1C6A tied to the visible top-level signboard labels Game Options / Play TDII / High Score and the downstream $1C70 field now structurally closed as a 4-state 2x2 Select Opponent surface whose fourth BG1 clock slot already collapses into $1C76 = 0 / $1C7A = 0 while the three car slots preserve opponent mode."
     },
     {
       "question": "Are chosen IDs persisted directly, or are they replaced with compact indices in SRAM?",
