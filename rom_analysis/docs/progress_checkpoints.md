@@ -4520,6 +4520,7 @@ Next best step:
   - `tools/out/snes_car_obj_catalog_manifest.json`
   - `tools/out/snes_car_obj_catalog_manifest.md`
 - promoted second-state car-select artifacts:
+  - `tools/out/car_select_frame_1500_frame_01500_frame.png`
   - `tools/out/car_select_right_capture/capture_frame_01640.png`
   - `tools/out/car_select_frame_1640_rightnav_frame_01640_vram.bin`
   - `tools/out/car_select_frame_1640_rightnav_frame_01640_cgram.bin`
@@ -4547,6 +4548,9 @@ Next best step:
   - the right-navigation probe changes `state_0202` from `1` to `2` at frame
     `1537`
   - the visible car-select capture at frame `1640` shows `Lamborghini Diablo`
+  - the frame-`1500` `Porsche 959` PNG is now promoted as a stable in-repo
+    screenshot artifact, so both live anchors can be cited directly in
+    article/documentation outputs
   - `L00BC0F` statically closes the per-car helper math:
     - `lda $0202`
     - `adc #$0009`
