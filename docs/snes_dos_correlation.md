@@ -17,7 +17,7 @@ bank-0/bank-1 archaeology or direct ROM-header evidence.
 | Track/scenery selector | Verified `4`-slot top-level selector through `$1C7C` with groups `[0, 5, 11, 18] / [5, 6, 7, 8]`; rendered rows `11..14` now recover `Desert Blast - Easy`, `City Bound - Medium`, `East Coast - Hard`, `West Coast - Hardest` | `VERIFIED` |
 | UI descriptor rows | Adjacent menu helpers build a long ROM pointer rooted at `1E:8000`; rows `8..10` read as a rolling-tire helper cycle, rows `11..14` as track labels, rows `15..17` as top-level signboard labels, and rows `0x15..0x1B` as control/sound labels | `VERIFIED` |
 | Selector persistence | No cart SRAM in ROM header | `VERIFIED` |
-| DOS-style play-session gate | No verified dual-catalog equivalent yet; no-force timed-input probes now recover the default rival path `L00C20B -> 01:C1D2 -> L00BE76 -> L008B87 -> 01:902D`, followed later by `active_main = 02:9016`, while `L009568/L0095AD` remains the strongest bank-1 boundary | `VERIFIED` / `PROBABLE` |
+| DOS-style play-session gate | No verified dual-catalog equivalent yet; no-force timed-input probes now recover the default rival path `L00C20B -> 01:C1D2 -> L00BE76 -> L008B87 -> 01:902D`, followed later by `active_main = 02:9016`, while callback-relative probes now also recover the no-opponent fourth-slot selection into `L00BE76 -> 01:BE43` with `$1C70 = 3` / `$1C76 = 0`; `L009568/L0095AD` remains the strongest bank-1 boundary | `VERIFIED` / `PROBABLE` |
 
 ## Selection State
 
@@ -507,6 +507,33 @@ Relevant DOS contract:
   - The remaining proof target is now to move the clock-slot input inside the
     live `01:C1D2` window so the no-opponent branch can be compared against
     this recovered default baseline.
+
+### CLAIM AUDIT
+
+- Claim: Callback-relative input keyed to first live `01:C1D2` now closes
+  organic fourth-slot selection through `L00BE76 -> 01:BE43` with
+  `$1C70 = 3` and `$1C76 = 0`.
+- Classification: VERIFIED
+- Evidence:
+  - [tools/out/select_opponent_clock_path_v5_trigger/td2_boot_probe.json](/home/nivando-soares/asmdump/tools/out/select_opponent_clock_path_v5_trigger/td2_boot_probe.json)
+    records trigger windows relative to first `01:C1D2` at frame `1628`,
+    reaches `L00BE76` at `1642`, and has `$1C70 = 3` / `$1C76 = 0` by that
+    same frame.
+  - The same `v5` run samples `active_main = 01:BE43` at frames `1713`,
+    `1736`, `1857`, `1887`, `2014`, and `2044`, with no traced
+    `L008B87`, `01:902D`, or `01:9111` hit.
+  - [tools/out/select_opponent_clock_path_v6_trigger_long/td2_boot_probe.json](/home/nivando-soares/asmdump/tools/out/select_opponent_clock_path_v6_trigger_long/td2_boot_probe.json)
+    reproduces `L00BE76` at `1642`, first `01:BE43` at `1713`, and keeps
+    `$1C70 = 3` / `$1C76 = 0` through sampled frames `2200`, `2400`, and
+    `2600`.
+  - [tools/out/snes_select_opponent_callback_relative_selection.json](/home/nivando-soares/asmdump/tools/out/snes_select_opponent_callback_relative_selection.json)
+    consolidates the callback-relative fourth-slot proof and scopes the
+    remaining later confirm gap.
+- Notes:
+  - This closes organic fourth-slot selection itself.
+  - Because the bounded `v5/v6` program omits the later confirm `start` used
+    in the default-rival path, the remaining open edge is the later
+    no-opponent phase-confirm/promotion path after `01:BE43`.
 
 ### CLAIM AUDIT
 

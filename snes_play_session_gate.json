@@ -67,6 +67,23 @@
       }
     },
     {
+      "id": "organic_clock_slot_callback_relative_selection",
+      "dos_contract": "DOS play-session assembly is guarded by a non-graphics gate that requires both car and scenery catalogs.",
+      "mapping_status": "clock_slot_selection_recovered",
+      "claim_audit": {
+        "claim": "Callback-relative input windows keyed to the first live 01:C1D2 hit now drive the fourth Select Opponent slot organically ($1C70 = 3), after which the run reaches L00BE76 and the later 01:BE43 corridor with $1C76 = 0.",
+        "classification": "VERIFIED",
+        "evidence": [
+          "validation/mesen_probe_boot.lua now accepts TD2_BOOT_PROBE_TRIGGER_INPUT_WINDOWS and records both trigger_input_windows and exec_point_trace.first_frames in the probe JSON.",
+          "tools/out/select_opponent_clock_path_v5_trigger/td2_boot_probe.json records first 01:C1D2 at frame 1628, state_1c70 = 3 / state_1c76 = 0 by frame 1642, and L00BE76 at frame 1642.",
+          "The same v5 run then samples active_main = 01:BE43 at frames 1713, 1736, 1857, 1887, 2014, and 2044 with no traced L008B87, 01:902D, or 01:9111 hit.",
+          "tools/out/select_opponent_clock_path_v6_trigger_long/td2_boot_probe.json reproduces first 01:C1D2 at 1628, L00BE76 at 1642, first 01:BE43 at 1713, and keeps state_1c70 = 3 / state_1c76 = 0 with active_main = 01:BE43 through sampled frames 2200, 2400, and 2600.",
+          "tools/out/snes_select_opponent_callback_relative_selection.json consolidates the callback-relative runs and scopes the remaining open edge."
+        ],
+        "notes": "This closes organic fourth-slot selection itself. It does not yet prove the later no-opponent phase-confirm behavior because the v5/v6 input program omits the later confirm start window that previously advanced the default-rival lane into L008B87 -> 01:902D -> active_main = 02:9016."
+      }
+    },
+    {
       "id": "descriptor_progression_boundary",
       "dos_contract": "DOS play-session assembly is guarded by a non-graphics gate that requires both car and scenery catalogs.",
       "mapping_status": "strongest_current_play_session_candidate",
@@ -91,7 +108,7 @@
         "claim": "No verified SNES refusal branch equivalent to the DOS 0x6064 both-catalogs-required gate has been recovered yet.",
         "classification": "VERIFIED",
         "evidence": [
-          "Current recovered gate surfaces are the front-end success gate at L008B26, the verified Select Opponent mode split at L008B87, the organic default-rival path through L00C20B -> 01:C1D2 -> L00BE76 -> L008B87 -> 01:902D -> active_main = 02:9016, the explicit callback install of 02:9016/02:8F3C from the same bank-1 corridor, and the descriptor-progression boundary at L009568/L0095AD.",
+          "Current recovered gate surfaces are the front-end success gate at L008B26, the verified Select Opponent mode split at L008B87, the organic default-rival path through L00C20B -> 01:C1D2 -> L00BE76 -> L008B87 -> 01:902D -> active_main = 02:9016, the callback-relative fourth-slot selection path through L00C20B -> 01:C1D2 -> L00BE76 -> 01:BE43 with state_1c70 = 3 / state_1c76 = 0, the explicit callback install of 02:9016/02:8F3C from the same bank-1 corridor, and the descriptor-progression boundary at L009568/L0095AD.",
           "Neither recovered surface directly proves validation of separate car and scenery working sets before gameplay."
         ],
         "notes": "This is a statement about the present evidence state. It is not a proof that no such gate exists elsewhere in the ROM."
@@ -101,7 +118,7 @@
   "questions_answered": [
     {
       "question": "Is there a gameplay gate equivalent to DOS 0x6064, even if the error messaging differs?",
-      "answer": "No verified dual-catalog gate is recovered yet. The closest verified SNES surfaces are the L008B26 front-end success gate, the L008B87 no-opponent-vs-rival split that comes out of Select Opponent, the newly recovered organic default-rival path L00C20B -> 01:C1D2 -> L00BE76 -> L008B87 -> 01:902D -> active_main = 02:9016, and the explicit 02:9016/02:8F3C callback install from the same bank-1 corridor, while L009568/L0095AD remains the strongest bank-1-side pregame boundary."
+      "answer": "No verified dual-catalog gate is recovered yet. The closest verified SNES surfaces are the L008B26 front-end success gate, the L008B87 no-opponent-vs-rival split that comes out of Select Opponent, the recovered organic default-rival path L00C20B -> 01:C1D2 -> L00BE76 -> L008B87 -> 01:902D -> active_main = 02:9016, the callback-relative fourth-slot selection path L00C20B -> 01:C1D2 -> L00BE76 -> 01:BE43 with state_1c70 = 3 / state_1c76 = 0, and the explicit 02:9016/02:8F3C callback install from the same bank-1 corridor, while L009568/L0095AD remains the strongest bank-1-side pregame boundary."
     }
   ]
 }

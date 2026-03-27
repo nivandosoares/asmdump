@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "created": "2026-03-27",
+  "scope": "Callback-relative proof for organic fourth-slot Select Opponent selection from power-on.",
+  "claim_audit": {
+    "claim": "Callback-relative input windows keyed to the first live 01:C1D2 hit now drive the fourth Select Opponent slot organically ($1C70 = 3), after which the run reaches L00BE76 and the later 01:BE43 corridor with $1C76 = 0.",
+    "classification": "VERIFIED",
+    "evidence": [
+      "validation/mesen_probe_boot.lua now accepts TD2_BOOT_PROBE_TRIGGER_INPUT_WINDOWS and records both trigger_input_windows and exec_point_trace.first_frames in the probe JSON.",
+      "tools/out/select_opponent_clock_path_v5_trigger/td2_boot_probe.json records trigger_input_windows c1d2+1-6:right,down and c1d2+8-13:start, first c1d2 at frame 1628, state_1c70 = 3 / state_1c76 = 0 by frame 1642, and l00be76 at frame 1642.",
+      "The same v5 run then samples active_main = 01:BE43 at frames 1713, 1736, 1857, 1887, 2014, and 2044 with no traced b87, 902d, or 9111 hit.",
+      "tools/out/select_opponent_clock_path_v6_trigger_long/td2_boot_probe.json reproduces first c1d2 at 1628, l00be76 at 1642, first be43 at 1713, and keeps state_1c70 = 3 / state_1c76 = 0 with active_main = 01:BE43 through sampled frames 2200, 2400, and 2600, still with no traced b87, 902d, or 9111 hit.",
+      "tools/out/snes_select_opponent_callback_relative_selection.md consolidates the two callback-relative runs and scopes the remaining open edge."
+    ],
+    "notes": "This closes organic fourth-slot selection itself. It does not yet prove the later no-opponent phase-confirm behavior because the v5/v6 input program omits the later confirm start window that previously advanced the default-rival lane into L008B87 -> 01:902D -> active_main = 02:9016."
+  },
+  "scenarios": [
+    {
+      "id": "v5",
+      "probe_json": "tools/out/select_opponent_clock_path_v5_trigger/td2_boot_probe.json",
+      "input_windows": "1200:start;1280:start;1505-1510:start",
+      "trigger_input_windows": "c1d2+1-6:right,down;c1d2+8-13:start",
+      "events": {
+        "l00c20b": 1613,
+        "c1d2_first": 1628,
+        "c1d2_last": 1643,
+        "l00be76": 1642
+      },
+      "state": {
+        "state_1c70_after_selection": 3,
+        "state_1c76_after_selection": 0,
+        "active_main_samples": {
+          "1642": "01:C1D2",
+          "1706": "00:8029",
+          "1713": "01:BE43",
+          "1736": "01:BE43",
+          "1857": "01:BE43",
+          "1887": "01:BE43",
+          "2014": "01:BE43",
+          "2044": "01:BE43"
+        }
+      },
+      "notes": "Short callback-relative proof run. It closes the fourth-slot move but does not include a later phase-confirm input."
+    },
+    {
+      "id": "v6",
+      "probe_json": "tools/out/select_opponent_clock_path_v6_trigger_long/td2_boot_probe.json",
+      "input_windows": "1200:start;1280:start;1505-1510:start",
+      "trigger_input_windows": "c1d2+1-6:right,down;c1d2+8-13:start",
+      "events": {
+        "l00c20b": 1613,
+        "c1d2_first": 1628,
+        "c1d2_last": 1643,
+        "l00be76": 1642,
+        "l01be43_first": 1713,
+        "l01be43_last": 2206
+      },
+      "state": {
+        "state_1c70_after_selection": 3,
+        "state_1c76_after_selection": 0,
+        "active_main_samples": {
+          "1642": "01:C1D2",
+          "1706": "00:8029",
+          "1713": "01:BE43",
+          "2200": "01:BE43",
+          "2400": "01:BE43",
+          "2600": "01:BE43"
+        }
+      },
+      "notes": "Long follow-up run. It shows the fourth-slot state persisting into the later 01:BE43 corridor, but still without a later phase-confirm input."
+    }
+  ],
+  "next_gate": "Pair the callback-relative fourth-slot move with a later start confirm after the 01:BE43 corridor is live so the no-opponent lane can be compared against the default-rival baseline."
+}

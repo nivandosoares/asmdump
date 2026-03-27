@@ -84,6 +84,58 @@ local function parse_input_windows_env(name)
     return windows
 end
 
+local function parse_trigger_input_windows_env(name)
+    local raw = os.getenv(name)
+    if raw == nil or raw == "" then
+        return {}
+    end
+
+    local windows = {}
+    for segment in raw:gmatch("[^;]+") do
+        local item = trim(segment)
+        if item ~= "" then
+            local range_raw, buttons_raw = item:match("^([^:]+):?(.*)$")
+            if range_raw ~= nil then
+                local point_id, start_raw, end_raw = range_raw:match("^(.-)%+(%-?%d+)%s*%-%s*(%-?%d+)$")
+                if point_id == nil then
+                    point_id, start_raw = range_raw:match("^(.-)%+(%-?%d+)$")
+                    end_raw = start_raw
+                end
+
+                local start_offset = tonumber(start_raw)
+                local end_offset = tonumber(end_raw)
+                if point_id ~= nil and start_offset ~= nil and end_offset ~= nil then
+                    point_id = trim(point_id)
+                    if point_id ~= "" then
+                        if end_offset < start_offset then
+                            start_offset, end_offset = end_offset, start_offset
+                        end
+
+                        windows[#windows + 1] = {
+                            point_id = point_id,
+                            start_offset = math.floor(start_offset),
+                            end_offset = math.floor(end_offset),
+                            pattern = parse_button_pattern(buttons_raw)
+                        }
+                    end
+                end
+            end
+        end
+    end
+
+    table.sort(windows, function(a, b)
+        if a.point_id == b.point_id then
+            if a.start_offset == b.start_offset then
+                return a.end_offset < b.end_offset
+            end
+            return a.start_offset < b.start_offset
+        end
+        return a.point_id < b.point_id
+    end)
+
+    return windows
+end
+
 local function parse_exec_point_env(name)
     local raw = os.getenv(name)
     if raw == nil or raw == "" then
@@ -139,6 +191,7 @@ local config = {
     player = env_number("TD2_BOOT_PROBE_PLAYER", 0),
     input_pattern = parse_input_env("TD2_BOOT_PROBE_INPUT"),
     input_windows = parse_input_windows_env("TD2_BOOT_PROBE_INPUT_WINDOWS"),
+    trigger_input_windows = parse_trigger_input_windows_env("TD2_BOOT_PROBE_TRIGGER_INPUT_WINDOWS"),
     dump_ppu_memory = env_number("TD2_BOOT_PROBE_DUMP_PPU_MEMORY", 0) ~= 0,
     dump_wram_memory = env_number("TD2_BOOT_PROBE_DUMP_WRAM_MEMORY", 0) ~= 0,
     trace_mode7_writes = env_number("TD2_BOOT_PROBE_TRACE_MODE7", 0) ~= 0,
@@ -212,6 +265,7 @@ local state = {
     l001210_dropped_hits = 0,
     exec_point_hits = {},
     exec_point_hit_counts = {},
+    exec_point_first_frames = {},
     exec_point_dropped_hits = 0,
     write_point_hits = {},
     write_point_dropped_hits = 0,
@@ -686,6 +740,7 @@ local function save_probe_log()
         trace_start_frame = config.trace_start_frame,
         trace_end_frame = config.trace_end_frame,
         trace_exec_points = config.trace_exec_points,
+        trigger_input_windows = config.trigger_input_windows,
         exec_point_max_hits = config.exec_point_max_hits,
         exec_point_max_hits_per_point = config.exec_point_max_hits_per_point,
         trace_write_points = config.trace_write_points,
@@ -711,6 +766,7 @@ local function save_probe_log()
         exec_point_trace = {
             hit_count = #state.exec_point_hits,
             dropped_hits = state.exec_point_dropped_hits,
+            first_frames = state.exec_point_first_frames,
             hits = state.exec_point_hits,
         },
         write_point_trace = {
@@ -848,6 +904,7 @@ local function reset_probe_state()
     state.l001210_dropped_hits = 0
     state.exec_point_hits = {}
     state.exec_point_hit_counts = {}
+    state.exec_point_first_frames = {}
     state.exec_point_dropped_hits = 0
     state.write_point_hits = {}
     state.write_point_dropped_hits = 0
@@ -1126,6 +1183,10 @@ local function make_exec_point_callback(point)
             return
         end
 
+        if state.exec_point_first_frames[point.id] == nil then
+            state.exec_point_first_frames[point.id] = state.frame
+        end
+
         local cpu_state = emu.getState()
         local reg_a = mask_u16(cpu_state["cpu.a"])
         local reg_x = mask_u16(cpu_state["cpu.x"])
@@ -1330,6 +1391,25 @@ local function on_l001210_exec()
     state.last_l001210_callsite = nil
 end
 
+local function resolve_triggered_input_pattern(frame)
+    if #config.trigger_input_windows == 0 then
+        return nil
+    end
+
+    for _, window in ipairs(config.trigger_input_windows) do
+        local trigger_frame = state.exec_point_first_frames[window.point_id]
+        if trigger_frame ~= nil then
+            local start_frame = trigger_frame + window.start_offset
+            local end_frame = trigger_frame + window.end_offset
+            if frame >= start_frame and frame <= end_frame then
+                return window.pattern
+            end
+        end
+    end
+
+    return nil
+end
+
 local function resolve_active_input_pattern(frame)
     if #config.input_windows > 0 then
         for _, window in ipairs(config.input_windows) do
@@ -1337,7 +1417,18 @@ local function resolve_active_input_pattern(frame)
                 return window.pattern
             end
         end
+
+        local triggered_pattern = resolve_triggered_input_pattern(frame)
+        if triggered_pattern ~= nil then
+            return triggered_pattern
+        end
+
         return nil
+    end
+
+    local triggered_pattern = resolve_triggered_input_pattern(frame)
+    if triggered_pattern ~= nil then
+        return triggered_pattern
     end
 
     if config.input_start_frame < 0 or frame < config.input_start_frame then

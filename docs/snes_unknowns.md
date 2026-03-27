@@ -381,6 +381,33 @@ DOS-driven SNES correlation pass.
     `01:C1D2` window itself or trigger relative to first `01:C1D2`, instead
     of continuing to slide absolute-frame windows forward by guesswork.
 
+### CLAIM AUDIT
+
+- Claim: Callback-relative input windows now close organic fourth-slot
+  `Select Opponent` selection into the `L00BE76 -> 01:BE43` corridor with
+  `$1C70 = 3` and `$1C76 = 0`.
+- Classification: VERIFIED
+- Evidence:
+  - [tools/out/select_opponent_clock_path_v5_trigger/td2_boot_probe.json](/home/nivando-soares/asmdump/tools/out/select_opponent_clock_path_v5_trigger/td2_boot_probe.json)
+    records `trigger_input_windows` keyed to first `01:C1D2` at frame `1628`,
+    then reaches `L00BE76` at `1642` with `$1C70 = 3` and `$1C76 = 0`.
+  - The same `v5` run samples `active_main = 01:BE43` at frames `1713`,
+    `1736`, `1857`, `1887`, `2014`, and `2044`, with no traced
+    `L008B87`, `01:902D`, or `01:9111` hit.
+  - [tools/out/select_opponent_clock_path_v6_trigger_long/td2_boot_probe.json](/home/nivando-soares/asmdump/tools/out/select_opponent_clock_path_v6_trigger_long/td2_boot_probe.json)
+    reproduces first `01:C1D2` at `1628`, `L00BE76` at `1642`, first
+    `01:BE43` at `1713`, and keeps `$1C70 = 3` / `$1C76 = 0` through sampled
+    frames `2200`, `2400`, and `2600`.
+  - [tools/out/snes_select_opponent_callback_relative_selection.json](/home/nivando-soares/asmdump/tools/out/snes_select_opponent_callback_relative_selection.json)
+    consolidates the callback-relative selection proof and scopes the open
+    later confirm edge.
+- Notes:
+  - The remaining unknown is no longer whether the fourth slot can be selected
+    organically.
+  - The remaining unknown is the later no-opponent phase-confirm path after
+    `01:BE43`, because the bounded `v5/v6` input program omits the later
+    confirm `start` used in the default-rival baseline.
+
 ## Next Probes
 
 - Get a deterministic post-attract or menu savestate where `$1CAC/$1CCA/$1CE*`
@@ -401,9 +428,9 @@ DOS-driven SNES correlation pass.
   car-name text surface instead.
 - Use the now-decoded `0x15..0x1B` settings labels to identify the exact
   front-end submenu/callsite that owns that control/sound surface.
-- Use an overlapping or callback-relative `right+down` injection so the
-  fourth-slot move is guaranteed to occur while `01:C1D2` is already live,
-  instead of continuing to chase unstable absolute-frame windows.
+- Pair the now-closed callback-relative fourth-slot move with a later
+  `start` confirm after `01:BE43` is live so the no-opponent lane can be
+  compared directly against the recovered default-rival corridor.
 - Keep decoding the `01:8016..01:8330` table families into named rows so
   `$1C7C`, `$1CAC`, and `$1CCA` can be tied to concrete assets instead of raw
   indices.

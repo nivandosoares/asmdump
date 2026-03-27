@@ -206,6 +206,29 @@ To inspect the boot/title selectors directly:
 ./validation/run_mesen_probe_boot.sh
 ```
 
+`mesen_probe_boot.lua` now also accepts callback-relative input windows through
+`TD2_BOOT_PROBE_TRIGGER_INPUT_WINDOWS`.
+
+That format is:
+
+- `point_id+offset:buttons`
+- `point_id+start-end:buttons`
+
+where `point_id` matches a labeled entry from `TD2_BOOT_PROBE_TRACE_EXEC_POINTS`.
+
+Example:
+
+```sh
+MESEN_TIMEOUT_SECONDS=60 \
+TD2_BOOT_PROBE_TRACE_EXEC_POINTS='c1d2=01:C1D2' \
+TD2_BOOT_PROBE_INPUT_WINDOWS='1200:start;1280:start;1505-1510:start' \
+TD2_BOOT_PROBE_TRIGGER_INPUT_WINDOWS='c1d2+1-6:right,down;c1d2+8-13:start' \
+./validation/run_mesen_probe_boot.sh ./game.smc
+```
+
+The probe JSON now records both `trigger_input_windows` and the first traced
+frame for each exec-point id under `exec_point_trace.first_frames`.
+
 For producer-side visual ownership tracing, the same probe can now carry
 write-breakpoint hits for `VRAM/CGRAM/OAM`-related registers. The resulting
 `td2_boot_probe.json` can be fed into
