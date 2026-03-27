@@ -587,6 +587,33 @@ Relevant DOS contract:
 
 ### CLAIM AUDIT
 
+- Claim: The first stable rival-vs-no-opponent visual split after both paths
+  reach `02:9016` is a rival-only OAM marker on the top HUD strip, gated by
+  `$1C76` through `state_11f3 -> oam_0730`.
+- Classification: VERIFIED
+- Evidence:
+  - `bank2.asm:1145-1165` (`L0108EF`) stages `oam_072c` from `state_11f1`,
+    conditionally stages `oam_0730` from `state_11f3` only when
+    `$1C76 != 0`, and stages `oam_0734` from `state_11f5`.
+  - [tools/out/post9016_extended_state_compare.json](/home/nivando-soares/asmdump/tools/out/post9016_extended_state_compare.json)
+    compares frames `2048..2088` of corrected rival/no-opponent probes and
+    keeps stable whole-window differences `oam_0730 = 4618 -> 57600`,
+    `state_11f3 = 44 -> 0`, `$1C76 = 1 -> 0`, and `$1C70 = 0 -> 3`.
+  - [tools/out/post9016_compare_summary.json](/home/nivando-soares/asmdump/tools/out/post9016_compare_summary.json)
+    localizes all sampled image deltas in the same window to the top-strip
+    bounding box `(11, 11, 194, 21)`.
+  - Human review of the corrected screenshot pack reports a red rival marker
+    absent from the no-opponent lane and confirms the difference disappears
+    with OAM disabled while the lower cockpit stays unchanged.
+- Notes:
+  - This closes the first stable gameplay-visible split as rival-only OAM
+    ownership.
+  - The user also reports rival blinking lights in the rearview as the first
+    meaningful cue, but that finer rearview mapping is not yet tied to a
+    specific state field.
+
+### CLAIM AUDIT
+
 - Claim: `L009568/L0095AD` form the strongest current SNES gameplay-handoff
   candidate because they advance `$1CA8`, compare it against `$1C80`, and
   either rebuild the next descriptor row via `L008C10` or unwind back to

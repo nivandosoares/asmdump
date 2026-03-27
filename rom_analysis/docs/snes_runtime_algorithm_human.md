@@ -104,8 +104,14 @@ already grounded in code reads, probes, or generated artifacts.
     `$1C70 = 3`, `$1C76 = 0` at the same downstream timestamps. A direct
     compare over frames `2044..2199` now shows that both paths also keep the
     same callback surface (`02:9016` main, `01:96A0` IRQ, `02:8F3C` NMI) while
-    narrowing the remaining post-handoff split to `14` sampled fields, with
-    `state_09a2/state_09a8` the strongest non-selector candidates.
+    narrowing the remaining post-handoff split to `14` sampled fields. The
+    first stable visible split inside the corrected non-black window
+    `2048..2088` is now also closed: `bank2.asm` `L0108EF` stages the
+    top-strip OAM slot `oam_0730` from `state_11f3` only when `$1C76 != 0`,
+    which matches the rival-only red marker seen in the corrected screenshot
+    review pack. That means `state_09a2/state_09a8` are no longer the first
+    visible split; they are now secondary post-handoff OAM candidates after
+    the already-closed top-strip marker.
     Direct headless forcing of `01:9568/01:95AD` still does not promote into
     that same corridor: short-force probes keep `active_main` pinned on
     `01:9568/01:95AD` through frame `2199` with no staged callback writes.
@@ -131,8 +137,10 @@ If you strip away the assembly details, the proven logic is:
 - the actual front-end car-name text surface is still not located
 - the exact organic runtime/HUD divergence between the recovered default-rival
   path (`$1C76 = 1`) and the fourth-slot no-opponent path (`$1C76 = 0`) is
-  still is not semantically decoded, but the observed split is now narrowed to
-  `14` sampled fields in the first shared `02:9016` window
+  no longer fully opaque: the first stable visible split is the rival-only
+  top-strip OAM marker under `state_11f3 -> oam_0730`, but the reported
+  rearview blinking lights and the intermittent `09A2/09A8`-side differences
+  are still not fully semantically decoded
 - the remaining front-end/gameplay bridge problem is no longer late confirm;
   it is assigning meaning and visible ownership to the narrowed post-handoff
   deltas, especially `state_09a2/state_09a8` and the paired DP scratch fields,

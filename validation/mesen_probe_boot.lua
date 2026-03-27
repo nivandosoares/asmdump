@@ -636,6 +636,13 @@ local function snapshot_boot_state()
         state_09a2 = read_u16(0x7E09A2),
         state_09a4 = read_u16(0x7E09A4),
         state_09a8 = read_u16(0x7E09A8),
+        state_11a7 = read_u16(0x7E11A7),
+        state_11cd = read_u16(0x7E11CD),
+        state_11df = read_u16(0x7E11DF),
+        state_11f1 = read_u16(0x7E11F1),
+        state_11f3 = read_u16(0x7E11F3),
+        state_11f5 = read_u16(0x7E11F5),
+        state_137c = read_u16(0x7E137C),
         state_1c6a = read_u16(0x7E1C6A),
         state_1c70 = read_u16(0x7E1C70),
         state_1c74 = read_u16(0x7E1C74),
@@ -673,7 +680,15 @@ local function snapshot_boot_state()
         dp_0053 = read_u8(0x000053),
         dp_0054 = read_u8(0x000054),
         dp_0055 = read_u16(0x000055),
-        dp_0056 = read_u8(0x000056)
+        dp_0056 = read_u8(0x000056),
+        oam_072c = read_u16(0x7E072C),
+        oam_072e = read_u16(0x7E072E),
+        oam_0730 = read_u16(0x7E0730),
+        oam_0732 = read_u16(0x7E0732),
+        oam_0734 = read_u16(0x7E0734),
+        oam_0736 = read_u16(0x7E0736),
+        oam_0738 = read_u16(0x7E0738),
+        oam_073a = read_u16(0x7E073A)
     }
 end
 

@@ -1,0 +1,574 @@
+{
+  "probe_a": "tools/out/post9016_rival_v2_fields/td2_boot_probe.json",
+  "probe_b": "tools/out/post9016_clock_v7_fields/td2_boot_probe.json",
+  "label_a": "default_rival_v2_fields",
+  "label_b": "no_opponent_v7_fields",
+  "start_frame": 2048,
+  "end_frame": 2088,
+  "compared_frame_count": 41,
+  "shared_frames": [
+    2048,
+    2088
+  ],
+  "callback_summary": {
+    "main": {
+      "a": [
+        "02:9016"
+      ],
+      "b": [
+        "02:9016"
+      ],
+      "same": true
+    },
+    "irq": {
+      "a": [
+        "01:96A0"
+      ],
+      "b": [
+        "01:96A0"
+      ],
+      "same": true
+    },
+    "nmi": {
+      "a": [
+        "02:8F3C"
+      ],
+      "b": [
+        "02:8F3C"
+      ],
+      "same": true
+    }
+  },
+  "same_field_count": 67,
+  "same_fields": [
+    "active_irq_callback_addr",
+    "active_irq_callback_bank",
+    "active_main_callback_addr",
+    "active_main_callback_bank",
+    "active_nmi_callback_addr",
+    "active_nmi_callback_bank",
+    "dp_0010",
+    "dp_0011",
+    "dp_0012",
+    "dp_0040",
+    "oam_072c",
+    "oam_072e",
+    "oam_0732",
+    "oam_0734",
+    "oam_0736",
+    "oam_0738",
+    "oam_073a",
+    "selector_1c78",
+    "selector_1c7a",
+    "selector_1c7c",
+    "selector_1c80",
+    "selector_1c82",
+    "selector_1ca8",
+    "selector_1cac",
+    "selector_1cca",
+    "selector_1ccc",
+    "selector_1cce",
+    "selector_1cd0",
+    "selector_1ce2",
+    "selector_1ce4",
+    "selector_1ce6",
+    "selector_1cea",
+    "state_0200",
+    "state_0202",
+    "state_0204",
+    "state_0206",
+    "state_0208",
+    "state_020a",
+    "state_0400",
+    "state_0402",
+    "state_0404",
+    "state_0405",
+    "state_0406",
+    "state_0408",
+    "state_040a",
+    "state_0440",
+    "state_0442",
+    "state_0444",
+    "state_0960",
+    "state_0962",
+    "state_0990",
+    "state_0996",
+    "state_09a4",
+    "state_0f70",
+    "state_11a7",
+    "state_11cd",
+    "state_11df",
+    "state_11f1",
+    "state_11f5",
+    "state_137c",
+    "state_1c6a",
+    "state_1c74",
+    "state_1c84",
+    "state_1c86",
+    "state_1d08",
+    "state_1d10",
+    "state_1e2c"
+  ],
+  "differing_field_count": 16,
+  "differing_fields": [
+    {
+      "field": "dp_0053",
+      "diff_count": 41,
+      "total_frames": 41,
+      "all_frames_differ": true,
+      "first_diff_frame": 2048,
+      "last_diff_frame": 2088,
+      "unique_values_a": [
+        232,
+        248,
+        8
+      ],
+      "unique_values_b": [
+        104,
+        88,
+        96
+      ],
+      "constant_a_over_window": false,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 248,
+          "value_b": 96,
+          "count": 32
+        },
+        {
+          "value_a": 8,
+          "value_b": 104,
+          "count": 6
+        },
+        {
+          "value_a": 232,
+          "value_b": 88,
+          "count": 3
+        }
+      ]
+    },
+    {
+      "field": "dp_0054",
+      "diff_count": 41,
+      "total_frames": 41,
+      "all_frames_differ": true,
+      "first_diff_frame": 2048,
+      "last_diff_frame": 2088,
+      "unique_values_a": [
+        232,
+        248,
+        8
+      ],
+      "unique_values_b": [
+        104,
+        88,
+        96
+      ],
+      "constant_a_over_window": false,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 248,
+          "value_b": 96,
+          "count": 32
+        },
+        {
+          "value_a": 8,
+          "value_b": 104,
+          "count": 7
+        },
+        {
+          "value_a": 232,
+          "value_b": 88,
+          "count": 2
+        }
+      ]
+    },
+    {
+      "field": "oam_0730",
+      "diff_count": 41,
+      "total_frames": 41,
+      "all_frames_differ": true,
+      "first_diff_frame": 2048,
+      "last_diff_frame": 2088,
+      "unique_values_a": [
+        4618
+      ],
+      "unique_values_b": [
+        57600
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": true,
+      "pair_counts": [
+        {
+          "value_a": 4618,
+          "value_b": 57600,
+          "count": 41
+        }
+      ]
+    },
+    {
+      "field": "state_11f3",
+      "diff_count": 41,
+      "total_frames": 41,
+      "all_frames_differ": true,
+      "first_diff_frame": 2048,
+      "last_diff_frame": 2088,
+      "unique_values_a": [
+        44
+      ],
+      "unique_values_b": [
+        0
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": true,
+      "pair_counts": [
+        {
+          "value_a": 44,
+          "value_b": 0,
+          "count": 41
+        }
+      ]
+    },
+    {
+      "field": "state_1c70",
+      "diff_count": 41,
+      "total_frames": 41,
+      "all_frames_differ": true,
+      "first_diff_frame": 2048,
+      "last_diff_frame": 2088,
+      "unique_values_a": [
+        0
+      ],
+      "unique_values_b": [
+        3
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": true,
+      "pair_counts": [
+        {
+          "value_a": 0,
+          "value_b": 3,
+          "count": 41
+        }
+      ]
+    },
+    {
+      "field": "state_1c76",
+      "diff_count": 41,
+      "total_frames": 41,
+      "all_frames_differ": true,
+      "first_diff_frame": 2048,
+      "last_diff_frame": 2088,
+      "unique_values_a": [
+        1
+      ],
+      "unique_values_b": [
+        0
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": true,
+      "pair_counts": [
+        {
+          "value_a": 1,
+          "value_b": 0,
+          "count": 41
+        }
+      ]
+    },
+    {
+      "field": "dp_0008",
+      "diff_count": 24,
+      "total_frames": 41,
+      "all_frames_differ": false,
+      "first_diff_frame": 2048,
+      "last_diff_frame": 2088,
+      "unique_values_a": [
+        0,
+        32,
+        3496,
+        5376
+      ],
+      "unique_values_b": [
+        0,
+        960
+      ],
+      "constant_a_over_window": false,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 5376,
+          "value_b": 960,
+          "count": 19
+        },
+        {
+          "value_a": 3496,
+          "value_b": 0,
+          "count": 3
+        },
+        {
+          "value_a": 32,
+          "value_b": 960,
+          "count": 2
+        }
+      ]
+    },
+    {
+      "field": "dp_0020",
+      "diff_count": 21,
+      "total_frames": 41,
+      "all_frames_differ": false,
+      "first_diff_frame": 2048,
+      "last_diff_frame": 2088,
+      "unique_values_a": [
+        18,
+        192
+      ],
+      "unique_values_b": [
+        149,
+        18
+      ],
+      "constant_a_over_window": false,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 192,
+          "value_b": 149,
+          "count": 21
+        }
+      ]
+    },
+    {
+      "field": "dp_0022",
+      "diff_count": 21,
+      "total_frames": 41,
+      "all_frames_differ": false,
+      "first_diff_frame": 2048,
+      "last_diff_frame": 2088,
+      "unique_values_a": [
+        4,
+        9
+      ],
+      "unique_values_b": [
+        294,
+        4
+      ],
+      "constant_a_over_window": false,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 9,
+          "value_b": 294,
+          "count": 21
+        }
+      ]
+    },
+    {
+      "field": "state_09a2",
+      "diff_count": 21,
+      "total_frames": 41,
+      "all_frames_differ": false,
+      "first_diff_frame": 2048,
+      "last_diff_frame": 2088,
+      "unique_values_a": [
+        27,
+        38,
+        40
+      ],
+      "unique_values_b": [
+        27,
+        34
+      ],
+      "constant_a_over_window": false,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 40,
+          "value_b": 34,
+          "count": 12
+        },
+        {
+          "value_a": 38,
+          "value_b": 34,
+          "count": 9
+        }
+      ]
+    },
+    {
+      "field": "dp_0000",
+      "diff_count": 3,
+      "total_frames": 41,
+      "all_frames_differ": false,
+      "first_diff_frame": 2051,
+      "last_diff_frame": 2083,
+      "unique_values_a": [
+        0,
+        4
+      ],
+      "unique_values_b": [
+        0,
+        4
+      ],
+      "constant_a_over_window": false,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 0,
+          "value_b": 4,
+          "count": 3
+        }
+      ]
+    },
+    {
+      "field": "dp_000c",
+      "diff_count": 3,
+      "total_frames": 41,
+      "all_frames_differ": false,
+      "first_diff_frame": 2051,
+      "last_diff_frame": 2083,
+      "unique_values_a": [
+        128,
+        33480,
+        45808
+      ],
+      "unique_values_b": [
+        128,
+        33480
+      ],
+      "constant_a_over_window": false,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 45808,
+          "value_b": 33480,
+          "count": 3
+        }
+      ]
+    },
+    {
+      "field": "state_09a8",
+      "diff_count": 3,
+      "total_frames": 41,
+      "all_frames_differ": false,
+      "first_diff_frame": 2051,
+      "last_diff_frame": 2083,
+      "unique_values_a": [
+        10,
+        2
+      ],
+      "unique_values_b": [
+        10,
+        2
+      ],
+      "constant_a_over_window": false,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 2,
+          "value_b": 10,
+          "count": 3
+        }
+      ]
+    },
+    {
+      "field": "dp_0004",
+      "diff_count": 2,
+      "total_frames": 41,
+      "all_frames_differ": false,
+      "first_diff_frame": 2050,
+      "last_diff_frame": 2082,
+      "unique_values_a": [
+        10,
+        24577
+      ],
+      "unique_values_b": [
+        10
+      ],
+      "constant_a_over_window": false,
+      "constant_b_over_window": true,
+      "pair_counts": [
+        {
+          "value_a": 24577,
+          "value_b": 10,
+          "count": 2
+        }
+      ]
+    },
+    {
+      "field": "dp_0055",
+      "diff_count": 2,
+      "total_frames": 41,
+      "all_frames_differ": false,
+      "first_diff_frame": 2051,
+      "last_diff_frame": 2083,
+      "unique_values_a": [
+        5304,
+        5520
+      ],
+      "unique_values_b": [
+        5440,
+        5520
+      ],
+      "constant_a_over_window": false,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 5304,
+          "value_b": 5440,
+          "count": 2
+        }
+      ]
+    },
+    {
+      "field": "dp_0056",
+      "diff_count": 2,
+      "total_frames": 41,
+      "all_frames_differ": false,
+      "first_diff_frame": 2051,
+      "last_diff_frame": 2083,
+      "unique_values_a": [
+        20,
+        21
+      ],
+      "unique_values_b": [
+        21
+      ],
+      "constant_a_over_window": false,
+      "constant_b_over_window": true,
+      "pair_counts": [
+        {
+          "value_a": 20,
+          "value_b": 21,
+          "count": 2
+        }
+      ]
+    }
+  ],
+  "categories": {
+    "stable_constant_window_differences": [
+      "oam_0730",
+      "state_11f3",
+      "state_1c70",
+      "state_1c76"
+    ],
+    "stable_all_frame_differences": [
+      "dp_0053",
+      "dp_0054"
+    ],
+    "intermittent_constant_pair_differences": [
+      "dp_0020",
+      "dp_0022",
+      "dp_0000",
+      "dp_000c",
+      "state_09a8",
+      "dp_0004",
+      "dp_0055",
+      "dp_0056"
+    ],
+    "intermittent_mixed_differences": [
+      "dp_0008",
+      "state_09a2"
+    ]
+  }
+}

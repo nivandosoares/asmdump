@@ -459,6 +459,28 @@ DOS-driven SNES correlation pass.
   - The next useful target is ownership or visibility for `09A2/09A8` and the
     paired DP scratch fields inside the shared `02:9016` corridor.
 
+### CLAIM AUDIT
+
+- Claim: The first stable post-`02:9016` rival-only visual split is no longer
+  unknown: it is the extra top-strip OAM marker controlled by
+  `$1C76 -> state_11f3 -> oam_0730`.
+- Classification: VERIFIED
+- Evidence:
+  - `bank2.asm:1145-1165` (`L0108EF`) stages the middle top-strip OAM slot
+    `oam_0730` from `state_11f3` only when `$1C76 != 0`.
+  - [tools/out/post9016_extended_state_compare.json](/home/nivando-soares/asmdump/tools/out/post9016_extended_state_compare.json)
+    keeps `oam_0730`, `state_11f3`, `$1C76`, and `$1C70` different across all
+    sampled frames `2048..2088`, while `oam_072c` and `oam_0734` remain the
+    same.
+  - Human review of the corrected screenshot pack reports that the red rival
+    marker disappears with OAM disabled and that lower cockpit and road
+    content remain unchanged.
+- Notes:
+  - This closes the first stable marker split.
+  - The remaining unknowns are the reported rearview blinking lights and the
+    intermittent `09A2/09A8`-side OAM differences beyond this already-closed
+    marker.
+
 ## Next Probes
 
 - Get a deterministic post-attract or menu savestate where `$1CAC/$1CCA/$1CE*`

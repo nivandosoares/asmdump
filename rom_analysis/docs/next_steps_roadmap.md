@@ -99,14 +99,15 @@ Use these to avoid collapsing distinct front-end surfaces into one:
     `L00C20B -> 01:C1D2 -> L00BE76 -> 01:BE43 -> L008B87 -> 01:902D ->
     01:9111 -> active_main = 02:9016`
   - the remaining proving target is now post-handoff divergence:
-    corrected screenshot review packs now start at `2048` because the earlier
-    `2044` frame was a dead transition surface, and objective image compare
-    already localizes the earliest stable rival-vs-clock delta to the top
-    radar strip (`125..137` differing pixels inside `(11, 11, 194, 21)`),
-    where the rival lane shows an extra red marker absent from the no-opponent
-    lane; the next step is to tie that visible delta back to the narrowed
-    `09A2/09A8/0020/0022/0053/0054` split instead of spending more runs on
-    front-end confirmation
+    corrected screenshot review packs start at `2048` because the earlier
+    `2044` frame was a dead transition surface, objective image compare
+    localizes the earliest stable rival-vs-clock delta to the top strip
+    (`125..137` differing pixels inside `(11, 11, 194, 21)`), and an extended
+    probe compare now closes that first live split as
+    `$1C76 -> state_11f3 -> oam_0730` in `bank2.asm` `L0108EF`; the next step
+    is therefore no longer “find any visible delta” but tie the remaining
+    intermittent OAM-side differences (`09A2/09A8`, plus the reported
+    rearview blinking lights) to later rival-only behavior
 
 ## Execution Reset (2026-03-19)
 

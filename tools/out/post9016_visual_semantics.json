@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "created": "2026-03-27",
+  "scope": "Semantic read of the first shared non-black post-02:9016 rival-vs-no-opponent window.",
+  "claim_audit": {
+    "claim": "The first stable visible rival-vs-no-opponent divergence in frames 2048..2088 is an OAM-side top-strip marker controlled by the rival-enabled state $1C76 through state_11f3 -> oam_0730 staging in bank-2 gameplay code.",
+    "classification": "VERIFIED",
+    "evidence": [
+      "tools/out/post9016_compare_summary.json localizes all sampled image deltas in 2048..2088 to the same top-strip bounding box (11, 11, 194, 21).",
+      "Human review of tools/out/post9016_compare_questions.md answers that the default-rival lane shows a red rival marker absent from the no-opponent lane, that the lower cockpit/dashboard remains unchanged, and that the observed difference disappears with OAM disabled.",
+      "bank2.asm:1145-1165 (L0108EF) stages oam_072c from state_11f1, conditionally stages oam_0730 from state_11f3 only when $1C76 != 0, and stages oam_0734 from state_11f5.",
+      "tools/out/post9016_extended_state_compare.json compares the corrected 2048..2088 window and shows stable whole-window differences oam_0730 = 4618 -> 57600, state_11f3 = 44 -> 0, state_1c76 = 1 -> 0, and state_1c70 = 0 -> 3.",
+      "The same extended compare keeps oam_072c and oam_0734 identical across the window, matching the visual read that the split is the extra rival marker rather than the whole cockpit HUD."
+    ],
+    "notes": "This closes the first stable gameplay-visible split as a rival-only OAM marker. The user also reports rival blinking lights in the rearview, but that finer rearview mapping is not yet tied to a specific state field in this checkpoint."
+  },
+  "human_review": {
+    "answers": {
+      "rival_marker_present": true,
+      "first_meaningful_delta_is_top_marker": false,
+      "lower_dashboard_difference": false,
+      "road_world_difference": false,
+      "difference_is_oam": true,
+      "extra_note": "The user reports rival blinking lights in the rearview as the first meaningful cue and says the top marker itself is straightforward rather than ambiguous."
+    }
+  },
+  "code_links": {
+    "radar_marker_builder": "bank2.asm:1145-1165",
+    "rival_mode_split": "bank1.asm:2403-2405",
+    "extended_compare": "tools/out/post9016_extended_state_compare.json"
+  },
+  "next_gate": "Tie the remaining intermittent post-02:9016 deltas (especially state_09a2/state_09a8) to the next visible rival-only OAM behavior beyond the already-closed top-strip marker."
+}

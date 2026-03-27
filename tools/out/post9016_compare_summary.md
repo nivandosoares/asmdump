@@ -6,6 +6,9 @@
 - diff pixels at first nonzero sample: `125`
 - diff bounding box at first nonzero sample: `(11, 11, 194, 21)`
 - practical visual read: the earliest stable delta is confined to the top radar/HUD strip; the default-rival lane shows an extra red opponent marker that is absent in the no-opponent lane.
+- human review refinement: the user also reports rival blinking lights in the
+  rearview as the first meaningful cue; lower cockpit and road content stay
+  unchanged in this window, and the observed split disappears with OAM off.
 
 | Boot frame | PNG | Diff pixels | Bounding box |
 |---|---|---:|---|
