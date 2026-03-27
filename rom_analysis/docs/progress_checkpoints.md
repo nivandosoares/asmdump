@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; registry tightening now closes `9681` as `sentinel-control` and `E91F` as `nested-invalid-marker`; active unresolved queue remains `EE7F` and `DA96` |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | resume from `rom_analysis/docs/intro_00_8029_next_agent_handoff.md`; extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract builders now also merge that activity layer directly, the follow-up `1102..1117` compare summary proves the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, the new `1118..1125` continuation note extends that exact no-DMA surface past the old headless edge, the next sampled compare block now closes the same exact surface through `1133`, the wider `1164..1172` boundary window already proved the next later change is a producer-side reactivation rather than a callback switch, a new blob-cycle report now ties that reactivation to a concrete ownership path `01:B6E3 -> 01:9DC6 -> 00:95BD -> $096A/$0700 -> OAMDATA` while proving every sampled direct `VMDATA` burst in `1134..1200` matches the same `AA10/AB58/ACA0` ROM blob as the paired `DMA0` source and alternates over `VMADD = 0x4920/0x49A0`, and the previously open `$1C7C` naming frontier is now closed by rendered descriptor rows `11..14`: `Desert Blast - Easy`, `City Bound - Medium`, `East Coast - Hard`, `West Coast - Hardest`; normalized front-end row previews now also sharpen the remaining car-facing read: rows `8..10` decode to a three-phase rolling-tire helper rather than a name-bearing label set, rows `0x15..0x1B` decode to control/sound menu text (`Brake`, `Throttle`, `Horn`, `Upshift`, `Downshift`, `Steering`, `Pause`, `stereo`), the `01:9C77` per-car bases now calibrate to Porsche 959 / Lamborghini Diablo / Ferrari F40 OBJ catalogs, a stable frame-`1500` car-select render keeps the `Porsche 959` title/info box intact without OAM, the helper-provenance artifact anchors that visible lower-screen BG2 surface to helper bundle `10`, a new right-navigation calibration reaches a stable `Lamborghini Diablo` panel at frame `1640`, static `L00BC0F` proves the per-car `BG2` reload uses `$0202 + 0x0009` through `L00A9A0/L00A9CB` without a paired per-car `L00A9F2`, and new visible-layer diffs keep `BG1` unchanged while rewriting `256` `BG2` cells inside screen bbox `x=0..247`, `y=128..223`; short-force callback probes still show the next headless limit clearly: after one real `01:B1F9` entry at frame `1201`, `01:9568/01:95AD` stay pinned as `active_main` through frame `2199` with no `7E:096C..0971` writes and no exec hit at `01:B226/B638/B6A3/B6E3/B755/01:9D69/02:9016/02:8F3C`, so direct-force callback promotion remains low-yield unless a richer selector/savestate capture appears. |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | resume from `rom_analysis/docs/intro_00_8029_next_agent_handoff.md`; extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract builders now also merge that activity layer directly, the follow-up `1102..1117` compare summary proves the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, the new `1118..1125` continuation note extends that exact no-DMA surface past the old headless edge, the next sampled compare block now closes the same exact surface through `1133`, the wider `1164..1172` boundary window already proved the next later change is a producer-side reactivation rather than a callback switch, a new blob-cycle report now ties that reactivation to a concrete ownership path `01:B6E3 -> 01:9DC6 -> 00:95BD -> $096A/$0700 -> OAMDATA` while proving every sampled direct `VMDATA` burst in `1134..1200` matches the same `AA10/AB58/ACA0` ROM blob as the paired `DMA0` source and alternates over `VMADD = 0x4920/0x49A0`, and the previously open `$1C7C` naming frontier is now closed by rendered descriptor rows `11..14`: `Desert Blast - Easy`, `City Bound - Medium`, `East Coast - Hard`, `West Coast - Hardest`; normalized front-end row previews now also sharpen the remaining car-facing read: rows `8..10` decode to a three-phase rolling-tire helper rather than a name-bearing label set, rows `0x15..0x1B` decode to control/sound menu text (`Brake`, `Throttle`, `Horn`, `Upshift`, `Downshift`, `Steering`, `Pause`, `stereo`), the `01:9C77` per-car bases now calibrate to Porsche 959 / Lamborghini Diablo / Ferrari F40 OBJ catalogs, a stable frame-`1500` front-end car-presentation render keeps the `Porsche 959` title/info box intact without OAM, the helper-provenance artifact anchors that visible lower-screen BG2 surface to helper bundle `10`, a new right-navigation calibration reaches a stable `Lamborghini Diablo` panel at frame `1640`, static `L00BC0F` proves the per-car `BG2` reload uses `$0202 + 0x0009` through `L00A9A0/L00A9CB` without a paired per-car `L00A9F2`, and the new exact-frame raw-dump compare lane now keeps `BG1` unchanged across frames `1500/1640/1780`, limits visible `BG2` tilemap deltas to the top row (`27/11/27` changed cells), and shows `0` changed visible-union `BG2` CHR bytes across those same pairings; this frame trio is currently best described as one front-end car-presentation corridor rather than a proven interactive car-select menu. Short-force callback probes still show the next headless limit clearly: after one real `01:B1F9` entry at frame `1201`, `01:9568/01:95AD` stay pinned as `active_main` through frame `2199` with no `7E:096C..0971` writes and no exec hit at `01:B226/B638/B6A3/B6E3/B755/01:9D69/02:9016/02:8F3C`, so direct-force callback promotion remains low-yield unless a richer selector/savestate capture appears. |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -4583,6 +4583,107 @@ Next best step:
 - map the `BG2` delta against helper `10/11` payload ownership:
   - `00:B6B2` vs `00:BCBA`
   - `0E:91FE` vs `0E:A428`
+
+### CP-100: raw exact-frame front-end car-presentation triangle narrows the panel delta to top-row tilemap changes
+
+- added a raw-frame visible-window comparer:
+  - `tools/compare_raw_bg_visible.py`
+- added a raw-frame visible-CHR delta summarizer:
+  - `tools/summarize_raw_bg_chr_delta.py`
+- promoted third-slot selector and front-end car-presentation frame artifacts:
+  - `tools/out/car_select_nav_right2_probe/td2_boot_probe.json`
+  - `tools/out/car_select_frame_1780_right2.json`
+  - `tools/out/car_select_frame_1780_right2_frame_01780_vram.bin`
+  - `tools/out/car_select_frame_1780_right2_frame_01780_cgram.bin`
+  - `tools/out/car_select_frame_1780_right2_frame_01780_ppu_state.json`
+  - `tools/out/car_select_frame_1780_right2_frame_01780_oam.bin`
+  - `tools/out/car_select_frame_1780_right2_frame_01780_frame.png`
+- promoted raw exact-frame compare artifacts:
+  - `tools/out/car_select_raw_bg1_1500_vs_1640.json`
+  - `tools/out/car_select_raw_bg1_1500_vs_1640.md`
+  - `tools/out/car_select_raw_bg2_1500_vs_1640.json`
+  - `tools/out/car_select_raw_bg2_1500_vs_1640.md`
+  - `tools/out/car_select_raw_bg1_1500_vs_1780.json`
+  - `tools/out/car_select_raw_bg1_1500_vs_1780.md`
+  - `tools/out/car_select_raw_bg2_1500_vs_1780.json`
+  - `tools/out/car_select_raw_bg2_1500_vs_1780.md`
+  - `tools/out/car_select_raw_bg1_1640_vs_1780.json`
+  - `tools/out/car_select_raw_bg1_1640_vs_1780.md`
+  - `tools/out/car_select_raw_bg2_1640_vs_1780.json`
+  - `tools/out/car_select_raw_bg2_1640_vs_1780.md`
+- promoted raw visible-CHR delta artifacts:
+  - `tools/out/car_select_raw_bg2_chr_1500_vs_1640.json`
+  - `tools/out/car_select_raw_bg2_chr_1500_vs_1640.md`
+  - `tools/out/car_select_raw_bg2_chr_1500_vs_1780.json`
+  - `tools/out/car_select_raw_bg2_chr_1500_vs_1780.md`
+  - `tools/out/car_select_raw_bg2_chr_1640_vs_1780.json`
+  - `tools/out/car_select_raw_bg2_chr_1640_vs_1780.md`
+- bounded validation/artifact run:
+  - `MESEN_TIMEOUT_SECONDS=60 MESEN_BIN=/home/nivando-soares/Mesen2/bin/linux-x64/Release/Mesen TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/car_select_nav_right2_probe/td2_boot_probe TD2_BOOT_PROBE_TOTAL_FRAMES=1825 TD2_BOOT_PROBE_INPUT_WINDOWS='1200:start;1280:start;1505-1510:right;1645-1650:right' ./validation/run_mesen_probe_boot.sh`
+  - `MESEN_TIMEOUT_SECONDS=60 MESEN_BIN=/home/nivando-soares/Mesen2/bin/linux-x64/Release/Mesen TD2_BG_RANGE_START_FRAME=1780 TD2_BG_RANGE_END_FRAME=1780 TD2_BG_RANGE_DUMP_OAM=1 TD2_BG_RANGE_DUMP_SCREENSHOTS=1 TD2_BG_RANGE_INPUT_WINDOWS='1200:start;1280:start;1505-1510:right;1645-1650:right' TD2_BG_RANGE_OUTPUT_PREFIX=tools/out/car_select_frame_1780_right2 ./validation/run_mesen_dump_bg_range.sh ./game.smc`
+  - `python3 -m py_compile tools/compare_raw_bg_visible.py`
+  - `python3 tools/compare_raw_bg_visible.py tools/out/car_select_frame_1500_frame_01500_vram.bin tools/out/car_select_frame_1500_frame_01500_ppu_state.json tools/out/car_select_frame_1640_rightnav_frame_01640_vram.bin tools/out/car_select_frame_1640_rightnav_frame_01640_ppu_state.json tools/out/car_select_raw_bg1_1500_vs_1640.json --layer bg1 --markdown-out tools/out/car_select_raw_bg1_1500_vs_1640.md`
+  - `python3 tools/compare_raw_bg_visible.py tools/out/car_select_frame_1500_frame_01500_vram.bin tools/out/car_select_frame_1500_frame_01500_ppu_state.json tools/out/car_select_frame_1640_rightnav_frame_01640_vram.bin tools/out/car_select_frame_1640_rightnav_frame_01640_ppu_state.json tools/out/car_select_raw_bg2_1500_vs_1640.json --layer bg2 --markdown-out tools/out/car_select_raw_bg2_1500_vs_1640.md`
+  - `python3 tools/compare_raw_bg_visible.py tools/out/car_select_frame_1500_frame_01500_vram.bin tools/out/car_select_frame_1500_frame_01500_ppu_state.json tools/out/car_select_frame_1780_right2_frame_01780_vram.bin tools/out/car_select_frame_1780_right2_frame_01780_ppu_state.json tools/out/car_select_raw_bg1_1500_vs_1780.json --layer bg1 --markdown-out tools/out/car_select_raw_bg1_1500_vs_1780.md`
+  - `python3 tools/compare_raw_bg_visible.py tools/out/car_select_frame_1500_frame_01500_vram.bin tools/out/car_select_frame_1500_frame_01500_ppu_state.json tools/out/car_select_frame_1780_right2_frame_01780_vram.bin tools/out/car_select_frame_1780_right2_frame_01780_ppu_state.json tools/out/car_select_raw_bg2_1500_vs_1780.json --layer bg2 --markdown-out tools/out/car_select_raw_bg2_1500_vs_1780.md`
+  - `python3 tools/compare_raw_bg_visible.py tools/out/car_select_frame_1640_rightnav_frame_01640_vram.bin tools/out/car_select_frame_1640_rightnav_frame_01640_ppu_state.json tools/out/car_select_frame_1780_right2_frame_01780_vram.bin tools/out/car_select_frame_1780_right2_frame_01780_ppu_state.json tools/out/car_select_raw_bg1_1640_vs_1780.json --layer bg1 --markdown-out tools/out/car_select_raw_bg1_1640_vs_1780.md`
+  - `python3 tools/compare_raw_bg_visible.py tools/out/car_select_frame_1640_rightnav_frame_01640_vram.bin tools/out/car_select_frame_1640_rightnav_frame_01640_ppu_state.json tools/out/car_select_frame_1780_right2_frame_01780_vram.bin tools/out/car_select_frame_1780_right2_frame_01780_ppu_state.json tools/out/car_select_raw_bg2_1640_vs_1780.json --layer bg2 --markdown-out tools/out/car_select_raw_bg2_1640_vs_1780.md`
+  - `python3 -m py_compile tools/summarize_raw_bg_chr_delta.py`
+  - `python3 tools/summarize_raw_bg_chr_delta.py tools/out/car_select_frame_1500_frame_01500_vram.bin tools/out/car_select_frame_1500_frame_01500_ppu_state.json tools/out/car_select_frame_1640_rightnav_frame_01640_vram.bin tools/out/car_select_frame_1640_rightnav_frame_01640_ppu_state.json tools/out/car_select_raw_bg2_chr_1500_vs_1640.json --layer bg2 --markdown-out tools/out/car_select_raw_bg2_chr_1500_vs_1640.md`
+  - `python3 tools/summarize_raw_bg_chr_delta.py tools/out/car_select_frame_1500_frame_01500_vram.bin tools/out/car_select_frame_1500_frame_01500_ppu_state.json tools/out/car_select_frame_1780_right2_frame_01780_vram.bin tools/out/car_select_frame_1780_right2_frame_01780_ppu_state.json tools/out/car_select_raw_bg2_chr_1500_vs_1780.json --layer bg2 --markdown-out tools/out/car_select_raw_bg2_chr_1500_vs_1780.md`
+  - `python3 tools/summarize_raw_bg_chr_delta.py tools/out/car_select_frame_1640_rightnav_frame_01640_vram.bin tools/out/car_select_frame_1640_rightnav_frame_01640_ppu_state.json tools/out/car_select_frame_1780_right2_frame_01780_vram.bin tools/out/car_select_frame_1780_right2_frame_01780_ppu_state.json tools/out/car_select_raw_bg2_chr_1640_vs_1780.json --layer bg2 --markdown-out tools/out/car_select_raw_bg2_chr_1640_vs_1780.md`
+- observed result:
+  - the second-right probe changes `state_0202` from `2` to `0` at frame
+    `1677`, closing the third live anchor in the same front-end
+    presentation/preview corridor.
+  - the exact-frame raw dump at `1780` keeps the same `BG1/BG2` state fields
+    as the earlier `1500` and `1640` front-end presentation anchors.
+  - the new raw comparer reproduces the strong structural boundary while
+    correcting the earlier tilemap-overreach:
+    - `BG1` changed visible cells remain `0` across `1500->1640`,
+      `1500->1780`, and `1640->1780`
+    - `BG2` tilemap changes shrink to the top row only:
+      - `1500->1640`: `27` changed cells
+      - `1500->1780`: `11` changed cells
+      - `1640->1780`: `27` changed cells
+  - the visible-union `BG2` CHR delta is now explicitly negative:
+    - `1500->1640`: `0` changed CHR tiles, `0` changed CHR bytes
+    - `1500->1780`: `0` changed CHR tiles, `0` changed CHR bytes
+    - `1640->1780`: `0` changed CHR tiles, `0` changed CHR bytes
+  - the earlier design-pack compare stays useful as a looser pack-level signal,
+    but it is no longer the source of truth for exact-frame tilemap deltas.
+  - `mesen_ppu_extract` diverges from the exact-frame raw dump at `1780`, so
+    front-end exact-frame comparison should currently trust the raw runner
+    dump until extractor timing semantics are reconciled.
+- practical reading:
+  - the `1500/1640/1780` trio should now be described conservatively as one
+    front-end car-presentation/preview corridor, not yet a proven interactive
+    car-select menu.
+  - the per-car visible mutation is still on `BG2`, but the exact-frame
+    tilemap ownership is now much narrower than the old `256`-cell read.
+  - the strongest current split is:
+    - `BG1`: stable wallpaper
+    - `BG2` tilemap: small top-row name/title delta
+    - visible `BG2` CHR: currently unchanged across the exact-frame visible
+      tile union, so the live panel-name change is best explained by tilemap
+      selection over shared glyph/panel CHR
+  - `L00A9CB` is still a real per-car reload path, but this checkpoint does
+    not yet tie it to the visible exact-frame delta; it may be staging
+    non-visible tiles or reloading CHR that is identical over the visible
+    union.
+  - the raw third selector anchor is the remaining front-end slot in the
+    verified `3`-choice loop and is therefore the strongest current
+    `Ferrari F40` candidate by elimination, but the direct name-bearing proof
+    is still pending.
+
+Next best step:
+
+- measure the full `0x3000` `BG2` CHR-region deltas across frames
+  `1500/1640/1780`, not just the visible tile union, so `L00A9CB` can be tied
+  either to non-visible staging or to identical visible glyph reloads.
+- reconcile the `1780` timing mismatch between `mesen_dump_bg_range` and
+  `mesen_ppu_extract` before using the extractor as an exact-frame source in
+  this front-end lane again.
 
 ## Next Advancement Gates
 

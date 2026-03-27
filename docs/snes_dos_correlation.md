@@ -12,7 +12,7 @@ bank-0/bank-1 archaeology or direct ROM-header evidence.
 | Car/scenery materializers | One verified shared descriptor materializer; no recovered split into dedicated car and scenery builders yet | `VERIFIED` |
 | Car roster size | Verified `3`-slot front-end surface through `$0202/$1C78`; no recovered front-end restriction on the third slot in the current menu loop | `VERIFIED` |
 | Car-specific working set | Customizer UI plus live parameter fields exist | `VERIFIED` |
-| Preview asset resolution | Verified 3-choice animated preview rebuilder through `$0202`; the per-car bases at `01:9C77` now calibrate as Porsche 959 / Lamborghini Diablo / Ferrari F40 OBJ catalogs, while the visible name/info box persists on BG without OAM | `VERIFIED` / `PROBABLE` |
+| Preview asset resolution | Verified 3-choice animated preview rebuilder through `$0202`; the per-car bases at `01:9C77` now calibrate as Porsche 959 / Lamborghini Diablo / Ferrari F40 OBJ catalogs, while exact-frame raw dumps from the current front-end car-presentation corridor keep the visible name/info box on BG without OAM and narrow the per-car tilemap delta to the top title row | `VERIFIED` / `PROBABLE` |
 | Track/scenery selector | Verified `4`-slot top-level selector through `$1C7C` with groups `[0, 5, 11, 18] / [5, 6, 7, 8]`; rendered rows `11..14` now recover `Desert Blast - Easy`, `City Bound - Medium`, `East Coast - Hard`, `West Coast - Hardest` | `VERIFIED` |
 | UI descriptor rows | Adjacent menu helpers build a long ROM pointer rooted at `1E:8000`; rows `8..10` now read as a rolling-tire helper cycle, rows `11..14` as track labels, and rows `0x15..0x1B` as control/sound labels | `VERIFIED` / `PROBABLE` |
 | Selector persistence | No cart SRAM in ROM header | `VERIFIED` |
@@ -119,7 +119,7 @@ Relevant DOS contracts:
 
 ### CLAIM AUDIT
 
-- Claim: The recovered SNES front-end car-selection surface exposes exactly
+- Claim: The recovered SNES front-end car-presentation surface exposes exactly
   `3` reachable slots through `$0202/$1C78`, and the current loop shows no
   separate front-end restriction on the third slot.
 - Classification: VERIFIED
@@ -174,30 +174,46 @@ Relevant DOS contracts:
     - `1A:97D8` now matches the Porsche 959 sprite catalog
     - `11:A578` now matches the Lamborghini Diablo sprite catalog
     - `1A:8000` now matches the Ferrari F40 sprite catalog
-  - A live car-select capture at frame `1500` still shows the `Porsche 959`
+  - A live front-end car-presentation capture at frame `1500` still shows the `Porsche 959`
     title box and info panel when rendered without OAM, while the car art only
     returns when OAM is composed back in.
   - The right-navigation capture
     `TD2_CAPTURE_INPUT_WINDOWS='1200:start;1280:start;1505-1510:right'`
     reaches a stable `Lamborghini Diablo` panel at frame `1640`.
+  - The second-right probe
+    `TD2_BOOT_PROBE_INPUT_WINDOWS='1200:start;1280:start;1505-1510:right;1645-1650:right'`
+    changes `state_0202` from `2` to `0` at frame `1677`, giving a third live
+    front-end anchor in the same selector domain.
   - [rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.json](/home/nivando-soares/asmdump/rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.json)
     now ties that live lower-screen surface to helper bundle `10`:
     - `L00A9A0 00:B6B2 -> VRAM 0x1000` matches the live `BG2` tilemap base
     - `L00A9CB 0E:91FE -> VRAM 0x3000` matches the live `BG2` CHR base
-  - [tools/out/car_select_bg1_1500_vs_1640_right.json](/home/nivando-soares/asmdump/tools/out/car_select_bg1_1500_vs_1640_right.json)
-    reports `0` changed visible `BG1` cells between the Porsche and Diablo
-    frames, while
-    [tools/out/car_select_bg2_1500_vs_1640_right.json](/home/nivando-soares/asmdump/tools/out/car_select_bg2_1500_vs_1640_right.json)
-    reports `256` changed visible `BG2` cells over bbox `x=0..247`,
-    `y=128..223`.
+  - Exact-frame raw comparisons now tighten the per-car panel read:
+    - [tools/out/car_select_raw_bg1_1500_vs_1640.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg1_1500_vs_1640.json),
+      [tools/out/car_select_raw_bg1_1500_vs_1780.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg1_1500_vs_1780.json),
+      and [tools/out/car_select_raw_bg1_1640_vs_1780.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg1_1640_vs_1780.json)
+      all report `0` changed visible `BG1` cells across the three live anchors.
+    - [tools/out/car_select_raw_bg2_1500_vs_1640.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg2_1500_vs_1640.json),
+      [tools/out/car_select_raw_bg2_1500_vs_1780.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg2_1500_vs_1780.json),
+      and [tools/out/car_select_raw_bg2_1640_vs_1780.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg2_1640_vs_1780.json)
+      keep the `BG2` tilemap delta to `27/11/27` changed cells, all on the
+      top screen row.
 - Notes:
-  - The selector domain itself is now materially closed for the active two
-    live anchors.
+  - The selector domain itself is now materially closed for the active three
+    live anchors inside the current front-end car-presentation corridor.
   - The actual title/info box is now better read as a helper-backed `BG2`
     tilemap/CHR surface than as an OBJ descriptor row family.
+  - The exact-frame raw-dump evidence narrows that further: the visible
+    title/info panel is no longer best read as a broad `BG2` tilemap rewrite,
+    and the visible-union CHR delta is currently zero, so the best exact-frame
+    read is a small top-row tilemap delta over shared visible CHR.
+  - This frame trio should currently be described conservatively as a
+    front-end car-presentation/preview surface, not yet a proven interactive
+    car-select menu.
   - The raw helper assets for indices `9..11` are now reachable through the
-    partial-bulk extractor; the remaining gap is exact text/payload ownership
-    inside helper bundles `10/11`, plus the third live `Ferrari F40` anchor.
+  partial-bulk extractor; the remaining gap is exact text/payload ownership
+    inside helper bundles `10/11`, plus a direct text-bearing proof that the
+    raw third anchor is the remaining `Ferrari F40` slot.
 
 ### CLAIM AUDIT
 

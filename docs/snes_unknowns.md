@@ -29,17 +29,20 @@ DOS-driven SNES correlation pass.
     `TD2_BOOT_PROBE_INPUT_WINDOWS='1200:start;1280:start;1505-1510:right'`
     changes `state_0202` from `1` to `2` at frame `1537`.
   - The matching visible capture at frame `1640` shows `Lamborghini Diablo`.
+  - The second-right probe
+    `TD2_BOOT_PROBE_INPUT_WINDOWS='1200:start;1280:start;1505-1510:right;1645-1650:right'`
+    changes `state_0202` from `2` to `0` at frame `1677`.
 - Notes:
   - The preview, commit, and per-car helper reload are direct code evidence.
   - The current recovered loop already exposes all three front-end slots.
   - The remaining gap is no longer the selector domain itself; it is the
-    third live name-bearing anchor plus exact payload ownership inside the
-    helper-backed BG panel.
+    exact payload ownership inside the helper-backed BG panel plus a direct
+    name-bearing proof for the third live slot.
   - The raw helper bundles are now extractable.
   - Normalized `1E:8000` row previews strongly suggest rows `8..10` are
     rolling-tire phases rather than car names, so the remaining uncertainty is
     where the separate name-bearing surface lives.
-  - A stable frame-`1500` car-select capture now narrows that surface
+  - A stable frame-`1500` front-end car-presentation capture now narrows that surface
     further: removing OAM keeps the `Porsche 959` title box and info panel
     intact while removing the car art, so the name-bearing surface is better
     read as BG/tilemap text rather than these OBJ helpers.
@@ -58,7 +61,7 @@ DOS-driven SNES correlation pass.
     - `1A:97D8` -> Porsche 959 body plus wheel/canopy pieces
     - `11:A578` -> Lamborghini Diablo body plus wheel/canopy pieces
     - `1A:8000` -> Ferrari F40 body plus wheel/canopy pieces
-  - The stable frame-`1500` car-select capture reached via
+  - The stable frame-`1500` front-end car-presentation capture reached via
     `TD2_BG_RANGE_INPUT_WINDOWS='1200:start;1280:start'` keeps the
     `Porsche 959` title box, prompt, and stats panel in a BG-only render from
     `tools/render_mesen_snes_bg.py`, while the car itself disappears without
@@ -70,6 +73,24 @@ DOS-driven SNES correlation pass.
   - `L00BC0F` statically proves the per-car panel reload uses
     `$0202 + 0x0009` through `L00A9A0/L00A9CB`, without a paired per-car
     `L00A9F2`.
+  - The second-right probe reaches a third live selector anchor by changing
+    `state_0202` from `2` to `0` at frame `1677`; the exact-frame raw dump at
+    frame `1780` keeps the same `BG1/BG2` state fields as frames `1500/1640`.
+  - [tools/out/car_select_raw_bg1_1500_vs_1640.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg1_1500_vs_1640.json),
+    [tools/out/car_select_raw_bg1_1500_vs_1780.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg1_1500_vs_1780.json),
+    and [tools/out/car_select_raw_bg1_1640_vs_1780.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg1_1640_vs_1780.json)
+    all report `0` changed visible `BG1` cells across the three live anchors.
+  - [tools/out/car_select_raw_bg2_1500_vs_1640.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg2_1500_vs_1640.json),
+    [tools/out/car_select_raw_bg2_1500_vs_1780.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg2_1500_vs_1780.json),
+    and [tools/out/car_select_raw_bg2_1640_vs_1780.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg2_1640_vs_1780.json)
+    keep the exact-frame `BG2` tilemap delta to the top screen row only:
+    `27/11/27` changed cells for `1500->1640`, `1500->1780`, and
+    `1640->1780`.
+  - [tools/out/car_select_raw_bg2_chr_1500_vs_1640.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg2_chr_1500_vs_1640.json),
+    [tools/out/car_select_raw_bg2_chr_1500_vs_1780.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg2_chr_1500_vs_1780.json),
+    and [tools/out/car_select_raw_bg2_chr_1640_vs_1780.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg2_chr_1640_vs_1780.json)
+    all report `0` changed visible-union `BG2` CHR tiles and `0` changed
+    visible-union `BG2` CHR bytes across those same three pairings.
   - [tools/out/car_select_bg1_1500_vs_1640_right.json](/home/nivando-soares/asmdump/tools/out/car_select_bg1_1500_vs_1640_right.json)
     reports `0` changed visible `BG1` cells between the `Porsche 959` frame
     `1500` and the `Lamborghini Diablo` frame `1640`.
@@ -79,10 +100,21 @@ DOS-driven SNES correlation pass.
 - Notes:
   - This reclassifies the per-car bases as animation/catalog surfaces for the
     visible car sprite, not as the car-name text source.
-  - The mutable per-car title/stats surface is now better read as helper-
-    driven `BG2` tilemap/CHR, not OAM, wallpaper, or a per-car palette fork.
-  - The remaining naming hunt should now target byte ownership inside helper
-    bundles `10/11`, plus the third live `Ferrari F40` anchor.
+  - The current `1500/1640/1780` frame trio should be described
+    conservatively as one front-end car-presentation corridor, not yet as a
+    proven interactive car-select menu.
+  - The exact-frame raw comparisons narrow the visible `BG2` change further
+    than the earlier design-pack diff: the tilemap delta is small and
+    top-row-bound, while the visible-union `BG2` CHR delta is currently zero.
+  - The current best exact-frame read is therefore shared glyph/panel CHR plus
+    a small title-row tilemap change, not a proven visible CHR swap.
+  - The raw third anchor at `state_0202 = 0` is the remaining front-end slot
+    by elimination against the calibrated `01:9C77` catalogs, so it is the
+    strongest current `Ferrari F40` candidate even though the name-bearing
+    text proof is not yet promoted directly.
+  - `mesen_ppu_extract` diverged from the exact-frame raw dump at `1780`, so
+    the raw runner dump is now the source of truth for exact front-end frame
+    comparisons until that extractor timing mismatch is explained.
 
 ### CLAIM AUDIT
 
@@ -181,7 +213,8 @@ DOS-driven SNES correlation pass.
   clean one-shot helper builds can be compared against the real layer mix.
 - Use the frame-`1500` helper provenance anchor to split the remaining name-box
   ownership across `00:B6B2` tilemap/layout, `0E:91FE` bulk CHR, and
-  `02:FBF3` palette payloads.
+  `02:FBF3` palette payloads, using exact-frame raw dumps before design-pack
+  extractor outputs when those two surfaces disagree.
 - Trace the follow-up callback/composition path after the helper `9/10/11`
   bundle build to explain why helpers `10` and `11` stay blank in the current
   isolated-layer model.

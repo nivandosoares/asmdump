@@ -1,0 +1,440 @@
+{
+  "schema": "td2.raw_bg_visible_diff.v1",
+  "reference": {
+    "vramPath": "/home/nivando-soares/asmdump/tools/out/car_select_frame_1500_frame_01500_vram.bin",
+    "ppuStatePath": "/home/nivando-soares/asmdump/tools/out/car_select_frame_1500_frame_01500_ppu_state.json",
+    "frameNumber": 1500
+  },
+  "comparison": {
+    "vramPath": "/home/nivando-soares/asmdump/tools/out/car_select_frame_1780_right2_frame_01780_vram.bin",
+    "ppuStatePath": "/home/nivando-soares/asmdump/tools/out/car_select_frame_1780_right2_frame_01780_ppu_state.json",
+    "frameNumber": 1780
+  },
+  "layer": {
+    "name": "bg2",
+    "referenceState": {
+      "tilemapAddress": 4096,
+      "chrAddress": 12288,
+      "doubleWidth": false,
+      "doubleHeight": true,
+      "largeTiles": false,
+      "hscroll": 0,
+      "vscroll": 1023
+    },
+    "comparisonState": {
+      "tilemapAddress": 4096,
+      "chrAddress": 12288,
+      "doubleWidth": false,
+      "doubleHeight": true,
+      "largeTiles": false,
+      "hscroll": 0,
+      "vscroll": 1023
+    },
+    "grid": {
+      "widthTiles": 32,
+      "heightTiles": 64,
+      "tilemapBaseBytes": 4096,
+      "tilemapBaseWords": 2048,
+      "chrBaseWords": 12288
+    },
+    "referenceVisibleWindow": {
+      "screenStartTileX": 0,
+      "screenStartTileY": 63,
+      "screenWidthTiles": 32,
+      "screenHeightTiles": 28
+    },
+    "comparisonVisibleWindow": {
+      "screenStartTileX": 0,
+      "screenStartTileY": 63,
+      "screenWidthTiles": 32,
+      "screenHeightTiles": 28
+    },
+    "stateMatches": {
+      "tilemapAddress": true,
+      "chrAddress": true,
+      "doubleWidth": true,
+      "doubleHeight": true,
+      "largeTiles": true,
+      "hscroll": true,
+      "vscroll": true
+    },
+    "allStateFieldsMatch": true
+  },
+  "summary": {
+    "changedCellCount": 11,
+    "unchangedCellCount": 885,
+    "zeroToNonZeroCount": 0,
+    "nonZeroToZeroCount": 0,
+    "nonZeroToNonZeroCount": 11,
+    "changedBoundingBox": {
+      "screenTileLeft": 5,
+      "screenTileTop": 0,
+      "screenTileRight": 30,
+      "screenTileBottom": 0
+    },
+    "changedPixelBoundingBox": {
+      "screenPixelLeft": 40,
+      "screenPixelTop": 0,
+      "screenPixelRight": 247,
+      "screenPixelBottom": 7
+    },
+    "changedScreenRows": [
+      0
+    ],
+    "changedRowCounts": [
+      {
+        "screenTileY": 0,
+        "count": 11
+      }
+    ],
+    "changedScreenColumns": [
+      5,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      30
+    ],
+    "changedColumnCounts": [
+      {
+        "screenTileX": 5,
+        "count": 1
+      },
+      {
+        "screenTileX": 16,
+        "count": 1
+      },
+      {
+        "screenTileX": 17,
+        "count": 1
+      },
+      {
+        "screenTileX": 18,
+        "count": 1
+      },
+      {
+        "screenTileX": 19,
+        "count": 1
+      },
+      {
+        "screenTileX": 20,
+        "count": 1
+      },
+      {
+        "screenTileX": 21,
+        "count": 1
+      },
+      {
+        "screenTileX": 22,
+        "count": 1
+      },
+      {
+        "screenTileX": 23,
+        "count": 1
+      },
+      {
+        "screenTileX": 24,
+        "count": 1
+      },
+      {
+        "screenTileX": 30,
+        "count": 1
+      }
+    ],
+    "referenceChangedTileIndices": [
+      97,
+      213,
+      214,
+      235,
+      304,
+      305,
+      306,
+      307,
+      308,
+      309
+    ],
+    "comparisonChangedTileIndices": [
+      95,
+      212,
+      233,
+      300,
+      304,
+      305,
+      306,
+      307,
+      308,
+      309
+    ]
+  },
+  "sampleChanges": [
+    {
+      "screenTileX": 5,
+      "screenTileY": 0,
+      "screenPixelX": 40,
+      "screenPixelY": 0,
+      "mapTileX": 5,
+      "mapTileY": 63,
+      "reference": {
+        "entryWord": 235,
+        "tileIndex": 235,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      },
+      "comparison": {
+        "entryWord": 233,
+        "tileIndex": 233,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      }
+    },
+    {
+      "screenTileX": 16,
+      "screenTileY": 0,
+      "screenPixelX": 128,
+      "screenPixelY": 0,
+      "mapTileX": 16,
+      "mapTileY": 63,
+      "reference": {
+        "entryWord": 304,
+        "tileIndex": 304,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      },
+      "comparison": {
+        "entryWord": 300,
+        "tileIndex": 300,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      }
+    },
+    {
+      "screenTileX": 17,
+      "screenTileY": 0,
+      "screenPixelX": 136,
+      "screenPixelY": 0,
+      "mapTileX": 17,
+      "mapTileY": 63,
+      "reference": {
+        "entryWord": 305,
+        "tileIndex": 305,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      },
+      "comparison": {
+        "entryWord": 304,
+        "tileIndex": 304,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      }
+    },
+    {
+      "screenTileX": 18,
+      "screenTileY": 0,
+      "screenPixelX": 144,
+      "screenPixelY": 0,
+      "mapTileX": 18,
+      "mapTileY": 63,
+      "reference": {
+        "entryWord": 306,
+        "tileIndex": 306,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      },
+      "comparison": {
+        "entryWord": 305,
+        "tileIndex": 305,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      }
+    },
+    {
+      "screenTileX": 19,
+      "screenTileY": 0,
+      "screenPixelX": 152,
+      "screenPixelY": 0,
+      "mapTileX": 19,
+      "mapTileY": 63,
+      "reference": {
+        "entryWord": 307,
+        "tileIndex": 307,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      },
+      "comparison": {
+        "entryWord": 306,
+        "tileIndex": 306,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      }
+    },
+    {
+      "screenTileX": 20,
+      "screenTileY": 0,
+      "screenPixelX": 160,
+      "screenPixelY": 0,
+      "mapTileX": 20,
+      "mapTileY": 63,
+      "reference": {
+        "entryWord": 308,
+        "tileIndex": 308,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      },
+      "comparison": {
+        "entryWord": 307,
+        "tileIndex": 307,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      }
+    },
+    {
+      "screenTileX": 21,
+      "screenTileY": 0,
+      "screenPixelX": 168,
+      "screenPixelY": 0,
+      "mapTileX": 21,
+      "mapTileY": 63,
+      "reference": {
+        "entryWord": 309,
+        "tileIndex": 309,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      },
+      "comparison": {
+        "entryWord": 308,
+        "tileIndex": 308,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      }
+    },
+    {
+      "screenTileX": 22,
+      "screenTileY": 0,
+      "screenPixelX": 176,
+      "screenPixelY": 0,
+      "mapTileX": 22,
+      "mapTileY": 63,
+      "reference": {
+        "entryWord": 213,
+        "tileIndex": 213,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      },
+      "comparison": {
+        "entryWord": 309,
+        "tileIndex": 309,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      }
+    },
+    {
+      "screenTileX": 23,
+      "screenTileY": 0,
+      "screenPixelX": 184,
+      "screenPixelY": 0,
+      "mapTileX": 23,
+      "mapTileY": 63,
+      "reference": {
+        "entryWord": 214,
+        "tileIndex": 214,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      },
+      "comparison": {
+        "entryWord": 212,
+        "tileIndex": 212,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      }
+    },
+    {
+      "screenTileX": 24,
+      "screenTileY": 0,
+      "screenPixelX": 192,
+      "screenPixelY": 0,
+      "mapTileX": 24,
+      "mapTileY": 63,
+      "reference": {
+        "entryWord": 214,
+        "tileIndex": 214,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      },
+      "comparison": {
+        "entryWord": 212,
+        "tileIndex": 212,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      }
+    },
+    {
+      "screenTileX": 30,
+      "screenTileY": 0,
+      "screenPixelX": 240,
+      "screenPixelY": 0,
+      "mapTileX": 30,
+      "mapTileY": 63,
+      "reference": {
+        "entryWord": 97,
+        "tileIndex": 97,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      },
+      "comparison": {
+        "entryWord": 95,
+        "tileIndex": 95,
+        "palette": 0,
+        "priority": 0,
+        "hflip": 0,
+        "vflip": 0
+      }
+    }
+  ]
+}
