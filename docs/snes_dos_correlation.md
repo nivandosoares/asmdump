@@ -14,7 +14,7 @@ bank-0/bank-1 archaeology or direct ROM-header evidence.
 | Car-specific working set | Customizer UI plus live parameter fields exist | `VERIFIED` |
 | Preview asset resolution | Verified 3-choice animated preview rebuilder through `$0202`; the per-car bases at `01:9C77` now calibrate as Porsche 959 / Lamborghini Diablo / Ferrari F40 OBJ catalogs, while exact-frame raw dumps from the current front-end car-presentation corridor keep the visible name/info box on BG without OAM and narrow the per-car tilemap delta to the top title row | `VERIFIED` / `PROBABLE` |
 | Track/scenery selector | Verified `4`-slot top-level selector through `$1C7C` with groups `[0, 5, 11, 18] / [5, 6, 7, 8]`; rendered rows `11..14` now recover `Desert Blast - Easy`, `City Bound - Medium`, `East Coast - Hard`, `West Coast - Hardest` | `VERIFIED` |
-| UI descriptor rows | Adjacent menu helpers build a long ROM pointer rooted at `1E:8000`; rows `8..10` now read as a rolling-tire helper cycle, rows `11..14` as track labels, and rows `0x15..0x1B` as control/sound labels | `VERIFIED` / `PROBABLE` |
+| UI descriptor rows | Adjacent menu helpers build a long ROM pointer rooted at `1E:8000`; rows `8..10` read as a rolling-tire helper cycle, rows `11..14` as track labels, rows `15..17` as top-level signboard labels, and rows `0x15..0x1B` as control/sound labels | `VERIFIED` |
 | Selector persistence | No cart SRAM in ROM header | `VERIFIED` |
 | DOS-style play-session gate | No verified dual-catalog equivalent yet; same corridor stages `02:9016/02:8F3C`, and `L009568/L0095AD` remains the strongest bank-1 boundary | `VERIFIED` / `PROBABLE` |
 
@@ -227,6 +227,27 @@ Relevant DOS contracts:
   partial-bulk extractor; the remaining gap is exact text/payload ownership
     inside helper bundles `10/11`, plus a direct text-bearing proof that the
     raw third anchor is the remaining `Ferrari F40` slot.
+
+### CLAIM AUDIT
+
+- Claim: the `1E:8000` rows `15..17` are the visible signboard labels for the
+  separate top-level `$1C6A` menu gate.
+- Classification: VERIFIED
+- Evidence:
+  - `01:BAC3` loads `$00 = $1C6A + 0x000F` and calls `L00179B` after building
+    the long ROM pointer `1E:8000`.
+  - [tools/out/snes_frontend_pointer_table_top_menu_0f_11.json](/home/nivando-soares/asmdump/tools/out/snes_frontend_pointer_table_top_menu_0f_11.json)
+    decodes rows `15..17` under that exact callsite.
+  - [tools/out/snes_frontend_top_menu_labels.json](/home/nivando-soares/asmdump/tools/out/snes_frontend_top_menu_labels.json)
+    fixes the rendered row texts as:
+    - `Game Options`
+    - `Play TDII`
+    - `High Score`
+- Notes:
+  - This closes the top-level signboard naming surface with direct ROM-side
+    row renders.
+  - The downstream `$0202` three-slot preview corridor should not be collapsed
+    into this first top-level menu surface.
 
 ### CLAIM AUDIT
 

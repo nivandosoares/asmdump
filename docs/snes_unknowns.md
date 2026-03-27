@@ -131,6 +131,25 @@ DOS-driven SNES correlation pass.
 
 ### CLAIM AUDIT
 
+- Claim: rows `15..17` in the `1E:8000` front-end table are the top-level
+  signboard labels for the separate `$1C6A` menu gate.
+- Classification: VERIFIED
+- Evidence:
+  - `01:BAC3` loads `$00 = $1C6A + 0x000F` and calls `L00179B` against the
+    long ROM pointer table rooted at `1E:8000`.
+  - [tools/out/snes_frontend_pointer_table_top_menu_0f_11.json](/home/nivando-soares/asmdump/tools/out/snes_frontend_pointer_table_top_menu_0f_11.json)
+    decodes rows `15..17` as one adjacent three-row family under that callsite.
+  - [tools/out/snes_frontend_top_menu_labels.json](/home/nivando-soares/asmdump/tools/out/snes_frontend_top_menu_labels.json)
+    now fixes the rendered row texts as `Game Options`, `Play TDII`, and
+    `High Score`.
+- Notes:
+  - This closes the old user-guided heuristic about the initial signboard menu
+    with direct ROM-side descriptor evidence.
+  - It also sharpens the ownership split: the downstream `$0202` three-slot
+    corridor is not the first top-level signboard surface.
+
+### CLAIM AUDIT
+
 - Claim: rows `0x15..0x1B` in the `1E:8000` front-end table belong to the
   control/sound settings surface, not the car-name surface.
 - Classification: VERIFIED
@@ -164,8 +183,9 @@ DOS-driven SNES correlation pass.
 
 ### CLAIM AUDIT
 
-- Claim: `$1C7C` is the best current track or scenery selector candidate.
-- Classification: PROBABLE
+- Claim: `$1C7C` is the verified four-slot track/scenery selector in the
+  current front-end flow.
+- Classification: VERIFIED
 - Evidence:
   - `L008B6F` sets `$1C84 = 4` before `L00BE76`.
   - `L00BE76` rotates `$1C7C` over `4` states.
@@ -176,9 +196,12 @@ DOS-driven SNES correlation pass.
     row.
   - An adjacent front-end UI helper uses `$00 = $1C7C + 0x000B` against the
     ROM descriptor table rooted at `1E:8000` through `L00179B`.
+  - [tools/out/snes_frontend_pointer_table_tracks.json](/home/nivando-soares/asmdump/tools/out/snes_frontend_pointer_table_tracks.json)
+    renders rows `11..14` as `Desert Blast - Easy`, `City Bound - Medium`,
+    `East Coast - Hard`, and `West Coast - Hardest`.
 - Notes:
-  - The selector mechanics and `4`-slot cardinality are verified.
-  - The remaining gap is the human-readable name mapping for the four slots.
+  - Both the selector mechanics and the human-readable row mapping are now
+    closed for the top-level four-slot track surface.
 
 ### CLAIM AUDIT
 

@@ -94,6 +94,8 @@ def selector_surface_for_index(index: int) -> str:
         return "front-end rolling-tire helper ($0202 + 0x0008)"
     if 11 <= index <= 14:
         return "track-facing adjacent helper ($1C7C + 0x000B)"
+    if 15 <= index <= 17:
+        return "top-level signboard labels ($1C6A + 0x000F)"
     if 0x15 <= index <= 0x1B:
         return "front-end control/sound labels"
     return "unclassified current lane"
@@ -564,6 +566,7 @@ def write_markdown(report: dict, path: Path) -> None:
             "",
             "- Indices `8..10` are the current front-end rolling-tire helper rows.",
             "- Indices `11..14` are the current track-facing adjacent helper rows.",
+            "- Indices `15..17` are the current top-level signboard labels.",
             "- Indices `0x15..0x1B` are now decoded as front-end control/sound labels.",
             "- The descriptor payload format is now closed enough to split "
             "each row into an object list plus a descriptor-local 4bpp OBJ blob.",

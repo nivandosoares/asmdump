@@ -1,0 +1,36 @@
+{
+  "schema": "td2.snes_frontend_top_menu_labels.v1",
+  "created": "2026-03-27",
+  "claim": "The separate top-level 3-option gate at $1C6A uses 1E:8000 rows 15..17 as signboard labels.",
+  "code_anchor": {
+    "entry": "01:BAC3",
+    "selector_expr": "$1C6A + 0x000F",
+    "helper": "L00179B",
+    "table_base": "1E:8000"
+  },
+  "rows": [
+    {
+      "selector_value": 0,
+      "row_index": 15,
+      "label": "Game Options",
+      "target": "1E:B26C",
+      "preview_png": "tools/out/frontend_top_menu_rows_0f_11/frontend_row_15_preview.png"
+    },
+    {
+      "selector_value": 1,
+      "row_index": 16,
+      "label": "Play TDII",
+      "target": "1E:B7D4",
+      "preview_png": "tools/out/frontend_top_menu_rows_0f_11/frontend_row_16_preview.png",
+      "notes": "The ROM-side rendered label is abbreviated as TDII in the signboard preview."
+    },
+    {
+      "selector_value": 2,
+      "row_index": 17,
+      "label": "High Score",
+      "target": "1E:BC3C",
+      "preview_png": "tools/out/frontend_top_menu_rows_0f_11/frontend_row_17_preview.png"
+    }
+  ],
+  "composite_preview_png": "tools/out/snes_frontend_top_menu_signboards.png"
+}

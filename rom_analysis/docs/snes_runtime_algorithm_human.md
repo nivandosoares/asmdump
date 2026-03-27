@@ -18,6 +18,7 @@ already grounded in code reads, probes, or generated artifacts.
 1. The game keeps a live selector/state block in WRAM around `$1C6A..$1C90`
    instead of one compact DOS-style selector vector.
 2. Front-end input mutates that block through small bank-1 helper loops:
+   - `$1C6A` drives a separate `3`-option top-level signboard gate
    - `$0202/$1C78` drives the `3`-slot car-facing preview domain
    - `$1C7C` drives the `4`-slot top-level phase domain
 3. The top-level bank-1 success corridor does not fall straight into a build.
@@ -63,6 +64,8 @@ already grounded in code reads, probes, or generated artifacts.
     - `$1C7C = 3` -> `West Coast - Hardest`
 11. The nearby front-end row families now split more cleanly than before:
     - rows `8..10` are a rolling-tire helper cycle, not names
+    - rows `15..17` are the top-level signboard labels:
+      `Game Options`, `Play TDII`, `High Score`
     - rows `0x15..0x1B` are control/sound settings labels
     - the per-car bases at `01:9C77` are now better read as OBJ catalogs for
       Porsche 959, Lamborghini Diablo, and Ferrari F40 body/wheel/canopy

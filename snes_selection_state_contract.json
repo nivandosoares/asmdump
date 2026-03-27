@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "created": "2026-03-26",
+  "created": "2026-03-27",
   "scope": "First-pass DOS-driven SNES selection-state correlation baseline.",
   "contracts": [
     {
@@ -15,9 +15,10 @@
           "L00BBCB drives a 3-choice preview through $0202, and L008B57 commits $0202 back into $1C78.",
           "L00C20B edits $1C70 as a 2-bit field and L00BE76 rotates $1C7C modulo 4.",
           "L008B87 derives $1C74/$1C76/$1C7A/$1C7E/$1C80 from $1C6C/$1C70/$1C78/$1C7C/$1C90 before the descriptor build at L008C10.",
-          "Unlabeled front-end UI helpers later feed L00179B from slot families $0202 + 0x0008 and $1C7C + 0x000B against the shared $1E80 buffer."
+          "Adjacent front-end UI helpers feed L00179B/L001662 from selector families $1C6A + 0x000F, $0202 + 0x0008, and $1C7C + 0x000B against the long ROM pointer table rooted at 1E:8000.",
+          "tools/out/snes_frontend_top_menu_labels.json now closes the visible $1C6A signboard rows as Game Options / Play TDII / High Score."
         ],
-        "notes": "The live SNES state is clearly field-oriented inside one WRAM neighborhood. A compact vector overlay analogous to DOS 0x8a1c has not been recovered."
+        "notes": "The live SNES state is clearly field-oriented inside one WRAM neighborhood. A compact vector overlay analogous to DOS 0x8a1c has not been recovered, but the top-level $1C6A surface is now also human-readable through the 1E:8000 signboard rows."
       }
     },
     {
@@ -38,7 +39,7 @@
   "questions_answered": [
     {
       "question": "Does the SNES version also use a selector vector, or did it flatten the state into named fields?",
-      "answer": "Current verified evidence favors flattened named WRAM fields inside one contiguous front-end state block."
+      "answer": "Current verified evidence favors flattened named WRAM fields inside one contiguous front-end state block, with $1C6A now directly tied to the visible top-level signboard labels Game Options / Play TDII / High Score."
     },
     {
       "question": "Are chosen IDs persisted directly, or are they replaced with compact indices in SRAM?",

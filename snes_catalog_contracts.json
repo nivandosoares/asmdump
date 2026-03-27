@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "created": "2026-03-26",
+  "created": "2026-03-27",
   "scope": "First-pass DOS-driven SNES catalog/materialization correlation baseline.",
   "contracts": [
     {
@@ -13,9 +13,11 @@
         "evidence": [
           "The helper sites at 01:BDF4, 01:BE53, and 01:BAC3 all use the overlapping sequence lda #$1E80 ; sta $11 ; lda #$8000 ; sta $10 before calling L00179B or L001662.",
           "L00179B resolves each row by reading a four-byte entry from [$10] at index * 4 and adding it back to the long base pointer, which is direct ROM-table behavior rather than WRAM materialization.",
-          "tools/out/snes_frontend_pointer_table_1e8000.json decodes the current adjacent menu rows as car-facing indices 8..10 and track-facing indices 11..14 under the 1E:8000 table."
+          "tools/out/snes_frontend_pointer_table_1e8000.json decodes the adjacent menu rows as car-facing indices 8..10 and track-facing indices 11..14 under the 1E:8000 table.",
+          "tools/out/snes_frontend_pointer_table_top_menu_0f_11.json and tools/out/snes_frontend_top_menu_labels.json now close the top-level signboard rows 15..17 as Game Options / Play TDII / High Score.",
+          "The nearby controls family at tools/out/snes_frontend_pointer_table_controls_15_1b.json closes rows 0x15..0x1B as control/sound labels."
         ],
-        "notes": "This is the clearest current SNES equivalent of a compact layout-descriptor family. The remaining gap is human-readable payload naming, not table reachability."
+        "notes": "This is the clearest current SNES equivalent of a compact layout-descriptor family. Table reachability and several human-readable row families are now closed; the main remaining naming gap is the separate car-name BG surface."
       }
     },
     {
@@ -108,9 +110,10 @@
           "L008B87 uses $1C7C to read $1C7E/$1C80 from table 01:8000.",
           "Raw table decode at 01:8000/01:8008 yields group bases [0, 5, 11, 18] and counts [5, 6, 7, 8].",
           "L008C10 immediately uses $1C82 = $1CA8 + $1C7E to derive the live descriptor row.",
-          "An adjacent front-end UI helper uses $00 = $1C7C + 0x000B against the ROM pointer table rooted at 1E:8000 via L00179B."
+          "An adjacent front-end UI helper uses $00 = $1C7C + 0x000B against the ROM pointer table rooted at 1E:8000 via L00179B.",
+          "tools/out/snes_frontend_pointer_table_tracks.json renders rows 11..14 as Desert Blast - Easy / City Bound - Medium / East Coast - Hard / West Coast - Hardest."
         ],
-        "notes": "The four-slot selector behavior is direct code evidence. The final human-readable track names are still not recovered from ROM text."
+        "notes": "The four-slot selector behavior and the human-readable track-label row mapping are now both recovered from ROM-side evidence."
       }
     },
     {
@@ -135,7 +138,7 @@
     },
     {
       "question": "Does the track record include a bank or source selector equivalent to DOS play_disk?",
-      "answer": "A source-selector-like descriptor family exists at $1CAC/$1CCA/$1CE2/$1CE4/$1CE6, and $1C7C now has verified four-slot base/count groups [0, 5, 11, 18] / [5, 6, 7, 8], but the exact human-readable track names are not yet proven from ROM text."
+      "answer": "A source-selector-like descriptor family exists at $1CAC/$1CCA/$1CE2/$1CE4/$1CE6, and $1C7C now has verified four-slot base/count groups [0, 5, 11, 18] / [5, 6, 7, 8] plus ROM-side track labels Desert Blast - Easy / City Bound - Medium / East Coast - Hard / West Coast - Hardest."
     },
     {
       "question": "Does the SNES menu use tiny layout descriptors analogous to DOS .SS sidecars?",
