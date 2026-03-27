@@ -1,0 +1,107 @@
+{
+  "schema": "td2.snes_frontend_rival_selection_grid.v1",
+  "created": "2026-03-27",
+  "claim": "L00C20B owns a verified downstream 4-state 2x2 front-end selection surface on $1C70. The hidden callback at 01:C1D2 redraws 1E:8000 row 0x1D as a selection box, while the setup code lays out three explicit rear-car cells from 16:8000/18:8000/1B:8000 row 6. The fourth cell is still unresolved.",
+  "classification": {
+    "structure": "VERIFIED",
+    "user_guided_rival_clock_semantics": "PROBABLE"
+  },
+  "state_selector": {
+    "field": "$1C70",
+    "domain": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "edit_site": "01:C32A..01:C371",
+    "call_chain_fit": "L008B3E -> L00C20B -> L00BE76"
+  },
+  "selection_box": {
+    "callback_entry": "01:C1D2",
+    "row_index": 29,
+    "row_base": "1E:8000",
+    "preview_png": "tools/out/snes_frontend_rival_grid_selection_box_row1d.png"
+  },
+  "grid_positions": [
+    {
+      "selector_value": 0,
+      "grid_role": "top_left",
+      "highlight_xy": [
+        85,
+        109
+      ],
+      "draw_xy": [
+        83,
+        109
+      ],
+      "static_cell": {
+        "table_base": "16:8000",
+        "row_index": 6,
+        "vram_target": "0x3400",
+        "preview_png": "tools/out/snes_frontend_rival_grid_top_left_bank16_row6.png"
+      },
+      "classification": "VERIFIED",
+      "notes": "Explicit rear-car cell rendered during L00C20B setup."
+    },
+    {
+      "selector_value": 1,
+      "grid_role": "top_right",
+      "highlight_xy": [
+        173,
+        109
+      ],
+      "draw_xy": [
+        171,
+        109
+      ],
+      "static_cell": {
+        "table_base": "18:8000",
+        "row_index": 6,
+        "vram_target": "0x3600",
+        "preview_png": "tools/out/snes_frontend_rival_grid_top_right_bank18_row6.png"
+      },
+      "classification": "VERIFIED",
+      "notes": "Explicit rear-car cell rendered during L00C20B setup."
+    },
+    {
+      "selector_value": 2,
+      "grid_role": "bottom_left",
+      "highlight_xy": [
+        85,
+        173
+      ],
+      "draw_xy": [
+        83,
+        173
+      ],
+      "static_cell": {
+        "table_base": "1B:8000",
+        "row_index": 6,
+        "vram_target": "0x3000",
+        "preview_png": "tools/out/snes_frontend_rival_grid_bottom_left_bank1b_row6.png"
+      },
+      "classification": "VERIFIED",
+      "notes": "Explicit rear-car cell rendered during L00C20B setup."
+    },
+    {
+      "selector_value": 3,
+      "grid_role": "bottom_right",
+      "highlight_xy": [
+        173,
+        173
+      ],
+      "draw_xy": null,
+      "static_cell": null,
+      "classification": "PROBABLE",
+      "notes": "No fourth explicit rear-car descriptor is rendered by the verified L00C20B setup sequence. The strongest current user-guided fit is the time-only/clock slot."
+    }
+  ],
+  "evidence": [
+    "L00C20B installs the hidden callback with lda #$0001 ; ldx #$C1D2 ; jsl L000385.",
+    "01:C1D2 resolves 1E:8000 row 0x001D through L00179B and picks one of four x/y pairs from 01:C1C2..01:C1D0 using $1C70 * 4.",
+    "L00C20B itself draws row 6 from 16:8000, 18:8000, and 1B:8000 at the first three grid coordinates before entering the input loop.",
+    "The input loop edits $1C70 as a 2-bit field: bit 0 controls left/right and bit 1 controls top/bottom.",
+    "The next downstream call in the static front-end flow is L00BE76, the already-closed 4-track selector."
+  ]
+}

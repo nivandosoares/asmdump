@@ -13,6 +13,7 @@ bank-0/bank-1 archaeology or direct ROM-header evidence.
 | Car roster size | Verified `3`-slot front-end surface through `$0202/$1C78`; no recovered front-end restriction on the third slot in the current menu loop | `VERIFIED` |
 | Car-specific working set | Customizer UI plus live parameter fields exist | `VERIFIED` |
 | Preview asset resolution | Verified 3-choice animated preview rebuilder through `$0202`; the per-car bases at `01:9C77` now calibrate as Porsche 959 / Lamborghini Diablo / Ferrari F40 OBJ catalogs, while exact-frame raw dumps from the current front-end car-presentation corridor keep the visible name/info box on BG without OAM and narrow the per-car tilemap delta to the top title row | `VERIFIED` / `PROBABLE` |
+| Opponent/time selector | Verified downstream `4`-state `2x2` surface through `$1C70`, with a `1E:8000` row `0x1D` selection box and three explicit rear-car cells from `16:8000/18:8000/1B:8000`; the fourth-cell `rival/clock` naming remains user-guided | `VERIFIED` / `PROBABLE` |
 | Track/scenery selector | Verified `4`-slot top-level selector through `$1C7C` with groups `[0, 5, 11, 18] / [5, 6, 7, 8]`; rendered rows `11..14` now recover `Desert Blast - Easy`, `City Bound - Medium`, `East Coast - Hard`, `West Coast - Hardest` | `VERIFIED` |
 | UI descriptor rows | Adjacent menu helpers build a long ROM pointer rooted at `1E:8000`; rows `8..10` read as a rolling-tire helper cycle, rows `11..14` as track labels, rows `15..17` as top-level signboard labels, and rows `0x15..0x1B` as control/sound labels | `VERIFIED` |
 | Selector persistence | No cart SRAM in ROM header | `VERIFIED` |
@@ -45,6 +46,30 @@ Relevant DOS contract:
   - This is a flattened named-field block, not a proven compact selector
     vector like DOS `0x8a1c`.
   - The fields are still clearly clustered in one WRAM neighborhood.
+  - The downstream `$1C70` surface is now structurally closed as a `2x2` grid
+    rather than only as an unlabeled `2`-bit field.
+
+### CLAIM AUDIT
+
+- Claim: `L00C20B` owns a verified downstream `4`-state `2x2` front-end
+  selection surface on `$1C70`, with a `1E:8000` row `0x1D` selection box and
+  three explicit rear-car cells.
+- Classification: VERIFIED
+- Evidence:
+  - `L00C20B` draws row `6` from `16:8000`, `18:8000`, and `1B:8000` at the
+    first three coordinate pairs from `01:C1C2..01:C1CC`.
+  - `L00C20B` installs callback `01:C1D2` through `lda #$0001 ; ldx #$C1D2 ;
+    jsl L000385`.
+  - `01:C1D2` redraws `1E:8000` row `0x001D` through `L00179B`, selecting one
+    of four coordinate pairs from `01:C1C2..01:C1D0` via `$1C70 * 4`.
+  - `L00C20B` edits `$1C70` as a `2`-bit field at `01:C32A..01:C371`.
+  - [tools/out/snes_frontend_rival_selection_grid.json](/home/nivando-soares/asmdump/tools/out/snes_frontend_rival_selection_grid.json)
+    records the verified coordinates, row indices, and preview PNGs in one
+    artifact.
+- Notes:
+  - The structure of the surface is now closed even though the exact semantic
+    label for the fourth slot is not.
+  - This is the strongest current post-car, pre-track front-end surface.
 
 ## Catalog And Working-Set Materialization
 

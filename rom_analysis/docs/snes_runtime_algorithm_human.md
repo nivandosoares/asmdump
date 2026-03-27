@@ -70,6 +70,12 @@ already grounded in code reads, probes, or generated artifacts.
     - rows `15..17` are the top-level signboard labels:
       `Game Options`, `Play TDII`, `High Score`
     - rows `0x15..0x1B` are control/sound settings labels
+    - the next downstream `$1C70` surface is now structurally closed as a
+      `2x2` grid:
+      - selector box = `1E:8000` row `0x1D`
+      - explicit rear-car cells = `16:8000` row `6`, `18:8000` row `6`,
+        `1B:8000` row `6`
+      - the bottom-right cell meaning is still open
     - the per-car bases at `01:9C77` are now better read as OBJ catalogs for
       Porsche 959, Lamborghini Diablo, and Ferrari F40 body/wheel/canopy
       animation pieces

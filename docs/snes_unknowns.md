@@ -55,6 +55,45 @@ DOS-driven SNES correlation pass.
 
 ### CLAIM AUDIT
 
+- Claim: `L00C20B/$1C70` is a verified downstream `4`-state `2x2` selection
+  surface with three explicit rear-car cells and one unresolved fourth cell.
+- Classification: VERIFIED
+- Evidence:
+  - `L00C20B` draws row `6` from `16:8000`, `18:8000`, and `1B:8000` before
+    entering its input loop.
+  - `L00C20B` installs callback `01:C1D2`, which redraws `1E:8000` row
+    `0x1D` as a movable selection box over four coordinate pairs from
+    `01:C1C2..01:C1D0`.
+  - `L00C20B` edits `$1C70` as a `2`-bit field, which yields the exact four
+    selector values `0..3`.
+  - [tools/out/snes_frontend_rival_selection_grid.json](/home/nivando-soares/asmdump/tools/out/snes_frontend_rival_selection_grid.json)
+    now promotes the structural read and preview PNGs in one artifact.
+- Notes:
+  - This closes the geometry and ownership of the surface.
+  - The unresolved part is semantic naming of the fourth cell, not whether the
+    grid exists.
+
+### CLAIM AUDIT
+
+- Claim: `L00C20B/$1C70` is the strongest current SNES equivalent of the
+  user-guided `3 rivals + clock` menu between car selection and phase
+  selection.
+- Classification: PROBABLE
+- Evidence:
+  - The static flow already fits the user-guided sequence:
+    `L00BAE8 -> L008B3E -> L00C20B -> L00BE76`.
+  - `L00C20B` exposes a `4`-state surface immediately after the `3`-car
+    `$0202/$1C78` corridor and immediately before the verified `4`-track
+    `$1C7C` selector.
+  - Three of the four cells are explicit rear-car renders, which fits a
+    rival-choice interpretation better than a settings/help surface.
+- Notes:
+  - The remaining proof target is the bottom-right cell.
+  - Promote the `clock` naming only after a live named frame or a direct text/
+    descriptor tie closes that last slot.
+
+### CLAIM AUDIT
+
 - Claim: `01:9C77` indexes three car-specific OBJ catalogs, while the visible
   car-name/info box belongs to a separate `BG2` helper-bundle path.
 - Classification: VERIFIED
