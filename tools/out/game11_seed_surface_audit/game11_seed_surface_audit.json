@@ -1,0 +1,194 @@
+{
+  "seed_surface_audit": {
+    "json_path": "/home/nivando-soares/asmdump/tools/out/track1_seed_sweep_v3_ab_compare/seed_surface_audit/td2_boot_probe.json",
+    "frame_count": 8,
+    "unique_main_callbacks": [
+      "02:9016"
+    ],
+    "unique_irq_callbacks": [
+      "01:96A0"
+    ],
+    "selector_1c6a_values": [
+      1
+    ],
+    "selector_0202_values": [
+      65535
+    ],
+    "selector_1c70_values": [
+      0
+    ],
+    "classification": "front_end_menu_seed"
+  },
+  "input_seed": {
+    "rom_path": "/home/nivando-soares/asmdump/game.smc",
+    "rom_sha256": "53e1a9e17a8b0cffd24946e61a47a6f21e7d85ba32b9436da8705b5e53b1f017",
+    "savestate_path": "/home/nivando-soares/asmdump/.mesen-config/Mesen2/SaveStates/game_11.mss",
+    "savestate_sha256": "17f2857d3309ad99fc87724d131f9b1e7965c1fb5a530f739dedda9f51086b14",
+    "warmup_frames": 60,
+    "capture_frames": 300,
+    "screenshot_every": 1
+  },
+  "scenario_summary_path": "/home/nivando-soares/asmdump/tools/out/track1_seed_sweep_v3_ab_compare/summary.json",
+  "capture_observation": {
+    "a_hold_frame_060_image": "/home/nivando-soares/asmdump/tools/out/game11_seed_surface_audit/game11_a_hold_frame_060.png",
+    "a_hold_frame_219_image": "/home/nivando-soares/asmdump/tools/out/game11_seed_surface_audit/game11_a_hold_frame_219.png",
+    "reading": "The same seed presents a gameplay-like cockpit surface at frame 60 and a top-menu signboard surface again by frame 219."
+  },
+  "a_hold_sampled_states": [
+    {
+      "frame": 0,
+      "active_main": "02:9016",
+      "active_irq": "01:96A0",
+      "active_nmi": "02:8F3C",
+      "state_1c6a": 1,
+      "state_1c70": 0,
+      "state_1c76": 1,
+      "state_0202": 65535,
+      "state_0960": 0
+    },
+    {
+      "frame": 60,
+      "active_main": "02:9016",
+      "active_irq": "01:96A0",
+      "active_nmi": "02:8F3C",
+      "state_1c6a": 1,
+      "state_1c70": 0,
+      "state_1c76": 1,
+      "state_0202": 65535,
+      "state_0960": 128
+    },
+    {
+      "frame": 62,
+      "active_main": "00:8029",
+      "active_irq": "00:835F",
+      "active_nmi": "00:8029",
+      "state_1c6a": 1,
+      "state_1c70": 0,
+      "state_1c76": 1,
+      "state_0202": 65535,
+      "state_0960": 128
+    },
+    {
+      "frame": 159,
+      "active_main": "00:8029",
+      "active_irq": "00:835F",
+      "active_nmi": "00:8029",
+      "state_1c6a": 1,
+      "state_1c70": 0,
+      "state_1c76": 1,
+      "state_0202": 65535,
+      "state_0960": 128
+    },
+    {
+      "frame": 219,
+      "active_main": "01:BAB3",
+      "active_irq": "00:835F",
+      "active_nmi": "00:8029",
+      "state_1c6a": 1,
+      "state_1c70": 0,
+      "state_1c76": 1,
+      "state_0202": 65535,
+      "state_0960": 128
+    },
+    {
+      "frame": 229,
+      "active_main": "01:BAB3",
+      "active_irq": "00:835F",
+      "active_nmi": "00:8029",
+      "state_1c6a": 1,
+      "state_1c70": 0,
+      "state_1c76": 1,
+      "state_0202": 65535,
+      "state_0960": 128
+    }
+  ],
+  "a_and_b_hold_sampled_states": [
+    {
+      "frame": 0,
+      "active_main": "02:9016",
+      "active_irq": "01:96A0",
+      "active_nmi": "02:8F3C",
+      "state_1c6a": 1,
+      "state_1c70": 0,
+      "state_1c76": 1,
+      "state_0202": 65535,
+      "state_0960": 0
+    },
+    {
+      "frame": 60,
+      "active_main": "02:9016",
+      "active_irq": "01:96A0",
+      "active_nmi": "02:8F3C",
+      "state_1c6a": 1,
+      "state_1c70": 0,
+      "state_1c76": 1,
+      "state_0202": 65535,
+      "state_0960": 32896
+    },
+    {
+      "frame": 62,
+      "active_main": "00:8029",
+      "active_irq": "00:835F",
+      "active_nmi": "00:8029",
+      "state_1c6a": 1,
+      "state_1c70": 0,
+      "state_1c76": 1,
+      "state_0202": 65535,
+      "state_0960": 32896
+    },
+    {
+      "frame": 159,
+      "active_main": "00:8029",
+      "active_irq": "00:835F",
+      "active_nmi": "00:8029",
+      "state_1c6a": 1,
+      "state_1c70": 0,
+      "state_1c76": 1,
+      "state_0202": 65535,
+      "state_0960": 32896
+    },
+    {
+      "frame": 219,
+      "active_main": "01:BAB3",
+      "active_irq": "00:835F",
+      "active_nmi": "00:8029",
+      "state_1c6a": 1,
+      "state_1c70": 0,
+      "state_1c76": 1,
+      "state_0202": 65535,
+      "state_0960": 32896
+    },
+    {
+      "frame": 229,
+      "active_main": "01:BAB3",
+      "active_irq": "00:835F",
+      "active_nmi": "00:8029",
+      "state_1c6a": 1,
+      "state_1c70": 0,
+      "state_1c76": 1,
+      "state_0202": 65535,
+      "state_0960": 32896
+    }
+  ],
+  "first_cross_scenario_state_diff": {
+    "frame": 60,
+    "fields": [
+      "state_0960"
+    ],
+    "values": {
+      "state_0960": [
+        128,
+        32896
+      ]
+    }
+  },
+  "conclusion": {
+    "classification": "front_end_menu_seed",
+    "claim": "game_11.mss must not be treated as verified gameplay seed",
+    "notes": [
+      "No-input audit frames 0..7 stay on 02:9016 with $1C6A = 1 and $0202 = 0xFFFF.",
+      "A-hold and A+B-hold keep the same top-menu selector fields through frame 229 even while the captured images pass through a gameplay-like cockpit surface.",
+      "The frame-219 divergence promoted in v3_ab_compare is therefore not gameplay proof; it happens inside the same menu-bound seed family."
+    ]
+  }
+}

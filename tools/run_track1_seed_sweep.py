@@ -23,6 +23,9 @@ class Scenario:
     input_windows: str
 
 
+SEED_AUDIT_FRAME_COUNT = 8
+
+
 DEFAULT_SCENARIOS = (
     Scenario("b_hold", "60-359:b"),
     Scenario("start_then_b_hold", "60:start;61-359:b"),
@@ -33,7 +36,7 @@ DEFAULT_SCENARIOS = (
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Run a bounded deterministic button sweep against a gameplay savestate "
+            "Run a bounded deterministic button sweep against a seeded savestate "
             "and classify whether each scenario stays static or begins moving."
         )
     )
@@ -148,6 +151,80 @@ def clean_prefix_outputs(prefix: Path) -> None:
         candidate = parent / f"{stem}{suffix}"
         if candidate.exists():
             candidate.unlink()
+
+
+def run_seed_surface_audit(
+    *,
+    root: Path,
+    rom_path: Path,
+    savestate_path: Path,
+    out_dir: Path,
+    timeout_seconds: int,
+) -> dict[str, object]:
+    audit_dir = out_dir / "seed_surface_audit"
+    output_prefix = audit_dir / "td2_boot_probe"
+    clean_prefix_outputs(output_prefix)
+    json_path = audit_dir / "td2_boot_probe.json"
+    if json_path.exists():
+        json_path.unlink()
+
+    env = os.environ.copy()
+    env["MESEN_TIMEOUT_SECONDS"] = str(timeout_seconds)
+    env["TD2_BOOT_PROBE_OUTPUT_PREFIX"] = str(output_prefix.resolve())
+    env["TD2_BOOT_PROBE_TOTAL_FRAMES"] = str(SEED_AUDIT_FRAME_COUNT)
+
+    subprocess.run(
+        [
+            "./validation/run_mesen_probe_boot.sh",
+            str(rom_path),
+            str(savestate_path),
+        ],
+        cwd=root,
+        env=env,
+        check=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
+    payload = load_capture_log(json_path)
+    frames = payload.get("frames", [])
+    if not isinstance(frames, list) or not frames:
+        raise SystemExit(f"error: invalid seed surface audit payload: {json_path}")
+
+    unique_main_callbacks = sorted(
+        {
+            f"{int(row.get('active_main_callback_bank', 0)):02X}:{int(row.get('active_main_callback_addr', 0)):04X}"
+            for row in frames
+            if row.get("active_main_callback_bank") is not None and row.get("active_main_callback_addr") is not None
+        }
+    )
+    unique_irq_callbacks = sorted(
+        {
+            f"{int(row.get('active_irq_callback_bank', 0)):02X}:{int(row.get('active_irq_callback_addr', 0)):04X}"
+            for row in frames
+            if row.get("active_irq_callback_bank") is not None and row.get("active_irq_callback_addr") is not None
+        }
+    )
+    selector_1c6a_values = sorted({row.get("state_1c6a") for row in frames if row.get("state_1c6a") is not None})
+    selector_0202_values = sorted({row.get("state_0202") for row in frames if row.get("state_0202") is not None})
+    selector_1c70_values = sorted({row.get("state_1c70") for row in frames if row.get("state_1c70") is not None})
+
+    top_menu_like = (
+        selector_1c6a_values == [1]
+        and selector_0202_values == [65535]
+        and selector_1c70_values == [0]
+    )
+
+    return {
+        "json_path": str(json_path.resolve()),
+        "frame_count": len(frames),
+        "unique_main_callbacks": unique_main_callbacks,
+        "unique_irq_callbacks": unique_irq_callbacks,
+        "selector_1c6a_values": selector_1c6a_values,
+        "selector_0202_values": selector_0202_values,
+        "selector_1c70_values": selector_1c70_values,
+        "classification": "front_end_menu_seed" if top_menu_like else "unknown_seed_surface",
+    }
 
 
 def run_scenario(
@@ -266,13 +343,19 @@ def build_summary(
     warmup_frames: int,
     capture_frames: int,
     screenshot_every: int,
+    seed_surface_audit: dict[str, object],
 ) -> dict[str, object]:
     dynamic_results = [result for result in results if result["classification"] == "dynamic"]
     static_seed_results = [
         result for result in results if result["classification"] == "static_after_first_nontrivial"
     ]
 
-    if dynamic_results:
+    if seed_surface_audit["classification"] == "front_end_menu_seed":
+        recommended_next = (
+            "the current seed still starts in a top-level front-end/menu state; "
+            "recover a verified gameplay seed before promoting sweep output as gameplay evidence"
+        )
+    elif dynamic_results:
         recommended_next = (
             f"use scenario {dynamic_results[0]['name']} as the first moving gameplay window"
         )
@@ -296,6 +379,7 @@ def build_summary(
             "capture_frames": capture_frames,
             "screenshot_every": screenshot_every,
         },
+        "seed_surface_audit": seed_surface_audit,
         "scenario_count": len(results),
         "dynamic_scenarios": [result["name"] for result in dynamic_results],
         "static_seed_scenarios": [result["name"] for result in static_seed_results],
@@ -306,6 +390,7 @@ def build_summary(
 
 def write_markdown(path: Path, summary: dict[str, object]) -> None:
     input_seed = summary["input_seed"]
+    seed_surface_audit = summary["seed_surface_audit"]
     lines = [
         "# Track 1 Seed Sweep",
         "",
@@ -318,6 +403,13 @@ def write_markdown(path: Path, summary: dict[str, object]) -> None:
             f"`warmup={input_seed['warmup_frames']}` "
             f"`frames={input_seed['capture_frames']}` "
             f"`screenshot_every={input_seed['screenshot_every']}`"
+        ),
+        (
+            "- Seed surface audit: "
+            f"`{seed_surface_audit['classification']}` "
+            f"`main={','.join(seed_surface_audit['unique_main_callbacks']) or '<none>'}` "
+            f"`$1C6A={seed_surface_audit['selector_1c6a_values']}` "
+            f"`$0202={seed_surface_audit['selector_0202_values']}`"
         ),
         "",
         "| Scenario | Windows | Distinct hashes | Classification | First nontrivial | First motion |",
@@ -375,6 +467,13 @@ def main() -> int:
         raise SystemExit("error: --screenshot-every must be > 0")
 
     out_dir.mkdir(parents=True, exist_ok=True)
+    seed_surface_audit = run_seed_surface_audit(
+        root=root,
+        rom_path=rom_path,
+        savestate_path=savestate_path,
+        out_dir=out_dir,
+        timeout_seconds=args.timeout_seconds,
+    )
 
     results = []
     for scenario in scenarios:
@@ -404,6 +503,7 @@ def main() -> int:
         warmup_frames=args.warmup_frames,
         capture_frames=args.capture_frames,
         screenshot_every=args.screenshot_every,
+        seed_surface_audit=seed_surface_audit,
     )
     summary_path = out_dir / "summary.json"
     markdown_path = out_dir / "summary.md"

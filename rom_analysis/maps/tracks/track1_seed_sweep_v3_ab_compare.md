@@ -34,6 +34,21 @@
   - classification: `dynamic`
   - first nontrivial frame: `62`
   - first later motion: `64`
+- Seed surface audit:
+  - classification: `front_end_menu_seed`
+  - no-input main callback: `02:9016`
+  - selector fields: `$1C6A = [1]`, `$1C70 = [0]`, `$0202 = [65535]`
+
+## Seed Audit Reading
+
+- The no-input audit does **not** start in verified gameplay.
+- The same `game_11.mss` seed starts on the top-level signboard menu with
+  `Play TDII` selected.
+- Matching sampled probes for `a_hold` and `a+b` keep the same top-menu
+  selector family through frame `229`, even while the captured images pass
+  through a gameplay-like cockpit surface.
+- By frame `219`, both scenarios are already on `01:BAB3` with the same
+  tracked selector fields, so that branch is not gameplay-backed.
 
 ## Equivalence Reading
 
@@ -42,7 +57,8 @@
   (`script frame 218`) and first diverges at capture index `159`
   (`script frame 219`).
 - The first `a_hold` vs `a_and_b_hold` divergence is already large enough to
-  treat as a gameplay-facing branch rather than screenshot noise:
+  treat as a deterministic branch rather than screenshot noise, but not as
+  gameplay-backed evidence on the current seed:
   - mismatch pixels: `2085`
   - bbox: `[99, 75, 153, 113]`
 
@@ -56,12 +72,11 @@
 
 ## Practical Reading
 
-- Stop treating `b = true` as the only defensible early-gameplay accelerator
-  proxy on the current `game_11.mss` seed.
-- For the **current** seed, `a_hold` and `b_hold` are equally strong early
-  moving lanes, and `a+b` becomes the better discriminator because it stays
-  aligned early and then breaks away at frame `219`.
-- The next bounded Lane 3 target should therefore pivot from the old
-  `76/92/108` cadence on `v2_current` to the first current-seed branch:
-  capture and explain the `a_hold` vs `a_and_b_hold` divergence centered on
-  frame `219`.
+- Stop treating `game_11.mss` as a verified gameplay seed.
+- The useful correction here is not “`A` or `B` accelerates in gameplay.”
+- The useful correction is:
+  - `a_hold` and `b_hold` collapse onto the same front-end/menu-bound corridor
+  - `a+b` first diverges at frame `219`, but still inside that same
+    menu-bound seed family
+- The next bounded target is now to recover a true gameplay seed before
+  promoting any more lane-3 conclusions from this sweep family.

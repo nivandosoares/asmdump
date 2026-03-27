@@ -5,6 +5,7 @@
 - Savestate: `/home/nivando-soares/asmdump/.mesen-config/Mesen2/SaveStates/game_11.mss`
 - Savestate SHA-256: `17f2857d3309ad99fc87724d131f9b1e7965c1fb5a530f739dedda9f51086b14`
 - Capture config: `warmup=60` `frames=300` `screenshot_every=1`
+- Seed surface audit: `front_end_menu_seed` `main=02:9016` `$1C6A=[1]` `$0202=[65535]`
 
 | Scenario | Windows | Distinct hashes | Classification | First nontrivial | First motion |
 |---|---|---:|---|---:|---:|
@@ -15,4 +16,4 @@
 - Scenario count: 3
 - Dynamic scenarios: a_hold, b_hold, a_and_b_hold
 - Static-seed scenarios: none
-- Recommended next step: use scenario a_hold as the first moving gameplay window
+- Recommended next step: the current seed still starts in a top-level front-end/menu state; recover a verified gameplay seed before promoting sweep output as gameplay evidence

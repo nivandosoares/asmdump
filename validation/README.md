@@ -2161,9 +2161,15 @@ Notes:
 
 - `tools/run_track1_seed_sweep.py` summaries now record the ROM and savestate
   SHA-256 fingerprints alongside the capture config, because the current
-  `game_11.mss` gameplay seed has already drifted from older promoted sweep
+  `game_11.mss` seed has already drifted from older promoted sweep
   results.
-- On the current fingerprinted `game_11.mss` seed, `a_hold` and `b_hold` are
+- The sweep summary now also runs a short no-input boot-probe audit of the
+  seed surface before classifying the screenshot lanes.
+- On the current fingerprinted `game_11.mss` seed, that audit classifies the
+  savestate as `front_end_menu_seed` (`02:9016`, `$1C6A = [1]`,
+  `$0202 = [65535]`), so current sweep output must not be promoted as gameplay
+  evidence.
+- Within that same menu-bound seed family, `a_hold` and `b_hold` are
   pixel-identical across the first `300` captured frames, while `a+b` stays
   aligned early and first diverges at script frame `219`.
 - `mesen_capture.lua` now calls `emu.stop(0)` when capture finishes so the `--testRunner` process exits cleanly.

@@ -8,6 +8,26 @@
     "capture_frames": 300,
     "screenshot_every": 1
   },
+  "seed_surface_audit": {
+    "json_path": "/home/nivando-soares/asmdump/tools/out/track1_seed_sweep_v3_ab_compare/seed_surface_audit/td2_boot_probe.json",
+    "frame_count": 8,
+    "unique_main_callbacks": [
+      "02:9016"
+    ],
+    "unique_irq_callbacks": [
+      "01:96A0"
+    ],
+    "selector_1c6a_values": [
+      1
+    ],
+    "selector_0202_values": [
+      65535
+    ],
+    "selector_1c70_values": [
+      0
+    ],
+    "classification": "front_end_menu_seed"
+  },
   "scenario_count": 3,
   "dynamic_scenarios": [
     "a_hold",
@@ -15,7 +35,7 @@
     "a_and_b_hold"
   ],
   "static_seed_scenarios": [],
-  "recommended_next": "use scenario a_hold as the first moving gameplay window",
+  "recommended_next": "the current seed still starts in a top-level front-end/menu state; recover a verified gameplay seed before promoting sweep output as gameplay evidence",
   "scenarios": [
     {
       "name": "a_hold",
