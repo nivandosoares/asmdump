@@ -9,6 +9,7 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `rom_analysis/docs/snes_runtime_algorithm_human.md`
 - `tools/out/game11_seed_surface_audit/game11_seed_surface_audit.md`
 - `rom_analysis/maps/tracks/track1_seed_sweep_v3_ab_compare.md`
+- `rom_analysis/maps/tracks/track1_b_hold_scanline_recheck_0090_0093_current_seed.md`
 - `tools/out/post9016_default_rival_probe_none_vs_a_compare.md`
 - `tools/out/post9016_default_rival_probe_none_vs_b_compare.md`
 - `tools/out/post9016_default_rival_a2050_sequence_compare.md`
@@ -29,6 +30,16 @@ This note is the explicit resume point for the next agent on Lane 3.
     - `$0202 = 0xFFFF`
   - the same seed can pass through cockpit-like presentation imagery and still
     fall back into the top-level signboard family
+  - a fresh current-seed recheck now also closes the old `90..92` confusion:
+    - `rom_analysis/maps/tracks/track1_b_hold_scanline_recheck_0090_0093_current_seed.md`
+    - the current savestate fingerprint is now
+      `516b217fe396e68d3c7149f13a6b156cd514ca2929172518a0d27654555f853e`,
+      not the older `17f2857d3309ad99fc87724d131f9b1e7965c1fb5a530f739dedda9f51086b14`
+      recorded in `track1_seed_sweep_v3_ab_compare`
+    - fresh `target_frame=90/91` scanline reruns no longer reproduce the old
+      `v2_current` queue-cursor equalization
+    - those reruns stay flat on `00:8029 / 00:835F` with
+      `dp_0053/0054/0055/0056 = 0x30/0x30/0x28/0x12` and `0` write hits
 - the best current Lane 3 candidate is now the deterministic power-on
   default-rival corridor after the already-closed front-end route:
   - base route:
@@ -80,6 +91,10 @@ This note is the explicit resume point for the next agent on Lane 3.
 
 - do not reopen `game_11.mss` as if it were a gameplay seed
 - do not re-run wide `A/B` sweeps on `game_11.mss` and call the result gameplay
+- do not ask for or spend more local effort on the archived `90..92`
+  queue-cursor equalization against the current `game_11.mss`
+  - the fresh current-seed reruns are static and no longer hit the old write
+    burst
 - do not spend more CPU on full-length parallel `mesen_capture.lua` runs from
   power-on when a `mesen_probe_boot.lua` compare can falsify the same question
   more cheaply
