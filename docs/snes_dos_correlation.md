@@ -17,7 +17,7 @@ bank-0/bank-1 archaeology or direct ROM-header evidence.
 | Track/scenery selector | Verified `4`-slot top-level selector through `$1C7C` with groups `[0, 5, 11, 18] / [5, 6, 7, 8]`; rendered rows `11..14` now recover `Desert Blast - Easy`, `City Bound - Medium`, `East Coast - Hard`, `West Coast - Hardest` | `VERIFIED` |
 | UI descriptor rows | Adjacent menu helpers build a long ROM pointer rooted at `1E:8000`; rows `8..10` read as a rolling-tire helper cycle, rows `11..14` as track labels, rows `15..17` as top-level signboard labels, and rows `0x15..0x1B` as control/sound labels | `VERIFIED` |
 | Selector persistence | No cart SRAM in ROM header | `VERIFIED` |
-| DOS-style play-session gate | No verified dual-catalog equivalent yet; same corridor stages `02:9016/02:8F3C`, and `L009568/L0095AD` remains the strongest bank-1 boundary | `VERIFIED` / `PROBABLE` |
+| DOS-style play-session gate | No verified dual-catalog equivalent yet; no-force timed-input probes now recover the default rival path `L00C20B -> 01:C1D2 -> L00BE76 -> L008B87 -> 01:902D`, followed later by `active_main = 02:9016`, while `L009568/L0095AD` remains the strongest bank-1 boundary | `VERIFIED` / `PROBABLE` |
 
 ## Selection State
 
@@ -482,6 +482,34 @@ Relevant DOS contract:
 
 ### CLAIM AUDIT
 
+- Claim: No-force timed-input probes now recover the default top-left `Select
+  Opponent` path organically through `L00C20B -> 01:C1D2 -> L00BE76 ->
+  L008B87 -> 01:902D`, followed later by `active_main = 02:9016`.
+- Classification: VERIFIED
+- Evidence:
+  - [tools/out/select_opponent_clock_path_v1b/td2_boot_probe.json](/home/nivando-soares/asmdump/tools/out/select_opponent_clock_path_v1b/td2_boot_probe.json)
+    reaches `L00C20B` at frame `1562`, `01:C1D2` at `1577..1617`,
+    `L00BE76` at `1616`, `L008B87` at `1706`, `01:902D` at `1857`, and
+    first `active_main = 02:9016` at frame `2014`.
+  - [tools/out/select_opponent_clock_path_v2/td2_boot_probe.json](/home/nivando-soares/asmdump/tools/out/select_opponent_clock_path_v2/td2_boot_probe.json)
+    reaches `L00C20B` at frame `1584`, `01:C1D2` at `1599..1647`,
+    `L00BE76` at `1646`, `L008B87` at `1736`, `01:902D` at `1887`, and
+    first `active_main = 02:9016` at frame `2044`.
+  - In both runs, `$1C70` stays `0` through the recovered corridor and
+    `$1C76` flips from `0` to `1` only after `L008B87`, matching the default
+    top-left rival slot rather than the fourth clock slot.
+  - [tools/out/snes_select_opponent_organic_default_path.json](/home/nivando-soares/asmdump/tools/out/snes_select_opponent_organic_default_path.json)
+    consolidates the timings and the failed early `right+down` attempts in one
+    promoted artifact.
+- Notes:
+  - This closes organic reachability for the default rival path without
+    `active_main` forcing.
+  - The remaining proof target is now to move the clock-slot input inside the
+    live `01:C1D2` window so the no-opponent branch can be compared against
+    this recovered default baseline.
+
+### CLAIM AUDIT
+
 - Claim: `L009568/L0095AD` form the strongest current SNES gameplay-handoff
   candidate because they advance `$1CA8`, compare it against `$1C80`, and
   either rebuild the next descriptor row via `L008C10` or unwind back to
@@ -519,9 +547,11 @@ Relevant DOS contract:
 - Classification: VERIFIED
 - Evidence:
   - Current recovered gate surfaces are the front-end success gate at `L008B26`,
-    the verified `L008B87` no-opponent-vs-rival split, and the
-    descriptor-progression boundary at `L009568/L0095AD`, plus the explicit
-    callback install of `02:9016/02:8F3C` from the same bank-1 corridor.
+    the verified `L008B87` no-opponent-vs-rival split, the organic default
+    rival path through `L00C20B -> 01:C1D2 -> L00BE76 -> L008B87 -> 01:902D
+    -> active_main = 02:9016`, the descriptor-progression boundary at
+    `L009568/L0095AD`, and the explicit callback install of `02:9016/02:8F3C`
+    from the same bank-1 corridor.
   - Neither recovered surface directly proves validation of separate car and
     scenery working sets before gameplay.
 - Notes:

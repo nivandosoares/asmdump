@@ -330,9 +330,33 @@ DOS-driven SNES correlation pass.
   - This is the strongest current boundary candidate.
   - It is still not a verified dual-catalog validity gate.
   - The branch entry itself is real.
-  - The remaining proof gap is now an organic-promotion and live no-opponent
-    capture problem rather than a simple “trace a wider forced window”
-    problem.
+  - The remaining proof gap is now a live no-opponent capture problem inside a
+    corridor whose default rival path is already recovered organically.
+
+### CLAIM AUDIT
+
+- Claim: The default top-left `Select Opponent` path is now recovered
+  organically from power-on into the later `02:9016` gameplay callback family.
+- Classification: VERIFIED
+- Evidence:
+  - [tools/out/select_opponent_clock_path_v1b/td2_boot_probe.json](/home/nivando-soares/asmdump/tools/out/select_opponent_clock_path_v1b/td2_boot_probe.json)
+    reaches `L00C20B` at frame `1562`, first `01:C1D2` at `1577`,
+    `L00BE76` at `1616`, `L008B87` at `1706`, `01:902D` at `1857`, and first
+    `active_main = 02:9016` at frame `2014`.
+  - [tools/out/select_opponent_clock_path_v2/td2_boot_probe.json](/home/nivando-soares/asmdump/tools/out/select_opponent_clock_path_v2/td2_boot_probe.json)
+    reaches `L00C20B` at frame `1584`, first `01:C1D2` at `1599`,
+    `L00BE76` at `1646`, `L008B87` at `1736`, `01:902D` at `1887`, and first
+    `active_main = 02:9016` at frame `2044`.
+  - In both runs, `$1C70` stays `0` and `$1C76` flips `0 -> 1` only after
+    `L008B87`, so the organic path currently closes the default rival slot,
+    not the fourth clock slot.
+  - [tools/out/snes_select_opponent_organic_default_path.json](/home/nivando-soares/asmdump/tools/out/snes_select_opponent_organic_default_path.json)
+    consolidates the two probe timings and the early `right+down` miss.
+- Notes:
+  - This removes reachability as the blocker for the `Select Opponent` lane.
+  - The remaining unknown is to hit `$1C70 = 3` while `01:C1D2` is already
+    live, so the no-opponent path can be compared against the recovered
+    default-rival baseline.
 
 ## Next Probes
 
@@ -354,8 +378,9 @@ DOS-driven SNES correlation pass.
   car-name text surface instead.
 - Use the now-decoded `0x15..0x1B` settings labels to identify the exact
   front-end submenu/callsite that owns that control/sound surface.
-- Capture or derive a richer post-selection state where `$1C76 = 0` and
-  `$1C76 = 1` can diverge organically without forced `active_main` pinning.
+- Move `right+down` inside the live `01:C1D2` window so `$1C70` can leave `0`
+  and the already recovered organic default-rival path can be compared
+  directly against the no-opponent branch.
 - Keep decoding the `01:8016..01:8330` table families into named rows so
   `$1C7C`, `$1CAC`, and `$1CCA` can be tied to concrete assets instead of raw
   indices.
@@ -363,4 +388,5 @@ DOS-driven SNES correlation pass.
   windows to prove whether that selector is track/scenery-facing.
 - Prefer a richer selector-bearing savestate or live debugger capture over
   more direct-force headless windows, because short-force probes now stay
-  pinned on `01:9568/01:95AD` without ever staging `$096C-$0971`.
+  pinned on `01:9568/01:95AD` without ever staging `$096C-$0971`, while the
+  default-rival corridor is already recovered organically without forcing.

@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "created": "2026-03-27",
+  "scope": "Organic default Select Opponent handoff path from power-on into the bank-2 gameplay corridor.",
+  "claim_audit": {
+    "claim": "No-force timed-input probes now recover the default top-left Select Opponent path organically through L00C20B -> 01:C1D2 -> L00BE76 -> L008B87 -> 01:902D, followed later by active_main = 02:9016.",
+    "classification": "VERIFIED",
+    "evidence": [
+      "tools/out/select_opponent_clock_path_v1b/td2_boot_probe.json reaches c20b at frame 1562, c1d2 at 1577..1617, be76 at 1616, b87 at 1706, 902d at 1857, and first active_main = 02:9016 at frame 2014.",
+      "tools/out/select_opponent_clock_path_v2/td2_boot_probe.json reaches c20b at frame 1584, c1d2 at 1599..1647, be76 at 1646, b87 at 1736, 902d at 1887, and first active_main = 02:9016 at frame 2044.",
+      "In both runs, state_1c70 stays 0 through the recovered corridor and state_1c76 flips from 0 to 1 only after L008B87, matching the default top-left rival slot rather than the fourth clock slot.",
+      "The attempted right+down input windows land before the first live 01:C1D2 frame in both runs, so they do not move $1C70 away from 0."
+    ],
+    "notes": "This closes organic reachability for the default rival path without active_main forcing. The remaining proving target is to move the clock-slot input inside the live 01:C1D2 window so the no-opponent branch can be compared against this recovered baseline."
+  },
+  "scenarios": [
+    {
+      "id": "v1b",
+      "probe_json": "tools/out/select_opponent_clock_path_v1b/td2_boot_probe.json",
+      "input_windows": "1200:start;1280:start;1505-1510:start;1560-1565:right,down;1610-1615:start;1700-1705:start",
+      "events": {
+        "l00c20b": 1562,
+        "c1d2_first": 1577,
+        "c1d2_last": 1617,
+        "l00be76": 1616,
+        "l008b87": 1706,
+        "l00902d": 1857,
+        "active_main_029016_first": 2014
+      },
+      "state": {
+        "state_1c70": 0,
+        "state_1c76_before_b87": 0,
+        "state_1c76_after_b87": 1
+      },
+      "notes": "The right+down attempt still lands before the recovered live C1D2 window."
+    },
+    {
+      "id": "v2",
+      "probe_json": "tools/out/select_opponent_clock_path_v2/td2_boot_probe.json",
+      "input_windows": "1200:start;1280:start;1505-1510:start;1584-1589:right,down;1640-1645:start;1730-1735:start",
+      "events": {
+        "l00c20b": 1584,
+        "c1d2_first": 1599,
+        "c1d2_last": 1647,
+        "l00be76": 1646,
+        "l008b87": 1736,
+        "l00902d": 1887,
+        "active_main_029016_first": 2044
+      },
+      "state": {
+        "state_1c70": 0,
+        "state_1c76_before_b87": 0,
+        "state_1c76_after_b87": 1
+      },
+      "notes": "Shifting the right+down attempt later still leaves it just ahead of the first live C1D2 frame."
+    }
+  ],
+  "next_gate": "Inject right+down only after 01:C1D2 is already live so $1C70 can be moved to 3 before the same organic corridor falls through L008B87 and 01:902D."
+}

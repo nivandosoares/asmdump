@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "created": "2026-03-26",
+  "created": "2026-03-27",
   "scope": "First-pass DOS-driven SNES gameplay-handoff gate correlation baseline.",
   "contracts": [
     {
@@ -51,10 +51,26 @@
       }
     },
     {
+      "id": "organic_default_rival_path",
+      "dos_contract": "DOS play-session assembly is guarded by a non-graphics gate that requires both car and scenery catalogs.",
+      "mapping_status": "default_rival_path_recovered",
+      "claim_audit": {
+        "claim": "No-force timed-input probes now recover the default top-left Select Opponent path organically through L00C20B -> 01:C1D2 -> L00BE76 -> L008B87 -> 01:902D, followed later by active_main = 02:9016.",
+        "classification": "VERIFIED",
+        "evidence": [
+          "tools/out/select_opponent_clock_path_v1b/td2_boot_probe.json reaches L00C20B at frame 1562, 01:C1D2 at 1577..1617, L00BE76 at 1616, L008B87 at 1706, 01:902D at 1857, and first active_main = 02:9016 at frame 2014.",
+          "tools/out/select_opponent_clock_path_v2/td2_boot_probe.json reaches L00C20B at frame 1584, 01:C1D2 at 1599..1647, L00BE76 at 1646, L008B87 at 1736, 01:902D at 1887, and first active_main = 02:9016 at frame 2044.",
+          "In both runs, $1C70 stays 0 through the recovered corridor and $1C76 flips from 0 to 1 only after L008B87, matching the default top-left rival slot rather than the fourth clock slot.",
+          "The attempted right+down windows land before the first live 01:C1D2 frame in both runs, so they do not move $1C70 away from 0."
+        ],
+        "notes": "This closes organic reachability for the default rival path without active_main forcing. The remaining proving target is to move the clock-slot input inside the live 01:C1D2 window so the no-opponent branch can be compared against the recovered default baseline."
+      }
+    },
+    {
       "id": "descriptor_progression_boundary",
       "dos_contract": "DOS play-session assembly is guarded by a non-graphics gate that requires both car and scenery catalogs.",
       "mapping_status": "strongest_current_play_session_candidate",
-      "claim_audit": {
+        "claim_audit": {
         "claim": "L009568/L0095AD form the strongest current SNES gameplay-handoff candidate because they advance $1CA8, compare it against $1C80, and either rebuild the next descriptor row via L008C10 or unwind back to L008B31.",
         "classification": "PROBABLE",
         "evidence": [
@@ -71,11 +87,11 @@
       "id": "dual_catalog_refusal_gate",
       "dos_contract": "DOS play-session assembly is guarded by a non-graphics gate that requires both car and scenery catalogs.",
       "mapping_status": "not_yet_found",
-      "claim_audit": {
+        "claim_audit": {
         "claim": "No verified SNES refusal branch equivalent to the DOS 0x6064 both-catalogs-required gate has been recovered yet.",
         "classification": "VERIFIED",
         "evidence": [
-          "Current recovered gate surfaces are the front-end success gate at L008B26, the verified Select Opponent mode split at L008B87, the explicit callback install of 02:9016/02:8F3C from the same bank-1 corridor, and the descriptor-progression boundary at L009568/L0095AD.",
+          "Current recovered gate surfaces are the front-end success gate at L008B26, the verified Select Opponent mode split at L008B87, the organic default-rival path through L00C20B -> 01:C1D2 -> L00BE76 -> L008B87 -> 01:902D -> active_main = 02:9016, the explicit callback install of 02:9016/02:8F3C from the same bank-1 corridor, and the descriptor-progression boundary at L009568/L0095AD.",
           "Neither recovered surface directly proves validation of separate car and scenery working sets before gameplay."
         ],
         "notes": "This is a statement about the present evidence state. It is not a proof that no such gate exists elsewhere in the ROM."
@@ -85,7 +101,7 @@
   "questions_answered": [
     {
       "question": "Is there a gameplay gate equivalent to DOS 0x6064, even if the error messaging differs?",
-      "answer": "No verified dual-catalog gate is recovered yet. The closest verified SNES surfaces are the L008B26 front-end success gate, the L008B87 no-opponent-vs-rival split that comes out of Select Opponent, and the explicit 02:9016/02:8F3C callback install from the same bank-1 corridor, while L009568/L0095AD remains the strongest bank-1-side pregame boundary."
+      "answer": "No verified dual-catalog gate is recovered yet. The closest verified SNES surfaces are the L008B26 front-end success gate, the L008B87 no-opponent-vs-rival split that comes out of Select Opponent, the newly recovered organic default-rival path L00C20B -> 01:C1D2 -> L00BE76 -> L008B87 -> 01:902D -> active_main = 02:9016, and the explicit 02:9016/02:8F3C callback install from the same bank-1 corridor, while L009568/L0095AD remains the strongest bank-1-side pregame boundary."
     }
   ]
 }

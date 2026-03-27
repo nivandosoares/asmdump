@@ -91,9 +91,13 @@ already grounded in code reads, probes, or generated artifacts.
 12. After the front-end bundle is accepted and built, the strongest currently
     proven gameplay-facing corridor is still the bank-1 path that stages
     `02:9016` (main) and `02:8F3C` (NMI) at `01:902D..01:9034`. That corridor
-    is real, but direct headless forcing of `01:9568/01:95AD` does not yet
-    promote into it: short-force probes still pin `active_main` on
-    `01:9568/01:95AD` through frame `2199` with no staged callback writes.
+    is real, and no-force timed-input probes now recover the default top-left
+    rival path into it organically:
+    `L00C20B -> 01:C1D2 -> L00BE76 -> L008B87 -> 01:902D`, followed later by
+    `active_main = 02:9016`. Direct headless forcing of `01:9568/01:95AD`
+    still does not promote into that same corridor: short-force probes keep
+    `active_main` pinned on `01:9568/01:95AD` through frame `2199` with no
+    staged callback writes.
 
 ## Short Version
 
@@ -114,9 +118,11 @@ If you strip away the assembly details, the proven logic is:
 ## Open Edges
 
 - the actual front-end car-name text surface is still not located
-- the exact organic runtime/HUD divergence between `$1C76 = 0` and
-  `$1C76 = 1` is still not captured
-- the exact organic callback-promotion timing into the `02:9016/02:8F3C`
-  gameplay lane is still not closed
+- the exact organic runtime/HUD divergence between the recovered default-rival
+  path (`$1C76 = 1`) and the fourth-slot no-opponent path (`$1C76 = 0`) is
+  still not captured
+- the remaining front-end timing problem is to move the fourth-slot input
+  inside the live `01:C1D2` window; organic promotion into `02:9016/02:8F3C`
+  is now already closed for the default-rival path
 - late attract producer scheduling after `1133` is materially narrowed, but the
   native replacement schedule is still a live archaeology target
