@@ -119,6 +119,14 @@ def pixel_hash(path: Path) -> str:
     return hashlib.sha256(rgb).hexdigest()
 
 
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def find_capture_index(entries: list[dict[str, object]], capture_index: int) -> dict[str, object] | None:
     for entry in entries:
         if int(entry.get("capture_index", -1)) == capture_index:
@@ -250,7 +258,15 @@ def run_scenario(
     }
 
 
-def build_summary(results: list[dict[str, object]]) -> dict[str, object]:
+def build_summary(
+    results: list[dict[str, object]],
+    *,
+    rom_path: Path,
+    savestate_path: Path,
+    warmup_frames: int,
+    capture_frames: int,
+    screenshot_every: int,
+) -> dict[str, object]:
     dynamic_results = [result for result in results if result["classification"] == "dynamic"]
     static_seed_results = [
         result for result in results if result["classification"] == "static_after_first_nontrivial"
@@ -271,6 +287,15 @@ def build_summary(results: list[dict[str, object]]) -> dict[str, object]:
         )
 
     return {
+        "input_seed": {
+            "rom_path": str(rom_path.resolve()),
+            "rom_sha256": file_sha256(rom_path),
+            "savestate_path": str(savestate_path.resolve()),
+            "savestate_sha256": file_sha256(savestate_path),
+            "warmup_frames": warmup_frames,
+            "capture_frames": capture_frames,
+            "screenshot_every": screenshot_every,
+        },
         "scenario_count": len(results),
         "dynamic_scenarios": [result["name"] for result in dynamic_results],
         "static_seed_scenarios": [result["name"] for result in static_seed_results],
@@ -280,8 +305,20 @@ def build_summary(results: list[dict[str, object]]) -> dict[str, object]:
 
 
 def write_markdown(path: Path, summary: dict[str, object]) -> None:
+    input_seed = summary["input_seed"]
     lines = [
         "# Track 1 Seed Sweep",
+        "",
+        f"- ROM: `{input_seed['rom_path']}`",
+        f"- ROM SHA-256: `{input_seed['rom_sha256']}`",
+        f"- Savestate: `{input_seed['savestate_path']}`",
+        f"- Savestate SHA-256: `{input_seed['savestate_sha256']}`",
+        (
+            "- Capture config: "
+            f"`warmup={input_seed['warmup_frames']}` "
+            f"`frames={input_seed['capture_frames']}` "
+            f"`screenshot_every={input_seed['screenshot_every']}`"
+        ),
         "",
         "| Scenario | Windows | Distinct hashes | Classification | First nontrivial | First motion |",
         "|---|---|---:|---|---:|---:|",
@@ -360,7 +397,14 @@ def main() -> int:
             f"first_motion={result['first_motion_script_frame']})"
         )
 
-    summary = build_summary(results)
+    summary = build_summary(
+        results,
+        rom_path=rom_path,
+        savestate_path=savestate_path,
+        warmup_frames=args.warmup_frames,
+        capture_frames=args.capture_frames,
+        screenshot_every=args.screenshot_every,
+    )
     summary_path = out_dir / "summary.json"
     markdown_path = out_dir / "summary.md"
     summary_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")

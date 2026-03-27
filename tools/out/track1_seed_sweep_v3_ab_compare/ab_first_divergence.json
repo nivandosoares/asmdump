@@ -1,0 +1,15 @@
+{
+  "left_scenario": "a_hold",
+  "right_scenario": "a_and_b_hold",
+  "capture_index": 159,
+  "script_frame": 219,
+  "mismatch_pixels": 2085,
+  "max_channel_diff": 82,
+  "mean_abs_channel_diff": 0.8113432384672619,
+  "bbox": [
+    99,
+    75,
+    153,
+    113
+  ]
+}

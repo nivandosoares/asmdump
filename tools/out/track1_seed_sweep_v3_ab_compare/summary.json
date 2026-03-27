@@ -1,0 +1,81 @@
+{
+  "input_seed": {
+    "rom_path": "/home/nivando-soares/asmdump/game.smc",
+    "rom_sha256": "53e1a9e17a8b0cffd24946e61a47a6f21e7d85ba32b9436da8705b5e53b1f017",
+    "savestate_path": "/home/nivando-soares/asmdump/.mesen-config/Mesen2/SaveStates/game_11.mss",
+    "savestate_sha256": "17f2857d3309ad99fc87724d131f9b1e7965c1fb5a530f739dedda9f51086b14",
+    "warmup_frames": 60,
+    "capture_frames": 300,
+    "screenshot_every": 1
+  },
+  "scenario_count": 3,
+  "dynamic_scenarios": [
+    "a_hold",
+    "b_hold",
+    "a_and_b_hold"
+  ],
+  "static_seed_scenarios": [],
+  "recommended_next": "use scenario a_hold as the first moving gameplay window",
+  "scenarios": [
+    {
+      "name": "a_hold",
+      "input_windows": "60-359:a",
+      "output_prefix": "/home/nivando-soares/asmdump/tools/out/track1_seed_sweep_v3_ab_compare/a_hold/capture",
+      "log_path": "/home/nivando-soares/asmdump/tools/out/track1_seed_sweep_v3_ab_compare/a_hold/capture_input_log.json",
+      "screenshot_count": 300,
+      "distinct_hash_count": 5,
+      "transition_count": 15,
+      "classification": "dynamic",
+      "first_capture_index": 0,
+      "last_capture_index": 299,
+      "first_script_frame": 60,
+      "last_script_frame": 359,
+      "first_adjacent_change_capture_index": 2,
+      "first_adjacent_change_script_frame": 62,
+      "first_nontrivial_capture_index": 2,
+      "first_nontrivial_script_frame": 62,
+      "first_motion_capture_index": 4,
+      "first_motion_script_frame": 64
+    },
+    {
+      "name": "b_hold",
+      "input_windows": "60-359:b",
+      "output_prefix": "/home/nivando-soares/asmdump/tools/out/track1_seed_sweep_v3_ab_compare/b_hold/capture",
+      "log_path": "/home/nivando-soares/asmdump/tools/out/track1_seed_sweep_v3_ab_compare/b_hold/capture_input_log.json",
+      "screenshot_count": 300,
+      "distinct_hash_count": 5,
+      "transition_count": 15,
+      "classification": "dynamic",
+      "first_capture_index": 0,
+      "last_capture_index": 299,
+      "first_script_frame": 60,
+      "last_script_frame": 359,
+      "first_adjacent_change_capture_index": 2,
+      "first_adjacent_change_script_frame": 62,
+      "first_nontrivial_capture_index": 2,
+      "first_nontrivial_script_frame": 62,
+      "first_motion_capture_index": 4,
+      "first_motion_script_frame": 64
+    },
+    {
+      "name": "a_and_b_hold",
+      "input_windows": "60-359:a,b",
+      "output_prefix": "/home/nivando-soares/asmdump/tools/out/track1_seed_sweep_v3_ab_compare/a_and_b_hold/capture",
+      "log_path": "/home/nivando-soares/asmdump/tools/out/track1_seed_sweep_v3_ab_compare/a_and_b_hold/capture_input_log.json",
+      "screenshot_count": 300,
+      "distinct_hash_count": 5,
+      "transition_count": 15,
+      "classification": "dynamic",
+      "first_capture_index": 0,
+      "last_capture_index": 299,
+      "first_script_frame": 60,
+      "last_script_frame": 359,
+      "first_adjacent_change_capture_index": 2,
+      "first_adjacent_change_script_frame": 62,
+      "first_nontrivial_capture_index": 2,
+      "first_nontrivial_script_frame": 62,
+      "first_motion_capture_index": 4,
+      "first_motion_script_frame": 64
+    }
+  ]
+}

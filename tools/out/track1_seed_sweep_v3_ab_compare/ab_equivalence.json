@@ -1,0 +1,41 @@
+{
+  "input_seed": {
+    "rom_path": "/home/nivando-soares/asmdump/game.smc",
+    "rom_sha256": "53e1a9e17a8b0cffd24946e61a47a6f21e7d85ba32b9436da8705b5e53b1f017",
+    "savestate_path": "/home/nivando-soares/asmdump/.mesen-config/Mesen2/SaveStates/game_11.mss",
+    "savestate_sha256": "17f2857d3309ad99fc87724d131f9b1e7965c1fb5a530f739dedda9f51086b14",
+    "warmup_frames": 60,
+    "capture_frames": 300,
+    "screenshot_every": 1
+  },
+  "pairwise_equivalence": [
+    {
+      "left": "a_hold",
+      "right": "b_hold",
+      "equal_all_frames": true,
+      "first_capture_diff_index": null,
+      "capture_count": 300
+    },
+    {
+      "left": "a_and_b_hold",
+      "right": "a_hold",
+      "equal_all_frames": false,
+      "first_capture_diff_index": 159,
+      "capture_count": 300
+    },
+    {
+      "left": "a_and_b_hold",
+      "right": "b_hold",
+      "equal_all_frames": false,
+      "first_capture_diff_index": 159,
+      "capture_count": 300
+    }
+  ],
+  "cross_generation_compare": {
+    "old_summary": "/home/nivando-soares/asmdump/tools/out/track1_seed_sweep_v2_current/summary.json",
+    "old_b_hold_equals_current_b_hold": false,
+    "first_capture_diff_index": 0,
+    "old_capture_count": 300,
+    "current_capture_count": 300
+  }
+}

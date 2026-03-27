@@ -2159,7 +2159,13 @@ The current OBJ experiments line up with that reading:
 
 Notes:
 
-- The default input pattern uses `b = true` as the candidate accelerate button. Confirm or adjust this once track 1 is wired into the capture workflow.
+- `tools/run_track1_seed_sweep.py` summaries now record the ROM and savestate
+  SHA-256 fingerprints alongside the capture config, because the current
+  `game_11.mss` gameplay seed has already drifted from older promoted sweep
+  results.
+- On the current fingerprinted `game_11.mss` seed, `a_hold` and `b_hold` are
+  pixel-identical across the first `300` captured frames, while `a+b` stays
+  aligned early and first diverges at script frame `219`.
 - `mesen_capture.lua` now calls `emu.stop(0)` when capture finishes so the `--testRunner` process exits cleanly.
 - In this environment, one downloaded Linux release binary crashed with `std::bad_cast` under `--testRunner`, while a local source-build binary resolved through `MESEN_BIN` completed the same capture successfully.
 - Mesen2's `--testRunner` path does not expose a clean CLI hook for loading a `.mss` savestate before the script runs. The current workaround is a one-shot `emu.addMemoryCallback(..., emu.callbackType.exec, ...)` that calls `emu.loadSavestate(...)` on the first executed instruction.
