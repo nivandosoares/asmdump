@@ -11,6 +11,9 @@ DOS-driven SNES correlation pass.
   selector for the main front-end flow.
 - Classification: VERIFIED
 - Evidence:
+  - `L008B31` always passes through `L00BAE8` first; that routine owns a
+    separate `3`-option front-end gate on `$1C6A` before control reaches the
+    downstream `$0202` corridor at `L008B3E`.
   - `L00BBCB` cycles `$0202` over `0..2`, rebuilds one bundle from
     `0x0009 + $0202`, and `L008B57` commits `$0202 -> $1C78`.
   - `L00BC0F` reloads the live per-car panel through `L00A9A0/L00A9CB` with
@@ -34,6 +37,9 @@ DOS-driven SNES correlation pass.
     changes `state_0202` from `2` to `0` at frame `1677`.
 - Notes:
   - The preview, commit, and per-car helper reload are direct code evidence.
+  - The current `$0202` trio is not the first top-level menu surface; it is a
+    downstream front-end corridor reached only after the separate `$1C6A`
+    three-option gate returns through `L008B31`.
   - The current recovered loop already exposes all three front-end slots.
   - The remaining gap is no longer the selector domain itself; it is the
     exact payload ownership inside the helper-backed BG panel plus a direct
@@ -91,6 +97,11 @@ DOS-driven SNES correlation pass.
     and [tools/out/car_select_raw_bg2_chr_1640_vs_1780.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg2_chr_1640_vs_1780.json)
     all report `0` changed visible-union `BG2` CHR tiles and `0` changed
     visible-union `BG2` CHR bytes across those same three pairings.
+  - [tools/out/car_select_raw_bg2_chr_region_1500_vs_1640.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg2_chr_region_1500_vs_1640.json),
+    [tools/out/car_select_raw_bg2_chr_region_1500_vs_1780.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg2_chr_region_1500_vs_1780.json),
+    and [tools/out/car_select_raw_bg2_chr_region_1640_vs_1780.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg2_chr_region_1640_vs_1780.json)
+    all report `0` changed bytes across the full inferred `BG2` CHR region
+    `0x3000..0x5FFF` (`12288` bytes) for those same three pairings.
   - [tools/out/car_select_bg1_1500_vs_1640_right.json](/home/nivando-soares/asmdump/tools/out/car_select_bg1_1500_vs_1640_right.json)
     reports `0` changed visible `BG1` cells between the `Porsche 959` frame
     `1500` and the `Lamborghini Diablo` frame `1640`.
@@ -108,6 +119,8 @@ DOS-driven SNES correlation pass.
     top-row-bound, while the visible-union `BG2` CHR delta is currently zero.
   - The current best exact-frame read is therefore shared glyph/panel CHR plus
     a small title-row tilemap change, not a proven visible CHR swap.
+  - The full inferred `BG2` CHR region is also flat across the three anchors,
+    so the current exact-frame difference is now best read as tilemap-only.
   - The raw third anchor at `state_0202 = 0` is the remaining front-end slot
     by elimination against the calibrated `01:9C77` catalogs, so it is the
     strongest current `Ferrari F40` candidate even though the name-bearing
@@ -215,6 +228,9 @@ DOS-driven SNES correlation pass.
   ownership across `00:B6B2` tilemap/layout, `0E:91FE` bulk CHR, and
   `02:FBF3` palette payloads, using exact-frame raw dumps before design-pack
   extractor outputs when those two surfaces disagree.
+- Reconcile why `L00A9CB` still exists as a per-car reload path even though the
+  full inferred exact-frame `BG2` CHR region is identical across the current
+  three front-end anchors.
 - Trace the follow-up callback/composition path after the helper `9/10/11`
   bundle build to explain why helpers `10` and `11` stay blank in the current
   isolated-layer model.

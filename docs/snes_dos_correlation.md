@@ -126,6 +126,8 @@ Relevant DOS contracts:
 - Evidence:
   - `L008B3E` sets `$1C84 = 3`, copies `$1C78 -> $0202`, and enters
     `L00BBCB`.
+  - `L008B31` only reaches that `$0202` path after first calling `L00BAE8`,
+    which owns a separate `3`-option front-end gate on `$1C6A`.
   - `L00BDAC` increments `$0202`, wraps `2 -> 0`, and immediately re-enters
     `L00BC0F`.
   - `L00BDD0` decrements `$0202`, wraps `0 -> 2`, and immediately re-enters
@@ -134,6 +136,8 @@ Relevant DOS contracts:
     helper triples for indices `9`, `10`, and `11`.
 - Notes:
   - This is a verified statement about the recovered front-end selector loop.
+  - It is downstream of the separate top-level `$1C6A` menu surface, not a
+    proof that the first title/menu screen itself is `$0202`-driven.
   - It does not rule out some unrelated later gameplay-mode restriction
     elsewhere, but no front-end lock condition is recovered here.
 
@@ -198,15 +202,24 @@ Relevant DOS contracts:
       and [tools/out/car_select_raw_bg2_1640_vs_1780.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg2_1640_vs_1780.json)
       keep the `BG2` tilemap delta to `27/11/27` changed cells, all on the
       top screen row.
+    - [tools/out/car_select_raw_bg2_chr_region_1500_vs_1640.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg2_chr_region_1500_vs_1640.json),
+      [tools/out/car_select_raw_bg2_chr_region_1500_vs_1780.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg2_chr_region_1500_vs_1780.json),
+      and [tools/out/car_select_raw_bg2_chr_region_1640_vs_1780.json](/home/nivando-soares/asmdump/tools/out/car_select_raw_bg2_chr_region_1640_vs_1780.json)
+      all report `0` changed bytes across the full inferred `BG2` CHR region
+      `0x3000..0x5FFF` (`12288` bytes).
 - Notes:
   - The selector domain itself is now materially closed for the active three
     live anchors inside the current front-end car-presentation corridor.
+  - That corridor is downstream of the separate `$1C6A` three-option top menu
+    at `L00BAE8`, so it should not be collapsed into the title/menu-signboard
+    surface without additional evidence.
   - The actual title/info box is now better read as a helper-backed `BG2`
     tilemap/CHR surface than as an OBJ descriptor row family.
   - The exact-frame raw-dump evidence narrows that further: the visible
     title/info panel is no longer best read as a broad `BG2` tilemap rewrite,
-    and the visible-union CHR delta is currently zero, so the best exact-frame
-    read is a small top-row tilemap delta over shared visible CHR.
+    the visible-union CHR delta is currently zero, and the full inferred
+    `BG2` CHR region is also currently zero, so the best exact-frame read is a
+    small top-row tilemap delta over shared CHR.
   - This frame trio should currently be described conservatively as a
     front-end car-presentation/preview surface, not yet a proven interactive
     car-select menu.

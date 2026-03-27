@@ -4685,6 +4685,56 @@ Next best step:
   `mesen_ppu_extract` before using the extractor as an exact-frame source in
   this front-end lane again.
 
+### CP-101: full `BG2` CHR region stays flat and the `$0202` corridor is confirmed downstream of the top menu
+
+- added a full-region CHR delta summarizer:
+  - `tools/summarize_raw_bg_chr_region_delta.py`
+- promoted full-region delta artifacts:
+  - `tools/out/car_select_raw_bg2_chr_region_1500_vs_1640.json`
+  - `tools/out/car_select_raw_bg2_chr_region_1500_vs_1640.md`
+  - `tools/out/car_select_raw_bg2_chr_region_1500_vs_1780.json`
+  - `tools/out/car_select_raw_bg2_chr_region_1500_vs_1780.md`
+  - `tools/out/car_select_raw_bg2_chr_region_1640_vs_1780.json`
+  - `tools/out/car_select_raw_bg2_chr_region_1640_vs_1780.md`
+- bounded validation/artifact run:
+  - `python3 -m py_compile tools/summarize_raw_bg_chr_region_delta.py`
+  - `python3 tools/summarize_raw_bg_chr_region_delta.py tools/out/car_select_frame_1500_frame_01500_vram.bin tools/out/car_select_frame_1500_frame_01500_ppu_state.json tools/out/car_select_frame_1640_rightnav_frame_01640_vram.bin tools/out/car_select_frame_1640_rightnav_frame_01640_ppu_state.json tools/out/car_select_raw_bg2_chr_region_1500_vs_1640.json --layer bg2 --markdown-out tools/out/car_select_raw_bg2_chr_region_1500_vs_1640.md`
+  - `python3 tools/summarize_raw_bg_chr_region_delta.py tools/out/car_select_frame_1500_frame_01500_vram.bin tools/out/car_select_frame_1500_frame_01500_ppu_state.json tools/out/car_select_frame_1780_right2_frame_01780_vram.bin tools/out/car_select_frame_1780_right2_frame_01780_ppu_state.json tools/out/car_select_raw_bg2_chr_region_1500_vs_1780.json --layer bg2 --markdown-out tools/out/car_select_raw_bg2_chr_region_1500_vs_1780.md`
+  - `python3 tools/summarize_raw_bg_chr_region_delta.py tools/out/car_select_frame_1640_rightnav_frame_01640_vram.bin tools/out/car_select_frame_1640_rightnav_frame_01640_ppu_state.json tools/out/car_select_frame_1780_right2_frame_01780_vram.bin tools/out/car_select_frame_1780_right2_frame_01780_ppu_state.json tools/out/car_select_raw_bg2_chr_region_1640_vs_1780.json --layer bg2 --markdown-out tools/out/car_select_raw_bg2_chr_region_1640_vs_1780.md`
+  - static flow read:
+    - `L008B31 -> L00BAE8`
+    - `L00BAE8` owns the separate top-level `$1C6A` three-option gate
+    - only later does `L008B31 -> L008B3E` enter the downstream `$0202` loop
+- observed result:
+  - the full inferred `BG2` CHR region `0x3000..0x5FFF` (`12288` bytes) is
+    identical across all three exact-frame pairings:
+    - `1500->1640`: `0` changed bytes
+    - `1500->1780`: `0` changed bytes
+    - `1640->1780`: `0` changed bytes
+  - this extends the earlier visible-union `CHR = 0` result to the whole
+    inferred region, not just the currently visible tiles.
+  - static flow now closes one front-end ownership boundary:
+    - `L00BAE8` is the separate top-level `3`-option menu gate on `$1C6A`
+    - the `$0202` three-slot corridor is downstream of that gate, not the
+      first title/menu signboard surface itself
+- practical reading:
+  - the exact-frame difference across `1500/1640/1780` is now tilemap-only in
+    the currently inferred `BG2` region.
+  - `L00A9CB` remains a real reload path in code, but this frame trio no
+    longer supports using visible or full-region `BG2` CHR deltas to explain
+    the observed front-end difference.
+  - the next front-end narrowing should stop assuming `CHR` ownership first
+    and instead explain why the static reload path can be present while the
+    exact-frame region remains identical.
+
+Next best step:
+
+- reconcile the `1780` timing mismatch between `mesen_dump_bg_range` and
+  `mesen_ppu_extract` so extractor output can be trusted again for exact-frame
+  front-end work.
+- use the now-closed `L00BAE8` split to document the top-level three-option
+  menu surface separately from the downstream `$0202` corridor.
+
 ## Next Advancement Gates
 
 ### Gate G1 (Immediate): close active bank30 unresolved queue

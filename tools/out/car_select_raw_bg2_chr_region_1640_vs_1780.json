@@ -1,0 +1,35 @@
+{
+  "schema": "td2.raw_bg_chr_region_delta.v1",
+  "reference": {
+    "vramPath": "/home/nivando-soares/asmdump/tools/out/car_select_frame_1640_rightnav_frame_01640_vram.bin",
+    "ppuStatePath": "/home/nivando-soares/asmdump/tools/out/car_select_frame_1640_rightnav_frame_01640_ppu_state.json",
+    "frameNumber": 1640
+  },
+  "comparison": {
+    "vramPath": "/home/nivando-soares/asmdump/tools/out/car_select_frame_1780_right2_frame_01780_vram.bin",
+    "ppuStatePath": "/home/nivando-soares/asmdump/tools/out/car_select_frame_1780_right2_frame_01780_ppu_state.json",
+    "frameNumber": 1780
+  },
+  "layer": {
+    "name": "bg2",
+    "chrAddress": 12288,
+    "referenceInferredRegionSize": 12288,
+    "comparisonInferredRegionSize": 12288,
+    "regionSize": 12288,
+    "regionOverrideApplied": false,
+    "chrAddresses": [
+      8192,
+      12288,
+      24576
+    ]
+  },
+  "summary": {
+    "changedByteCount": 0,
+    "unchangedByteCount": 12288,
+    "changedRangeCount": 0,
+    "changedByteFraction": 0.0,
+    "firstChangedOffset": null,
+    "lastChangedOffset": null
+  },
+  "sampleChangedRanges": []
+}
