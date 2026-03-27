@@ -481,6 +481,27 @@ DOS-driven SNES correlation pass.
     intermittent `09A2/09A8`-side OAM differences beyond this already-closed
     marker.
 
+### CLAIM AUDIT
+
+- Claim: The intermittent `09A2/09A8` pulses at frames `2051` and `2083` do
+  not produce any additional whole-frame visible pulse inside the corrected
+  `2048..2088` post-`02:9016` window.
+- Classification: VERIFIED
+- Evidence:
+  - [tools/out/post9016_fullrate_compare.json](/home/nivando-soares/asmdump/tools/out/post9016_fullrate_compare.json)
+    compares every frame in `2048..2088` and keeps the same full top-strip
+    bbox `(11, 11, 194, 21)` for frames `2049..2088`; only frame `2048`
+    differs, with a smaller transition bbox `(11, 20, 14, 21)`.
+  - [tools/out/post9016_intralane_focus_compare.json](/home/nivando-soares/asmdump/tools/out/post9016_intralane_focus_compare.json)
+    reports `0` mismatched pixels for rival and no-opponent adjacent-frame
+    pairs `2050->2051`, `2051->2052`, `2082->2083`, and `2083->2084`.
+- Notes:
+  - This further demotes `09A2/09A8` as explanations for a visible pulse in
+    this exact window.
+  - The reported rearview blinking lights therefore likely belong to a later
+    gameplay window or a different animation surface than the first stable
+    `2048..2088` rival-only split.
+
 ## Next Probes
 
 - Get a deterministic post-attract or menu savestate where `$1CAC/$1CCA/$1CE*`

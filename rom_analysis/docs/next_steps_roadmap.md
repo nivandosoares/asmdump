@@ -106,8 +106,16 @@ Use these to avoid collapsing distinct front-end surfaces into one:
     probe compare now closes that first live split as
     `$1C76 -> state_11f3 -> oam_0730` in `bank2.asm` `L0108EF`; the next step
     is therefore no longer “find any visible delta” but tie the remaining
-    intermittent OAM-side differences (`09A2/09A8`, plus the reported
-    rearview blinking lights) to later rival-only behavior
+    intermittent OAM-side differences to later rival-only behavior. A new
+    full-rate compare over `2048..2088` now also shows that the suspected
+    `09A2/09A8` pulses at `2051/2083` do not create any extra whole-frame
+    visible pulse in this same window: frame `2048` alone carries a smaller
+    transition bbox `(11, 20, 14, 21)`, frames `2049..2088` keep the same
+    full top-strip bbox `(11, 11, 194, 21)`, and adjacent-frame compares for
+    `2050->2051`, `2051->2052`, `2082->2083`, and `2083->2084` are all
+    pixel-identical in both lanes. That pushes the reported rearview blinking
+    lights search later than this first shared window instead of leaving
+    `09A2/09A8` as the default explanation here.
 
 ## Execution Reset (2026-03-19)
 

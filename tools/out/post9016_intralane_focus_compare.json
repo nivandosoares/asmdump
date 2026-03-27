@@ -1,0 +1,60 @@
+{
+  "checks": [
+    {
+      "lane": "rival",
+      "from_frame": 2050,
+      "to_frame": 2051,
+      "mismatch_pixels": 0,
+      "bbox": null
+    },
+    {
+      "lane": "rival",
+      "from_frame": 2051,
+      "to_frame": 2052,
+      "mismatch_pixels": 0,
+      "bbox": null
+    },
+    {
+      "lane": "rival",
+      "from_frame": 2082,
+      "to_frame": 2083,
+      "mismatch_pixels": 0,
+      "bbox": null
+    },
+    {
+      "lane": "rival",
+      "from_frame": 2083,
+      "to_frame": 2084,
+      "mismatch_pixels": 0,
+      "bbox": null
+    },
+    {
+      "lane": "clock",
+      "from_frame": 2050,
+      "to_frame": 2051,
+      "mismatch_pixels": 0,
+      "bbox": null
+    },
+    {
+      "lane": "clock",
+      "from_frame": 2051,
+      "to_frame": 2052,
+      "mismatch_pixels": 0,
+      "bbox": null
+    },
+    {
+      "lane": "clock",
+      "from_frame": 2082,
+      "to_frame": 2083,
+      "mismatch_pixels": 0,
+      "bbox": null
+    },
+    {
+      "lane": "clock",
+      "from_frame": 2083,
+      "to_frame": 2084,
+      "mismatch_pixels": 0,
+      "bbox": null
+    }
+  ]
+}

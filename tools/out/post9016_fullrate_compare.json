@@ -1,0 +1,551 @@
+{
+  "frame_range": [
+    2048,
+    2088
+  ],
+  "row_count": 41,
+  "nonzero_count": 41,
+  "first_nonzero_frame": 2048,
+  "last_nonzero_frame": 2088,
+  "unique_bboxes": [
+    {
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ],
+      "count": 40
+    },
+    {
+      "bbox": [
+        11,
+        20,
+        14,
+        21
+      ],
+      "count": 1
+    }
+  ],
+  "frames": [
+    {
+      "frame": 2048,
+      "capture_index": 0,
+      "mismatch_pixels": 8,
+      "bbox": [
+        11,
+        20,
+        14,
+        21
+      ]
+    },
+    {
+      "frame": 2049,
+      "capture_index": 1,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2050,
+      "capture_index": 2,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2051,
+      "capture_index": 3,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2052,
+      "capture_index": 4,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2053,
+      "capture_index": 5,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2054,
+      "capture_index": 6,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2055,
+      "capture_index": 7,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2056,
+      "capture_index": 8,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2057,
+      "capture_index": 9,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2058,
+      "capture_index": 10,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2059,
+      "capture_index": 11,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2060,
+      "capture_index": 12,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2061,
+      "capture_index": 13,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2062,
+      "capture_index": 14,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2063,
+      "capture_index": 15,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2064,
+      "capture_index": 16,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2065,
+      "capture_index": 17,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2066,
+      "capture_index": 18,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2067,
+      "capture_index": 19,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2068,
+      "capture_index": 20,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2069,
+      "capture_index": 21,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2070,
+      "capture_index": 22,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2071,
+      "capture_index": 23,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2072,
+      "capture_index": 24,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2073,
+      "capture_index": 25,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2074,
+      "capture_index": 26,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2075,
+      "capture_index": 27,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2076,
+      "capture_index": 28,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2077,
+      "capture_index": 29,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2078,
+      "capture_index": 30,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2079,
+      "capture_index": 31,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2080,
+      "capture_index": 32,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2081,
+      "capture_index": 33,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2082,
+      "capture_index": 34,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2083,
+      "capture_index": 35,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2084,
+      "capture_index": 36,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2085,
+      "capture_index": 37,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2086,
+      "capture_index": 38,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2087,
+      "capture_index": 39,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    {
+      "frame": 2088,
+      "capture_index": 40,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    }
+  ],
+  "focus_frames": {
+    "2050": {
+      "frame": 2050,
+      "capture_index": 2,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    "2051": {
+      "frame": 2051,
+      "capture_index": 3,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    "2052": {
+      "frame": 2052,
+      "capture_index": 4,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    "2082": {
+      "frame": 2082,
+      "capture_index": 34,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    "2083": {
+      "frame": 2083,
+      "capture_index": 35,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    },
+    "2084": {
+      "frame": 2084,
+      "capture_index": 36,
+      "mismatch_pixels": 125,
+      "bbox": [
+        11,
+        11,
+        194,
+        21
+      ]
+    }
+  }
+}

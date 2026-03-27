@@ -140,7 +140,10 @@ If you strip away the assembly details, the proven logic is:
   no longer fully opaque: the first stable visible split is the rival-only
   top-strip OAM marker under `state_11f3 -> oam_0730`, but the reported
   rearview blinking lights and the intermittent `09A2/09A8`-side differences
-  are still not fully semantically decoded
+  are still not fully semantically decoded; a full-rate compare now also shows
+  that `2051/2083` do not create any extra whole-frame or adjacent-frame
+  visible pulse inside `2048..2088`, so that later blink search has to move
+  beyond this first shared window
 - the remaining front-end/gameplay bridge problem is no longer late confirm;
   it is assigning meaning and visible ownership to the narrowed post-handoff
   deltas, especially `state_09a2/state_09a8` and the paired DP scratch fields,
