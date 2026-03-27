@@ -17,7 +17,7 @@ bank-0/bank-1 archaeology or direct ROM-header evidence.
 | Track/scenery selector | Verified `4`-slot top-level selector through `$1C7C` with groups `[0, 5, 11, 18] / [5, 6, 7, 8]`; rendered rows `11..14` now recover `Desert Blast - Easy`, `City Bound - Medium`, `East Coast - Hard`, `West Coast - Hardest` | `VERIFIED` |
 | UI descriptor rows | Adjacent menu helpers build a long ROM pointer rooted at `1E:8000`; rows `8..10` read as a rolling-tire helper cycle, rows `11..14` as track labels, rows `15..17` as top-level signboard labels, and rows `0x15..0x1B` as control/sound labels | `VERIFIED` |
 | Selector persistence | No cart SRAM in ROM header | `VERIFIED` |
-| DOS-style play-session gate | No verified dual-catalog equivalent yet; no-force timed-input probes now recover the default rival path `L00C20B -> 01:C1D2 -> L00BE76 -> L008B87 -> 01:902D`, followed later by `active_main = 02:9016`, while callback-relative probes now also recover the no-opponent fourth-slot selection into `L00BE76 -> 01:BE43` with `$1C70 = 3` / `$1C76 = 0`; `L009568/L0095AD` remains the strongest bank-1 boundary | `VERIFIED` / `PROBABLE` |
+| DOS-style play-session gate | No verified dual-catalog equivalent yet; no-force timed-input probes now recover the default rival path `L00C20B -> 01:C1D2 -> L00BE76 -> L008B87 -> 01:902D`, followed later by `active_main = 02:9016`, and a callback-relative `be43+17-22:start` confirm now also recovers the no-opponent fourth-slot path into the same later corridor while preserving `$1C70 = 3` / `$1C76 = 0`; `L009568/L0095AD` remains the strongest bank-1 boundary | `VERIFIED` / `PROBABLE` |
 
 ## Selection State
 
@@ -534,6 +534,33 @@ Relevant DOS contract:
   - Because the bounded `v5/v6` program omits the later confirm `start` used
     in the default-rival path, the remaining open edge is the later
     no-opponent phase-confirm/promotion path after `01:BE43`.
+
+### CLAIM AUDIT
+
+- Claim: A later `be43+17-22:start` confirm now closes the organic
+  no-opponent path through `L008B87 -> 01:902D -> 01:9111 -> 02:9016`, while
+  preserving `$1C70 = 3` and `$1C76 = 0`.
+- Classification: VERIFIED
+- Evidence:
+  - [tools/out/select_opponent_clock_path_v7_be43_confirm/td2_boot_probe.json](/home/nivando-soares/asmdump/tools/out/select_opponent_clock_path_v7_be43_confirm/td2_boot_probe.json)
+    records first `01:C1D2` at `1628`, `L00BE76` at `1642`, first
+    `01:BE43` at `1713`, `L008B87` at `1736`, `01:902D` at `1887`,
+    `01:9111` at `2043`, and first `active_main = 02:9016` at `2044`.
+  - The same `v7` run samples `$1C70 = 3` / `$1C76 = 0` at `1736`, `1887`,
+    `2044`, `2600`, and `3000`.
+  - At frame `1730`, `v7` still has `active_main = 01:BE43` with
+    `state_0960 = 0x1000`, matching the be43-relative confirm pulse that
+    precedes `L008B87`.
+  - [tools/out/select_opponent_clock_path_v2/td2_boot_probe.json](/home/nivando-soares/asmdump/tools/out/select_opponent_clock_path_v2/td2_boot_probe.json)
+    reaches the same downstream timestamps `1736 / 1887 / 2044`, but with the
+    rival state `$1C70 = 0` / `$1C76 = 1`.
+  - [tools/out/snes_select_opponent_no_opponent_organic_path.json](/home/nivando-soares/asmdump/tools/out/snes_select_opponent_no_opponent_organic_path.json)
+    consolidates the no-opponent path and the timing/state comparison against
+    the default-rival baseline.
+- Notes:
+  - This closes the later no-opponent confirm/promotion path itself.
+  - The remaining open edge is now the gameplay-facing divergence after the
+    shared `02:9016` corridor begins.
 
 ### CLAIM AUDIT
 

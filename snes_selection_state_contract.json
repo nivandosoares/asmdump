@@ -22,9 +22,10 @@
           "tools/out/snes_frontend_rival_selection_grid.json now closes the downstream $1C70 surface structurally as a 4-state 2x2 grid with a 1E:8000 row 0x1D selection box, three explicit rear-car cells, and a separate BG1 stopwatch/clock slot.",
           "tools/out/snes_frontend_select_opponent_bg1.png isolates helper 8 on BG1 and visibly renders the Select Opponent banner plus the fourth-slot stopwatch/clock icon.",
           "tools/out/snes_frontend_select_opponent_mode_split.json now closes the first downstream handoff semantics of that same $1C70 surface.",
-          "tools/out/snes_select_opponent_callback_relative_selection.json now closes the live callback-relative move into $1C70 = 3 by keying input to the first organic 01:C1D2 hit."
+          "tools/out/snes_select_opponent_callback_relative_selection.json now closes the live callback-relative move into $1C70 = 3 by keying input to the first organic 01:C1D2 hit.",
+          "tools/out/snes_select_opponent_no_opponent_organic_path.json now closes the later no-opponent handoff path into 02:9016 while preserving $1C70 = 3 / $1C76 = 0."
         ],
-        "notes": "The live SNES state is clearly field-oriented inside one WRAM neighborhood. A compact vector overlay analogous to DOS 0x8a1c has not been recovered, but the top-level $1C6A surface is now both human-readable and semantically mapped through the 1E:8000 signboard rows, and the downstream $1C70 field is no longer just a raw bitfield: it now has a closed 2x2 grid structure with a separate BG1 clock slot, a verified no-opponent collapse into $1C76/$1C7A, and an organic callback-relative path that reaches slot 3 live."
+        "notes": "The live SNES state is clearly field-oriented inside one WRAM neighborhood. A compact vector overlay analogous to DOS 0x8a1c has not been recovered, but the top-level $1C6A surface is now both human-readable and semantically mapped through the 1E:8000 signboard rows, and the downstream $1C70 field is no longer just a raw bitfield: it now has a closed 2x2 grid structure with a separate BG1 clock slot, a verified no-opponent collapse into $1C76/$1C7A, an organic callback-relative path that reaches slot 3 live, and a recovered no-opponent handoff into 02:9016 while preserving $1C76 = 0."
       }
     },
     {
@@ -45,7 +46,7 @@
   "questions_answered": [
     {
       "question": "Does the SNES version also use a selector vector, or did it flatten the state into named fields?",
-      "answer": "Current verified evidence favors flattened named WRAM fields inside one contiguous front-end state block, with $1C6A tied to the visible top-level signboard labels Game Options / Play TDII / High Score and the downstream $1C70 field now structurally closed as a 4-state 2x2 Select Opponent surface whose fourth BG1 clock slot already collapses into $1C76 = 0 / $1C7A = 0, and can now also be reached organically through callback-relative input keyed to the first live 01:C1D2 hit."
+      "answer": "Current verified evidence favors flattened named WRAM fields inside one contiguous front-end state block, with $1C6A tied to the visible top-level signboard labels Game Options / Play TDII / High Score and the downstream $1C70 field now structurally closed as a 4-state 2x2 Select Opponent surface whose fourth BG1 clock slot already collapses into $1C76 = 0 / $1C7A = 0, can be reached organically through callback-relative input keyed to the first live 01:C1D2 hit, and now also carries a recovered no-opponent handoff into 02:9016 while preserving $1C76 = 0."
     },
     {
       "question": "Are chosen IDs persisted directly, or are they replaced with compact indices in SRAM?",

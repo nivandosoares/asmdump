@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "created": "2026-03-27",
+  "scope": "Organic no-opponent Select Opponent handoff path from power-on into the bank-2 gameplay corridor.",
+  "claim_audit": {
+    "claim": "Callback-relative clock-slot selection plus a later be43+17-22:start confirm now recover the no-opponent path organically through L00C20B -> 01:C1D2 -> L00BE76 -> 01:BE43 -> L008B87 -> 01:902D -> 01:9111 -> active_main = 02:9016 while keeping state_1c70 = 3 and state_1c76 = 0.",
+    "classification": "VERIFIED",
+    "evidence": [
+      "tools/out/select_opponent_clock_path_v7_be43_confirm/td2_boot_probe.json records first c1d2 at 1628, be76 at 1642, first be43 at 1713, a be43+17-22:start trigger window, b87 at 1736, 902d at 1887, 9111 at 2043, and first active_main = 02:9016 at 2044.",
+      "The same v7 run samples state_1c70 = 3 and state_1c76 = 0 at frames 1736, 1887, 2044, 2600, and 3000.",
+      "At frame 1730, v7 records active_main = 01:BE43 with state_0960 = 0x1000, matching the be43-relative confirm pulse that precedes the recovered b87 hit at 1736.",
+      "tools/out/select_opponent_clock_path_v2/td2_boot_probe.json reaches the same later timestamps b87 = 1736, 902d = 1887, and active_main = 02:9016 at 2044, but with state_1c70 = 0 and state_1c76 = 1 instead of the v7 no-opponent state 3 / 0.",
+      "tools/out/snes_select_opponent_no_opponent_organic_path.md consolidates the recovered no-opponent path and the timing/state comparison against the default-rival baseline."
+    ],
+    "notes": "This closes the no-opponent confirm/promotion path itself. The remaining open edge is now the gameplay-facing divergence after the shared 02:9016 corridor begins, not front-end reachability or late phase confirmation."
+  },
+  "scenarios": [
+    {
+      "id": "v7",
+      "probe_json": "tools/out/select_opponent_clock_path_v7_be43_confirm/td2_boot_probe.json",
+      "input_windows": "1200:start;1280:start;1505-1510:start",
+      "trigger_input_windows": "c1d2+1-6:right,down;c1d2+8-13:start;be43+17-22:start",
+      "events": {
+        "l00c20b": 1613,
+        "c1d2_first": 1628,
+        "c1d2_last": 1643,
+        "l00be76": 1642,
+        "l01be43_first": 1713,
+        "l008b87": 1736,
+        "l00902d": 1887,
+        "l009111": 2043,
+        "active_main_029016_first": 2044
+      },
+      "state": {
+        "state_1c70": 3,
+        "state_1c76": 0,
+        "state_1c7a": 0,
+        "active_main_samples": {
+          "1736": "01:BE43",
+          "1887": "00:8029",
+          "2044": "02:9016",
+          "2600": "02:9016",
+          "3000": "02:9016"
+        }
+      },
+      "notes": "The later be43-relative start closes the same downstream timestamps as the rival baseline while preserving the no-opponent selector state."
+    }
+  ],
+  "comparison": {
+    "default_rival_v2": {
+      "probe_json": "tools/out/select_opponent_clock_path_v2/td2_boot_probe.json",
+      "events": {
+        "l008b87": 1736,
+        "l00902d": 1887,
+        "active_main_029016_first": 2044
+      },
+      "state": {
+        "state_1c70": 0,
+        "state_1c76": 1,
+        "state_1c7a": 0
+      }
+    },
+    "no_opponent_v7": {
+      "probe_json": "tools/out/select_opponent_clock_path_v7_be43_confirm/td2_boot_probe.json",
+      "events": {
+        "l008b87": 1736,
+        "l00902d": 1887,
+        "active_main_029016_first": 2044
+      },
+      "state": {
+        "state_1c70": 3,
+        "state_1c76": 0,
+        "state_1c7a": 0
+      }
+    }
+  },
+  "next_gate": "Capture and compare the post-029016 no-opponent lane against the default-rival baseline so gameplay/HUD divergence can be tied to the preserved 1c76 = 0 state."
+}

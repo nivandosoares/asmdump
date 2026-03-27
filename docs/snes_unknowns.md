@@ -408,6 +408,34 @@ DOS-driven SNES correlation pass.
     `01:BE43`, because the bounded `v5/v6` input program omits the later
     confirm `start` used in the default-rival baseline.
 
+### CLAIM AUDIT
+
+- Claim: A later `be43+17-22:start` confirm now closes the organic no-opponent
+  path through `L008B87 -> 01:902D -> 01:9111 -> 02:9016`, while preserving
+  `$1C70 = 3` and `$1C76 = 0`.
+- Classification: VERIFIED
+- Evidence:
+  - [tools/out/select_opponent_clock_path_v7_be43_confirm/td2_boot_probe.json](/home/nivando-soares/asmdump/tools/out/select_opponent_clock_path_v7_be43_confirm/td2_boot_probe.json)
+    records first `01:C1D2` at `1628`, `L00BE76` at `1642`, first
+    `01:BE43` at `1713`, `L008B87` at `1736`, `01:902D` at `1887`,
+    `01:9111` at `2043`, and first `active_main = 02:9016` at `2044`.
+  - The same `v7` run samples `$1C70 = 3` / `$1C76 = 0` at `1736`, `1887`,
+    `2044`, `2600`, and `3000`.
+  - At frame `1730`, `v7` still has `active_main = 01:BE43` with
+    `state_0960 = 0x1000`, matching the be43-relative confirm pulse that
+    precedes `L008B87`.
+  - [tools/out/select_opponent_clock_path_v2/td2_boot_probe.json](/home/nivando-soares/asmdump/tools/out/select_opponent_clock_path_v2/td2_boot_probe.json)
+    reaches the same downstream timestamps `1736 / 1887 / 2044`, but keeps the
+    rival state `$1C70 = 0` / `$1C76 = 1`.
+  - [tools/out/snes_select_opponent_no_opponent_organic_path.json](/home/nivando-soares/asmdump/tools/out/snes_select_opponent_no_opponent_organic_path.json)
+    consolidates the recovered no-opponent path and the timing/state
+    comparison against the default-rival baseline.
+- Notes:
+  - The remaining unknown is no longer the later confirm path itself.
+  - The remaining unknown is the gameplay-facing divergence after the shared
+    `02:9016` corridor begins, especially HUD/opponent-side differences tied
+    to `$1C76 = 0`.
+
 ## Next Probes
 
 - Get a deterministic post-attract or menu savestate where `$1CAC/$1CCA/$1CE*`
@@ -428,9 +456,10 @@ DOS-driven SNES correlation pass.
   car-name text surface instead.
 - Use the now-decoded `0x15..0x1B` settings labels to identify the exact
   front-end submenu/callsite that owns that control/sound surface.
-- Pair the now-closed callback-relative fourth-slot move with a later
-  `start` confirm after `01:BE43` is live so the no-opponent lane can be
-  compared directly against the recovered default-rival corridor.
+- Use the now-closed no-opponent path to capture and compare the first
+  post-`02:9016` gameplay-facing window against the recovered default-rival
+  baseline, focusing on state fields and later bank1/bank2 branches gated by
+  `$1C76 = 0`.
 - Keep decoding the `01:8016..01:8330` table families into named rows so
   `$1C7C`, `$1CAC`, and `$1CCA` can be tied to concrete assets instead of raw
   indices.

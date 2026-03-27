@@ -94,12 +94,14 @@ already grounded in code reads, probes, or generated artifacts.
     is real, and no-force timed-input probes now recover the default top-left
     rival path into it organically:
     `L00C20B -> 01:C1D2 -> L00BE76 -> L008B87 -> 01:902D`, followed later by
-    `active_main = 02:9016`. Callback-relative input keyed to the first live
-    `01:C1D2` hit can now also move the fourth slot organically: current
-    `v5/v6` runs set `$1C70 = 3`, keep `$1C76 = 0`, and reach `L00BE76`
-    followed by the `01:BE43` corridor. Because those runs omit a later
-    phase-confirm `start`, they still do not prove whether the no-opponent
-    lane later reaches `L008B87/01:902D/02:9016` or diverges elsewhere.
+    `active_main = 02:9016`. Callback-relative input keyed first to live
+    `01:C1D2` and then to `be43+17-22:start` now also recovers the fourth-slot
+    no-opponent path into that same downstream corridor:
+    `L00C20B -> 01:C1D2 -> L00BE76 -> 01:BE43 -> L008B87 -> 01:902D ->
+    01:9111 -> active_main = 02:9016`. The important difference is preserved
+    in state, not in this handoff timing: the rival baseline keeps
+    `$1C70 = 0`, `$1C76 = 1`, while the no-opponent lane keeps
+    `$1C70 = 3`, `$1C76 = 0` at the same downstream timestamps.
     Direct headless forcing of `01:9568/01:95AD` still does not promote into
     that same corridor: short-force probes keep `active_main` pinned on
     `01:9568/01:95AD` through frame `2199` with no staged callback writes.
@@ -126,9 +128,8 @@ If you strip away the assembly details, the proven logic is:
 - the exact organic runtime/HUD divergence between the recovered default-rival
   path (`$1C76 = 1`) and the fourth-slot no-opponent path (`$1C76 = 0`) is
   still not captured
-- the remaining front-end timing problem is no longer slot selection itself;
-  it is pairing the now-closed callback-relative fourth-slot move with a later
-  confirm after `01:BE43` so the no-opponent lane can be compared against the
-  default-rival promotion into `02:9016/02:8F3C`
+- the remaining front-end/gameplay bridge problem is no longer late confirm;
+  it is capturing what the preserved `$1C76 = 0` state changes after both
+  paths have already converged to the shared `02:9016/02:8F3C` corridor
 - late attract producer scheduling after `1133` is materially narrowed, but the
   native replacement schedule is still a live archaeology target
