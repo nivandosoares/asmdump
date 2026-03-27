@@ -5097,6 +5097,43 @@ Next best step:
   around the first shared `02:9016` window so `state_09a2/state_09a8` and the
   paired DP scratch fields can be tied to visible HUD/opponent-side behavior.
 
+### CP-112: screenshot review pack for the first shared `02:9016` window
+
+- promoted artifacts:
+  - `tools/out/post9016_default_rival_capture/`
+  - `tools/out/post9016_no_opponent_clock_capture/`
+  - `tools/out/post9016_compare_questions.md`
+- bounded capture runs:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=180 TD2_CAPTURE_OUTPUT_PREFIX=tools/out/post9016_default_rival_capture/capture TD2_CAPTURE_WARMUP_FRAMES=2044 TD2_CAPTURE_FRAMES=41 TD2_CAPTURE_SCREENSHOT_EVERY=4 TD2_CAPTURE_INPUT_WINDOWS='1200:start;1280:start;1505-1510:start' ./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_capture.lua`
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=180 TD2_CAPTURE_OUTPUT_PREFIX=tools/out/post9016_no_opponent_clock_capture/capture TD2_CAPTURE_WARMUP_FRAMES=2044 TD2_CAPTURE_FRAMES=41 TD2_CAPTURE_SCREENSHOT_EVERY=4 TD2_CAPTURE_INPUT_WINDOWS='1200:start;1280:start;1505-1510:start;1629-1634:right,down;1636-1641:start;1730-1735:start' ./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_capture.lua`
+- supporting normalization:
+  - `python3 tools/build_capture_sequence_manifest.py tools/out/post9016_default_rival_capture/capture_input_log.json tools/out/post9016_default_rival_capture/sequence.txt --json-out tools/out/post9016_default_rival_capture/sequence.json --start-frame 2044 --end-frame-exclusive 2085`
+  - `python3 tools/build_capture_sequence_manifest.py tools/out/post9016_no_opponent_clock_capture/capture_input_log.json tools/out/post9016_no_opponent_clock_capture/sequence.txt --json-out tools/out/post9016_no_opponent_clock_capture/sequence.json --start-frame 2044 --end-frame-exclusive 2085`
+- negative result kept:
+  - the first attempt to use the bridge-side guided export for the same window
+    failed in `extract_mesen_scene_range.py` because `mesen_ppu_extract`
+    timed out waiting to reach frame `1280` on the long warmup path.
+- observed result:
+  - the screenshot capture path succeeds for both lanes over frames
+    `2044..2084`, sampled every `4` frames.
+  - both capture logs confirm the expected review window shape:
+    `41` captured frames each, from `2044` through `2084`.
+  - the compare note now points the reviewer directly at matched PNG pairs and
+    asks for numbered answers about the earliest visible rival/no-opponent
+    difference, BG-vs-OAM ownership, radar/HUD deltas, and whether a later
+    window is needed.
+- practical reading:
+  - this creates a human-review surface that is better matched to the current
+    open question than the bridge path.
+  - the next narrowing step can now use direct reviewer answers instead of
+    guessing which of `09A2/09A8/0020/0022/0053/0054` first becomes visible.
+
+Next best step:
+
+- collect answers from `tools/out/post9016_compare_questions.md`, then tie the
+  reported first visible difference back to the already-narrowed state split in
+  the shared `02:9016` corridor.
+
 ## Next Advancement Gates
 
 ### Gate G1 (Immediate): close active bank30 unresolved queue

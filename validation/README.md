@@ -200,6 +200,51 @@ To seed the run from a deterministic savestate instead of power-on:
 ./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_capture.lua /absolute/path/to/start_state.mss
 ```
 
+For short human-review packs where the goal is direct screenshot comparison
+rather than bridge-extracted layer packs, use `mesen_capture.lua` plus
+`tools/build_capture_sequence_manifest.py`. This is useful when a long warmup
+path is stable in the test runner but awkward in the bridge extractor.
+
+Example: compare the first shared post-`02:9016` window of the default-rival
+and no-opponent paths:
+
+```sh
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=180 \
+TD2_CAPTURE_OUTPUT_PREFIX=tools/out/post9016_default_rival_capture/capture \
+TD2_CAPTURE_WARMUP_FRAMES=2044 \
+TD2_CAPTURE_FRAMES=41 \
+TD2_CAPTURE_SCREENSHOT_EVERY=4 \
+TD2_CAPTURE_INPUT_WINDOWS='1200:start;1280:start;1505-1510:start' \
+./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_capture.lua
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=180 \
+TD2_CAPTURE_OUTPUT_PREFIX=tools/out/post9016_no_opponent_clock_capture/capture \
+TD2_CAPTURE_WARMUP_FRAMES=2044 \
+TD2_CAPTURE_FRAMES=41 \
+TD2_CAPTURE_SCREENSHOT_EVERY=4 \
+TD2_CAPTURE_INPUT_WINDOWS='1200:start;1280:start;1505-1510:start;1629-1634:right,down;1636-1641:start;1730-1735:start' \
+./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_capture.lua
+
+python3 tools/build_capture_sequence_manifest.py \
+  tools/out/post9016_default_rival_capture/capture_input_log.json \
+  tools/out/post9016_default_rival_capture/sequence.txt \
+  --json-out tools/out/post9016_default_rival_capture/sequence.json \
+  --start-frame 2044 \
+  --end-frame-exclusive 2085
+
+python3 tools/build_capture_sequence_manifest.py \
+  tools/out/post9016_no_opponent_clock_capture/capture_input_log.json \
+  tools/out/post9016_no_opponent_clock_capture/sequence.txt \
+  --json-out tools/out/post9016_no_opponent_clock_capture/sequence.json \
+  --start-frame 2044 \
+  --end-frame-exclusive 2085
+```
+
+The resulting PNG pairs can then be reviewed directly, with an external
+question sheet such as `tools/out/post9016_compare_questions.md`.
+
 To inspect the boot/title selectors directly:
 
 ```sh
