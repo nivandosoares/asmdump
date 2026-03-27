@@ -142,8 +142,11 @@ If you strip away the assembly details, the proven logic is:
   rearview blinking lights and the intermittent `09A2/09A8`-side differences
   are still not fully semantically decoded; a full-rate compare now also shows
   that `2051/2083` do not create any extra whole-frame or adjacent-frame
-  visible pulse inside `2048..2088`, so that later blink search has to move
-  beyond this first shared window
+  visible pulse inside `2048..2088`, while a tighter first-frame compare shows
+  the first rival-only blink cue is concentrated in top-right bbox
+  `(180, 11, 194, 19)` on rival `2048->2049` with no matching change in the
+  no-opponent lane; that gives the next trace a much smaller target even
+  though the exact state/OAM binding is still open
 - the remaining front-end/gameplay bridge problem is no longer late confirm;
   it is assigning meaning and visible ownership to the narrowed post-handoff
   deltas, especially `state_09a2/state_09a8` and the paired DP scratch fields,

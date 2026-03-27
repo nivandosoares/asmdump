@@ -114,8 +114,12 @@ Use these to avoid collapsing distinct front-end surfaces into one:
     full top-strip bbox `(11, 11, 194, 21)`, and adjacent-frame compares for
     `2050->2051`, `2051->2052`, `2082->2083`, and `2083->2084` are all
     pixel-identical in both lanes. That pushes the reported rearview blinking
-    lights search later than this first shared window instead of leaving
-    `09A2/09A8` as the default explanation here.
+    lights search later than those `09A2/09A8` pulse frames. A tighter first-
+    frame compare now narrows the user-reported blink cue further:
+    rival `2048->2049` changes only in bbox `(180, 11, 194, 19)`, while the
+    no-opponent lane is pixel-identical across the same step. The next best
+    move is therefore a rival-only state/OAM trace around `2048->2049`,
+    targeted at that top-right subregion rather than the whole strip.
 
 ## Execution Reset (2026-03-19)
 

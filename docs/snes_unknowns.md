@@ -502,6 +502,28 @@ DOS-driven SNES correlation pass.
     gameplay window or a different animation surface than the first stable
     `2048..2088` rival-only split.
 
+### CLAIM AUDIT
+
+- Claim: The user-reported first rival-only blink cue is now narrowed to the
+  very first rival-lane transition `2048 -> 2049`, localized to the top-right
+  HUD subregion `(180, 11, 194, 19)` while the no-opponent lane stays
+  pixel-identical across the same two frames.
+- Classification: PROBABLE
+- Evidence:
+  - [tools/out/post9016_firstframe_blink_compare.json](/home/nivando-soares/asmdump/tools/out/post9016_firstframe_blink_compare.json)
+    reports `117` changed pixels for rival `2048 -> 2049` over bbox
+    `(180, 11, 194, 19)`, while clock `2048 -> 2049` reports `0` changed
+    pixels.
+  - That bbox sits inside the already-closed top HUD strip, but unlike the
+    full rival-vs-clock compare it is concentrated in the rightmost subregion.
+  - Human review identifies this first rival-only cue as the rival lights in
+    the rearview turning on.
+- Notes:
+  - The region and rival-only timing are verified.
+  - The semantic read as rearview blinking lights is still `PROBABLE` until it
+    is tied to a specific state or OAM path beyond the already-closed
+    `$1C76 -> state_11f3 -> oam_0730` marker split.
+
 ## Next Probes
 
 - Get a deterministic post-attract or menu savestate where `$1CAC/$1CCA/$1CE*`

@@ -1,0 +1,21 @@
+{
+  "rival": {
+    "mismatch_pixels": 117,
+    "bbox": [
+      180,
+      11,
+      194,
+      19
+    ],
+    "width": 256,
+    "height": 224,
+    "diff_ppm": "tools/out/post9016_rival_2048_2049_diff.ppm"
+  },
+  "clock": {
+    "mismatch_pixels": 0,
+    "bbox": null,
+    "width": 256,
+    "height": 224,
+    "diff_ppm": "tools/out/post9016_clock_2048_2049_diff.ppm"
+  }
+}

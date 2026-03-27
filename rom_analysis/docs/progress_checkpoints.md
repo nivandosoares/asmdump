@@ -5260,6 +5260,28 @@ Next best step:
     window or a different surface than the first shared post-`02:9016`
     marker split.
 
+### CP-116: first rival-only blink cue narrows to `2048 -> 2049`
+
+- promoted artifacts:
+  - `tools/out/post9016_firstframe_blink_compare.json`
+  - `tools/out/post9016_firstframe_blink_compare.md`
+- bounded validation:
+  - direct frame compare for rival `2048 -> 2049`
+  - direct frame compare for no-opponent `2048 -> 2049`
+- observed result:
+  - rival `2048 -> 2049` changes `117` pixels over bbox `(180, 11, 194, 19)`
+  - no-opponent `2048 -> 2049` changes `0` pixels
+  - the subregion is inside the already-closed top HUD strip but concentrated
+    at the right edge, matching the user report that the first cue is the
+    rival lights in the rearview turning on rather than the center strip
+    marker itself
+- practical reading:
+  - the first user-reported rival-only blink cue is now narrowed to a single
+    lane-local frame step and a small top-right bbox
+  - this is strong enough to redirect the next trace away from
+    `09A2/09A8` pulse frames and toward rival-only OAM/state changes that can
+    explain `2048 -> 2049`
+
 ## Next Advancement Gates
 
 ### Gate G1 (Immediate): close active bank30 unresolved queue
