@@ -56,7 +56,8 @@ DOS-driven SNES correlation pass.
 ### CLAIM AUDIT
 
 - Claim: `L00C20B/$1C70` is a verified downstream `4`-state `2x2` selection
-  surface with three explicit rear-car cells and one unresolved fourth cell.
+  surface with three explicit rear-car cells and one separate `BG1`
+  stopwatch/clock fourth slot.
 - Classification: VERIFIED
 - Evidence:
   - `L00C20B` draws row `6` from `16:8000`, `18:8000`, and `1B:8000` before
@@ -68,29 +69,34 @@ DOS-driven SNES correlation pass.
     selector values `0..3`.
   - [tools/out/snes_frontend_rival_selection_grid.json](/home/nivando-soares/asmdump/tools/out/snes_frontend_rival_selection_grid.json)
     now promotes the structural read and preview PNGs in one artifact.
+  - [tools/out/snes_frontend_select_opponent_bg1.png](/home/nivando-soares/asmdump/tools/out/snes_frontend_select_opponent_bg1.png)
+    isolates helper `8` on `BG1` and shows `Select Opponent` plus the
+    stopwatch/clock slot in the bottom-right quadrant.
 - Notes:
-  - This closes the geometry and ownership of the surface.
-  - The unresolved part is semantic naming of the fourth cell, not whether the
-    grid exists.
+  - This closes the geometry and ownership of all four slots.
+  - The fourth slot is outside the OAM car-row list because it belongs to the
+    helper-backed `BG1` surface, not the rear-car descriptor family.
 
 ### CLAIM AUDIT
 
 - Claim: `L00C20B/$1C70` is the strongest current SNES equivalent of the
   user-guided `3 rivals + clock` menu between car selection and phase
   selection.
-- Classification: PROBABLE
+- Classification: VERIFIED
 - Evidence:
   - The static flow already fits the user-guided sequence:
     `L00BAE8 -> L008B3E -> L00C20B -> L00BE76`.
   - `L00C20B` exposes a `4`-state surface immediately after the `3`-car
     `$0202/$1C78` corridor and immediately before the verified `4`-track
     `$1C7C` selector.
-  - Three of the four cells are explicit rear-car renders, which fits a
-    rival-choice interpretation better than a settings/help surface.
+  - Three of the four cells are explicit rear-car renders.
+  - The fourth slot is now directly visible on helper `8` as a `BG1`
+    stopwatch/clock icon under the `Select Opponent` banner.
 - Notes:
-  - The remaining proof target is the bottom-right cell.
-  - Promote the `clock` naming only after a live named frame or a direct text/
-    descriptor tie closes that last slot.
+  - The open semantic edge is now narrower:
+    the icon is closed as a clock/stopwatch slot, while the exact gameplay
+    handoff semantics after choosing it still belong to the later play-session
+    boundary lane.
 
 ### CLAIM AUDIT
 

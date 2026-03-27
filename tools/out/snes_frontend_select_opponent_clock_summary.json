@@ -1,0 +1,17 @@
+{
+  "helper_index": 8,
+  "banner_text_visual": "Select Opponent",
+  "bbox": {
+    "left": 1,
+    "top": 1,
+    "right": 63,
+    "bottom": 13
+  },
+  "interior_counts": {
+    "top_left_interior": 50,
+    "top_right_interior": 50,
+    "bottom_left_interior": 14,
+    "bottom_right_interior": 30
+  },
+  "reading": "Bottom-right interior is the only cell with dense non-grid content in the isolated BG1 helper-8 render; this is the same out-of-band slot the user identified as the clock/time-only option."
+}

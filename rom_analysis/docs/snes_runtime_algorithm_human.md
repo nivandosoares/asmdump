@@ -75,7 +75,8 @@ already grounded in code reads, probes, or generated artifacts.
       - selector box = `1E:8000` row `0x1D`
       - explicit rear-car cells = `16:8000` row `6`, `18:8000` row `6`,
         `1B:8000` row `6`
-      - the bottom-right cell meaning is still open
+      - the bottom-right cell is carried separately by helper `8` on `BG1` as
+        a `Select Opponent` stopwatch/clock slot
     - the per-car bases at `01:9C77` are now better read as OBJ catalogs for
       Porsche 959, Lamborghini Diablo, and Ferrari F40 body/wheel/canopy
       animation pieces

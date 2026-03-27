@@ -1,7 +1,8 @@
 # SNES Front-End Rival Selection Grid
 
 - Claim: `L00C20B` owns a verified downstream `4`-state `2x2` front-end
-  surface on `$1C70`.
+  surface on `$1C70`, with three OAM car cells plus a separate `BG1`
+  stopwatch/clock slot.
 - Scope: promote the structural read of the post-car, pre-track selector
   surface without over-promoting the unresolved fourth cell.
 
@@ -20,7 +21,7 @@
 | `0` | top-left | `(85, 109)` | `16:8000` row `6` -> `VRAM 0x3400` | `VERIFIED` | `tools/out/snes_frontend_rival_grid_top_left_bank16_row6.png` |
 | `1` | top-right | `(173, 109)` | `18:8000` row `6` -> `VRAM 0x3600` | `VERIFIED` | `tools/out/snes_frontend_rival_grid_top_right_bank18_row6.png` |
 | `2` | bottom-left | `(85, 173)` | `1B:8000` row `6` -> `VRAM 0x3000` | `VERIFIED` | `tools/out/snes_frontend_rival_grid_bottom_left_bank1b_row6.png` |
-| `3` | bottom-right | `(173, 173)` | no explicit rear-car row in verified setup | `PROBABLE` | unresolved |
+| `3` | bottom-right | `(173, 173)` | helper `8` on `BG1` under `Select Opponent` | `VERIFIED` | `tools/out/snes_frontend_select_opponent_bg1.png` |
 
 ## Selection Box
 
@@ -30,11 +31,22 @@
   - `01:C1D2` uses `$1C70 * 4` against `01:C1C2..01:C1D0`
   - the callback redraws row `0x1D` from `1E:8000` through `L00179B`
 
+## BG1 Fourth Slot
+
+- Isolated scene: `tools/out/snes_frontend_select_opponent_bg1.png`
+- Helper bundle: `8`
+- Sources:
+  - `L00A9A0` -> `05:E950`
+  - `L00A9CB` -> `05:EC0A`
+  - `L00A9F2` -> `05:FAD2`
+- Visual read:
+  - banner text: `Select Opponent`
+  - bottom-right quadrant: stopwatch/clock icon
+- Summary:
+  - `tools/out/snes_frontend_select_opponent_clock_summary.json`
+
 ## Notes
 
-- This closes the structure of the downstream surface, not the final meaning of
-  every slot.
-- The strongest current user-guided fit is still:
-  - `3` rival-car cells plus one time-only/clock slot
-- That last semantic step remains `PROBABLE` until a live named frame or a
-  direct text/descriptor tie closes the fourth cell.
+- This closes the geometry and visible ownership of all four slots.
+- The extra semantic step from “clock icon” to “time-only gameplay branch”
+  remains a downstream reading, but the fourth slot itself is no longer open.
