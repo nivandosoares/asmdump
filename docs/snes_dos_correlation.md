@@ -12,7 +12,7 @@ bank-0/bank-1 archaeology or direct ROM-header evidence.
 | Car/scenery materializers | One verified shared descriptor materializer; no recovered split into dedicated car and scenery builders yet | `VERIFIED` |
 | Car roster size | Verified `3`-slot front-end surface through `$0202/$1C78`; no recovered front-end restriction on the third slot in the current menu loop | `VERIFIED` |
 | Car-specific working set | Customizer UI plus live parameter fields exist | `VERIFIED` |
-| Preview asset resolution | Verified 3-choice animated preview rebuilder through `$0202`; strongest current car-facing selector domain is `$0202/$1C78` | `VERIFIED` / `PROBABLE` |
+| Preview asset resolution | Verified 3-choice animated preview rebuilder through `$0202`; the per-car bases at `01:9C77` now calibrate as Porsche 959 / Lamborghini Diablo / Ferrari F40 OBJ catalogs, while the visible name/info box persists on BG without OAM | `VERIFIED` / `PROBABLE` |
 | Track/scenery selector | Verified `4`-slot top-level selector through `$1C7C` with groups `[0, 5, 11, 18] / [5, 6, 7, 8]`; rendered rows `11..14` now recover `Desert Blast - Easy`, `City Bound - Medium`, `East Coast - Hard`, `West Coast - Hardest` | `VERIFIED` |
 | UI descriptor rows | Adjacent menu helpers build a long ROM pointer rooted at `1E:8000`; rows `8..10` now read as a rolling-tire helper cycle, rows `11..14` as track labels, and rows `0x15..0x1B` as control/sound labels | `VERIFIED` / `PROBABLE` |
 | Selector persistence | No cart SRAM in ROM header | `VERIFIED` |
@@ -168,9 +168,18 @@ Relevant DOS contracts:
   - A separate verified `CUSTOMIZE CAR` surface exists in the same front-end
     corridor, and later bank-1 paths keep indexing auxiliary tables through
     `$1C78`.
+  - The same `$0202` selector also chooses per-car bases from `01:9C77`:
+    - `1A:97D8` now matches the Porsche 959 sprite catalog
+    - `11:A578` now matches the Lamborghini Diablo sprite catalog
+    - `1A:8000` now matches the Ferrari F40 sprite catalog
+  - A live car-select capture at frame `1500` still shows the `Porsche 959`
+    title box and info panel when rendered without OAM, while the car art only
+    returns when OAM is composed back in.
 - Notes:
   - The strongest remaining gap is now the actual car-name text surface, not
     whether rows `8..10` themselves are names.
+  - The actual title/info box is now better read as a BG surface than as an
+    OBJ descriptor row family.
   - The raw helper assets for indices `9..11` are now reachable through the
     partial-bulk extractor; the remaining gap is runtime composition, not raw
     decode reachability.

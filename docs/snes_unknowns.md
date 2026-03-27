@@ -33,6 +33,34 @@ DOS-driven SNES correlation pass.
   - Normalized `1E:8000` row previews strongly suggest rows `8..10` are
     rolling-tire phases rather than car names, so the remaining uncertainty is
     where the separate name-bearing surface lives.
+  - A stable frame-`1500` car-select capture now narrows that surface
+    further: removing OAM keeps the `Porsche 959` title box and info panel
+    intact while removing the car art, so the name-bearing surface is better
+    read as BG/tilemap text rather than these OBJ helpers.
+
+### CLAIM AUDIT
+
+- Claim: `01:9C77` indexes three car-specific OBJ catalogs, while the visible
+  car-name/info box belongs to a separate BG surface.
+- Classification: PROBABLE
+- Evidence:
+  - `01:9C77` resolves the three per-car bases `1A:8000`, `1A:97D8`, and
+    `11:A578`, and `L009D69/L009DC6` consume those bases through the same
+    `$0202` selector domain.
+  - Longplay-calibrated row previews now line up as:
+    - `1A:97D8` -> Porsche 959 body plus wheel/canopy pieces
+    - `11:A578` -> Lamborghini Diablo body plus wheel/canopy pieces
+    - `1A:8000` -> Ferrari F40 body plus wheel/canopy pieces
+  - The stable frame-`1500` car-select capture reached via
+    `TD2_BG_RANGE_INPUT_WINDOWS='1200:start;1280:start'` keeps the
+    `Porsche 959` title box, prompt, and stats panel in a BG-only render from
+    `tools/render_mesen_snes_bg.py`, while the car itself disappears without
+    OAM and returns when OAM is composed.
+- Notes:
+  - This reclassifies the per-car bases as animation/catalog surfaces for the
+    visible car sprite, not as the car-name text source.
+  - The remaining naming hunt should now target the BG/tilemap/string path
+    that feeds the title/info box.
 
 ### CLAIM AUDIT
 
@@ -129,6 +157,8 @@ DOS-driven SNES correlation pass.
   are nonzero, then rerun the boot probe to capture a richer selector block.
 - Capture live menu `TMAIN/BG1SC/BG2SC/BG12NBA` around the preview cycle so the
   clean one-shot helper builds can be compared against the real layer mix.
+- Use the now-repeatable frame-`1500` car-select window to trace the BG
+  tilemap/CHR provenance for the `Porsche 959` name box and info panel.
 - Trace the follow-up callback/composition path after the helper `9/10/11`
   bundle build to explain why helpers `10` and `11` stay blank in the current
   isolated-layer model.

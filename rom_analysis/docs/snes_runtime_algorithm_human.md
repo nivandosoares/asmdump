@@ -64,7 +64,12 @@ already grounded in code reads, probes, or generated artifacts.
 11. The nearby front-end row families now split more cleanly than before:
     - rows `8..10` are a rolling-tire helper cycle, not names
     - rows `0x15..0x1B` are control/sound settings labels
-    - the actual car-name text surface has not been located yet
+    - the per-car bases at `01:9C77` are now better read as OBJ catalogs for
+      Porsche 959, Lamborghini Diablo, and Ferrari F40 body/wheel/canopy
+      animation pieces
+    - a stable car-select frame at `1500` keeps the `Porsche 959` name box and
+      info panel even with OAM removed, so the actual car-name text surface is
+      now better read as BG/tilemap text and still has not been located in ROM
 12. After the front-end bundle is accepted and built, the strongest currently
     proven gameplay-facing corridor is still the bank-1 path that stages
     `02:9016` (main) and `02:8F3C` (NMI) at `01:902D..01:9034`. That corridor
