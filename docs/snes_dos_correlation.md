@@ -155,10 +155,12 @@ Relevant DOS contracts:
 
 - Claim: `$0202/$1C78` is the strongest current car-facing selector domain in
   the SNES front end.
-- Classification: PROBABLE
+- Classification: VERIFIED
 - Evidence:
   - `L00BBCB` cycles `$0202` over `0..2` and commits the final value into
     `$1C78`.
+  - `L00BC0F` reloads the visible per-car panel through `L00A9A0/L00A9CB`
+    with `A = $0202 + 0x0009`, without a paired per-car `L00A9F2`.
   - The three preview helper bundles are distinct:
     - index `9` -> `L00A9A0 00:B0AB`, `L00A9CB 0E:8000`, `L00A9F2 02:FC11`
     - index `10` -> `00:B6B2`, `0E:91FE`, `02:FBF3`
@@ -175,18 +177,27 @@ Relevant DOS contracts:
   - A live car-select capture at frame `1500` still shows the `Porsche 959`
     title box and info panel when rendered without OAM, while the car art only
     returns when OAM is composed back in.
+  - The right-navigation capture
+    `TD2_CAPTURE_INPUT_WINDOWS='1200:start;1280:start;1505-1510:right'`
+    reaches a stable `Lamborghini Diablo` panel at frame `1640`.
   - [rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.json](/home/nivando-soares/asmdump/rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.json)
     now ties that live lower-screen surface to helper bundle `10`:
     - `L00A9A0 00:B6B2 -> VRAM 0x1000` matches the live `BG2` tilemap base
     - `L00A9CB 0E:91FE -> VRAM 0x3000` matches the live `BG2` CHR base
+  - [tools/out/car_select_bg1_1500_vs_1640_right.json](/home/nivando-soares/asmdump/tools/out/car_select_bg1_1500_vs_1640_right.json)
+    reports `0` changed visible `BG1` cells between the Porsche and Diablo
+    frames, while
+    [tools/out/car_select_bg2_1500_vs_1640_right.json](/home/nivando-soares/asmdump/tools/out/car_select_bg2_1500_vs_1640_right.json)
+    reports `256` changed visible `BG2` cells over bbox `x=0..247`,
+    `y=128..223`.
 - Notes:
-  - The strongest remaining gap is now the actual car-name text surface, not
-    whether rows `8..10` themselves are names.
+  - The selector domain itself is now materially closed for the active two
+    live anchors.
   - The actual title/info box is now better read as a helper-backed `BG2`
-    surface than as an OBJ descriptor row family.
+    tilemap/CHR surface than as an OBJ descriptor row family.
   - The raw helper assets for indices `9..11` are now reachable through the
-    partial-bulk extractor; the remaining gap is the exact text/payload path
-    inside helper bundle `10`, not raw decode reachability.
+    partial-bulk extractor; the remaining gap is exact text/payload ownership
+    inside helper bundles `10/11`, plus the third live `Ferrari F40` anchor.
 
 ### CLAIM AUDIT
 

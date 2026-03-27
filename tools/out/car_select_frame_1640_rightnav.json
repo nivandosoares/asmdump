@@ -1,0 +1,40 @@
+{
+  "captured": [{
+      "cgram": "/home/nivando-soares/asmdump/tools/out/car_select_frame_1640_rightnav_frame_01640_cgram.bin",
+      "frame": 1640,
+      "oam": "/home/nivando-soares/asmdump/tools/out/car_select_frame_1640_rightnav_frame_01640_oam.bin",
+      "ppu_state": "/home/nivando-soares/asmdump/tools/out/car_select_frame_1640_rightnav_frame_01640_ppu_state.json",
+      "screenshot": "/home/nivando-soares/asmdump/tools/out/car_select_frame_1640_rightnav_frame_01640_frame.png",
+      "vram": "/home/nivando-soares/asmdump/tools/out/car_select_frame_1640_rightnav_frame_01640_vram.bin"
+    }],
+  "dump_oam": true,
+  "dump_screenshots": true,
+  "end_frame": 1640,
+  "input_end_frame": -1,
+  "input_pattern": [],
+  "input_player": 0,
+  "input_start_frame": -1,
+  "input_windows": [{
+      "end_frame": 1200,
+      "pattern": {
+        "start": true
+      },
+      "start_frame": 1200
+    }, {
+      "end_frame": 1280,
+      "pattern": {
+        "start": true
+      },
+      "start_frame": 1280
+    }, {
+      "end_frame": 1510,
+      "pattern": {
+        "right": true
+      },
+      "start_frame": 1505
+    }],
+  "output_prefix": "/home/nivando-soares/asmdump/tools/out/car_select_frame_1640_rightnav",
+  "start_frame": 1640,
+  "step": 1,
+  "total_frames": 1641
+}

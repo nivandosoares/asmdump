@@ -1,0 +1,491 @@
+{
+  "schema": "td2.visual_contract.v1",
+  "createdUtc": "2026-03-27T11:56:51.422054+00:00",
+  "source": {
+    "designPackDir": "/home/nivando-soares/asmdump/tools/out/design_frame1640_car_select_right",
+    "designPackManifest": "/home/nivando-soares/asmdump/tools/out/design_frame1640_car_select_right/design_pack.json",
+    "frameNumber": 1640,
+    "provenancePath": null
+  },
+  "frame": {
+    "frameNumber": 1640,
+    "bgMode": null,
+    "brightness": null,
+    "forcedBlank": null,
+    "mainScreenLayers": null,
+    "subScreenLayers": null,
+    "mainLayerNames": [
+      "bg1",
+      "bg2"
+    ],
+    "subLayerNames": [],
+    "mode7": null
+  },
+  "translationSurface": {
+    "bgSourceOfTruth": "Use tilemaps/bg*_tilemap.json plus tilesets/tiles_bg*.json and raw/vram.bin.",
+    "objSourceOfTruth": "Use sprites/sprites_visible.json plus raw/oam.bin, raw/cgram.bin, and raw/ppu_state.json.",
+    "assemblyBridge": "Bind BG rows to runtime chunk provenance first; bind OBJ producers through breakpoint/write traces next."
+  },
+  "bg": {
+    "layerCount": 4,
+    "activeLayerCount": 3,
+    "layers": [
+      {
+        "name": "bg1",
+        "layer": 0,
+        "bgMode": 1,
+        "bpp": 4,
+        "active": true,
+        "enabledOnMain": true,
+        "enabledOnSub": false,
+        "state": {
+          "tilemapBaseWords": 0,
+          "chrBaseWords": 8192,
+          "doubleWidth": true,
+          "doubleHeight": false,
+          "largeTiles": false,
+          "hscroll": 0,
+          "vscroll": 1023
+        },
+        "grid": {
+          "widthTiles": 64,
+          "heightTiles": 32,
+          "tilemapBaseBytes": 0,
+          "tilemapBaseWords": 0,
+          "chrBaseWords": 8192
+        },
+        "tileUsage": {
+          "uniqueTileCount": 181,
+          "nonZeroTileCount": 180,
+          "tileIndexRanges": [
+            {
+              "start": 0,
+              "end": 180,
+              "count": 181
+            }
+          ],
+          "nonZeroTileIndexRanges": [
+            {
+              "start": 1,
+              "end": 180,
+              "count": 180
+            }
+          ],
+          "paletteIndices": [
+            0,
+            2
+          ],
+          "priorityCounts": {
+            "0": 2048
+          },
+          "hflipCount": 0,
+          "vflipCount": 2,
+          "topTiles": [
+            {
+              "tileIndex": 0,
+              "count": 1152
+            },
+            {
+              "tileIndex": 14,
+              "count": 448
+            },
+            {
+              "tileIndex": 73,
+              "count": 8
+            },
+            {
+              "tileIndex": 77,
+              "count": 4
+            },
+            {
+              "tileIndex": 1,
+              "count": 3
+            },
+            {
+              "tileIndex": 2,
+              "count": 3
+            },
+            {
+              "tileIndex": 3,
+              "count": 3
+            },
+            {
+              "tileIndex": 4,
+              "count": 3
+            },
+            {
+              "tileIndex": 5,
+              "count": 3
+            },
+            {
+              "tileIndex": 6,
+              "count": 3
+            },
+            {
+              "tileIndex": 15,
+              "count": 3
+            },
+            {
+              "tileIndex": 16,
+              "count": 3
+            },
+            {
+              "tileIndex": 17,
+              "count": 3
+            },
+            {
+              "tileIndex": 18,
+              "count": 3
+            },
+            {
+              "tileIndex": 19,
+              "count": 3
+            },
+            {
+              "tileIndex": 20,
+              "count": 3
+            }
+          ]
+        },
+        "chrUsage": {
+          "bytesPerTile": 32,
+          "chrBaseBytes": 16384,
+          "byteRanges": [
+            {
+              "tileStart": 0,
+              "tileEnd": 180,
+              "count": 181,
+              "byteStart": 16384,
+              "byteEndExclusive": 22176
+            }
+          ]
+        }
+      },
+      {
+        "name": "bg2",
+        "layer": 1,
+        "bgMode": 1,
+        "bpp": 4,
+        "active": true,
+        "enabledOnMain": true,
+        "enabledOnSub": false,
+        "state": {
+          "tilemapBaseWords": 4096,
+          "chrBaseWords": 12288,
+          "doubleWidth": false,
+          "doubleHeight": true,
+          "largeTiles": false,
+          "hscroll": 0,
+          "vscroll": 1023
+        },
+        "grid": {
+          "widthTiles": 32,
+          "heightTiles": 64,
+          "tilemapBaseBytes": 8192,
+          "tilemapBaseWords": 4096,
+          "chrBaseWords": 12288
+        },
+        "tileUsage": {
+          "uniqueTileCount": 329,
+          "nonZeroTileCount": 328,
+          "tileIndexRanges": [
+            {
+              "start": 0,
+              "end": 328,
+              "count": 329
+            }
+          ],
+          "nonZeroTileIndexRanges": [
+            {
+              "start": 1,
+              "end": 328,
+              "count": 328
+            }
+          ],
+          "paletteIndices": [
+            0
+          ],
+          "priorityCounts": {
+            "0": 2048
+          },
+          "hflipCount": 22,
+          "vflipCount": 0,
+          "topTiles": [
+            {
+              "tileIndex": 0,
+              "count": 1472
+            },
+            {
+              "tileIndex": 5,
+              "count": 131
+            },
+            {
+              "tileIndex": 4,
+              "count": 33
+            },
+            {
+              "tileIndex": 3,
+              "count": 28
+            },
+            {
+              "tileIndex": 103,
+              "count": 13
+            },
+            {
+              "tileIndex": 228,
+              "count": 7
+            },
+            {
+              "tileIndex": 227,
+              "count": 6
+            },
+            {
+              "tileIndex": 50,
+              "count": 5
+            },
+            {
+              "tileIndex": 81,
+              "count": 5
+            },
+            {
+              "tileIndex": 119,
+              "count": 5
+            },
+            {
+              "tileIndex": 51,
+              "count": 3
+            },
+            {
+              "tileIndex": 126,
+              "count": 3
+            },
+            {
+              "tileIndex": 1,
+              "count": 2
+            },
+            {
+              "tileIndex": 2,
+              "count": 2
+            },
+            {
+              "tileIndex": 48,
+              "count": 2
+            },
+            {
+              "tileIndex": 58,
+              "count": 2
+            }
+          ]
+        },
+        "chrUsage": {
+          "bytesPerTile": 32,
+          "chrBaseBytes": 24576,
+          "byteRanges": [
+            {
+              "tileStart": 0,
+              "tileEnd": 328,
+              "count": 329,
+              "byteStart": 24576,
+              "byteEndExclusive": 35104
+            }
+          ]
+        }
+      },
+      {
+        "name": "bg3",
+        "layer": 2,
+        "bgMode": 1,
+        "bpp": 2,
+        "active": true,
+        "enabledOnMain": false,
+        "enabledOnSub": false,
+        "state": {
+          "tilemapBaseWords": 4096,
+          "chrBaseWords": 24576,
+          "doubleWidth": true,
+          "doubleHeight": false,
+          "largeTiles": false,
+          "hscroll": 0,
+          "vscroll": 1023
+        },
+        "grid": {
+          "widthTiles": 64,
+          "heightTiles": 32,
+          "tilemapBaseBytes": 8192,
+          "tilemapBaseWords": 4096,
+          "chrBaseWords": 24576
+        },
+        "tileUsage": {
+          "uniqueTileCount": 532,
+          "nonZeroTileCount": 531,
+          "tileIndexRanges": [
+            {
+              "start": 0,
+              "end": 531,
+              "count": 532
+            }
+          ],
+          "nonZeroTileIndexRanges": [
+            {
+              "start": 1,
+              "end": 531,
+              "count": 531
+            }
+          ],
+          "paletteIndices": [
+            0,
+            7
+          ],
+          "priorityCounts": {
+            "0": 2048
+          },
+          "hflipCount": 46,
+          "vflipCount": 3,
+          "topTiles": [
+            {
+              "tileIndex": 5,
+              "count": 817
+            },
+            {
+              "tileIndex": 0,
+              "count": 448
+            },
+            {
+              "tileIndex": 4,
+              "count": 67
+            },
+            {
+              "tileIndex": 530,
+              "count": 30
+            },
+            {
+              "tileIndex": 3,
+              "count": 28
+            },
+            {
+              "tileIndex": 526,
+              "count": 27
+            },
+            {
+              "tileIndex": 103,
+              "count": 14
+            },
+            {
+              "tileIndex": 228,
+              "count": 9
+            },
+            {
+              "tileIndex": 227,
+              "count": 7
+            },
+            {
+              "tileIndex": 383,
+              "count": 7
+            },
+            {
+              "tileIndex": 278,
+              "count": 5
+            },
+            {
+              "tileIndex": 50,
+              "count": 5
+            },
+            {
+              "tileIndex": 81,
+              "count": 5
+            },
+            {
+              "tileIndex": 119,
+              "count": 5
+            },
+            {
+              "tileIndex": 254,
+              "count": 3
+            },
+            {
+              "tileIndex": 239,
+              "count": 3
+            }
+          ]
+        },
+        "chrUsage": {
+          "bytesPerTile": 16,
+          "chrBaseBytes": 49152,
+          "byteRanges": [
+            {
+              "tileStart": 0,
+              "tileEnd": 531,
+              "count": 532,
+              "byteStart": 49152,
+              "byteEndExclusive": 57664
+            }
+          ]
+        }
+      },
+      {
+        "name": "bg4",
+        "layer": 3,
+        "bgMode": 1,
+        "bpp": 0,
+        "active": false,
+        "enabledOnMain": false,
+        "enabledOnSub": false,
+        "state": {
+          "tilemapBaseWords": 0,
+          "chrBaseWords": 0,
+          "doubleWidth": false,
+          "doubleHeight": false,
+          "largeTiles": false,
+          "hscroll": 0,
+          "vscroll": 1023
+        },
+        "grid": {
+          "widthTiles": 32,
+          "heightTiles": 32,
+          "tilemapBaseBytes": 0,
+          "tilemapBaseWords": 0,
+          "chrBaseWords": 0
+        },
+        "tileUsage": {
+          "uniqueTileCount": 0,
+          "nonZeroTileCount": 0,
+          "tileIndexRanges": [],
+          "nonZeroTileIndexRanges": [],
+          "paletteIndices": [],
+          "priorityCounts": {},
+          "hflipCount": 0,
+          "vflipCount": 0,
+          "topTiles": [],
+          "note": "Layer is inactive in this frame; raw tilemap memory is not promoted as active visual usage."
+        },
+        "chrUsage": {
+          "bytesPerTile": 0,
+          "chrBaseBytes": 0,
+          "byteRanges": []
+        }
+      }
+    ]
+  },
+  "obj": {
+    "enabled": false,
+    "reason": "sprites_visible.json missing or invalid"
+  },
+  "provenance": {
+    "enabled": false,
+    "runtimeReference": null,
+    "chunkValidationInputs": [],
+    "summary": null
+  },
+  "producerTrace": {
+    "enabled": false,
+    "reason": "probe json not provided"
+  },
+  "callbackState": {
+    "enabled": false,
+    "reason": "probe json not provided"
+  },
+  "activityTrace": {
+    "enabled": false,
+    "reason": "activity trace json not provided"
+  }
+}

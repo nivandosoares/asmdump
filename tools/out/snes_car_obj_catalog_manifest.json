@@ -1,0 +1,57 @@
+{
+  "schema": "td2.snes_car_obj_catalog_manifest.v1",
+  "created": "2026-03-27",
+  "claim": "The three per-car bases consumed from 01:9C77 are OBJ catalogs for the selectable car art, not the BG name/info panel.",
+  "entries": [
+    {
+      "canonical_id": "p959",
+      "display_name": "Porsche 959",
+      "catalog_role_classification": "VERIFIED",
+      "display_name_mapping_classification": "VERIFIED",
+      "base_snes": "1A:97D8",
+      "file_offset": "0x0D17D8",
+      "asset_role": "obj_catalog",
+      "local_report_json": "tools/out/car_table_1a97d8_report.json",
+      "local_report_md": "tools/out/car_table_1a97d8_report.md",
+      "render_dir": "tools/out/car_table_1a97d8_renders",
+      "runtime_anchor": {
+        "frame": 1500,
+        "selection_state_0202": 1,
+        "evidence": "Stable car-select frame keeps Porsche 959 title/info in BG while the matching 01:9C77 surface supplies the visible car OBJ art."
+      },
+      "notes": "Use this as the canonical Porsche 959 OBJ catalog label for future promoted assets."
+    },
+    {
+      "canonical_id": "diablo",
+      "display_name": "Lamborghini Diablo",
+      "catalog_role_classification": "VERIFIED",
+      "display_name_mapping_classification": "VERIFIED",
+      "base_snes": "11:A578",
+      "file_offset": "0x08A578",
+      "asset_role": "obj_catalog",
+      "local_report_json": "tools/out/car_table_11a578_report.json",
+      "local_report_md": "tools/out/car_table_11a578_report.md",
+      "render_dir": "tools/out/car_table_11a578_renders",
+      "runtime_anchor": {
+        "frame": 1640,
+        "selection_state_0202": 2,
+        "evidence": "Right-navigation capture reaches a stable Lamborghini Diablo car-select panel while the calibrated 11:A578 surface supplies the visible car OBJ art."
+      },
+      "notes": "Use this as the canonical Lamborghini Diablo OBJ catalog label for future promoted assets."
+    },
+    {
+      "canonical_id": "f40",
+      "display_name": "Ferrari F40",
+      "catalog_role_classification": "VERIFIED",
+      "display_name_mapping_classification": "PROBABLE",
+      "base_snes": "1A:8000",
+      "file_offset": "0x0D0000",
+      "asset_role": "obj_catalog",
+      "local_report_json": "tools/out/car_table_1a8000_report.json",
+      "local_report_md": "tools/out/car_table_1a8000_report.md",
+      "render_dir": "tools/out/car_table_1a8000_renders",
+      "runtime_anchor": null,
+      "notes": "The local row decode is now promoted in-repo; the Ferrari naming tie remains the remaining third-slot mapping from the calibrated 01:9C77 family until a live named frame is promoted."
+    }
+  ]
+}

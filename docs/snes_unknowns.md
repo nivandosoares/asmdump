@@ -9,10 +9,13 @@ DOS-driven SNES correlation pass.
 
 - Claim: `$1C78` and the `3`-choice `$0202` preview path are the active car
   selector for the main front-end flow.
-- Classification: PROBABLE
+- Classification: VERIFIED
 - Evidence:
   - `L00BBCB` cycles `$0202` over `0..2`, rebuilds one bundle from
     `0x0009 + $0202`, and `L008B57` commits `$0202 -> $1C78`.
+  - `L00BC0F` reloads the live per-car panel through `L00A9A0/L00A9CB` with
+    `A = $0202 + 0x0009`, while leaving per-car palette work off that inner
+    loop.
   - `L00BDAC` and `L00BDD0` wrap the selection across all three slots without
     a recovered lock condition.
   - An adjacent front-end UI helper uses `$00 = $0202 + 0x0008` against the
@@ -22,13 +25,16 @@ DOS-driven SNES correlation pass.
     - index `10` -> `00:B6B2`, `0E:91FE`, `02:FBF3`
     - index `11` -> `00:BCBA`, `0E:A428`, `0D:C98F`
   - A separate verified car-customize surface exists at `01:880D`.
+  - The right-navigation probe
+    `TD2_BOOT_PROBE_INPUT_WINDOWS='1200:start;1280:start;1505-1510:right'`
+    changes `state_0202` from `1` to `2` at frame `1537`.
+  - The matching visible capture at frame `1640` shows `Lamborghini Diablo`.
 - Notes:
-  - The preview and commit behavior are direct code evidence.
-  - The domain label still needs a separate name-bearing asset or
-    debugger-backed menu trace.
-  - The current recovered loop already exposes all three front-end slots; the
-    remaining gap is naming, not a recovered front-end restriction on the
-    third slot.
+  - The preview, commit, and per-car helper reload are direct code evidence.
+  - The current recovered loop already exposes all three front-end slots.
+  - The remaining gap is no longer the selector domain itself; it is the
+    third live name-bearing anchor plus exact payload ownership inside the
+    helper-backed BG panel.
   - The raw helper bundles are now extractable.
   - Normalized `1E:8000` row previews strongly suggest rows `8..10` are
     rolling-tire phases rather than car names, so the remaining uncertainty is
@@ -42,12 +48,13 @@ DOS-driven SNES correlation pass.
 
 - Claim: `01:9C77` indexes three car-specific OBJ catalogs, while the visible
   car-name/info box belongs to a separate `BG2` helper-bundle path.
-- Classification: PROBABLE
+- Classification: VERIFIED
 - Evidence:
   - `01:9C77` resolves the three per-car bases `1A:8000`, `1A:97D8`, and
     `11:A578`, and `L009D69/L009DC6` consume those bases through the same
     `$0202` selector domain.
-  - Longplay-calibrated row previews now line up as:
+  - [tools/out/snes_car_obj_catalog_manifest.json](/home/nivando-soares/asmdump/tools/out/snes_car_obj_catalog_manifest.json)
+    now promotes the canonical car OBJ labels:
     - `1A:97D8` -> Porsche 959 body plus wheel/canopy pieces
     - `11:A578` -> Lamborghini Diablo body plus wheel/canopy pieces
     - `1A:8000` -> Ferrari F40 body plus wheel/canopy pieces
@@ -60,11 +67,22 @@ DOS-driven SNES correlation pass.
     now anchors that live lower-screen BG surface to helper bundle `10`:
     - `L00A9A0 00:B6B2 -> VRAM 0x1000` for the live `BG2` tilemap base
     - `L00A9CB 0E:91FE -> VRAM 0x3000` for the live `BG2` CHR base
+  - `L00BC0F` statically proves the per-car panel reload uses
+    `$0202 + 0x0009` through `L00A9A0/L00A9CB`, without a paired per-car
+    `L00A9F2`.
+  - [tools/out/car_select_bg1_1500_vs_1640_right.json](/home/nivando-soares/asmdump/tools/out/car_select_bg1_1500_vs_1640_right.json)
+    reports `0` changed visible `BG1` cells between the `Porsche 959` frame
+    `1500` and the `Lamborghini Diablo` frame `1640`.
+  - [tools/out/car_select_bg2_1500_vs_1640_right.json](/home/nivando-soares/asmdump/tools/out/car_select_bg2_1500_vs_1640_right.json)
+    reports `256` changed visible `BG2` cells over bbox `x=0..247`,
+    `y=128..223`, with matching `BG2` state fields in both frames.
 - Notes:
   - This reclassifies the per-car bases as animation/catalog surfaces for the
     visible car sprite, not as the car-name text source.
-  - The remaining naming hunt should now target the exact text/payload path
-    inside helper bundle `10`, not the coarse BG-vs-OBJ split.
+  - The mutable per-car title/stats surface is now better read as helper-
+    driven `BG2` tilemap/CHR, not OAM, wallpaper, or a per-car palette fork.
+  - The remaining naming hunt should now target byte ownership inside helper
+    bundles `10/11`, plus the third live `Ferrari F40` anchor.
 
 ### CLAIM AUDIT
 

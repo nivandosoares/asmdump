@@ -1,0 +1,79 @@
+{
+  "schema": "td2.design_pack_bg_visible_diff.v1",
+  "reference": {
+    "designPackDir": "/home/nivando-soares/asmdump/tools/out/design_frame1500_car_select",
+    "designPackManifest": "/home/nivando-soares/asmdump/tools/out/design_frame1500_car_select/design_pack.json",
+    "frameNumber": 1500
+  },
+  "comparison": {
+    "designPackDir": "/home/nivando-soares/asmdump/tools/out/design_frame1640_car_select_right",
+    "designPackManifest": "/home/nivando-soares/asmdump/tools/out/design_frame1640_car_select_right/design_pack.json",
+    "frameNumber": 1640
+  },
+  "layer": {
+    "name": "bg1",
+    "referenceState": {
+      "tilemapAddress": 0,
+      "chrAddress": 8192,
+      "doubleWidth": true,
+      "doubleHeight": false,
+      "largeTiles": false,
+      "hscroll": 0,
+      "vscroll": 1023
+    },
+    "comparisonState": {
+      "tilemapAddress": 0,
+      "chrAddress": 8192,
+      "doubleWidth": true,
+      "doubleHeight": false,
+      "largeTiles": false,
+      "hscroll": 0,
+      "vscroll": 1023
+    },
+    "grid": {
+      "widthTiles": 64,
+      "heightTiles": 32,
+      "tilemapBaseBytes": 0,
+      "tilemapBaseWords": 0,
+      "chrBaseWords": 8192
+    },
+    "referenceVisibleWindow": {
+      "screenStartTileX": 0,
+      "screenStartTileY": 31,
+      "screenWidthTiles": 32,
+      "screenHeightTiles": 28
+    },
+    "comparisonVisibleWindow": {
+      "screenStartTileX": 0,
+      "screenStartTileY": 31,
+      "screenWidthTiles": 32,
+      "screenHeightTiles": 28
+    },
+    "stateMatches": {
+      "tilemapAddress": true,
+      "chrAddress": true,
+      "doubleWidth": true,
+      "doubleHeight": true,
+      "largeTiles": true,
+      "hscroll": true,
+      "vscroll": true
+    },
+    "allStateFieldsMatch": true
+  },
+  "summary": {
+    "changedCellCount": 0,
+    "unchangedCellCount": 896,
+    "zeroToNonZeroCount": 0,
+    "nonZeroToZeroCount": 0,
+    "nonZeroToNonZeroCount": 0,
+    "changedBoundingBox": null,
+    "changedPixelBoundingBox": null,
+    "changedScreenRows": [],
+    "changedRowCounts": [],
+    "changedScreenColumns": [],
+    "changedColumnCounts": [],
+    "referenceChangedTileIndices": [],
+    "comparisonChangedTileIndices": []
+  },
+  "sampleChanges": []
+}
