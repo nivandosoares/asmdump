@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "created": "2026-03-27",
+  "scope": "Narrowing the remaining organic clock-slot probe around the live Select Opponent callback window.",
+  "claim_audit": {
+    "claim": "Absolute-frame input windows remain unstable for the fourth-slot clock probe because delaying confirmation also shifts the first live 01:C1D2 window later, leaving right+down early in both bounded follow-ups.",
+    "classification": "VERIFIED",
+    "evidence": [
+      "tools/out/select_opponent_clock_path_v3/td2_boot_probe.json reaches c20b at frame 1600 and first c1d2 only at 1615..1617; the right+down window 1600..1605 therefore still lands before the live callback.",
+      "The same v3 run still falls through the default path, reaching be76 at 1616, b87 at 1706, 902d at 1857, and first active_main = 02:9016 at 2014 with $1C70 unchanged at 0.",
+      "tools/out/select_opponent_clock_path_v4/td2_boot_probe.json reaches c20b at frame 1613 and first c1d2 only at 1628..1637; the delayed right+down window 1620..1625 is still early relative to the live callback.",
+      "In v4, delayed start at 1630..1635 does reach be76 at 1636, but no b87 or 902d hit appears through the 1450..1900 trace window, and sampled later frames stay on active_main = 01:BE43 with $1C70 still 0."
+    ],
+    "notes": "The remaining clock-slot problem is now better described as callback-relative timing drift, not a raw button-map question. The next defensible probe should overlap right+down with the live C1D2 window itself or trigger relative to first C1D2 rather than fixed absolute frames."
+  },
+  "scenarios": [
+    {
+      "id": "v3",
+      "probe_json": "tools/out/select_opponent_clock_path_v3/td2_boot_probe.json",
+      "input_windows": "1200:start;1280:start;1505-1510:start;1600-1605:right,down;1610-1615:start;1700-1705:start",
+      "events": {
+        "l00c20b": 1600,
+        "c1d2_first": 1615,
+        "c1d2_last": 1617,
+        "l00be76": 1616,
+        "l008b87": 1706,
+        "l00902d": 1857,
+        "active_main_029016_first": 2014
+      },
+      "state": {
+        "state_1c70": 0,
+        "state_1c76_after_b87": 1
+      },
+      "notes": "The run still closes the default-rival baseline because right+down lands before C1D2 becomes live."
+    },
+    {
+      "id": "v4",
+      "probe_json": "tools/out/select_opponent_clock_path_v4/td2_boot_probe.json",
+      "input_windows": "1200:start;1280:start;1505-1510:start;1620-1625:right,down;1630-1635:start;1700-1705:start",
+      "events": {
+        "l00c20b": 1613,
+        "c1d2_first": 1628,
+        "c1d2_last": 1637,
+        "l00be76": 1636
+      },
+      "state": {
+        "state_1c70": 0,
+        "state_1c76": 0,
+        "later_active_main": "01:BE43"
+      },
+      "notes": "Delaying confirmation shifts the live C1D2 window later instead of creating a stable absolute-frame target."
+    }
+  ],
+  "next_gate": "Use an overlapping or callback-relative right+down injection so the fourth-slot move is guaranteed to occur while 01:C1D2 is already live."
+}

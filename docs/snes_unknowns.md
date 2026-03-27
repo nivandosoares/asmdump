@@ -358,6 +358,29 @@ DOS-driven SNES correlation pass.
     live, so the no-opponent path can be compared against the recovered
     default-rival baseline.
 
+### CLAIM AUDIT
+
+- Claim: The remaining fourth-slot clock probe is now blocked by
+  callback-relative timing drift rather than by uncertain button semantics.
+- Classification: VERIFIED
+- Evidence:
+  - [tools/out/select_opponent_clock_path_v3/td2_boot_probe.json](/home/nivando-soares/asmdump/tools/out/select_opponent_clock_path_v3/td2_boot_probe.json)
+    reaches `L00C20B` at frame `1600` but first `01:C1D2` only at
+    `1615..1617`, so `right+down` at `1600..1605` still lands too early and
+    the run falls through the default-rival baseline again.
+  - [tools/out/select_opponent_clock_path_v4/td2_boot_probe.json](/home/nivando-soares/asmdump/tools/out/select_opponent_clock_path_v4/td2_boot_probe.json)
+    delays confirmation, but that also shifts first `01:C1D2` to
+    `1628..1637`; `right+down` at `1620..1625` is still early, and the run
+    only reaches `L00BE76` before staying on `active_main = 01:BE43` through
+    the sampled later frames.
+  - [tools/out/snes_select_opponent_clock_timing_narrowing.json](/home/nivando-soares/asmdump/tools/out/snes_select_opponent_clock_timing_narrowing.json)
+    consolidates the two bounded follow-ups.
+- Notes:
+  - This narrows the remaining input problem substantially.
+  - The next defensible probe should overlap `right+down` with the live
+    `01:C1D2` window itself or trigger relative to first `01:C1D2`, instead
+    of continuing to slide absolute-frame windows forward by guesswork.
+
 ## Next Probes
 
 - Get a deterministic post-attract or menu savestate where `$1CAC/$1CCA/$1CE*`
@@ -378,9 +401,9 @@ DOS-driven SNES correlation pass.
   car-name text surface instead.
 - Use the now-decoded `0x15..0x1B` settings labels to identify the exact
   front-end submenu/callsite that owns that control/sound surface.
-- Move `right+down` inside the live `01:C1D2` window so `$1C70` can leave `0`
-  and the already recovered organic default-rival path can be compared
-  directly against the no-opponent branch.
+- Use an overlapping or callback-relative `right+down` injection so the
+  fourth-slot move is guaranteed to occur while `01:C1D2` is already live,
+  instead of continuing to chase unstable absolute-frame windows.
 - Keep decoding the `01:8016..01:8330` table families into named rows so
   `$1C7C`, `$1CAC`, and `$1CCA` can be tied to concrete assets instead of raw
   indices.
