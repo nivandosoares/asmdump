@@ -5403,10 +5403,27 @@ Next best step:
     infinitely repeated passive frame
   - but the run still carries the inherited selector family
     (`$1C6A = 1`, `$1C70 = 0`, `$1C76 = 1`, `$0202 = 0xFFFF`), so this does
-    not yet close the “verified gameplay seed” gate
+  not yet close the “verified gameplay seed” gate
   - the best active Lane 3 target is now to extend the `A`-responsive lane
     until it either produces unmistakable world/gameplay motion or cleanly
     exits the inherited top-menu selector family
+
+### CP-120: explicit Lane 3 next-agent handoff added
+
+- promoted docs:
+  - `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
+- bounded validation:
+  - `git diff --check -- rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md rom_analysis/docs/next_steps_roadmap.md rom_analysis/docs/progress_checkpoints.md`
+- observed result:
+  - the current Lane 3 resume point is now explicit instead of being spread
+    across the last two checkpoints and multiple compare artifacts
+  - the handoff fixes:
+    - the invalid `game_11.mss` gameplay-seed assumption
+    - the exact trusted artifacts for the late `A/B` narrowing
+    - the concrete next experiment (`2050-2400:a` with `B` as control)
+- practical reading:
+  - the next agent should start from the handoff doc, not from older
+    `game_11.mss` sweep notes or the old `v2_current` baseline
 
 ## Next Advancement Gates
 
