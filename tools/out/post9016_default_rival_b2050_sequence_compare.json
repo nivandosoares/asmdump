@@ -1,0 +1,96 @@
+{
+  "capture_count": 41,
+  "first_divergence": {
+    "capture_index": 0,
+    "script_frame": 2048,
+    "same": false,
+    "mismatch_pixels": 117,
+    "bbox": [
+      180,
+      11,
+      194,
+      19
+    ]
+  },
+  "differing_frames": [
+    {
+      "capture_index": 0,
+      "script_frame": 2048,
+      "same": false,
+      "mismatch_pixels": 117,
+      "bbox": [
+        180,
+        11,
+        194,
+        19
+      ]
+    },
+    {
+      "capture_index": 4,
+      "script_frame": 2052,
+      "same": false,
+      "mismatch_pixels": 20,
+      "bbox": [
+        17,
+        13,
+        193,
+        17
+      ]
+    },
+    {
+      "capture_index": 20,
+      "script_frame": 2068,
+      "same": false,
+      "mismatch_pixels": 8,
+      "bbox": [
+        181,
+        16,
+        193,
+        17
+      ]
+    },
+    {
+      "capture_index": 36,
+      "script_frame": 2084,
+      "same": false,
+      "mismatch_pixels": 20,
+      "bbox": [
+        17,
+        13,
+        193,
+        17
+      ]
+    }
+  ],
+  "base_first_adjacent_motion": {
+    "from_capture_index": 0,
+    "to_capture_index": 1,
+    "from_script_frame": 2048,
+    "to_script_frame": 2049,
+    "mismatch_pixels": 117,
+    "bbox": [
+      180,
+      11,
+      194,
+      19
+    ]
+  },
+  "candidate_first_adjacent_motion": {
+    "from_capture_index": 3,
+    "to_capture_index": 4,
+    "from_script_frame": 2051,
+    "to_script_frame": 2052,
+    "mismatch_pixels": 20,
+    "bbox": [
+      17,
+      13,
+      193,
+      17
+    ]
+  },
+  "base_label": "no_input",
+  "candidate_label": "b_hold",
+  "base_dir": "/home/nivando-soares/asmdump/tools/out/post9016_default_rival_capture_full",
+  "candidate_dir": "/home/nivando-soares/asmdump/tools/out/post9016_default_rival_capture_b2050",
+  "script_start_frame": 2048
+}

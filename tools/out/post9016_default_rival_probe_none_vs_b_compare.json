@@ -1,0 +1,191 @@
+{
+  "probe_a": "tools/out/post9016_default_rival_probe_none/td2_boot_probe.json",
+  "probe_b": "tools/out/post9016_default_rival_probe_b/td2_boot_probe.json",
+  "label_a": "no_input",
+  "label_b": "b_hold",
+  "start_frame": 2048,
+  "end_frame": 2208,
+  "compared_frame_count": 161,
+  "shared_frames": [
+    2048,
+    2208
+  ],
+  "callback_summary": {
+    "main": {
+      "a": [
+        "02:9016"
+      ],
+      "b": [
+        "02:9016"
+      ],
+      "same": true
+    },
+    "irq": {
+      "a": [
+        "01:96A0"
+      ],
+      "b": [
+        "01:96A0"
+      ],
+      "same": true
+    },
+    "nmi": {
+      "a": [
+        "02:8F3C"
+      ],
+      "b": [
+        "02:8F3C"
+      ],
+      "same": true
+    }
+  },
+  "same_field_count": 81,
+  "same_fields": [
+    "active_irq_callback_addr",
+    "active_irq_callback_bank",
+    "active_main_callback_addr",
+    "active_main_callback_bank",
+    "active_nmi_callback_addr",
+    "active_nmi_callback_bank",
+    "dp_0000",
+    "dp_0004",
+    "dp_000c",
+    "dp_0010",
+    "dp_0011",
+    "dp_0012",
+    "dp_0020",
+    "dp_0022",
+    "dp_0040",
+    "dp_0053",
+    "dp_0054",
+    "dp_0055",
+    "dp_0056",
+    "oam_072c",
+    "oam_072e",
+    "oam_0730",
+    "oam_0732",
+    "oam_0734",
+    "oam_0736",
+    "oam_0738",
+    "oam_073a",
+    "selector_1c78",
+    "selector_1c7a",
+    "selector_1c7c",
+    "selector_1c80",
+    "selector_1c82",
+    "selector_1ca8",
+    "selector_1cac",
+    "selector_1cca",
+    "selector_1ccc",
+    "selector_1cce",
+    "selector_1cd0",
+    "selector_1ce2",
+    "selector_1ce4",
+    "selector_1ce6",
+    "selector_1cea",
+    "state_0200",
+    "state_0202",
+    "state_0204",
+    "state_0206",
+    "state_0208",
+    "state_020a",
+    "state_0400",
+    "state_0402",
+    "state_0404",
+    "state_0405",
+    "state_0406",
+    "state_0408",
+    "state_040a",
+    "state_0440",
+    "state_0442",
+    "state_0444",
+    "state_0962",
+    "state_0990",
+    "state_0996",
+    "state_09a2",
+    "state_09a4",
+    "state_09a8",
+    "state_0f70",
+    "state_11a7",
+    "state_11cd",
+    "state_11df",
+    "state_11f1",
+    "state_11f3",
+    "state_11f5",
+    "state_137c",
+    "state_1c6a",
+    "state_1c70",
+    "state_1c74",
+    "state_1c76",
+    "state_1c84",
+    "state_1c86",
+    "state_1d08",
+    "state_1d10",
+    "state_1e2c"
+  ],
+  "differing_field_count": 2,
+  "differing_fields": [
+    {
+      "field": "state_0960",
+      "diff_count": 159,
+      "total_frames": 161,
+      "all_frames_differ": false,
+      "first_diff_frame": 2050,
+      "last_diff_frame": 2208,
+      "unique_values_a": [
+        0
+      ],
+      "unique_values_b": [
+        0,
+        32768
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 0,
+          "value_b": 32768,
+          "count": 159
+        }
+      ]
+    },
+    {
+      "field": "dp_0008",
+      "diff_count": 1,
+      "total_frames": 161,
+      "all_frames_differ": false,
+      "first_diff_frame": 2195,
+      "last_diff_frame": 2195,
+      "unique_values_a": [
+        0,
+        32,
+        3496,
+        5376
+      ],
+      "unique_values_b": [
+        0,
+        32,
+        3496,
+        5376
+      ],
+      "constant_a_over_window": false,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 3496,
+          "value_b": 0,
+          "count": 1
+        }
+      ]
+    }
+  ],
+  "categories": {
+    "stable_constant_window_differences": [],
+    "stable_all_frame_differences": [],
+    "intermittent_constant_pair_differences": [
+      "state_0960",
+      "dp_0008"
+    ],
+    "intermittent_mixed_differences": []
+  }
+}
