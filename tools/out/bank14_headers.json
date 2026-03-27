@@ -1,0 +1,122 @@
+[
+  {
+    "offset": 0,
+    "pattern": "26fb",
+    "header": {
+      "marker": "26FB",
+      "header_bytes": "26fb004100040008208a164b56e30241",
+      "field_be_03": 16640,
+      "field_be_06": 8
+    },
+    "index": 0,
+    "next_offset": 4606,
+    "span": 4606
+  },
+  {
+    "offset": 4606,
+    "pattern": "26fb",
+    "header": {
+      "marker": "26FB",
+      "header_bytes": "26fb0041000400082089364b5440c090",
+      "field_be_03": 16640,
+      "field_be_06": 8
+    },
+    "index": 1,
+    "next_offset": 9256,
+    "span": 4650
+  },
+  {
+    "offset": 9256,
+    "pattern": "26fb",
+    "header": {
+      "marker": "26FB",
+      "header_bytes": "26fb0042800500085094364b54e34281",
+      "field_be_03": 17024,
+      "field_be_06": 8
+    },
+    "index": 2,
+    "next_offset": 14055,
+    "span": 4799
+  },
+  {
+    "offset": 14055,
+    "pattern": "42fb",
+    "header": {
+      "marker": "42FB",
+      "header_bytes": "42fb0007066f000706681569001c6a69",
+      "field_be_02": 7,
+      "field_be_04": 1647,
+      "declared_output_span": 1798
+    },
+    "index": 3,
+    "next_offset": 14428,
+    "span": 373
+  },
+  {
+    "offset": 14428,
+    "pattern": "26fb",
+    "header": {
+      "marker": "26FB",
+      "header_bytes": "26fb000d0004006824b4d26611243218",
+      "field_be_03": 3328,
+      "field_be_06": 104
+    },
+    "index": 4,
+    "next_offset": 16421,
+    "span": 1993
+  },
+  {
+    "offset": 16421,
+    "pattern": "42fb",
+    "header": {
+      "marker": "42FB",
+      "header_bytes": "42fb002ac0a4002ac00d7a1200002512",
+      "field_be_02": 42,
+      "field_be_04": 49316,
+      "declared_output_span": 10944
+    },
+    "index": 5,
+    "next_offset": 20873,
+    "span": 4452
+  },
+  {
+    "offset": 20873,
+    "pattern": "42fb",
+    "header": {
+      "marker": "42FB",
+      "header_bytes": "42fb0028409e002840128c2900003229",
+      "field_be_02": 40,
+      "field_be_04": 16542,
+      "declared_output_span": 10304
+    },
+    "index": 6,
+    "next_offset": 25191,
+    "span": 4318
+  },
+  {
+    "offset": 25191,
+    "pattern": "26fb",
+    "header": {
+      "marker": "26FB",
+      "header_bytes": "26fb0007060500e157d649250981b610",
+      "field_be_03": 1798,
+      "field_be_06": 225
+    },
+    "index": 7,
+    "next_offset": 26366,
+    "span": 1175
+  },
+  {
+    "offset": 26366,
+    "pattern": "26fb",
+    "header": {
+      "marker": "26FB",
+      "header_bytes": "26fb0017c004002f89d33495444d8cc2",
+      "field_be_03": 6080,
+      "field_be_06": 47
+    },
+    "index": 8,
+    "next_offset": 32768,
+    "span": 6402
+  }
+]

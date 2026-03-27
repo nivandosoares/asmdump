@@ -1,0 +1,435 @@
+{
+  "total_hits": 12,
+  "dropped_hits": 0,
+  "unique_sources": 12,
+  "bank_counts": {
+    "00": 1,
+    "02": 1,
+    "04": 7,
+    "0E": 1,
+    "1A": 2
+  },
+  "marker_counts": {
+    "26FB": 6,
+    "42FB": 6
+  },
+  "caller_counts": {
+    "01:A043": 1,
+    "01:A061": 1,
+    "01:A9BD": 5,
+    "01:A9E1": 5
+  },
+  "bank30_caller_counts": {},
+  "l00a9_index_counts": {
+    "L00A9A0:0": 1,
+    "L00A9A0:10": 1,
+    "L00A9A0:4": 1,
+    "L00A9A0:6": 1,
+    "L00A9A0:7": 1,
+    "L00A9CB:0": 1,
+    "L00A9CB:10": 1,
+    "L00A9CB:4": 1,
+    "L00A9CB:6": 1,
+    "L00A9CB:7": 1
+  },
+  "l00a9_bank30_index_counts": {},
+  "l00a9_source_match_counts": {
+    "true": 10,
+    "false": 0
+  },
+  "sources": [
+    {
+      "source_linear": 46770,
+      "source_snes": "00:B6B2",
+      "source_bank": 0,
+      "source_addr": 46770,
+      "source_marker": "42FB",
+      "source_marker_word": 17147,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 1304,
+      "last_frame": 1304,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 193823,
+      "source_snes": "02:F51F",
+      "source_bank": 2,
+      "source_addr": 62751,
+      "source_marker": "42FB",
+      "source_marker_word": 17147,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 81,
+      "last_frame": 81,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 294912,
+      "source_snes": "04:8000",
+      "source_bank": 4,
+      "source_addr": 32768,
+      "source_marker": "42FB",
+      "source_marker_word": 17147,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 79,
+      "last_frame": 79,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 295606,
+      "source_snes": "04:82B6",
+      "source_bank": 4,
+      "source_addr": 33462,
+      "source_marker": "42FB",
+      "source_marker_word": 17147,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 626,
+      "last_frame": 626,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 296329,
+      "source_snes": "04:8589",
+      "source_bank": 4,
+      "source_addr": 34185,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 629,
+      "last_frame": 629,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 301805,
+      "source_snes": "04:9AED",
+      "source_bank": 4,
+      "source_addr": 39661,
+      "source_marker": "42FB",
+      "source_marker_word": 17147,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 955,
+      "last_frame": 955,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 302069,
+      "source_snes": "04:9BF5",
+      "source_bank": 4,
+      "source_addr": 39925,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 957,
+      "last_frame": 957,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 311063,
+      "source_snes": "04:BF17",
+      "source_bank": 4,
+      "source_addr": 48919,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 1203,
+      "last_frame": 1203,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 312375,
+      "source_snes": "04:C437",
+      "source_bank": 4,
+      "source_addr": 50231,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 1211,
+      "last_frame": 1211,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 954878,
+      "source_snes": "0E:91FE",
+      "source_bank": 14,
+      "source_addr": 37374,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 1310,
+      "last_frame": 1310,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 1753496,
+      "source_snes": "1A:C198",
+      "source_bank": 26,
+      "source_addr": 49560,
+      "source_marker": "42FB",
+      "source_marker_word": 17147,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 1283,
+      "last_frame": 1283,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "source_linear": 1754458,
+      "source_snes": "1A:C55A",
+      "source_bank": 26,
+      "source_addr": 50522,
+      "source_marker": "26FB",
+      "source_marker_word": 9979,
+      "source_provenance": "unclassified",
+      "source_known_id": null,
+      "count": 1,
+      "first_frame": 1288,
+      "last_frame": 1288,
+      "top_destinations": [
+        {
+          "destination": "7E:2000",
+          "count": 1
+        }
+      ],
+      "top_main_callbacks": [
+        {
+          "callback": "00:8029",
+          "count": 1
+        }
+      ]
+    }
+  ],
+  "bank30": {
+    "known_candidates": [
+      {
+        "id": "bank30_42fb_9681",
+        "source_linear": 2004609,
+        "source_snes": "1E:9681",
+        "marker": "42FB",
+        "provenance": "candidate",
+        "note": "zero-output sentinel candidate",
+        "hit_count": 0,
+        "first_frame": null,
+        "last_frame": null
+      },
+      {
+        "id": "bank30_67fb_da96",
+        "source_linear": 2022038,
+        "source_snes": "1E:DA96",
+        "marker": "67FB",
+        "provenance": "candidate",
+        "note": "large 67FB chunk with overlapping marker window",
+        "hit_count": 0,
+        "first_frame": null,
+        "last_frame": null
+      },
+      {
+        "id": "bank30_26fb_df6c",
+        "source_linear": 2023276,
+        "source_snes": "1E:DF6C",
+        "marker": "26FB",
+        "provenance": "table-confirmed",
+        "note": "referenced by bank1 helper pointer table",
+        "hit_count": 0,
+        "first_frame": null,
+        "last_frame": null
+      },
+      {
+        "id": "bank30_26fb_e039",
+        "source_linear": 2023481,
+        "source_snes": "1E:E039",
+        "marker": "26FB",
+        "provenance": "table-confirmed",
+        "note": "referenced by bank1 helper pointer table",
+        "hit_count": 0,
+        "first_frame": null,
+        "last_frame": null
+      },
+      {
+        "id": "bank30_26fb_e73f",
+        "source_linear": 2025279,
+        "source_snes": "1E:E73F",
+        "marker": "26FB",
+        "provenance": "table-confirmed",
+        "note": "referenced by bank1 helper pointer table",
+        "hit_count": 0,
+        "first_frame": null,
+        "last_frame": null
+      },
+      {
+        "id": "bank30_26fb_e800",
+        "source_linear": 2025472,
+        "source_snes": "1E:E800",
+        "marker": "26FB",
+        "provenance": "table-confirmed",
+        "note": "referenced by bank1 helper pointer table",
+        "hit_count": 0,
+        "first_frame": null,
+        "last_frame": null
+      },
+      {
+        "id": "bank30_67fb_e91f",
+        "source_linear": 2025759,
+        "source_snes": "1E:E91F",
+        "marker": "67FB",
+        "provenance": "candidate",
+        "note": "current decoder fails with source exhaustion",
+        "hit_count": 0,
+        "first_frame": null,
+        "last_frame": null
+      },
+      {
+        "id": "bank30_26fb_ee7f",
+        "source_linear": 2027135,
+        "source_snes": "1E:EE7F",
+        "marker": "26FB",
+        "provenance": "table-confirmed",
+        "note": "referenced by bank1 helper pointer table",
+        "hit_count": 0,
+        "first_frame": null,
+        "last_frame": null
+      }
+    ],
+    "unknown_sources": []
+  }
+}

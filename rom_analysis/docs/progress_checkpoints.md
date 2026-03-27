@@ -10,7 +10,7 @@ next gate needed to advance.
 | Lane | Status | Completion read |
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; registry tightening now closes `9681` as `sentinel-control` and `E91F` as `nested-invalid-marker`; active unresolved queue remains `EE7F` and `DA96` |
-| Lane 2: Mesen tile/sprite/tilemap design handoff | active | resume from `rom_analysis/docs/intro_00_8029_next_agent_handoff.md`; extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract builders now also merge that activity layer directly, the follow-up `1102..1117` compare summary proves the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, the new `1118..1125` continuation note extends that exact no-DMA surface past the old headless edge, the next sampled compare block now closes the same exact surface through `1133`, the wider `1164..1172` boundary window already proved the next later change is a producer-side reactivation rather than a callback switch, a new blob-cycle report now ties that reactivation to a concrete ownership path `01:B6E3 -> 01:9DC6 -> 00:95BD -> $096A/$0700 -> OAMDATA` while proving every sampled direct `VMDATA` burst in `1134..1200` matches the same `AA10/AB58/ACA0` ROM blob as the paired `DMA0` source and alternates over `VMADD = 0x4920/0x49A0`, and the previously open `$1C7C` naming frontier is now closed by rendered descriptor rows `11..14`: `Desert Blast - Easy`, `City Bound - Medium`, `East Coast - Hard`, `West Coast - Hardest`; normalized front-end row previews now also sharpen the remaining car-facing read: rows `8..10` decode to a three-phase rolling-tire helper rather than a name-bearing label set, rows `0x15..0x1B` decode to control/sound menu text (`Brake`, `Throttle`, `Horn`, `Upshift`, `Downshift`, `Steering`, `Pause`, `stereo`), the `01:9C77` per-car bases now calibrate to Porsche 959 / Lamborghini Diablo / Ferrari F40 OBJ catalogs, and a stable frame-`1500` car-select render keeps the `Porsche 959` title/info box intact without OAM, so the naming hunt should now move to BG/tilemap/string provenance rather than the per-car OBJ catalogs; short-force callback probes still show the next headless limit clearly: after one real `01:B1F9` entry at frame `1201`, `01:9568/01:95AD` stay pinned as `active_main` through frame `2199` with no `7E:096C..0971` writes and no exec hit at `01:B226/B638/B6A3/B6E3/B755/01:9D69/02:9016/02:8F3C`, so direct-force callback promotion remains low-yield unless a richer selector/savestate capture appears. |
+| Lane 2: Mesen tile/sprite/tilemap design handoff | active | resume from `rom_analysis/docs/intro_00_8029_next_agent_handoff.md`; extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract builders now also merge that activity layer directly, the follow-up `1102..1117` compare summary proves the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, the new `1118..1125` continuation note extends that exact no-DMA surface past the old headless edge, the next sampled compare block now closes the same exact surface through `1133`, the wider `1164..1172` boundary window already proved the next later change is a producer-side reactivation rather than a callback switch, a new blob-cycle report now ties that reactivation to a concrete ownership path `01:B6E3 -> 01:9DC6 -> 00:95BD -> $096A/$0700 -> OAMDATA` while proving every sampled direct `VMDATA` burst in `1134..1200` matches the same `AA10/AB58/ACA0` ROM blob as the paired `DMA0` source and alternates over `VMADD = 0x4920/0x49A0`, and the previously open `$1C7C` naming frontier is now closed by rendered descriptor rows `11..14`: `Desert Blast - Easy`, `City Bound - Medium`, `East Coast - Hard`, `West Coast - Hardest`; normalized front-end row previews now also sharpen the remaining car-facing read: rows `8..10` decode to a three-phase rolling-tire helper rather than a name-bearing label set, rows `0x15..0x1B` decode to control/sound menu text (`Brake`, `Throttle`, `Horn`, `Upshift`, `Downshift`, `Steering`, `Pause`, `stereo`), the `01:9C77` per-car bases now calibrate to Porsche 959 / Lamborghini Diablo / Ferrari F40 OBJ catalogs, a stable frame-`1500` car-select render keeps the `Porsche 959` title/info box intact without OAM, and the new helper-provenance artifact now anchors that visible lower-screen BG2 surface to helper bundle `10`: `L00A9A0 00:B6B2 -> VRAM 0x1000` for the live tilemap base and `L00A9CB 0E:91FE -> VRAM 0x3000` for the live CHR base, leaving the remaining gap as text/payload ownership inside that helper bundle rather than coarse BG-vs-OBJ provenance; short-force callback probes still show the next headless limit clearly: after one real `01:B1F9` entry at frame `1201`, `01:9568/01:95AD` stay pinned as `active_main` through frame `2199` with no `7E:096C..0971` writes and no exec hit at `01:B226/B638/B6A3/B6E3/B755/01:9D69/02:9016/02:8F3C`, so direct-force callback promotion remains low-yield unless a richer selector/savestate capture appears. |
 | Lane 3: Gameplay-era frame archaeology | active | refreshed sweep `v2_current` keeps `b_hold` as the only dynamic seed lane; visible-phase scanline sampling now explains the screenshot-vs-end-frame split, the queue-cursor equalization path is directly observed through frames `90..92`, and the remaining edge is the frame-`91` `0x14B8` burst plus the frame-`92` reset while the active `0600` queue stays empty |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
@@ -4447,6 +4447,64 @@ Next best step:
 - use the repeatable frame-`1500` schedule as the new calibration anchor
 - trace the BG/tilemap/CHR provenance for the `Porsche 959` box and info panel
 - stop mining `1A:8000/1A:97D8/11:A578` as if they were name-label tables
+
+### CP-98: frame-1500 BG2 provenance lands on helper bundle `10`
+
+- added a small bank-1 helper provenance builder:
+  - `tools/build_bank1_helper_provenance.py`
+- promoted the frame-`1500` design-facing artifacts needed for the read:
+  - `tools/out/design_frame1500_car_select/design_pack.json`
+  - `tools/out/visual_contract_frame1500_car_select.json`
+  - `tools/out/car_select_frame1500_probe_repo/td2_boot_probe.json`
+  - `tools/out/car_select_frame1500_probe_repo/td2_boot_probe_l001210_exec.json`
+- added frame-local provenance outputs:
+  - `rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.json`
+  - `rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md`
+- bounded validation:
+  - `python3 tools/build_mesen_design_pack.py /tmp/car_select_frame_01500 tools/out/design_frame1500_car_select --clean-out`
+  - `python3 tools/build_mesen_visual_contract.py tools/out/design_frame1500_car_select tools/out/visual_contract_frame1500_car_select.json`
+  - `MESEN_BIN=<repo-compatible Mesen build> MESEN_TIMEOUT_SECONDS=120 TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/car_select_frame1500_probe_repo/td2_boot_probe TD2_BOOT_PROBE_TOTAL_FRAMES=1501 TD2_BOOT_PROBE_INPUT_WINDOWS='1200:start;1280:start' TD2_BOOT_PROBE_TRACE_L001210=1 TD2_BOOT_PROBE_L001210_MAX_HITS=4096 ./validation/run_mesen_probe_boot.sh`
+  - `python3 tools/extract_compression_header_manifest.py game.smc --bank 0 --json-out tools/out/bank0_headers.json`
+  - `python3 tools/extract_compression_header_manifest.py game.smc --bank 14 --json-out tools/out/bank14_headers.json`
+  - `python3 tools/validate_td2_chunks.py game.smc --bank 0 --headers-json tools/out/bank0_headers.json --json-out tools/out/bank0_chunk_validation.json`
+  - `python3 tools/validate_td2_chunks.py game.smc --bank 14 --headers-json tools/out/bank14_headers.json --json-out tools/out/bank14_chunk_validation.json`
+  - `python3 -m py_compile tools/build_bank1_helper_provenance.py`
+  - `python3 tools/build_bank1_helper_provenance.py game.smc tools/out/design_frame1500_car_select tools/out/car_select_frame1500_probe_repo/td2_boot_probe.json tools/out/car_select_frame1500_probe_repo/td2_boot_probe_l001210_exec.json rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.json --chunk-validation tools/out/bank0_chunk_validation.json --chunk-validation tools/out/bank14_chunk_validation.json --markdown-out rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md`
+- observed result:
+  - isolating the live frame proves `BG1` is only the wallpaper strip while `BG2` owns the entire lower-screen title/info surface
+  - the visible nonzero `BG2` window spans screen pixels `0..255 x 120..223`
+  - the matching frame-`1500` probe state is `$0202/$0204/$0208/$020A/$0054 = 1/3/13/$9CC3/136`
+  - the last matching helper-trace hits before frame `1500` are:
+    - frame `1304`: `L00A9A0`, helper index `10`, source `00:B6B2`
+    - frame `1310`: `L00A9CB`, helper index `10`, source `0E:91FE`
+  - helper bundle `10` stages:
+    - `L00A9A0 00:B6B2 -> VRAM 0x1000`
+    - `L00A9CB 0E:91FE -> VRAM 0x3000`
+    - `L00A9F2 02:FBF3 -> CGRAM 0xC0`
+  - those VRAM destinations match the live frame exactly:
+    - `BG2 tilemapBaseWords = 0x1000`
+    - `BG2 chrBaseWords = 0x3000`
+  - validation status now closes the coarse source read:
+    - `00:B6B2` validates as an `ok` `42FB` chunk (`4102` bytes out, `1543` bytes consumed)
+    - `0E:91FE` reproduces the known helper-bundle partial `26FB` frontier (`13111` bytes actual vs `16640` declared), so the CHR anchor is real even though strict validation still reports `fail`
+- practical reading:
+  - the frame-`1500` car-name/info panel is no longer just “some BG surface”
+  - its live tilemap/CHR base pair now lands on the same helper bundle `10`
+    used by the selector-state runtime path
+  - the remaining gap is narrower:
+    - identify which part of helper bundle `10` owns the actual title/info
+      strings and panel glyphs
+    - explain how the runtime composition uses that bundle after the last
+      observed `1304/1310` decompressions
+
+Next best step:
+
+- trace the visible `Porsche 959` title/info glyphs inside helper bundle `10`,
+  not in the `01:9C77` OBJ catalogs
+- split the remaining ownership question across:
+  - `00:B6B2` paged tilemap/layout payload
+  - `0E:91FE` partial bulk CHR payload
+  - `02:FBF3` palette payload
 
 ## Next Advancement Gates
 

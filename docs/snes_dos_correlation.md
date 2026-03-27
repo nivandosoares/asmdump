@@ -175,14 +175,18 @@ Relevant DOS contracts:
   - A live car-select capture at frame `1500` still shows the `Porsche 959`
     title box and info panel when rendered without OAM, while the car art only
     returns when OAM is composed back in.
+  - [rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.json](/home/nivando-soares/asmdump/rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.json)
+    now ties that live lower-screen surface to helper bundle `10`:
+    - `L00A9A0 00:B6B2 -> VRAM 0x1000` matches the live `BG2` tilemap base
+    - `L00A9CB 0E:91FE -> VRAM 0x3000` matches the live `BG2` CHR base
 - Notes:
   - The strongest remaining gap is now the actual car-name text surface, not
     whether rows `8..10` themselves are names.
-  - The actual title/info box is now better read as a BG surface than as an
-    OBJ descriptor row family.
+  - The actual title/info box is now better read as a helper-backed `BG2`
+    surface than as an OBJ descriptor row family.
   - The raw helper assets for indices `9..11` are now reachable through the
-    partial-bulk extractor; the remaining gap is runtime composition, not raw
-    decode reachability.
+    partial-bulk extractor; the remaining gap is the exact text/payload path
+    inside helper bundle `10`, not raw decode reachability.
 
 ### CLAIM AUDIT
 

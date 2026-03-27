@@ -1,0 +1,105 @@
+{
+  "schema": "td2.bank1_helper_provenance.v1",
+  "frame_number": 1500,
+  "layer": {
+    "name": "bg2",
+    "bgMode": 1,
+    "tilemapBaseWords": 4096,
+    "chrBaseWords": 12288,
+    "enabledOnMain": true,
+    "enabledOnSub": false,
+    "bpp": 4
+  },
+  "visible_window": {
+    "screenStartTileX": 0,
+    "screenStartTileY": 63,
+    "screenWidthTiles": 32,
+    "screenHeightTiles": 28,
+    "nonZeroScreenTileCount": 416,
+    "nonZeroTileIndexMin": 1,
+    "nonZeroTileIndexMax": 217,
+    "nonZeroPaletteIndices": [
+      0
+    ],
+    "nonZeroBoundingBox": {
+      "screenTileLeft": 0,
+      "screenTileTop": 15,
+      "screenTileRight": 31,
+      "screenTileBottom": 27,
+      "screenPixelLeft": 0,
+      "screenPixelTop": 120,
+      "screenPixelRight": 255,
+      "screenPixelBottom": 223
+    }
+  },
+  "probe_frame": {
+    "state_0202": 1,
+    "state_0204": 3,
+    "state_0208": 13,
+    "state_020a": 40131,
+    "dp_0054": 136
+  },
+  "recent_hits": {
+    "a9a0": {
+      "frame": 1304,
+      "source_snes": "00:B6B2",
+      "table_index": 10,
+      "frame_delta": 196
+    },
+    "a9cb": {
+      "frame": 1310,
+      "source_snes": "0E:91FE",
+      "table_index": 10,
+      "frame_delta": 190
+    }
+  },
+  "helper_bundle": {
+    "helper_index": 10,
+    "a9a0": {
+      "table": "L00A9A0",
+      "source_bank": 0,
+      "source_addr": 46770,
+      "source_snes": "00:B6B2",
+      "compression": "42FB",
+      "validation": {
+        "source_validation": "tools/out/bank0_chunk_validation.json",
+        "status": "ok",
+        "marker": "42FB",
+        "output_size": 4102,
+        "consumed_bytes": 1543,
+        "error": null
+      },
+      "apply_vram_word_addr": 4096
+    },
+    "a9cb": {
+      "table": "L00A9CB",
+      "source_bank": 14,
+      "source_addr": 37374,
+      "source_snes": "0E:91FE",
+      "compression": "26FB",
+      "validation": {
+        "source_validation": "tools/out/bank14_chunk_validation.json",
+        "status": "fail",
+        "marker": "26FB",
+        "output_size": null,
+        "consumed_bytes": null,
+        "error": "26FB decode length mismatch: got 13111 bytes, expected 16640"
+      },
+      "apply_vram_word_addr": 12288
+    },
+    "a9f2": {
+      "table": "L00A9F2",
+      "source_bank": 2,
+      "source_addr": 64499,
+      "source_snes": "02:FBF3",
+      "compression": "raw",
+      "validation": null,
+      "apply_cgram_dest": 32960,
+      "palette_color_count": 48
+    }
+  },
+  "matches": {
+    "tilemapBaseMatchesA9A0": true,
+    "chrBaseMatchesA9CB": true
+  }
+}

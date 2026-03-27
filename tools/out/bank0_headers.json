@@ -1,0 +1,44 @@
+[
+  {
+    "offset": 12459,
+    "pattern": "42fb",
+    "header": {
+      "marker": "42FB",
+      "header_bytes": "42fb00100601001006092b0a00000b0a",
+      "field_be_02": 16,
+      "field_be_04": 1537,
+      "declared_output_span": 4102
+    },
+    "index": 0,
+    "next_offset": 14002,
+    "span": 1543
+  },
+  {
+    "offset": 14002,
+    "pattern": "42fb",
+    "header": {
+      "marker": "42FB",
+      "header_bytes": "42fb00100602001006092d0a00000b0a",
+      "field_be_02": 16,
+      "field_be_04": 1538,
+      "declared_output_span": 4102
+    },
+    "index": 1,
+    "next_offset": 15546,
+    "span": 1544
+  },
+  {
+    "offset": 15546,
+    "pattern": "42fb",
+    "header": {
+      "marker": "42FB",
+      "header_bytes": "42fb0010061f001006142e1500001715",
+      "field_be_02": 16,
+      "field_be_04": 1567,
+      "declared_output_span": 4102
+    },
+    "index": 2,
+    "next_offset": 32768,
+    "span": 17222
+  }
+]

@@ -20,6 +20,9 @@ Current Sprint 0 tooling:
 - `build_mesen_design_pack.py`: repack a raw `mesen_ppu_extract` frame folder into a stable design-team bundle (`layers/`, `tilemaps/`, `tilesets/`, `sprites/`, `palette/`, `raw/`) plus a `design_pack.json` manifest
 - `build_mesen_design_pack_range.py`: batch `build_mesen_design_pack.py` over `frame_*` directories and emit `design_pack_range.json` for timeline review
 - `build_tilemap_chunk_provenance.py`: correlates design-pack tile-index ranges with `L001210` runtime chunk hits and chunk-validation metadata into `frame/layer/tile-index-range -> candidate ROM chunk` tables
+- `build_bank1_helper_provenance.py`: correlates one design-pack frame with bank1 `L00A9A0/L00A9CB/L00A9F2` helper-bundle sources using a matching boot probe plus `L001210` trace
+- `build_mesen_visual_contract.py`: promotes one design-pack frame into a translation-facing visual contract that separates BG vs OBJ usage, summarizes producer-side write traces, and now also captures the matching probe frame's callback/state snapshot when `--probe-json` is supplied
+- `build_mesen_visual_contract_range.py`: batches those visual contracts across `frame_*` or `design_frame*` directories, emits a compact range index, and can now map per-frame probes via `--probe-pattern` so the range summary includes callback-family/state progression rather than only per-frame files
 - `extract_mesen_scene_range.py`: batches `mesen_ppu_extract` across a frame range, writes per-frame scene folders, and emits a collapsed `sequence.txt` manifest for the SDL runtime
 - `build_scene_sequence_manifest.py`: converts flat Mesen range dumps into runtime-ready `sequence.txt` manifests, either as `snes_bg` entries or exact sampled `image` entries from screenshots; when `oam.bin` exists, it now carries it through as an optional fourth `snes_bg` path
 - `build_indexed_palette_animation.py`: collapses a screenshot-backed frame range into one indexed image plus a palette timeline and can emit a one-entry `indexed_anim` sequence manifest
@@ -29,6 +32,7 @@ Current Sprint 0 tooling:
 - `render_mesen_snes_bg.py`: composes a 256x224 preview directly from Mesen VRAM/CGRAM/state dumps, including Mode 7 and optional OBJ composition from OAM dumps
 - `check_obj_vertical_flip.py`: builds a minimal 16x32 vertically mirrored OBJ fixture and checks the Python renderer plus SDL runtime against one golden PPM for the width-vs-height mirror regression
 - `check_bg_layer_priority.py`: builds a minimal mode-0 four-layer scene and checks BG4 support plus tile-priority ordering against one golden PPM in both the Python renderer and SDL runtime
+- `terminal_bot.py`: provides a persistent PTY-backed shell session helper for bot-style automation, including session start/list/status, stateful `cd`/`export`, raw input writes, `Ctrl-C`, and log streaming from a shared session log
 - `clean_generated_artifacts.py`: removes always-safe build output, scratch untracked `tools/out` runs (`*smoke*`, `*makecheck*`, `*designtest*`, `tmp*`, `test_*`), debugger `game.cdl` junk, and other disposable generated clutter; it skips any tracked path, and `tools/out/` itself is git-ignored by default, so promoting a new artifact from that tree is now an explicit `git add -f` decision
 - `summarize_mode7_trace.py`: summarizes the tracked register-write traces emitted by `mesen_probe_boot.lua` for Mode 7/TMAIN or DMA/HDMA windows
 - `summarize_l001210_trace.py`: summarizes `L001210` dispatcher execution hits (`$0C/$0E/$10`) captured by `mesen_probe_boot.lua` for chunk provenance, including caller-site coverage and `L00A9*` table-index usage when present
@@ -73,6 +77,9 @@ python3 tools/build_mode7_source_scene.py game.smc tools/out/bank1_mode7_visible
 python3 tools/build_mesen_design_pack.py tools/out/mesen_frame300 tools/out/design_frame300 --clean-out
 python3 tools/build_mesen_design_pack_range.py tools/out/mesen_range_1086_1093_v1 tools/out/design_mesen_range_1086_1093_v1 --clean-out
 python3 tools/build_tilemap_chunk_provenance.py tools/out/design_mesen_range_1086_1093_v1 tools/out/td2_boot_probe_l001210_exec.json rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.jsonc --chunk-validation tools/out/bank13_chunk_validation.json --markdown-out rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md
+python3 tools/build_bank1_helper_provenance.py game.smc tools/out/design_frame1500_car_select tools/out/car_select_frame1500_probe_repo/td2_boot_probe.json tools/out/car_select_frame1500_probe_repo/td2_boot_probe_l001210_exec.json rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.json --chunk-validation tools/out/bank0_chunk_validation.json --chunk-validation tools/out/bank14_chunk_validation.json --markdown-out rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md
+python3 tools/build_mesen_visual_contract.py tools/out/design_frame998 tools/out/visual_contract_frame998_live_probe.json --probe-json tools/out/visual_contract_probe_998_live/td2_boot_probe.json
+python3 tools/build_mesen_visual_contract_range.py tools/out tools/out/visual_contract_range_986_1093_live --frame-glob 'design_frame*' --probe-pattern 'tools/out/visual_contract_probe_{frame}_live/td2_boot_probe.json' --clean-out
 python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 654 --end-frame 710 --step 4 --out-dir tools/out/ballistic_sequence --ld-library-path /path/to/mesen/release
 python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 978 --end-frame 982 --step 4 --out-dir tools/out/intro_native_978 --ld-library-path /path/to/mesen/release
 python3 tools/extract_mesen_scene_range.py --rom game.smc --start-frame 7051 --end-frame 7051 --step 1 --out-dir tools/out/mesen_range_7051_inputfix_v1 --ld-library-path /path/to/mesen/release --input-windows '6800:start;6900-6920:start,a' --frame-timeout-seconds 180
@@ -102,6 +109,14 @@ python3 tools/run_l001210_probe_matrix.py --out-dir tools/out/l001210_probe_matr
 python3 tools/build_bank30_chunk_registry.py tools/out/bank30_headers.json tools/out/bank30_chunk_validation.json tools/out/td2_boot_probe_l001210_summary.json tools/out/bank30_chunk_registry.json --markdown-out tools/out/bank30_chunk_registry.md
 python3 tools/check_regression_gates.py validation/regression_gates_intro.jsonc --render-dir port/build/regression_frames --json-out tools/out/regression_gates_intro_report.json
 python3 tools/validate_callback_contracts.py rom_analysis/docs/callback_state_contracts.jsonc tools/out/td2_boot_probe.json --json-out tools/out/callback_state_contracts_report.json
+python3 tools/terminal_bot.py start --cwd .
+python3 tools/terminal_bot.py exec SESSION_ID -- pwd
+python3 tools/terminal_bot.py cd SESSION_ID tools
+python3 tools/terminal_bot.py setenv SESSION_ID DEMO value
+python3 tools/terminal_bot.py exec SESSION_ID -- 'printf "%s\n" "$DEMO"'
+python3 tools/terminal_bot.py exec SESSION_ID --stream -- 'python3 -c "import time; print(\"alpha\", flush=True); time.sleep(0.5); print(\"beta\", flush=True)"'
+python3 tools/terminal_bot.py interrupt SESSION_ID
+python3 tools/terminal_bot.py close SESSION_ID --force
 python3 tools/decompress_td2_chunk.py game.smc tools/out/bank7_42fb_8000.bin --bank 7 --addr 0x8000 --json-out tools/out/bank7_42fb_8000.json
 python3 tools/decompress_td2_chunk.py game.smc tools/out/bank7_26fb_817a.bin --bank 7 --addr 0x817A --json-out tools/out/bank7_26fb_817a.json
 python3 tools/decompress_td2_chunk.py game.smc tools/out/bank30_67fb_da96.bin --bank 30 --addr 0xDA96 --json-out tools/out/bank30_67fb_da96.json
@@ -148,6 +163,7 @@ Current environment note:
   when possible.
 - `make -C tools regression-gates REGRESSION_GATES_RENDER_DIR=../port/build/regression_frames`
 - `make -C tools callback-contracts-check`
+- `make -C tools terminal-bot-smoke`
 - `make -C tools track1-b-hold-cycle`
 - `make -C tools bank7-42fb0`
 - `make -C tools bank7-42fb0-preview`
@@ -203,11 +219,6 @@ Current practical reading for this tool:
 - its `GetTilemap` outputs are viewer-oriented layer renders, not a final composed screenshot
 - for frame `300`, the extracted PPU state lands on the expected credits scene state (`bgMode = 1`, `mainScreenLayers = 0x04`, `chrAddress = 0x2000/0x4000/0x6000`)
 - the frame-`300` `*_visible.ppm` outputs do not match the final screenshot pixel-for-pixel, so they should be treated as standalone layer assets, not as golden-frame replacements
-- late timed-input extraction is still environment-sensitive:
-  - the planned `7055` interior retry for scenario `6800:start;6900-6920:start,a`
-    timed out before the late input window on the current local bridge setup
-  - treat later-scene bridge extraction as compatibility-pinned work until a
-    known-good `Mesen`/`MesenCore.so` pair is re-established
 
 `build_mesen_design_pack.py` now adds inspect-and-draw outputs on top of those raw dumps:
 
@@ -374,10 +385,16 @@ The late attract bridge-visible builder artifacts now live in:
   - `tools/out/mesen_range_1086_1093_v1/sequence.txt` extends that same direct bridge-extracted continuation through frame `1093`
   - `tools/out/visible_mode7_1094_1101.json` captures the first visible-scanline `ppu.mode7.*` values for the next failing block
   - `tools/out/mesen_range_1094_1101_v1/frame_XXXXX/ppu_state_visible.json` are diagnostic sidecars patched from those visible samples
+  - `tools/out/post_1093_compare/summary.md` now measures the direct extracted
+    end-of-frame state against the visible surface across `1094..1101`
   - `tools/runtime_manifest_to_json.py` now turns the assembled runtime manifest into the JSON summary used by the intro bridge-visible pipeline, so extending these windows no longer needs embedded JSON blobs in `Makefile`
   - practical reading:
     - the visible-scanline Mode 7 values for `1094..1101` are now measurable and repeatable
-    - simply swapping those visible values onto the direct extracted frame states makes the mismatch much worse, so the blocker beyond `1093` is not solved by a bare `ppu_state` substitution
+    - `main_visible.ppm` is exactly the top `224` lines of `main.ppm` across the whole block
+    - simply swapping those visible values onto the direct extracted frame states makes the mismatch much worse:
+      - base render vs `main_visible.ppm`: `177..574` mismatched pixels
+      - visible-state render vs `main_visible.ppm`: `362..5930`
+    - so the blocker beyond `1093` is not solved by a bare `ppu_state` substitution
 
 The next milestone, the full first no-input attract loop, now lives in `tools/out/intro_loop*`:
 

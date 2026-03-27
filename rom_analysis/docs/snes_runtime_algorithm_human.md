@@ -68,8 +68,10 @@ already grounded in code reads, probes, or generated artifacts.
       Porsche 959, Lamborghini Diablo, and Ferrari F40 body/wheel/canopy
       animation pieces
     - a stable car-select frame at `1500` keeps the `Porsche 959` name box and
-      info panel even with OAM removed, so the actual car-name text surface is
-      now better read as BG/tilemap text and still has not been located in ROM
+      info panel even with OAM removed, and the current helper-provenance read
+      now lands that lower-screen `BG2` surface on helper bundle `10`
+      (`00:B6B2 -> VRAM 0x1000`, `0E:91FE -> VRAM 0x3000`), so the remaining
+      gap is the exact text/payload ownership inside that bundle
 12. After the front-end bundle is accepted and built, the strongest currently
     proven gameplay-facing corridor is still the bank-1 path that stages
     `02:9016` (main) and `02:8F3C` (NMI) at `01:902D..01:9034`. That corridor

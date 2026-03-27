@@ -41,7 +41,7 @@ DOS-driven SNES correlation pass.
 ### CLAIM AUDIT
 
 - Claim: `01:9C77` indexes three car-specific OBJ catalogs, while the visible
-  car-name/info box belongs to a separate BG surface.
+  car-name/info box belongs to a separate `BG2` helper-bundle path.
 - Classification: PROBABLE
 - Evidence:
   - `01:9C77` resolves the three per-car bases `1A:8000`, `1A:97D8`, and
@@ -56,11 +56,15 @@ DOS-driven SNES correlation pass.
     `Porsche 959` title box, prompt, and stats panel in a BG-only render from
     `tools/render_mesen_snes_bg.py`, while the car itself disappears without
     OAM and returns when OAM is composed.
+  - [rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.json](/home/nivando-soares/asmdump/rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.json)
+    now anchors that live lower-screen BG surface to helper bundle `10`:
+    - `L00A9A0 00:B6B2 -> VRAM 0x1000` for the live `BG2` tilemap base
+    - `L00A9CB 0E:91FE -> VRAM 0x3000` for the live `BG2` CHR base
 - Notes:
   - This reclassifies the per-car bases as animation/catalog surfaces for the
     visible car sprite, not as the car-name text source.
-  - The remaining naming hunt should now target the BG/tilemap/string path
-    that feeds the title/info box.
+  - The remaining naming hunt should now target the exact text/payload path
+    inside helper bundle `10`, not the coarse BG-vs-OBJ split.
 
 ### CLAIM AUDIT
 
@@ -157,8 +161,9 @@ DOS-driven SNES correlation pass.
   are nonzero, then rerun the boot probe to capture a richer selector block.
 - Capture live menu `TMAIN/BG1SC/BG2SC/BG12NBA` around the preview cycle so the
   clean one-shot helper builds can be compared against the real layer mix.
-- Use the now-repeatable frame-`1500` car-select window to trace the BG
-  tilemap/CHR provenance for the `Porsche 959` name box and info panel.
+- Use the frame-`1500` helper provenance anchor to split the remaining name-box
+  ownership across `00:B6B2` tilemap/layout, `0E:91FE` bulk CHR, and
+  `02:FBF3` palette payloads.
 - Trace the follow-up callback/composition path after the helper `9/10/11`
   bundle build to explain why helpers `10` and `11` stay blank in the current
   isolated-layer model.
