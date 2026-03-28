@@ -8,6 +8,7 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `rom_analysis/docs/progress_checkpoints.md`
 - `rom_analysis/docs/snes_runtime_algorithm_human.md`
 - `rom_analysis/docs/lane3_attract_demo_boundary.md`
+- `rom_analysis/docs/lane3_visual_annotation_template.md`
 - `tools/out/game11_seed_surface_audit/game11_seed_surface_audit.md`
 - `rom_analysis/maps/tracks/track1_seed_sweep_v3_ab_compare.md`
 - `rom_analysis/maps/tracks/track1_b_hold_scanline_recheck_0090_0093_current_seed.md`
@@ -16,6 +17,9 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
 - `rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
 - `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
+- `rom_analysis/maps/tracks/track1_live_race_plus30f_lab_backend_boundary.md`
+- `rom_analysis/docs/lane3_today_work_brief.md`
+- `rom_analysis/docs/lane3_visual_annotation_template.md`
 - `manual_artifacts/lane3/lane3_live_race_notes.txt`
 - `tools/out/lane3_live_race_mid_bg2_producer_summary.md`
 - `tools/out/lane3_live_race_slot2_boundary_summary.md`
@@ -89,6 +93,12 @@ This note is the explicit resume point for the next agent on Lane 3.
   - current tooling caveat:
     - headless `td2_boot_probe_frame.png` and `mesen_capture.lua` PNG output
       from these seeds is currently zero-byte; trust the JSON/state side first
+  - new backend-boundary caveat on `live_race_plus30f`:
+    - current absolute start frame is now anchored as `17495`
+    - current measured delta from `live_race_mid` (`16655`) is `840`, so the
+      filename `plus30f` is historical only
+    - current `labRunner` export attempts fail during frame-boundary
+      correction on that seed
 - the older deterministic power-on candidate is still relevant as the fallback
   comparison corridor:
   - base route:
@@ -167,6 +177,8 @@ This note is the explicit resume point for the next agent on Lane 3.
   visual evidence
   - if image export is needed, pivot to the lab backend or fix the screenshot
     path first
+- do not keep repeating blind `labRunner` frame guesses on `live_race_plus30f`
+  without using the now-known absolute start frame `17495`
 
 ## Exact Artifacts To Trust
 
@@ -204,6 +216,8 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `tools/out/lane3_live_race_slot2_vs_mid_probe_compare.md`
 - `tools/out/lane3_live_race_mid_bg2_producer_summary.json`
 - `tools/out/lane3_live_race_mid_bg2_producer_summary.md`
+- `rom_analysis/maps/tracks/track1_live_race_plus30f_lab_backend_boundary.md`
+- `rom_analysis/docs/lane3_today_work_brief.md`
 - `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
 - `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
 - `rom_analysis/maps/tracks/track1_live_race_vs_post9016_control.md`
@@ -301,11 +315,16 @@ The question is now narrower:
    - keep the `01:960D / 01:96A0 / 01:9809` split scheduler in scope while
      reading those producers
 6. If a second visible replicate becomes necessary, use the lab backend on
-   `live_race_plus30f` instead of reusing `slot2_extra`.
+   `live_race_plus30f` instead of reusing `slot2_extra`, but treat the current
+   boundary-correction failure as an active tooling bug rather than as a
+   ready-to-run export path.
 7. Treat the old power-on no-input `post9016` corridor as the control surface;
    use the `A` lane only if a richer fallback is needed later.
 8. Prefer bounded producer/OAM/HUD tracing over more screenshot volume:
    - the current screenshot path is still broken on the manual seeds
+9. If another dev is available today, use
+   `rom_analysis/docs/lane3_today_work_brief.md` as the working brief rather
+   than reconstructing the queue from multiple archaeology notes.
 
 ## Minimal Validation If Tooling Changes
 
