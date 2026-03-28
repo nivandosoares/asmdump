@@ -311,6 +311,14 @@ The question is now narrower:
 - the strongest current producer cluster is now narrowed:
   - inside `L01318D`, especially `02:B042 / 02:B05D / 02:B0B1 / 02:B0BD /
     02:B134`
+- the first static role split inside that cluster is now also closed:
+  - `02:B042` loads a per-entry variant word into `$26`
+  - `02:B05D`, `02:B0B1`, and `02:B0BD` are setup/math, not the final submit
+    points
+  - `02:B134` is the strongest current generic submit candidate because it
+    lands on `jsr L012BE2.w`
+  - a nearby alternate submit path also exists at `02:B101` via
+    `jsr L012D5A.w`
 - the remaining open questions are now semantic rather than structural:
   - which exact member of that cluster is the road-line builder versus support
     cursor math?
@@ -338,7 +346,10 @@ The question is now narrower:
    - `slot2_extra` is now a closed `00:8029` boundary/control seed and should
      not be used as a gameplay replicate
 5. Focus on the narrowed `L01318D` cluster first:
-   - `02:B042 / 02:B05D / 02:B0B1 / 02:B0BD / 02:B134`
+   - use the static role split note:
+     `rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md`
+   - prefer `L012BE2` and the alternate `L012D5A` branch over treating the old
+     five-PC list as if every member were an emitter
    - keep the `01:960D / 01:96A0 / 01:9809` split scheduler in scope while
      reading those producers
 6. If a second visible replicate becomes necessary, use the lab backend on
