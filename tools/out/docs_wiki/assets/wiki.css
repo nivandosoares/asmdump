@@ -1,14 +1,15 @@
 :root {
   color-scheme: light;
-  --bg: #f5f2ea;
-  --panel: #fffdf8;
-  --panel-border: #d4ccb9;
-  --ink: #2a241a;
-  --muted: #746a57;
-  --accent: #7b3f00;
-  --accent-soft: #eee2cf;
-  --code-bg: #f1ece3;
-  --shadow: 0 10px 30px rgba(42, 36, 26, 0.08);
+  --bg: #ffffff;
+  --panel: #ffffff;
+  --panel-border: #d7e0ea;
+  --ink: #15202b;
+  --muted: #526171;
+  --accent: #0b5cad;
+  --accent-soft: #eaf3ff;
+  --code-bg: #f4f8fb;
+  --code-ink: #10212f;
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
   --font-sans: "Georgia", "Times New Roman", serif;
   --font-mono: "SFMono-Regular", "Consolas", monospace;
 }
@@ -19,7 +20,7 @@
 
 body {
   margin: 0;
-  background: linear-gradient(180deg, #f7f4ee 0%, #efe8db 100%);
+  background: var(--bg);
   color: var(--ink);
   font-family: var(--font-sans);
   line-height: 1.55;
@@ -27,6 +28,12 @@ body {
 
 a {
   color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.12em;
+}
+
+a:hover {
+  color: #084784;
 }
 
 code,
@@ -37,15 +44,26 @@ pre {
 code {
   background: var(--code-bg);
   border-radius: 4px;
+  border: 1px solid #dbe6ef;
+  color: var(--code-ink);
   padding: 0.1rem 0.35rem;
 }
 
 pre {
   overflow-x: auto;
-  background: #201c17;
-  color: #f8f4ec;
+  background: #ffffff;
+  color: var(--code-ink);
+  border: 1px solid #dbe6ef;
   padding: 1rem;
   border-radius: 10px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+pre code {
+  background: transparent;
+  border: 0;
+  color: inherit;
+  padding: 0;
 }
 
 table {
@@ -65,13 +83,14 @@ td {
 
 th {
   background: var(--accent-soft);
+  color: var(--ink);
 }
 
 blockquote {
   margin: 1.25rem 0;
   padding: 0.2rem 1rem;
   border-left: 4px solid var(--accent);
-  background: #f7efe1;
+  background: #f5f9ff;
 }
 
 .layout {
@@ -88,7 +107,7 @@ blockquote {
   overflow-y: auto;
   padding: 1.5rem 1.25rem;
   border-right: 1px solid var(--panel-border);
-  background: rgba(255, 253, 248, 0.92);
+  background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(10px);
 }
 
@@ -227,7 +246,7 @@ blockquote {
   padding: 1rem;
   border: 1px solid var(--panel-border);
   border-radius: 14px;
-  background: linear-gradient(180deg, #fffefb 0%, #faf4ea 100%);
+  background: #ffffff;
 }
 
 .doc-card h3 {
@@ -289,12 +308,12 @@ blockquote {
   border: 1px solid var(--panel-border);
   border-radius: 12px;
   overflow: hidden;
-  background: #fffaf1;
+  background: #ffffff;
 }
 
 .artifact-card a {
   display: block;
-  background: #e9e0cf;
+  background: #f7fbff;
 }
 
 .artifact-card img {

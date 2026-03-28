@@ -82,6 +82,9 @@ next gate needed to advance.
 - Follow-up fix:
   - the wiki renderer now parses pipe-table separator rows correctly, so docs
     with Markdown tables no longer fall back to raw `| ... |` paragraph text
+  - the wiki theme now also keeps code blocks and inline code on a white,
+    high-contrast surface instead of the earlier dark code panel, which was
+    making some generated pages hard to read
 - SDL smoke read:
   - the current runtime renders the bridge-visible intro sequence through
     frame `1000`
