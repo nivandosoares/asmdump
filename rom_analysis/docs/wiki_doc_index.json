@@ -50,6 +50,23 @@
       ]
     },
     {
+      "id": "compression-bank30",
+      "title": "Compression And Bank30",
+      "description": "Bank30 decode provenance, unresolved queue closure, and `L001210` caller narrowing.",
+      "entries": [
+        {
+          "path": "rom_analysis/docs/bank30_decompression_report.md",
+          "label": "Bank30 Decompression",
+          "note": "Current registry-backed read of bank30 markers and the active unresolved queue."
+        },
+        {
+          "path": "rom_analysis/docs/bank30_b1f9_forced_lane_stall.md",
+          "label": "B1F9 Forced-Lane Stall",
+          "note": "Why the current headless `B1F9` forcing lane is low-yield for `EE7F`."
+        }
+      ]
+    },
+    {
       "id": "attract-intro",
       "title": "Attract And Intro",
       "description": "Late-attract, Mode 7, and tilemap provenance work. Keep these separate from menu and gameplay interpretation.",

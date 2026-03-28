@@ -98,6 +98,41 @@ next gate needed to advance.
   - gameplay parity is still not claimed by this smoke; the gameplay lane
     remains probe/capture-driven
 
+## Lane 1 `B1F9` Stall Update (`2026-03-28`)
+
+- New tooling:
+  - `tools/build_b1f9_stage_report.py`
+- New note:
+  - `rom_analysis/docs/bank30_b1f9_forced_lane_stall.md`
+- New generated artifacts:
+  - `tools/out/l001210_probe_matrix_v14_b1f9_stagetrace_report.json`
+  - `tools/out/l001210_probe_matrix_v14_b1f9_stagetrace_report.md`
+- Closed practical read:
+  - the forced `01:9568` / `01:95AD` lanes still reach `01:B1F9` once at
+    frame `1201`, but all `L001210` hits in those same scenarios occur before
+    that entry
+  - post-entry `L001210` hit count is `0` in both forced lanes
+  - `B1F9` stage counters also stay flat in both forced lanes:
+    - `B226 = 0`
+    - `B256 = 0`
+    - `B273 = 0`
+    - `B59B = 0`
+  - both lanes stay pinned through frame `2199` with:
+    - `state_1D10 = 0x4100`
+    - `state_09A8 = 2`
+    - `state_0960 = 0`
+    - lane-specific `active_main = 01:9568 / 01:95AD`
+  - static `bank1.asm` cross-check now closes why this matters:
+    - the unresolved `EE7F`-relevant dynamic index select lives only in the
+      `L00B1F9` prologue before the first `L00A9A0` call
+    - the later `L00B6A3/L00B6E3` surface is a separate worker loop, not a
+      second table-select/decompress phase
+- Practical implication:
+  - direct headless `B1F9` forcing is now a low-yield lane for `EE7F`
+  - the active unresolved queue remains `EE7F` / `DA96`, but the next useful
+    proving move should come from a real menu/live path or a different caller
+    family, not more widening of the same forced lane
+
 ## Execution Reset (2026-03-19)
 
 - The port plan now treats maintainability cleanup as a first-class execution
@@ -5894,6 +5929,15 @@ Current status:
   observed around the forced `01:B1F9` entry.
 - caller-stack proof now closes one ambiguity: the forced lane really is entering
   from `01:9568/01:95AD`.
+- the new consolidated stall report closes the remaining headless ambiguity in
+  that same lane:
+  - both forced lanes hit `01:B1F9` once at frame `1201`
+  - post-entry `L001210` hit count is `0`
+  - both lanes stay pinned through frame `2199` with `state_1D10 = 0x4100`,
+    `state_09A8 = 2`, `state_0960 = 0`
+  - static `L00B1F9` read now isolates the `EE7F`-relevant selector to the
+    prologue before the first `L00A9A0` call, so the later `L00B6A3/L00B6E3`
+    worker surface is no longer a plausible hidden fallback for index `32`
 - corrected late-window tracing plus static caller/routine reads now show a more
   specific next proving lane:
   - use manual debugger confirmation for the remaining `B1F9` question, or move

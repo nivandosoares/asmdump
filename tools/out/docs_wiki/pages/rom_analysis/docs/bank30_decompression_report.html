@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bank 30 Decompression Report | TD2 Archaeology Wiki</title>
+  <link rel="stylesheet" href="../../../assets/wiki.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="site-link" href="../../../index.html">TD2 Archaeology Wiki</a>
+      <p class="sidebar-note">Simple wiki-style index built from curated markdown sources.</p>
+      <section class="sidebar-group"><h3>Source Of Truth</h3><ul><li><a href="../../PORT_PLAN.html">Port Plan</a></li><li><a href="next_steps_roadmap.html">Next Steps Roadmap</a></li><li><a href="progress_checkpoints.html">Progress Checkpoints</a></li><li><a href="validation_gates.html">Validation Gates</a></li><li><a href="../../validation/README.html">Validation README</a></li><li><a href="../../tools/README.html">Tools README</a></li><li><a href="../../port/README.html">Port README</a></li><li><a href="../README.html">ROM Analysis README</a></li></ul></section><section class="sidebar-group"><h3>Compression And Bank30</h3><ul><li><a href="bank30_decompression_report.html">Bank30 Decompression</a></li><li><a href="bank30_b1f9_forced_lane_stall.html">B1F9 Forced-Lane Stall</a></li></ul></section><section class="sidebar-group"><h3>Attract And Intro</h3><ul><li><a href="intro_00_8029_next_agent_handoff.html">00:8029 Handoff</a></li><li><a href="intro_01_9fe5_window_986_1093.html">01:9FE5 Window 986..1093</a></li><li><a href="intro_01_9fe5_activity_trace_1094_1117.html">01:9FE5 Activity Trace</a></li><li><a href="intro_00_8029_mode7_blob_cycle_1134_1200.html">Mode 7 Blob Cycle 1134..1200</a></li><li><a href="../maps/tilemaps/mesen_range_1086_1093_provenance.html">Tilemap Provenance 1086..1093</a></li><li><a href="mesen_debugger_design_workbench.html">Mesen Design Workbench</a></li></ul></section><section class="sidebar-group"><h3>Front-End And Menu</h3><ul><li><a href="snes_runtime_algorithm_human.html">SNES Runtime Algorithm</a></li><li><a href="../maps/tilemaps/car_select_frame_1500_bg2_provenance.html">Frame 1500 BG2 Provenance</a></li><li><a href="../../tools/out/snes_frontend_top_menu_labels.html">Top Menu Labels</a></li><li><a href="../../tools/out/snes_frontend_rival_selection_grid.html">Rival Selection Grid</a></li><li><a href="../../tools/out/snes_select_opponent_organic_default_path.html">Organic Default Path</a></li><li><a href="../../tools/out/snes_frontend_select_opponent_mode_split.html">Select Opponent Mode Split</a></li></ul></section><section class="sidebar-group"><h3>Gameplay And Lane 3</h3><ul><li><a href="lane3_today_work_brief.html">Lane 3 Work Brief</a></li><li><a href="gameplay_default_rival_next_agent_handoff.html">Gameplay Handoff</a></li><li><a href="lane3_attract_demo_boundary.html">Attract Demo Boundary</a></li><li><a href="../maps/tracks/track1_live_gameplay_entry_route.html">Live Gameplay Entry Route</a></li><li><a href="../maps/tracks/track1_live_race_manual_seed_intake.html">Manual Seed Intake</a></li><li><a href="../maps/tracks/track1_live_race_manual_video_intake.html">Manual Video Intake</a></li><li><a href="../maps/tracks/track1_live_race_visible_layer_stack.html">Visible Layer Stack</a></li><li><a href="../maps/tracks/track1_live_race_bg2_producer_path.html">BG2 Producer Path</a></li><li><a href="../maps/tracks/track1_live_race_l01318d_static_role_split.html">L01318D Role Split</a></li><li><a href="../maps/tracks/track1_02_9016_state_ownership.html">02:9016 State Ownership</a></li></ul></section><section class="sidebar-group"><h3>Runtime And Port Validation</h3><ul><li><a href="port_sdl_runtime_mimetization_smoke.html">SDL Runtime Smoke</a></li><li><a href="mesen_instrumented_backend_architecture.html">Instrumented Backend Architecture</a></li></ul></section>
+    </aside>
+    <main class="content">
+      <nav class="breadcrumbs">
+        <a href="../../../index.html">Index</a>
+        <span>/</span>
+        <a href="../../../index.html#compression-bank30">Compression And Bank30</a>
+        <span>/</span>
+        <span>Bank30 Decompression</span>
+      </nav>
+      <header class="doc-header">
+        <p class="eyebrow">Compression And Bank30</p>
+        <h1>Bank 30 Decompression Report</h1>
+        <p class="doc-note">Current registry-backed read of bank30 markers and the active unresolved queue.</p>
+        <div class="doc-meta">
+          <span>Source: <code>rom_analysis/docs/bank30_decompression_report.md</code></span>
+          <a href="../../../../../../rom_analysis/docs/bank30_decompression_report.md">Open Raw Markdown</a>
+        </div>
+      </header>
+<section class="artifact-panel"><header class="artifact-header"><h2>Artifact Support</h2><p>Resolved image references found in this note.</p></header><div class="artifact-grid"><figure class="artifact-card"><a href="../../../../bank30_67fb_da96_4bpp.ppm"><img src="../../../artifacts/tools/out/bank30_67fb_da96_4bpp.png" alt="tools/out/bank30_67fb_da96_4bpp.ppm" loading="lazy"></a><figcaption><code>tools/out/bank30_67fb_da96_4bpp.ppm</code><span>Converted from PPM for browser preview.</span></figcaption></figure><figure class="artifact-card"><a href="../../../../bank30_67fb_da96_2bpp.ppm"><img src="../../../artifacts/tools/out/bank30_67fb_da96_2bpp.png" alt="tools/out/bank30_67fb_da96_2bpp.ppm" loading="lazy"></a><figcaption><code>tools/out/bank30_67fb_da96_2bpp.ppm</code><span>Converted from PPM for browser preview.</span></figcaption></figure></div></section>
+      <article class="doc-body">
+        <h1 id="bank-30-decompression-report">Bank 30 Decompression Report</h1>
+<p>This report records the decompression/classification pass over marker hits discovered in bank <code>30</code> (<code>0x1E</code>), including the new <code>67FB</code> decoder pass.</p>
+<h2 id="inputs">Inputs</h2>
+<ul><li><code>tools/out/bank30_chunks.json</code></li><li><code>tools/out/bank30_headers.json</code></li><li><code>tools/out/bank30_chunk_validation.json</code></li><li><code>.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json</code></li><li><code>tools/out/td2_boot_probe_l001210_summary.json</code></li><li><code>tools/out/bank30_chunk_registry.json</code></li></ul>
+<p>Detected markers:</p>
+<ul><li><code>42FB</code> at <code>1E:9681</code> (<code>offset 0x1681</code>)</li><li><code>67FB</code> at <code>1E:DA96</code> (<code>offset 0x5A96</code>)</li><li><code>26FB</code> at:</li><li><code>1E:DF6C</code></li><li><code>1E:E039</code></li><li><code>1E:E73F</code></li><li><code>1E:E800</code></li><li><code>1E:EE7F</code></li><li><code>67FB</code> at <code>1E:E91F</code> (<code>offset 0x691F</code>)</li></ul>
+<h2 id="decompression-run">Decompression Run</h2>
+<p>Commands executed:</p>
+<pre><code class="language-sh">make -C tools bank30-validate
+python3 tools/decompress_td2_chunk.py game.smc tools/out/bank30_42fb_9681.bin --bank 30 --addr 0x9681 --json-out tools/out/bank30_42fb_9681.json
+python3 tools/decompress_td2_chunk.py game.smc tools/out/bank30_67fb_da96.bin --bank 30 --addr 0xDA96 --json-out tools/out/bank30_67fb_da96.json
+python3 tools/decompress_td2_chunk.py game.smc tools/out/bank30_26fb_df6c.bin --bank 30 --addr 0xDF6C --json-out tools/out/bank30_26fb_df6c.json
+python3 tools/decompress_td2_chunk.py game.smc tools/out/bank30_26fb_e039.bin --bank 30 --addr 0xE039 --json-out tools/out/bank30_26fb_e039.json
+python3 tools/decompress_td2_chunk.py game.smc tools/out/bank30_26fb_e73f.bin --bank 30 --addr 0xE73F --json-out tools/out/bank30_26fb_e73f.json
+python3 tools/decompress_td2_chunk.py game.smc tools/out/bank30_26fb_e800.bin --bank 30 --addr 0xE800 --json-out tools/out/bank30_26fb_e800.json
+python3 tools/decompress_td2_chunk.py game.smc tools/out/bank30_26fb_ee7f.bin --bank 30 --addr 0xEE7F --json-out tools/out/bank30_26fb_ee7f.json
+python3 tools/decompress_td2_chunk.py game.smc tools/out/bank30_67fb_e91f.bin --bank 30 --addr 0xE91F --json-out tools/out/bank30_67fb_e91f.json</code></pre>
+<h2 id="decoder-results">Decoder Results</h2>
+<table><thead><tr><th>Marker start</th><th>Status</th><th>Output size</th><th>Input consumed</th><th>Notes</th></tr></thead><tbody><tr><td><code>1E:9681</code> (<code>42FB</code>)</td><td>ok</td><td><code>0</code></td><td><code>11</code></td><td>Declared output is zero; likely control/sentinel record.</td></tr><tr><td><code>1E:DA96</code> (<code>67FB</code>)</td><td>ok</td><td><code>28620</code></td><td><code>6429</code></td><td>Mode word <code>0x59E7</code> (word mode path).</td></tr><tr><td><code>1E:DF6C</code> (<code>26FB</code>)</td><td>ok</td><td><code>1798</code></td><td><code>205</code></td><td>Decodes from this offset, but offset is inside <code>1E:DA96</code> input window.</td></tr><tr><td><code>1E:E039</code> (<code>26FB</code>)</td><td>ok</td><td><code>3264</code></td><td><code>1395</code></td><td>Decodes from this offset, but offset is inside <code>1E:DA96</code> input window.</td></tr><tr><td><code>1E:E73F</code> (<code>26FB</code>)</td><td>ok</td><td><code>1798</code></td><td><code>193</code></td><td>Decodes from this offset, but offset is inside <code>1E:DA96</code> input window.</td></tr><tr><td><code>1E:E800</code> (<code>26FB</code>)</td><td>ok</td><td><code>3168</code></td><td><code>1407</code></td><td>Decodes from this offset, but offset is inside <code>1E:DA96</code> input window.</td></tr><tr><td><code>1E:E91F</code> (<code>67FB</code>)</td><td>fail</td><td>-</td><td>-</td><td>Stream ended early before reaching declared output size.</td></tr><tr><td><code>1E:EE7F</code> (<code>26FB</code>)</td><td>ok</td><td><code>1798</code></td><td><code>887</code></td><td>Decodes from this offset, but offset is inside <code>1E:DA96</code> input window.</td></tr></tbody></table>
+<h2 id="overlap-validation">Overlap Validation</h2>
+<p>The successful <code>67FB</code> decode at <code>1E:DA96</code> consumes <code>6429</code> source bytes:</p>
+<ul><li>source window: <code>[0x5A96, 0x73B3)</code> in bank-30 offsets</li><li>this window includes every later marker hit (<code>26FB</code> at <code>DF6C/E039/E73F/E800/EE7F</code> and <code>67FB</code> at <code>E91F</code>)</li></ul>
+<p>Practical reading: marker scan output in this region must be treated as candidates, not confirmed top-level chunk boundaries.</p>
+<h2 id="bank-1-pointer-table-provenance">Bank 1 Pointer-Table Provenance</h2>
+<p>Bank-1 helper tables that feed <code>L001210</code> confirm direct references to five bank-30 <code>26FB</code> starts:</p>
+<p>Reference note: <code>rom_analysis/docs/bank1_l001210_pointer_tables.md</code>.</p>
+<ul><li><code>01:A789</code> + bank table <code>01:A7D3</code>:</li><li>index <code>28</code> -&gt; <code>1E:DF6C</code></li><li>index <code>29</code> -&gt; <code>1E:E73F</code></li><li>index <code>32</code> -&gt; <code>1E:EE7F</code></li><li><code>01:A842</code> + bank table <code>01:A888</code>:</li><li>index <code>28</code> -&gt; <code>1E:E039</code></li><li>index <code>29</code> -&gt; <code>1E:E800</code></li></ul>
+<p>This confirms those <code>26FB</code> starts are intentional entries even though they lie inside the larger <code>67FB</code> decode window from <code>1E:DA96</code>.</p>
+<h2 id="runtime-l001210-exec-probe">Runtime <code>L001210</code> Exec Probe</h2>
+<p>Runtime probe commands:</p>
+<pre><code class="language-sh">make -C tools l001210-probe L001210_PROBE_TOTAL_FRAMES=3600 MESEN_TIMEOUT_SECONDS=90
+make -C tools l001210-trace-summary</code></pre>
+<p>Observed (<code>tools/out/td2_boot_probe_l001210_summary.json</code>):</p>
+<ul><li>total <code>L001210</code> hits in the <code>3600</code>-frame no-input run: <code>34</code></li><li>unique source pointers: <code>16</code></li><li>bank-30 sources hit in this window: <code>8</code> hits total</li><li><code>1E:DF6C</code> (<code>26FB</code>): frames <code>1280</code> and <code>2698</code></li><li><code>1E:E039</code> (<code>26FB</code>): frames <code>1282</code> and <code>2700</code></li><li><code>1E:E73F</code> (<code>26FB</code>): frames <code>1292</code> and <code>2709</code></li><li><code>1E:E800</code> (<code>26FB</code>): frames <code>1294</code> and <code>2712</code></li><li>no hits in this no-input window for:</li><li><code>1E:9681</code> (<code>42FB</code>)</li><li><code>1E:DA96</code> (<code>67FB</code>)</li><li><code>1E:E91F</code> (<code>67FB</code>)</li><li><code>1E:EE7F</code> (<code>26FB</code>)</li></ul>
+<p>Loop note:</p>
+<ul><li>Each of the four active bank-30 entries above repeats exactly <code>1418</code> frames later, matching the measured no-input attract loop period.</li></ul>
+<p>Alternate scripted-input probe:</p>
+<ul><li>command:</li><li><code>TD2_BOOT_PROBE_TOTAL_FRAMES=4000 TD2_BOOT_PROBE_TRACE_L001210=1 TD2_BOOT_PROBE_INPUT_START_FRAME=240 TD2_BOOT_PROBE_INPUT=start,b MESEN_TIMEOUT_SECONDS=110 ./validation/run_mesen_probe_boot.sh ./game.smc</code></li><li><code>python3 tools/summarize_l001210_trace.py .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json --json-out tools/out/td2_boot_probe_l001210_summary_startb.json</code></li><li>result:</li><li>only <code>2</code> total hits (<code>02:F51F</code>, <code>04:8000</code>, both <code>42FB</code>)</li><li>no bank-30 <code>L001210</code> sources observed in this path</li></ul>
+<h2 id="tile-preview-probes">Tile Preview Probes</h2>
+<p>Generated grayscale probes (<code>4bpp</code>, plus <code>offset 0x6</code> variants):</p>
+<ul><li><code>tools/out/bank30_26fb_*_4bpp.ppm</code></li><li><code>tools/out/bank30_26fb_*_4bpp_off6.ppm</code></li><li><code>tools/out/bank30_26fb_*_2bpp_off6.ppm</code></li><li><code>tools/out/bank30_67fb_da96_4bpp.ppm</code></li><li><code>tools/out/bank30_67fb_da96_2bpp.ppm</code></li></ul>
+<p>Observed decode geometry:</p>
+<ul><li><code>1798</code>-byte outputs decode as <code>56</code> tiles at <code>4bpp</code> (<code>128x32</code>) when probing both offset <code>0</code> and <code>0x6</code>.</li><li><code>3264</code> and <code>3168</code> outputs decode as <code>102</code> and <code>99</code> tiles respectively at <code>4bpp</code>.</li><li><code>67FB</code> output (<code>28620</code> bytes, word mode) looks table/map-like rather than planar tile data.</li></ul>
+<h2 id="interpretation">Interpretation</h2>
+<ol><li><code>67FB</code> is now decoded and confirmed active at <code>1E:DA96</code>.</li><li>The <code>1E:DA96</code> output is a strong map/table candidate (high use of tilemap-style word flags, not clean planar-tile alignment).</li><li>The five <code>26FB</code> starts (<code>DF6C/E039/E73F/E800/EE7F</code>) are confirmed runtime table entries from bank-1 pointer maps.</li><li>Overlapping starts are therefore a real pattern in this content region.</li><li>Runtime now confirms active usage for <code>DF6C/E039/E73F/E800</code> on the no-input attract path.</li><li><code>1E:E91F</code> is now best treated as a nested invalid marker, not as a still-open top-level chunk target:</li></ol>
+<ul><li>standalone <code>67FB</code> decode fails with source exhaustion</li><li>the marker lies inside the successful <code>1E:DA96</code> decode window</li><li>it also lies inside the successful nested <code>1E:E800</code> decode window</li></ul>
+<ol><li><code>1E:9681</code> is now best treated as a zero-output control/sentinel record, not as a content-bearing unresolved chunk.</li><li><code>1E:DA96</code> and <code>1E:EE7F</code> remain unobserved in this no-input runtime window and are now the active unresolved queue.</li><li>Consolidated registry (<code>make -C tools bank30-registry</code>) now classifies all candidates into:</li></ol>
+<ul><li><code>runtime-confirmed</code>: <code>4</code></li><li><code>table-confirmed-unseen</code>: <code>1</code> (<code>P0</code>: <code>EE7F</code>)</li><li><code>67fb-unseen</code>: <code>1</code> (<code>P1</code>: <code>DA96</code>)</li><li><code>nested-invalid-marker</code>: <code>1</code> (<code>E91F</code>)</li><li><code>sentinel-control</code>: <code>1</code> (<code>9681</code>)</li></ul>
+<h2 id="next-actions">Next Actions</h2>
+<ol><li>Probe deterministic savestate-targeted paths to confirm reachability for <code>1E:DA96</code> and <code>1E:EE7F</code>.</li></ol>
+<ul><li>current <code>start,b</code> scripted-input probe does not reach bank30 candidates.</li></ul>
+<ol><li>Build a validated chunk map for bank <code>30</code> using:</li></ol>
+<ul><li>decode success + consumed spans</li><li>pointer-table provenance</li><li>runtime <code>L001210</code> hit evidence</li></ul>
+<ol><li>Tie bank-30 chunk outputs to Mesen design-pack tilemap entries for provenance (<code>frame/layer/tile index</code> -&gt; <code>ROM chunk/offset</code>).</li></ol>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

@@ -311,6 +311,11 @@ decode support exists.
   - matrix v12/v12b precondition forcing (`8` scenarios, `72000` frames aggregate) confirms selector/state forcing applies but still yields `b1f9_exec_count = 0` in that lane.
   - matrix v13 callback activation (`5` scenarios, `16000` frames aggregate) forces active callback to `01:9568/01:95AD`; callback+state variants reach `B1F9` once (`frame 1201`) but still do not produce `01:B256/B273/B59B` `L001210` hits.
   - matrix v14 stage trace (`3` scenarios, `6600` frames aggregate) confirms forced lanes still report `b1f9_exec_count = 1` but show no `B1F9` internal stage progress (`B226/B256/B273/B59B` all `0`).
+  - consolidated `B1F9` stage report now also closes the strongest remaining ambiguity in that same lane:
+    - both forced `01:9568/01:95AD` scenarios still hit `01:B1F9` once at frame `1201`
+    - all `L001210` hits in those scenarios occur before that entry; post-entry `L001210` hit count is `0`
+    - both lanes stay pinned through frame `2199` with `state_1D10 = 0x4100`, `state_09A8 = 2`, `state_0960 = 0`, and lane-specific `active_main = 01:9568/01:95AD`
+    - static `bank1.asm` read now makes the implication explicit: the unresolved `EE7F`-relevant dynamic index select is only in the `L00B1F9` prologue (`$1C80 < $1CA8 ? $1C78 + 0x001F : 0x0002`) before the first `L00A9A0` call, while the later `L00B6A3/L00B6E3` surface is a separate worker loop rather than another table-select/decompress stage
   - targeted prologue exec traces (`2200` frames each, forced `01:9568` and `01:95AD`) record only the `01:B1F9` entry at frame `1201`; no exec hits are yet observed at `00:050F`, `00:083F`, return sites `01:B202/01:B206`, or inner stages `01:B226/B256/B273/B59B`.
   - targeted side-effect traces over the same forced lanes and frame window (`1200..1202`) also record no writes at the expected helper/setup sites (`HDMAEN`, `$0966/$0968`, `$0974`, `BGMODE/BGxSC/BG12NBA`, `$0F42`, `TMAIN`, `OBJSEL`, or the `L00052E` window/color-math resets).
   - stack-return tracing now proves the forced entries are real in-bank calls:

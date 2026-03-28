@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bank30 `B1F9` Forced-Lane Stall | TD2 Archaeology Wiki</title>
+  <link rel="stylesheet" href="../../../assets/wiki.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="site-link" href="../../../index.html">TD2 Archaeology Wiki</a>
+      <p class="sidebar-note">Simple wiki-style index built from curated markdown sources.</p>
+      <section class="sidebar-group"><h3>Source Of Truth</h3><ul><li><a href="../../PORT_PLAN.html">Port Plan</a></li><li><a href="next_steps_roadmap.html">Next Steps Roadmap</a></li><li><a href="progress_checkpoints.html">Progress Checkpoints</a></li><li><a href="validation_gates.html">Validation Gates</a></li><li><a href="../../validation/README.html">Validation README</a></li><li><a href="../../tools/README.html">Tools README</a></li><li><a href="../../port/README.html">Port README</a></li><li><a href="../README.html">ROM Analysis README</a></li></ul></section><section class="sidebar-group"><h3>Compression And Bank30</h3><ul><li><a href="bank30_decompression_report.html">Bank30 Decompression</a></li><li><a href="bank30_b1f9_forced_lane_stall.html">B1F9 Forced-Lane Stall</a></li></ul></section><section class="sidebar-group"><h3>Attract And Intro</h3><ul><li><a href="intro_00_8029_next_agent_handoff.html">00:8029 Handoff</a></li><li><a href="intro_01_9fe5_window_986_1093.html">01:9FE5 Window 986..1093</a></li><li><a href="intro_01_9fe5_activity_trace_1094_1117.html">01:9FE5 Activity Trace</a></li><li><a href="intro_00_8029_mode7_blob_cycle_1134_1200.html">Mode 7 Blob Cycle 1134..1200</a></li><li><a href="../maps/tilemaps/mesen_range_1086_1093_provenance.html">Tilemap Provenance 1086..1093</a></li><li><a href="mesen_debugger_design_workbench.html">Mesen Design Workbench</a></li></ul></section><section class="sidebar-group"><h3>Front-End And Menu</h3><ul><li><a href="snes_runtime_algorithm_human.html">SNES Runtime Algorithm</a></li><li><a href="../maps/tilemaps/car_select_frame_1500_bg2_provenance.html">Frame 1500 BG2 Provenance</a></li><li><a href="../../tools/out/snes_frontend_top_menu_labels.html">Top Menu Labels</a></li><li><a href="../../tools/out/snes_frontend_rival_selection_grid.html">Rival Selection Grid</a></li><li><a href="../../tools/out/snes_select_opponent_organic_default_path.html">Organic Default Path</a></li><li><a href="../../tools/out/snes_frontend_select_opponent_mode_split.html">Select Opponent Mode Split</a></li></ul></section><section class="sidebar-group"><h3>Gameplay And Lane 3</h3><ul><li><a href="lane3_today_work_brief.html">Lane 3 Work Brief</a></li><li><a href="gameplay_default_rival_next_agent_handoff.html">Gameplay Handoff</a></li><li><a href="lane3_attract_demo_boundary.html">Attract Demo Boundary</a></li><li><a href="../maps/tracks/track1_live_gameplay_entry_route.html">Live Gameplay Entry Route</a></li><li><a href="../maps/tracks/track1_live_race_manual_seed_intake.html">Manual Seed Intake</a></li><li><a href="../maps/tracks/track1_live_race_manual_video_intake.html">Manual Video Intake</a></li><li><a href="../maps/tracks/track1_live_race_visible_layer_stack.html">Visible Layer Stack</a></li><li><a href="../maps/tracks/track1_live_race_bg2_producer_path.html">BG2 Producer Path</a></li><li><a href="../maps/tracks/track1_live_race_l01318d_static_role_split.html">L01318D Role Split</a></li><li><a href="../maps/tracks/track1_02_9016_state_ownership.html">02:9016 State Ownership</a></li></ul></section><section class="sidebar-group"><h3>Runtime And Port Validation</h3><ul><li><a href="port_sdl_runtime_mimetization_smoke.html">SDL Runtime Smoke</a></li><li><a href="mesen_instrumented_backend_architecture.html">Instrumented Backend Architecture</a></li></ul></section>
+    </aside>
+    <main class="content">
+      <nav class="breadcrumbs">
+        <a href="../../../index.html">Index</a>
+        <span>/</span>
+        <a href="../../../index.html#compression-bank30">Compression And Bank30</a>
+        <span>/</span>
+        <span>B1F9 Forced-Lane Stall</span>
+      </nav>
+      <header class="doc-header">
+        <p class="eyebrow">Compression And Bank30</p>
+        <h1>Bank30 `B1F9` Forced-Lane Stall</h1>
+        <p class="doc-note">Why the current headless `B1F9` forcing lane is low-yield for `EE7F`.</p>
+        <div class="doc-meta">
+          <span>Source: <code>rom_analysis/docs/bank30_b1f9_forced_lane_stall.md</code></span>
+          <a href="../../../../../../rom_analysis/docs/bank30_b1f9_forced_lane_stall.md">Open Raw Markdown</a>
+        </div>
+      </header>
+      <article class="doc-body">
+        <h1 id="bank30-b1f9-forced-lane-stall">Bank30 <code>B1F9</code> Forced-Lane Stall</h1>
+<p>This note closes the current headless <code>B1F9</code> forcing lane as a low-yield path for the active bank30 unresolved queue.</p>
+<h2 id="inputs">Inputs</h2>
+<ul><li><code>tools/out/l001210_probe_matrix_v14_b1f9_stagetrace/</code></li><li><code>tools/out/l001210_probe_matrix_v14_b1f9_stagetrace_report.json</code></li><li><code>tools/out/l001210_probe_matrix_v14_b1f9_stagetrace_report.md</code></li><li><code>bank1.asm</code></li></ul>
+<p>Generated with:</p>
+<pre><code class="language-sh">python3 tools/build_b1f9_stage_report.py \
+  tools/out/l001210_probe_matrix_v14_b1f9_stagetrace \
+  tools/out/l001210_probe_matrix_v14_b1f9_stagetrace_report.json \
+  --markdown-out tools/out/l001210_probe_matrix_v14_b1f9_stagetrace_report.md</code></pre>
+<h2 id="dynamic-read">Dynamic Read</h2>
+<ul><li>Both forced lanes still enter <code>01:B1F9</code> exactly once at frame <code>1201</code>:</li><li><code>force_main_9568_with_state_stagetrace</code></li><li><code>force_main_95ad_with_state_stagetrace</code></li><li>In both lanes, all <code>L001210</code> hits still occur before the forced <code>B1F9</code> entry. Post-entry <code>L001210</code> hit count is <code>0</code>.</li><li>Internal stage counters also stay flat in both forced lanes:</li><li><code>B226 = 0</code></li><li><code>B256 = 0</code></li><li><code>B273 = 0</code></li><li><code>B59B = 0</code></li><li>The forced lanes end on a stable pinned surface through frame <code>2199</code>:</li><li><code>active_main = 01:9568</code> or <code>01:95AD</code> depending on lane</li><li><code>state_1D10 = 0x4100</code></li><li><code>state_09A8 = 2</code></li><li><code>state_0960 = 0</code></li><li><code>state_1C86 = 1</code></li></ul>
+<p>Practical reading: the current headless forcing setup can prove a real <code>B1F9</code> entry, but it does not drive the routine far enough to produce new decompression evidence after that entry.</p>
+<h2 id="static-cross-check">Static Cross-Check</h2>
+<p>The unresolved <code>1E:EE7F</code> path is only reachable in the prologue-side dynamic index select at <code>L00B1F9</code>:</p>
+<ul><li><code>L009568</code> and <code>L0095AD</code> both <code>inc $1CA8</code> before <code>jsr L00B1F9</code></li><li><code>L00B1F9</code> begins with default helper index <code>0x0002</code></li><li>if <code>$1C80 &lt; $1CA8</code>, the routine overrides that with <code>($1C78 + 0x001F)</code></li><li><code>L00B226</code> then feeds that selected value into <code>L00A9A0</code>, which is the relevant table path for <code>1E:EE7F</code> when <code>$1C78 = 1</code></li></ul>
+<p>Code anchors in <a href="/home/nivando-soares/asmdump/bank1.asm">bank1.asm</a>:</p>
+<ul><li>caller-side <code>inc $1CA8</code> before <code>jsr L00B1F9</code>: <a href="/home/nivando-soares/asmdump/bank1.asm#L2490">bank1.asm</a>, <a href="/home/nivando-soares/asmdump/bank1.asm#L2513">bank1.asm</a></li><li>dynamic index select and first <code>L00A9A0/L00A9CB</code> calls: <a href="/home/nivando-soares/asmdump/bank1.asm#L5892">bank1.asm</a></li><li>later worker/loop surface: <a href="/home/nivando-soares/asmdump/bank1.asm#L6248">bank1.asm</a>, <a href="/home/nivando-soares/asmdump/bank1.asm#L6286">bank1.asm</a></li></ul>
+<p>The later <code>L00B6A3 -&gt; L00B6E3</code> surface is therefore not a second chance to observe the <code>EE7F</code> selector. It is a later worker loop centered on <code>$0440/$0442/$0444</code>, <code>state_0202</code>, <code>01:9D69</code>, and a wait exit through <code>L00B755</code>.</p>
+<h2 id="conclusion">Conclusion</h2>
+<ul><li>The current forced <code>01:9568/01:95AD -&gt; 01:B1F9</code> lane is no longer the best headless proving path for <code>1E:EE7F</code>.</li><li>It demonstrates entry reachability, but not post-entry decompression progress.</li><li>The open unresolved queue remains:</li><li><code>P0</code>: <code>1E:EE7F</code></li><li><code>P1</code>: <code>1E:DA96</code></li></ul>
+<h2 id="next-best-step">Next Best Step</h2>
+<ul><li>Stop widening the same headless <code>B1F9</code> forcing lane unless a new trace surface changes the observed boundary.</li><li>Prefer one of these instead:</li><li>a real menu/live debugger capture that reaches the <code>EE7F</code>-relevant prologue path organically</li><li>a different caller family that can touch <code>DA96</code> or index <code>32</code> without the current callback-injection stall</li></ul>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

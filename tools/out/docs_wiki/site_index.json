@@ -50,6 +50,18 @@
       "page": "pages/rom_analysis/README.html"
     },
     {
+      "source": "rom_analysis/docs/bank30_decompression_report.md",
+      "label": "Bank30 Decompression",
+      "section": "Compression And Bank30",
+      "page": "pages/rom_analysis/docs/bank30_decompression_report.html"
+    },
+    {
+      "source": "rom_analysis/docs/bank30_b1f9_forced_lane_stall.md",
+      "label": "B1F9 Forced-Lane Stall",
+      "section": "Compression And Bank30",
+      "page": "pages/rom_analysis/docs/bank30_b1f9_forced_lane_stall.html"
+    },
+    {
       "source": "rom_analysis/docs/intro_00_8029_next_agent_handoff.md",
       "label": "00:8029 Handoff",
       "section": "Attract And Intro",

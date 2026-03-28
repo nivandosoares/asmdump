@@ -1,0 +1,173 @@
+{
+  "forced_b1f9_stall_read": true,
+  "forced_scenario_count": 2,
+  "input_dir": "tools/out/l001210_probe_matrix_v14_b1f9_stagetrace",
+  "scenario_count": 3,
+  "scenarios": [
+    {
+      "b1f9_exec_count": 1,
+      "b1f9_exec_frames": [
+        1201
+      ],
+      "b1f9_stage_counts": {
+        "b226": 0,
+        "b256": 0,
+        "b273": 0,
+        "b59b": 0
+      },
+      "b1f9_stage_frames": {
+        "b226": [],
+        "b256": [],
+        "b273": [],
+        "b59b": []
+      },
+      "bank30_hits": 0,
+      "bank30_sources": [],
+      "entry_snapshot": {
+        "active_irq": "00:835F",
+        "active_main": "01:9568",
+        "active_nmi": "00:8029",
+        "frame": 1201,
+        "selector_1c78": 1,
+        "selector_1c80": 0,
+        "selector_1ca8": 2,
+        "selector_1cac": 0,
+        "selector_1cae": null,
+        "state_0960": 0,
+        "state_09a8": 2,
+        "state_1c86": 1,
+        "state_1d10": 16640,
+        "state_1d10_hex": "0x4100"
+      },
+      "name": "force_main_9568_with_state_stagetrace",
+      "post_b1f9_bank30_hit_count": 0,
+      "post_b1f9_hit_count": 0,
+      "probe_json": "tools/out/l001210_probe_matrix_v14_b1f9_stagetrace/force_main_9568_with_state_stagetrace_probe.json",
+      "summary_json": "tools/out/l001210_probe_matrix_v14_b1f9_stagetrace/force_main_9568_with_state_stagetrace_summary.json",
+      "tail_snapshot": {
+        "active_irq": "00:835F",
+        "active_main": "01:9568",
+        "active_nmi": "00:8029",
+        "frame": 2199,
+        "selector_1c78": 1,
+        "selector_1c80": 0,
+        "selector_1ca8": 2,
+        "selector_1cac": 0,
+        "selector_1cae": null,
+        "state_0960": 0,
+        "state_09a8": 2,
+        "state_1c86": 1,
+        "state_1d10": 16640,
+        "state_1d10_hex": "0x4100"
+      },
+      "total_hits": 6,
+      "trace_json": "tools/out/l001210_probe_matrix_v14_b1f9_stagetrace/force_main_9568_with_state_stagetrace_l001210_exec.json"
+    },
+    {
+      "b1f9_exec_count": 1,
+      "b1f9_exec_frames": [
+        1201
+      ],
+      "b1f9_stage_counts": {
+        "b226": 0,
+        "b256": 0,
+        "b273": 0,
+        "b59b": 0
+      },
+      "b1f9_stage_frames": {
+        "b226": [],
+        "b256": [],
+        "b273": [],
+        "b59b": []
+      },
+      "bank30_hits": 0,
+      "bank30_sources": [],
+      "entry_snapshot": {
+        "active_irq": "00:835F",
+        "active_main": "01:95AD",
+        "active_nmi": "00:8029",
+        "frame": 1201,
+        "selector_1c78": 1,
+        "selector_1c80": 0,
+        "selector_1ca8": 2,
+        "selector_1cac": 0,
+        "selector_1cae": null,
+        "state_0960": 0,
+        "state_09a8": 2,
+        "state_1c86": 1,
+        "state_1d10": 16640,
+        "state_1d10_hex": "0x4100"
+      },
+      "name": "force_main_95ad_with_state_stagetrace",
+      "post_b1f9_bank30_hit_count": 0,
+      "post_b1f9_hit_count": 0,
+      "probe_json": "tools/out/l001210_probe_matrix_v14_b1f9_stagetrace/force_main_95ad_with_state_stagetrace_probe.json",
+      "summary_json": "tools/out/l001210_probe_matrix_v14_b1f9_stagetrace/force_main_95ad_with_state_stagetrace_summary.json",
+      "tail_snapshot": {
+        "active_irq": "00:835F",
+        "active_main": "01:95AD",
+        "active_nmi": "00:8029",
+        "frame": 2199,
+        "selector_1c78": 1,
+        "selector_1c80": 0,
+        "selector_1ca8": 2,
+        "selector_1cac": 0,
+        "selector_1cae": null,
+        "state_0960": 0,
+        "state_09a8": 2,
+        "state_1c86": 1,
+        "state_1d10": 16640,
+        "state_1d10_hex": "0x4100"
+      },
+      "total_hits": 6,
+      "trace_json": "tools/out/l001210_probe_matrix_v14_b1f9_stagetrace/force_main_95ad_with_state_stagetrace_l001210_exec.json"
+    },
+    {
+      "b1f9_exec_count": 0,
+      "b1f9_exec_frames": [],
+      "b1f9_stage_counts": {
+        "b226": 0,
+        "b256": 0,
+        "b273": 0,
+        "b59b": 0
+      },
+      "b1f9_stage_frames": {
+        "b226": [],
+        "b256": [],
+        "b273": [],
+        "b59b": []
+      },
+      "bank30_hits": 4,
+      "bank30_sources": [
+        "1E:DF6C",
+        "1E:E039",
+        "1E:E73F",
+        "1E:E800"
+      ],
+      "entry_snapshot": null,
+      "name": "seq_base_stagetrace_2200",
+      "post_b1f9_bank30_hit_count": 0,
+      "post_b1f9_hit_count": 0,
+      "probe_json": "tools/out/l001210_probe_matrix_v14_b1f9_stagetrace/seq_base_stagetrace_2200_probe.json",
+      "summary_json": "tools/out/l001210_probe_matrix_v14_b1f9_stagetrace/seq_base_stagetrace_2200_summary.json",
+      "tail_snapshot": {
+        "active_irq": "00:835F",
+        "active_main": "01:A39C",
+        "active_nmi": "00:8029",
+        "frame": 2199,
+        "selector_1c78": 1,
+        "selector_1c80": 0,
+        "selector_1ca8": 0,
+        "selector_1cac": 0,
+        "selector_1cae": null,
+        "state_0960": 0,
+        "state_09a8": 2,
+        "state_1c86": 0,
+        "state_1d10": 0,
+        "state_1d10_hex": "0x0000"
+      },
+      "total_hits": 19,
+      "trace_json": "tools/out/l001210_probe_matrix_v14_b1f9_stagetrace/seq_base_stagetrace_2200_l001210_exec.json"
+    }
+  ]
+}
