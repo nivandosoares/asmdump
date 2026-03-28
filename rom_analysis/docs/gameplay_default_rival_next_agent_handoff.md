@@ -76,6 +76,18 @@ This note is the explicit resume point for the next agent on Lane 3.
     - `Porsche` cockpit in motion
     - first `Desert Blast` segment
     - approaching a green NPC traffic car
+  - follow-up human support note:
+    - `manual_artifacts/lane3/responses.txt`
+    - practical route back to `live_race_mid`:
+      keep taking the first menu option / keep pressing `A` until gameplay
+    - menu semantics:
+      - `A` advances
+      - `B` returns to the previous option screen
+    - gameplay essentials:
+      - `A` accelerates
+      - `B` reduces speed
+      - d-pad steers
+    - `slot2_extra` is also described there as still intro/credits
   - both manual seeds still load onto:
     - `main = 02:9016`
     - `irq = 01:96A0`
@@ -202,6 +214,7 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `manual_artifacts/lane3/lane3_live_race_mid.mss`
 - `manual_artifacts/lane3/lane3_live_race_plus30f.mss`
 - `manual_artifacts/lane3/lane3_live_race_notes.txt`
+- `manual_artifacts/lane3/responses.txt`
 - `tools/out/lane3_live_race_mid_probe/td2_boot_probe.json`
 - `tools/out/lane3_live_race_plus30f_probe/td2_boot_probe.json`
 - `tools/out/lane3_live_race_mid_vs_plus30f_probe_compare.json`
@@ -325,6 +338,9 @@ The question is now narrower:
 9. If another dev is available today, use
    `rom_analysis/docs/lane3_today_work_brief.md` as the working brief rather
    than reconstructing the queue from multiple archaeology notes.
+10. If a human needs to re-enter the same gameplay corridor manually, use the
+    new route/control note in `manual_artifacts/lane3/responses.txt` instead
+    of rediscovering the menu flow from scratch.
 
 ## Minimal Validation If Tooling Changes
 

@@ -18,6 +18,12 @@ What is closed:
 - `game_11.mss` is no longer admissible as a gameplay seed
 - `lane3_live_race_mid.mss` and `lane3_live_race_plus30f.mss` are preserved
   and user-identified as real Desert Blast gameplay imagery
+- a first human support note is now recorded in
+  `manual_artifacts/lane3/responses.txt`
+- the practical route back to `live_race_mid` is now explicit:
+  keep taking the first menu option / keep pressing `A` until gameplay;
+  `B` backs out one screen; in gameplay `A` accelerates, `B` reduces speed,
+  and the d-pad steers
 - the old post-`2050` power-on corridor is now a control surface, not the best
   gameplay anchor
 - the first ownership pass is closed on:
@@ -28,13 +34,16 @@ What is closed:
   - `dp_0020 / dp_0022`
 - `lane3_live_race_mid` already narrows the visible gameplay stack to
   `BG1 + BG2 + OBJ`
-- `slot2_extra` is now explicitly a boundary/control seed, not gameplay
+- `slot2_extra` is now explicitly a boundary/control seed, not gameplay;
+  the new human response also still describes it as intro/credits
 
 What is still open:
 
 - exact semantics of the narrowed `L01318D` cluster
 - a second strong technical replicate for `live_race_plus30f`
 - a robust image/export path for the manual seeds
+- an equally detailed still-frame note for `live_race_plus30f`; the new human
+  response is richest on `live_race_mid`
 
 ## Hard Facts To Keep Fixed
 
@@ -143,6 +152,21 @@ Goal:
 
 - give the next dev a real visual sidecar for the preserved technical seeds
 
+Current status:
+
+- `manual_artifacts/lane3/responses.txt` now records a first filled screenshot
+  note for `ESTADO 1` / `live_race_mid`
+- strongest current read from that note:
+  - green NPC car near on the player's right
+  - wheel straight
+  - straight road with centered yellow divider
+  - `Porsche 959` cockpit base
+  - active radar marker
+- the same response also says `slot2_extra` still looks like intro/credits
+- remaining gap:
+  - no equally detailed still-frame note is recorded there yet for
+    `live_race_plus30f`
+
 Requested output:
 
 - one screenshot for `lane3_live_race_mid.mss`
@@ -164,6 +188,20 @@ Human annotation prompts:
 Goal:
 
 - give motion context the static technical traces do not provide
+
+Current status:
+
+- the new human response already summarizes a short local clip from
+  `live_race_mid`
+- strongest current motion/scene hooks from that summary:
+  - road curves plus elevations/depressions
+  - insects hitting the windshield
+  - checkpoint/post stop, gas-station dialog, and partial-results screen
+  - late police arrival with siren and a third radar marker
+- remaining gap:
+  - if the clip itself needs to become a promoted artifact later, pair this
+    summary with a time-stamped note rather than re-asking for the same human
+    read
 
 Requested output:
 

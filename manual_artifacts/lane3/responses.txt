@@ -1,0 +1,33 @@
+ Pedido de apoio humano no Mesen
+  Abrir estes estados:
+
+  - manual_artifacts/lane3/lane3_live_race_mid.mss
+  - manual_artifacts/lane3/lane3_live_race_plus30f.mss
+  - opcional: manual_artifacts/lane3/lane3_live_race_slot2_extra.mss
+
+  O que o agente queria de você:
+
+  - 1 screenshot de live_race_mid
+  - 1 screenshot de live_race_plus30f
+  - opcional: 1 screenshot de slot2_extra
+  - opcional: vídeo curto de 5..10 segundos a partir de live_race_mid
+
+  Anotações para preencher:
+
+  Mesen E1/E2
+  - seed: ESTADO 1
+  - carro verde:  perto com traseira visível a direita do player
+  - volante: reto 
+  - estrada: reta com faixa divisoria amarela bem ao centro
+  - cockpit base: porsche 959
+  - camada da estrada/mundo:layer2
+  - objetos dinâmicos: Vegetação, carro verde no trânsito, mesmo sentido do player, marcadores de velocidade rpm e caixa de câmbio
+  - há marcador/radar/rival ativo?: Sim
+  - o que se move primeiro?: estrada e objetos dinâmicos das laterais, e faixas brancas da pista
+  - observação livre: Observação livre: o State  #2 ainda é intro, ele começa na tela de créditos que foi usada pra pegar o primeiro golden do projeto
+
+
+O vídeo marca do ponto inicial em live race mid até o checkpoint do game onde o player chega ao posto, ali tem uma tela com diálogos entre o frentista e depois umamostra das parciais do player até o momento, na sequencia inicia outro checkpoint da fase.
+
+O vídeo mostra bem sprites, pista, curva, elevações e "depressões" na estrada além de pequenos insetos sujando o para brisas. não há colisões e a polícia entra no fim do vídeo com barulho de sirene e um terceiro marcador no radar acima da tela
+

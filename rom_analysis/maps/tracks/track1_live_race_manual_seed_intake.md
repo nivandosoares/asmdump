@@ -18,6 +18,21 @@
 - slot `#1` is the first requested state
 - slot `#3` is the second requested state from the same visible sequence
 
+## User-Supplied Navigation And Control Note
+
+- raw follow-up note:
+  - `manual_artifacts/lane3/responses.txt`
+- practical route back to `live_race_mid`:
+  - keep choosing the first option in each menu until gameplay, or keep
+    pressing `A`
+  - menu semantics:
+    - `A` advances
+    - `B` returns to the previous option screen
+- gameplay essentials:
+  - `A` accelerates
+  - `B` reduces speed
+  - d-pad steers
+
 ## Preserved Hashes
 
 - `lane3_live_race_mid.mss`
@@ -53,6 +68,7 @@
 - `manual_artifacts/lane3/lane3_live_race_plus30f.mss`
 - `manual_artifacts/lane3/lane3_live_race_slot2_extra.mss`
 - `manual_artifacts/lane3/lane3_live_race_notes.txt`
+- `manual_artifacts/lane3/responses.txt`
 - `tools/out/lane3_live_race_mid_probe/td2_boot_probe.json`
 - `tools/out/lane3_live_race_plus30f_probe/td2_boot_probe.json`
 - `tools/out/lane3_live_race_mid_vs_plus30f_probe_compare.json`
@@ -109,6 +125,32 @@
   - practical read:
     `lane3_live_race_slot2_extra.mss` is an adjacent boundary seed, not a
     substitute for the primary live-race pair
+
+## Human Follow-Up Read (`2026-03-28`)
+
+- the raw response note now gives a first filled visual read for
+  `ESTADO 1` / `live_race_mid`:
+  - the green NPC traffic car is near, with its rear visible on the player's
+    right
+  - the wheel still reads as straight
+  - the road is straight with the yellow divider centered
+  - the cockpit base still reads as `Porsche 959`
+  - the human layer guess keeps the road/world surface on `layer2`
+  - dynamic objects called out explicitly:
+    roadside vegetation, the green traffic car, and the speed / RPM / gear
+    indicators
+  - a radar/rival marker is visibly active
+  - the first motion is easiest to notice in the white lane stripes plus the
+    lateral roadside/dynamic objects
+- the same response note also confirms that `slot2_extra` still looks like
+  intro/credits, which matches the current boundary/control reading
+- the short local clip summarized in that same response extends
+  `live_race_mid` from the preserved start state to the checkpoint/post stop:
+  - gas-station dialog appears there, followed by the player's partial-results
+    screen and then the next checkpoint start
+  - the clip also highlights curves, elevations/depressions in the road,
+    insects hitting the windshield, and a late police arrival with siren plus
+    a third radar marker
 
 ## Negative Result
 
