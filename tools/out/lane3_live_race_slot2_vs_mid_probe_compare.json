@@ -1,0 +1,616 @@
+{
+  "probe_a": "tools/out/lane3_live_race_slot2_probe.json",
+  "probe_b": "tools/out/lane3_live_race_mid_probe/td2_boot_probe.json",
+  "label_a": "slot2_extra",
+  "label_b": "live_race_mid",
+  "frame_offset_a": 0,
+  "frame_offset_b": 0,
+  "start_frame": 0,
+  "end_frame": 7,
+  "compared_frame_count": 8,
+  "shared_frames": [
+    0,
+    7
+  ],
+  "callback_summary": {
+    "main": {
+      "a": [
+        "00:8029"
+      ],
+      "b": [
+        "02:9016"
+      ],
+      "same": false
+    },
+    "irq": {
+      "a": [
+        "00:835F"
+      ],
+      "b": [
+        "01:96A0"
+      ],
+      "same": false
+    },
+    "nmi": {
+      "a": [
+        "00:8029"
+      ],
+      "b": [
+        "02:8F3C"
+      ],
+      "same": false
+    }
+  },
+  "same_field_count": 1,
+  "same_fields": [
+    "state_1c70"
+  ],
+  "differing_field_count": 18,
+  "differing_fields": [
+    {
+      "field": "active_irq_callback_addr",
+      "diff_count": 8,
+      "total_frames": 8,
+      "all_frames_differ": true,
+      "first_diff_frame": 0,
+      "last_diff_frame": 7,
+      "unique_values_a": [
+        33631
+      ],
+      "unique_values_b": [
+        38560
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": true,
+      "pair_counts": [
+        {
+          "value_a": 33631,
+          "value_b": 38560,
+          "count": 8
+        }
+      ]
+    },
+    {
+      "field": "active_irq_callback_bank",
+      "diff_count": 8,
+      "total_frames": 8,
+      "all_frames_differ": true,
+      "first_diff_frame": 0,
+      "last_diff_frame": 7,
+      "unique_values_a": [
+        0
+      ],
+      "unique_values_b": [
+        1
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": true,
+      "pair_counts": [
+        {
+          "value_a": 0,
+          "value_b": 1,
+          "count": 8
+        }
+      ]
+    },
+    {
+      "field": "active_main_callback_addr",
+      "diff_count": 8,
+      "total_frames": 8,
+      "all_frames_differ": true,
+      "first_diff_frame": 0,
+      "last_diff_frame": 7,
+      "unique_values_a": [
+        32809
+      ],
+      "unique_values_b": [
+        36886
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": true,
+      "pair_counts": [
+        {
+          "value_a": 32809,
+          "value_b": 36886,
+          "count": 8
+        }
+      ]
+    },
+    {
+      "field": "active_main_callback_bank",
+      "diff_count": 8,
+      "total_frames": 8,
+      "all_frames_differ": true,
+      "first_diff_frame": 0,
+      "last_diff_frame": 7,
+      "unique_values_a": [
+        0
+      ],
+      "unique_values_b": [
+        2
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": true,
+      "pair_counts": [
+        {
+          "value_a": 0,
+          "value_b": 2,
+          "count": 8
+        }
+      ]
+    },
+    {
+      "field": "active_nmi_callback_addr",
+      "diff_count": 8,
+      "total_frames": 8,
+      "all_frames_differ": true,
+      "first_diff_frame": 0,
+      "last_diff_frame": 7,
+      "unique_values_a": [
+        32809
+      ],
+      "unique_values_b": [
+        36668
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": true,
+      "pair_counts": [
+        {
+          "value_a": 32809,
+          "value_b": 36668,
+          "count": 8
+        }
+      ]
+    },
+    {
+      "field": "active_nmi_callback_bank",
+      "diff_count": 8,
+      "total_frames": 8,
+      "all_frames_differ": true,
+      "first_diff_frame": 0,
+      "last_diff_frame": 7,
+      "unique_values_a": [
+        0
+      ],
+      "unique_values_b": [
+        2
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": true,
+      "pair_counts": [
+        {
+          "value_a": 0,
+          "value_b": 2,
+          "count": 8
+        }
+      ]
+    },
+    {
+      "field": "dp_0022",
+      "diff_count": 8,
+      "total_frames": 8,
+      "all_frames_differ": true,
+      "first_diff_frame": 0,
+      "last_diff_frame": 7,
+      "unique_values_a": [
+        0
+      ],
+      "unique_values_b": [
+        2,
+        3
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 0,
+          "value_b": 2,
+          "count": 6
+        },
+        {
+          "value_a": 0,
+          "value_b": 3,
+          "count": 2
+        }
+      ]
+    },
+    {
+      "field": "dp_0053",
+      "diff_count": 8,
+      "total_frames": 8,
+      "all_frames_differ": true,
+      "first_diff_frame": 0,
+      "last_diff_frame": 7,
+      "unique_values_a": [
+        0
+      ],
+      "unique_values_b": [
+        120,
+        136,
+        152,
+        168,
+        176
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 0,
+          "value_b": 120,
+          "count": 2
+        },
+        {
+          "value_a": 0,
+          "value_b": 136,
+          "count": 2
+        },
+        {
+          "value_a": 0,
+          "value_b": 152,
+          "count": 2
+        },
+        {
+          "value_a": 0,
+          "value_b": 168,
+          "count": 1
+        },
+        {
+          "value_a": 0,
+          "value_b": 176,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "field": "dp_0054",
+      "diff_count": 8,
+      "total_frames": 8,
+      "all_frames_differ": true,
+      "first_diff_frame": 0,
+      "last_diff_frame": 7,
+      "unique_values_a": [
+        0
+      ],
+      "unique_values_b": [
+        120,
+        136,
+        152,
+        168,
+        176,
+        192
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 0,
+          "value_b": 136,
+          "count": 2
+        },
+        {
+          "value_a": 0,
+          "value_b": 152,
+          "count": 2
+        },
+        {
+          "value_a": 0,
+          "value_b": 120,
+          "count": 1
+        },
+        {
+          "value_a": 0,
+          "value_b": 168,
+          "count": 1
+        },
+        {
+          "value_a": 0,
+          "value_b": 176,
+          "count": 1
+        },
+        {
+          "value_a": 0,
+          "value_b": 192,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "field": "oam_0730",
+      "diff_count": 8,
+      "total_frames": 8,
+      "all_frames_differ": true,
+      "first_diff_frame": 0,
+      "last_diff_frame": 7,
+      "unique_values_a": [
+        57616
+      ],
+      "unique_values_b": [
+        4645
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": true,
+      "pair_counts": [
+        {
+          "value_a": 57616,
+          "value_b": 4645,
+          "count": 8
+        }
+      ]
+    },
+    {
+      "field": "state_0202",
+      "diff_count": 8,
+      "total_frames": 8,
+      "all_frames_differ": true,
+      "first_diff_frame": 0,
+      "last_diff_frame": 7,
+      "unique_values_a": [
+        0
+      ],
+      "unique_values_b": [
+        65535
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": true,
+      "pair_counts": [
+        {
+          "value_a": 0,
+          "value_b": 65535,
+          "count": 8
+        }
+      ]
+    },
+    {
+      "field": "state_09a2",
+      "diff_count": 8,
+      "total_frames": 8,
+      "all_frames_differ": true,
+      "first_diff_frame": 0,
+      "last_diff_frame": 7,
+      "unique_values_a": [
+        0
+      ],
+      "unique_values_b": [
+        29,
+        30,
+        32,
+        33,
+        41,
+        43,
+        49
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 0,
+          "value_b": 43,
+          "count": 2
+        },
+        {
+          "value_a": 0,
+          "value_b": 41,
+          "count": 1
+        },
+        {
+          "value_a": 0,
+          "value_b": 29,
+          "count": 1
+        },
+        {
+          "value_a": 0,
+          "value_b": 30,
+          "count": 1
+        },
+        {
+          "value_a": 0,
+          "value_b": 33,
+          "count": 1
+        },
+        {
+          "value_a": 0,
+          "value_b": 49,
+          "count": 1
+        },
+        {
+          "value_a": 0,
+          "value_b": 32,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "field": "state_11f3",
+      "diff_count": 8,
+      "total_frames": 8,
+      "all_frames_differ": true,
+      "first_diff_frame": 0,
+      "last_diff_frame": 7,
+      "unique_values_a": [
+        0
+      ],
+      "unique_values_b": [
+        477,
+        478
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 0,
+          "value_b": 477,
+          "count": 6
+        },
+        {
+          "value_a": 0,
+          "value_b": 478,
+          "count": 2
+        }
+      ]
+    },
+    {
+      "field": "state_1c6a",
+      "diff_count": 8,
+      "total_frames": 8,
+      "all_frames_differ": true,
+      "first_diff_frame": 0,
+      "last_diff_frame": 7,
+      "unique_values_a": [
+        0
+      ],
+      "unique_values_b": [
+        1
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": true,
+      "pair_counts": [
+        {
+          "value_a": 0,
+          "value_b": 1,
+          "count": 8
+        }
+      ]
+    },
+    {
+      "field": "state_1c76",
+      "diff_count": 8,
+      "total_frames": 8,
+      "all_frames_differ": true,
+      "first_diff_frame": 0,
+      "last_diff_frame": 7,
+      "unique_values_a": [
+        0
+      ],
+      "unique_values_b": [
+        1
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": true,
+      "pair_counts": [
+        {
+          "value_a": 0,
+          "value_b": 1,
+          "count": 8
+        }
+      ]
+    },
+    {
+      "field": "dp_0020",
+      "diff_count": 4,
+      "total_frames": 8,
+      "all_frames_differ": false,
+      "first_diff_frame": 1,
+      "last_diff_frame": 7,
+      "unique_values_a": [
+        0
+      ],
+      "unique_values_b": [
+        0,
+        215,
+        221,
+        40,
+        52
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 0,
+          "value_b": 40,
+          "count": 1
+        },
+        {
+          "value_a": 0,
+          "value_b": 215,
+          "count": 1
+        },
+        {
+          "value_a": 0,
+          "value_b": 221,
+          "count": 1
+        },
+        {
+          "value_a": 0,
+          "value_b": 52,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "field": "state_09a8",
+      "diff_count": 4,
+      "total_frames": 8,
+      "all_frames_differ": false,
+      "first_diff_frame": 1,
+      "last_diff_frame": 7,
+      "unique_values_a": [
+        2
+      ],
+      "unique_values_b": [
+        10,
+        2
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 2,
+          "value_b": 10,
+          "count": 4
+        }
+      ]
+    },
+    {
+      "field": "state_0960",
+      "diff_count": 1,
+      "total_frames": 8,
+      "all_frames_differ": false,
+      "first_diff_frame": 0,
+      "last_diff_frame": 0,
+      "unique_values_a": [
+        0
+      ],
+      "unique_values_b": [
+        0,
+        128
+      ],
+      "constant_a_over_window": true,
+      "constant_b_over_window": false,
+      "pair_counts": [
+        {
+          "value_a": 0,
+          "value_b": 128,
+          "count": 1
+        }
+      ]
+    }
+  ],
+  "categories": {
+    "stable_constant_window_differences": [
+      "active_irq_callback_addr",
+      "active_irq_callback_bank",
+      "active_main_callback_addr",
+      "active_main_callback_bank",
+      "active_nmi_callback_addr",
+      "active_nmi_callback_bank",
+      "oam_0730",
+      "state_0202",
+      "state_1c6a",
+      "state_1c76"
+    ],
+    "stable_all_frame_differences": [
+      "dp_0022",
+      "dp_0053",
+      "dp_0054",
+      "state_09a2",
+      "state_11f3"
+    ],
+    "intermittent_constant_pair_differences": [
+      "state_09a8",
+      "state_0960"
+    ],
+    "intermittent_mixed_differences": [
+      "dp_0020"
+    ]
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "schema": "td2.lane3.live_race_layer_stack.v1",
+  "source_seed": "manual_artifacts/lane3/lane3_live_race_mid.mss",
+  "frame": 0,
+  "artifacts": {
+    "raw_dump_summary": "tools/out/lane3_live_race_mid_bg0_silent.json",
+    "scanline_samples": ".mesen-config/Mesen2/LuaScriptData/mesen_scanline_step_test/td2_scanline_step_test.json",
+    "design_pack": "tools/out/design_lane3_live_race_mid_frame0/design_pack.json"
+  },
+  "ppu": {
+    "bg_mode": 1,
+    "main_layers_mask": 19,
+    "main_layers_enabled": [
+      "bg1",
+      "bg2",
+      "obj"
+    ],
+    "sub_layers_mask": 0,
+    "sub_layers_enabled": []
+  },
+  "scanline_scrolls": {
+    "bg1_hscroll_values": [
+      0
+    ],
+    "bg1_vscroll_values": [
+      1023
+    ],
+    "bg2_hscroll_values": [
+      0,
+      945,
+      946
+    ],
+    "bg2_vscroll_values": [
+      0,
+      1,
+      2,
+      1013,
+      1014,
+      1015,
+      1016,
+      1017,
+      1018,
+      1019,
+      1020,
+      1021,
+      1022,
+      1023
+    ],
+    "bg3_hscroll_values": [
+      0
+    ],
+    "bg3_vscroll_values": [
+      1023
+    ]
+  },
+  "tilemaps": [
+    {
+      "name": "bg1",
+      "layer": 0,
+      "active": true,
+      "enabledOnMain": true,
+      "enabledOnSub": false,
+      "bpp": 4,
+      "json": "tilemaps/bg1_tilemap.json",
+      "csv": "tilemaps/bg1_tilemap.csv"
+    },
+    {
+      "name": "bg2",
+      "layer": 1,
+      "active": true,
+      "enabledOnMain": true,
+      "enabledOnSub": false,
+      "bpp": 4,
+      "json": "tilemaps/bg2_tilemap.json",
+      "csv": "tilemaps/bg2_tilemap.csv"
+    },
+    {
+      "name": "bg3",
+      "layer": 2,
+      "active": true,
+      "enabledOnMain": false,
+      "enabledOnSub": false,
+      "bpp": 2,
+      "json": "tilemaps/bg3_tilemap.json",
+      "csv": "tilemaps/bg3_tilemap.csv"
+    },
+    {
+      "name": "bg4",
+      "layer": 3,
+      "active": false,
+      "enabledOnMain": false,
+      "enabledOnSub": false,
+      "bpp": 0,
+      "json": "tilemaps/bg4_tilemap.json",
+      "csv": "tilemaps/bg4_tilemap.csv"
+    }
+  ],
+  "isolated_render_stats": {
+    "bg1": {
+      "non_backdrop_pixels": 48026,
+      "bbox": [
+        0,
+        1,
+        255,
+        223
+      ]
+    },
+    "bg2": {
+      "non_backdrop_pixels": 0,
+      "bbox": null
+    },
+    "obj": {
+      "non_backdrop_pixels": 1635,
+      "bbox": [
+        38,
+        18,
+        234,
+        175
+      ]
+    }
+  },
+  "reading": {
+    "strongest_fit": [
+      "Visible gameplay stack on this sample is BG1 + BG2 + OBJ, not BG1 + BG2 + BG3 + OBJ.",
+      "BG1 stays scroll-stable across sampled visible scanlines and is the current best cockpit/HUD-base candidate.",
+      "BG2 varies per scanline and is the current best road/world raster layer candidate.",
+      "BG3 exists in VRAM state but is not enabled on main or sub screens in this sample."
+    ],
+    "caveat": "Static single-state BG2 rendering falls back to backdrop, which fits a per-scanline/rasterized layer rather than disproving BG2 visibility."
+  },
+  "negative_followup": {
+    "plus30f_bg_range_exit_code": 255,
+    "plus30f_scanline_exit_code": 255,
+    "plus30f_note": "Headless helper wrappers returned 255 for lane3_live_race_plus30f.mss without producing raw dump artifacts."
+  }
+}

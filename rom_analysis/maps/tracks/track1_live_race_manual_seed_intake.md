@@ -37,6 +37,11 @@
   - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=90 TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/lane3_live_race_plus30f_probe/td2_boot_probe TD2_BOOT_PROBE_TOTAL_FRAMES=12 TD2_BOOT_PROBE_SCREENSHOT_FRAME=0 ./validation/run_mesen_probe_boot.sh ./game.smc ./manual_artifacts/lane3/lane3_live_race_plus30f.mss`
 - bounded compare:
   - `python3 tools/compare_boot_probe_windows.py tools/out/lane3_live_race_mid_probe/td2_boot_probe.json tools/out/lane3_live_race_plus30f_probe/td2_boot_probe.json tools/out/lane3_live_race_mid_vs_plus30f_probe_compare.json --markdown-out tools/out/lane3_live_race_mid_vs_plus30f_probe_compare.md --label-a live_race_mid --label-b live_race_plus30f --start-frame 0 --end-frame 11 --fields state_0960,state_09a2,state_09a8,state_11f3,dp_0053,dp_0054,dp_0020,dp_0022,state_1c6a,state_1c70,state_1c76,state_0202,active_main_callback_bank,active_main_callback_addr,active_irq_callback_bank,active_irq_callback_addr,active_nmi_callback_bank,active_nmi_callback_addr`
+- slot-`#2` boundary recheck:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=90 TD2_BG_RANGE_START_FRAME=0 TD2_BG_RANGE_END_FRAME=0 TD2_BG_RANGE_STEP=1 TD2_BG_RANGE_DUMP_OAM=1 TD2_BG_RANGE_OUTPUT_PREFIX=tools/out/lane3_live_race_slot2_bg0_silent ./validation/run_mesen_dump_bg_range.sh ./game.smc manual_artifacts/lane3/lane3_live_race_slot2_extra.mss > tools/out/lane3_live_race_slot2_bg0_silent.log 2>&1`
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=90 TD2_SCANLINE_TEST_TARGET_FRAME=0 TD2_SCANLINE_TEST_MAX_SAMPLES=16 TD2_SCANLINE_TEST_OUTPUT_PREFIX=tools/out/lane3_live_race_slot2_scanline0 ./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_scanline_step_test.lua manual_artifacts/lane3/lane3_live_race_slot2_extra.mss > tools/out/lane3_live_race_slot2_scanline0.log 2>&1`
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=90 TD2_BOOT_PROBE_TOTAL_FRAMES=8 TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/lane3_live_race_slot2_probe ./validation/run_mesen_probe_boot.sh ./game.smc manual_artifacts/lane3/lane3_live_race_slot2_extra.mss > tools/out/lane3_live_race_slot2_probe.log 2>&1`
+  - `python3 tools/compare_boot_probe_windows.py tools/out/lane3_live_race_slot2_probe.json tools/out/lane3_live_race_mid_probe/td2_boot_probe.json tools/out/lane3_live_race_slot2_vs_mid_probe_compare.json --markdown-out tools/out/lane3_live_race_slot2_vs_mid_probe_compare.md --label-a slot2_extra --label-b live_race_mid --start-frame 0 --end-frame 7 --fields state_0960,state_09a2,state_09a8,state_11f3,dp_0053,dp_0054,dp_0020,dp_0022,state_1c6a,state_1c70,state_1c76,state_0202,active_main_callback_bank,active_main_callback_addr,active_irq_callback_bank,active_irq_callback_addr,active_nmi_callback_bank,active_nmi_callback_addr,oam_0730`
 - negative screenshot-path check:
   - short `mesen_capture.lua` reruns from both seeds (`8` frames, no input)
   - both capture directories were created, but all emitted PNG files were
@@ -52,6 +57,10 @@
 - `tools/out/lane3_live_race_plus30f_probe/td2_boot_probe.json`
 - `tools/out/lane3_live_race_mid_vs_plus30f_probe_compare.json`
 - `tools/out/lane3_live_race_mid_vs_plus30f_probe_compare.md`
+- `tools/out/lane3_live_race_slot2_boundary_summary.json`
+- `tools/out/lane3_live_race_slot2_boundary_summary.md`
+- `tools/out/lane3_live_race_slot2_vs_mid_probe_compare.json`
+- `tools/out/lane3_live_race_slot2_vs_mid_probe_compare.md`
 
 ## Current Reading
 
@@ -94,6 +103,12 @@
     menu-vs-gameplay boundary
   - the real lane-3 question is now sharper: why can visually live-race seeds
     still present as `02:9016` with the inherited selector block?
+- the preserved slot `#2` is no longer usefully "unclassified":
+  - its direct recheck now keeps `main/irq/nmi = 00:8029 / 00:835F / 00:8029`
+  - its frame-`0` visible stack is `BG3`-only, not `BG1 + BG2 + OBJ`
+  - practical read:
+    `lane3_live_race_slot2_extra.mss` is an adjacent boundary seed, not a
+    substitute for the primary live-race pair
 
 ## Negative Result
 
@@ -107,6 +122,8 @@
 
 - treat `lane3_live_race_mid.mss` and `lane3_live_race_plus30f.mss` as the new
   active Lane 3 seed pair
+- do not substitute `lane3_live_race_slot2_extra.mss` for the missing second
+  visual replicate; it is now a closed boundary/control seed
 - compare their producer-side/OAM/HUD state against the older power-on
   `02:9016` corridor
 - specifically trace what `state_11f3`, `dp_0053`, `dp_0054`, `state_09a2`,

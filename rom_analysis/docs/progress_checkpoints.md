@@ -11,7 +11,7 @@ next gate needed to advance.
 |---|---|---|
 | Lane 1: Bank30 compression provenance | active | core pipeline is in place; registry tightening now closes `9681` as `sentinel-control` and `E91F` as `nested-invalid-marker`; active unresolved queue remains `EE7F` and `DA96` |
 | Lane 2: Mesen tile/sprite/tilemap design handoff | active | resume from `rom_analysis/docs/intro_00_8029_next_agent_handoff.md`; extraction + design packs are operational; contiguous provenance windows still cover `1086..1117`, the later direct-hit cluster `7051/7059/7064` now also has interior tilemap carry confirmation at `7055/7061`, the reopened result is tilemap-only rather than full-scene carry because `7055` still diverges in visible-sprite/OAM composition, a new visual-contract IR now separates BG/CHR state from OBJ/OAM state with optional provenance binding, the frame-`300` live producer-trace proof is still good after the launcher fix, frames `986/990/994/998/1005/1013/1021/1029/1037/1045/1053/1061/1069/1077/1085/1093` now have live producer-trace-backed visual contracts under the same `01:9FE5` callback family, the new consolidated `986..1093` range summary now makes that callback/state progression explicit in one artifact, the post-`1093` compare summary now closes the first `1094..1101` read by proving `main_visible.ppm` is the top `224` lines of `main.ppm` and that swapping only visible-scanline `matrix[0]/[3]` values makes the render mismatch worse, a new Mesen activity-trace builder now normalizes `DMA/VRAM/Mode7` probe outputs into frame/callback events, the visual-contract builders now also merge that activity layer directly, the follow-up `1102..1117` compare summary proves the whole `00:8029` continuation keeps the same `bg1`/`61`-sprite surface, the new `1118..1125` continuation note extends that exact no-DMA surface past the old headless edge, the next sampled compare block now closes the same exact surface through `1133`, the wider `1164..1172` boundary window already proved the next later change is a producer-side reactivation rather than a callback switch, a new blob-cycle report now ties that reactivation to a concrete ownership path `01:B6E3 -> 01:9DC6 -> 00:95BD -> $096A/$0700 -> OAMDATA` while proving every sampled direct `VMDATA` burst in `1134..1200` matches the same `AA10/AB58/ACA0` ROM blob as the paired `DMA0` source and alternates over `VMADD = 0x4920/0x49A0`, and the previously open `$1C7C` naming frontier is now closed by rendered descriptor rows `11..14`: `Desert Blast - Easy`, `City Bound - Medium`, `East Coast - Hard`, `West Coast - Hardest`; the separate `$1C6A` top-menu surface is now also closed by rendered descriptor rows `15..17`: `Game Options`, `Play TDII`, `High Score`; those same `$1C6A` branches are now semantically closed as `Game Options -> L00C0C7`, `Play TDII -> downstream $0202 corridor`, and `High Score -> L00A3CC`; the next downstream `$1C70` surface is now fully closed as a `4`-state `2x2` Select Opponent grid with a `1E:8000` row `0x1D` selection box, three explicit rear-car cells from `16:8000/18:8000/1B:8000`, and a separate helper-`8` BG1 stopwatch/clock slot, and `L008B87` now also closes the first handoff semantics of that same choice by turning `$1C70 = 0..2` into `$1C76 = 1`, `$1C7A = $1C70` while `$1C70 = 3` forces the no-opponent branch `$1C76 = 0`, `$1C7A = 0`; no-force timed-input probes now also recover the default rival corridor organically through `L00C20B -> 01:C1D2 -> L00BE76 -> L008B87 -> 01:902D`, followed later by `active_main = 02:9016`. Callback-relative `v5/v6` follow-ups now also drive the fourth slot organically by keying `right+down` and `start` to first live `01:C1D2`, and a later `be43+17-22:start` confirm now closes the no-opponent path through `L008B87 -> 01:902D -> 01:9111 -> active_main = 02:9016` while preserving `$1C70 = 3` / `$1C76 = 0` at the same downstream timestamps where the rival baseline keeps `0 / 1`. A direct `2044..2199` compare now shows that both paths already share `02:9016/01:96A0/02:8F3C`, keep `54` sampled fields identical, and narrow the remaining split to `14` fields, with `state_09a2/state_09a8` and the paired DP scratch fields `0020/0022/0053/0054` the strongest post-handoff targets; the corrected screenshot-review packs now establish that `2044` is a dead transition frame and the first shared non-black review window is `2048..2088`, while the extended probe compare now closes the first stable rival-vs-clock live split itself as `$1C76 -> state_11f3 -> oam_0730` in `bank2.asm` `L0108EF`, matching the rival-only top-strip OAM marker seen in the corrected screenshots. A full-rate `2048..2088` compare now pushes the lane further: frame `2048` alone carries a smaller transition bbox `(11, 20, 14, 21)`, frames `2049..2088` keep the same full top-strip bbox `(11, 11, 194, 21)`, and the suspected `09A2/09A8` pulse points `2051/2083` show no extra whole-frame or adjacent-frame-visible change in either lane. Normalized front-end row previews now also sharpen the remaining car-facing read: rows `8..10` decode to a three-phase rolling-tire helper rather than a name-bearing label set, rows `0x15..0x1B` decode to control/sound menu text (`Brake`, `Throttle`, `Horn`, `Upshift`, `Downshift`, `Steering`, `Pause`, `stereo`), the `01:9C77` per-car bases now calibrate to Porsche 959 / Lamborghini Diablo / Ferrari F40 OBJ catalogs, a stable frame-`1500` front-end car-presentation render keeps the `Porsche 959` title/info box intact without OAM, the helper-provenance artifact anchors that visible lower-screen BG2 surface to helper bundle `10`, static `L00BC0F` proves the per-car `BG2` reload uses `$0202 + 0x0009` through `L00A9A0/L00A9CB` without a paired per-car `L00A9F2`, and the new exact-frame raw-dump compare lane now keeps `BG1` unchanged across frames `1500/1640/1780`, limits visible `BG2` tilemap deltas to the top row (`27/11/27` changed cells), and shows `0` changed visible-union `BG2` CHR bytes across those same pairings; this frame trio is currently best described as one front-end car-presentation corridor rather than a proven interactive car-select menu. Short-force callback probes still show the next headless limit clearly: after one real `01:B1F9` entry at frame `1201`, `01:9568/01:95AD` stay pinned as `active_main` through frame `2199` with no `7E:096C..0971` writes and no exec hit at `01:B226/B638/B6A3/B6E3/B755/01:9D69/02:9016/02:8F3C`, so direct-force callback promotion remains low-yield unless a richer selector/savestate capture appears. |
-| Lane 3: Gameplay-era frame archaeology | active | the older promoted `v2_current` lane still explains the historical screenshot-vs-end-frame split and the pre-drift queue-cursor equalization path through frames `90..92`, but a fresh current-seed recheck now closes an important confusion point: today's `game_11.mss` fingerprint no longer reproduces that window and instead stays flat on `00:8029/00:835F` with `dp_0053/0054/0055/0056 = 0x30/0x30/0x28/0x12` and `0` write hits in `target_frame=90/91` scanline reruns. The seed-surface audit still proves the current `game_11.mss` savestate is a `front_end_menu_seed`, not verified gameplay. The repo now also carries a preserved manual live-race seed pair from user Mesen slots `#1/#3`, plus slot `#2` as an extra backup. The primary pair still loads onto `02:9016/01:96A0/02:8F3C` with the inherited selector family, and a new aligned control compare now proves the old post-`2050` default-rival no-input corridor is already separated inside that same callback family: both manual seeds differ on all `12/12` aligned frames in `oam_0730`, `state_11f3`, `dp_0053`, `dp_0054`, `dp_0020`, `dp_0022`, and `state_09a2`. A new attract/demo boundary note now demotes a key historical assumption: older no-input and early-input corridors can clip short gameplay-like demo slices, so the absence of a long uninterrupted gameplay segment there is no longer strong negative evidence by itself. Lane 3 is therefore no longer blocked on finding the first separator; it is blocked on explaining those HUD/OAM/substate fields. |
+| Lane 3: Gameplay-era frame archaeology | active | the older promoted `v2_current` lane still explains the historical screenshot-vs-end-frame split and the pre-drift queue-cursor equalization path through frames `90..92`, but a fresh current-seed recheck now closes an important confusion point: today's `game_11.mss` fingerprint no longer reproduces that window and instead stays flat on `00:8029/00:835F` with `dp_0053/0054/0055/0056 = 0x30/0x30/0x28/0x12` and `0` write hits in `target_frame=90/91` scanline reruns. The seed-surface audit still proves the current `game_11.mss` savestate is a `front_end_menu_seed`, not verified gameplay. The repo now also carries a preserved manual live-race seed pair from user Mesen slots `#1/#3`, plus slot `#2` as an explicit nearby boundary seed. The primary pair still loads onto `02:9016/01:96A0/02:8F3C` with the inherited selector family, and a new aligned control compare now proves the old post-`2050` default-rival no-input corridor is already separated inside that same callback family: both manual seeds differ on all `12/12` aligned frames in `oam_0730`, `state_11f3`, `dp_0053`, `dp_0054`, `dp_0020`, `dp_0022`, and `state_09a2`. A new attract/demo boundary note now demotes a key historical assumption: older no-input and early-input corridors can clip short gameplay-like demo slices, so the absence of a long uninterrupted gameplay segment there is no longer strong negative evidence by itself. A new ownership note now closes the first semantic pass on those split fields: `state_11f3 -> oam_0730` is rival-gated HUD/OAM, `state_09a2` is an OAM cursor, `state_09a8` is allocator/build control, `dp_0053/0054` behave as DMA-ring cursors, and `dp_0020/0022` are still best read as transient builder scratch. A new live-race layer-stack note now narrows the visible composition on a real manual seed: `lane3_live_race_mid.mss` frame `0` samples as `BG1 + BG2 + OBJ`, `BG1` stays scroll-stable, `BG2` changes per scanline, and the active `01:9111 -> 01:9185 -> 02:9165` path already matches that read via the `HDMA7` / `BG2VOFS` corridor. A direct slot-`#2` recheck now closes the preserved extra seed as `00:8029/00:835F/00:8029` with visible `BG3` only at frame `0`, so it is a boundary/control seed rather than a second gameplay replicate. Lane 3 is therefore no longer blocked on field naming; it is blocked on tying the extra live-race OAM/DMA activity and the per-scanline `BG2` motion to specific producer paths. |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
 ## Execution Reset (2026-03-19)
@@ -5557,6 +5557,150 @@ Next best step:
     strong disproof of gameplay-adjacent behavior
   - those lanes should now be treated as mixed front-end/presentation/demo
     evidence unless corroborated by stronger code-facing or manual-seed proof
+
+### CP-124: first semantic ownership pass closes the main `02:9016` split fields
+
+- promoted docs:
+  - `rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
+- bounded validation:
+  - documentation + code-reading consolidation against already-promoted Lane 3
+    artifacts and current source:
+    - `rom_analysis/maps/tracks/track1_live_race_vs_post9016_control.md`
+    - `bank2.asm` `L0108EF`, `L0117BA`, `L012501`
+    - `bank0.asm` `L00158F`, `L0015BD`, `L0015E1`, `L001662`, `L00179B`
+    - `bank1.asm` `L009185`, `6250..6272`
+  - probe spot-checks from the existing promoted JSONs over:
+    - control aligned window `2048..2053`
+    - manual live-race windows `0..5`
+- observed result:
+  - `state_11f3` is now materially explained:
+    - `L0117BA` seeds it as `$11F1 - 1` only when `$1C76 != 0`
+    - `L0108EF` converts it directly into `oam_0730`
+    - `L012501` also compares it against `$1CE8`
+  - `state_09a2/state_09a8` now fit the bank-0 OAM builder model:
+    - `09A2` is the sprite cursor used while populating `0700/0900`
+    - `09A8` is copied into the allocator-side `0AAA` map and is repeatedly
+      raised above its default `2` value only around sprite-submission calls
+  - `dp_0053/dp_0054` now fit DMA-ring cursor behavior instead of generic
+    gameplay state:
+    - control spot-check: `E8/E8 -> E8/E8 -> E8/F8 -> F8/F8`
+    - `live_race_mid`: `78/78 -> 78/88 -> 88/88 -> 88/98 -> 98/98 -> 98/A8`
+    - `live_race_plus30f`: `28/28 -> 28/28 -> 28/28 -> 28/28 -> 28/30 -> 30/40`
+    - the step size stays consistent with the `8`-byte descriptor model used
+      by the scanline queue summarizer over `7E:0600`
+  - `dp_0020/dp_0022` remain discriminative but still look like transient
+    builder operands, because bank-2 rewrites `$20.b/$22.b` throughout the
+    sprite/HUD submission paths immediately before math and `L001662/L00179B`
+    calls
+- practical reading:
+  - the main `02:9016` split bytes are no longer anonymous
+  - the surviving open problem is now producer attribution:
+    which exact bank-2 paths are responsible for the extra live-race OAM and
+    DMA queue work inside the shared driver
+
+### CP-125: first live-race layer-stack pass narrows gameplay to `BG1 + BG2 + OBJ`
+
+- promoted docs:
+  - `rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
+- promoted artifacts:
+  - `tools/out/lane3_live_race_mid_layer_stack_summary.json`
+  - `tools/out/lane3_live_race_mid_layer_stack_summary.md`
+- bounded validation:
+  - real-seed raw dump from the working manual live-race seed:
+    - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=90 TD2_BG_RANGE_START_FRAME=0 TD2_BG_RANGE_END_FRAME=0 TD2_BG_RANGE_STEP=1 TD2_BG_RANGE_DUMP_OAM=1 TD2_BG_RANGE_OUTPUT_PREFIX=tools/out/lane3_live_race_mid_bg0_silent ./validation/run_mesen_dump_bg_range.sh ./game.smc manual_artifacts/lane3/lane3_live_race_mid.mss > tools/out/lane3_live_race_mid_bg0_silent.log 2>&1`
+  - scanline/PPU sample from the same seed:
+    - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=90 TD2_SCANLINE_TEST_TARGET_FRAME=0 TD2_SCANLINE_TEST_MAX_SAMPLES=16 ./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_scanline_step_test.lua manual_artifacts/lane3/lane3_live_race_mid.mss > tools/out/lane3_live_race_mid_scanline0.log 2>&1`
+  - derived design-pack/tilemap read from the dumped raw files
+  - local isolated renders for `BG1`, `BG2`, and `OBJ`
+- observed result:
+  - the confirmed `live_race_mid` sample now has a direct visible-layer read:
+    - `bgMode = 1`
+    - `mainLayers = 0x13`
+    - visible stack = `BG1 + BG2 + OBJ`
+    - `subLayers = 0`
+  - `BG1` is stable across the sampled visible scanlines:
+    - `hscroll = 0`
+    - `vscroll = 1023`
+  - `BG2` is the only visible BG layer with meaningful per-scanline movement:
+    - `hscroll = 0 -> 945 -> 946`
+    - `vscroll = 1023 -> 1013`, then wraps to `0 -> 2`
+  - the derived design-pack read matches that mask:
+    - `bg1`: `enabledOnMain = true`
+    - `bg2`: `enabledOnMain = true`
+    - `bg3`: `enabledOnMain = false`
+    - `bg4`: inactive
+  - the isolated static renderer fits that read conservatively:
+    - `BG1` alone still draws a full-scene non-backdrop surface
+    - `OBJ` alone draws a smaller actor/HUD region
+    - `BG2` alone falls back to backdrop under a single static `ppu_state`,
+      which is consistent with a per-scanline/rasterized producer rather than
+      strong evidence that `BG2` is absent
+  - explicit negative follow-up kept:
+    - the same raw helper wrappers returned `255` on
+      `lane3_live_race_plus30f.mss` and produced no raw dump artifacts
+- practical reading:
+  - the older “`BG1 + BG2 + BG3 + OBJ` gameplay stack” heuristic is now too
+    strong for the confirmed `live_race_mid` sample
+  - current strongest fit is:
+    - `BG1` = cockpit/HUD base candidate
+    - `BG2` = road/world raster layer candidate
+    - `OBJ` = dynamic world/HUD actors
+    - `BG3` = present in raw state but not visible on main/sub in this sample
+  - the next open edge is not “which visible layer exists” but who drives the
+    per-scanline `BG2` motion and whether the same mask holds on the second
+    manual seed
+
+### CP-126: runtime path and slot-`#2` boundary sharpen the live-race layer read
+
+- promoted docs:
+  - `rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
+  - `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
+- promoted artifacts:
+  - `tools/out/lane3_live_race_slot2_boundary_summary.json`
+  - `tools/out/lane3_live_race_slot2_boundary_summary.md`
+  - `tools/out/lane3_live_race_slot2_vs_mid_probe_compare.json`
+  - `tools/out/lane3_live_race_slot2_vs_mid_probe_compare.md`
+- bounded validation:
+  - code-side follow-up on the active live-race family:
+    - `nl -ba bank1.asm | sed -n '2008,2098p'`
+    - `nl -ba bank1.asm | sed -n '2558,2835p'`
+    - `nl -ba bank1.asm | sed -n '5760,5910p'`
+    - `nl -ba bank2.asm | sed -n '2148,2255p'`
+    - `nl -ba bank2.asm | sed -n '2628,2662p'`
+    - `nl -ba bank2.asm | sed -n '6538,6615p'`
+    - `nl -ba bank2.asm | sed -n '7204,7278p'`
+  - boundary recheck on the preserved extra slot:
+    - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=90 TD2_BG_RANGE_START_FRAME=0 TD2_BG_RANGE_END_FRAME=0 TD2_BG_RANGE_STEP=1 TD2_BG_RANGE_DUMP_OAM=1 TD2_BG_RANGE_OUTPUT_PREFIX=tools/out/lane3_live_race_slot2_bg0_silent ./validation/run_mesen_dump_bg_range.sh ./game.smc manual_artifacts/lane3/lane3_live_race_slot2_extra.mss > tools/out/lane3_live_race_slot2_bg0_silent.log 2>&1`
+    - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=90 TD2_SCANLINE_TEST_TARGET_FRAME=0 TD2_SCANLINE_TEST_MAX_SAMPLES=16 TD2_SCANLINE_TEST_OUTPUT_PREFIX=tools/out/lane3_live_race_slot2_scanline0 ./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_scanline_step_test.lua manual_artifacts/lane3/lane3_live_race_slot2_extra.mss > tools/out/lane3_live_race_slot2_scanline0.log 2>&1`
+    - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=90 TD2_BOOT_PROBE_TOTAL_FRAMES=8 TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/lane3_live_race_slot2_probe ./validation/run_mesen_probe_boot.sh ./game.smc manual_artifacts/lane3/lane3_live_race_slot2_extra.mss > tools/out/lane3_live_race_slot2_probe.log 2>&1`
+    - `python3 tools/compare_boot_probe_windows.py tools/out/lane3_live_race_slot2_probe.json tools/out/lane3_live_race_mid_probe/td2_boot_probe.json tools/out/lane3_live_race_slot2_vs_mid_probe_compare.json --markdown-out tools/out/lane3_live_race_slot2_vs_mid_probe_compare.md --label-a slot2_extra --label-b live_race_mid --start-frame 0 --end-frame 7 --fields state_0960,state_09a2,state_09a8,state_11f3,dp_0053,dp_0054,dp_0020,dp_0022,state_1c6a,state_1c70,state_1c76,state_0202,active_main_callback_bank,active_main_callback_addr,active_irq_callback_bank,active_irq_callback_addr,active_nmi_callback_bank,active_nmi_callback_addr,oam_0730`
+- observed result:
+  - the active live-race callback family is now tied more tightly to the
+    visible `BG2` road/world read:
+    - `bank1.asm` `L009075..L009111` arms the
+      `02:9016 / 01:96A0 / 02:8F3C` family
+    - `bank1.asm` `L009185` enters `bank2.asm` `L011165`
+    - `L011165` runs `L01340E`, `L013927`, `L012F48`, `L01318D`, `L01070A`,
+      and `L0108EF` before the OAM flush
+    - `bank2.asm` `2628..2644` arms `HDMA7` against destination base `0x0F`,
+      i.e. the `BG2` scroll register block
+    - `bank1.asm` `5846..5851` also writes `BG2VOFS` from `$22/$23`
+  - the preserved extra slot is now explicitly closed as a non-gameplay
+    boundary seed:
+    - boot probe surface stays `00:8029 / 00:835F / 00:8029`
+    - frame-`0` raw dump reads `bgMode = 1`, `mainLayers = 0x04`,
+      visible `BG3` only
+    - scanline sample stays flat on `BG1/BG2/BG3 = 0 / 1023`
+    - compare vs `live_race_mid` differs on all `8/8` frames in the callback
+      surface plus live-race workload fields like `state_09a2`, `state_11f3`,
+      `dp_0053`, `dp_0054`, and `oam_0730`
+- practical reading:
+  - the user's layer observation is now useful as a guide on confirmed
+    gameplay, but the repo also has a direct nearby counterexample
+  - `slot2_extra` is boundary/control evidence, not a second gameplay sample
+  - the remaining open problem is specifically producer attribution inside the
+    confirmed `02:9016` live-race family, not proving that every nearby seed is
+    gameplay
 
 ## Next Advancement Gates
 

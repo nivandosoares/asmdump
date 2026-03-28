@@ -1,0 +1,79 @@
+{
+  "schema": "td2.lane3.slot2_boundary_summary.v1",
+  "source_seed": "manual_artifacts/lane3/lane3_live_race_slot2_extra.mss",
+  "frame": 0,
+  "boot_probe_surface": {
+    "main": "00:8029",
+    "irq": "00:835F",
+    "nmi": "00:8029"
+  },
+  "state_surface": {
+    "state_1c6a": 0,
+    "state_1c70": 0,
+    "state_1c76": 0,
+    "state_0202": 0,
+    "state_09a2": 0,
+    "state_09a8": 2,
+    "state_11f3": 0,
+    "dp_0053": 0,
+    "dp_0054": 0
+  },
+  "ppu": {
+    "bg_mode": 1,
+    "main_layers_mask": 4,
+    "main_layers_enabled": [
+      "bg3"
+    ],
+    "sub_layers_mask": 0,
+    "sub_layers_enabled": []
+  },
+  "scanline_scrolls": {
+    "bg1_hscroll_values": [
+      0
+    ],
+    "bg1_vscroll_values": [
+      1023
+    ],
+    "bg2_hscroll_values": [
+      0
+    ],
+    "bg2_vscroll_values": [
+      1023
+    ],
+    "bg3_hscroll_values": [
+      0
+    ],
+    "bg3_vscroll_values": [
+      1023
+    ]
+  },
+  "compare_vs_live_race_mid": {
+    "frames": [
+      0,
+      7
+    ],
+    "callback_surface_a": "00:8029/00:835F/00:8029",
+    "callback_surface_b": "02:9016/01:96A0/02:8F3C",
+    "all_frame_differences": [
+      "active_main_callback_bank",
+      "active_main_callback_addr",
+      "active_irq_callback_bank",
+      "active_irq_callback_addr",
+      "active_nmi_callback_bank",
+      "active_nmi_callback_addr",
+      "state_0202",
+      "state_1c6a",
+      "state_1c76",
+      "state_09a2",
+      "state_11f3",
+      "dp_0053",
+      "dp_0054",
+      "oam_0730"
+    ]
+  },
+  "reading": [
+    "slot2_extra is not a second gameplay replicate",
+    "slot2_extra is an adjacent front-end or boundary seed",
+    "slot2_extra should not be substituted for live_race_plus30f when reasoning about live-race composition"
+  ]
+}

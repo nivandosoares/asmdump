@@ -1,0 +1,25 @@
+# Lane 3 Live-Race Mid Layer Stack Summary
+
+- Source seed: `manual_artifacts/lane3/lane3_live_race_mid.mss`
+- Frame: `0`
+- PPU: `bgMode = 1`, `mainLayers = 0x13` -> `bg1, bg2, obj`, `subLayers = 0x00`
+- Scanline scroll read:
+  - `BG1 h/v = [0] / [1023]`
+  - `BG2 h/v = [0, 945, 946] / [0, 1, 2, 1013, 1014, 1015, 1016, 1017, 1018, 1019, 1020, 1021, 1022, 1023]`
+  - `BG3 h/v = [0] / [1023]`
+- Tilemap enablement from the derived design pack:
+  - `bg1`: `active=True`, `enabledOnMain=True`, `enabledOnSub=False`, `bpp=4`
+  - `bg2`: `active=True`, `enabledOnMain=True`, `enabledOnSub=False`, `bpp=4`
+  - `bg3`: `active=True`, `enabledOnMain=False`, `enabledOnSub=False`, `bpp=2`
+  - `bg4`: `active=False`, `enabledOnMain=False`, `enabledOnSub=False`, `bpp=0`
+- Isolated static renders from the same raw dump:
+  - `bg1`: `48026` non-backdrop pixels, bbox `[0, 1, 255, 223]`
+  - `bg2`: `0` non-backdrop pixels in the single-state render
+  - `obj`: `1635` non-backdrop pixels, bbox `[38, 18, 234, 175]`
+- Current read:
+  - visible gameplay on this sample uses `BG1 + BG2 + OBJ`
+  - `BG1` is currently the strongest cockpit/HUD-base candidate because it stays scroll-stable across sampled visible scanlines
+  - `BG2` is currently the strongest road/world candidate because it changes per scanline while staying enabled on the main screen
+  - `BG3` is present in state but not enabled on the visible screen in this sample
+- Negative follow-up kept:
+  - the same raw-dump helper wrappers returned `255` on `lane3_live_race_plus30f.mss` and produced no raw dump artifacts

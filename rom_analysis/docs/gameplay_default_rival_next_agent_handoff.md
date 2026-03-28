@@ -13,7 +13,11 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `rom_analysis/maps/tracks/track1_b_hold_scanline_recheck_0090_0093_current_seed.md`
 - `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
 - `rom_analysis/maps/tracks/track1_live_race_vs_post9016_control.md`
+- `rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
+- `rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
 - `manual_artifacts/lane3/lane3_live_race_notes.txt`
+- `tools/out/lane3_live_race_slot2_boundary_summary.md`
+- `tools/out/lane3_live_race_slot2_vs_mid_probe_compare.md`
 - `tools/out/post9016_default_rival_probe_none_vs_a_compare.md`
 - `tools/out/post9016_default_rival_probe_none_vs_b_compare.md`
 - `tools/out/post9016_default_rival_a2050_sequence_compare.md`
@@ -55,6 +59,13 @@ This note is the explicit resume point for the next agent on Lane 3.
       `cf8b7bae867a83ceb3b0ba43abfb19ce25d7edcc507cc581bd3706ed9dc12076`
   - preserved extra slot:
     - `manual_artifacts/lane3/lane3_live_race_slot2_extra.mss`
+  - slot `#2` is no longer an open backup:
+    - bounded follow-up now closes it as an adjacent boundary seed
+    - short probe surface:
+      `main/irq/nmi = 00:8029 / 00:835F / 00:8029`
+    - frame-`0` visible stack:
+      `bgMode = 1`, `mainLayers = 0x04`, visible `BG3` only
+    - do not use it as a replacement for `live_race_plus30f`
   - user-supplied visual context:
     - `Porsche` cockpit in motion
     - first `Desert Blast` segment
@@ -185,6 +196,10 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `tools/out/lane3_live_race_mid_vs_post9016_default_rival_probe_compare.md`
 - `tools/out/lane3_live_race_plus30f_vs_post9016_default_rival_probe_compare.json`
 - `tools/out/lane3_live_race_plus30f_vs_post9016_default_rival_probe_compare.md`
+- `tools/out/lane3_live_race_slot2_boundary_summary.json`
+- `tools/out/lane3_live_race_slot2_boundary_summary.md`
+- `tools/out/lane3_live_race_slot2_vs_mid_probe_compare.json`
+- `tools/out/lane3_live_race_slot2_vs_mid_probe_compare.md`
 - `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
 - `rom_analysis/maps/tracks/track1_live_race_vs_post9016_control.md`
 
@@ -207,25 +222,66 @@ The first separator is no longer open:
   `oam_0730`, `state_11f3`, `dp_0053`, `dp_0054`, `dp_0020`, `dp_0022`, and
   `state_09a2`
 
-The question is now:
+The first semantic ownership pass is now also closed:
 
-- what do those fields mean inside the broader `02:9016` family when the
-  user-verified seed is already in live Desert Blast gameplay imagery?
+- `state_11f3 -> oam_0730` is a rival-only HUD/OAM path
+- `state_09a2` is an OAM staging cursor / sprite count
+- `state_09a8` is a builder-side OAM allocator control value
+- `dp_0053/dp_0054` behave as DMA-ring read/write cursors
+- `dp_0020/dp_0022` remain useful, but currently look like transient
+  builder scratch rather than durable gameplay state
+
+The first visible layer-stack pass is now also narrowed on a real manual seed:
+
+- confirmed `live_race_mid` frame `0` samples as `bgMode = 1`
+- visible main-screen stack on that sample is `BG1 + BG2 + OBJ`
+- `BG1` stays scroll-stable across sampled visible scanlines
+- `BG2` changes per scanline and is now the strongest road/world raster-layer
+  candidate
+- `BG3` exists in raw state but is not enabled on the visible screen in that
+  sample
+- code-side fit is now stronger:
+  - `01:9111 -> 01:9185 -> 02:9165` is the active gameplay family path
+  - `02:9165` runs `L01340E`, `L013927`, `L012F48`, `L01318D`, `L01070A`,
+    and `L0108EF` before the OAM flush
+  - `bank2.asm` `2628..2644` arms HDMA channel `7` against the `BG2` scroll
+    register block, and `bank1.asm` `5846..5851` writes `BG2VOFS` from `$22/$23`
+- the same raw helper wrappers still fail on `live_race_plus30f`, so the
+  second-seed replication remains open
+- the preserved `slot2_extra` is now explicitly **not** that second replicate:
+  - it stays on `00:8029 / 00:835F / 00:8029`
+  - it is a useful boundary/control seed, not gameplay evidence
+
+The question is now narrower:
+
+- which specific bank-2 producer paths create the extra live-race OAM and
+  DMA-queue movement inside the shared `02:9016` driver?
+- which path drives the per-scanline `BG2` scroll changes behind the visible
+  road/world layer candidate?
 
 ## Recommended Next Experiment
 
 1. Start from the preserved manual seeds and the new aligned-control compare,
    not from `game_11.mss`.
-2. Read code around the already-proven OAM-side split first:
-   - `bank2.asm` `L0108EF`
-   - any nearby producers/consumers of `state_11f3` and `oam_0730`
-3. Then trace the remaining stable manual-vs-control split fields:
-   - `dp_0053`, `dp_0054`
-   - `dp_0020`, `dp_0022`
-   - `state_09a2`, `state_09a8`
-4. Treat the old power-on no-input `post9016` corridor as the control surface;
+2. Keep the known ownership anchors fixed:
+   - `bank2.asm` `L0117BA`, `L0108EF`, `L012501`
+   - `bank0.asm` `L00158F`, `L0015BD`, `L0015E1`, `L001662`, `L00179B`
+3. Treat the remaining open problem as producer attribution, not field naming:
+   - `dp_0053/dp_0054` already fit DMA-ring cursor behavior
+   - `state_09a2/state_09a8` already fit OAM staging / allocator control
+   - `dp_0020/dp_0022` still need path-level attribution
+4. Keep the new visible-layer stack result in scope:
+   - current confirmed gameplay sample is `BG1 + BG2 + OBJ`
+   - `BG2` is the strongest current road/world candidate because its scroll
+     changes per scanline
+   - `BG3` is not currently proven as a visible gameplay layer
+   - `slot2_extra` is now a closed `00:8029` boundary/control seed and should
+     not be used as a gameplay replicate
+5. Focus on bank-2 paths that set `$09A8` to non-`2` values before
+   `L001662/L00179B`, plus callers near `L01318D` and `L0108EF`.
+6. Treat the old power-on no-input `post9016` corridor as the control surface;
    use the `A` lane only if a richer fallback is needed later.
-5. Prefer bounded producer/OAM/HUD tracing over more screenshot volume:
+7. Prefer bounded producer/OAM/HUD tracing over more screenshot volume:
    - the current screenshot path is still broken on the manual seeds
 
 ## Minimal Validation If Tooling Changes
