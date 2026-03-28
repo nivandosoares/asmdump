@@ -6201,8 +6201,9 @@ Current status:
   - assign exact semantic roles inside the narrowed `L01318D` cluster while
     keeping the already-closed split-field ownership (`state_11f3`, `09A2`,
     `09A8`, `0053/0054`, `0020/0022`) in mind
-  - recover a second visual replicate from `live_race_plus30f` through the lab
-    backend if that path becomes cheaper than more symbolic narrowing
+  - keep the lab backend as the follow-up only for full composed-screen export;
+    the second visual replicate itself is now already closed on the native
+    savestate path for `BG2/BG3/OBJ`
   - only after that decide whether the best next gameplay-facing target is the
     old frame-`91` burst / frame-`92` reset path or a later `A`-lane follow-up
 
@@ -6233,3 +6234,41 @@ Current status:
   - it is blocked on a specific lab-backend boundary-correction failure
   - the next dev should treat human visual exports as the practical fallback
     for today's second-seed work while the backend path remains unstable
+
+### CP-127: gameplay-native visible layers now replicate across both preserved live-race seeds
+
+- promoted docs:
+  - `rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md`
+  - `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
+  - `rom_analysis/docs/next_steps_roadmap.md`
+- updated tooling:
+  - `tools/build_gameplay_frame_bundle.py`
+- promoted artifacts:
+  - `tools/out/mesen_lane3_live_race_plus30f_native/state.json`
+  - `tools/out/lane3_live_race_mid_native_bundle/bundle_manifest.json`
+  - `tools/out/lane3_live_race_plus30f_native_bundle/bundle_manifest.json`
+  - `tools/out/lane3_live_race_mid_native_bundle/native_visible_checks.json`
+  - `tools/out/lane3_live_race_plus30f_native_bundle/native_visible_checks.json`
+- bounded validation:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release ./tools/run_mesen_ppu_extract.sh --rom ./game.smc --load-state manual_artifacts/lane3/lane3_live_race_plus30f.mss --frame 0 --frame-is-offset --out-dir tools/out/mesen_lane3_live_race_plus30f_native --frame-timeout-seconds 60`
+  - `python3 tools/build_gameplay_frame_bundle.py --label lane3_live_race_mid_native --frame 16655 --vram tools/out/mesen_lane3_live_race_mid_native/vram.bin --cgram tools/out/mesen_lane3_live_race_mid_native/cgram.bin --ppu-state tools/out/mesen_lane3_live_race_mid_native/ppu_state.json --oam tools/out/mesen_lane3_live_race_mid_native/oam.bin --native-frame-dir tools/out/mesen_lane3_live_race_mid_native --out-dir tools/out/lane3_live_race_mid_native_bundle`
+  - `python3 tools/build_gameplay_frame_bundle.py --label lane3_live_race_plus30f_native --frame 17495 --vram tools/out/mesen_lane3_live_race_plus30f_native/vram.bin --cgram tools/out/mesen_lane3_live_race_plus30f_native/cgram.bin --ppu-state tools/out/mesen_lane3_live_race_plus30f_native/ppu_state.json --oam tools/out/mesen_lane3_live_race_plus30f_native/oam.bin --native-frame-dir tools/out/mesen_lane3_live_race_plus30f_native --out-dir tools/out/lane3_live_race_plus30f_native_bundle`
+- observed result:
+  - the second preserved gameplay seed now reproduces the same useful native
+    layer family as `live_race_mid`:
+    `BG2 visible`, `BG3 visible`, and `sprites_screen` all materialize with
+    non-black image payloads
+  - the remaining composed-screen issue is now clearly not seed-specific:
+    `main_visible.ppm` and `sub_visible.ppm` are byte-identical all-black
+    outputs on both gameplay seeds
+  - the new bundle-side fence makes that explicit instead of leaving it as an
+    implicit visual gotcha:
+    `native_visible_checks.json` records per-artifact byte statistics and
+    `bundle_manifest.json` now carries warning rows for fully black native
+    surfaces
+- practical reading:
+  - gameplay-native archaeology can now trust the savestate-backed `BG2/BG3`
+    world layers plus `OBJ` separation on both preserved gameplay seeds
+  - the open native question is only the composed `main/sub` export path; use
+    the state-facing `main.png` or other full-scene review surfaces until that
+    boundary is explained or replaced

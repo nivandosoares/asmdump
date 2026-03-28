@@ -120,16 +120,23 @@ This note is the explicit resume point for the next agent on Lane 3.
       `tools/run_mesen_ppu_extract.sh --load-state ... --frame 0 --frame-is-offset`
     - first promoted artifact:
       `tools/out/mesen_lane3_live_race_mid_native/`
+    - second promoted artifact:
+      `tools/out/mesen_lane3_live_race_plus30f_native/`
     - promoted bundle:
       `tools/out/lane3_live_race_mid_native_bundle/`
+    - promoted bundle:
+      `tools/out/lane3_live_race_plus30f_native_bundle/`
     - closed read:
       `bg2_visible_native.png` closes the road layer,
       `bg3_visible_native.png` closes the scenery layer,
-      `sprites_screen_native.png` closes the dynamic `OBJ` side
+      `sprites_screen_native.png` closes the dynamic `OBJ` side on both seeds
     - remaining native boundary:
-      `main_visible_native.png` is still black on this seed, so final composed
-      main-screen export is still open even though the separable gameplay
-      layers are now available
+      `main_visible_native.png` and `sub_visible_native` are still fully black
+      on both gameplay seeds, so final composed main-screen export is still
+      open even though the separable gameplay layers are now available
+    - bundle fence:
+      `bundle_manifest.json` now carries `nativeVisibleChecks` plus warning
+      rows when a promoted native artifact is all black
   - practical rule for later lane-3 review:
     - prefer the savestate-backed native extractor when the target question is
       “what does `BG2` or `BG3` really look like in gameplay?”
@@ -278,6 +285,12 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `tools/out/lane3_live_race_slot2_boundary_summary.md`
 - `tools/out/lane3_live_race_slot2_vs_mid_probe_compare.json`
 - `tools/out/lane3_live_race_slot2_vs_mid_probe_compare.md`
+- `tools/out/mesen_lane3_live_race_mid_native/state.json`
+- `tools/out/mesen_lane3_live_race_plus30f_native/state.json`
+- `tools/out/lane3_live_race_mid_native_bundle/bundle_manifest.json`
+- `tools/out/lane3_live_race_plus30f_native_bundle/bundle_manifest.json`
+- `tools/out/lane3_live_race_mid_native_bundle/native_visible_checks.json`
+- `tools/out/lane3_live_race_plus30f_native_bundle/native_visible_checks.json`
 - `tools/out/lane3_live_entry_late_probe_v1/td2_boot_probe.json`
 - `tools/out/lane3_live_entry_frame03250_bundle/bundle_manifest.json`
 - `tools/out/lane3_live_entry_frame03550_bundle/bundle_manifest.json`
@@ -291,6 +304,7 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `tools/out/lane3_live_race_mid_bg2_producer_summary.json`
 - `tools/out/lane3_live_race_mid_bg2_producer_summary.md`
 - `rom_analysis/maps/tracks/track1_live_race_plus30f_lab_backend_boundary.md`
+- `rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md`
 - `rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
 - `rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
 - `rom_analysis/docs/lane3_today_work_brief.md`
@@ -341,8 +355,9 @@ The first visible layer-stack pass is now also narrowed on a real manual seed:
     and `L0108EF` before the OAM flush
   - `bank2.asm` `2628..2644` arms HDMA channel `7` against the `BG2` scroll
     register block, and `bank1.asm` `5846..5851` writes `BG2VOFS` from `$22/$23`
-- the same raw helper wrappers still fail on `live_race_plus30f`, so the
-  second-seed replication remains open
+- the same raw helper wrappers still fail on `live_race_plus30f`, but the
+  second-seed native visible-layer replicate is now closed through the
+  savestate-backed extractor
 - the preserved `slot2_extra` is now explicitly **not** that second replicate:
   - it stays on `00:8029 / 00:835F / 00:8029`
   - it is a useful boundary/control seed, not gameplay evidence

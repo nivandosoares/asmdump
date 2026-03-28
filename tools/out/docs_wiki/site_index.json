@@ -12,14 +12,14 @@
       "source": "rom_analysis/docs/next_steps_roadmap.md",
       "label": "Next Steps Roadmap",
       "section": "Source Of Truth",
-      "last_updated": "2026-03-28 14:07",
+      "last_updated": "2026-03-28 14:46",
       "page": "pages/rom_analysis/docs/next_steps_roadmap.html"
     },
     {
       "source": "rom_analysis/docs/progress_checkpoints.md",
       "label": "Progress Checkpoints",
       "section": "Source Of Truth",
-      "last_updated": "2026-03-28 14:23",
+      "last_updated": "2026-03-28 14:46",
       "page": "pages/rom_analysis/docs/progress_checkpoints.html"
     },
     {
@@ -166,7 +166,7 @@
       "source": "rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md",
       "label": "Gameplay Handoff",
       "section": "Gameplay And Lane 3",
-      "last_updated": "2026-03-28 14:04",
+      "last_updated": "2026-03-28 14:46",
       "page": "pages/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.html"
     },
     {
@@ -208,7 +208,7 @@
       "source": "rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md",
       "label": "Native Visible Layers",
       "section": "Gameplay And Lane 3",
-      "last_updated": "2026-03-28 14:07",
+      "last_updated": "2026-03-28 14:45",
       "page": "pages/rom_analysis/maps/tracks/track1_live_race_native_visible_layers.html"
     },
     {

@@ -1,0 +1,117 @@
+{
+  "source_frame_dir": "/home/nivando-soares/asmdump/tools/out/lane3_live_race_plus30f_native_bundle/frame_dir",
+  "pack_dir": "/home/nivando-soares/asmdump/tools/out/lane3_live_race_plus30f_native_bundle/design_pack",
+  "frame_number": null,
+  "created_utc": "2026-03-28T17:46:51.496952+00:00",
+  "ppu_summary": {
+    "ppu.oamBaseAddress": 24576,
+    "ppu.oamAddressOffset": 4096,
+    "ppu.oamMode": 0,
+    "ppu.mode7.matrix[0]": 86,
+    "ppu.mode7.matrix[3]": 14392
+  },
+  "layers": [
+    {
+      "name": "bg1",
+      "full": "layers/bg1.ppm"
+    },
+    {
+      "name": "bg2",
+      "full": "layers/bg2.ppm"
+    },
+    {
+      "name": "bg3"
+    },
+    {
+      "name": "bg4"
+    },
+    {
+      "name": "main"
+    },
+    {
+      "name": "sub"
+    }
+  ],
+  "tilesets": [
+    {
+      "name": "bg1"
+    },
+    {
+      "name": "bg2"
+    },
+    {
+      "name": "bg3"
+    },
+    {
+      "name": "bg4"
+    }
+  ],
+  "sprites": {
+    "preview_files": []
+  },
+  "sprite_analysis": {
+    "enabled": false,
+    "reason": "sprites.json missing or invalid"
+  },
+  "tilemaps": {
+    "enabled": true,
+    "bgMode": 1,
+    "layers": [
+      {
+        "name": "bg1",
+        "layer": 0,
+        "active": true,
+        "enabledOnMain": true,
+        "enabledOnSub": false,
+        "bpp": 4,
+        "json": "tilemaps/bg1_tilemap.json",
+        "csv": "tilemaps/bg1_tilemap.csv"
+      },
+      {
+        "name": "bg2",
+        "layer": 1,
+        "active": true,
+        "enabledOnMain": true,
+        "enabledOnSub": false,
+        "bpp": 4,
+        "json": "tilemaps/bg2_tilemap.json",
+        "csv": "tilemaps/bg2_tilemap.csv"
+      },
+      {
+        "name": "bg3",
+        "layer": 2,
+        "active": true,
+        "enabledOnMain": false,
+        "enabledOnSub": false,
+        "bpp": 2,
+        "json": "tilemaps/bg3_tilemap.json",
+        "csv": "tilemaps/bg3_tilemap.csv"
+      },
+      {
+        "name": "bg4",
+        "layer": 3,
+        "active": false,
+        "enabledOnMain": false,
+        "enabledOnSub": false,
+        "bpp": 0,
+        "json": "tilemaps/bg4_tilemap.json",
+        "csv": "tilemaps/bg4_tilemap.csv"
+      }
+    ]
+  },
+  "palette": {},
+  "raw": {
+    "vram": "raw/vram.bin",
+    "cgram": "raw/cgram.bin",
+    "oam": "raw/oam.bin",
+    "ppu_state": "raw/ppu_state.json"
+  },
+  "inspector_hints": {
+    "tilemaps": "Use layers/*.ppm and layers/*_visible.ppm to inspect composed BG/map output.",
+    "tilemap_entries": "Use tilemaps/bg*_tilemap.json (or csv) for raw tile index/palette/flip/priority per cell.",
+    "tilesets": "Use tilesets/tiles_bg*.ppm + json for CHR decode and layer CHR base context.",
+    "sprites": "Use sprites/sprites_screen.ppm + sprite_previews/*.ppm + sprites.json metadata.",
+    "sprite_draw_order": "Use sprites/sprites_visible.json to inspect visible sprites grouped by priority.",
+    "raw_memory": "Use raw/vram.bin, raw/cgram.bin, raw/oam.bin for custom tooling and round-trip edits."
+  }
+}

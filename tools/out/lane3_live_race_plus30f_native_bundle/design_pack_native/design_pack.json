@@ -1,0 +1,296 @@
+{
+  "source_frame_dir": "/home/nivando-soares/asmdump/tools/out/mesen_lane3_live_race_plus30f_native",
+  "pack_dir": "/home/nivando-soares/asmdump/tools/out/lane3_live_race_plus30f_native_bundle/design_pack_native",
+  "frame_number": 3,
+  "created_utc": "2026-03-28T17:46:51.745396+00:00",
+  "ppu_summary": {
+    "bgMode": 1,
+    "mainScreenLayers": 19,
+    "subScreenLayers": 0,
+    "brightness": 15,
+    "forcedBlank": false,
+    "directColorMode": false,
+    "mode7": {
+      "matrix": [
+        86,
+        27648,
+        0,
+        14392
+      ],
+      "centerX": 128,
+      "centerY": 112,
+      "hScroll": 0,
+      "vScroll": 8191
+    },
+    "ppu.oamBaseAddress": 24576,
+    "ppu.oamAddressOffset": 4096,
+    "ppu.oamMode": 0,
+    "ppu.mode7.matrix[0]": 86,
+    "ppu.mode7.matrix[3]": 14392
+  },
+  "layers": [
+    {
+      "name": "bg1",
+      "full": "layers/bg1.ppm",
+      "visible": "layers/bg1_visible.ppm",
+      "meta": "layers/bg1.json"
+    },
+    {
+      "name": "bg2",
+      "full": "layers/bg2.ppm",
+      "visible": "layers/bg2_visible.ppm",
+      "meta": "layers/bg2.json"
+    },
+    {
+      "name": "bg3",
+      "full": "layers/bg3.ppm",
+      "visible": "layers/bg3_visible.ppm",
+      "meta": "layers/bg3.json"
+    },
+    {
+      "name": "bg4"
+    },
+    {
+      "name": "main",
+      "full": "layers/main.ppm",
+      "visible": "layers/main_visible.ppm",
+      "meta": "layers/main.json"
+    },
+    {
+      "name": "sub",
+      "full": "layers/sub.ppm",
+      "visible": "layers/sub_visible.ppm",
+      "meta": "layers/sub.json"
+    }
+  ],
+  "tilesets": [
+    {
+      "name": "bg1",
+      "ppm": "tilesets/tiles_bg1.ppm",
+      "meta": "tilesets/tiles_bg1.json"
+    },
+    {
+      "name": "bg2",
+      "ppm": "tilesets/tiles_bg2.ppm",
+      "meta": "tilesets/tiles_bg2.json"
+    },
+    {
+      "name": "bg3",
+      "ppm": "tilesets/tiles_bg3.ppm",
+      "meta": "tilesets/tiles_bg3.json"
+    },
+    {
+      "name": "bg4"
+    }
+  ],
+  "sprites": {
+    "preview_files": [
+      "sprites/sprite_previews/sprite_000.ppm",
+      "sprites/sprite_previews/sprite_001.ppm",
+      "sprites/sprite_previews/sprite_002.ppm",
+      "sprites/sprite_previews/sprite_003.ppm",
+      "sprites/sprite_previews/sprite_004.ppm",
+      "sprites/sprite_previews/sprite_005.ppm",
+      "sprites/sprite_previews/sprite_006.ppm",
+      "sprites/sprite_previews/sprite_007.ppm",
+      "sprites/sprite_previews/sprite_008.ppm",
+      "sprites/sprite_previews/sprite_009.ppm",
+      "sprites/sprite_previews/sprite_010.ppm",
+      "sprites/sprite_previews/sprite_011.ppm",
+      "sprites/sprite_previews/sprite_012.ppm",
+      "sprites/sprite_previews/sprite_013.ppm",
+      "sprites/sprite_previews/sprite_014.ppm",
+      "sprites/sprite_previews/sprite_015.ppm",
+      "sprites/sprite_previews/sprite_016.ppm",
+      "sprites/sprite_previews/sprite_017.ppm",
+      "sprites/sprite_previews/sprite_018.ppm",
+      "sprites/sprite_previews/sprite_019.ppm",
+      "sprites/sprite_previews/sprite_020.ppm",
+      "sprites/sprite_previews/sprite_021.ppm",
+      "sprites/sprite_previews/sprite_022.ppm",
+      "sprites/sprite_previews/sprite_023.ppm",
+      "sprites/sprite_previews/sprite_024.ppm",
+      "sprites/sprite_previews/sprite_025.ppm",
+      "sprites/sprite_previews/sprite_026.ppm",
+      "sprites/sprite_previews/sprite_027.ppm",
+      "sprites/sprite_previews/sprite_028.ppm",
+      "sprites/sprite_previews/sprite_029.ppm",
+      "sprites/sprite_previews/sprite_030.ppm",
+      "sprites/sprite_previews/sprite_031.ppm",
+      "sprites/sprite_previews/sprite_032.ppm",
+      "sprites/sprite_previews/sprite_033.ppm",
+      "sprites/sprite_previews/sprite_034.ppm",
+      "sprites/sprite_previews/sprite_035.ppm",
+      "sprites/sprite_previews/sprite_036.ppm",
+      "sprites/sprite_previews/sprite_037.ppm",
+      "sprites/sprite_previews/sprite_038.ppm",
+      "sprites/sprite_previews/sprite_039.ppm",
+      "sprites/sprite_previews/sprite_040.ppm",
+      "sprites/sprite_previews/sprite_041.ppm",
+      "sprites/sprite_previews/sprite_042.ppm",
+      "sprites/sprite_previews/sprite_043.ppm",
+      "sprites/sprite_previews/sprite_044.ppm",
+      "sprites/sprite_previews/sprite_045.ppm",
+      "sprites/sprite_previews/sprite_046.ppm",
+      "sprites/sprite_previews/sprite_047.ppm",
+      "sprites/sprite_previews/sprite_048.ppm",
+      "sprites/sprite_previews/sprite_049.ppm",
+      "sprites/sprite_previews/sprite_050.ppm",
+      "sprites/sprite_previews/sprite_051.ppm",
+      "sprites/sprite_previews/sprite_052.ppm",
+      "sprites/sprite_previews/sprite_053.ppm",
+      "sprites/sprite_previews/sprite_054.ppm",
+      "sprites/sprite_previews/sprite_055.ppm",
+      "sprites/sprite_previews/sprite_056.ppm",
+      "sprites/sprite_previews/sprite_057.ppm",
+      "sprites/sprite_previews/sprite_058.ppm",
+      "sprites/sprite_previews/sprite_059.ppm",
+      "sprites/sprite_previews/sprite_060.ppm",
+      "sprites/sprite_previews/sprite_061.ppm",
+      "sprites/sprite_previews/sprite_062.ppm",
+      "sprites/sprite_previews/sprite_063.ppm",
+      "sprites/sprite_previews/sprite_064.ppm",
+      "sprites/sprite_previews/sprite_065.ppm",
+      "sprites/sprite_previews/sprite_066.ppm",
+      "sprites/sprite_previews/sprite_067.ppm",
+      "sprites/sprite_previews/sprite_068.ppm",
+      "sprites/sprite_previews/sprite_069.ppm",
+      "sprites/sprite_previews/sprite_070.ppm",
+      "sprites/sprite_previews/sprite_071.ppm",
+      "sprites/sprite_previews/sprite_072.ppm",
+      "sprites/sprite_previews/sprite_073.ppm",
+      "sprites/sprite_previews/sprite_074.ppm",
+      "sprites/sprite_previews/sprite_075.ppm",
+      "sprites/sprite_previews/sprite_076.ppm",
+      "sprites/sprite_previews/sprite_077.ppm",
+      "sprites/sprite_previews/sprite_078.ppm",
+      "sprites/sprite_previews/sprite_079.ppm",
+      "sprites/sprite_previews/sprite_080.ppm",
+      "sprites/sprite_previews/sprite_081.ppm",
+      "sprites/sprite_previews/sprite_082.ppm",
+      "sprites/sprite_previews/sprite_083.ppm",
+      "sprites/sprite_previews/sprite_084.ppm",
+      "sprites/sprite_previews/sprite_085.ppm",
+      "sprites/sprite_previews/sprite_086.ppm",
+      "sprites/sprite_previews/sprite_087.ppm",
+      "sprites/sprite_previews/sprite_088.ppm",
+      "sprites/sprite_previews/sprite_089.ppm",
+      "sprites/sprite_previews/sprite_090.ppm",
+      "sprites/sprite_previews/sprite_091.ppm",
+      "sprites/sprite_previews/sprite_092.ppm",
+      "sprites/sprite_previews/sprite_093.ppm",
+      "sprites/sprite_previews/sprite_094.ppm",
+      "sprites/sprite_previews/sprite_095.ppm",
+      "sprites/sprite_previews/sprite_096.ppm",
+      "sprites/sprite_previews/sprite_097.ppm",
+      "sprites/sprite_previews/sprite_098.ppm",
+      "sprites/sprite_previews/sprite_099.ppm",
+      "sprites/sprite_previews/sprite_100.ppm",
+      "sprites/sprite_previews/sprite_101.ppm",
+      "sprites/sprite_previews/sprite_102.ppm",
+      "sprites/sprite_previews/sprite_103.ppm",
+      "sprites/sprite_previews/sprite_104.ppm",
+      "sprites/sprite_previews/sprite_105.ppm",
+      "sprites/sprite_previews/sprite_106.ppm",
+      "sprites/sprite_previews/sprite_107.ppm",
+      "sprites/sprite_previews/sprite_108.ppm",
+      "sprites/sprite_previews/sprite_109.ppm",
+      "sprites/sprite_previews/sprite_110.ppm",
+      "sprites/sprite_previews/sprite_111.ppm",
+      "sprites/sprite_previews/sprite_112.ppm",
+      "sprites/sprite_previews/sprite_113.ppm",
+      "sprites/sprite_previews/sprite_114.ppm",
+      "sprites/sprite_previews/sprite_115.ppm",
+      "sprites/sprite_previews/sprite_116.ppm",
+      "sprites/sprite_previews/sprite_117.ppm",
+      "sprites/sprite_previews/sprite_118.ppm",
+      "sprites/sprite_previews/sprite_119.ppm",
+      "sprites/sprite_previews/sprite_120.ppm",
+      "sprites/sprite_previews/sprite_121.ppm",
+      "sprites/sprite_previews/sprite_122.ppm",
+      "sprites/sprite_previews/sprite_123.ppm",
+      "sprites/sprite_previews/sprite_124.ppm",
+      "sprites/sprite_previews/sprite_125.ppm",
+      "sprites/sprite_previews/sprite_126.ppm",
+      "sprites/sprite_previews/sprite_127.ppm"
+    ],
+    "screen_preview": "sprites/sprites_screen.ppm",
+    "meta": "sprites/sprites.json"
+  },
+  "sprite_analysis": {
+    "enabled": true,
+    "totalCount": 128,
+    "visibleCount": 19,
+    "priorityCounts": {
+      "Number3": 12,
+      "Number2": 6,
+      "Number0": 1
+    },
+    "visibleList": "sprites/sprites_visible.json"
+  },
+  "tilemaps": {
+    "enabled": true,
+    "bgMode": 1,
+    "layers": [
+      {
+        "name": "bg1",
+        "layer": 0,
+        "active": true,
+        "enabledOnMain": true,
+        "enabledOnSub": false,
+        "bpp": 4,
+        "json": "tilemaps/bg1_tilemap.json",
+        "csv": "tilemaps/bg1_tilemap.csv"
+      },
+      {
+        "name": "bg2",
+        "layer": 1,
+        "active": true,
+        "enabledOnMain": true,
+        "enabledOnSub": false,
+        "bpp": 4,
+        "json": "tilemaps/bg2_tilemap.json",
+        "csv": "tilemaps/bg2_tilemap.csv"
+      },
+      {
+        "name": "bg3",
+        "layer": 2,
+        "active": true,
+        "enabledOnMain": false,
+        "enabledOnSub": false,
+        "bpp": 2,
+        "json": "tilemaps/bg3_tilemap.json",
+        "csv": "tilemaps/bg3_tilemap.csv"
+      },
+      {
+        "name": "bg4",
+        "layer": 3,
+        "active": false,
+        "enabledOnMain": false,
+        "enabledOnSub": false,
+        "bpp": 0,
+        "json": "tilemaps/bg4_tilemap.json",
+        "csv": "tilemaps/bg4_tilemap.csv"
+      }
+    ]
+  },
+  "palette": {
+    "preview": "palette/palette.ppm",
+    "meta": "palette/palette.json"
+  },
+  "raw": {
+    "vram": "raw/vram.bin",
+    "cgram": "raw/cgram.bin",
+    "oam": "raw/oam.bin",
+    "ppu_state": "raw/ppu_state.json",
+    "state": "raw/state.json"
+  },
+  "inspector_hints": {
+    "tilemaps": "Use layers/*.ppm and layers/*_visible.ppm to inspect composed BG/map output.",
+    "tilemap_entries": "Use tilemaps/bg*_tilemap.json (or csv) for raw tile index/palette/flip/priority per cell.",
+    "tilesets": "Use tilesets/tiles_bg*.ppm + json for CHR decode and layer CHR base context.",
+    "sprites": "Use sprites/sprites_screen.ppm + sprite_previews/*.ppm + sprites.json metadata.",
+    "sprite_draw_order": "Use sprites/sprites_visible.json to inspect visible sprites grouped by priority.",
+    "raw_memory": "Use raw/vram.bin, raw/cgram.bin, raw/oam.bin for custom tooling and round-trip edits."
+  }
+}

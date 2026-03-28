@@ -193,6 +193,22 @@ def write_png_preview(source_ppm: Path, dest_png: Path) -> bool:
     return True
 
 
+def analyze_pnm_rgb(source_path: Path) -> dict[str, int | bool] | None:
+    try:
+        width, height, rgb = read_pnm_rgb(source_path)
+    except ValueError:
+        return None
+    nonzero_bytes = sum(1 for component in rgb if component)
+    return {
+        "width": width,
+        "height": height,
+        "rgbByteCount": len(rgb),
+        "uniqueRgbByteValues": len(set(rgb)),
+        "nonzeroRgbBytes": nonzero_bytes,
+        "allBlack": nonzero_bytes == 0,
+    }
+
+
 def read_backdrop_rgb(cgram_path: Path) -> tuple[int, int, int]:
     cgram = cgram_path.read_bytes()
     if len(cgram) < 2:
@@ -308,8 +324,10 @@ def import_native_frame_dir(
     root: Path,
     native_frame_dir: Path,
     out_dir: Path,
-) -> dict[str, str | None]:
+) -> tuple[dict[str, str | None], dict[str, dict[str, object]], list[str]]:
     outputs: dict[str, str | None] = {}
+    checks: dict[str, dict[str, object]] = {}
+    warnings: list[str] = []
     design_pack_native_dir = out_dir / "design_pack_native"
 
     subprocess.run(
@@ -330,14 +348,22 @@ def import_native_frame_dir(
         "native_bg2_visible_ppm": ("bg2_visible.ppm", "bg2_visible_native.ppm"),
         "native_bg3_visible_ppm": ("bg3_visible.ppm", "bg3_visible_native.ppm"),
         "native_main_visible_ppm": ("main_visible.ppm", "main_visible_native.ppm"),
+        "native_sub_visible_ppm": ("sub_visible.ppm", "sub_visible_native.ppm"),
         "native_sprites_screen_ppm": ("sprites_screen.ppm", "sprites_screen_native.ppm"),
     }
     for manifest_key, (source_name, dest_name) in promoted_files.items():
         source_path = native_frame_dir / source_name
+        artifact_key = manifest_key.removeprefix("native_").removesuffix("_ppm")
         if not source_path.is_file():
             outputs[manifest_key] = None
             png_key = manifest_key.replace("_ppm", "_png")
             outputs[png_key] = None
+            checks[artifact_key] = {
+                "source": source_name,
+                "ppm": None,
+                "png": None,
+                "missing": True,
+            }
             continue
         dest_path = out_dir / dest_name
         copy_file(source_path, dest_path)
@@ -345,8 +371,32 @@ def import_native_frame_dir(
         png_key = manifest_key.replace("_ppm", "_png")
         png_path = out_dir / dest_name.replace(".ppm", ".png")
         outputs[png_key] = repo_rel(png_path) if write_png_preview(dest_path, png_path) else None
+        analysis = analyze_pnm_rgb(dest_path)
+        if analysis is None:
+            checks[artifact_key] = {
+                "source": source_name,
+                "ppm": repo_rel(dest_path),
+                "png": outputs[png_key],
+                "missing": False,
+                "analysisFailed": True,
+            }
+            continue
+        checks[artifact_key] = {
+            "source": source_name,
+            "ppm": repo_rel(dest_path),
+            "png": outputs[png_key],
+            "missing": False,
+            **analysis,
+        }
+        if analysis["allBlack"]:
+            warnings.append(
+                f"{dest_name} is fully black in this native gameplay bundle; "
+                "treat it as a boundary artifact, not a valid composed-screen render."
+            )
 
-    return outputs
+    write_json(out_dir / "native_visible_checks.json", checks)
+    outputs["native_visible_checks_json"] = repo_rel(out_dir / "native_visible_checks.json")
+    return outputs, checks, warnings
 
 
 def write_json(path: Path, payload: dict) -> None:
@@ -482,8 +532,12 @@ def main() -> None:
     )
 
     native_outputs: dict[str, str | None] = {}
+    native_checks: dict[str, dict[str, object]] = {}
+    warnings: list[str] = []
     if native_frame_dir is not None:
-        native_outputs = import_native_frame_dir(root, native_frame_dir, out_dir)
+        native_outputs, native_checks, warnings = import_native_frame_dir(
+            root, native_frame_dir, out_dir
+        )
 
     manifest = {
         "label": args.label,
@@ -507,6 +561,8 @@ def main() -> None:
             **png_outputs,
             **native_outputs,
         },
+        "nativeVisibleChecks": native_checks,
+        "warnings": warnings,
     }
     write_json(out_dir / "bundle_manifest.json", manifest)
 

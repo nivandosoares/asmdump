@@ -1,0 +1,74 @@
+{
+  "bg1_visible": {
+    "source": "bg1_visible.ppm",
+    "ppm": "tools/out/lane3_live_race_plus30f_native_bundle/bg1_visible_native.ppm",
+    "png": "tools/out/lane3_live_race_plus30f_native_bundle/bg1_visible_native.png",
+    "missing": false,
+    "width": 256,
+    "height": 224,
+    "rgbByteCount": 172032,
+    "uniqueRgbByteValues": 16,
+    "nonzeroRgbBytes": 140916,
+    "allBlack": false
+  },
+  "bg2_visible": {
+    "source": "bg2_visible.ppm",
+    "ppm": "tools/out/lane3_live_race_plus30f_native_bundle/bg2_visible_native.ppm",
+    "png": "tools/out/lane3_live_race_plus30f_native_bundle/bg2_visible_native.png",
+    "missing": false,
+    "width": 256,
+    "height": 224,
+    "rgbByteCount": 172032,
+    "uniqueRgbByteValues": 8,
+    "nonzeroRgbBytes": 162438,
+    "allBlack": false
+  },
+  "bg3_visible": {
+    "source": "bg3_visible.ppm",
+    "ppm": "tools/out/lane3_live_race_plus30f_native_bundle/bg3_visible_native.ppm",
+    "png": "tools/out/lane3_live_race_plus30f_native_bundle/bg3_visible_native.png",
+    "missing": false,
+    "width": 256,
+    "height": 224,
+    "rgbByteCount": 172032,
+    "uniqueRgbByteValues": 12,
+    "nonzeroRgbBytes": 130290,
+    "allBlack": false
+  },
+  "main_visible": {
+    "source": "main_visible.ppm",
+    "ppm": "tools/out/lane3_live_race_plus30f_native_bundle/main_visible_native.ppm",
+    "png": "tools/out/lane3_live_race_plus30f_native_bundle/main_visible_native.png",
+    "missing": false,
+    "width": 256,
+    "height": 224,
+    "rgbByteCount": 172032,
+    "uniqueRgbByteValues": 1,
+    "nonzeroRgbBytes": 0,
+    "allBlack": true
+  },
+  "sub_visible": {
+    "source": "sub_visible.ppm",
+    "ppm": "tools/out/lane3_live_race_plus30f_native_bundle/sub_visible_native.ppm",
+    "png": "tools/out/lane3_live_race_plus30f_native_bundle/sub_visible_native.png",
+    "missing": false,
+    "width": 256,
+    "height": 224,
+    "rgbByteCount": 172032,
+    "uniqueRgbByteValues": 1,
+    "nonzeroRgbBytes": 0,
+    "allBlack": true
+  },
+  "sprites_screen": {
+    "source": "sprites_screen.ppm",
+    "ppm": "tools/out/lane3_live_race_plus30f_native_bundle/sprites_screen_native.ppm",
+    "png": "tools/out/lane3_live_race_plus30f_native_bundle/sprites_screen_native.png",
+    "missing": false,
+    "width": 512,
+    "height": 256,
+    "rgbByteCount": 393216,
+    "uniqueRgbByteValues": 27,
+    "nonzeroRgbBytes": 173107,
+    "allBlack": false
+  }
+}
