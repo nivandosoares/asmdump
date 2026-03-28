@@ -266,6 +266,9 @@ next gate needed to advance.
   - the wiki now also surfaces a per-document `Last updated` label on both
     index cards and rendered pages, sourced from the underlying Markdown
     file timestamp so recent updates are visible in the HTML surface itself
+  - the `Attract And Intro` section on the index page now also exposes a
+    `Latest` block and sorts its cards by most recent update first, so the
+    current intro-facing read is visible without scanning the older notes
 - SDL smoke read:
   - the current runtime renders the bridge-visible intro sequence through
     frame `1000`

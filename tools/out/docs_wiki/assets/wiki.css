@@ -242,6 +242,39 @@ blockquote {
   gap: 1rem;
 }
 
+.latest-panel {
+  margin: 1rem 0 1.2rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  background: #fbfdff;
+}
+
+.latest-label {
+  margin: 0 0 0.65rem;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.latest-list {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.latest-list li + li {
+  margin-top: 0.45rem;
+}
+
+.latest-list li span {
+  display: inline-block;
+  margin-left: 0.55rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
 .doc-card {
   padding: 1rem;
   border: 1px solid var(--panel-border);

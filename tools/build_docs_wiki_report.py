@@ -599,6 +599,11 @@ def source_last_updated(source_rel: Path) -> str:
     return timestamp.strftime("%Y-%m-%d %H:%M")
 
 
+def source_last_updated_dt(source_rel: Path) -> datetime:
+    source_abs = REPO_ROOT / source_rel
+    return datetime.fromtimestamp(source_abs.stat().st_mtime)
+
+
 def build_sidebar(manifest: dict, page_map: dict[Path, Path], current_page: Path) -> str:
     sections_html: list[str] = []
     for section in manifest["sections"]:
@@ -695,14 +700,15 @@ def render_index_page(
     total_docs = len(entries)
 
     for section in manifest["sections"]:
-        cards: list[str] = []
+        section_cards: list[dict[str, object]] = []
         for item in section["entries"]:
             rel = ensure_relative_repo_path(item["path"])
             entry = entry_lookup[rel]
             source_text = source_cache[entry.path]
             title = first_heading(source_text, entry.label)
             excerpt = first_excerpt(source_text, entry.note)
-            last_updated = source_last_updated(entry.path)
+            last_updated_dt = source_last_updated_dt(entry.path)
+            last_updated = last_updated_dt.strftime("%Y-%m-%d %H:%M")
             href = relative_file_href(output_dir / "index.html", page_map[rel])
             raw_href = relative_file_href(output_dir / "index.html", REPO_ROOT / rel)
             visuals = artifact_map.get(entry.path, [])
@@ -714,7 +720,7 @@ def render_index_page(
             search_blob = " ".join(
                 [entry.section_title, entry.label, title, excerpt, entry.note, entry.path.as_posix()]
             ).lower()
-            cards.append(
+            card_html = (
                 "<article class=\"doc-card\""
                 f" data-search=\"{html.escape(search_blob)}\">"
                 f"<p class=\"eyebrow\">{html.escape(entry.section_title)}</p>"
@@ -730,13 +736,48 @@ def render_index_page(
                 "</div>"
                 "</article>"
             )
+
+            section_cards.append(
+                {
+                    "entry": entry,
+                    "label": entry.label,
+                    "href": href,
+                    "last_updated": last_updated,
+                    "last_updated_dt": last_updated_dt,
+                    "card_html": card_html,
+                }
+            )
+
+        if section["id"] == "attract-intro":
+            section_cards.sort(
+                key=lambda row: (-float(row["last_updated_dt"].timestamp()), str(row["label"]).lower()),
+            )
+            latest_items = "".join(
+                "<li>"
+                f"<a href=\"{html.escape(str(row['href']))}\">{html.escape(str(row['label']))}</a>"
+                f"<span>Last updated {html.escape(str(row['last_updated']))}</span>"
+                "</li>"
+                for row in section_cards
+            )
+            latest_html = (
+                "<div class=\"latest-panel\">"
+                "<p class=\"latest-label\">Latest</p>"
+                "<ol class=\"latest-list\">"
+                f"{latest_items}"
+                "</ol>"
+                "</div>"
+            )
+        else:
+            latest_html = ""
+
         sections_html.append(
             f'<section id="{html.escape(section["id"])}" class="section-block">'
             f"<header class=\"section-header\">"
             f"<h2>{html.escape(section['title'])}</h2>"
             f"<p>{html.escape(section.get('description', ''))}</p>"
             f"</header>"
-            f"<div class=\"card-grid\">{''.join(cards)}</div>"
+            f"{latest_html}"
+            f"<div class=\"card-grid\">{''.join(str(row['card_html']) for row in section_cards)}</div>"
             "</section>"
         )
 
@@ -1038,6 +1079,39 @@ blockquote {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1rem;
+}
+
+.latest-panel {
+  margin: 1rem 0 1.2rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  background: #fbfdff;
+}
+
+.latest-label {
+  margin: 0 0 0.65rem;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.latest-list {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.latest-list li + li {
+  margin-top: 0.45rem;
+}
+
+.latest-list li span {
+  display: inline-block;
+  margin-left: 0.55rem;
+  color: var(--muted);
+  font-size: 0.88rem;
 }
 
 .doc-card {
