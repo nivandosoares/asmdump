@@ -88,6 +88,20 @@ This note is the explicit resume point for the next agent on Lane 3.
       - `B` reduces speed
       - d-pad steers
     - `slot2_extra` is also described there as still intro/credits
+  - preserved manual video follow-up:
+    - `manual_artifacts/lane3/lane3_live_race_video.avi`
+    - `rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md`
+    - derived stills under `manual_artifacts/lane3/Screenshots/`
+    - current measured metadata:
+      - `43.861101s`
+      - `256x224`
+      - about `60.10 fps`
+      - `2636` reported video frames
+    - stronger continuity read now preserved in stills:
+      - opening `live_race_mid` road / cockpit / radar / green-car surface
+      - stop-sign and gas-station/post continuity before the checkpoint pause
+      - a late resumed-driving frame with an extra colored radar marker,
+        matching the earlier police/third-marker human note
   - both manual seeds still load onto:
     - `main = 02:9016`
     - `irq = 01:96A0`

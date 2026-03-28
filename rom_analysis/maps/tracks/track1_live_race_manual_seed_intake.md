@@ -69,6 +69,14 @@
 - `manual_artifacts/lane3/lane3_live_race_slot2_extra.mss`
 - `manual_artifacts/lane3/lane3_live_race_notes.txt`
 - `manual_artifacts/lane3/responses.txt`
+- `manual_artifacts/lane3/lane3_live_race_video.avi`
+- `manual_artifacts/lane3/Screenshots/lane3_live_race_video_contact_sheet.png`
+- `manual_artifacts/lane3/Screenshots/lane3_live_race_video_frame0000_start.png`
+- `manual_artifacts/lane3/Screenshots/lane3_live_race_video_frame0600_curve.png`
+- `manual_artifacts/lane3/Screenshots/lane3_live_race_video_frame1200_open_road.png`
+- `manual_artifacts/lane3/Screenshots/lane3_live_race_video_frame1500_stop_sign.png`
+- `manual_artifacts/lane3/Screenshots/lane3_live_race_video_frame2500_late_radar.png`
+- `rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md`
 - `tools/out/lane3_live_race_mid_probe/td2_boot_probe.json`
 - `tools/out/lane3_live_race_plus30f_probe/td2_boot_probe.json`
 - `tools/out/lane3_live_race_mid_vs_plus30f_probe_compare.json`
@@ -151,6 +159,29 @@
   - the clip also highlights curves, elevations/depressions in the road,
     insects hitting the windshield, and a late police arrival with siren plus
     a third radar marker
+
+## Video Intake Follow-Up (`2026-03-28`)
+
+- the preserved local clip is now ingested as a first-class artifact in:
+  - `rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md`
+- measured video metadata:
+  - `43.861101s`
+  - `256x224`
+  - about `60.10 fps`
+  - `2636` reported video frames
+- extracted stills now preserve the key visual milestones directly:
+  - opening live-race frame with the green traffic car on the player's right
+  - a later curved-road frame
+  - a later open-road frame
+  - the checkpoint `STOP` sign
+  - a late resumed-driving frame with an extra colored radar marker
+- practical gain over the raw response note:
+  - the checkpoint/post sequence is no longer text-only
+  - the black transition frames around the stop/post sequence are now
+    documented as part of the clip continuity rather than a missing-capture
+    ambiguity
+  - the late extra radar marker is now a preserved still target for later
+    HUD/OAM correlation
 
 ## Negative Result
 

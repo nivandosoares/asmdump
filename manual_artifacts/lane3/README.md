@@ -1,6 +1,6 @@
 # Lane 3 Manual Capture Request
 
-## Current Status (`2026-03-27`)
+## Current Status (`2026-03-28`)
 
 The original request is now fulfilled.
 
@@ -10,6 +10,25 @@ Preserved manual savestates:
 - `lane3_live_race_plus30f.mss`
 - `lane3_live_race_slot2_extra.mss`
 - `lane3_live_race_notes.txt`
+- `responses.txt`
+- `lane3_live_race_video.avi`
+
+Derived stills from the preserved local video now live under:
+
+- `Screenshots/lane3_live_race_video_contact_sheet.png`
+- `Screenshots/lane3_live_race_video_frame0000_start.png`
+- `Screenshots/lane3_live_race_video_frame0600_curve.png`
+- `Screenshots/lane3_live_race_video_frame1200_open_road.png`
+- `Screenshots/lane3_live_race_video_frame1500_stop_sign.png`
+- `Screenshots/lane3_live_race_video_frame2500_late_radar.png`
+
+Note:
+
+- no separate user-supplied screenshot files were present in `Screenshots/`
+  at intake time
+- the current PNGs in that folder were extracted from
+  `lane3_live_race_video.avi` so later agents have stable review frames even
+  if they do not replay the video manually
 
 These came from the user's live Mesen config under
 `~/.config/Mesen2/SaveStates/`:
@@ -32,6 +51,8 @@ The most useful manual package is:
 1. `lane3_live_race_mid.mss`
 2. `lane3_live_race_plus30f.mss`
 3. `lane3_live_race_notes.txt`
+4. `responses.txt`
+5. `lane3_live_race_video.avi`
 
 ## What Each File Should Be
 

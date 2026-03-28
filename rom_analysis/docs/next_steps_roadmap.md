@@ -79,6 +79,13 @@ Use these as guided-capture targets for lane 3, not as promoted ROM claims:
     near on the player's right, and an active radar marker
   - the same note also extends the seed through a checkpoint/post-stop dialog
     sequence and a late police arrival with a third radar marker
+  - the preserved local video is now also ingested through
+    `rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md`:
+    extracted stills now preserve the opening live-race frame, curved/open
+    road continuity, the checkpoint `STOP` sign and gas-station/post exterior,
+    the black transition/fade around that stop, and a late resumed-driving
+    frame with an extra colored radar marker that matches the earlier
+    police/third-marker note
 
 ## Front-End Menu Split
 
