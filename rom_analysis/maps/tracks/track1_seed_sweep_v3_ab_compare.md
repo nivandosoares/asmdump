@@ -75,8 +75,8 @@
 - Stop treating `game_11.mss` as a verified gameplay seed.
 - The useful correction here is not “`A` or `B` accelerates in gameplay.”
 - The useful correction is:
-  - `a_hold` and `b_hold` collapse onto the same front-end/menu-bound corridor
+  - `a_hold` and `b_hold` collapse onto the same broad front-end/demo corridor
   - `a+b` first diverges at frame `219`, but still inside that same
-    menu-bound seed family
+    inherited seed family rather than a separately proven gameplay corridor
 - The next bounded target is now to recover a true gameplay seed before
   promoting any more lane-3 conclusions from this sweep family.

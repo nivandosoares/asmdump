@@ -112,6 +112,15 @@ already grounded in code reads, probes, or generated artifacts.
     review pack. That means `state_09a2/state_09a8` are no longer the first
     visible split; they are now secondary post-handoff OAM candidates after
     the already-closed top-strip marker.
+    A newer Lane 3 constraint now sharpens the interpretation of this whole
+    family: the old no-input and early-input power-on corridors were probably
+    crossing short attract/demo gameplay slices, not a clean long-form
+    player-controlled gameplay state. That is why the same broad
+    `02:9016/01:96A0/02:8F3C` family can appear "menu-like" in some archived
+    passes and still hold user-verified live Desert Blast gameplay imagery in
+    the preserved manual seeds. The callback family is therefore broader than a
+    menu-only label; the real separation sits in internal HUD/OAM/substate
+    fields.
     Direct headless forcing of `01:9568/01:95AD` still does not promote into
     that same corridor: short-force probes keep `active_main` pinned on
     `01:9568/01:95AD` through frame `2199` with no staged callback writes.

@@ -30,7 +30,7 @@
 
 ## Current Reading
 
-- The current `game_11.mss` still loads as the same broad menu-bound seed
+- The current `game_11.mss` still loads as the same broad front-end/demo seed
   family at frame `0`:
   - boot probe frame `0`: `active_main = 02:9016`, `active_irq = 01:96A0`,
     `$1C6A = 1`, `$1C70 = 0`, `$1C76 = 1`, `$0202 = 0xFFFF`

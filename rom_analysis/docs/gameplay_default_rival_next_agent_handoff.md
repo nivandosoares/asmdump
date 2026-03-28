@@ -7,6 +7,7 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `rom_analysis/docs/next_steps_roadmap.md`
 - `rom_analysis/docs/progress_checkpoints.md`
 - `rom_analysis/docs/snes_runtime_algorithm_human.md`
+- `rom_analysis/docs/lane3_attract_demo_boundary.md`
 - `tools/out/game11_seed_surface_audit/game11_seed_surface_audit.md`
 - `rom_analysis/maps/tracks/track1_seed_sweep_v3_ab_compare.md`
 - `rom_analysis/maps/tracks/track1_b_hold_scanline_recheck_0090_0093_current_seed.md`
@@ -118,9 +119,13 @@ This note is the explicit resume point for the next agent on Lane 3.
       - `2084`
 - practical read:
   - this corridor is no longer “the same frame repeated forever”
-  - but it is also not yet a closed gameplay seed, because the inherited
-    selector family never leaves the old menu-derived state block in the
-    current proof window
+  - but it is also not yet a closed gameplay seed by itself
+  - the better current read is that older power-on/no-input-style lanes can
+    cross short attract/demo gameplay slices while still preserving the same
+    inherited selector block
+  - that means a missing long gameplay segment after injected input is not
+    strong evidence that the lane was "never gameplay"; the input may simply
+    have cut a short demo slice before it developed further
 
 ## Do Not Repeat
 
@@ -135,6 +140,10 @@ This note is the explicit resume point for the next agent on Lane 3.
 - do not spend more CPU on full-length parallel `mesen_capture.lua` runs from
   power-on when a `mesen_probe_boot.lua` compare can falsify the same question
   more cheaply
+- do not keep assuming that more passive power-on runtime will reveal a long
+  uninterrupted gameplay session
+  - the stronger current fit is that these corridors can include short
+    attract/demo slices that are easy to clip with scripted input
 - do not treat frame `2048` as the first useful late-input delta in this lane
   - it is still contaminated by the already-closed top-right rival blink
   - the first useful post-input frame is `2052`

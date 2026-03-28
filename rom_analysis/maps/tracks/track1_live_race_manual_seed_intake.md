@@ -88,7 +88,10 @@
   - the repo now has preserved manual seeds that the user identifies as live
     Desert Blast gameplay imagery
   - but the code-facing state still resembles the same `02:9016` family that
-    earlier looked menu-derived
+    earlier looked menu-derived or front-end-bound in older no-input corridors
+  - the newer fit is that those older corridors likely crossed short
+    attract/demo gameplay slices and were over-interpreted as a clean
+    menu-vs-gameplay boundary
   - the real lane-3 question is now sharper: why can visually live-race seeds
     still present as `02:9016` with the inherited selector block?
 
