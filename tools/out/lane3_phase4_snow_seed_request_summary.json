@@ -1,0 +1,232 @@
+{
+  "scenarios": [
+    {
+      "id": "early_right_guess",
+      "note": "early 01:BAB3 right pulses",
+      "probe_path": "tools/out/lane3_track_east_probe_guess/td2_boot_probe.json",
+      "first_be43_frame": null,
+      "first_9016_frame": null,
+      "selector_1c7c_values": [
+        0,
+        7538
+      ],
+      "sample_frames": {
+        "1250": {
+          "selector_1c7c": 0,
+          "state_0960": 256,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:BAB3"
+        },
+        "1260": {
+          "selector_1c7c": 0,
+          "state_0960": 256,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:BAB3"
+        },
+        "1280": {
+          "selector_1c7c": 0,
+          "state_0960": 128,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:BAB3"
+        },
+        "1629": {
+          "selector_1c7c": 0,
+          "state_0960": 0,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:BAB3"
+        },
+        "1640": {
+          "selector_1c7c": 0,
+          "state_0960": 128,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:BAB3"
+        },
+        "1714": {
+          "selector_1c7c": 0,
+          "state_0960": 0,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "00:8029"
+        },
+        "1730": {
+          "selector_1c7c": 0,
+          "state_0960": 128,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "00:8029"
+        },
+        "1736": {
+          "selector_1c7c": 0,
+          "state_0960": 0,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "00:8029"
+        },
+        "2044": {
+          "selector_1c7c": 0,
+          "state_0960": 0,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "00:8029"
+        }
+      }
+    },
+    {
+      "id": "early_down_guess",
+      "note": "early 01:BAB3 down pulses",
+      "probe_path": "tools/out/lane3_track_east_down_probe_guess/td2_boot_probe.json",
+      "first_be43_frame": 1717,
+      "first_9016_frame": 2044,
+      "selector_1c7c_values": [
+        0,
+        8903
+      ],
+      "sample_frames": {
+        "1250": {
+          "selector_1c7c": 0,
+          "state_0960": 1024,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:BAB3"
+        },
+        "1260": {
+          "selector_1c7c": 0,
+          "state_0960": 1024,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:BAB3"
+        },
+        "1280": {
+          "selector_1c7c": 0,
+          "state_0960": 128,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:BAB3"
+        },
+        "1629": {
+          "selector_1c7c": 0,
+          "state_0960": 0,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:C1D2"
+        },
+        "1640": {
+          "selector_1c7c": 0,
+          "state_0960": 128,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:C1D2"
+        },
+        "1714": {
+          "selector_1c7c": 0,
+          "state_0960": 0,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "00:8029"
+        },
+        "1730": {
+          "selector_1c7c": 0,
+          "state_0960": 128,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:BE43"
+        },
+        "1736": {
+          "selector_1c7c": 0,
+          "state_0960": 0,
+          "state_1c70": 0,
+          "state_1c76": 1,
+          "active_main": "01:BE43"
+        },
+        "2044": {
+          "selector_1c7c": 0,
+          "state_0960": 0,
+          "state_1c70": 0,
+          "state_1c76": 1,
+          "active_main": "02:9016"
+        }
+      }
+    },
+    {
+      "id": "be43_down_guess",
+      "note": "be43-relative down guess",
+      "probe_path": "tools/out/lane3_track_be43_down_guess/td2_boot_probe.json",
+      "first_be43_frame": null,
+      "first_9016_frame": null,
+      "selector_1c7c_values": [
+        0,
+        43487
+      ],
+      "sample_frames": {
+        "1250": {
+          "selector_1c7c": 0,
+          "state_0960": 0,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:BAB3"
+        },
+        "1260": {
+          "selector_1c7c": 0,
+          "state_0960": 0,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:BAB3"
+        },
+        "1280": {
+          "selector_1c7c": 0,
+          "state_0960": 4096,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:BAB3"
+        },
+        "1629": {
+          "selector_1c7c": 0,
+          "state_0960": 0,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:C1D2"
+        },
+        "1640": {
+          "selector_1c7c": 0,
+          "state_0960": 0,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:C1D2"
+        },
+        "1714": {
+          "selector_1c7c": 0,
+          "state_0960": 0,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:C1D2"
+        },
+        "1730": {
+          "selector_1c7c": 0,
+          "state_0960": 0,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:C1D2"
+        },
+        "1736": {
+          "selector_1c7c": 0,
+          "state_0960": 0,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:C1D2"
+        },
+        "2044": {
+          "selector_1c7c": 0,
+          "state_0960": 0,
+          "state_1c70": 0,
+          "state_1c76": 0,
+          "active_main": "01:C1D2"
+        }
+      }
+    }
+  ]
+}

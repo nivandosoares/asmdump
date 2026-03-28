@@ -221,6 +221,7 @@ Validation contract baseline:
   - `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
   - `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
   - `rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
+  - `rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md`
   - `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
 - New generated artifacts:
   - `tools/out/lane3_service_status_phase_pack/`
@@ -248,6 +249,9 @@ Validation contract baseline:
     emulator-side `BG/OBJ` capture
   - prefer later hard-phase or service/post routes over more whole-frame-only
     live-entry diffs
+  - for snow specifically, stop treating long autonomous replay from the
+    default menu corridor as the primary plan; request preserved human
+    savestates near phase 4 instead
 
 ## Gameplay Capture Heuristics (User-supplied, Unverified)
 

@@ -17,6 +17,7 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
 - `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
 - `rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
+- `rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md`
 - `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
 - `rom_analysis/maps/tracks/track1_live_race_vs_post9016_control.md`
 - `rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
@@ -241,6 +242,12 @@ This note is the explicit resume point for the next agent on Lane 3.
     partial-results, later hard phases, snow, and the arrest/prison finale,
     without pretending those longplay/video anchors are already
     `BG/OBJ`-resolved
+  - new boundary:
+    the default menu-entry automation is not yet a credible route to reach the
+    later snow corridor before game-over
+  - new request surface:
+    prefer preserved human savestates near phase-4 snow over longer autonomous
+    replay attempts from the default front-end route
 
 ## Do Not Repeat
 

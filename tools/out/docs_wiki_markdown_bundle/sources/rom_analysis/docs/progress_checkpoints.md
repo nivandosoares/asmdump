@@ -6372,3 +6372,33 @@ Current status:
   - the next move is no longer “find any snow frame”; it is “decide whether
     snow or service/post is the better next emulator-side `BG/OBJ` capture
     target”
+
+### CP-131: phase-4 snow is now explicitly fenced as a savestate-first target
+
+- promoted docs:
+  - `rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md`
+  - `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
+  - `rom_analysis/docs/next_steps_roadmap.md`
+- promoted artifacts:
+  - `tools/out/lane3_phase4_snow_seed_request_summary.json`
+  - `tools/out/lane3_phase4_snow_seed_request_summary.md`
+- bounded validation:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=180 python3 tools/run_lane3_gameplay_entry.py tools/out/lane3_track_east_probe_guess --mode probe --menu-windows '1200:a;1250-1255:right;1260-1265:right;1280:a;1505-1510:a;1640-1645:a;1730-1735:a' --probe-total-frames 2600`
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=180 python3 tools/run_lane3_gameplay_entry.py tools/out/lane3_track_east_down_probe_guess --mode probe --menu-windows '1200:a;1250-1255:down;1260-1265:down;1280:a;1505-1510:a;1640-1645:a;1730-1735:a' --probe-total-frames 2600`
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=210 TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/lane3_track_be43_down_guess/td2_boot_probe TD2_BOOT_PROBE_TOTAL_FRAMES=3200 TD2_BOOT_PROBE_TRACE_START_FRAME=1450 TD2_BOOT_PROBE_TRACE_END_FRAME=2600 TD2_BOOT_PROBE_TRACE_EXEC_POINTS='c20b=01:C20B,c1d2=01:C1D2,be43=01:BE43,be76=01:BE76,b87=01:8B87,902d=01:902D,9111=01:9111,9016=02:9016' TD2_BOOT_PROBE_EXEC_POINT_MAX_HITS=768 TD2_BOOT_PROBE_INPUT_WINDOWS='1200:start;1280:start;1505-1510:start' TD2_BOOT_PROBE_TRIGGER_INPUT_WINDOWS='be43+1-6:down;be43+17-22:start' ./validation/run_mesen_probe_boot.sh ./game.smc`
+- observed result:
+  - early menu guesses do close useful joypad-bit evidence:
+    `right -> state_0960 = 0x0100`
+    `down -> state_0960 = 0x0400`
+  - but they do not close a snow-capable route:
+    - early `01:BAB3` right pulses fail to preserve the normal gameplay handoff
+    - early `01:BAB3` down pulses still keep `selector_1c7c = 0` into the
+      same default `02:9016` corridor
+    - a later `be43`-relative down guess without the earlier organic selector
+      steps does not even reach `01:BE43`; it stalls in `01:C1D2`
+- practical reading:
+  - phase-4 snow should no longer be treated as a “keep driving from the
+    default menu route until it works” problem
+  - the right next external dependency is preserved human savestates near the
+    snowy corridor, after which lane 3 can return to the trusted native
+    `BG1/BG2/BG3/OBJ` extraction path immediately

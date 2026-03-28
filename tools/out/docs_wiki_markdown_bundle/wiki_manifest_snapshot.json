@@ -226,6 +226,11 @@
           "note": "Longplay-backed snow-driving anchors starting at the one-hour mark."
         },
         {
+          "path": "rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md",
+          "label": "Phase 4 Snow Seed Request",
+          "note": "Boundary note showing why phase-4 snow is now a savestate-first capture target."
+        },
+        {
           "path": "rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md",
           "label": "Prison Finale Anchor",
           "note": "Longplay-backed arrest/prison ending pack and high-score handoff."
