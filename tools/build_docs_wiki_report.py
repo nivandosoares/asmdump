@@ -17,6 +17,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = REPO_ROOT / "rom_analysis" / "docs" / "wiki_doc_index.json"
 DEFAULT_OUTPUT = REPO_ROOT / "tools" / "out" / "docs_wiki"
+DEFAULT_MARKDOWN_BUNDLE_OUTPUT = REPO_ROOT / "tools" / "out" / "docs_wiki_markdown_bundle"
 
 
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
@@ -61,6 +62,12 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=DEFAULT_OUTPUT,
         help="Output directory for the generated HTML site.",
+    )
+    parser.add_argument(
+        "--markdown-bundle-dir",
+        type=Path,
+        default=DEFAULT_MARKDOWN_BUNDLE_OUTPUT,
+        help="Output directory for the NotebookLM-friendly markdown bundle.",
     )
     return parser.parse_args()
 
@@ -314,6 +321,14 @@ def page_output_path(output_dir: Path, source_rel: Path) -> Path:
 
 def relative_file_href(from_file: Path, to_file: Path) -> str:
     return Path(os.path.relpath(to_file, start=from_file.parent)).as_posix()
+
+
+def repo_rel(path: Path) -> str:
+    resolved = path.resolve()
+    try:
+        return resolved.relative_to(REPO_ROOT).as_posix()
+    except ValueError:
+        return resolved.as_posix()
 
 
 def split_pipe_row(line: str) -> list[str]:
@@ -653,8 +668,17 @@ def render_doc_page(
   <link rel="stylesheet" href="{html.escape(css_href)}">
 </head>
 <body>
+  <header class="mobile-topbar">
+    <a class="site-link mobile-site-link" href="{html.escape(index_href)}">{html.escape(site_title)}</a>
+    <button class="sidebar-toggle" type="button" data-sidebar-toggle aria-controls="site-sidebar" aria-expanded="false">Browse</button>
+  </header>
+  <div class="sidebar-backdrop" data-sidebar-backdrop></div>
   <div class="layout">
-    <aside class="sidebar">
+    <aside class="sidebar" id="site-sidebar">
+      <div class="sidebar-mobile-header">
+        <span class="sidebar-mobile-title">Wiki Navigation</span>
+        <button class="sidebar-close" type="button" data-sidebar-close aria-label="Close navigation">Close</button>
+      </div>
       <a class="site-link" href="{html.escape(index_href)}">{html.escape(site_title)}</a>
       <p class="sidebar-note">Simple wiki-style index built from curated markdown sources.</p>
       {sidebar_html}
@@ -694,6 +718,7 @@ def render_index_page(
     output_dir: Path,
     source_cache: dict[Path, str],
     artifact_map: dict[Path, list[ArtifactImage]],
+    markdown_bundle: dict[str, object] | None,
 ) -> str:
     entry_lookup = {entry.path: entry for entry in entries}
     sections_html: list[str] = []
@@ -810,6 +835,35 @@ def render_index_page(
         for row in latest_articles[:10]
     )
 
+    markdown_bundle_html = ""
+    if markdown_bundle is not None:
+        bundle_readme_href = relative_file_href(
+            output_dir / "index.html",
+            Path(str(markdown_bundle["readme_md"])),
+        )
+        bundle_index_href = relative_file_href(
+            output_dir / "index.html",
+            Path(str(markdown_bundle["index_md"])),
+        )
+        bundle_combined_href = relative_file_href(
+            output_dir / "index.html",
+            Path(str(markdown_bundle["combined_md"])),
+        )
+        markdown_bundle_html = (
+            "<section class=\"bundle-panel\">"
+            "<p class=\"latest-label\">NotebookLM Bundle</p>"
+            "<p class=\"bundle-copy\">"
+            "Curated markdown export kept in sync with the wiki manifest for offline review and NotebookLM ingestion."
+            "</p>"
+            f"<p class=\"bundle-meta\">{int(markdown_bundle['doc_count'])} markdown files mirrored from the current wiki manifest.</p>"
+            "<div class=\"bundle-links\">"
+            f"<a href=\"{html.escape(bundle_readme_href)}\">Bundle README</a>"
+            f"<a href=\"{html.escape(bundle_index_href)}\">Bundle Index</a>"
+            f"<a href=\"{html.escape(bundle_combined_href)}\">Combined Markdown</a>"
+            "</div>"
+            "</section>"
+        )
+
     generated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     return f"""<!doctype html>
 <html lang="en">
@@ -821,8 +875,17 @@ def render_index_page(
   <script defer src="assets/wiki.js"></script>
 </head>
 <body>
+  <header class="mobile-topbar">
+    <a class="site-link mobile-site-link" href="index.html">{html.escape(manifest['site_title'])}</a>
+    <button class="sidebar-toggle" type="button" data-sidebar-toggle aria-controls="site-sidebar" aria-expanded="false">Browse</button>
+  </header>
+  <div class="sidebar-backdrop" data-sidebar-backdrop></div>
   <div class="layout">
-    <aside class="sidebar">
+    <aside class="sidebar" id="site-sidebar">
+      <div class="sidebar-mobile-header">
+        <span class="sidebar-mobile-title">Wiki Navigation</span>
+        <button class="sidebar-close" type="button" data-sidebar-close aria-label="Close navigation">Close</button>
+      </div>
       <a class="site-link" href="index.html">{html.escape(manifest['site_title'])}</a>
       <p class="sidebar-note">{html.escape(manifest.get('tagline', ''))}</p>
       <section class="sidebar-group">
@@ -851,6 +914,7 @@ def render_index_page(
           <span>Filter docs</span>
           <input id="doc-filter" type="search" placeholder="Search by lane, surface, file, or topic">
         </label>
+        {markdown_bundle_html}
       </header>
       <section class="section-block latest-articles-block">
         <header class="section-header">
@@ -898,6 +962,7 @@ body {
   color: var(--ink);
   font-family: var(--font-sans);
   line-height: 1.55;
+  overflow-wrap: anywhere;
 }
 
 a {
@@ -973,6 +1038,14 @@ blockquote {
   min-height: 100vh;
 }
 
+.mobile-topbar,
+.sidebar-mobile-header,
+.sidebar-toggle,
+.sidebar-close,
+.sidebar-backdrop {
+  display: none;
+}
+
 .sidebar {
   position: sticky;
   top: 0;
@@ -1022,6 +1095,7 @@ blockquote {
 }
 
 .content {
+  min-width: 0;
   padding: 2rem;
 }
 
@@ -1108,6 +1182,27 @@ blockquote {
   padding: 0.85rem 1rem;
   font: inherit;
   background: #fff;
+}
+
+.bundle-panel {
+  margin-top: 1rem;
+  padding: 1rem 1.05rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  background: #fbfdff;
+}
+
+.bundle-copy,
+.bundle-meta {
+  margin: 0.45rem 0 0;
+  color: var(--muted);
+}
+
+.bundle-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
 }
 
 .card-grid {
@@ -1278,20 +1373,190 @@ blockquote {
   padding-left: 1.3rem;
 }
 
+.doc-body img,
+.content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.doc-body,
+.doc-card,
+.artifact-card,
+.hero,
+.section-block,
+.doc-header {
+  min-width: 0;
+}
+
+.doc-body p,
+.doc-body li,
+.doc-body td,
+.doc-body th,
+.doc-note,
+.doc-excerpt,
+.doc-path code,
+.doc-meta code {
+  overflow-wrap: anywhere;
+}
+
 @media (max-width: 980px) {
+  .mobile-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--panel-border);
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+  }
+
+  .mobile-site-link {
+    margin-bottom: 0;
+    font-size: 1.1rem;
+  }
+
+  .sidebar-toggle,
+  .sidebar-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--panel-border);
+    border-radius: 999px;
+    padding: 0.55rem 0.9rem;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 45;
+    background: rgba(15, 23, 42, 0.28);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  body.sidebar-open .sidebar-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  body.sidebar-open {
+    overflow: hidden;
+  }
+
   .layout {
     grid-template-columns: 1fr;
+    min-height: auto;
   }
 
   .sidebar {
-    position: static;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    width: min(88vw, 360px);
     height: auto;
     border-right: 0;
-    border-bottom: 1px solid var(--panel-border);
+    border-left: 1px solid var(--panel-border);
+    transform: translateX(100%);
+    transition: transform 0.2s ease;
+    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.18);
+    padding: 1rem;
+  }
+
+  body.sidebar-open .sidebar {
+    transform: translateX(0);
+  }
+
+  .sidebar-mobile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .sidebar-mobile-title {
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
   .content {
-    padding: 1rem;
+    padding: 0.85rem;
+  }
+
+  .hero,
+  .doc-header {
+    padding: 1.15rem 1rem;
+  }
+
+  .section-block,
+  .artifact-panel,
+  .doc-body {
+    padding: 1rem 0.95rem;
+  }
+
+  .hero-meta,
+  .doc-meta,
+  .doc-links,
+  .breadcrumbs,
+  .bundle-links {
+    gap: 0.5rem;
+  }
+
+  .breadcrumbs,
+  .doc-meta {
+    font-size: 0.88rem;
+  }
+
+  .card-grid,
+  .artifact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .latest-list {
+    padding-left: 1rem;
+  }
+
+  .latest-list li span {
+    display: block;
+    margin-left: 0;
+    margin-top: 0.15rem;
+  }
+
+  .latest-links {
+    margin-left: 0;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  pre {
+    padding: 0.85rem;
+    font-size: 0.82rem;
+  }
+
+  .doc-body table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  th,
+  td {
+    min-width: 140px;
   }
 }
 """
@@ -1299,6 +1564,37 @@ blockquote {
 
 JS_TEXT = """
 document.addEventListener("DOMContentLoaded", () => {
+  const body = document.body;
+  const toggleButtons = Array.from(document.querySelectorAll("[data-sidebar-toggle]"));
+  const closeButtons = Array.from(document.querySelectorAll("[data-sidebar-close]"));
+  const backdrop = document.querySelector("[data-sidebar-backdrop]");
+  const setSidebarOpen = (open) => {
+    body.classList.toggle("sidebar-open", open);
+    for (const button of toggleButtons) {
+      button.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+  };
+  for (const button of toggleButtons) {
+    button.addEventListener("click", () => {
+      setSidebarOpen(!body.classList.contains("sidebar-open"));
+    });
+  }
+  for (const button of closeButtons) {
+    button.addEventListener("click", () => setSidebarOpen(false));
+  }
+  if (backdrop) {
+    backdrop.addEventListener("click", () => setSidebarOpen(false));
+  }
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 980 && body.classList.contains("sidebar-open")) {
+      setSidebarOpen(false);
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && body.classList.contains("sidebar-open")) {
+      setSidebarOpen(false);
+    }
+  });
   const input = document.getElementById("doc-filter");
   if (!input) {
     return;
@@ -1323,7 +1619,156 @@ def write_assets(output_dir: Path) -> None:
     (assets_dir / "wiki.js").write_text(JS_TEXT.strip() + "\n", encoding="utf-8")
 
 
-def build_site(manifest: dict, entries: list[DocEntry], output_dir: Path) -> None:
+def join_markdown_lines(lines: list[str]) -> str:
+    trimmed = list(lines)
+    while trimmed and trimmed[-1] == "":
+        trimmed.pop()
+    return "\n".join(trimmed) + "\n"
+
+
+def build_markdown_bundle(
+    manifest: dict,
+    entries: list[DocEntry],
+    bundle_dir: Path,
+    source_cache: dict[Path, str],
+    manifest_path: Path,
+) -> dict[str, object]:
+    if bundle_dir.exists():
+        for child in bundle_dir.iterdir():
+            if child.is_dir():
+                shutil.rmtree(child)
+            else:
+                child.unlink()
+    bundle_dir.mkdir(parents=True, exist_ok=True)
+    sources_dir = bundle_dir / "sources"
+    sources_dir.mkdir(parents=True, exist_ok=True)
+
+    generated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    manifest_snapshot_path = bundle_dir / "wiki_manifest_snapshot.json"
+    manifest_snapshot_path.write_text(
+        json.dumps(manifest, indent=2, ensure_ascii=True) + "\n",
+        encoding="utf-8",
+    )
+
+    section_rows: dict[str, list[dict[str, str]]] = {}
+    index_rows: list[dict[str, str]] = []
+    combined_parts = [
+        "# TD2 Wiki Markdown Bundle",
+        "",
+        f"- Generated: `{generated_at}`",
+        f"- Manifest: `{manifest_path.relative_to(REPO_ROOT).as_posix()}`",
+        f"- Total docs: `{len(entries)}`",
+        "",
+        "Use `wiki_bundle_index.md` for the curated file list or `wiki_combined.md` for a single-file ingest path.",
+        "",
+    ]
+
+    for entry in entries:
+        source_text = source_cache[entry.path]
+        dest_rel = Path("sources") / entry.path
+        dest_path = bundle_dir / dest_rel
+        dest_path.parent.mkdir(parents=True, exist_ok=True)
+        dest_path.write_text(source_text, encoding="utf-8")
+        last_updated = source_last_updated(entry.path)
+        row = {
+            "section_id": entry.section_id,
+            "section_title": entry.section_title,
+            "label": entry.label,
+            "note": entry.note,
+            "source": entry.path.as_posix(),
+            "bundle_copy": dest_rel.as_posix(),
+            "last_updated": last_updated,
+        }
+        index_rows.append(row)
+        section_rows.setdefault(entry.section_id, []).append(row)
+        combined_parts.extend(
+            [
+                f"## {entry.section_title} :: {entry.label}",
+                "",
+                f"- Source: `{entry.path.as_posix()}`",
+                f"- Bundle copy: `{dest_rel.as_posix()}`",
+                f"- Last updated: `{last_updated}`",
+                f"- Note: {entry.note}",
+                "",
+                "---",
+                "",
+                source_text.rstrip(),
+                "",
+                "",
+            ]
+        )
+
+    index_lines = [
+        "# TD2 Wiki Markdown Bundle",
+        "",
+        f"Generated: `{generated_at}`",
+        "",
+        "This folder mirrors the markdown files curated by the HTML wiki so they can be reviewed or ingested outside the browser surface.",
+        "",
+        "## Included Sections",
+        "",
+    ]
+    for section in manifest["sections"]:
+        index_lines.append(f"### {section['title']}")
+        index_lines.append("")
+        for row in section_rows.get(section["id"], []):
+            index_lines.append(
+                f"- `{row['bundle_copy']}` | source `{row['source']}` | updated `{row['last_updated']}`"
+            )
+            if row["note"]:
+                index_lines.append(f"  note: {row['note']}")
+        index_lines.append("")
+
+    readme_lines = [
+        "# NotebookLM Bundle",
+        "",
+        "Use this folder when you want the same curated markdown corpus from the wiki without the HTML wrapper.",
+        "",
+        "Recommended entry points:",
+        "",
+        "- `wiki_bundle_index.md`: sectioned file inventory with source paths and timestamps.",
+        "- `wiki_combined.md`: one-file combined export of the current curated corpus.",
+        "- `sources/`: original markdown files copied with repo-relative paths preserved.",
+        "",
+    ]
+
+    bundle_index_json = {
+        "generated_at": generated_at,
+        "doc_count": len(entries),
+        "manifest": manifest_path.relative_to(REPO_ROOT).as_posix(),
+        "docs": index_rows,
+    }
+
+    (bundle_dir / "README.md").write_text(join_markdown_lines(readme_lines), encoding="utf-8")
+    (bundle_dir / "wiki_bundle_index.md").write_text(
+        join_markdown_lines(index_lines), encoding="utf-8"
+    )
+    (bundle_dir / "wiki_combined.md").write_text(
+        join_markdown_lines(combined_parts), encoding="utf-8"
+    )
+    (bundle_dir / "wiki_bundle_index.json").write_text(
+        json.dumps(bundle_index_json, indent=2, ensure_ascii=True) + "\n",
+        encoding="utf-8",
+    )
+
+    return {
+        "root": bundle_dir,
+        "readme_md": bundle_dir / "README.md",
+        "index_md": bundle_dir / "wiki_bundle_index.md",
+        "combined_md": bundle_dir / "wiki_combined.md",
+        "index_json": bundle_dir / "wiki_bundle_index.json",
+        "manifest_snapshot": manifest_snapshot_path,
+        "doc_count": len(entries),
+    }
+
+
+def build_site(
+    manifest: dict,
+    entries: list[DocEntry],
+    output_dir: Path,
+    markdown_bundle_dir: Path,
+    manifest_path: Path,
+) -> None:
     page_map = {entry.path: page_output_path(output_dir, entry.path) for entry in entries}
     source_cache: dict[Path, str] = {}
     artifact_map: dict[Path, list[ArtifactImage]] = {}
@@ -1352,6 +1797,13 @@ def build_site(manifest: dict, entries: list[DocEntry], output_dir: Path) -> Non
         )
         page_path.write_text(page_html, encoding="utf-8")
 
+    markdown_bundle = build_markdown_bundle(
+        manifest,
+        entries,
+        markdown_bundle_dir,
+        source_cache,
+        manifest_path,
+    )
     index_html = render_index_page(
         manifest,
         entries,
@@ -1359,6 +1811,7 @@ def build_site(manifest: dict, entries: list[DocEntry], output_dir: Path) -> Non
         output_dir,
         source_cache,
         artifact_map,
+        markdown_bundle,
     )
     (output_dir / "index.html").write_text(index_html, encoding="utf-8")
 
@@ -1374,6 +1827,14 @@ def build_site(manifest: dict, entries: list[DocEntry], output_dir: Path) -> Non
             }
             for entry in entries
         ],
+        "markdown_bundle": {
+            "directory": repo_rel(markdown_bundle_dir),
+            "readme": relative_file_href(output_dir / "index.html", Path(str(markdown_bundle["readme_md"]))),
+            "index_markdown": relative_file_href(output_dir / "index.html", Path(str(markdown_bundle["index_md"]))),
+            "combined_markdown": relative_file_href(output_dir / "index.html", Path(str(markdown_bundle["combined_md"]))),
+            "index_json": relative_file_href(output_dir / "index.html", Path(str(markdown_bundle["index_json"]))),
+            "doc_count": int(markdown_bundle["doc_count"]),
+        },
     }
     (output_dir / "site_index.json").write_text(
         json.dumps(site_index, indent=2, ensure_ascii=True) + "\n",
@@ -1385,10 +1846,14 @@ def main() -> None:
     args = parse_args()
     manifest_path = args.manifest.resolve()
     output_dir = args.output_dir.resolve()
+    markdown_bundle_dir = args.markdown_bundle_dir.resolve()
 
     manifest, entries = read_manifest(manifest_path)
-    build_site(manifest, entries, output_dir)
-    print(f"Generated wiki with {len(entries)} pages at {output_dir}")
+    build_site(manifest, entries, output_dir, markdown_bundle_dir, manifest_path)
+    print(
+        f"Generated wiki with {len(entries)} pages at {output_dir} "
+        f"and markdown bundle at {markdown_bundle_dir}"
+    )
 
 
 if __name__ == "__main__":

@@ -182,6 +182,7 @@ CALLBACK_PROBE_JSON ?= $(BOOT_PROBE_PREFIX).json
 CALLBACK_CONTRACTS_REPORT_JSON ?= $(OUT_DIR)/callback_state_contracts_report.json
 DOCS_WIKI_MANIFEST ?= ../rom_analysis/docs/wiki_doc_index.json
 DOCS_WIKI_OUT_DIR ?= $(OUT_DIR)/docs_wiki
+DOCS_WIKI_MARKDOWN_BUNDLE_DIR ?= $(OUT_DIR)/docs_wiki_markdown_bundle
 LANE3_LIVE_RACE_MID_ASSET_FOCUS_JSON := $(OUT_DIR)/lane3_live_race_mid_asset_focus.json
 LANE3_LIVE_RACE_MID_ASSET_FOCUS_MD := $(OUT_DIR)/lane3_live_race_mid_asset_focus.md
 LANE3_LIVE_RACE_MID_FRAME_IMAGE := ../manual_artifacts/lane3/Screenshots/lane3_live_race_video_frame0000_start.png
@@ -567,7 +568,8 @@ callback-contracts-check:
 docs-wiki:
 	$(PYTHON) build_docs_wiki_report.py \
 		--manifest $(DOCS_WIKI_MANIFEST) \
-		--output-dir $(DOCS_WIKI_OUT_DIR)
+		--output-dir $(DOCS_WIKI_OUT_DIR) \
+		--markdown-bundle-dir $(DOCS_WIKI_MARKDOWN_BUNDLE_DIR)
 
 terminal-bot-smoke:
 	$(PYTHON) terminal_bot.py self-test

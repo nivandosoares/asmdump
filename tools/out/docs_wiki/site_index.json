@@ -12,14 +12,14 @@
       "source": "rom_analysis/docs/next_steps_roadmap.md",
       "label": "Next Steps Roadmap",
       "section": "Source Of Truth",
-      "last_updated": "2026-03-28 14:46",
+      "last_updated": "2026-03-28 14:56",
       "page": "pages/rom_analysis/docs/next_steps_roadmap.html"
     },
     {
       "source": "rom_analysis/docs/progress_checkpoints.md",
       "label": "Progress Checkpoints",
       "section": "Source Of Truth",
-      "last_updated": "2026-03-28 14:46",
+      "last_updated": "2026-03-28 14:56",
       "page": "pages/rom_analysis/docs/progress_checkpoints.html"
     },
     {
@@ -40,7 +40,7 @@
       "source": "tools/README.md",
       "label": "Tools README",
       "section": "Source Of Truth",
-      "last_updated": "2026-03-28 14:05",
+      "last_updated": "2026-03-28 14:55",
       "page": "pages/tools/README.html"
     },
     {
@@ -166,7 +166,7 @@
       "source": "rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md",
       "label": "Gameplay Handoff",
       "section": "Gameplay And Lane 3",
-      "last_updated": "2026-03-28 14:46",
+      "last_updated": "2026-03-28 14:55",
       "page": "pages/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.html"
     },
     {
@@ -288,5 +288,13 @@
       "last_updated": "2026-03-22 22:03",
       "page": "pages/rom_analysis/docs/mesen_instrumented_backend_architecture.html"
     }
-  ]
+  ],
+  "markdown_bundle": {
+    "directory": "tools/out/docs_wiki_markdown_bundle",
+    "readme": "../docs_wiki_markdown_bundle/README.md",
+    "index_markdown": "../docs_wiki_markdown_bundle/wiki_bundle_index.md",
+    "combined_markdown": "../docs_wiki_markdown_bundle/wiki_combined.md",
+    "index_json": "../docs_wiki_markdown_bundle/wiki_bundle_index.json",
+    "doc_count": 41
+  }
 }

@@ -1,4 +1,35 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const body = document.body;
+  const toggleButtons = Array.from(document.querySelectorAll("[data-sidebar-toggle]"));
+  const closeButtons = Array.from(document.querySelectorAll("[data-sidebar-close]"));
+  const backdrop = document.querySelector("[data-sidebar-backdrop]");
+  const setSidebarOpen = (open) => {
+    body.classList.toggle("sidebar-open", open);
+    for (const button of toggleButtons) {
+      button.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+  };
+  for (const button of toggleButtons) {
+    button.addEventListener("click", () => {
+      setSidebarOpen(!body.classList.contains("sidebar-open"));
+    });
+  }
+  for (const button of closeButtons) {
+    button.addEventListener("click", () => setSidebarOpen(false));
+  }
+  if (backdrop) {
+    backdrop.addEventListener("click", () => setSidebarOpen(false));
+  }
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 980 && body.classList.contains("sidebar-open")) {
+      setSidebarOpen(false);
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && body.classList.contains("sidebar-open")) {
+      setSidebarOpen(false);
+    }
+  });
   const input = document.getElementById("doc-filter");
   if (!input) {
     return;
