@@ -102,9 +102,13 @@
 ## Next Best Step
 
 - stop treating `09A2/09A8/0053/0054` as anonymous split bytes
-- trace the specific bank-2 producer paths that create the extra live-race
-  OAM and queue movement:
-  - callers around `L01318D` and `L0108EF`
-  - paths that set `$09A8` to non-`2` values before `L001662/L00179B`
-  - any owner that advances the `0053/0054` DMA ring alongside those OAM
-    submissions
+- the first producer trace is now closed enough to focus the next pass:
+  - `BG2VOFS` is fed directly from `$22/$23`
+  - `next_irq_ptr` flips `01:960D <-> 01:96A0` inside the confirmed live-race
+    frame
+  - the strongest current producer cluster sits inside `L01318D` around
+    `02:B042 / 02:B05D / 02:B0B1 / 02:B0BD / 02:B134`
+- next ownership target:
+  map which of those producers also account for the extra live-race
+  `09A2/09A8/0053/0054` movement instead of treating the whole cluster as one
+  opaque road builder

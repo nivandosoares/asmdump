@@ -1,0 +1,811 @@
+{
+  "note_date": "2026-03-27",
+  "seed": "manual_artifacts/lane3/lane3_live_race_mid.mss",
+  "raw_inputs": {
+    "exec_trace_json": "tools/out/lane3_live_race_mid_exec_trace.json",
+    "ppu_reg_trace_json": "tools/out/lane3_live_race_mid_ppu_reg_trace.json"
+  },
+  "exec_trace": {
+    "exec_hit_count": 7,
+    "write_hit_count": 54,
+    "exec_points_hit": [
+      {
+        "point_id": "irq_96a0",
+        "point_snes": "01:96A0",
+        "stack_return_rts": 33594
+      },
+      {
+        "point_id": "road_1318d",
+        "point_snes": "02:B18D",
+        "stack_return_rts": 37344
+      },
+      {
+        "point_id": "road_1070a",
+        "point_snes": "02:870A",
+        "stack_return_rts": 37347
+      },
+      {
+        "point_id": "road_108ef",
+        "point_snes": "02:88EF",
+        "stack_return_rts": 37350
+      },
+      {
+        "point_id": "irq_960d",
+        "point_snes": "01:960D",
+        "stack_return_rts": 33594
+      },
+      {
+        "point_id": "cb_9185",
+        "point_snes": "01:9185",
+        "stack_return_rts": 1
+      },
+      {
+        "point_id": "cb_9165",
+        "point_snes": "02:9165",
+        "stack_return_rts": 37257
+      }
+    ],
+    "write_counts": {
+      "dp22": 26,
+      "dp23": 26,
+      "next_irq_ptr": 2
+    },
+    "next_irq_events": [
+      {
+        "scanline": 24,
+        "cpu_pc": "01:9808",
+        "value": 13,
+        "next_irq_addr": null
+      },
+      {
+        "scanline": 121,
+        "cpu_pc": "01:969F",
+        "value": 160,
+        "next_irq_addr": null
+      }
+    ]
+  },
+  "ppu_reg_trace": {
+    "write_hit_count": 512,
+    "dropped_hits": 20,
+    "write_counts": {
+      "vtime": 2,
+      "bg1hofs": 4,
+      "bg1vofs": 4,
+      "bg2hofs": 246,
+      "bg2vofs": 246,
+      "bg3hofs": 4,
+      "bg3vofs": 4,
+      "tmain": 2
+    },
+    "tmain_events": [
+      {
+        "scanline": 23,
+        "cpu_pc": "01:96A7",
+        "value": 23
+      },
+      {
+        "scanline": 121,
+        "cpu_pc": "01:965A",
+        "value": 19
+      }
+    ],
+    "vtime_events": [
+      {
+        "scanline": 225,
+        "cpu_pc": "00:8172",
+        "value": 23
+      },
+      {
+        "scanline": 24,
+        "cpu_pc": "01:9801",
+        "value": 120
+      }
+    ],
+    "bg1_events": {
+      "bg1hofs": [
+        {
+          "scanline": 225,
+          "cpu_pc": "00:818B",
+          "value": 0
+        },
+        {
+          "scanline": 225,
+          "cpu_pc": "00:8191",
+          "value": 0
+        },
+        {
+          "scanline": 120,
+          "cpu_pc": "01:9637",
+          "value": 0
+        },
+        {
+          "scanline": 120,
+          "cpu_pc": "01:963A",
+          "value": 0
+        }
+      ],
+      "bg1vofs": [
+        {
+          "scanline": 226,
+          "cpu_pc": "00:818B",
+          "value": 255
+        },
+        {
+          "scanline": 226,
+          "cpu_pc": "00:8191",
+          "value": 255
+        },
+        {
+          "scanline": 120,
+          "cpu_pc": "01:963D",
+          "value": 255
+        },
+        {
+          "scanline": 120,
+          "cpu_pc": "01:9640",
+          "value": 255
+        }
+      ]
+    },
+    "bg3_events": {
+      "bg3hofs": [
+        {
+          "scanline": 226,
+          "cpu_pc": "00:818B",
+          "value": 0
+        },
+        {
+          "scanline": 226,
+          "cpu_pc": "00:8191",
+          "value": 0
+        },
+        {
+          "scanline": 23,
+          "cpu_pc": "01:96B7",
+          "value": 85
+        },
+        {
+          "scanline": 23,
+          "cpu_pc": "01:96BD",
+          "value": 0
+        }
+      ],
+      "bg3vofs": [
+        {
+          "scanline": 226,
+          "cpu_pc": "00:818B",
+          "value": 255
+        },
+        {
+          "scanline": 226,
+          "cpu_pc": "00:8191",
+          "value": 255
+        },
+        {
+          "scanline": 24,
+          "cpu_pc": "01:96C3",
+          "value": 20
+        },
+        {
+          "scanline": 24,
+          "cpu_pc": "01:96C9",
+          "value": 0
+        }
+      ]
+    },
+    "bg2_vofs_unique_scanlines": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      226
+    ],
+    "bg2_unique_write_samples": [
+      {
+        "scanline": 226,
+        "cpu_pc": "00:818B",
+        "point_id": "bg2hofs",
+        "value": 0
+      },
+      {
+        "scanline": 226,
+        "cpu_pc": "00:8191",
+        "point_id": "bg2hofs",
+        "value": 0
+      },
+      {
+        "scanline": 226,
+        "cpu_pc": "00:818B",
+        "point_id": "bg2vofs",
+        "value": 255
+      },
+      {
+        "scanline": 226,
+        "cpu_pc": "00:8191",
+        "point_id": "bg2vofs",
+        "value": 255
+      },
+      {
+        "scanline": 0,
+        "cpu_pc": "00:9809",
+        "point_id": "bg2hofs",
+        "value": 0
+      },
+      {
+        "scanline": 0,
+        "cpu_pc": "00:9809",
+        "point_id": "bg2vofs",
+        "value": 255
+      },
+      {
+        "scanline": 1,
+        "cpu_pc": "00:988D",
+        "point_id": "bg2hofs",
+        "value": 0
+      },
+      {
+        "scanline": 1,
+        "cpu_pc": "00:988D",
+        "point_id": "bg2vofs",
+        "value": 254
+      },
+      {
+        "scanline": 1,
+        "cpu_pc": "00:988D",
+        "point_id": "bg2vofs",
+        "value": 255
+      },
+      {
+        "scanline": 2,
+        "cpu_pc": "00:9839",
+        "point_id": "bg2hofs",
+        "value": 0
+      },
+      {
+        "scanline": 2,
+        "cpu_pc": "00:9839",
+        "point_id": "bg2vofs",
+        "value": 253
+      },
+      {
+        "scanline": 2,
+        "cpu_pc": "00:9839",
+        "point_id": "bg2vofs",
+        "value": 255
+      },
+      {
+        "scanline": 3,
+        "cpu_pc": "00:9812",
+        "point_id": "bg2hofs",
+        "value": 0
+      },
+      {
+        "scanline": 3,
+        "cpu_pc": "00:9812",
+        "point_id": "bg2vofs",
+        "value": 252
+      },
+      {
+        "scanline": 3,
+        "cpu_pc": "00:9812",
+        "point_id": "bg2vofs",
+        "value": 255
+      },
+      {
+        "scanline": 4,
+        "cpu_pc": "00:97DD",
+        "point_id": "bg2hofs",
+        "value": 0
+      },
+      {
+        "scanline": 4,
+        "cpu_pc": "00:97DD",
+        "point_id": "bg2vofs",
+        "value": 251
+      },
+      {
+        "scanline": 4,
+        "cpu_pc": "00:97DD",
+        "point_id": "bg2vofs",
+        "value": 255
+      },
+      {
+        "scanline": 5,
+        "cpu_pc": "00:9861",
+        "point_id": "bg2hofs",
+        "value": 0
+      },
+      {
+        "scanline": 5,
+        "cpu_pc": "00:9861",
+        "point_id": "bg2vofs",
+        "value": 250
+      },
+      {
+        "scanline": 5,
+        "cpu_pc": "00:9861",
+        "point_id": "bg2vofs",
+        "value": 255
+      },
+      {
+        "scanline": 6,
+        "cpu_pc": "02:AFD1",
+        "point_id": "bg2hofs",
+        "value": 0
+      },
+      {
+        "scanline": 6,
+        "cpu_pc": "02:AFD1",
+        "point_id": "bg2vofs",
+        "value": 249
+      },
+      {
+        "scanline": 6,
+        "cpu_pc": "02:AFD1",
+        "point_id": "bg2vofs",
+        "value": 255
+      },
+      {
+        "scanline": 7,
+        "cpu_pc": "02:B03A",
+        "point_id": "bg2hofs",
+        "value": 0
+      },
+      {
+        "scanline": 7,
+        "cpu_pc": "02:B03A",
+        "point_id": "bg2vofs",
+        "value": 248
+      },
+      {
+        "scanline": 7,
+        "cpu_pc": "02:B03A",
+        "point_id": "bg2vofs",
+        "value": 255
+      },
+      {
+        "scanline": 8,
+        "cpu_pc": "02:B054",
+        "point_id": "bg2hofs",
+        "value": 0
+      },
+      {
+        "scanline": 8,
+        "cpu_pc": "02:B054",
+        "point_id": "bg2vofs",
+        "value": 247
+      },
+      {
+        "scanline": 8,
+        "cpu_pc": "02:B054",
+        "point_id": "bg2vofs",
+        "value": 255
+      },
+      {
+        "scanline": 9,
+        "cpu_pc": "02:B327",
+        "point_id": "bg2hofs",
+        "value": 0
+      },
+      {
+        "scanline": 9,
+        "cpu_pc": "02:B327",
+        "point_id": "bg2vofs",
+        "value": 246
+      },
+      {
+        "scanline": 9,
+        "cpu_pc": "02:B327",
+        "point_id": "bg2vofs",
+        "value": 255
+      },
+      {
+        "scanline": 10,
+        "cpu_pc": "00:9669",
+        "point_id": "bg2hofs",
+        "value": 0
+      },
+      {
+        "scanline": 10,
+        "cpu_pc": "00:9669",
+        "point_id": "bg2vofs",
+        "value": 245
+      },
+      {
+        "scanline": 10,
+        "cpu_pc": "00:9669",
+        "point_id": "bg2vofs",
+        "value": 255
+      },
+      {
+        "scanline": 11,
+        "cpu_pc": "00:9600",
+        "point_id": "bg2hofs",
+        "value": 177
+      },
+      {
+        "scanline": 11,
+        "cpu_pc": "00:9600",
+        "point_id": "bg2hofs",
+        "value": 255
+      },
+      {
+        "scanline": 11,
+        "cpu_pc": "00:9600",
+        "point_id": "bg2vofs",
+        "value": 254
+      },
+      {
+        "scanline": 11,
+        "cpu_pc": "00:9600",
+        "point_id": "bg2vofs",
+        "value": 255
+      },
+      {
+        "scanline": 12,
+        "cpu_pc": "00:9809",
+        "point_id": "bg2hofs",
+        "value": 177
+      },
+      {
+        "scanline": 12,
+        "cpu_pc": "00:9809",
+        "point_id": "bg2hofs",
+        "value": 255
+      },
+      {
+        "scanline": 12,
+        "cpu_pc": "00:9809",
+        "point_id": "bg2vofs",
+        "value": 255
+      },
+      {
+        "scanline": 13,
+        "cpu_pc": "00:988F",
+        "point_id": "bg2hofs",
+        "value": 178
+      },
+      {
+        "scanline": 13,
+        "cpu_pc": "00:988F",
+        "point_id": "bg2hofs",
+        "value": 255
+      },
+      {
+        "scanline": 13,
+        "cpu_pc": "00:988F",
+        "point_id": "bg2vofs",
+        "value": 0
+      },
+      {
+        "scanline": 14,
+        "cpu_pc": "02:B0E3",
+        "point_id": "bg2hofs",
+        "value": 178
+      },
+      {
+        "scanline": 14,
+        "cpu_pc": "02:B0E3",
+        "point_id": "bg2hofs",
+        "value": 255
+      },
+      {
+        "scanline": 14,
+        "cpu_pc": "02:B0E3",
+        "point_id": "bg2vofs",
+        "value": 1
+      },
+      {
+        "scanline": 14,
+        "cpu_pc": "02:B0E3",
+        "point_id": "bg2vofs",
+        "value": 0
+      },
+      {
+        "scanline": 15,
+        "cpu_pc": "02:B122",
+        "point_id": "bg2hofs",
+        "value": 178
+      },
+      {
+        "scanline": 15,
+        "cpu_pc": "02:B122",
+        "point_id": "bg2hofs",
+        "value": 255
+      },
+      {
+        "scanline": 15,
+        "cpu_pc": "02:B122",
+        "point_id": "bg2vofs",
+        "value": 2
+      },
+      {
+        "scanline": 15,
+        "cpu_pc": "02:B122",
+        "point_id": "bg2vofs",
+        "value": 0
+      },
+      {
+        "scanline": 16,
+        "cpu_pc": "02:B338",
+        "point_id": "bg2hofs",
+        "value": 179
+      },
+      {
+        "scanline": 16,
+        "cpu_pc": "02:B338",
+        "point_id": "bg2hofs",
+        "value": 255
+      },
+      {
+        "scanline": 16,
+        "cpu_pc": "02:B338",
+        "point_id": "bg2vofs",
+        "value": 3
+      },
+      {
+        "scanline": 16,
+        "cpu_pc": "02:B338",
+        "point_id": "bg2vofs",
+        "value": 0
+      },
+      {
+        "scanline": 17,
+        "cpu_pc": "00:9674",
+        "point_id": "bg2hofs",
+        "value": 179
+      },
+      {
+        "scanline": 17,
+        "cpu_pc": "00:9674",
+        "point_id": "bg2hofs",
+        "value": 255
+      },
+      {
+        "scanline": 17,
+        "cpu_pc": "00:9674",
+        "point_id": "bg2vofs",
+        "value": 4
+      },
+      {
+        "scanline": 17,
+        "cpu_pc": "00:9674",
+        "point_id": "bg2vofs",
+        "value": 0
+      },
+      {
+        "scanline": 18,
+        "cpu_pc": "00:969D",
+        "point_id": "bg2hofs",
+        "value": 179
+      },
+      {
+        "scanline": 18,
+        "cpu_pc": "00:969D",
+        "point_id": "bg2hofs",
+        "value": 255
+      },
+      {
+        "scanline": 18,
+        "cpu_pc": "00:969D",
+        "point_id": "bg2vofs",
+        "value": 5
+      },
+      {
+        "scanline": 18,
+        "cpu_pc": "00:969D",
+        "point_id": "bg2vofs",
+        "value": 0
+      },
+      {
+        "scanline": 19,
+        "cpu_pc": "00:9837",
+        "point_id": "bg2hofs",
+        "value": 180
+      },
+      {
+        "scanline": 19,
+        "cpu_pc": "00:9837",
+        "point_id": "bg2hofs",
+        "value": 255
+      },
+      {
+        "scanline": 19,
+        "cpu_pc": "00:9837",
+        "point_id": "bg2vofs",
+        "value": 6
+      },
+      {
+        "scanline": 19,
+        "cpu_pc": "00:9837",
+        "point_id": "bg2vofs",
+        "value": 0
+      },
+      {
+        "scanline": 20,
+        "cpu_pc": "02:AFD0",
+        "point_id": "bg2hofs",
+        "value": 180
+      },
+      {
+        "scanline": 20,
+        "cpu_pc": "02:AFD0",
+        "point_id": "bg2hofs",
+        "value": 255
+      },
+      {
+        "scanline": 20,
+        "cpu_pc": "02:AFD0",
+        "point_id": "bg2vofs",
+        "value": 7
+      },
+      {
+        "scanline": 20,
+        "cpu_pc": "02:AFD0",
+        "point_id": "bg2vofs",
+        "value": 0
+      },
+      {
+        "scanline": 21,
+        "cpu_pc": "02:B03A",
+        "point_id": "bg2hofs",
+        "value": 180
+      },
+      {
+        "scanline": 21,
+        "cpu_pc": "02:B03A",
+        "point_id": "bg2hofs",
+        "value": 255
+      },
+      {
+        "scanline": 21,
+        "cpu_pc": "02:B03A",
+        "point_id": "bg2vofs",
+        "value": 8
+      },
+      {
+        "scanline": 21,
+        "cpu_pc": "02:B03A",
+        "point_id": "bg2vofs",
+        "value": 0
+      },
+      {
+        "scanline": 22,
+        "cpu_pc": "02:B053",
+        "point_id": "bg2hofs",
+        "value": 0
+      },
+      {
+        "scanline": 22,
+        "cpu_pc": "02:B053",
+        "point_id": "bg2vofs",
+        "value": 233
+      }
+    ]
+  },
+  "current_reading": [
+    "The active live-race frame stays inside 02:9016 / 01:96A0 while repeatedly rewriting $22/$23 and then writing BG2VOFS from those operands.",
+    "The next-IRQ pointer flips between 01:960D and 01:96A0 inside the frame, so gameplay uses a two-phase IRQ split rather than a single static visible pass.",
+    "BG2 registers are written across most visible scanlines, while BG1 writes only land at the deeper split and frame edge and BG3 writes cluster around the early top-strip split.",
+    "This supports using the user debugger observation as a guide: BG1 is a strong cockpit-base candidate, BG2 is the strongest road/world raster candidate, and BG3 looks more like a temporary strip/auxiliary layer in this confirmed sample than the full gameplay world layer."
+  ]
+}

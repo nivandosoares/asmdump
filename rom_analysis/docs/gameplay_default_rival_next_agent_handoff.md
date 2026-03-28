@@ -15,7 +15,9 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `rom_analysis/maps/tracks/track1_live_race_vs_post9016_control.md`
 - `rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
 - `rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
+- `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
 - `manual_artifacts/lane3/lane3_live_race_notes.txt`
+- `tools/out/lane3_live_race_mid_bg2_producer_summary.md`
 - `tools/out/lane3_live_race_slot2_boundary_summary.md`
 - `tools/out/lane3_live_race_slot2_vs_mid_probe_compare.md`
 - `tools/out/post9016_default_rival_probe_none_vs_a_compare.md`
@@ -200,7 +202,10 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `tools/out/lane3_live_race_slot2_boundary_summary.md`
 - `tools/out/lane3_live_race_slot2_vs_mid_probe_compare.json`
 - `tools/out/lane3_live_race_slot2_vs_mid_probe_compare.md`
+- `tools/out/lane3_live_race_mid_bg2_producer_summary.json`
+- `tools/out/lane3_live_race_mid_bg2_producer_summary.md`
 - `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
+- `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
 - `rom_analysis/maps/tracks/track1_live_race_vs_post9016_control.md`
 
 ## Repo Caveat
@@ -254,10 +259,24 @@ The first visible layer-stack pass is now also narrowed on a real manual seed:
 
 The question is now narrower:
 
-- which specific bank-2 producer paths create the extra live-race OAM and
-  DMA-queue movement inside the shared `02:9016` driver?
-- which path drives the per-scanline `BG2` scroll changes behind the visible
-  road/world layer candidate?
+- the first producer-side answer is now closed on `live_race_mid`:
+  - the confirmed frame repeatedly rewrites `$22/$23`
+  - `bank1.asm` `5846..5851` then writes `BG2VOFS` directly from that pair
+  - `next_irq_ptr` flips `01:960D <-> 01:96A0` at scanlines `24` and `121`
+  - `TMAIN` temporarily rises to `0x17` at scanline `23` and returns to
+    `0x13` at scanline `121`
+  - `BG2HOFS/BG2VOFS` are the only heavily rewritten visible layer registers
+    in the bounded PPU trace; `BG1` and `BG3` only move at the split edges
+- the strongest current producer cluster is now narrowed:
+  - inside `L01318D`, especially `02:B042 / 02:B05D / 02:B0B1 / 02:B0BD /
+    02:B134`
+- the remaining open questions are now semantic rather than structural:
+  - which exact member of that cluster is the road-line builder versus support
+    cursor math?
+  - which owner advances the extra live-race `09A2/09A8/0053/0054` movement
+    alongside that `BG2` producer work?
+  - can `live_race_plus30f` be recovered through the lab backend as the second
+    visual replicate?
 
 ## Recommended Next Experiment
 
@@ -277,11 +296,15 @@ The question is now narrower:
    - `BG3` is not currently proven as a visible gameplay layer
    - `slot2_extra` is now a closed `00:8029` boundary/control seed and should
      not be used as a gameplay replicate
-5. Focus on bank-2 paths that set `$09A8` to non-`2` values before
-   `L001662/L00179B`, plus callers near `L01318D` and `L0108EF`.
-6. Treat the old power-on no-input `post9016` corridor as the control surface;
+5. Focus on the narrowed `L01318D` cluster first:
+   - `02:B042 / 02:B05D / 02:B0B1 / 02:B0BD / 02:B134`
+   - keep the `01:960D / 01:96A0 / 01:9809` split scheduler in scope while
+     reading those producers
+6. If a second visible replicate becomes necessary, use the lab backend on
+   `live_race_plus30f` instead of reusing `slot2_extra`.
+7. Treat the old power-on no-input `post9016` corridor as the control surface;
    use the `A` lane only if a richer fallback is needed later.
-7. Prefer bounded producer/OAM/HUD tracing over more screenshot volume:
+8. Prefer bounded producer/OAM/HUD tracing over more screenshot volume:
    - the current screenshot path is still broken on the manual seeds
 
 ## Minimal Validation If Tooling Changes

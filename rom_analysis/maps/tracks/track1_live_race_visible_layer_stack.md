@@ -109,10 +109,13 @@
 
 ## Next Best Step
 
+- keep this note as the visible-stack baseline and use
+  `track1_live_race_bg2_producer_path.md` for the producer-side follow-up
 - do not use `slot2_extra` as the second-seed replication target; it is now a
   closed boundary seed
 - if second-seed replication still matters, recover it from `live_race_plus30f`
   through a different export path such as the lab backend
-- keep tracing which runtime path drives the per-scanline `BG2` scroll changes,
-  since that path is now the strongest candidate for the visible road/world
-  layer
+- the next open edge is now semantic, not structural:
+  map exactly what the `01:9809` loop and the `L01318D`
+  `02:B042 / 02:B05D / 02:B0B1 / 02:B0BD / 02:B134` cluster each contribute
+  to the visible `BG2` motion
