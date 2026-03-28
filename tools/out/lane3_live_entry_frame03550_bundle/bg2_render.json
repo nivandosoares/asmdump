@@ -1,0 +1,46 @@
+{
+  "bg_mode": 1,
+  "main_screen_layers": 2,
+  "layer_states": [
+    {
+      "layer_index": 0,
+      "tilemapAddress": 0,
+      "chrAddress": 12288,
+      "doubleWidth": true,
+      "doubleHeight": false,
+      "largeTiles": false,
+      "hscroll": 0,
+      "vscroll": 1023
+    },
+    {
+      "layer_index": 1,
+      "tilemapAddress": 2048,
+      "chrAddress": 8192,
+      "doubleWidth": true,
+      "doubleHeight": true,
+      "largeTiles": true,
+      "hscroll": 263,
+      "vscroll": 283
+    },
+    {
+      "layer_index": 2,
+      "tilemapAddress": 6144,
+      "chrAddress": 20480,
+      "doubleWidth": true,
+      "doubleHeight": false,
+      "largeTiles": false,
+      "hscroll": 192,
+      "vscroll": 12
+    },
+    {
+      "layer_index": 3,
+      "tilemapAddress": 0,
+      "chrAddress": 12288,
+      "doubleWidth": false,
+      "doubleHeight": false,
+      "largeTiles": false,
+      "hscroll": 0,
+      "vscroll": 1023
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "label": "lane3_live_entry_frame03550",
+  "frame": 3550,
+  "bundle_dir": "tools/out/lane3_live_entry_frame03550_bundle",
+  "sources": {
+    "vram": "tools/out/lane3_live_entry_frame03550_frame_03550_vram.bin",
+    "cgram": "tools/out/lane3_live_entry_frame03550_frame_03550_cgram.bin",
+    "ppu_state": "tools/out/lane3_live_entry_frame03550_frame_03550_ppu_state.json",
+    "oam": "tools/out/lane3_live_entry_frame03550_frame_03550_oam.bin",
+    "screenshot": "tools/out/lane3_live_entry_frame03550_frame_03550_frame.png"
+  },
+  "outputs": {
+    "main_ppm": "tools/out/lane3_live_entry_frame03550_bundle/main.ppm",
+    "frame_png": "tools/out/lane3_live_entry_frame03550_bundle/frame.png",
+    "bg1_ppm": "tools/out/lane3_live_entry_frame03550_bundle/bg1.ppm",
+    "bg2_ppm": "tools/out/lane3_live_entry_frame03550_bundle/bg2.ppm",
+    "obj_ppm": "tools/out/lane3_live_entry_frame03550_bundle/obj.ppm",
+    "design_pack": "tools/out/lane3_live_entry_frame03550_bundle/design_pack/design_pack.json"
+  }
+}

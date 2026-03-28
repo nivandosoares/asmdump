@@ -1,0 +1,18 @@
+{
+  "mode": "probe",
+  "rom": "game.smc",
+  "menu_windows": "1200:a;1280:a;1505-1510:a;1640-1645:a;1730-1735:a",
+  "gameplay_start_frame": 2050,
+  "gameplay_input_windows_relative": "0-2750:a",
+  "combined_input_windows_absolute": "1200:a;1280:a;1505-1510:a;1640-1645:a;1730-1735:a;2050-4800:a",
+  "timeout_seconds": 240,
+  "command": [
+    "./validation/run_mesen_probe_boot.sh",
+    "game.smc"
+  ],
+  "env_overrides": {
+    "TD2_BOOT_PROBE_TOTAL_FRAMES": "4800",
+    "TD2_BOOT_PROBE_OUTPUT_PREFIX": "/home/nivando-soares/asmdump/tools/out/lane3_live_entry_late_probe_v1/td2_boot_probe",
+    "TD2_BOOT_PROBE_INPUT_WINDOWS": "1200:a;1280:a;1505-1510:a;1640-1645:a;1730-1735:a;2050-4800:a"
+  }
+}

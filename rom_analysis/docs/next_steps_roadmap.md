@@ -54,6 +54,32 @@ Validation contract baseline:
   - parameterize it upward into alternate cars / tracks / opponent branches
     instead of continuing to optimize for one exact saved frame
 
+## Lane 3 Live Entry Phase Split (`2026-03-28`)
+
+- New note:
+  - `rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
+- New tooling:
+  - `tools/build_gameplay_frame_bundle.py`
+  - `tools/build_gameplay_bundle_compare.py`
+- New generated artifacts:
+  - `tools/out/lane3_live_entry_late_probe_v1/td2_boot_probe.json`
+  - `tools/out/lane3_live_entry_frame03250_bundle/`
+  - `tools/out/lane3_live_entry_frame03550_bundle/`
+  - `tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
+- Practical read:
+  - the first late gameplay pair from the reproducible live-entry route is now
+    promoted as a self-contained review surface
+  - frame `3250` stays on open-road driving while frame `3550` is already a
+    collision/overlay-heavy phase with `Cars Left: 4`
+  - both still keep `02:9016 / 01:96A0 / 02:8F3C`, so the change is not a
+    top-level callback swap
+  - `BG2` tilemap stats stay unchanged while `BG1` and `OBJ` shift
+    materially; `BG2` scroll still moves across the pair
+- Next gate:
+  - repeat the same bundle/compare workflow on a checkpoint/post-stop or
+    police/radar pair so lane 3 can compare multiple gameplay phases through
+    named `BG1/BG2/OBJ` buckets instead of whole-frame screenshots alone
+
 ## Docs Wiki And SDL Smoke (`2026-03-28`)
 
 - New tooling:

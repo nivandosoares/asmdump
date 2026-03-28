@@ -1,0 +1,523 @@
+{
+  "schema": "td2.gameplay_bundle_compare.v1",
+  "labels": {
+    "a": "live_entry_3250",
+    "b": "live_entry_3550"
+  },
+  "bundle_a": {
+    "bundle_dir": "tools/out/lane3_live_entry_frame03250_bundle",
+    "frame": 3250,
+    "frame_png": "tools/out/lane3_live_entry_frame03250_bundle/frame.png",
+    "bg1_ppm": "tools/out/lane3_live_entry_frame03250_bundle/bg1.ppm",
+    "bg2_ppm": "tools/out/lane3_live_entry_frame03250_bundle/bg2.ppm",
+    "obj_ppm": "tools/out/lane3_live_entry_frame03250_bundle/obj.ppm",
+    "bg_mode": 1,
+    "main_screen_layers": 19,
+    "layer_states": [
+      {
+        "layer_index": 0,
+        "tilemapAddress": 0,
+        "chrAddress": 12288,
+        "doubleWidth": true,
+        "doubleHeight": false,
+        "largeTiles": false,
+        "hscroll": 0,
+        "vscroll": 1023
+      },
+      {
+        "layer_index": 1,
+        "tilemapAddress": 2048,
+        "chrAddress": 8192,
+        "doubleWidth": true,
+        "doubleHeight": true,
+        "largeTiles": true,
+        "hscroll": 213,
+        "vscroll": 27
+      },
+      {
+        "layer_index": 2,
+        "tilemapAddress": 6144,
+        "chrAddress": 20480,
+        "doubleWidth": true,
+        "doubleHeight": false,
+        "largeTiles": false,
+        "hscroll": 510,
+        "vscroll": 12
+      }
+    ],
+    "obj": {
+      "visible_sprites": 31,
+      "drawn_pixels": 916
+    },
+    "tilemaps": {
+      "bg1": {
+        "entry_count": 2048,
+        "unique_tiles": 458,
+        "non_zero_tiles": 1350,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 698
+          },
+          {
+            "tileIndex": 337,
+            "count": 97
+          },
+          {
+            "tileIndex": 114,
+            "count": 38
+          },
+          {
+            "tileIndex": 13,
+            "count": 21
+          },
+          {
+            "tileIndex": 14,
+            "count": 21
+          }
+        ]
+      },
+      "bg2": {
+        "entry_count": 4096,
+        "unique_tiles": 66,
+        "non_zero_tiles": 1536,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 2560
+          },
+          {
+            "tileIndex": 8,
+            "count": 792
+          },
+          {
+            "tileIndex": 66,
+            "count": 388
+          },
+          {
+            "tileIndex": 2,
+            "count": 120
+          },
+          {
+            "tileIndex": 132,
+            "count": 24
+          }
+        ]
+      },
+      "bg3": {
+        "entry_count": 2048,
+        "unique_tiles": 177,
+        "non_zero_tiles": 1007,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 1041
+          },
+          {
+            "tileIndex": 176,
+            "count": 832
+          },
+          {
+            "tileIndex": 1,
+            "count": 1
+          },
+          {
+            "tileIndex": 2,
+            "count": 1
+          },
+          {
+            "tileIndex": 3,
+            "count": 1
+          }
+        ]
+      }
+    }
+  },
+  "bundle_b": {
+    "bundle_dir": "tools/out/lane3_live_entry_frame03550_bundle",
+    "frame": 3550,
+    "frame_png": "tools/out/lane3_live_entry_frame03550_bundle/frame.png",
+    "bg1_ppm": "tools/out/lane3_live_entry_frame03550_bundle/bg1.ppm",
+    "bg2_ppm": "tools/out/lane3_live_entry_frame03550_bundle/bg2.ppm",
+    "obj_ppm": "tools/out/lane3_live_entry_frame03550_bundle/obj.ppm",
+    "bg_mode": 1,
+    "main_screen_layers": 19,
+    "layer_states": [
+      {
+        "layer_index": 0,
+        "tilemapAddress": 0,
+        "chrAddress": 12288,
+        "doubleWidth": true,
+        "doubleHeight": false,
+        "largeTiles": false,
+        "hscroll": 0,
+        "vscroll": 1023
+      },
+      {
+        "layer_index": 1,
+        "tilemapAddress": 2048,
+        "chrAddress": 8192,
+        "doubleWidth": true,
+        "doubleHeight": true,
+        "largeTiles": true,
+        "hscroll": 263,
+        "vscroll": 283
+      },
+      {
+        "layer_index": 2,
+        "tilemapAddress": 6144,
+        "chrAddress": 20480,
+        "doubleWidth": true,
+        "doubleHeight": false,
+        "largeTiles": false,
+        "hscroll": 192,
+        "vscroll": 12
+      }
+    ],
+    "obj": {
+      "visible_sprites": 25,
+      "drawn_pixels": 1961
+    },
+    "tilemaps": {
+      "bg1": {
+        "entry_count": 2048,
+        "unique_tiles": 566,
+        "non_zero_tiles": 1732,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 316
+          },
+          {
+            "tileIndex": 640,
+            "count": 242
+          },
+          {
+            "tileIndex": 337,
+            "count": 97
+          },
+          {
+            "tileIndex": 114,
+            "count": 38
+          },
+          {
+            "tileIndex": 13,
+            "count": 21
+          }
+        ]
+      },
+      "bg2": {
+        "entry_count": 4096,
+        "unique_tiles": 66,
+        "non_zero_tiles": 1536,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 2560
+          },
+          {
+            "tileIndex": 8,
+            "count": 792
+          },
+          {
+            "tileIndex": 66,
+            "count": 388
+          },
+          {
+            "tileIndex": 2,
+            "count": 120
+          },
+          {
+            "tileIndex": 132,
+            "count": 24
+          }
+        ]
+      },
+      "bg3": {
+        "entry_count": 2048,
+        "unique_tiles": 177,
+        "non_zero_tiles": 1007,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 1041
+          },
+          {
+            "tileIndex": 176,
+            "count": 832
+          },
+          {
+            "tileIndex": 1,
+            "count": 1
+          },
+          {
+            "tileIndex": 2,
+            "count": 1
+          },
+          {
+            "tileIndex": 3,
+            "count": 1
+          }
+        ]
+      }
+    }
+  },
+  "comparisons": {
+    "bg1_tilemap": {
+      "a": {
+        "entry_count": 2048,
+        "unique_tiles": 458,
+        "non_zero_tiles": 1350,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 698
+          },
+          {
+            "tileIndex": 337,
+            "count": 97
+          },
+          {
+            "tileIndex": 114,
+            "count": 38
+          },
+          {
+            "tileIndex": 13,
+            "count": 21
+          },
+          {
+            "tileIndex": 14,
+            "count": 21
+          }
+        ]
+      },
+      "b": {
+        "entry_count": 2048,
+        "unique_tiles": 566,
+        "non_zero_tiles": 1732,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 316
+          },
+          {
+            "tileIndex": 640,
+            "count": 242
+          },
+          {
+            "tileIndex": 337,
+            "count": 97
+          },
+          {
+            "tileIndex": 114,
+            "count": 38
+          },
+          {
+            "tileIndex": 13,
+            "count": 21
+          }
+        ]
+      },
+      "same": false
+    },
+    "bg2_tilemap": {
+      "a": {
+        "entry_count": 4096,
+        "unique_tiles": 66,
+        "non_zero_tiles": 1536,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 2560
+          },
+          {
+            "tileIndex": 8,
+            "count": 792
+          },
+          {
+            "tileIndex": 66,
+            "count": 388
+          },
+          {
+            "tileIndex": 2,
+            "count": 120
+          },
+          {
+            "tileIndex": 132,
+            "count": 24
+          }
+        ]
+      },
+      "b": {
+        "entry_count": 4096,
+        "unique_tiles": 66,
+        "non_zero_tiles": 1536,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 2560
+          },
+          {
+            "tileIndex": 8,
+            "count": 792
+          },
+          {
+            "tileIndex": 66,
+            "count": 388
+          },
+          {
+            "tileIndex": 2,
+            "count": 120
+          },
+          {
+            "tileIndex": 132,
+            "count": 24
+          }
+        ]
+      },
+      "same": true
+    },
+    "bg3_tilemap": {
+      "a": {
+        "entry_count": 2048,
+        "unique_tiles": 177,
+        "non_zero_tiles": 1007,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 1041
+          },
+          {
+            "tileIndex": 176,
+            "count": 832
+          },
+          {
+            "tileIndex": 1,
+            "count": 1
+          },
+          {
+            "tileIndex": 2,
+            "count": 1
+          },
+          {
+            "tileIndex": 3,
+            "count": 1
+          }
+        ]
+      },
+      "b": {
+        "entry_count": 2048,
+        "unique_tiles": 177,
+        "non_zero_tiles": 1007,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 1041
+          },
+          {
+            "tileIndex": 176,
+            "count": 832
+          },
+          {
+            "tileIndex": 1,
+            "count": 1
+          },
+          {
+            "tileIndex": 2,
+            "count": 1
+          },
+          {
+            "tileIndex": 3,
+            "count": 1
+          }
+        ]
+      },
+      "same": true
+    },
+    "obj": {
+      "a": {
+        "visible_sprites": 31,
+        "drawn_pixels": 916
+      },
+      "b": {
+        "visible_sprites": 25,
+        "drawn_pixels": 1961
+      },
+      "same": false
+    },
+    "bg1_scroll": {
+      "a": {
+        "layer_index": 0,
+        "tilemapAddress": 0,
+        "chrAddress": 12288,
+        "doubleWidth": true,
+        "doubleHeight": false,
+        "largeTiles": false,
+        "hscroll": 0,
+        "vscroll": 1023
+      },
+      "b": {
+        "layer_index": 0,
+        "tilemapAddress": 0,
+        "chrAddress": 12288,
+        "doubleWidth": true,
+        "doubleHeight": false,
+        "largeTiles": false,
+        "hscroll": 0,
+        "vscroll": 1023
+      },
+      "same": true
+    },
+    "bg2_scroll": {
+      "a": {
+        "layer_index": 1,
+        "tilemapAddress": 2048,
+        "chrAddress": 8192,
+        "doubleWidth": true,
+        "doubleHeight": true,
+        "largeTiles": true,
+        "hscroll": 213,
+        "vscroll": 27
+      },
+      "b": {
+        "layer_index": 1,
+        "tilemapAddress": 2048,
+        "chrAddress": 8192,
+        "doubleWidth": true,
+        "doubleHeight": true,
+        "largeTiles": true,
+        "hscroll": 263,
+        "vscroll": 283
+      },
+      "same": false
+    },
+    "bg3_scroll": {
+      "a": {
+        "layer_index": 2,
+        "tilemapAddress": 6144,
+        "chrAddress": 20480,
+        "doubleWidth": true,
+        "doubleHeight": false,
+        "largeTiles": false,
+        "hscroll": 510,
+        "vscroll": 12
+      },
+      "b": {
+        "layer_index": 2,
+        "tilemapAddress": 6144,
+        "chrAddress": 20480,
+        "doubleWidth": true,
+        "doubleHeight": false,
+        "largeTiles": false,
+        "hscroll": 192,
+        "vscroll": 12
+      },
+      "same": false
+    }
+  },
+  "current_reading": [
+    "BG2 tilemap stats stay unchanged while BG1 changes, so the strongest current fit is that the road/world plane persists and the later overlay loads onto the cockpit/HUD side.",
+    "OBJ workload changes across the pair, so dynamic actor/overlay work contributes materially to the visible transition.",
+    "BG2 scroll operands continue moving across the pair, which keeps the world/road layer live even though the later frame is visually dominated by the crash overlay."
+  ]
+}

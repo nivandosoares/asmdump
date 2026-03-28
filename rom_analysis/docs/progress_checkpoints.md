@@ -79,6 +79,39 @@ next gate needed to advance.
   - this is the gameplay-side equivalent of the earlier lane-2 asset-first
     gain that helped disambiguate car extraction
 
+## Lane 3 Live Entry Phase Split (`2026-03-28`)
+
+- New tooling:
+  - `tools/build_gameplay_frame_bundle.py`
+  - `tools/build_gameplay_bundle_compare.py`
+- New note:
+  - `rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
+- New generated artifacts:
+  - `tools/out/lane3_live_entry_late_probe_v1/td2_boot_probe.json`
+  - `tools/out/lane3_live_entry_frame03250_bundle/`
+  - `tools/out/lane3_live_entry_frame03550_bundle/`
+  - `tools/out/lane3_live_entry_frame03250_vs_03550_compare.json`
+  - `tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
+- Closed practical read:
+  - the promoted power-on live-entry route now has its first late gameplay
+    phase split packaged as self-contained artifacts, not only as raw frame
+    dumps
+  - both anchors keep the same top-level gameplay callback family:
+    `02:9016 / 01:96A0 / 02:8F3C`
+  - frame `3250` is still open-road driving, while frame `3550` is already a
+    shattered-windshield collision overlay with `Cars Left: 4`
+  - the strongest machine read now matches that visual split:
+    - `BG2` tilemap stats stay identical across the pair
+    - `BG1` tilemap stats change sharply
+    - `OBJ` workload also changes sharply
+    - `BG2` scroll operands still move, so the road/world layer stays live
+      under the later overlay
+- Practical implication:
+  - lane 3 can now do asset-first phase comparisons from the reproducible
+    live-entry route itself, not only from preserved manual seeds
+  - the next best gameplay pair is now a checkpoint/post-stop or
+    police/radar-oriented phase, not another blind whole-frame diff
+
 ## Docs Wiki And SDL Smoke (`2026-03-28`)
 
 - New tooling:

@@ -19,11 +19,13 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
 - `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
 - `rom_analysis/maps/tracks/track1_live_race_plus30f_lab_backend_boundary.md`
+- `rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
 - `rom_analysis/docs/lane3_today_work_brief.md`
 - `rom_analysis/docs/lane3_visual_annotation_template.md`
 - `manual_artifacts/lane3/lane3_live_race_notes.txt`
 - `tools/out/lane3_live_race_mid_bg2_producer_summary.md`
 - `tools/out/lane3_live_race_mid_asset_focus.md`
+- `tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
 - `tools/out/lane3_live_race_slot2_boundary_summary.md`
 - `tools/out/lane3_live_race_slot2_vs_mid_probe_compare.md`
 - `tools/out/post9016_default_rival_probe_none_vs_a_compare.md`
@@ -243,9 +245,15 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `tools/out/lane3_live_race_slot2_boundary_summary.md`
 - `tools/out/lane3_live_race_slot2_vs_mid_probe_compare.json`
 - `tools/out/lane3_live_race_slot2_vs_mid_probe_compare.md`
+- `tools/out/lane3_live_entry_late_probe_v1/td2_boot_probe.json`
+- `tools/out/lane3_live_entry_frame03250_bundle/bundle_manifest.json`
+- `tools/out/lane3_live_entry_frame03550_bundle/bundle_manifest.json`
+- `tools/out/lane3_live_entry_frame03250_vs_03550_compare.json`
+- `tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
 - `tools/out/lane3_live_race_mid_bg2_producer_summary.json`
 - `tools/out/lane3_live_race_mid_bg2_producer_summary.md`
 - `rom_analysis/maps/tracks/track1_live_race_plus30f_lab_backend_boundary.md`
+- `rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
 - `rom_analysis/docs/lane3_today_work_brief.md`
 - `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
 - `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
@@ -369,6 +377,19 @@ The question is now narrower:
     - practical fit:
       steering already matters visually on this lane, but the present probe
       field set is too coarse to expose its owner cleanly
+  - first late live-entry phase split is now also promoted:
+    - `3250` stays on open-road driving
+    - `3550` shows a shattered-windshield collision overlay with
+      `Cars Left: 4`
+    - both still keep the same top-level callback family:
+      `02:9016 / 01:96A0 / 02:8F3C`
+    - `BG2` tilemap stats stay identical across the pair while `BG1` and
+      `OBJ` shift materially
+    - `BG2` scroll operands still move, so the road/world plane stays live
+      underneath the later overlay
+  - practical next move after this split:
+    repeat the same bundle/compare workflow on a checkpoint or police/radar
+    pair, not only on the collision transition
 
 ## Recommended Next Experiment
 
@@ -415,10 +436,15 @@ The question is now narrower:
    - align or compensate the one-frame capture lead automatically
    - widen the probe field set around steering-sensitive windows instead of
      only reusing `state_11f3/oam_0730/09A2/0053/0054`
-11. If another dev is available today, use
+11. Use the newly promoted late live-entry pair as the event-bucket template:
+   - `3250` = road/world still dominant
+   - `3550` = collision overlay dominant
+   - the next equivalent pair should target checkpoint/post-stop or the later
+     police/radar event so lane 3 can compare more than one gameplay phase
+12. If another dev is available today, use
    `rom_analysis/docs/lane3_today_work_brief.md` as the working brief rather
    than reconstructing the queue from multiple archaeology notes.
-12. If a human needs to re-enter the same gameplay corridor manually, use the
+13. If a human needs to re-enter the same gameplay corridor manually, use the
     new route/control note in `manual_artifacts/lane3/responses.txt` instead
     of rediscovering the menu flow from scratch.
 
@@ -427,6 +453,8 @@ The question is now narrower:
 - `python3 -m py_compile tools/compare_capture_sequences.py`
 - `python3 -m py_compile tools/run_lane3_gameplay_entry.py`
 - `python3 -m py_compile tools/search_boot_probe_matches.py`
+- `python3 -m py_compile tools/build_gameplay_frame_bundle.py`
+- `python3 -m py_compile tools/build_gameplay_bundle_compare.py`
 - `python3 tools/compare_boot_probe_windows.py tools/out/post9016_default_rival_probe_none/td2_boot_probe.json tools/out/post9016_default_rival_probe_a/td2_boot_probe.json tools/out/post9016_default_rival_probe_none_vs_a_compare.json --markdown-out tools/out/post9016_default_rival_probe_none_vs_a_compare.md --label-a no_input --label-b a_hold --start-frame 2048 --end-frame 2208`
 - `python3 tools/compare_boot_probe_windows.py tools/out/post9016_default_rival_probe_none/td2_boot_probe.json tools/out/post9016_default_rival_probe_b/td2_boot_probe.json tools/out/post9016_default_rival_probe_none_vs_b_compare.json --markdown-out tools/out/post9016_default_rival_probe_none_vs_b_compare.md --label-a no_input --label-b b_hold --start-frame 2048 --end-frame 2208`
 - `python3 tools/compare_capture_sequences.py tools/out/post9016_default_rival_capture_full tools/out/post9016_default_rival_capture_a2050 tools/out/post9016_default_rival_a2050_sequence_compare.json --markdown-out tools/out/post9016_default_rival_a2050_sequence_compare.md --base-label no_input --candidate-label a_hold --script-start-frame 2048`

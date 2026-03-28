@@ -166,9 +166,19 @@
           "note": "Promoted power-on route for reproducible gameplay entry."
         },
         {
+          "path": "rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md",
+          "label": "Live Entry Phase Split 3250..3550",
+          "note": "First promoted late gameplay pair from the live-entry route, with stable artifact bundles for both phases."
+        },
+        {
           "path": "rom_analysis/maps/tracks/track1_live_race_asset_focus.md",
           "label": "Gameplay Asset Focus",
           "note": "Asset-first gameplay taxonomy that maps BG/OBJ buckets to tracing targets."
+        },
+        {
+          "path": "tools/out/lane3_live_entry_frame03250_vs_03550_compare.md",
+          "label": "Live Entry Bundle Compare",
+          "note": "Generated BG1/BG2/OBJ compare for the first late live-entry gameplay pair."
         },
         {
           "path": "tools/out/lane3_live_race_mid_asset_focus.md",
