@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-03-28 15:30:10",
-  "doc_count": 44,
+  "generated_at": "2026-03-28 15:51:59",
+  "doc_count": 45,
   "manifest": "rom_analysis/docs/wiki_doc_index.json",
   "docs": [
     {
@@ -19,7 +19,7 @@
       "note": "Current lane status, open gates, and practical follow-up targets.",
       "source": "rom_analysis/docs/next_steps_roadmap.md",
       "bundle_copy": "sources/rom_analysis/docs/next_steps_roadmap.md",
-      "last_updated": "2026-03-28 15:29"
+      "last_updated": "2026-03-28 15:51"
     },
     {
       "section_id": "source-of-truth",
@@ -28,7 +28,7 @@
       "note": "Checkpoint log with evidence-bearing milestones.",
       "source": "rom_analysis/docs/progress_checkpoints.md",
       "bundle_copy": "sources/rom_analysis/docs/progress_checkpoints.md",
-      "last_updated": "2026-03-28 15:29"
+      "last_updated": "2026-03-28 15:51"
     },
     {
       "section_id": "source-of-truth",
@@ -217,7 +217,7 @@
       "note": "Primary gameplay-oriented handoff note.",
       "source": "rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md",
       "bundle_copy": "sources/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md",
-      "last_updated": "2026-03-28 15:29"
+      "last_updated": "2026-03-28 15:51"
     },
     {
       "section_id": "gameplay-lane3",
@@ -335,6 +335,15 @@
       "source": "rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md",
       "bundle_copy": "sources/rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md",
       "last_updated": "2026-03-28 15:29"
+    },
+    {
+      "section_id": "gameplay-lane3",
+      "section_title": "Gameplay And Lane 3",
+      "label": "Snow Anchors",
+      "note": "Longplay-backed snow-driving anchors starting at the one-hour mark.",
+      "source": "rom_analysis/maps/tracks/track1_longplay_snow_anchors.md",
+      "bundle_copy": "sources/rom_analysis/maps/tracks/track1_longplay_snow_anchors.md",
+      "last_updated": "2026-03-28 15:51"
     },
     {
       "section_id": "gameplay-lane3",

@@ -221,6 +221,11 @@
           "note": "Longplay-backed visual anchors for night, bridge, mountain-wall, tunnel, and rain."
         },
         {
+          "path": "rom_analysis/maps/tracks/track1_longplay_snow_anchors.md",
+          "label": "Snow Anchors",
+          "note": "Longplay-backed snow-driving anchors starting at the one-hour mark."
+        },
+        {
           "path": "rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md",
           "label": "Prison Finale Anchor",
           "note": "Longplay-backed arrest/prison ending pack and high-score handoff."

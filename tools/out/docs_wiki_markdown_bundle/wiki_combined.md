@@ -1,8 +1,8 @@
 # TD2 Wiki Markdown Bundle
 
-- Generated: `2026-03-28 15:30:10`
+- Generated: `2026-03-28 15:51:59`
 - Manifest: `rom_analysis/docs/wiki_doc_index.json`
-- Total docs: `44`
+- Total docs: `45`
 
 Use `wiki_bundle_index.md` for the curated file list or `wiki_combined.md` for a single-file ingest path.
 
@@ -504,7 +504,7 @@ The work above assumes option 1 first, then selective enhancement after parity.
 
 - Source: `rom_analysis/docs/next_steps_roadmap.md`
 - Bundle copy: `sources/rom_analysis/docs/next_steps_roadmap.md`
-- Last updated: `2026-03-28 15:29`
+- Last updated: `2026-03-28 15:51`
 - Note: Current lane status, open gates, and practical follow-up targets.
 
 ---
@@ -731,10 +731,12 @@ Validation contract baseline:
 - New notes:
   - `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
   - `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
+  - `rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
   - `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
 - New generated artifacts:
   - `tools/out/lane3_service_status_phase_pack/`
   - `tools/out/longplay_hard_phase_anchor_pack/`
+  - `tools/out/longplay_snow_phase_pack/`
   - `tools/out/longplay_prison_finale_phase_pack/`
 - Practical read:
   - the previously unseen checkpoint `service/post`, `partial-results`, and
@@ -746,6 +748,7 @@ Validation contract baseline:
     - mountain-wall/no-shoulder corridor
     - tunnel
     - rain
+    - snow
   - the player-arrest / prison ending is also now preserved explicitly as its
     own named pack instead of a vague end-of-longplay expectation
 - Boundary:
@@ -2082,7 +2085,7 @@ Update findings in:
 
 - Source: `rom_analysis/docs/progress_checkpoints.md`
 - Bundle copy: `sources/rom_analysis/docs/progress_checkpoints.md`
-- Last updated: `2026-03-28 15:29`
+- Last updated: `2026-03-28 15:51`
 - Note: Checkpoint log with evidence-bearing milestones.
 
 ---
@@ -8436,6 +8439,32 @@ Current status:
   - the next good use of effort is to target one of these named moments with a
     real emulator-side `BG/OBJ` capture path instead of searching videos again
 
+### CP-130: longplay snow anchors now close the last missing designer-confirmed visual gap
+
+- promoted docs:
+  - `rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
+  - `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
+  - `rom_analysis/docs/next_steps_roadmap.md`
+- updated tooling/spec:
+  - `tools/gameplay_video_phase_packs.json`
+- promoted artifacts:
+  - `tools/out/longplay_snow_phase_pack/`
+- bounded validation:
+  - `python3 tools/build_video_phase_pack.py --spec tools/gameplay_video_phase_packs.json`
+- observed result:
+  - the user-guided one-hour search was correct:
+    the local longplay enters a snow-driving corridor at `01:00:00`
+  - promoted snow anchors now cover:
+    - onset at `3600s`
+    - snowy mountain curve at `3740s`
+    - snowy log-truck corridor at `3800s`
+- practical reading:
+  - the last missing designer-confirmed visual gap from the earlier hard-phase
+    pack is now closed
+  - the next move is no longer “find any snow frame”; it is “decide whether
+    snow or service/post is the better next emulator-side `BG/OBJ` capture
+    target”
+
 
 ## Source Of Truth :: Validation Gates
 
@@ -13514,7 +13543,7 @@ without redoing the same work.
 
 - Source: `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
 - Bundle copy: `sources/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
-- Last updated: `2026-03-28 15:29`
+- Last updated: `2026-03-28 15:51`
 - Note: Primary gameplay-oriented handoff note.
 
 ---
@@ -13537,6 +13566,7 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
 - `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
 - `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
+- `rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
 - `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
 - `rom_analysis/maps/tracks/track1_live_race_vs_post9016_control.md`
 - `rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
@@ -13754,11 +13784,13 @@ This note is the explicit resume point for the next agent on Lane 3.
   moments the user called out:
   - `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
   - `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
+  - `rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
   - `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
   - practical read:
     these close the human-facing lookup surface for checkpoint service/post,
-    partial-results, later hard phases, and the arrest/prison finale, without
-    pretending those longplay/video anchors are already `BG/OBJ`-resolved
+    partial-results, later hard phases, snow, and the arrest/prison finale,
+    without pretending those longplay/video anchors are already
+    `BG/OBJ`-resolved
 
 ## Do Not Repeat
 
@@ -15452,6 +15484,71 @@ intake time.
 - once any of these phases is reachable in a reproducible emulator path, keep
   the later analysis on the ratified `BG` plus `OBJ` surfaces instead of
   collapsing back to whole-frame-only review
+
+
+## Gameplay And Lane 3 :: Snow Anchors
+
+- Source: `rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
+- Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
+- Last updated: `2026-03-28 15:51`
+- Note: Longplay-backed snow-driving anchors starting at the one-hour mark.
+
+---
+
+# Track 1 Longplay Snow Anchors
+
+- Intake date: `2026-03-28`
+- Source video:
+  - local `the_duel_longplay.mp4`
+- Builder:
+  - `tools/build_video_phase_pack.py`
+- Spec:
+  - `tools/gameplay_video_phase_packs.json`
+- Promoted phase pack:
+  - `tools/out/longplay_snow_phase_pack/`
+
+## Key Artifacts
+
+- `tools/out/longplay_snow_phase_pack/anchor_sheet.png`
+- `tools/out/longplay_snow_phase_pack/01_snow_onset_anchor.png`
+- `tools/out/longplay_snow_phase_pack/02_snow_mountain_curve_anchor.png`
+- `tools/out/longplay_snow_phase_pack/03_snow_log_truck_anchor.png`
+- `tools/out/longplay_snow_phase_pack/manifest.json`
+
+## What Was Run
+
+- targeted user-guided scan:
+  - `ffmpeg -y -loglevel error -ss 3600 -t 80 -i the_duel_longplay.mp4 -vf "fps=1,scale=320:180,tile=4x5" -frames:v 1 tools/out/tmp_snow_scan/longplay_6000_6080_detail_sheet.png`
+  - `ffmpeg -y -loglevel error -ss 3570 -t 240 -i the_duel_longplay.mp4 -vf "fps=1/10,scale=240:135,tile=4x6" -frames:v 1 tools/out/tmp_snow_scan/longplay_5950_6350_snow_sheet.png`
+- promoted builder run:
+  - `python3 tools/build_video_phase_pack.py --spec tools/gameplay_video_phase_packs.json`
+
+## Closed Read
+
+- the user hint was correct:
+  snow begins at the one-hour mark of the local longplay
+- promoted snow anchors:
+  - `01:00:00` (`3600s`): first clear snow onset
+  - `01:02:20` (`3740s`): snowy mountain curve with visible flakes and a
+    stronger mountain horizon
+  - `01:03:20` (`3800s`): later snowy corridor with a log truck ahead
+- practical reading:
+  - lane 3 no longer lacks preserved snow-specific gameplay frames
+  - the snow corridor is now a named visual surface rather than a vague
+    “maybe East/West Coast later” hypothesis
+
+## Boundary
+
+- this pack is still a longplay-derived visual anchor, not a trusted
+  `BG1/BG2/BG3/OBJ` capture
+- use it to aim later emulator-side snow capture, not to replace that work
+
+## Next Best Step
+
+- use this pack plus the earlier hard-phase pack to choose the first snow-capable
+  emulator-side route worth reproducing
+- once a live or savestate path reaches snow, keep the follow-up on `BG/OBJ`
+  ownership instead of whole-frame-only review
 
 
 ## Gameplay And Lane 3 :: Prison Finale Anchor

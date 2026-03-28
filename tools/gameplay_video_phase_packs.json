@@ -175,6 +175,50 @@
           "sheet_scale": "320:180"
         }
       ]
+    },
+    {
+      "id": "longplay_snow_phase_pack",
+      "title": "Longplay Snow Phase Pack",
+      "description": "Snow-driving anchors from the later longplay corridor, starting at the user-confirmed one-hour mark.",
+      "source": "the_duel_longplay.mp4",
+      "out_dir": "tools/out/longplay_snow_phase_pack",
+      "anchor_sheet_tile": "3x1",
+      "anchor_sheet_scale": "320:180",
+      "phases": [
+        {
+          "id": "snow_onset",
+          "title": "Snow Onset",
+          "note": "First clear snow gameplay still at the user-confirmed one-hour boundary of the local longplay.",
+          "anchor_seconds": 3600.000,
+          "window_start_seconds": 3598.000,
+          "window_duration_seconds": 6.000,
+          "sheet_fps": 1.0,
+          "sheet_tile": "3x2",
+          "sheet_scale": "320:180"
+        },
+        {
+          "id": "snow_mountain_curve",
+          "title": "Snow Mountain Curve",
+          "note": "Later snowy curve with visible snowfall and stronger mountain horizon.",
+          "anchor_seconds": 3740.000,
+          "window_start_seconds": 3738.000,
+          "window_duration_seconds": 6.000,
+          "sheet_fps": 1.0,
+          "sheet_tile": "3x2",
+          "sheet_scale": "320:180"
+        },
+        {
+          "id": "snow_log_truck",
+          "title": "Snow Log-Truck Corridor",
+          "note": "Later snowy corridor with traffic ahead, including the log truck in the player's lane family.",
+          "anchor_seconds": 3800.000,
+          "window_start_seconds": 3798.000,
+          "window_duration_seconds": 6.000,
+          "sheet_fps": 1.0,
+          "sheet_tile": "3x2",
+          "sheet_scale": "320:180"
+        }
+      ]
     }
   ]
 }

@@ -220,10 +220,12 @@ Validation contract baseline:
 - New notes:
   - `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
   - `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
+  - `rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
   - `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
 - New generated artifacts:
   - `tools/out/lane3_service_status_phase_pack/`
   - `tools/out/longplay_hard_phase_anchor_pack/`
+  - `tools/out/longplay_snow_phase_pack/`
   - `tools/out/longplay_prison_finale_phase_pack/`
 - Practical read:
   - the previously unseen checkpoint `service/post`, `partial-results`, and
@@ -235,6 +237,7 @@ Validation contract baseline:
     - mountain-wall/no-shoulder corridor
     - tunnel
     - rain
+    - snow
   - the player-arrest / prison ending is also now preserved explicitly as its
     own named pack instead of a vague end-of-longplay expectation
 - Boundary:

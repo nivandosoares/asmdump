@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Track 1 Live-Race `L01318D` Static Role Split | TD2 Archaeology Wiki</title>
+  <title>Track 1 Longplay Snow Anchors | TD2 Archaeology Wiki</title>
   <link rel="stylesheet" href="../../../../assets/wiki.css">
 </head>
 <body>
@@ -28,37 +28,32 @@
         <span>/</span>
         <a href="../../../../index.html#gameplay-lane3">Gameplay And Lane 3</a>
         <span>/</span>
-        <span>L01318D Role Split</span>
+        <span>Snow Anchors</span>
       </nav>
       <header class="doc-header">
         <p class="eyebrow">Gameplay And Lane 3</p>
-        <h1>Track 1 Live-Race `L01318D` Static Role Split</h1>
-        <p class="doc-note">Static role split for the narrowed gameplay cluster.</p>
+        <h1>Track 1 Longplay Snow Anchors</h1>
+        <p class="doc-note">Longplay-backed snow-driving anchors starting at the one-hour mark.</p>
         <div class="doc-meta">
-          <span>Source: <code>rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md</code></span>
-          <span class="update-pill">Last updated 2026-03-28 09:15</span>
-          <a href="../../../../../../../rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md">Open Raw Markdown</a>
+          <span>Source: <code>rom_analysis/maps/tracks/track1_longplay_snow_anchors.md</code></span>
+          <span class="update-pill">Last updated 2026-03-28 15:51</span>
+          <a href="../../../../../../../rom_analysis/maps/tracks/track1_longplay_snow_anchors.md">Open Raw Markdown</a>
         </div>
       </header>
+<section class="artifact-panel"><header class="artifact-header"><h2>Artifact Support</h2><p>Resolved image references found in this note.</p></header><div class="artifact-grid"><figure class="artifact-card"><a href="../../../../../tmp_snow_scan/longplay_6000_6080_detail_sheet.png"><img src="../../../../artifacts/tools/out/tmp_snow_scan/longplay_6000_6080_detail_sheet.png" alt="tools/out/tmp_snow_scan/longplay_6000_6080_detail_sheet.png" loading="lazy"></a><figcaption><code>tools/out/tmp_snow_scan/longplay_6000_6080_detail_sheet.png</code><span>Copied original artifact.</span></figcaption></figure><figure class="artifact-card"><a href="../../../../../tmp_snow_scan/longplay_5950_6350_snow_sheet.png"><img src="../../../../artifacts/tools/out/tmp_snow_scan/longplay_5950_6350_snow_sheet.png" alt="tools/out/tmp_snow_scan/longplay_5950_6350_snow_sheet.png" loading="lazy"></a><figcaption><code>tools/out/tmp_snow_scan/longplay_5950_6350_snow_sheet.png</code><span>Copied original artifact.</span></figcaption></figure></div></section>
       <article class="doc-body">
-        <h1 id="track-1-live-race-l01318d-static-role-split">Track 1 Live-Race <code>L01318D</code> Static Role Split</h1>
-<ul><li>Note date: <code>2026-03-28</code></li><li>Primary code surface:</li><li><code>bank2.asm</code> <code>L012F48 .. L01318D</code></li><li>Current gameplay seed context:</li><li><code>manual_artifacts/lane3/lane3_live_race_mid.mss</code></li></ul>
-<h2 id="what-was-read">What Was Read</h2>
-<ul><li>loop/caller context:</li><li><code>nl -ba bank2.asm | sed -n &#x27;2148,2255p&#x27;</code></li><li><code>nl -ba bank2.asm | sed -n &#x27;5877,6168p&#x27;</code></li><li><code>nl -ba bank2.asm | sed -n &#x27;6168,6279p&#x27;</code></li><li>existing ownership notes:</li><li><code>rom_analysis/maps/tracks/track1_02_9016_state_ownership.md</code></li><li><code>rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md</code></li><li>small address walk used to pin the previously named PCs inside the loop:</li><li><code>02:B042</code></li><li><code>02:B05D</code></li><li><code>02:B0B1</code></li><li><code>02:B0BD</code></li><li><code>02:B134</code></li></ul>
-<h2 id="loop-shape">Loop Shape</h2>
-<ul><li><code>L01114F</code> and <code>L011165</code> both call the same late gameplay block in order:</li><li><code>L012F48</code></li><li><code>L01318D</code></li><li><code>L01070A</code></li><li><code>L0108EF</code></li><li>OAM flush helper</li><li>practical reading:</li><li><code>L01318D</code> is not the already-closed rival-marker path</li><li>it sits earlier in the same frame build and prepares/emits the moving gameplay workload that later shares the frame with the closed <code>state_11f3 -&gt; oam_0730</code> HUD marker path</li></ul>
-<h2 id="static-role-split-inside-l01318d">Static Role Split Inside <code>L01318D</code></h2>
-<ul><li><code>02:B042</code></li><li>falls on <code>lda $12F4.w,X</code></li><li>role: loads a per-entry attribute/variant word into <code>$26</code></li><li>reading: operand selection, not sprite emission by itself</li></ul>
-<ul><li><code>02:B05D</code></li><li>falls on <code>adc $1CB2.w</code></li><li>role: part of the low-index branch that converts the local selector into the final <code>$22</code> screen/object position before <code>jsr L012BE2</code></li><li>reading: coordinate/phase assembly, not the final submit point</li></ul>
-<ul><li><code>02:B0B1</code></li><li>falls on an <code>asl A</code></li><li>role: part of the high-index branch&#x27;s <code>5 * value</code> style expansion on <code>$22</code> after subtracting <code>8</code> and optionally setting <code>$24 = 0x4000</code></li><li>reading: position/tile-base math, not the final submit point</li></ul>
-<ul><li><code>02:B0BD</code></li><li>falls on <code>lda #$1D80.w</code></li><li>role: loads the shared source-bank base into <code>$11/$10</code> immediately before the generic emitter call</li><li>reading: setup for submission, not the emission itself</li></ul>
-<ul><li><code>02:B134</code></li><li>falls on <code>jsr L012BE2.w</code></li><li>role: the generic submit point on the default branch after <code>$26</code>, <code>$24</code>, <code>$22</code>, and the <code>1D80:8000</code> source base are prepared</li><li>reading: strongest current candidate for the actual road-line/object emission site among the previously named PCs</li></ul>
-<h2 id="important-companion-branch">Important Companion Branch</h2>
-<ul><li>one nearby site is at least as important as the five named PCs:</li><li><code>02:B101</code> -&gt; <code>jsr L012D5A.w</code></li><li>branch condition:</li><li>active only when the <code>1CEA</code> test takes the special path and <code>$BA != 0</code></li><li>reading:</li><li>the narrowed cluster is not one emitter</li><li>it already splits into:</li><li>generic <code>L012BE2</code> submissions</li><li>an alternate <code>L012D5A</code> submission path</li></ul>
-<h2 id="practical-reading">Practical Reading</h2>
-<ul><li>the old five-PC list mixed together three different kinds of work:</li><li>operand/variant load (<code>02:B042</code>)</li><li>coordinate/tile-base math (<code>02:B05D</code>, <code>02:B0B1</code>, <code>02:B0BD</code>)</li><li>actual generic submit (<code>02:B134</code>)</li><li>that means the next proving target should no longer be &quot;which one of the five is the road builder?&quot;</li><li>the tighter target is:</li><li>what <code>L012BE2</code> emits on the default path</li><li>what <code>L012D5A</code> emits on the alternate path</li><li>which live-race conditions choose between those two emitters</li></ul>
-<h2 id="why-the-radar-was-only-an-anchor">Why The Radar Was Only An Anchor</h2>
-<ul><li>the radar/top-strip marker stayed useful because its ownership is already closed:</li><li><code>L0117BA</code> seeds <code>state_11f3</code></li><li><code>L0108EF</code> turns it into <code>oam_0730</code></li><li>that closed path gave a reliable visual/state anchor for confirming that the manual live-race seeds were meaningfully different from the old control corridor</li><li>but <code>L01318D</code> is where the open gameplay-world attribution still lives, so the lane should now spend effort there instead of treating the radar marker as the main destination</li></ul>
+        <h1 id="track-1-longplay-snow-anchors">Track 1 Longplay Snow Anchors</h1>
+<ul><li>Intake date: <code>2026-03-28</code></li><li>Source video:</li><li>local <code>the_duel_longplay.mp4</code></li><li>Builder:</li><li><code>tools/build_video_phase_pack.py</code></li><li>Spec:</li><li><code>tools/gameplay_video_phase_packs.json</code></li><li>Promoted phase pack:</li><li><code>tools/out/longplay_snow_phase_pack/</code></li></ul>
+<h2 id="key-artifacts">Key Artifacts</h2>
+<ul><li><code>tools/out/longplay_snow_phase_pack/anchor_sheet.png</code></li><li><code>tools/out/longplay_snow_phase_pack/01_snow_onset_anchor.png</code></li><li><code>tools/out/longplay_snow_phase_pack/02_snow_mountain_curve_anchor.png</code></li><li><code>tools/out/longplay_snow_phase_pack/03_snow_log_truck_anchor.png</code></li><li><code>tools/out/longplay_snow_phase_pack/manifest.json</code></li></ul>
+<h2 id="what-was-run">What Was Run</h2>
+<ul><li>targeted user-guided scan:</li><li><code>ffmpeg -y -loglevel error -ss 3600 -t 80 -i the_duel_longplay.mp4 -vf &quot;fps=1,scale=320:180,tile=4x5&quot; -frames:v 1 tools/out/tmp_snow_scan/longplay_6000_6080_detail_sheet.png</code></li><li><code>ffmpeg -y -loglevel error -ss 3570 -t 240 -i the_duel_longplay.mp4 -vf &quot;fps=1/10,scale=240:135,tile=4x6&quot; -frames:v 1 tools/out/tmp_snow_scan/longplay_5950_6350_snow_sheet.png</code></li><li>promoted builder run:</li><li><code>python3 tools/build_video_phase_pack.py --spec tools/gameplay_video_phase_packs.json</code></li></ul>
+<h2 id="closed-read">Closed Read</h2>
+<ul><li>the user hint was correct: snow begins at the one-hour mark of the local longplay</li><li>promoted snow anchors:</li><li><code>01:00:00</code> (<code>3600s</code>): first clear snow onset</li><li><code>01:02:20</code> (<code>3740s</code>): snowy mountain curve with visible flakes and a stronger mountain horizon</li><li><code>01:03:20</code> (<code>3800s</code>): later snowy corridor with a log truck ahead</li><li>practical reading:</li><li>lane 3 no longer lacks preserved snow-specific gameplay frames</li><li>the snow corridor is now a named visual surface rather than a vague “maybe East/West Coast later” hypothesis</li></ul>
+<h2 id="boundary">Boundary</h2>
+<ul><li>this pack is still a longplay-derived visual anchor, not a trusted <code>BG1/BG2/BG3/OBJ</code> capture</li><li>use it to aim later emulator-side snow capture, not to replace that work</li></ul>
+<h2 id="next-best-step">Next Best Step</h2>
+<ul><li>use this pack plus the earlier hard-phase pack to choose the first snow-capable emulator-side route worth reproducing</li><li>once a live or savestate path reaches snow, keep the follow-up on <code>BG/OBJ</code> ownership instead of whole-frame-only review</li></ul>
       </article>
     </main>
   </div>

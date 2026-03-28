@@ -12,14 +12,14 @@
       "source": "rom_analysis/docs/next_steps_roadmap.md",
       "label": "Next Steps Roadmap",
       "section": "Source Of Truth",
-      "last_updated": "2026-03-28 15:29",
+      "last_updated": "2026-03-28 15:51",
       "page": "pages/rom_analysis/docs/next_steps_roadmap.html"
     },
     {
       "source": "rom_analysis/docs/progress_checkpoints.md",
       "label": "Progress Checkpoints",
       "section": "Source Of Truth",
-      "last_updated": "2026-03-28 15:29",
+      "last_updated": "2026-03-28 15:51",
       "page": "pages/rom_analysis/docs/progress_checkpoints.html"
     },
     {
@@ -166,7 +166,7 @@
       "source": "rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md",
       "label": "Gameplay Handoff",
       "section": "Gameplay And Lane 3",
-      "last_updated": "2026-03-28 15:29",
+      "last_updated": "2026-03-28 15:51",
       "page": "pages/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.html"
     },
     {
@@ -261,6 +261,13 @@
       "page": "pages/rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.html"
     },
     {
+      "source": "rom_analysis/maps/tracks/track1_longplay_snow_anchors.md",
+      "label": "Snow Anchors",
+      "section": "Gameplay And Lane 3",
+      "last_updated": "2026-03-28 15:51",
+      "page": "pages/rom_analysis/maps/tracks/track1_longplay_snow_anchors.html"
+    },
+    {
       "source": "rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md",
       "label": "Prison Finale Anchor",
       "section": "Gameplay And Lane 3",
@@ -316,6 +323,6 @@
     "index_markdown": "../docs_wiki_markdown_bundle/wiki_bundle_index.md",
     "combined_markdown": "../docs_wiki_markdown_bundle/wiki_combined.md",
     "index_json": "../docs_wiki_markdown_bundle/wiki_bundle_index.json",
-    "doc_count": 44
+    "doc_count": 45
   }
 }

@@ -6346,3 +6346,29 @@ Current status:
     for the trusted savestate-backed `BG/OBJ` gameplay surfaces
   - the next good use of effort is to target one of these named moments with a
     real emulator-side `BG/OBJ` capture path instead of searching videos again
+
+### CP-130: longplay snow anchors now close the last missing designer-confirmed visual gap
+
+- promoted docs:
+  - `rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
+  - `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
+  - `rom_analysis/docs/next_steps_roadmap.md`
+- updated tooling/spec:
+  - `tools/gameplay_video_phase_packs.json`
+- promoted artifacts:
+  - `tools/out/longplay_snow_phase_pack/`
+- bounded validation:
+  - `python3 tools/build_video_phase_pack.py --spec tools/gameplay_video_phase_packs.json`
+- observed result:
+  - the user-guided one-hour search was correct:
+    the local longplay enters a snow-driving corridor at `01:00:00`
+  - promoted snow anchors now cover:
+    - onset at `3600s`
+    - snowy mountain curve at `3740s`
+    - snowy log-truck corridor at `3800s`
+- practical reading:
+  - the last missing designer-confirmed visual gap from the earlier hard-phase
+    pack is now closed
+  - the next move is no longer “find any snow frame”; it is “decide whether
+    snow or service/post is the better next emulator-side `BG/OBJ` capture
+    target”

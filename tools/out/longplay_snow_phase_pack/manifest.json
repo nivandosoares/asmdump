@@ -1,0 +1,92 @@
+{
+  "packId": "longplay_snow_phase_pack",
+  "title": "Longplay Snow Phase Pack",
+  "description": "Snow-driving anchors from the later longplay corridor, starting at the user-confirmed one-hour mark.",
+  "generatedAtUtc": "2026-03-28T18:52:17.572351+00:00",
+  "sourceVideo": "the_duel_longplay.mp4",
+  "videoMetadata": {
+    "programs": [],
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "vp9",
+        "codec_type": "video",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "60/1",
+        "avg_frame_rate": "312278000/5204633",
+        "nb_frames": "312278"
+      },
+      {
+        "index": 1,
+        "codec_name": "opus",
+        "codec_type": "audio",
+        "r_frame_rate": "0/0",
+        "avg_frame_rate": "0/0",
+        "nb_frames": "260233"
+      }
+    ],
+    "format": {
+      "duration": "5204.661000",
+      "size": "298768113"
+    },
+    "source": "the_duel_longplay.mp4"
+  },
+  "anchorSheet": "tools/out/longplay_snow_phase_pack/anchor_sheet.png",
+  "phases": [
+    {
+      "index": 1,
+      "id": "snow_onset",
+      "title": "Snow Onset",
+      "note": "First clear snow gameplay still at the user-confirmed one-hour boundary of the local longplay.",
+      "anchorSeconds": 3600.0,
+      "anchorTimestamp": "01:00:00.000",
+      "windowStartSeconds": 3598.0,
+      "windowStartTimestamp": "00:59:58.000",
+      "windowDurationSeconds": 6.0,
+      "windowEndTimestamp": "01:00:04.000",
+      "windowExpectedFrameCount": 6,
+      "sheetFps": 1.0,
+      "sheetTile": "3x2",
+      "sheetScale": "320:180",
+      "anchorImage": "tools/out/longplay_snow_phase_pack/01_snow_onset_anchor.png",
+      "windowSheet": "tools/out/longplay_snow_phase_pack/01_snow_onset_window.png"
+    },
+    {
+      "index": 2,
+      "id": "snow_mountain_curve",
+      "title": "Snow Mountain Curve",
+      "note": "Later snowy curve with visible snowfall and stronger mountain horizon.",
+      "anchorSeconds": 3740.0,
+      "anchorTimestamp": "01:02:20.000",
+      "windowStartSeconds": 3738.0,
+      "windowStartTimestamp": "01:02:18.000",
+      "windowDurationSeconds": 6.0,
+      "windowEndTimestamp": "01:02:24.000",
+      "windowExpectedFrameCount": 6,
+      "sheetFps": 1.0,
+      "sheetTile": "3x2",
+      "sheetScale": "320:180",
+      "anchorImage": "tools/out/longplay_snow_phase_pack/02_snow_mountain_curve_anchor.png",
+      "windowSheet": "tools/out/longplay_snow_phase_pack/02_snow_mountain_curve_window.png"
+    },
+    {
+      "index": 3,
+      "id": "snow_log_truck",
+      "title": "Snow Log-Truck Corridor",
+      "note": "Later snowy corridor with traffic ahead, including the log truck in the player's lane family.",
+      "anchorSeconds": 3800.0,
+      "anchorTimestamp": "01:03:20.000",
+      "windowStartSeconds": 3798.0,
+      "windowStartTimestamp": "01:03:18.000",
+      "windowDurationSeconds": 6.0,
+      "windowEndTimestamp": "01:03:24.000",
+      "windowExpectedFrameCount": 6,
+      "sheetFps": 1.0,
+      "sheetTile": "3x2",
+      "sheetScale": "320:180",
+      "anchorImage": "tools/out/longplay_snow_phase_pack/03_snow_log_truck_anchor.png",
+      "windowSheet": "tools/out/longplay_snow_phase_pack/03_snow_log_truck_window.png"
+    }
+  ]
+}

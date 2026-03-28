@@ -16,6 +16,7 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
 - `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
 - `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
+- `rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
 - `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
 - `rom_analysis/maps/tracks/track1_live_race_vs_post9016_control.md`
 - `rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
@@ -233,11 +234,13 @@ This note is the explicit resume point for the next agent on Lane 3.
   moments the user called out:
   - `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
   - `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
+  - `rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
   - `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
   - practical read:
     these close the human-facing lookup surface for checkpoint service/post,
-    partial-results, later hard phases, and the arrest/prison finale, without
-    pretending those longplay/video anchors are already `BG/OBJ`-resolved
+    partial-results, later hard phases, snow, and the arrest/prison finale,
+    without pretending those longplay/video anchors are already
+    `BG/OBJ`-resolved
 
 ## Do Not Repeat
 
