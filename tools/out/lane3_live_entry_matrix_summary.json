@@ -1,0 +1,122 @@
+[
+  {
+    "scenario": "lane3_entry_a_hold_4200",
+    "gameplay_input_windows": "0-2149:a",
+    "state_11f3": {
+      "min": 44,
+      "max": 198,
+      "first_max": 3348
+    },
+    "oam_0730": {
+      "min": 4618,
+      "max": 4628,
+      "first_max": 3320
+    },
+    "state_09a2": {
+      "min": 18,
+      "max": 45,
+      "first_max": 3110
+    },
+    "dp_0053": {
+      "min": 0,
+      "max": 248,
+      "first_max": 2083
+    },
+    "dp_0054": {
+      "min": 0,
+      "max": 248,
+      "first_max": 2082
+    },
+    "callbacks_tail": {
+      "main": [
+        "02:9016"
+      ],
+      "irq": [
+        "01:96A0"
+      ],
+      "nmi": [
+        "02:8F3C"
+      ]
+    }
+  },
+  {
+    "scenario": "lane3_entry_a_hold_right_4200",
+    "gameplay_input_windows": "0-2149:a;320-620:right",
+    "state_11f3": {
+      "min": 44,
+      "max": 198,
+      "first_max": 3348
+    },
+    "oam_0730": {
+      "min": 4618,
+      "max": 4628,
+      "first_max": 3320
+    },
+    "state_09a2": {
+      "min": 18,
+      "max": 45,
+      "first_max": 3110
+    },
+    "dp_0053": {
+      "min": 0,
+      "max": 248,
+      "first_max": 2083
+    },
+    "dp_0054": {
+      "min": 0,
+      "max": 248,
+      "first_max": 2082
+    },
+    "callbacks_tail": {
+      "main": [
+        "02:9016"
+      ],
+      "irq": [
+        "01:96A0"
+      ],
+      "nmi": [
+        "02:8F3C"
+      ]
+    }
+  },
+  {
+    "scenario": "lane3_entry_a_hold_left_4200",
+    "gameplay_input_windows": "0-2149:a;320-620:left",
+    "state_11f3": {
+      "min": 44,
+      "max": 198,
+      "first_max": 3348
+    },
+    "oam_0730": {
+      "min": 4618,
+      "max": 4628,
+      "first_max": 3320
+    },
+    "state_09a2": {
+      "min": 18,
+      "max": 45,
+      "first_max": 3110
+    },
+    "dp_0053": {
+      "min": 0,
+      "max": 248,
+      "first_max": 2083
+    },
+    "dp_0054": {
+      "min": 0,
+      "max": 248,
+      "first_max": 2082
+    },
+    "callbacks_tail": {
+      "main": [
+        "02:9016"
+      ],
+      "irq": [
+        "01:96A0"
+      ],
+      "nmi": [
+        "02:8F3C"
+      ]
+    }
+  }
+]

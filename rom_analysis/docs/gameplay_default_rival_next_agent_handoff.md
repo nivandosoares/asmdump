@@ -327,6 +327,47 @@ The question is now narrower:
   - can `live_race_plus30f` be recovered through the lab backend as the second
     visual replicate?
 
+## Live Entry Route
+
+- a new practical gameplay-entry note now exists:
+  - `rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md`
+- a new launcher now codifies the current user-guided route:
+  - `tools/run_lane3_gameplay_entry.py`
+  - fixed menu pulses:
+    `1200:a;1280:a;1505-1510:a;1640-1645:a;1730-1735:a`
+  - gameplay-relative zero:
+    frame `2050`
+- use that launcher when the goal is live gameplay probing rather than exact
+  still-frame anchoring
+- current closed limitation:
+  - the first `17000`-frame `menu_a_then_hold_a` run stays in
+    `02:9016/01:96A0/02:8F3C` but does **not** recreate the preserved
+    `live_race_mid` substate exactly
+  - at absolute frame `16655`, it still keeps:
+    - `state_11f3 = 198`
+    - `oam_0730 = 4628`
+  - the preserved manual seed still keeps:
+    - `state_11f3 = 477..479`
+    - `oam_0730 = 4645`
+  - the new match-search helper:
+    `tools/search_boot_probe_matches.py`
+    also confirms that `15000..16999` is only a broad tied plateau rather than
+    one special exact window
+- practical read:
+  - exact `live_race_mid` recreation is now secondary
+  - the main gain is that Lane 3 finally has a reusable power-on entry lane
+    for gameplay-relative debug/capture work
+  - first live-entry follow-up already shows a useful split:
+    - current strong probe fields stay identical across
+      `a-only`, `a+right`, and `a+left` steering-burst lanes
+    - repeated `straight` capture is deterministic
+    - after compensating a one-frame phase lead on the `right` capture, the
+      first real visual divergence lands around script frame `2402`, about
+      `32` frames after the injected `right` window begins at `2370`
+    - practical fit:
+      steering already matters visually on this lane, but the present probe
+      field set is too coarse to expose its owner cleanly
+
 ## Recommended Next Experiment
 
 1. Start from the preserved manual seeds and the new aligned-control compare,
@@ -356,25 +397,40 @@ The question is now narrower:
    `live_race_plus30f` instead of reusing `slot2_extra`, but treat the current
    boundary-correction failure as an active tooling bug rather than as a
    ready-to-run export path.
-7. Treat the old power-on no-input `post9016` corridor as the control surface;
-   use the `A` lane only if a richer fallback is needed later.
+7. Treat the new gameplay-entry launcher as the default power-on base when the
+   goal is live gameplay probing:
+   - use manual seeds for exact still-frame anchoring
+   - use `tools/run_lane3_gameplay_entry.py` for gameplay-relative experiments
 8. Prefer bounded producer/OAM/HUD tracing over more screenshot volume:
    - the current screenshot path is still broken on the manual seeds
-9. If another dev is available today, use
+9. Parameterize the live-entry lane upward next instead of pushing harder on
+   one exact saved frame:
+   - alternate cars
+   - alternate tracks
+   - opponent vs no-opponent branch
+10. Before asking for more human screenshots on the live-entry lane, expand the
+   machine-only steering read first:
+   - align or compensate the one-frame capture lead automatically
+   - widen the probe field set around steering-sensitive windows instead of
+     only reusing `state_11f3/oam_0730/09A2/0053/0054`
+11. If another dev is available today, use
    `rom_analysis/docs/lane3_today_work_brief.md` as the working brief rather
    than reconstructing the queue from multiple archaeology notes.
-10. If a human needs to re-enter the same gameplay corridor manually, use the
+12. If a human needs to re-enter the same gameplay corridor manually, use the
     new route/control note in `manual_artifacts/lane3/responses.txt` instead
     of rediscovering the menu flow from scratch.
 
 ## Minimal Validation If Tooling Changes
 
 - `python3 -m py_compile tools/compare_capture_sequences.py`
+- `python3 -m py_compile tools/run_lane3_gameplay_entry.py`
+- `python3 -m py_compile tools/search_boot_probe_matches.py`
 - `python3 tools/compare_boot_probe_windows.py tools/out/post9016_default_rival_probe_none/td2_boot_probe.json tools/out/post9016_default_rival_probe_a/td2_boot_probe.json tools/out/post9016_default_rival_probe_none_vs_a_compare.json --markdown-out tools/out/post9016_default_rival_probe_none_vs_a_compare.md --label-a no_input --label-b a_hold --start-frame 2048 --end-frame 2208`
 - `python3 tools/compare_boot_probe_windows.py tools/out/post9016_default_rival_probe_none/td2_boot_probe.json tools/out/post9016_default_rival_probe_b/td2_boot_probe.json tools/out/post9016_default_rival_probe_none_vs_b_compare.json --markdown-out tools/out/post9016_default_rival_probe_none_vs_b_compare.md --label-a no_input --label-b b_hold --start-frame 2048 --end-frame 2208`
 - `python3 tools/compare_capture_sequences.py tools/out/post9016_default_rival_capture_full tools/out/post9016_default_rival_capture_a2050 tools/out/post9016_default_rival_a2050_sequence_compare.json --markdown-out tools/out/post9016_default_rival_a2050_sequence_compare.md --base-label no_input --candidate-label a_hold --script-start-frame 2048`
 - `python3 tools/compare_capture_sequences.py tools/out/post9016_default_rival_capture_full tools/out/post9016_default_rival_capture_b2050 tools/out/post9016_default_rival_b2050_sequence_compare.json --markdown-out tools/out/post9016_default_rival_b2050_sequence_compare.md --base-label no_input --candidate-label b_hold --script-start-frame 2048`
 - `python3 tools/compare_boot_probe_windows.py tools/out/lane3_live_race_mid_probe/td2_boot_probe.json tools/out/lane3_live_race_plus30f_probe/td2_boot_probe.json tools/out/lane3_live_race_mid_vs_plus30f_probe_compare.json --markdown-out tools/out/lane3_live_race_mid_vs_plus30f_probe_compare.md --label-a live_race_mid --label-b live_race_plus30f --start-frame 0 --end-frame 11 --fields state_0960,state_09a2,state_09a8,state_11f3,dp_0053,dp_0054,dp_0020,dp_0022,state_1c6a,state_1c70,state_1c76,state_0202,active_main_callback_bank,active_main_callback_addr,active_irq_callback_bank,active_irq_callback_addr,active_nmi_callback_bank,active_nmi_callback_addr`
+- `python3 tools/run_lane3_gameplay_entry.py tools/out/lane3_gameplay_entry_probe_smoke --mesen-release-dir /home/nivando-soares/Mesen2/bin/linux-x64/Release --probe-total-frames 2600 --gameplay-input-windows '0-549:a'`
 
 ## Checkpoint Trail
 

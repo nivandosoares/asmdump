@@ -21,6 +21,39 @@ Validation contract baseline:
 - `rom_analysis/docs/validation_gates.md`
 - Latest run status: callback contracts `18/18` pass; regression gates `6/6` pass.
 
+## Lane 3 Live Entry Update (`2026-03-28`)
+
+- A new practical gameplay-entry route is now promoted in:
+  - `rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md`
+- The new launcher:
+  - `tools/run_lane3_gameplay_entry.py`
+  encodes the current user-guided route as:
+  - menu pulses:
+    `1200:a;1280:a;1505-1510:a;1640-1645:a;1730-1735:a`
+  - gameplay-relative zero:
+    frame `2050`
+- Practical read:
+  - this route is now good enough to use as a live-debug / live-capture entry
+    lane for gameplay archaeology
+  - exact `live_race_mid` savestate cloning is no longer the primary success
+    criterion
+- Closed negative result:
+  - the first long power-on run with that route plus gameplay-only `A` hold
+    does **not** recreate the preserved manual `live_race_mid` substate
+  - at absolute frame `16655`, it still keeps:
+    - `state_11f3 = 198`
+    - `oam_0730 = 4628`
+  - the preserved manual seed still keeps:
+    - `state_11f3 = 477..479`
+    - `oam_0730 = 4645`
+  - a sliding exact-field search over `15000..16999` does not produce a
+    stronger exact-state match than a broad `129/228`-slot plateau
+- Next gate:
+  - use the new live-entry lane as the default base for gameplay-relative
+    probing
+  - parameterize it upward into alternate cars / tracks / opponent branches
+    instead of continuing to optimize for one exact saved frame
+
 ## Gameplay Capture Heuristics (User-supplied, Unverified)
 
 Use these as guided-capture targets for lane 3, not as promoted ROM claims:

@@ -14,6 +14,41 @@ next gate needed to advance.
 | Lane 3: Gameplay-era frame archaeology | active | the older promoted `v2_current` lane still explains the historical screenshot-vs-end-frame split and the pre-drift queue-cursor equalization path through frames `90..92`, but a fresh current-seed recheck now closes an important confusion point: today's `game_11.mss` fingerprint no longer reproduces that window and instead stays flat on `00:8029/00:835F` with `dp_0053/0054/0055/0056 = 0x30/0x30/0x28/0x12` and `0` write hits in `target_frame=90/91` scanline reruns. The seed-surface audit still proves the current `game_11.mss` savestate is a `front_end_menu_seed`, not verified gameplay. The repo now also carries a preserved manual live-race seed pair from user Mesen slots `#1/#3`, plus slot `#2` as an explicit nearby boundary seed. The primary pair still loads onto `02:9016/01:96A0/02:8F3C` with the inherited selector family, and a new aligned control compare now proves the old post-`2050` default-rival no-input corridor is already separated inside that same callback family: both manual seeds differ on all `12/12` aligned frames in `oam_0730`, `state_11f3`, `dp_0053`, `dp_0054`, `dp_0020`, `dp_0022`, and `state_09a2`. A new attract/demo boundary note now demotes a key historical assumption: older no-input and early-input corridors can clip short gameplay-like demo slices, so the absence of a long uninterrupted gameplay segment there is no longer strong negative evidence by itself. A new ownership note now closes the first semantic pass on those split fields: `state_11f3 -> oam_0730` is rival-gated HUD/OAM, `state_09a2` is an OAM cursor, `state_09a8` is allocator/build control, `dp_0053/0054` behave as DMA-ring cursors, and `dp_0020/0022` are still best read as transient builder scratch. A new live-race layer-stack note now narrows the visible composition on a real manual seed: `lane3_live_race_mid.mss` frame `0` samples as `BG1 + BG2 + OBJ`, `BG1` stays scroll-stable, `BG2` changes per scanline, and the active `01:9111 -> 01:9185 -> 02:9165` path already matches that read via the `HDMA7` / `BG2VOFS` corridor. A new producer-path note now pushes that same seed into the visible split itself: `live_race_mid` repeatedly rewrites `$22/$23`, `next_irq_ptr` flips `01:960D <-> 01:96A0` at scanlines `24/121`, `TMAIN` briefly enables `BG3` at scanline `23`, and the strongest current producer cluster is now narrowed inside `L01318D` around `02:B042 / 02:B05D / 02:B0B1 / 02:B0BD / 02:B134`. The new static role split now sharpens that cluster: `02:B042` is a variant-word load, `02:B05D / 02:B0B1 / 02:B0BD` are setup/math, `02:B134` is the strongest generic `L012BE2` submit point, and a nearby alternate submit path exists at `02:B101 -> L012D5A`. A direct slot-`#2` recheck now closes the preserved extra seed as `00:8029/00:835F/00:8029` with visible `BG3` only at frame `0`, so it is a boundary/control seed rather than a second gameplay replicate. A new lab-backend boundary note now further closes `live_race_plus30f`: its absolute start frame is `17495`, which demotes the `plus30f` timing label to a historical name only, and current `labRunner` export attempts still fail during frame-boundary correction on that seed. A new human-support note now also makes the practical re-entry path explicit (`A` / first-option through menus, `B` backs out; in gameplay `A` accelerates, `B` decelerates, d-pad steers), confirms `slot2_extra` still looks like intro/credits, and extends `live_race_mid` visually through the checkpoint/post-stop sequence plus the late police/third-radar-marker event. That continuity is now backed by a preserved `43.86s` local video plus extracted stills for the opening live-race frame, curved/open-road continuity, checkpoint `STOP` sign, gas-station/post exterior, the black transition/fade, and a late resumed-driving frame with the extra colored radar marker. Lane 3 is therefore no longer blocked on “find any producer path”; it is blocked on exact emitter semantics inside that narrowed cluster plus a practical human-visual/export workflow while the backend replicate path remains unstable. |
 | Lane 4: Bank API contracts (30/10/11) | queued | baseline hypotheses documented, contracts not yet proven |
 
+## Lane 3 Live Entry Update (`2026-03-28`)
+
+- New note:
+  - `rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md`
+- New tooling:
+  - `tools/run_lane3_gameplay_entry.py`
+  - `tools/search_boot_probe_matches.py`
+- Closed practical read:
+  - the user-guided `A`-through-menus route is now promoted as a real
+    gameplay-entry lane from power-on
+  - the launcher fixes the route as:
+    - menu pulses:
+      `1200:a;1280:a;1505-1510:a;1640-1645:a;1730-1735:a`
+    - gameplay-relative zero:
+      frame `2050`
+- Closed negative result:
+  - a `17000`-frame run using that route plus gameplay-only `A` hold stays in
+    the live gameplay family but does not recreate the preserved
+    `live_race_mid` substate exactly
+  - absolute frame `16655` keeps:
+    - `state_11f3 = 198`
+    - `oam_0730 = 4628`
+  - the preserved manual seed still keeps:
+    - `state_11f3 = 477..479`
+    - `oam_0730 = 4645`
+  - the exact-field search over `15000..16999` never improves beyond a tied
+    `129/228` slot match, so exact savestate recreation is not the right
+    success gate for this route
+- Practical implication:
+  - this route is now the best current base for live gameplay probing,
+    gameplay-relative input programs, and later live capture/debug loops
+  - next leverage should go into selector parameterization
+    (cars / tracks / opponent branch), not into forcing one exact match to
+    `live_race_mid`
+
 ## Execution Reset (2026-03-19)
 
 - The port plan now treats maintainability cleanup as a first-class execution

@@ -1,0 +1,36 @@
+{
+  "capture_count": 120,
+  "first_divergence": null,
+  "differing_frames": [],
+  "base_first_adjacent_motion": {
+    "from_capture_index": 0,
+    "to_capture_index": 1,
+    "from_script_frame": 2320,
+    "to_script_frame": 2321,
+    "mismatch_pixels": 46,
+    "bbox": [
+      15,
+      85,
+      198,
+      115
+    ]
+  },
+  "candidate_first_adjacent_motion": {
+    "from_capture_index": 0,
+    "to_capture_index": 1,
+    "from_script_frame": 2320,
+    "to_script_frame": 2321,
+    "mismatch_pixels": 46,
+    "bbox": [
+      15,
+      85,
+      198,
+      115
+    ]
+  },
+  "base_label": "straight_a",
+  "candidate_label": "straight_b",
+  "base_dir": "/home/nivando-soares/asmdump/tools/out/lane3_entry_capture_straight_repeat_a",
+  "candidate_dir": "/home/nivando-soares/asmdump/tools/out/lane3_entry_capture_straight_repeat_b",
+  "script_start_frame": 2320
+}
