@@ -11,6 +11,7 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `rom_analysis/maps/tracks/track1_seed_sweep_v3_ab_compare.md`
 - `rom_analysis/maps/tracks/track1_b_hold_scanline_recheck_0090_0093_current_seed.md`
 - `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
+- `rom_analysis/maps/tracks/track1_live_race_vs_post9016_control.md`
 - `manual_artifacts/lane3/lane3_live_race_notes.txt`
 - `tools/out/post9016_default_rival_probe_none_vs_a_compare.md`
 - `tools/out/post9016_default_rival_probe_none_vs_b_compare.md`
@@ -171,7 +172,12 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `tools/out/lane3_live_race_plus30f_probe/td2_boot_probe.json`
 - `tools/out/lane3_live_race_mid_vs_plus30f_probe_compare.json`
 - `tools/out/lane3_live_race_mid_vs_plus30f_probe_compare.md`
+- `tools/out/lane3_live_race_mid_vs_post9016_default_rival_probe_compare.json`
+- `tools/out/lane3_live_race_mid_vs_post9016_default_rival_probe_compare.md`
+- `tools/out/lane3_live_race_plus30f_vs_post9016_default_rival_probe_compare.json`
+- `tools/out/lane3_live_race_plus30f_vs_post9016_default_rival_probe_compare.md`
 - `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
+- `rom_analysis/maps/tracks/track1_live_race_vs_post9016_control.md`
 
 ## Repo Caveat
 
@@ -182,34 +188,36 @@ This note is the explicit resume point for the next agent on Lane 3.
 
 ## Next Gate
 
-Use the preserved manual live-race seed pair to close one of these:
+Use the preserved manual live-race seed pair plus the aligned control compare
+to explain which substate fields separate live-race imagery from the older
+power-on `02:9016` corridor.
 
-1. explain why visually live-race seeds still present as `02:9016` plus the
-   inherited selector family, or
-2. find the first code-facing state transition that cleanly separates these
-   manual seeds from the older power-on `02:9016` corridor
+The first separator is no longer open:
 
-The question is no longer “can we find a gameplay-looking image?”
+- both manual seeds already differ immediately from the aligned control on
+  `oam_0730`, `state_11f3`, `dp_0053`, `dp_0054`, `dp_0020`, `dp_0022`, and
+  `state_09a2`
 
-The question is:
+The question is now:
 
-- what does `02:9016` actually mean when the user-verified seed is already in
-  live Desert Blast gameplay imagery?
+- what do those fields mean inside the broader `02:9016` family when the
+  user-verified seed is already in live Desert Blast gameplay imagery?
 
 ## Recommended Next Experiment
 
-1. Start from the preserved manual seeds, not from `game_11.mss`.
-2. Probe `lane3_live_race_mid.mss` and `lane3_live_race_plus30f.mss` first:
-   - compare callbacks
-   - compare selector family
-   - compare `state_11f3`, `state_0960`, `state_09a2`, `state_09a8`,
-     `dp_0053`, `dp_0054`, `dp_0020`, `dp_0022`
-3. Treat the old power-on default-rival `A` lane as the control corridor:
-   - first fallback target remains `2050-2400:a`
-4. Prefer producer/OAM/HUD tracing over more screenshot volume:
-   - the current screenshot path is broken on the new manual seeds
-5. Only pivot back to image export once the PNG path is fixed or the lab
-   backend is ready to provide non-empty frame outputs
+1. Start from the preserved manual seeds and the new aligned-control compare,
+   not from `game_11.mss`.
+2. Read code around the already-proven OAM-side split first:
+   - `bank2.asm` `L0108EF`
+   - any nearby producers/consumers of `state_11f3` and `oam_0730`
+3. Then trace the remaining stable manual-vs-control split fields:
+   - `dp_0053`, `dp_0054`
+   - `dp_0020`, `dp_0022`
+   - `state_09a2`, `state_09a8`
+4. Treat the old power-on no-input `post9016` corridor as the control surface;
+   use the `A` lane only if a richer fallback is needed later.
+5. Prefer bounded producer/OAM/HUD tracing over more screenshot volume:
+   - the current screenshot path is still broken on the manual seeds
 
 ## Minimal Validation If Tooling Changes
 

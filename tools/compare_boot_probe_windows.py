@@ -27,6 +27,24 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--markdown-out", type=Path, default=None, help="optional markdown summary output path")
     parser.add_argument("--label-a", default="probe_a", help="human label for probe A")
     parser.add_argument("--label-b", default="probe_b", help="human label for probe B")
+    parser.add_argument(
+        "--frame-offset-a",
+        type=int,
+        default=0,
+        help=(
+            "optional signed offset applied to probe A frame numbers before "
+            "window matching"
+        ),
+    )
+    parser.add_argument(
+        "--frame-offset-b",
+        type=int,
+        default=0,
+        help=(
+            "optional signed offset applied to probe B frame numbers before "
+            "window matching"
+        ),
+    )
     parser.add_argument("--start-frame", type=int, required=True, help="first frame to compare (inclusive)")
     parser.add_argument("--end-frame", type=int, required=True, help="last frame to compare (inclusive)")
     parser.add_argument(
@@ -47,7 +65,7 @@ def load_probe(path: Path) -> dict[str, Any]:
     return payload
 
 
-def build_frame_lookup(payload: dict[str, Any]) -> dict[int, dict[str, Any]]:
+def build_frame_lookup(payload: dict[str, Any], frame_offset: int) -> dict[int, dict[str, Any]]:
     out: dict[int, dict[str, Any]] = {}
     for row in payload.get("frames", []):
         if not isinstance(row, dict):
@@ -55,7 +73,7 @@ def build_frame_lookup(payload: dict[str, Any]) -> dict[int, dict[str, Any]]:
         frame = row.get("frame")
         if not isinstance(frame, int):
             continue
-        out[frame] = row
+        out[frame + frame_offset] = row
     return out
 
 
@@ -156,6 +174,11 @@ def build_markdown(payload: dict[str, Any]) -> str:
     lines.append("")
     lines.append(f"- `{payload['label_a']}`: `{payload['probe_a']}`")
     lines.append(f"- `{payload['label_b']}`: `{payload['probe_b']}`")
+    if payload["frame_offset_a"] != 0 or payload["frame_offset_b"] != 0:
+        lines.append(
+            f"- frame offsets: `{payload['label_a']}={payload['frame_offset_a']}`, "
+            f"`{payload['label_b']}={payload['frame_offset_b']}`"
+        )
     lines.append(
         f"- compared frames: `{payload['start_frame']}..{payload['end_frame']}` "
         f"(`{payload['compared_frame_count']}` shared frames)"
@@ -208,8 +231,8 @@ def main() -> None:
 
     payload_a = load_probe(args.probe_a)
     payload_b = load_probe(args.probe_b)
-    rows_a = build_frame_lookup(payload_a)
-    rows_b = build_frame_lookup(payload_b)
+    rows_a = build_frame_lookup(payload_a, args.frame_offset_a)
+    rows_b = build_frame_lookup(payload_b, args.frame_offset_b)
 
     frames = [
         frame
@@ -246,6 +269,8 @@ def main() -> None:
         "probe_b": str(args.probe_b),
         "label_a": args.label_a,
         "label_b": args.label_b,
+        "frame_offset_a": args.frame_offset_a,
+        "frame_offset_b": args.frame_offset_b,
         "start_frame": args.start_frame,
         "end_frame": args.end_frame,
         "compared_frame_count": len(frames),
