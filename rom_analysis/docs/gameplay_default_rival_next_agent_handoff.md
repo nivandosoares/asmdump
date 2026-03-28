@@ -10,6 +10,8 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `tools/out/game11_seed_surface_audit/game11_seed_surface_audit.md`
 - `rom_analysis/maps/tracks/track1_seed_sweep_v3_ab_compare.md`
 - `rom_analysis/maps/tracks/track1_b_hold_scanline_recheck_0090_0093_current_seed.md`
+- `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
+- `manual_artifacts/lane3/lane3_live_race_notes.txt`
 - `tools/out/post9016_default_rival_probe_none_vs_a_compare.md`
 - `tools/out/post9016_default_rival_probe_none_vs_b_compare.md`
 - `tools/out/post9016_default_rival_a2050_sequence_compare.md`
@@ -40,8 +42,40 @@ This note is the explicit resume point for the next agent on Lane 3.
       `v2_current` queue-cursor equalization
     - those reruns stay flat on `00:8029 / 00:835F` with
       `dp_0053/0054/0055/0056 = 0x30/0x30/0x28/0x12` and `0` write hits
-- the best current Lane 3 candidate is now the deterministic power-on
-  default-rival corridor after the already-closed front-end route:
+- the repo now has a preserved manual live-race seed pair:
+  - `manual_artifacts/lane3/lane3_live_race_mid.mss`
+    - source slot: `~/.config/Mesen2/SaveStates/game_1.mss`
+    - SHA-256:
+      `64789efaaeff890f4e42e35e2c529e17b6c42269842203db35eb492aebf1dd0a`
+  - `manual_artifacts/lane3/lane3_live_race_plus30f.mss`
+    - source slot: `~/.config/Mesen2/SaveStates/game_3.mss`
+    - SHA-256:
+      `cf8b7bae867a83ceb3b0ba43abfb19ce25d7edcc507cc581bd3706ed9dc12076`
+  - preserved extra slot:
+    - `manual_artifacts/lane3/lane3_live_race_slot2_extra.mss`
+  - user-supplied visual context:
+    - `Porsche` cockpit in motion
+    - first `Desert Blast` segment
+    - approaching a green NPC traffic car
+  - both manual seeds still load onto:
+    - `main = 02:9016`
+    - `irq = 01:96A0`
+    - `nmi = 02:8F3C`
+  - both still inherit:
+    - `$1C6A = 1`
+    - `$1C70 = 0`
+    - `$1C76 = 1`
+    - `$0202 = 0xFFFF`
+  - but the pair is not a duplicate:
+    - `state_11f3` stays around `477..479` on `live_race_mid`
+    - `state_11f3` stays around `627..629` on `live_race_plus30f`
+    - `dp_0053/0054` stay around `120..200` on `live_race_mid`
+    - `dp_0053/0054` stay around `40..64` on `live_race_plus30f`
+  - current tooling caveat:
+    - headless `td2_boot_probe_frame.png` and `mesen_capture.lua` PNG output
+      from these seeds is currently zero-byte; trust the JSON/state side first
+- the older deterministic power-on candidate is still relevant as the fallback
+  comparison corridor:
   - base route:
     `1200:start;1280:start;1505-1510:start;1584-1589:right,down;1640-1645:start;1730-1735:start`
   - this still lands on the same callback surface through `2048..2208`:
@@ -91,6 +125,8 @@ This note is the explicit resume point for the next agent on Lane 3.
 
 - do not reopen `game_11.mss` as if it were a gameplay seed
 - do not re-run wide `A/B` sweeps on `game_11.mss` and call the result gameplay
+- do not ask for the same manual live-race saves again
+  - slots `#1/#3` are already preserved inside `manual_artifacts/lane3/`
 - do not ask for or spend more local effort on the archived `90..92`
   queue-cursor equalization against the current `game_11.mss`
   - the fresh current-seed reruns are static and no longer hit the old write
@@ -104,6 +140,10 @@ This note is the explicit resume point for the next agent on Lane 3.
 - do not collapse `A` and `B` back into one lane
   - `A` is the rich proving lane
   - `B` is the clean control lane
+- do not trust the zero-byte PNG outputs from the first manual-seed audit as
+  visual evidence
+  - if image export is needed, pivot to the lab backend or fix the screenshot
+    path first
 
 ## Exact Artifacts To Trust
 
@@ -124,6 +164,14 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `tools/out/post9016_default_rival_a_frame_02052.png`
 - `tools/out/post9016_default_rival_noinput_frame_02056.png`
 - `tools/out/post9016_default_rival_a_frame_02056.png`
+- `manual_artifacts/lane3/lane3_live_race_mid.mss`
+- `manual_artifacts/lane3/lane3_live_race_plus30f.mss`
+- `manual_artifacts/lane3/lane3_live_race_notes.txt`
+- `tools/out/lane3_live_race_mid_probe/td2_boot_probe.json`
+- `tools/out/lane3_live_race_plus30f_probe/td2_boot_probe.json`
+- `tools/out/lane3_live_race_mid_vs_plus30f_probe_compare.json`
+- `tools/out/lane3_live_race_mid_vs_plus30f_probe_compare.md`
+- `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
 
 ## Repo Caveat
 
@@ -134,39 +182,34 @@ This note is the explicit resume point for the next agent on Lane 3.
 
 ## Next Gate
 
-Extend the late-`A` default-rival corridor until one of these becomes true:
+Use the preserved manual live-race seed pair to close one of these:
 
-1. unmistakable world/gameplay motion is visible, or
-2. the inherited selector family finally exits the old top-menu values
+1. explain why visually live-race seeds still present as `02:9016` plus the
+   inherited selector family, or
+2. find the first code-facing state transition that cleanly separates these
+   manual seeds from the older power-on `02:9016` corridor
 
-The question is no longer “does this corridor react at all?”
+The question is no longer “can we find a gameplay-looking image?”
 
 The question is:
 
-- is this responsive corridor true gameplay or still presentation-state reuse?
+- what does `02:9016` actually mean when the user-verified seed is already in
+  live Desert Blast gameplay imagery?
 
 ## Recommended Next Experiment
 
-1. Keep the same power-on default-rival base route.
-2. Extend the late `A` lane farther, but stay bounded:
-   - first probe target:
-     `2050-2400:a`
-   - if that still looks promising, one short capture window centered on the
-     first newly interesting frame is enough
-3. Keep `B` as the control lane for the same extension window.
-4. Prefer probe-first, then capture-second:
-   - probe:
-     - compare callbacks
-     - compare selector family
-     - compare `state_0960`, `dp_0053`, `dp_0054`, `state_09a8`,
-       `state_09a2`, `state_137c`
-   - capture:
-     - only once a newly interesting frame or bbox appears
-5. If the lane still never exits the inherited selector family, the next
-   proving step is not more PNG volume:
-   - it is to identify what `02:9016` actually means in this corridor and
-     whether the old “menu state” fields are simply not being cleared during a
-     real early gameplay phase
+1. Start from the preserved manual seeds, not from `game_11.mss`.
+2. Probe `lane3_live_race_mid.mss` and `lane3_live_race_plus30f.mss` first:
+   - compare callbacks
+   - compare selector family
+   - compare `state_11f3`, `state_0960`, `state_09a2`, `state_09a8`,
+     `dp_0053`, `dp_0054`, `dp_0020`, `dp_0022`
+3. Treat the old power-on default-rival `A` lane as the control corridor:
+   - first fallback target remains `2050-2400:a`
+4. Prefer producer/OAM/HUD tracing over more screenshot volume:
+   - the current screenshot path is broken on the new manual seeds
+5. Only pivot back to image export once the PNG path is fixed or the lab
+   backend is ready to provide non-empty frame outputs
 
 ## Minimal Validation If Tooling Changes
 
@@ -175,6 +218,7 @@ The question is:
 - `python3 tools/compare_boot_probe_windows.py tools/out/post9016_default_rival_probe_none/td2_boot_probe.json tools/out/post9016_default_rival_probe_b/td2_boot_probe.json tools/out/post9016_default_rival_probe_none_vs_b_compare.json --markdown-out tools/out/post9016_default_rival_probe_none_vs_b_compare.md --label-a no_input --label-b b_hold --start-frame 2048 --end-frame 2208`
 - `python3 tools/compare_capture_sequences.py tools/out/post9016_default_rival_capture_full tools/out/post9016_default_rival_capture_a2050 tools/out/post9016_default_rival_a2050_sequence_compare.json --markdown-out tools/out/post9016_default_rival_a2050_sequence_compare.md --base-label no_input --candidate-label a_hold --script-start-frame 2048`
 - `python3 tools/compare_capture_sequences.py tools/out/post9016_default_rival_capture_full tools/out/post9016_default_rival_capture_b2050 tools/out/post9016_default_rival_b2050_sequence_compare.json --markdown-out tools/out/post9016_default_rival_b2050_sequence_compare.md --base-label no_input --candidate-label b_hold --script-start-frame 2048`
+- `python3 tools/compare_boot_probe_windows.py tools/out/lane3_live_race_mid_probe/td2_boot_probe.json tools/out/lane3_live_race_plus30f_probe/td2_boot_probe.json tools/out/lane3_live_race_mid_vs_plus30f_probe_compare.json --markdown-out tools/out/lane3_live_race_mid_vs_plus30f_probe_compare.md --label-a live_race_mid --label-b live_race_plus30f --start-frame 0 --end-frame 11 --fields state_0960,state_09a2,state_09a8,state_11f3,dp_0053,dp_0054,dp_0020,dp_0022,state_1c6a,state_1c70,state_1c76,state_0202,active_main_callback_bank,active_main_callback_addr,active_irq_callback_bank,active_irq_callback_addr,active_nmi_callback_bank,active_nmi_callback_addr`
 
 ## Checkpoint Trail
 

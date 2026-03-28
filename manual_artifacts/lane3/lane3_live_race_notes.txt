@@ -1,0 +1,26 @@
+Lane 3 live-race seed intake
+Date: 2026-03-27
+
+User-supplied context:
+- Source slots were found under ~/.config/Mesen2/SaveStates/.
+- Slot #1 is the first requested live-race state.
+- Slot #3 is the second requested live-race state from the same visible run.
+- Visual description for both: Porsche cockpit in motion, first Desert Blast
+  segment, approaching a green NPC car.
+- Slot #2 was also preserved as an extra unclassified state in case it is a
+  useful intermediate.
+
+Preserved repo copies:
+- manual_artifacts/lane3/lane3_live_race_mid.mss
+  SHA-256: 64789efaaeff890f4e42e35e2c529e17b6c42269842203db35eb492aebf1dd0a
+- manual_artifacts/lane3/lane3_live_race_plus30f.mss
+  SHA-256: cf8b7bae867a83ceb3b0ba43abfb19ce25d7edcc507cc581bd3706ed9dc12076
+- manual_artifacts/lane3/lane3_live_race_slot2_extra.mss
+  SHA-256: f2ce9ae98cf0a4563e51adcb9ddcaf0a971c3d55a0e904970483e166c754aec8
+
+Headless audit note:
+- Both primary states were probed successfully with validation/mesen_probe_boot.lua.
+- Current headless screenshot/capture output for these seeds is unreliable:
+  boot-probe and capture PNG files were created as zero-byte files.
+- Trust the probe JSON and the copied .mss files first; do not trust the PNG
+  side of this specific intake until the screenshot path is fixed.

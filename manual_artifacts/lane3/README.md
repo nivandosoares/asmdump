@@ -1,5 +1,25 @@
 # Lane 3 Manual Capture Request
 
+## Current Status (`2026-03-27`)
+
+The original request is now fulfilled.
+
+Preserved manual savestates:
+
+- `lane3_live_race_mid.mss`
+- `lane3_live_race_plus30f.mss`
+- `lane3_live_race_slot2_extra.mss`
+- `lane3_live_race_notes.txt`
+
+These came from the user's live Mesen config under
+`~/.config/Mesen2/SaveStates/`:
+
+- slot `#1` -> `lane3_live_race_mid.mss`
+- slot `#2` -> `lane3_live_race_slot2_extra.mss`
+- slot `#3` -> `lane3_live_race_plus30f.mss`
+
+Use these preserved copies, not the mutable external config path.
+
 This directory is the manual handoff point for external Lane 3 evidence that
 cannot be produced reliably through the current headless Mesen path.
 
