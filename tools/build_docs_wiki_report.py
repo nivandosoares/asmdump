@@ -326,7 +326,10 @@ def split_pipe_row(line: str) -> list[str]:
 
 
 def is_table_separator(line: str) -> bool:
-    stripped = line.strip().strip("|").replace(":", "").replace("-", "")
+    stripped = line.strip()
+    if "|" not in stripped and "-" not in stripped:
+        return False
+    stripped = stripped.replace("|", "").replace(":", "").replace("-", "").strip()
     return stripped == ""
 
 

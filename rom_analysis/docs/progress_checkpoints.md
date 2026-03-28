@@ -79,6 +79,9 @@ next gate needed to advance.
   - local HTML link check over the generated site: `0` missing links
   - `make -C port`
   - `./port/test_regression.sh`
+- Follow-up fix:
+  - the wiki renderer now parses pipe-table separator rows correctly, so docs
+    with Markdown tables no longer fall back to raw `| ... |` paragraph text
 - SDL smoke read:
   - the current runtime renders the bridge-visible intro sequence through
     frame `1000`
