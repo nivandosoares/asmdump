@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lane 2 Handoff After Late `00:8029` Ownership Closure | TD2 Archaeology Wiki</title>
+  <link rel="stylesheet" href="../../../assets/wiki.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="site-link" href="../../../index.html">TD2 Archaeology Wiki</a>
+      <p class="sidebar-note">Simple wiki-style index built from curated markdown sources.</p>
+      <section class="sidebar-group"><h3>Source Of Truth</h3><ul><li><a href="../../PORT_PLAN.html">Port Plan</a></li><li><a href="next_steps_roadmap.html">Next Steps Roadmap</a></li><li><a href="progress_checkpoints.html">Progress Checkpoints</a></li><li><a href="validation_gates.html">Validation Gates</a></li><li><a href="../../validation/README.html">Validation README</a></li><li><a href="../../tools/README.html">Tools README</a></li><li><a href="../../port/README.html">Port README</a></li><li><a href="../README.html">ROM Analysis README</a></li></ul></section><section class="sidebar-group"><h3>Attract And Intro</h3><ul><li><a href="intro_00_8029_next_agent_handoff.html">00:8029 Handoff</a></li><li><a href="intro_01_9fe5_window_986_1093.html">01:9FE5 Window 986..1093</a></li><li><a href="intro_01_9fe5_activity_trace_1094_1117.html">01:9FE5 Activity Trace</a></li><li><a href="intro_00_8029_mode7_blob_cycle_1134_1200.html">Mode 7 Blob Cycle 1134..1200</a></li><li><a href="../maps/tilemaps/mesen_range_1086_1093_provenance.html">Tilemap Provenance 1086..1093</a></li><li><a href="mesen_debugger_design_workbench.html">Mesen Design Workbench</a></li></ul></section><section class="sidebar-group"><h3>Front-End And Menu</h3><ul><li><a href="snes_runtime_algorithm_human.html">SNES Runtime Algorithm</a></li><li><a href="../maps/tilemaps/car_select_frame_1500_bg2_provenance.html">Frame 1500 BG2 Provenance</a></li><li><a href="../../tools/out/snes_frontend_top_menu_labels.html">Top Menu Labels</a></li><li><a href="../../tools/out/snes_frontend_rival_selection_grid.html">Rival Selection Grid</a></li><li><a href="../../tools/out/snes_select_opponent_organic_default_path.html">Organic Default Path</a></li><li><a href="../../tools/out/snes_frontend_select_opponent_mode_split.html">Select Opponent Mode Split</a></li></ul></section><section class="sidebar-group"><h3>Gameplay And Lane 3</h3><ul><li><a href="lane3_today_work_brief.html">Lane 3 Work Brief</a></li><li><a href="gameplay_default_rival_next_agent_handoff.html">Gameplay Handoff</a></li><li><a href="lane3_attract_demo_boundary.html">Attract Demo Boundary</a></li><li><a href="../maps/tracks/track1_live_gameplay_entry_route.html">Live Gameplay Entry Route</a></li><li><a href="../maps/tracks/track1_live_race_manual_seed_intake.html">Manual Seed Intake</a></li><li><a href="../maps/tracks/track1_live_race_manual_video_intake.html">Manual Video Intake</a></li><li><a href="../maps/tracks/track1_live_race_visible_layer_stack.html">Visible Layer Stack</a></li><li><a href="../maps/tracks/track1_live_race_bg2_producer_path.html">BG2 Producer Path</a></li><li><a href="../maps/tracks/track1_live_race_l01318d_static_role_split.html">L01318D Role Split</a></li><li><a href="../maps/tracks/track1_02_9016_state_ownership.html">02:9016 State Ownership</a></li></ul></section><section class="sidebar-group"><h3>Runtime And Port Validation</h3><ul><li><a href="port_sdl_runtime_mimetization_smoke.html">SDL Runtime Smoke</a></li><li><a href="mesen_instrumented_backend_architecture.html">Instrumented Backend Architecture</a></li></ul></section>
+    </aside>
+    <main class="content">
+      <nav class="breadcrumbs">
+        <a href="../../../index.html">Index</a>
+        <span>/</span>
+        <a href="../../../index.html#attract-intro">Attract And Intro</a>
+        <span>/</span>
+        <span>00:8029 Handoff</span>
+      </nav>
+      <header class="doc-header">
+        <p class="eyebrow">Attract And Intro</p>
+        <h1>Lane 2 Handoff After Late `00:8029` Ownership Closure</h1>
+        <p class="doc-note">Active handoff for the later attract continuation lane.</p>
+        <div class="doc-meta">
+          <span>Source: <code>rom_analysis/docs/intro_00_8029_next_agent_handoff.md</code></span>
+          <a href="../../../../../../rom_analysis/docs/intro_00_8029_next_agent_handoff.md">Open Raw Markdown</a>
+        </div>
+      </header>
+      <article class="doc-body">
+        <h1 id="lane-2-handoff-after-late-00-8029-ownership-closure">Lane 2 Handoff After Late <code>00:8029</code> Ownership Closure</h1>
+<p>This note is the explicit resume point for the next agent on Lane 2.</p>
+<h2 id="read-first">Read First</h2>
+<ul><li><code>rom_analysis/docs/intro_00_8029_post_1117_window_1118_1125.md</code></li><li><code>rom_analysis/docs/intro_00_8029_post_1125_reactivation_1164_1172.md</code></li><li><code>rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md</code></li><li><code>tools/out/post_1117_compare_1164_1172/summary.md</code></li><li><code>tools/out/activity_trace_1134_1200/activity_trace.md</code></li><li><code>tools/out/mode7_blob_cycle_1134_1200/report.md</code></li></ul>
+<h2 id="closed-state">Closed State</h2>
+<ul><li>exact late-attract continuity is now closed through <code>1133</code></li><li><code>00:8029/00:835F</code></li><li><code>bg1</code></li><li><code>61</code> visible sprites</li><li><code>0</code> top-crop mismatch</li><li><code>0</code> base-render mismatch</li><li>no <code>DMA</code> or direct <code>VRAM/CGRAM</code> writes in the steady block</li><li>the first later boundary is now fixed at <code>1164/1165</code></li><li><code>1164</code> changes <code>state0204</code> and <code>dp0054</code></li><li><code>1165</code> begins the producer-side reactivation</li><li>this is not a callback-family handoff and not a composed-screen regression</li><li>late-cycle ownership is now closed:</li><li><code>01:B6E3 -&gt; 01:9DC6 -&gt; 00:95BD -&gt; $096A/$0700 -&gt; OAMDATA</code></li><li>late-cycle blob identity is now closed:</li><li>direct <code>VMDATA</code> bursts and paired <code>DMA0</code> bursts match the same ROM blob on every sampled burst frame</li><li>blob family: <code>AA10</code>, <code>AB58</code>, <code>ACA0</code></li><li>visible Mode 7 destinations: <code>0x4920</code>, <code>0x49A0</code></li><li>the blob-cycle report is now stronger as a schedule surface:</li><li>it filters strictly to the traced <code>1134..1200</code> window</li><li>it emits transition rows, not only burst rows</li><li>it now proves <code>state0204</code> is not a sufficient blob/<code>VMADD</code> selector: each sampled <code>state0204</code> value (<code>1/2/3</code>) reaches all three blob labels and both visible <code>VMADD</code> targets</li><li>tilemap-to-ROM provenance remains intentionally capped at <code>1117</code></li><li>no new direct tilemap chunk anchor exists beyond that point</li></ul>
+<h2 id="do-not-repeat">Do Not Repeat</h2>
+<ul><li>do not reopen the <code>bg1_visible</code> export/viewer semantics question</li><li>do not spend more time re-proving who owns the late <code>00:8029</code> producer cycle</li><li>do not promote provenance beyond <code>1117</code> on continuity/carry alone</li><li>do not infer late burst ownership from extracted end-of-frame <code>vram.bin</code> alone when write traces already exist</li></ul>
+<h2 id="next-gate">Next Gate</h2>
+<p>Derive the later-frame selection/schedule rule strongly enough to express the late <code>00:8029</code> producer cycle as a native replacement path.</p>
+<p>The open question is no longer &quot;which producer owns this?&quot; It is:</p>
+<ul><li>which later frames pick <code>AA10</code>, <code>AB58</code>, or <code>ACA0</code></li><li>which later frames target <code>0x4920</code> vs <code>0x49A0</code></li><li>how that schedule relates to <code>dp0054</code> plus the deeper <code>01:B6E3</code> phase loop (<code>$0440/$0442</code>)</li><li><code>state0204</code> is still useful telemetry, but the refreshed report now rules out a simple <code>state0204 -&gt; blob/VMADD</code> lookup</li></ul>
+<h2 id="recommended-next-experiment">Recommended Next Experiment</h2>
+<ol><li>Start from the existing <code>1134..1200</code> report instead of launching a new wide Mesen capture immediately.</li><li>Use the transition rows from the refreshed <code>tools/build_mode7_blob_cycle_report.py</code> output as the schedule surface:</li></ol>
+<ul><li><code>frame</code></li><li><code>state0204</code></li><li><code>dp0054</code></li><li>burst/no-burst</li><li>blob label</li><li><code>VMADD</code></li></ul>
+<ol><li>Push the static read one layer deeper around <code>01:B6E3</code>:</li></ol>
+<ul><li><code>$0440/$0442</code> phase advance</li><li>the <code>01:AAB2/01:AAD2</code> threshold/data tables</li><li>any downstream read that can explain why the same <code>state0204</code> value still reaches different blob/<code>VMADD</code> pairs</li></ul>
+<ol><li>Only after a concrete schedule hypothesis, run one bounded verification probe on a narrowed burst window.</li></ol>
+<h2 id="minimal-validation-if-tooling-changes">Minimal Validation If Tooling Changes</h2>
+<ul><li><code>python3 -m py_compile tools/build_mode7_blob_cycle_report.py</code></li><li><code>python3 tools/build_mode7_blob_cycle_report.py game.smc tools/out/activity_trace_1134_1200/td2_boot_probe.json tools/out/activity_trace_1134_1200/td2_boot_probe_dma_writes.json tools/out/activity_trace_1134_1200/td2_boot_probe_vram_writes.json tools/out/mode7_blob_cycle_1134_1200/report.json --blob AA10:0x1AAA10:0x100 --blob AB58:0x1AAB58:0x100 --blob ACA0:0x1AACA0:0x100 --markdown-out tools/out/mode7_blob_cycle_1134_1200/report.md</code></li></ul>
+<h2 id="checkpoint-trail">Checkpoint Trail</h2>
+<ul><li><code>6cccf8e</code>: exact continuity extended through <code>1125</code></li><li><code>e4eaada</code>: <code>1164/1165</code> producer boundary mapped</li><li><code>87e3167</code>: late <code>00:8029</code> blob-cycle ownership closed</li></ul>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bank1 Helper Provenance | TD2 Archaeology Wiki</title>
+  <link rel="stylesheet" href="../../../../assets/wiki.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="site-link" href="../../../../index.html">TD2 Archaeology Wiki</a>
+      <p class="sidebar-note">Simple wiki-style index built from curated markdown sources.</p>
+      <section class="sidebar-group"><h3>Source Of Truth</h3><ul><li><a href="../../../PORT_PLAN.html">Port Plan</a></li><li><a href="../../docs/next_steps_roadmap.html">Next Steps Roadmap</a></li><li><a href="../../docs/progress_checkpoints.html">Progress Checkpoints</a></li><li><a href="../../docs/validation_gates.html">Validation Gates</a></li><li><a href="../../../validation/README.html">Validation README</a></li><li><a href="../../../tools/README.html">Tools README</a></li><li><a href="../../../port/README.html">Port README</a></li><li><a href="../../README.html">ROM Analysis README</a></li></ul></section><section class="sidebar-group"><h3>Attract And Intro</h3><ul><li><a href="../../docs/intro_00_8029_next_agent_handoff.html">00:8029 Handoff</a></li><li><a href="../../docs/intro_01_9fe5_window_986_1093.html">01:9FE5 Window 986..1093</a></li><li><a href="../../docs/intro_01_9fe5_activity_trace_1094_1117.html">01:9FE5 Activity Trace</a></li><li><a href="../../docs/intro_00_8029_mode7_blob_cycle_1134_1200.html">Mode 7 Blob Cycle 1134..1200</a></li><li><a href="mesen_range_1086_1093_provenance.html">Tilemap Provenance 1086..1093</a></li><li><a href="../../docs/mesen_debugger_design_workbench.html">Mesen Design Workbench</a></li></ul></section><section class="sidebar-group"><h3>Front-End And Menu</h3><ul><li><a href="../../docs/snes_runtime_algorithm_human.html">SNES Runtime Algorithm</a></li><li><a href="car_select_frame_1500_bg2_provenance.html">Frame 1500 BG2 Provenance</a></li><li><a href="../../../tools/out/snes_frontend_top_menu_labels.html">Top Menu Labels</a></li><li><a href="../../../tools/out/snes_frontend_rival_selection_grid.html">Rival Selection Grid</a></li><li><a href="../../../tools/out/snes_select_opponent_organic_default_path.html">Organic Default Path</a></li><li><a href="../../../tools/out/snes_frontend_select_opponent_mode_split.html">Select Opponent Mode Split</a></li></ul></section><section class="sidebar-group"><h3>Gameplay And Lane 3</h3><ul><li><a href="../../docs/lane3_today_work_brief.html">Lane 3 Work Brief</a></li><li><a href="../../docs/gameplay_default_rival_next_agent_handoff.html">Gameplay Handoff</a></li><li><a href="../../docs/lane3_attract_demo_boundary.html">Attract Demo Boundary</a></li><li><a href="../tracks/track1_live_gameplay_entry_route.html">Live Gameplay Entry Route</a></li><li><a href="../tracks/track1_live_race_manual_seed_intake.html">Manual Seed Intake</a></li><li><a href="../tracks/track1_live_race_manual_video_intake.html">Manual Video Intake</a></li><li><a href="../tracks/track1_live_race_visible_layer_stack.html">Visible Layer Stack</a></li><li><a href="../tracks/track1_live_race_bg2_producer_path.html">BG2 Producer Path</a></li><li><a href="../tracks/track1_live_race_l01318d_static_role_split.html">L01318D Role Split</a></li><li><a href="../tracks/track1_02_9016_state_ownership.html">02:9016 State Ownership</a></li></ul></section><section class="sidebar-group"><h3>Runtime And Port Validation</h3><ul><li><a href="../../docs/port_sdl_runtime_mimetization_smoke.html">SDL Runtime Smoke</a></li><li><a href="../../docs/mesen_instrumented_backend_architecture.html">Instrumented Backend Architecture</a></li></ul></section>
+    </aside>
+    <main class="content">
+      <nav class="breadcrumbs">
+        <a href="../../../../index.html">Index</a>
+        <span>/</span>
+        <a href="../../../../index.html#front-end-menu">Front-End And Menu</a>
+        <span>/</span>
+        <span>Frame 1500 BG2 Provenance</span>
+      </nav>
+      <header class="doc-header">
+        <p class="eyebrow">Front-End And Menu</p>
+        <h1>Bank1 Helper Provenance</h1>
+        <p class="doc-note">Car-presentation BG2 ownership without treating it as gameplay.</p>
+        <div class="doc-meta">
+          <span>Source: <code>rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md</code></span>
+          <a href="../../../../../../../rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md">Open Raw Markdown</a>
+        </div>
+      </header>
+      <article class="doc-body">
+        <h1 id="bank1-helper-provenance">Bank1 Helper Provenance</h1>
+<ul><li>Frame: <code>1500</code></li><li>Layer: <code>bg2</code></li><li>Target probe state: <code>$0202=1</code>, <code>$0204=3</code>, <code>$0208=13</code>, <code>$020A=40131</code>, <code>$0054=136</code></li><li>Helper bundle: index <code>10</code></li></ul>
+<h2 id="layer-read">Layer Read</h2>
+<ul><li><code>tilemapBaseWords = 0x1000</code></li><li><code>chrBaseWords = 0x3000</code></li><li>visible nonzero bbox: <code>{&#x27;screenTileLeft&#x27;: 0, &#x27;screenTileTop&#x27;: 15, &#x27;screenTileRight&#x27;: 31, &#x27;screenTileBottom&#x27;: 27, &#x27;screenPixelLeft&#x27;: 0, &#x27;screenPixelTop&#x27;: 120, &#x27;screenPixelRight&#x27;: 255, &#x27;screenPixelBottom&#x27;: 223}</code></li><li>visible tile index span: <code>1..217</code></li><li>visible palette indices: <code>[0]</code></li></ul>
+<h2 id="runtime-anchor">Runtime Anchor</h2>
+<ul><li>last <code>L00A9A0</code> hit at/before frame <code>1500</code> with matching <code>$0202/$0208</code>: frame <code>1304</code> -&gt; <code>00:B6B2</code></li><li>last <code>L00A9CB</code> hit at/before frame <code>1500</code> with matching <code>$0202/$0208</code>: frame <code>1310</code> -&gt; <code>0E:91FE</code></li></ul>
+<h2 id="bundle-match">Bundle Match</h2>
+<ul><li><code>L00A9A0</code> helper <code>10</code> stages paged VRAM from <code>00:B6B2</code> to <code>0x1000</code></li><li><code>L00A9CB</code> helper <code>10</code> stages bulk VRAM from <code>0E:91FE</code> to <code>0x3000</code></li><li>tilemap base match: <code>True</code></li><li>CHR base match: <code>True</code></li></ul>
+<h2 id="reading">Reading</h2>
+<ul><li>The frame-level BG surface is anchored to the same bank1 helper bundle seen earlier in runtime trace.</li><li><code>L00A9A0</code> explains the live BG tilemap base and <code>L00A9CB</code> explains the live BG CHR base.</li><li>If the <code>26FB</code> validation on the bulk source fails with an early-end mismatch, treat that as the existing partial-bulk frontier, not as evidence against the helper match.</li></ul>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

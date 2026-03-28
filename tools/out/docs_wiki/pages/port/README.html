@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TD2 Port Runtime Skeleton | TD2 Archaeology Wiki</title>
+  <link rel="stylesheet" href="../../assets/wiki.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="site-link" href="../../index.html">TD2 Archaeology Wiki</a>
+      <p class="sidebar-note">Simple wiki-style index built from curated markdown sources.</p>
+      <section class="sidebar-group"><h3>Source Of Truth</h3><ul><li><a href="../PORT_PLAN.html">Port Plan</a></li><li><a href="../rom_analysis/docs/next_steps_roadmap.html">Next Steps Roadmap</a></li><li><a href="../rom_analysis/docs/progress_checkpoints.html">Progress Checkpoints</a></li><li><a href="../rom_analysis/docs/validation_gates.html">Validation Gates</a></li><li><a href="../validation/README.html">Validation README</a></li><li><a href="../tools/README.html">Tools README</a></li><li><a href="README.html">Port README</a></li><li><a href="../rom_analysis/README.html">ROM Analysis README</a></li></ul></section><section class="sidebar-group"><h3>Attract And Intro</h3><ul><li><a href="../rom_analysis/docs/intro_00_8029_next_agent_handoff.html">00:8029 Handoff</a></li><li><a href="../rom_analysis/docs/intro_01_9fe5_window_986_1093.html">01:9FE5 Window 986..1093</a></li><li><a href="../rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.html">01:9FE5 Activity Trace</a></li><li><a href="../rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.html">Mode 7 Blob Cycle 1134..1200</a></li><li><a href="../rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.html">Tilemap Provenance 1086..1093</a></li><li><a href="../rom_analysis/docs/mesen_debugger_design_workbench.html">Mesen Design Workbench</a></li></ul></section><section class="sidebar-group"><h3>Front-End And Menu</h3><ul><li><a href="../rom_analysis/docs/snes_runtime_algorithm_human.html">SNES Runtime Algorithm</a></li><li><a href="../rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.html">Frame 1500 BG2 Provenance</a></li><li><a href="../tools/out/snes_frontend_top_menu_labels.html">Top Menu Labels</a></li><li><a href="../tools/out/snes_frontend_rival_selection_grid.html">Rival Selection Grid</a></li><li><a href="../tools/out/snes_select_opponent_organic_default_path.html">Organic Default Path</a></li><li><a href="../tools/out/snes_frontend_select_opponent_mode_split.html">Select Opponent Mode Split</a></li></ul></section><section class="sidebar-group"><h3>Gameplay And Lane 3</h3><ul><li><a href="../rom_analysis/docs/lane3_today_work_brief.html">Lane 3 Work Brief</a></li><li><a href="../rom_analysis/docs/gameplay_default_rival_next_agent_handoff.html">Gameplay Handoff</a></li><li><a href="../rom_analysis/docs/lane3_attract_demo_boundary.html">Attract Demo Boundary</a></li><li><a href="../rom_analysis/maps/tracks/track1_live_gameplay_entry_route.html">Live Gameplay Entry Route</a></li><li><a href="../rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.html">Manual Seed Intake</a></li><li><a href="../rom_analysis/maps/tracks/track1_live_race_manual_video_intake.html">Manual Video Intake</a></li><li><a href="../rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.html">Visible Layer Stack</a></li><li><a href="../rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.html">BG2 Producer Path</a></li><li><a href="../rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.html">L01318D Role Split</a></li><li><a href="../rom_analysis/maps/tracks/track1_02_9016_state_ownership.html">02:9016 State Ownership</a></li></ul></section><section class="sidebar-group"><h3>Runtime And Port Validation</h3><ul><li><a href="../rom_analysis/docs/port_sdl_runtime_mimetization_smoke.html">SDL Runtime Smoke</a></li><li><a href="../rom_analysis/docs/mesen_instrumented_backend_architecture.html">Instrumented Backend Architecture</a></li></ul></section>
+    </aside>
+    <main class="content">
+      <nav class="breadcrumbs">
+        <a href="../../index.html">Index</a>
+        <span>/</span>
+        <a href="../../index.html#source-of-truth">Source Of Truth</a>
+        <span>/</span>
+        <span>Port README</span>
+      </nav>
+      <header class="doc-header">
+        <p class="eyebrow">Source Of Truth</p>
+        <h1>TD2 Port Runtime Skeleton</h1>
+        <p class="doc-note">SDL runtime scope, usage, and current sequence playback path.</p>
+        <div class="doc-meta">
+          <span>Source: <code>port/README.md</code></span>
+          <a href="../../../../../port/README.md">Open Raw Markdown</a>
+        </div>
+      </header>
+      <article class="doc-body">
+        <h1 id="td2-port-runtime-skeleton">TD2 Port Runtime Skeleton</h1>
+<p>This directory contains the first PC runtime skeleton for the SNES-to-PC port.</p>
+<p>Current scope:</p>
+<ul><li>SDL2 window and renderer</li><li>fixed-timestep 60 Hz main loop</li><li>256x224 framebuffer presentation</li><li>palette JSON loader for bank 3 experiments</li><li>palette swatch and gradient viewer</li><li>PPM image viewer for extracted assets</li><li>direct SNES BG renderer from extracted <code>VRAM + CGRAM + PPU state</code></li><li>optional OBJ/OAM composition for extracted SNES scenes</li><li>sequence playback for extracted intro/front-end scenes</li><li>indexed palette-animation playback for native intro clips</li></ul>
+<p>Build:</p>
+<pre><code class="language-sh">make -C port</code></pre>
+<p>Run:</p>
+<pre><code class="language-sh">./port/build/td2_port
+./port/build/td2_port --palette ./tools/out/bank3_palettes.json
+./port/build/td2_port --palette ./tools/out/bank3_palettes.json --palette-index 12
+./port/build/td2_port --image ./tools/out/bank6_tiles_gray.ppm
+./port/build/td2_port --snes-bg-prefix ./tools/out/bank1_credits_scene
+./port/build/td2_port --sequence ./tools/out/ballistic_sequence/sequence.txt
+./port/build/td2_port --sequence ./tools/out/ballistic_native_sequence.txt
+./port/build/td2_port --sequence ./tools/out/ballistic_rom_sequence.txt
+./port/build/td2_port --sequence ./tools/out/ballistic_callback_sequence.txt
+./port/build/td2_port --sequence ./tools/out/intro_loop_sequence.txt
+./port/build/td2_port --sequence ./tools/out/intro_loop_hybrid_sequence.txt
+./port/build/td2_port --sequence ./tools/out/intro_loop_hybrid_bridge_sequence.txt
+./port/build/td2_port --sequence ./tools/out/intro_loop_hybrid_bridge_visible_sequence.txt
+./port/build/td2_port --headless --palette ./tools/out/bank3_palettes.json --frames 1 --dump-prefix /tmp/td2_frame</code></pre>
+<p>Controls:</p>
+<ul><li><code>Esc</code>: quit</li><li><code>Left</code> / <code>Right</code>: previous or next 16-color palette, or pan image horizontally</li><li><code>Up</code> / <code>Down</code>: pan image vertically</li><li><code>Home</code> / <code>End</code>: jump to first or last palette, or move image view to top-left / bottom-right</li><li><code>Space</code>: toggle automatic palette cycling</li></ul>
+<p>For headless smoke tests, run with SDL&#x27;s dummy video driver:</p>
+<pre><code class="language-sh">./port/build/td2_port --headless --palette ./tools/out/bank3_palettes.json --frames 5</code></pre>
+<p>For validation-oriented frame dumps:</p>
+<pre><code class="language-sh">./port/build/td2_port --headless --palette ./tools/out/bank3_palettes.json --frames 1 --dump-prefix ./port/build/frame
+./port/build/td2_port --headless --snes-bg-prefix ./tools/out/bank1_credits_scene --frames 1 --dump-prefix ./port/build/credits
+./port/build/td2_port --headless --sequence ./tools/out/ballistic_sequence/sequence.txt --sequence-no-loop --frames 60 --dump-prefix ./port/build/ballistic
+./port/build/td2_port --headless --sequence ./tools/out/ballistic_native_sequence.txt --sequence-no-loop --frames 304 --dump-prefix ./port/build/ballistic_native
+./port/build/td2_port --headless --sequence ./tools/out/ballistic_rom_sequence.txt --sequence-no-loop --frames 304 --dump-prefix ./port/build/ballistic_rom
+./port/build/td2_port --headless --sequence ./tools/out/ballistic_callback_sequence.txt --sequence-no-loop --frames 304 --dump-prefix ./port/build/ballistic_callback
+./port/build/td2_port --headless --sequence ./tools/out/intro_loop_sequence.txt --sequence-no-loop --frames 1418 --dump-prefix ./port/build/intro_loop
+./port/build/td2_port --headless --sequence ./tools/out/intro_loop_hybrid_sequence.txt --sequence-no-loop --frames 1418 --dump-prefix ./port/build/intro_loop_hybrid
+./port/build/td2_port --headless --sequence ./tools/out/intro_loop_hybrid_bridge_sequence.txt --sequence-no-loop --frames 1418 --dump-prefix ./port/build/intro_loop_hybrid_bridge
+./port/build/td2_port --headless --sequence ./tools/out/intro_loop_hybrid_bridge_visible_sequence.txt --sequence-no-loop --frames 1418 --dump-prefix ./port/build/intro_loop_hybrid_bridge_visible</code></pre>
+<p>This writes <code>./port/build/frame_00000.ppm</code> or <code>./port/build/credits_00000.ppm</code>.</p>
+<p>The SNES BG path accepts either a shared prefix or explicit files:</p>
+<pre><code class="language-sh">./port/build/td2_port --snes-bg-prefix ./tools/out/bank1_credits_scene
+
+./port/build/td2_port \
+  --snes-bg-vram ./tools/out/bank1_credits_scene_vram.bin \
+  --snes-bg-cgram ./tools/out/bank1_credits_scene_cgram.bin \
+  --snes-bg-state ./tools/out/bank1_credits_scene_ppu_state.json
+
+./port/build/td2_port \
+  --snes-bg-vram ./tools/out/mesen_frame978_assets/vram.bin \
+  --snes-bg-cgram ./tools/out/mesen_frame978_assets/cgram.bin \
+  --snes-bg-state ./tools/out/mesen_frame978_assets/ppu_state.json \
+  --snes-bg-oam ./tools/out/mesen_frame978_assets/oam.bin</code></pre>
+<p>This uses the extracted VRAM/CGRAM/state directly and renders the BG layers inside the SDL runtime, without going through a prebuilt PPM. When an OAM dump is provided, or when a sibling <code>oam.bin</code> is present next to the VRAM dump, the runtime also composites OBJ sprites.</p>
+<p>For isolated <code>--snes-bg-*</code> validation, also pass an explicit empty sequence so the default intro-loop manifest does not overwrite the requested scene:</p>
+<pre><code class="language-sh">./port/build/td2_port \
+  --sequence /dev/null \
+  --headless \
+  --frames 1 \
+  --dump-prefix ./port/build/frame \
+  --snes-bg-vram ./tools/out/mesen_frame978_assets/vram.bin \
+  --snes-bg-cgram ./tools/out/mesen_frame978_assets/cgram.bin \
+  --snes-bg-state ./tools/out/mesen_frame978_assets/ppu_state.json \
+  --snes-bg-oam ./tools/out/mesen_frame978_assets/oam.bin</code></pre>
+<p>That same path now supports Mode 7 BG scenes from live Mesen dumps:</p>
+<pre><code class="language-sh">./port/build/td2_port \
+  --snes-bg-vram ./tools/out/td2_boot_probe_vram_1080.bin \
+  --snes-bg-cgram ./tools/out/td2_boot_probe_cgram_1080.bin \
+  --snes-bg-state ./tools/out/td2_boot_probe_ppu_state_1080.json</code></pre>
+<p>Sequence manifests are simple text files. Each line is one playback entry:</p>
+<pre><code class="language-txt"># type duration_frames path_a [path_b path_c path_d]
+snes_bg 4 frame_00654/vram.bin frame_00654/cgram.bin frame_00654/ppu_state.json
+snes_bg 4 frame_00978/vram.bin frame_00978/cgram.bin frame_00978/ppu_state.json frame_00978/oam.bin
+indexed_anim 304 ballistic_rom/ballistic_splash.txt
+ballistic_a39c 304 ballistic_callback/ballistic_a39c.txt</code></pre>
+<p>Paths can be relative to the manifest itself. This is the current path for sampled intro playback such as the <code>Ballistic presents</code> splash.</p>
+<p>The current exact no-input intro-loop milestone uses an <code>image</code> sequence built from Mesen screenshots:</p>
+<pre><code class="language-txt">image 4 intro_loop_sequence_images/frame_00654.ppm</code></pre>
+<p>The current screenshot-exact intro-loop runtime artifact is <code>tools/out/intro_loop_hybrid_sequence.txt</code>: direct runtime Ballistic via <code>ballistic_a39c</code>, then a native OAM-aware <code>snes_bg</code> splice for <code>978..985</code>, then sampled <code>image</code> playback for the remaining later attract states.</p>
+<p>The current bridge-accurate native-coverage artifacts are:</p>
+<ul><li><code>tools/out/intro_loop_hybrid_bridge_sequence.txt</code>: the same Ballistic and bootstrap path, then a longer queue-driven <code>snes_bg</code> splice covering <code>978..993</code>, then sampled <code>image</code> playback from <code>994</code> onward.</li><li><code>tools/out/intro_loop_hybrid_bridge_visible_sequence.txt</code>: the same Ballistic and bootstrap path, then native <code>snes_bg</code> playback through frame <code>1093</code>.</li></ul>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

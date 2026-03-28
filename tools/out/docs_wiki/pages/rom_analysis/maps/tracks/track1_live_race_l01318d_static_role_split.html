@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Track 1 Live-Race `L01318D` Static Role Split | TD2 Archaeology Wiki</title>
+  <link rel="stylesheet" href="../../../../assets/wiki.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="site-link" href="../../../../index.html">TD2 Archaeology Wiki</a>
+      <p class="sidebar-note">Simple wiki-style index built from curated markdown sources.</p>
+      <section class="sidebar-group"><h3>Source Of Truth</h3><ul><li><a href="../../../PORT_PLAN.html">Port Plan</a></li><li><a href="../../docs/next_steps_roadmap.html">Next Steps Roadmap</a></li><li><a href="../../docs/progress_checkpoints.html">Progress Checkpoints</a></li><li><a href="../../docs/validation_gates.html">Validation Gates</a></li><li><a href="../../../validation/README.html">Validation README</a></li><li><a href="../../../tools/README.html">Tools README</a></li><li><a href="../../../port/README.html">Port README</a></li><li><a href="../../README.html">ROM Analysis README</a></li></ul></section><section class="sidebar-group"><h3>Attract And Intro</h3><ul><li><a href="../../docs/intro_00_8029_next_agent_handoff.html">00:8029 Handoff</a></li><li><a href="../../docs/intro_01_9fe5_window_986_1093.html">01:9FE5 Window 986..1093</a></li><li><a href="../../docs/intro_01_9fe5_activity_trace_1094_1117.html">01:9FE5 Activity Trace</a></li><li><a href="../../docs/intro_00_8029_mode7_blob_cycle_1134_1200.html">Mode 7 Blob Cycle 1134..1200</a></li><li><a href="../tilemaps/mesen_range_1086_1093_provenance.html">Tilemap Provenance 1086..1093</a></li><li><a href="../../docs/mesen_debugger_design_workbench.html">Mesen Design Workbench</a></li></ul></section><section class="sidebar-group"><h3>Front-End And Menu</h3><ul><li><a href="../../docs/snes_runtime_algorithm_human.html">SNES Runtime Algorithm</a></li><li><a href="../tilemaps/car_select_frame_1500_bg2_provenance.html">Frame 1500 BG2 Provenance</a></li><li><a href="../../../tools/out/snes_frontend_top_menu_labels.html">Top Menu Labels</a></li><li><a href="../../../tools/out/snes_frontend_rival_selection_grid.html">Rival Selection Grid</a></li><li><a href="../../../tools/out/snes_select_opponent_organic_default_path.html">Organic Default Path</a></li><li><a href="../../../tools/out/snes_frontend_select_opponent_mode_split.html">Select Opponent Mode Split</a></li></ul></section><section class="sidebar-group"><h3>Gameplay And Lane 3</h3><ul><li><a href="../../docs/lane3_today_work_brief.html">Lane 3 Work Brief</a></li><li><a href="../../docs/gameplay_default_rival_next_agent_handoff.html">Gameplay Handoff</a></li><li><a href="../../docs/lane3_attract_demo_boundary.html">Attract Demo Boundary</a></li><li><a href="track1_live_gameplay_entry_route.html">Live Gameplay Entry Route</a></li><li><a href="track1_live_race_manual_seed_intake.html">Manual Seed Intake</a></li><li><a href="track1_live_race_manual_video_intake.html">Manual Video Intake</a></li><li><a href="track1_live_race_visible_layer_stack.html">Visible Layer Stack</a></li><li><a href="track1_live_race_bg2_producer_path.html">BG2 Producer Path</a></li><li><a href="track1_live_race_l01318d_static_role_split.html">L01318D Role Split</a></li><li><a href="track1_02_9016_state_ownership.html">02:9016 State Ownership</a></li></ul></section><section class="sidebar-group"><h3>Runtime And Port Validation</h3><ul><li><a href="../../docs/port_sdl_runtime_mimetization_smoke.html">SDL Runtime Smoke</a></li><li><a href="../../docs/mesen_instrumented_backend_architecture.html">Instrumented Backend Architecture</a></li></ul></section>
+    </aside>
+    <main class="content">
+      <nav class="breadcrumbs">
+        <a href="../../../../index.html">Index</a>
+        <span>/</span>
+        <a href="../../../../index.html#gameplay-lane3">Gameplay And Lane 3</a>
+        <span>/</span>
+        <span>L01318D Role Split</span>
+      </nav>
+      <header class="doc-header">
+        <p class="eyebrow">Gameplay And Lane 3</p>
+        <h1>Track 1 Live-Race `L01318D` Static Role Split</h1>
+        <p class="doc-note">Static role split for the narrowed gameplay cluster.</p>
+        <div class="doc-meta">
+          <span>Source: <code>rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md</code></span>
+          <a href="../../../../../../../rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md">Open Raw Markdown</a>
+        </div>
+      </header>
+      <article class="doc-body">
+        <h1 id="track-1-live-race-l01318d-static-role-split">Track 1 Live-Race <code>L01318D</code> Static Role Split</h1>
+<ul><li>Note date: <code>2026-03-28</code></li><li>Primary code surface:</li><li><code>bank2.asm</code> <code>L012F48 .. L01318D</code></li><li>Current gameplay seed context:</li><li><code>manual_artifacts/lane3/lane3_live_race_mid.mss</code></li></ul>
+<h2 id="what-was-read">What Was Read</h2>
+<ul><li>loop/caller context:</li><li><code>nl -ba bank2.asm | sed -n &#x27;2148,2255p&#x27;</code></li><li><code>nl -ba bank2.asm | sed -n &#x27;5877,6168p&#x27;</code></li><li><code>nl -ba bank2.asm | sed -n &#x27;6168,6279p&#x27;</code></li><li>existing ownership notes:</li><li><code>rom_analysis/maps/tracks/track1_02_9016_state_ownership.md</code></li><li><code>rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md</code></li><li>small address walk used to pin the previously named PCs inside the loop:</li><li><code>02:B042</code></li><li><code>02:B05D</code></li><li><code>02:B0B1</code></li><li><code>02:B0BD</code></li><li><code>02:B134</code></li></ul>
+<h2 id="loop-shape">Loop Shape</h2>
+<ul><li><code>L01114F</code> and <code>L011165</code> both call the same late gameplay block in order:</li><li><code>L012F48</code></li><li><code>L01318D</code></li><li><code>L01070A</code></li><li><code>L0108EF</code></li><li>OAM flush helper</li><li>practical reading:</li><li><code>L01318D</code> is not the already-closed rival-marker path</li><li>it sits earlier in the same frame build and prepares/emits the moving gameplay workload that later shares the frame with the closed <code>state_11f3 -&gt; oam_0730</code> HUD marker path</li></ul>
+<h2 id="static-role-split-inside-l01318d">Static Role Split Inside <code>L01318D</code></h2>
+<ul><li><code>02:B042</code></li><li>falls on <code>lda $12F4.w,X</code></li><li>role: loads a per-entry attribute/variant word into <code>$26</code></li><li>reading: operand selection, not sprite emission by itself</li></ul>
+<ul><li><code>02:B05D</code></li><li>falls on <code>adc $1CB2.w</code></li><li>role: part of the low-index branch that converts the local selector into the final <code>$22</code> screen/object position before <code>jsr L012BE2</code></li><li>reading: coordinate/phase assembly, not the final submit point</li></ul>
+<ul><li><code>02:B0B1</code></li><li>falls on an <code>asl A</code></li><li>role: part of the high-index branch&#x27;s <code>5 * value</code> style expansion on <code>$22</code> after subtracting <code>8</code> and optionally setting <code>$24 = 0x4000</code></li><li>reading: position/tile-base math, not the final submit point</li></ul>
+<ul><li><code>02:B0BD</code></li><li>falls on <code>lda #$1D80.w</code></li><li>role: loads the shared source-bank base into <code>$11/$10</code> immediately before the generic emitter call</li><li>reading: setup for submission, not the emission itself</li></ul>
+<ul><li><code>02:B134</code></li><li>falls on <code>jsr L012BE2.w</code></li><li>role: the generic submit point on the default branch after <code>$26</code>, <code>$24</code>, <code>$22</code>, and the <code>1D80:8000</code> source base are prepared</li><li>reading: strongest current candidate for the actual road-line/object emission site among the previously named PCs</li></ul>
+<h2 id="important-companion-branch">Important Companion Branch</h2>
+<ul><li>one nearby site is at least as important as the five named PCs:</li><li><code>02:B101</code> -&gt; <code>jsr L012D5A.w</code></li><li>branch condition:</li><li>active only when the <code>1CEA</code> test takes the special path and <code>$BA != 0</code></li><li>reading:</li><li>the narrowed cluster is not one emitter</li><li>it already splits into:</li><li>generic <code>L012BE2</code> submissions</li><li>an alternate <code>L012D5A</code> submission path</li></ul>
+<h2 id="practical-reading">Practical Reading</h2>
+<ul><li>the old five-PC list mixed together three different kinds of work:</li><li>operand/variant load (<code>02:B042</code>)</li><li>coordinate/tile-base math (<code>02:B05D</code>, <code>02:B0B1</code>, <code>02:B0BD</code>)</li><li>actual generic submit (<code>02:B134</code>)</li><li>that means the next proving target should no longer be &quot;which one of the five is the road builder?&quot;</li><li>the tighter target is:</li><li>what <code>L012BE2</code> emits on the default path</li><li>what <code>L012D5A</code> emits on the alternate path</li><li>which live-race conditions choose between those two emitters</li></ul>
+<h2 id="why-the-radar-was-only-an-anchor">Why The Radar Was Only An Anchor</h2>
+<ul><li>the radar/top-strip marker stayed useful because its ownership is already closed:</li><li><code>L0117BA</code> seeds <code>state_11f3</code></li><li><code>L0108EF</code> turns it into <code>oam_0730</code></li><li>that closed path gave a reliable visual/state anchor for confirming that the manual live-race seeds were meaningfully different from the old control corridor</li><li>but <code>L01318D</code> is where the open gameplay-world attribution still lives, so the lane should now spend effort there instead of treating the radar marker as the main destination</li></ul>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

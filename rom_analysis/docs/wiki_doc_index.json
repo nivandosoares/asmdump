@@ -1,0 +1,201 @@
+{
+  "site_title": "TD2 Archaeology Wiki",
+  "tagline": "Curated HTML index of the current markdown corpus, with front-end/menu material kept separate from gameplay to avoid cross-lane contamination.",
+  "sections": [
+    {
+      "id": "source-of-truth",
+      "title": "Source Of Truth",
+      "description": "Read these first before trusting any secondary note or generated artifact.",
+      "entries": [
+        {
+          "path": "PORT_PLAN.md",
+          "label": "Port Plan",
+          "note": "Primary execution contract and long-range port target."
+        },
+        {
+          "path": "rom_analysis/docs/next_steps_roadmap.md",
+          "label": "Next Steps Roadmap",
+          "note": "Current lane status, open gates, and practical follow-up targets."
+        },
+        {
+          "path": "rom_analysis/docs/progress_checkpoints.md",
+          "label": "Progress Checkpoints",
+          "note": "Checkpoint log with evidence-bearing milestones."
+        },
+        {
+          "path": "rom_analysis/docs/validation_gates.md",
+          "label": "Validation Gates",
+          "note": "Bounded pass/fail policy for regression and callback checks."
+        },
+        {
+          "path": "validation/README.md",
+          "label": "Validation README",
+          "note": "Current Mesen capture, probe, and export workflow."
+        },
+        {
+          "path": "tools/README.md",
+          "label": "Tools README",
+          "note": "Promoted extraction and analysis tooling surface."
+        },
+        {
+          "path": "port/README.md",
+          "label": "Port README",
+          "note": "SDL runtime scope, usage, and current sequence playback path."
+        },
+        {
+          "path": "rom_analysis/README.md",
+          "label": "ROM Analysis README",
+          "note": "Top-level archaeology tree orientation."
+        }
+      ]
+    },
+    {
+      "id": "attract-intro",
+      "title": "Attract And Intro",
+      "description": "Late-attract, Mode 7, and tilemap provenance work. Keep these separate from menu and gameplay interpretation.",
+      "entries": [
+        {
+          "path": "rom_analysis/docs/intro_00_8029_next_agent_handoff.md",
+          "label": "00:8029 Handoff",
+          "note": "Active handoff for the later attract continuation lane."
+        },
+        {
+          "path": "rom_analysis/docs/intro_01_9fe5_window_986_1093.md",
+          "label": "01:9FE5 Window 986..1093",
+          "note": "Consolidated visual-contract note for the bridge-visible intro block."
+        },
+        {
+          "path": "rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md",
+          "label": "01:9FE5 Activity Trace",
+          "note": "Producer-side activity narrowing for the post-1093 window."
+        },
+        {
+          "path": "rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md",
+          "label": "Mode 7 Blob Cycle 1134..1200",
+          "note": "Late 00:8029 blob rotation report and selector narrowing."
+        },
+        {
+          "path": "rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md",
+          "label": "Tilemap Provenance 1086..1093",
+          "note": "First promoted tilemap-to-ROM provenance window."
+        },
+        {
+          "path": "rom_analysis/docs/mesen_debugger_design_workbench.md",
+          "label": "Mesen Design Workbench",
+          "note": "Design-pack workflow and extraction surface."
+        }
+      ]
+    },
+    {
+      "id": "front-end-menu",
+      "title": "Front-End And Menu",
+      "description": "Menu, car-presentation, and opponent-selection material. This section exists specifically to keep front-end evidence away from gameplay claims.",
+      "entries": [
+        {
+          "path": "rom_analysis/docs/snes_runtime_algorithm_human.md",
+          "label": "SNES Runtime Algorithm",
+          "note": "Human-readable interpretation of the front-end and handoff corridor."
+        },
+        {
+          "path": "rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md",
+          "label": "Frame 1500 BG2 Provenance",
+          "note": "Car-presentation BG2 ownership without treating it as gameplay."
+        },
+        {
+          "path": "tools/out/snes_frontend_top_menu_labels.md",
+          "label": "Top Menu Labels",
+          "note": "Closed rendered label set for the top signboard menu."
+        },
+        {
+          "path": "tools/out/snes_frontend_rival_selection_grid.md",
+          "label": "Rival Selection Grid",
+          "note": "Rendered and structural read of the 2x2 opponent grid."
+        },
+        {
+          "path": "tools/out/snes_select_opponent_organic_default_path.md",
+          "label": "Organic Default Path",
+          "note": "Recovered no-force path into the default rival corridor."
+        },
+        {
+          "path": "tools/out/snes_frontend_select_opponent_mode_split.md",
+          "label": "Select Opponent Mode Split",
+          "note": "Separates rival slots from the no-opponent stopwatch branch."
+        }
+      ]
+    },
+    {
+      "id": "gameplay-lane3",
+      "title": "Gameplay And Lane 3",
+      "description": "Live-race, HUD/OAM, and gameplay-entry notes. Keep this family isolated from attract and front-end material.",
+      "entries": [
+        {
+          "path": "rom_analysis/docs/lane3_today_work_brief.md",
+          "label": "Lane 3 Work Brief",
+          "note": "Current gameplay archaeology state and human-support queue."
+        },
+        {
+          "path": "rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md",
+          "label": "Gameplay Handoff",
+          "note": "Primary gameplay-oriented handoff note."
+        },
+        {
+          "path": "rom_analysis/docs/lane3_attract_demo_boundary.md",
+          "label": "Attract Demo Boundary",
+          "note": "Boundary note explaining why some old seeds were misleading."
+        },
+        {
+          "path": "rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md",
+          "label": "Live Gameplay Entry Route",
+          "note": "Promoted power-on route for reproducible gameplay entry."
+        },
+        {
+          "path": "rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md",
+          "label": "Manual Seed Intake",
+          "note": "Human note for preserved live-race savestates and controls."
+        },
+        {
+          "path": "rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md",
+          "label": "Manual Video Intake",
+          "note": "Video-backed still capture summary for the live-race lane."
+        },
+        {
+          "path": "rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md",
+          "label": "Visible Layer Stack",
+          "note": "Layer composition read for a real gameplay seed."
+        },
+        {
+          "path": "rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md",
+          "label": "BG2 Producer Path",
+          "note": "Producer-side narrowing for the gameplay road/world path."
+        },
+        {
+          "path": "rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md",
+          "label": "L01318D Role Split",
+          "note": "Static role split for the narrowed gameplay cluster."
+        },
+        {
+          "path": "rom_analysis/maps/tracks/track1_02_9016_state_ownership.md",
+          "label": "02:9016 State Ownership",
+          "note": "Semantic ownership pass for post-handoff gameplay fields."
+        }
+      ]
+    },
+    {
+      "id": "runtime-port",
+      "title": "Runtime And Port Validation",
+      "description": "SDL runtime and cross-tool validation notes that speak directly to PC-port parity.",
+      "entries": [
+        {
+          "path": "rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md",
+          "label": "SDL Runtime Smoke",
+          "note": "Bounded regression read for current intro/front-end parity in the C/SDL runtime."
+        },
+        {
+          "path": "rom_analysis/docs/mesen_instrumented_backend_architecture.md",
+          "label": "Instrumented Backend Architecture",
+          "note": "Architecture note for the experimental Mesen backend path."
+        }
+      ]
+    }
+  ]
+}

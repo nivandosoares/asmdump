@@ -1,0 +1,1012 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Validation | TD2 Archaeology Wiki</title>
+  <link rel="stylesheet" href="../../assets/wiki.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="site-link" href="../../index.html">TD2 Archaeology Wiki</a>
+      <p class="sidebar-note">Simple wiki-style index built from curated markdown sources.</p>
+      <section class="sidebar-group"><h3>Source Of Truth</h3><ul><li><a href="../PORT_PLAN.html">Port Plan</a></li><li><a href="../rom_analysis/docs/next_steps_roadmap.html">Next Steps Roadmap</a></li><li><a href="../rom_analysis/docs/progress_checkpoints.html">Progress Checkpoints</a></li><li><a href="../rom_analysis/docs/validation_gates.html">Validation Gates</a></li><li><a href="README.html">Validation README</a></li><li><a href="../tools/README.html">Tools README</a></li><li><a href="../port/README.html">Port README</a></li><li><a href="../rom_analysis/README.html">ROM Analysis README</a></li></ul></section><section class="sidebar-group"><h3>Attract And Intro</h3><ul><li><a href="../rom_analysis/docs/intro_00_8029_next_agent_handoff.html">00:8029 Handoff</a></li><li><a href="../rom_analysis/docs/intro_01_9fe5_window_986_1093.html">01:9FE5 Window 986..1093</a></li><li><a href="../rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.html">01:9FE5 Activity Trace</a></li><li><a href="../rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.html">Mode 7 Blob Cycle 1134..1200</a></li><li><a href="../rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.html">Tilemap Provenance 1086..1093</a></li><li><a href="../rom_analysis/docs/mesen_debugger_design_workbench.html">Mesen Design Workbench</a></li></ul></section><section class="sidebar-group"><h3>Front-End And Menu</h3><ul><li><a href="../rom_analysis/docs/snes_runtime_algorithm_human.html">SNES Runtime Algorithm</a></li><li><a href="../rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.html">Frame 1500 BG2 Provenance</a></li><li><a href="../tools/out/snes_frontend_top_menu_labels.html">Top Menu Labels</a></li><li><a href="../tools/out/snes_frontend_rival_selection_grid.html">Rival Selection Grid</a></li><li><a href="../tools/out/snes_select_opponent_organic_default_path.html">Organic Default Path</a></li><li><a href="../tools/out/snes_frontend_select_opponent_mode_split.html">Select Opponent Mode Split</a></li></ul></section><section class="sidebar-group"><h3>Gameplay And Lane 3</h3><ul><li><a href="../rom_analysis/docs/lane3_today_work_brief.html">Lane 3 Work Brief</a></li><li><a href="../rom_analysis/docs/gameplay_default_rival_next_agent_handoff.html">Gameplay Handoff</a></li><li><a href="../rom_analysis/docs/lane3_attract_demo_boundary.html">Attract Demo Boundary</a></li><li><a href="../rom_analysis/maps/tracks/track1_live_gameplay_entry_route.html">Live Gameplay Entry Route</a></li><li><a href="../rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.html">Manual Seed Intake</a></li><li><a href="../rom_analysis/maps/tracks/track1_live_race_manual_video_intake.html">Manual Video Intake</a></li><li><a href="../rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.html">Visible Layer Stack</a></li><li><a href="../rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.html">BG2 Producer Path</a></li><li><a href="../rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.html">L01318D Role Split</a></li><li><a href="../rom_analysis/maps/tracks/track1_02_9016_state_ownership.html">02:9016 State Ownership</a></li></ul></section><section class="sidebar-group"><h3>Runtime And Port Validation</h3><ul><li><a href="../rom_analysis/docs/port_sdl_runtime_mimetization_smoke.html">SDL Runtime Smoke</a></li><li><a href="../rom_analysis/docs/mesen_instrumented_backend_architecture.html">Instrumented Backend Architecture</a></li></ul></section>
+    </aside>
+    <main class="content">
+      <nav class="breadcrumbs">
+        <a href="../../index.html">Index</a>
+        <span>/</span>
+        <a href="../../index.html#source-of-truth">Source Of Truth</a>
+        <span>/</span>
+        <span>Validation README</span>
+      </nav>
+      <header class="doc-header">
+        <p class="eyebrow">Source Of Truth</p>
+        <h1>Validation</h1>
+        <p class="doc-note">Current Mesen capture, probe, and export workflow.</p>
+        <div class="doc-meta">
+          <span>Source: <code>validation/README.md</code></span>
+          <a href="../../../../../validation/README.md">Open Raw Markdown</a>
+        </div>
+      </header>
+<section class="artifact-panel"><header class="artifact-header"><h2>Artifact Support</h2><p>Resolved image references found in this note.</p></header><div class="artifact-grid"><figure class="artifact-card"><a href="../../../mesen_frame990/main_visible.ppm"><img src="../../artifacts/tools/out/mesen_frame990/main_visible.png" alt="tools/out/mesen_frame990/main_visible.ppm" loading="lazy"></a><figcaption><code>tools/out/mesen_frame990/main_visible.ppm</code><span>Converted from PPM for browser preview.</span></figcaption></figure><figure class="artifact-card"><a href="../../../bank1_bootstrap_queue_990_bridgeobj.ppm"><img src="../../artifacts/tools/out/bank1_bootstrap_queue_990_bridgeobj.png" alt="tools/out/bank1_bootstrap_queue_990_bridgeobj.ppm" loading="lazy"></a><figcaption><code>tools/out/bank1_bootstrap_queue_990_bridgeobj.ppm</code><span>Converted from PPM for browser preview.</span></figcaption></figure><figure class="artifact-card"><a href="../../../mesen_frame994/main_visible.ppm"><img src="../../artifacts/tools/out/mesen_frame994/main_visible.png" alt="tools/out/mesen_frame994/main_visible.ppm" loading="lazy"></a><figcaption><code>tools/out/mesen_frame994/main_visible.ppm</code><span>Converted from PPM for browser preview.</span></figcaption></figure><figure class="artifact-card"><a href="../../../bank1_bootstrap_queue_994_bridgeobj.ppm"><img src="../../artifacts/tools/out/bank1_bootstrap_queue_994_bridgeobj.png" alt="tools/out/bank1_bootstrap_queue_994_bridgeobj.ppm" loading="lazy"></a><figcaption><code>tools/out/bank1_bootstrap_queue_994_bridgeobj.ppm</code><span>Converted from PPM for browser preview.</span></figcaption></figure><figure class="artifact-card"><a href="../../../mesen_frame998_mode7ppu.ppm"><img src="../../artifacts/tools/out/mesen_frame998_mode7ppu.png" alt="tools/out/mesen_frame998_mode7ppu.ppm" loading="lazy"></a><figcaption><code>tools/out/mesen_frame998_mode7ppu.ppm</code><span>Converted from PPM for browser preview.</span></figcaption></figure><figure class="artifact-card"><a href="../../../mesen_frame998/main_visible.ppm"><img src="../../artifacts/tools/out/mesen_frame998/main_visible.png" alt="tools/out/mesen_frame998/main_visible.ppm" loading="lazy"></a><figcaption><code>tools/out/mesen_frame998/main_visible.ppm</code><span>Converted from PPM for browser preview.</span></figcaption></figure><figure class="artifact-card"><a href="../../../mesen_frame1005_mode7ppu.ppm"><img src="../../artifacts/tools/out/mesen_frame1005_mode7ppu.png" alt="tools/out/mesen_frame1005_mode7ppu.ppm" loading="lazy"></a><figcaption><code>tools/out/mesen_frame1005_mode7ppu.ppm</code><span>Converted from PPM for browser preview.</span></figcaption></figure><figure class="artifact-card"><a href="../../../intro_loop_frame_01005_frame.png"><img src="../../artifacts/tools/out/intro_loop_frame_01005_frame.png" alt="tools/out/intro_loop_frame_01005_frame.png" loading="lazy"></a><figcaption><code>tools/out/intro_loop_frame_01005_frame.png</code><span>Copied original artifact.</span></figcaption></figure></div></section>
+      <article class="doc-body">
+        <h1 id="validation">Validation</h1>
+<p>This directory contains the first validation harness artifact for Sprint 0.</p>
+<p>Current asset:</p>
+<ul><li><code>mesen_capture.lua</code>: a Mesen-S/Mesen 2 Lua script that can override input for a fixed window, emit per-frame screenshots, and write a JSON input log</li><li><code>run_mesen_capture.sh</code>: a launcher that creates an isolated Mesen config inside the repo, enables Lua file I/O, and runs the script in <code>--testRunner</code> mode</li><li><code>mesen_probe_boot.lua</code>: a lightweight state probe that records boot/title selectors like <code>$1C78/$1C7A/$1CCA/...</code> once per frame</li><li><code>run_mesen_probe_boot.sh</code>: convenience wrapper around the generic launcher for the boot probe</li><li><code>mesen_dump_bg_range.lua</code>: single-run range dumper for <code>VRAM + CGRAM + PPU state</code> and optional screenshots on selected frames</li><li><code>run_mesen_dump_bg_range.sh</code>: convenience wrapper around the generic launcher for that range dumper</li><li><code>mesen_scanline_step_test.lua</code>: an experimental scanline-step probe that uses <code>emu.step(..., ppuScanline)</code> plus <code>codeBreak</code> to sample <code>emu.getState()</code> once per visible scanline on a target frame; it now also accepts the same seeded savestate/input-window pattern used by the gameplay harnesses, records gameplay-facing layer scroll/callback fields alongside the old <code>ppu.mode7.*</code> values, and emits <code>frame_events</code> snapshots for traced <code>start</code>/<code>end</code> frame boundaries</li></ul>
+<p>Expected workflow:</p>
+<ol><li>Boot the ROM in Mesen-S.</li><li>Navigate manually to a deterministic starting point, or load a known savestate at the start of track 1.</li><li>Load <code>validation/mesen_capture.lua</code>.</li><li>Let the script wait through its configured warm-up frames.</li><li>The script will hold the configured input pattern for 300 frames and dump PNGs plus a JSON log.</li></ol>
+<p>For automated headless runs with Mesen2&#x27;s test runner:</p>
+<pre><code class="language-sh">./validation/run_mesen_capture.sh</code></pre>
+<p>For short review windows where you want a reproducible bundle of visual artifacts instead of a one-off capture, use:</p>
+<pre><code class="language-sh">python3 tools/run_mesen_guided_export.py \
+  intro_mode7_rotation \
+  1094 \
+  1101 \
+  --input-windows &#x27;6800:start;6900-6920:start,a&#x27; \
+  --question &#x27;Is this window rotating the same Mode 7 source blob or switching producers?&#x27;</code></pre>
+<p>That wrapper assembles the repo&#x27;s current high-signal review surfaces in one place:</p>
+<ul><li>bridge-extracted frame folders under <code>tools/out/&lt;slug&gt;_&lt;start&gt;_&lt;end&gt;_frames/</code></li><li>design packs under <code>tools/out/&lt;slug&gt;_&lt;start&gt;_&lt;end&gt;_design/</code></li><li>a boot probe with <code>DMA/VRAM/Mode7</code> traces plus producer-side <code>write_point_trace</code></li><li>normalized activity trace JSON/Markdown</li><li>visual contracts for the whole range</li><li>a Markdown note skeleton under <code>rom_analysis/docs/</code></li></ul>
+<p>Useful options:</p>
+<ul><li><code>--savestate &lt;path&gt;</code>: seed the probe from a deterministic state</li><li><code>--with-provenance --chunk-validation tools/out/bank13_chunk_validation.json</code>: also build a tilemap provenance artifact from the generated <code>td2_boot_probe_l001210_exec.json</code></li><li><code>--dry-run</code>: print the exact commands and paths without executing Mesen</li><li><code>--skip-*</code>: reuse existing extracted frames or probes while rebuilding later stages</li></ul>
+<p>The default probe configuration is intentionally review-oriented rather than minimal: it enables <code>DMA</code>, direct <code>VRAM</code>, <code>Mode 7</code>, and <code>OAM/VRAM/CGRAM</code> register write tracing so the resulting visual-contract bundle is useful for later callback/state attribution instead of only pixel review.</p>
+<p>For the experimental instrumented-Mesen backend path, use:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=90 \
+./validation/run_mesen_lab_backend.sh \
+  ./game.smc \
+  --load-state ./.mesen-config/Mesen2/SaveStates/game_11.mss \
+  --run-range 18030:18032 \
+  --probe-set frame_core_probe,dma_vram_probe,mode7_probe \
+  --export-dir tools/out/mesen_lab_mvp_18030_18032</code></pre>
+<p>That launcher:</p>
+<ul><li>prepares the same isolated <code>XDG_CONFIG_HOME=.mesen-config</code> setup used by the Lua-based runners</li><li>calls the local <code>Mesen --labRunner</code> backend mode directly instead of the Lua test runner</li><li>normalizes <code>--load-state</code>, <code>--export-dir</code>, and <code>--manifest-out</code> paths</li><li>enforces an outer shell timeout via <code>MESEN_TIMEOUT_SECONDS</code></li></ul>
+<p>Current MVP capture semantics for <code>--labRunner</code> are explicit on purpose:</p>
+<ul><li>the runner aligns to a frame boundary first</li><li>each exported frame stores both <code>startBoundary</code> and <code>endBoundary</code></li><li>the event snapshot is taken at the end boundary with <code>ShowPreviousFrameEvents = true</code></li><li><code>frame.json</code> therefore preserves both state surfaces instead of pretending the step landed on a single canonical instant</li></ul>
+<p>Current bundle layout:</p>
+<ul><li><code>manifest.json</code></li><li><code>summary.json</code></li><li><code>frame_XXXXXX/frame.json</code></li><li><code>frame_XXXXXX/events.json</code></li><li>optional <code>frame_XXXXXX/vram.bin</code>, <code>cgram.bin</code>, <code>oam.bin</code> for <code>dma_vram_probe</code></li></ul>
+<p>See also:</p>
+<ul><li><code>rom_analysis/docs/mesen_instrumented_backend_architecture.md</code></li></ul>
+<p>For the targeted non-square OBJ vertical-mirror regression, build the runtime and run:</p>
+<pre><code class="language-sh">make -C tools obj-vertical-flip-check</code></pre>
+<p>That check generates a tiny 16x32 vertically mirrored sprite fixture under <code>tools/out/obj_vertical_flip_check/</code> and verifies four paths against the same golden PPM:</p>
+<ul><li>Python <code>render_mesen_snes_bg.py</code> simple OBJ renderer</li><li>Python <code>render_mesen_snes_bg.py --obj-renderer mode7-ppu</code></li><li>SDL runtime direct <code>--snes-bg-*</code> render in non-Mode-7</li><li>SDL runtime direct <code>--snes-bg-*</code> render in Mode 7</li></ul>
+<p>For the BG4 plus tile-priority regression, run:</p>
+<pre><code class="language-sh">make -C tools bg-layer-priority-check</code></pre>
+<p>That check generates a tiny four-layer mode-0 scene under <code>tools/out/bg_layer_priority_check/</code> and verifies:</p>
+<ul><li>BG4-only visibility</li><li>low-priority layer ordering</li><li>high-priority tile ordering over lower-priority foreground tiles</li><li>the same result in both <code>render_mesen_snes_bg.py</code> and the SDL runtime</li></ul>
+<p>For routine repo hygiene before switching lanes, run:</p>
+<pre><code class="language-sh">make -C tools clean-generated-dry-run
+make -C tools clean-generated</code></pre>
+<p><code>tools/out/</code> is now git-ignored by default. Existing tracked proof artifacts in that tree still behave normally, but newly promoted evidence from <code>tools/out/</code> should be added explicitly with <code>git add -f</code>.</p>
+<p><code>run_mesen_capture.sh</code> now resolves the emulator in this order:</p>
+<ul><li><code>MESEN_BIN</code></li><li><code>MESEN_RELEASE_DIR/Mesen</code></li><li><code>Mesen</code> or <code>mesen</code> on <code>PATH</code></li></ul>
+<p>The shared launcher now also normalizes these paths before invoking <code>Mesen --testRunner</code>:</p>
+<ul><li>ROM path and Lua script path: relative to the caller&#x27;s current directory</li><li>optional savestate path: relative to the caller&#x27;s current directory</li><li>repo-facing output prefixes like <code>tools/out/...</code>: relative to the repo root</li></ul>
+<p>This matters because the Mesen test runner resolves Lua relative file I/O under the isolated config tree (<code>.mesen-config/Mesen2</code>), not the repo cwd. Without that normalization, nested repo-relative prefixes can time out after silent write failures inside the config directory.</p>
+<p>For the bridge extractor path, <code>tools/run_mesen_ppu_extract.sh</code> uses <code>MESEN_RELEASE_DIR</code> to locate <code>MesenCore.so</code> and can also derive that directory from <code>MESEN_BIN</code> or <code>PATH</code>.</p>
+<p><code>mesen_capture.lua</code> now accepts the same lightweight env-style overrides used by the other probes:</p>
+<ul><li><code>TD2_CAPTURE_WARMUP_FRAMES</code></li><li><code>TD2_CAPTURE_FRAMES</code></li><li><code>TD2_CAPTURE_SCREENSHOT_EVERY</code></li><li><code>TD2_CAPTURE_PLAYER</code></li><li><code>TD2_CAPTURE_OUTPUT_PREFIX</code></li><li><code>TD2_CAPTURE_INPUT</code></li><li><code>TD2_CAPTURE_INPUT_START_FRAME</code></li><li><code>TD2_CAPTURE_INPUT_END_FRAME</code></li><li><code>TD2_CAPTURE_INPUT_WINDOWS</code></li></ul>
+<p><code>TD2_CAPTURE_INPUT_WINDOWS</code> uses the same semicolon-separated <code>start-end:buttons</code> or <code>frame:buttons</code> format as the boot probe, for example:</p>
+<pre><code class="language-sh">MESEN_TIMEOUT_SECONDS=60 \
+TD2_CAPTURE_OUTPUT_PREFIX=tools/out/track1_seed_sweep_v1/start_then_b_hold/capture \
+TD2_CAPTURE_INPUT_WINDOWS=&#x27;60:start;61-359:b&#x27; \
+./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_capture.lua ./.mesen-config/Mesen2/SaveStates/game_11.mss</code></pre>
+<p>To seed the run from a deterministic savestate instead of power-on:</p>
+<pre><code class="language-sh">./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_capture.lua /absolute/path/to/start_state.mss</code></pre>
+<p>For short human-review packs where the goal is direct screenshot comparison rather than bridge-extracted layer packs, use <code>mesen_capture.lua</code> plus <code>tools/build_capture_sequence_manifest.py</code>. This is useful when a long warmup path is stable in the test runner but awkward in the bridge extractor.</p>
+<p>Example: compare the first shared post-<code>02:9016</code> window of the default-rival and no-opponent paths:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=400 \
+TD2_CAPTURE_OUTPUT_PREFIX=tools/out/post9016_default_rival_capture/capture \
+TD2_CAPTURE_WARMUP_FRAMES=2048 \
+TD2_CAPTURE_FRAMES=41 \
+TD2_CAPTURE_SCREENSHOT_EVERY=4 \
+TD2_CAPTURE_INPUT_WINDOWS=&#x27;1200:start;1280:start;1505-1510:start;1584-1589:right,down;1640-1645:start;1730-1735:start&#x27; \
+./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_capture.lua
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=400 \
+TD2_CAPTURE_OUTPUT_PREFIX=tools/out/post9016_no_opponent_clock_capture/capture \
+TD2_CAPTURE_WARMUP_FRAMES=2048 \
+TD2_CAPTURE_FRAMES=41 \
+TD2_CAPTURE_SCREENSHOT_EVERY=4 \
+TD2_CAPTURE_INPUT_WINDOWS=&#x27;1200:start;1280:start;1505-1510:start;1629-1634:right,down;1636-1641:start;1730-1735:start&#x27; \
+./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_capture.lua
+
+python3 tools/build_capture_sequence_manifest.py \
+  tools/out/post9016_default_rival_capture/capture_input_log.json \
+  tools/out/post9016_default_rival_capture/sequence.txt \
+  --json-out tools/out/post9016_default_rival_capture/sequence.json \
+  --start-frame 2048 \
+  --end-frame-exclusive 2089
+
+python3 tools/build_capture_sequence_manifest.py \
+  tools/out/post9016_no_opponent_clock_capture/capture_input_log.json \
+  tools/out/post9016_no_opponent_clock_capture/sequence.txt \
+  --json-out tools/out/post9016_no_opponent_clock_capture/sequence.json \
+  --start-frame 2048 \
+  --end-frame-exclusive 2089</code></pre>
+<p>The resulting PNG pairs can then be reviewed directly, with an external question sheet such as <code>tools/out/post9016_compare_questions.md</code>. The capture runner now applies <code>TD2_CAPTURE_INPUT_WINDOWS</code> during warmup as well as during the explicit screenshot phase; without that, long power-on paths silently miss their early <code>start/right/down</code> confirms.</p>
+<p>To inspect the boot/title selectors directly:</p>
+<pre><code class="language-sh">./validation/run_mesen_probe_boot.sh</code></pre>
+<p><code>mesen_probe_boot.lua</code> now also accepts callback-relative input windows through <code>TD2_BOOT_PROBE_TRIGGER_INPUT_WINDOWS</code>.</p>
+<p>That format is:</p>
+<ul><li><code>point_id+offset:buttons</code></li><li><code>point_id+start-end:buttons</code></li></ul>
+<p>where <code>point_id</code> matches a labeled entry from <code>TD2_BOOT_PROBE_TRACE_EXEC_POINTS</code>.</p>
+<p>Example:</p>
+<pre><code class="language-sh">MESEN_TIMEOUT_SECONDS=60 \
+TD2_BOOT_PROBE_TRACE_EXEC_POINTS=&#x27;c1d2=01:C1D2&#x27; \
+TD2_BOOT_PROBE_INPUT_WINDOWS=&#x27;1200:start;1280:start;1505-1510:start&#x27; \
+TD2_BOOT_PROBE_TRIGGER_INPUT_WINDOWS=&#x27;c1d2+1-6:right,down;c1d2+8-13:start&#x27; \
+./validation/run_mesen_probe_boot.sh ./game.smc</code></pre>
+<p>The probe JSON now records both <code>trigger_input_windows</code> and the first traced frame for each exec-point id under <code>exec_point_trace.first_frames</code>.</p>
+<p>When using <code>TD2_BOOT_PROBE_TRIGGER_INPUT_WINDOWS</code>, make the trace window start before the trigger point can first execute. If <code>TD2_BOOT_PROBE_TRACE_START_FRAME</code> defaults to the screenshot frame, the probe will only learn <code>first_frames</code> too late for callback-relative input to fire.</p>
+<p>For direct state-window comparison between two recovered boot probes, use <code>tools/compare_boot_probe_windows.py</code>:</p>
+<pre><code class="language-sh">python3 tools/compare_boot_probe_windows.py \
+  tools/out/select_opponent_clock_path_v2/td2_boot_probe.json \
+  tools/out/select_opponent_clock_path_v7_be43_confirm/td2_boot_probe.json \
+  tools/out/snes_select_opponent_post_9016_state_compare.json \
+  --markdown-out tools/out/snes_select_opponent_post_9016_state_compare.md \
+  --label-a default_rival \
+  --label-b no_opponent_clock \
+  --start-frame 2044 \
+  --end-frame 2199</code></pre>
+<p>That compare is useful when both lanes already share the same callback family and you want to narrow the remaining WRAM split instead of rerunning Mesen blindly.</p>
+<p>For producer-side visual ownership tracing, the same probe can now carry write-breakpoint hits for <code>VRAM/CGRAM/OAM</code>-related registers. The resulting <code>td2_boot_probe.json</code> can be fed into <code>tools/build_mesen_visual_contract.py --probe-json ...</code>:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=75 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_986/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=987 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=982 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=986 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS=&#x27;objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122&#x27; \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh</code></pre>
+<p>Then merge that probe payload into a visual contract:</p>
+<pre><code class="language-sh">python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_mesen_range_7051_inputfix_v1/frame_07051 \
+  tools/out/visual_contract_7051_with_probe.json \
+  --provenance-json rom_analysis/maps/tilemaps/mesen_range_7051_provenance.jsonc \
+  --probe-json tools/out/visual_contract_probe_7051/td2_boot_probe.json</code></pre>
+<p><code>td2_boot_probe.json</code> now also preserves <code>trace_start_frame</code> and <code>trace_end_frame</code> in the main payload, so merged visual contracts can retain an exact <code>producerTrace.traceWindow</code> instead of only the per-domain frame spans.</p>
+<p>For active behavior mapping beyond coarse <code>write_point_trace</code> counts, the same probe can also emit:</p>
+<ul><li><code>*_dma_writes.json</code></li><li><code>*_vram_writes.json</code></li><li><code>*_mode7_writes.json</code></li></ul>
+<p>Those traces can be normalized into one frame/callback-oriented activity report with <code>tools/build_mesen_activity_trace.py</code>:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=180 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/activity_trace_1094_1117/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=1118 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=1094 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=1117 \
+TD2_BOOT_PROBE_TRACE_DMA=1 \
+TD2_BOOT_PROBE_TRACE_VRAM=1 \
+TD2_BOOT_PROBE_TRACE_MODE7=1 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_activity_trace.py \
+  tools/out/activity_trace_1094_1117/td2_boot_probe.json \
+  tools/out/activity_trace_1094_1117/activity_trace.json \
+  --markdown-out tools/out/activity_trace_1094_1117/activity_trace.md</code></pre>
+<p>This path is useful when the question is no longer just &quot;which domain wrote something?&quot; but:</p>
+<ul><li>which callback family owned the writes</li><li>which scanline they landed on</li><li>whether the window is doing <code>DMA</code>, direct <code>VRAM/CGRAM</code> writes, or only repeated register programming</li><li>whether a later mismatch boundary aligns with a real behavior change (<code>callback</code> switch, <code>OAM</code> DMA shutdown, <code>Mode 7</code> register-set reduction, and so on)</li></ul>
+<p>The visual-contract builders can now also merge that normalized activity layer directly with <code>--activity-trace-json</code>, so a range summary can carry <code>callback/state + BG/OBJ surface + DMA/direct/Mode7 activity</code> in the same artifact:</p>
+<pre><code class="language-sh">python3 tools/build_mesen_visual_contract_range.py \
+  tools/out/design_mesen_range_1102_1109_v1 \
+  tools/out/visual_contract_range_1102_1109_activity \
+  --provenance-json rom_analysis/maps/tilemaps/mesen_range_1102_1109_provenance.jsonc \
+  --probe-json tools/out/activity_trace_1094_1117/td2_boot_probe.json \
+  --activity-trace-json tools/out/activity_trace_1094_1117/activity_trace.json \
+  --clean-out</code></pre>
+<p>For the post-<code>1093</code> compare rubric itself, use:</p>
+<pre><code class="language-sh">python3 tools/build_mesen_window_compare.py \
+  tools/out/post_1093_compare_1102_1117/summary.json \
+  tools/out/mesen_range_1102_1109_v1 \
+  tools/out/mesen_range_1110_1117_v1 \
+  --activity-trace-json tools/out/activity_trace_1094_1117/activity_trace.json \
+  --markdown-out tools/out/post_1093_compare_1102_1117/summary.md</code></pre>
+<p>The Python <code>Mode 7</code> compare path now defaults to the promoted scanline-start rule <code>line + 1</code>:</p>
+<ul><li><code>tools/render_mesen_snes_bg.py</code></li><li><code>tools/build_mesen_window_compare.py</code></li><li><code>tools/build_mode7_plateau_analysis.py</code></li></ul>
+<p>Use the default for normal Lane 2 evidence generation. Only pass <code>--mode7-line-bias 0</code> when you want the old current-line counterfactual for a targeted validation or source-comparison run.</p>
+<p>That promotion is intentionally scoped to the Python/tooling path for now. The same rule is not yet committed into the SDL runtime because <code>port/src/td2_ppu.c</code> currently carries unrelated dirty work and should not be mixed with this checkpoint.</p>
+<p>That builder automates the same questions that were previously being answered by hand:</p>
+<ul><li>whether <code>main_visible.ppm</code> is still the top crop of <code>main.ppm</code></li><li>whether a visible-state <code>ppu_state_visible.json</code> render helps or hurts</li><li>whether the compare boundary lines up with a real activity boundary like <code>callback</code> change or <code>OAM DMA</code> shutdown</li></ul>
+<p>For the narrower static-plateau follow-up after the compare summary already exists, use:</p>
+<pre><code class="language-sh">python3 tools/build_mode7_plateau_analysis.py \
+  tools/out/post_1093_compare_1102_1117/summary.json \
+  tools/out/design_mesen_range_1102_1109_v1 \
+  tools/out/design_mesen_range_1110_1117_v1 \
+  tools/out/mode7_plateau_1105/analysis.json \
+  --markdown-out tools/out/mode7_plateau_1105/analysis.md</code></pre>
+<p>For the exact-hit <code>pixel 0 / X-origin / scanline-start</code> follow-up on the same canonical plateau, use:</p>
+<pre><code class="language-sh">python3 tools/build_mode7_first_pixel_audit.py \
+  tools/out/mode7_plateau_1105/analysis.json \
+  tools/out/mode7_first_pixel_1105/audit.json \
+  --markdown-out tools/out/mode7_first_pixel_1105/audit.md</code></pre>
+<p>That builder compares a small set of direct model candidates against both:</p>
+<ul><li><code>main_visible.ppm</code></li><li><code>layers/bg1_visible.ppm</code></li></ul>
+<p>The current exact-hit set is:</p>
+<ul><li>base current renderer</li><li>visible-state current renderer</li><li>increment-before-sample</li><li><code>pixel 0</code> origin <code>+1</code></li><li>scanline <code>Y + 1</code></li></ul>
+<p>For the bounded &quot;is there still another small local tweak hiding in the <code>bg1_visible</code> export?&quot; follow-up after the composed screen is already exact, use:</p>
+<pre><code class="language-sh">python3 tools/build_mode7_bg1_export_audit.py \
+  tools/out/mode7_plateau_1105_default/analysis.json \
+  tools/out/mode7_bg1_export_audit_1105/audit.json \
+  --markdown-out tools/out/mode7_bg1_export_audit_1105/audit.md</code></pre>
+<p>That audit scans a small implementation-adjacent grid over:</p>
+<ul><li><code>yLineBias</code></li><li><code>xOriginBias</code></li><li><code>hscrollBias</code></li><li>sample-before vs sample-after increment</li></ul>
+<p>and keeps the composed-screen constraint explicit by comparing each candidate against both:</p>
+<ul><li><code>main_visible.ppm</code></li><li><code>layers/bg1_visible.ppm</code></li></ul>
+<p>Current reading from the promoted <code>1105</code> / <code>1117</code> audit pair:</p>
+<ul><li><code>36</code> models scanned per endpoint</li><li><code>5</code> models keep the composed scene at <code>0</code></li><li>none of those <code>5</code> improves the <code>bg1_visible</code> mismatch below <code>2271</code></li></ul>
+<p>That is strong evidence that the remaining late-attract layer gap is better read as export-surface semantics than another small <code>Mode 7</code> renderer tweak.</p>
+<p>That export-side ambiguity is now closed more directly too:</p>
+<ul><li><code>tools/mesen_ppu_extract/Program.cs</code> writes <code>layers/bg1.ppm</code> from <code>GetTilemap(...)</code> and then derives <code>layers/bg1_visible.ppm</code> via <code>NormalizeScroll(...) + CropVisibleRegion(...)</code></li><li><code>tools/build_mesen_visible_crop_audit.py</code> proves that path against promoted late-attract design packs:</li></ul>
+<pre><code class="language-sh">python3 tools/build_mesen_visible_crop_audit.py \
+  tools/out/mode7_bg1_visible_crop_audit_1102_1105_1117/audit.json \
+  tools/out/design_mesen_range_1102_1109_v1/frame_01102 \
+  tools/out/design_mesen_range_1102_1109_v1/frame_01105 \
+  tools/out/design_mesen_range_1110_1117_v1/frame_01117 \
+  --markdown-out tools/out/mode7_bg1_visible_crop_audit_1102_1105_1117/audit.md</code></pre>
+<p>Current result from that audit:</p>
+<ul><li><code>1102/1105/1117</code> all land at <code>0</code> mismatched pixels</li><li>raw layer scroll <code>0,8191</code> normalizes to <code>0,0</code></li></ul>
+<p>Use that reading operationally:</p>
+<ul><li><code>main_visible.ppm</code> stays the renderer-parity surface</li><li><code>layers/*_visible.ppm</code> should be treated as viewer/export surfaces unless a task is explicitly about the bridge extractor itself</li></ul>
+<p>This path is useful when the remaining question is no longer &quot;is there another hidden upload?&quot; and has narrowed to:</p>
+<ul><li>whether <code>ppu_state_visible.json</code> actually differs on the canonical frame</li><li>whether <code>sample-after-increment</code> collapses to the same output as <code>X-origin +1</code></li><li>whether the missing composed-screen rule is horizontal or actually a scanline-start term</li></ul>
+<p>This path is useful once a late-attract window has already collapsed to one static scene and the remaining question is more specific:</p>
+<ul><li>whether the fixed diff box is mostly <code>BG</code> or mostly sprite coverage</li><li>whether the extracted visible <code>bg1</code> surface is also static across the plateau</li><li>whether a small horizontal shift improves the BG-only compare enough to justify investigating <code>Mode 7</code> sampling next</li><li>whether the plateau bbox ever touches the <code>Mode 7</code> outside-map path at all, which is the quickest way to keep or demote <code>M7SEL</code> edge/fill behavior as a live suspect</li></ul>
+<p>A current headless proof that uses only repo-relative prefixes is:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=30 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/frame300_live_probe_cap2048/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=301 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=0 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=300 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS=&#x27;objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122&#x27; \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=2048 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  port/assets/test_dump_frame300/design_pack \
+  tools/out/visual_contract_frame300_live_probe_cap2048.json \
+  --probe-json tools/out/frame300_live_probe_cap2048/td2_boot_probe.json</code></pre>
+<p>That proof currently yields live <code>vram</code>, <code>cgram</code>, <code>oam</code>, and <code>obj_state</code> producer domains. Narrower late windows can still return <code>write_point_trace</code> <code>0</code> hits if no writes occur there, so an empty trace is now a window-selection signal rather than a launcher failure.</p>
+<p>A promoted later-window proof chain now also exists at frames <code>986</code>, <code>990</code>, <code>994</code>, <code>998</code>, <code>1005</code>, <code>1013</code>, <code>1021</code>, <code>1029</code>, <code>1037</code>, <code>1045</code>, <code>1053</code>, <code>1061</code>, <code>1069</code>, <code>1077</code>, <code>1085</code>, and <code>1093</code>:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+make -C tools mesen-design-pack MESEN_FRAME=986
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=120 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_986_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=987 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=982 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=986 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS=&#x27;objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122&#x27; \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame986 \
+  tools/out/visual_contract_frame986_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_986_live/td2_boot_probe.json</code></pre>
+<p>Current reading for that <code>986</code> proof:</p>
+<ul><li><code>tools/out/visual_contract_probe_986_live/td2_boot_probe.json</code> records <code>3246</code> write hits with <code>0</code> drops</li><li>the merged contract shows:</li><li>exact <code>producerTrace.traceWindow = 982..986</code></li><li>OAM writes across frames <code>982..986</code></li><li>VRAM writes at frames <code>984</code> and <code>986</code></li><li>no <code>CGRAM</code> or <code>OBJSEL</code> writes in that bounded late window</li><li><code>tools/out/design_frame986/sprites/sprites_visible.json</code> reports <code>0</code> visible sprites, which matches the late-overlay-cleared reading for frame <code>986</code></li></ul>
+<p>The same proof path now also reaches <code>990</code> and <code>994</code>. If <code>994</code> times out while another Mesen job is running, extract the raw frame standalone first with <code>--frame-timeout-seconds 120</code> and then build the design pack:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+make -C tools mesen-design-pack MESEN_FRAME=990
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=120 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_990_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=991 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=986 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=990 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS=&#x27;objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122&#x27; \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame990 \
+  tools/out/visual_contract_frame990_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_990_live/td2_boot_probe.json
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+./tools/run_mesen_ppu_extract.sh \
+  --rom ./game.smc \
+  --frame 994 \
+  --frame-timeout-seconds 120 \
+  --out-dir ./tools/out/mesen_frame994
+
+python3 tools/build_mesen_design_pack.py \
+  tools/out/mesen_frame994 \
+  tools/out/design_frame994 \
+  --clean-out
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=120 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_994_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=995 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=990 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=994 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS=&#x27;objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122&#x27; \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame994 \
+  tools/out/visual_contract_frame994_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_994_live/td2_boot_probe.json</code></pre>
+<p>Current reading for those <code>990/994</code> proofs:</p>
+<ul><li>frame <code>990</code>:</li><li><code>tools/out/visual_contract_probe_990_live/td2_boot_probe.json</code> records <code>3762</code> write hits with <code>0</code> drops</li><li>the merged contract keeps exact <code>producerTrace.traceWindow = 986..990</code></li><li>producer domains:</li><li>OAM writes across frames <code>986..990</code></li><li>VRAM writes across frames <code>986/988/989/990</code></li><li><code>tools/out/design_frame990/sprites/sprites_visible.json</code> reports <code>5</code> visible sprites</li><li><code>tools/out/mesen_frame990/main_visible.ppm</code> is <code>1516</code> pixels from the local frame-<code>990</code> screenshot and <code>2</code> pixels from <code>tools/out/bank1_bootstrap_queue_990_bridgeobj.ppm</code></li><li>frame <code>994</code>:</li><li><code>tools/out/visual_contract_probe_994_live/td2_boot_probe.json</code> records <code>4020</code> write hits with <code>0</code> drops</li><li>the merged contract keeps exact <code>producerTrace.traceWindow = 990..994</code></li><li>producer domains:</li><li>OAM writes across frames <code>990..994</code></li><li>VRAM writes across frames <code>990..994</code></li><li><code>tools/out/design_frame994/sprites/sprites_visible.json</code> reports <code>19</code> visible sprites</li><li><code>tools/out/mesen_frame994/main_visible.ppm</code> is <code>2622</code> pixels from the local frame-<code>994</code> screenshot and <code>96</code> pixels from <code>tools/out/bank1_bootstrap_queue_994_bridgeobj.ppm</code></li><li>both windows stay on the same late callback family:</li><li>main callback <code>01:9FE5</code></li><li>IRQ callback <code>00:835F</code></li></ul>
+<p>The same ownership path now also reaches the start of the direct bridge-extracted block at <code>998</code>:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+make -C tools mesen-design-pack MESEN_FRAME=998
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=120 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_998_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=999 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=994 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=998 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS=&#x27;objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122&#x27; \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame998 \
+  tools/out/visual_contract_frame998_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_998_live/td2_boot_probe.json
+
+python3 tools/render_mesen_snes_bg.py \
+  tools/out/mesen_frame998/vram.bin \
+  tools/out/mesen_frame998/cgram.bin \
+  tools/out/mesen_frame998/ppu_state.json \
+  tools/out/mesen_frame998_mode7ppu.ppm \
+  --oam tools/out/mesen_frame998/oam.bin \
+  --obj-renderer mode7-ppu \
+  --json-out tools/out/mesen_frame998_mode7ppu.json</code></pre>
+<p>Current reading for that <code>998</code> proof:</p>
+<ul><li><code>tools/out/visual_contract_probe_998_live/td2_boot_probe.json</code> records <code>4020</code> write hits with <code>0</code> drops</li><li>the merged contract keeps exact <code>producerTrace.traceWindow = 994..998</code></li><li>producer domains:</li><li>OAM writes across frames <code>994..998</code></li><li>VRAM writes across frames <code>994..998</code></li><li><code>tools/out/design_frame998/sprites/sprites_visible.json</code> reports <code>32</code> visible sprites</li><li><code>tools/out/mesen_frame998/main_visible.ppm</code> is <code>3119</code> pixels from the local frame-<code>998</code> screenshot</li><li><code>tools/out/mesen_frame998_mode7ppu.ppm</code> is <code>4</code> pixels from <code>tools/out/mesen_frame998/main_visible.ppm</code></li><li>the callback family still does not change:</li><li>main callback <code>01:9FE5</code></li><li>IRQ callback <code>00:835F</code></li></ul>
+<p>The same ownership path now also closes the first direct bridge-extracted <code>998..1005</code> block at frame <code>1005</code>:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+make -C tools mesen-design-pack MESEN_FRAME=1005
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=150 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_1005_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=1006 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=998 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=1005 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS=&#x27;objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122&#x27; \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame1005 \
+  tools/out/visual_contract_frame1005_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_1005_live/td2_boot_probe.json
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=150 \
+TD2_BG_RANGE_START_FRAME=1005 \
+TD2_BG_RANGE_END_FRAME=1005 \
+TD2_BG_RANGE_STEP=1 \
+TD2_BG_RANGE_DUMP_SCREENSHOTS=1 \
+TD2_BG_RANGE_OUTPUT_PREFIX=tools/out/intro_loop \
+./validation/run_mesen_dump_bg_range.sh
+
+python3 tools/render_mesen_snes_bg.py \
+  tools/out/mesen_frame1005/vram.bin \
+  tools/out/mesen_frame1005/cgram.bin \
+  tools/out/mesen_frame1005/ppu_state.json \
+  tools/out/mesen_frame1005_mode7ppu.ppm \
+  --oam tools/out/mesen_frame1005/oam.bin \
+  --obj-renderer mode7-ppu \
+  --json-out tools/out/mesen_frame1005_mode7ppu.json</code></pre>
+<p>Current reading for that <code>1005</code> proof:</p>
+<ul><li><code>tools/out/visual_contract_probe_1005_live/td2_boot_probe.json</code> records <code>6432</code> write hits with <code>0</code> drops</li><li>the merged contract keeps exact <code>producerTrace.traceWindow = 998..1005</code></li><li>producer domains:</li><li>OAM writes across frames <code>998..1005</code></li><li>VRAM writes across frames <code>998..1005</code></li><li><code>tools/out/design_frame1005/sprites/sprites_visible.json</code> reports <code>53</code> visible sprites</li><li><code>tools/out/intro_loop_frame_01005_frame.png</code> is <code>4466</code> pixels from <code>tools/out/mesen_frame1005/main_visible.ppm</code></li><li><code>tools/out/mesen_frame1005_mode7ppu.ppm</code> is <code>4</code> pixels from <code>tools/out/mesen_frame1005/main_visible.ppm</code></li><li>the callback family still does not change:</li><li>main callback <code>01:9FE5</code></li><li>IRQ callback <code>00:835F</code></li></ul>
+<p>The same ownership path now also closes the next direct bridge-extracted <code>1006..1013</code> block at frame <code>1013</code>:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+make -C tools mesen-design-pack MESEN_FRAME=1013
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=150 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_1013_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=1014 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=1006 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=1013 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS=&#x27;objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122&#x27; \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame1013 \
+  tools/out/visual_contract_frame1013_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_1013_live/td2_boot_probe.json
+
+python3 tools/render_mesen_snes_bg.py \
+  tools/out/mesen_frame1013/vram.bin \
+  tools/out/mesen_frame1013/cgram.bin \
+  tools/out/mesen_frame1013/ppu_state.json \
+  tools/out/mesen_frame1013_mode7ppu.ppm \
+  --oam tools/out/mesen_frame1013/oam.bin \
+  --obj-renderer mode7-ppu \
+  --json-out tools/out/mesen_frame1013_mode7ppu.json</code></pre>
+<p>Current reading for that <code>1013</code> proof:</p>
+<ul><li><code>tools/out/visual_contract_probe_1013_live/td2_boot_probe.json</code> records <code>6174</code> write hits with <code>0</code> drops</li><li>the merged contract keeps exact <code>producerTrace.traceWindow = 1006..1013</code></li><li>producer domains:</li><li>OAM writes across frames <code>1006..1013</code></li><li>VRAM writes across frames <code>1006..1012</code></li><li><code>tools/out/design_frame1013/sprites/sprites_visible.json</code> reports <code>61</code> visible sprites</li><li><code>tools/out/intro_loop_frame_01013_frame.png</code> is <code>4638</code> pixels from <code>tools/out/mesen_frame1013/main_visible.ppm</code></li><li><code>tools/out/mesen_frame1013_mode7ppu.ppm</code> is <code>10</code> pixels from <code>tools/out/mesen_frame1013/main_visible.ppm</code></li><li>the callback family still does not change:</li><li>main callback <code>01:9FE5</code></li><li>IRQ callback <code>00:835F</code></li></ul>
+<p>The same ownership path now also closes the direct bridge-extracted <code>1014..1021</code> block at frame <code>1021</code>:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+make -C tools mesen-design-pack MESEN_FRAME=1021
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=150 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_1021_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=1022 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=1014 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=1021 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS=&#x27;objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122&#x27; \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame1021 \
+  tools/out/visual_contract_frame1021_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_1021_live/td2_boot_probe.json
+
+python3 tools/render_mesen_snes_bg.py \
+  tools/out/mesen_frame1021/vram.bin \
+  tools/out/mesen_frame1021/cgram.bin \
+  tools/out/mesen_frame1021/ppu_state.json \
+  tools/out/mesen_frame1021_mode7ppu.ppm \
+  --oam tools/out/mesen_frame1021/oam.bin \
+  --obj-renderer mode7-ppu \
+  --json-out tools/out/mesen_frame1021_mode7ppu.json</code></pre>
+<p>Current reading for that <code>1021</code> proof:</p>
+<ul><li><code>tools/out/visual_contract_probe_1021_live/td2_boot_probe.json</code> records <code>5400</code> write hits with <code>0</code> drops</li><li>the merged contract keeps exact <code>producerTrace.traceWindow = 1014..1021</code></li><li>producer domains:</li><li>OAM writes across frames <code>1014..1021</code></li><li>VRAM writes at frames <code>1014/1015/1017/1019</code></li><li><code>tools/out/design_frame1021/sprites/sprites_visible.json</code> reports <code>61</code> visible sprites</li><li><code>tools/out/intro_loop_frame_01021_frame.png</code> is <code>3557</code> pixels from <code>tools/out/mesen_frame1021/main_visible.ppm</code></li><li><code>tools/out/mesen_frame1021_mode7ppu.ppm</code> is <code>10</code> pixels from <code>tools/out/mesen_frame1021/main_visible.ppm</code></li><li>the callback family still does not change:</li><li>main callback <code>01:9FE5</code></li><li>IRQ callback <code>00:835F</code></li></ul>
+<p>The same ownership path now also closes the direct bridge-extracted <code>1022..1029</code> block at frame <code>1029</code>:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+make -C tools mesen-design-pack MESEN_FRAME=1029
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=150 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_1029_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=1030 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=1022 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=1029 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS=&#x27;objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122&#x27; \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame1029 \
+  tools/out/visual_contract_frame1029_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_1029_live/td2_boot_probe.json
+
+python3 tools/render_mesen_snes_bg.py \
+  tools/out/mesen_frame1029/vram.bin \
+  tools/out/mesen_frame1029/cgram.bin \
+  tools/out/mesen_frame1029/ppu_state.json \
+  tools/out/mesen_frame1029_mode7ppu.ppm \
+  --oam tools/out/mesen_frame1029/oam.bin \
+  --obj-renderer mode7-ppu \
+  --json-out tools/out/mesen_frame1029_mode7ppu.json</code></pre>
+<p>Current reading for that <code>1029</code> proof:</p>
+<ul><li><code>tools/out/visual_contract_probe_1029_live/td2_boot_probe.json</code> records <code>3822</code> write hits with <code>0</code> drops</li><li>the merged contract keeps exact <code>producerTrace.traceWindow = 1022..1029</code></li><li>producer domains:</li><li>OAM writes across <code>1022/1023/1024/1025/1027/1028/1029</code></li><li>no bounded <code>VRAM</code>, <code>CGRAM</code>, or <code>OBJSEL</code> writes were observed</li><li><code>tools/out/design_frame1029/sprites/sprites_visible.json</code> reports <code>61</code> visible sprites</li><li><code>tools/out/intro_loop_frame_01029_frame.png</code> is <code>1</code> pixel from <code>tools/out/mesen_frame1029/main_visible.ppm</code></li><li><code>tools/out/mesen_frame1029_mode7ppu.ppm</code> is <code>11</code> pixels from <code>tools/out/mesen_frame1029/main_visible.ppm</code></li><li>the callback family still does not change:</li><li>main callback <code>01:9FE5</code></li><li>IRQ callback <code>00:835F</code></li></ul>
+<p>The same ownership path now also closes the direct bridge-extracted <code>1030..1037</code> block at frame <code>1037</code>:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+make -C tools mesen-design-pack MESEN_FRAME=1037
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=150 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_1037_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=1038 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=1030 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=1037 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS=&#x27;objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122&#x27; \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame1037 \
+  tools/out/visual_contract_frame1037_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_1037_live/td2_boot_probe.json
+
+python3 tools/render_mesen_snes_bg.py \
+  tools/out/mesen_frame1037/vram.bin \
+  tools/out/mesen_frame1037/cgram.bin \
+  tools/out/mesen_frame1037/ppu_state.json \
+  tools/out/mesen_frame1037_mode7ppu.ppm \
+  --oam tools/out/mesen_frame1037/oam.bin \
+  --obj-renderer mode7-ppu \
+  --json-out tools/out/mesen_frame1037_mode7ppu.json</code></pre>
+<p>Current reading for that <code>1037</code> proof:</p>
+<ul><li><code>tools/out/visual_contract_probe_1037_live/td2_boot_probe.json</code> records <code>4948</code> write hits with <code>0</code> drops</li><li>the merged contract keeps exact <code>producerTrace.traceWindow = 1030..1037</code></li><li>producer domains:</li><li>OAM writes across <code>1030..1037</code></li><li>VRAM writes at <code>1030</code> and <code>1034</code></li><li><code>tools/out/design_frame1037/sprites/sprites_visible.json</code> reports <code>61</code> visible sprites</li><li><code>tools/out/intro_loop_frame_01037_frame.png</code> is <code>29</code> pixels from <code>tools/out/mesen_frame1037/main_visible.ppm</code></li><li><code>tools/out/mesen_frame1037_mode7ppu.ppm</code> is <code>8</code> pixels from <code>tools/out/mesen_frame1037/main_visible.ppm</code></li><li>the callback family still does not change:</li><li>main callback <code>01:9FE5</code></li><li>IRQ callback <code>00:835F</code></li></ul>
+<p>The same ownership path now also closes the direct bridge-extracted <code>1038..1045</code> block at frame <code>1045</code>:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+make -C tools mesen-design-pack MESEN_FRAME=1045
+
+# Do not run this probe and the screenshot dumper in parallel against the same
+# isolated config; that bounded attempt ended with exit 255 locally.
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=150 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_1045_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=1046 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=1038 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=1045 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS=&#x27;objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122&#x27; \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame1045 \
+  tools/out/visual_contract_frame1045_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_1045_live/td2_boot_probe.json
+
+python3 tools/render_mesen_snes_bg.py \
+  tools/out/mesen_frame1045/vram.bin \
+  tools/out/mesen_frame1045/cgram.bin \
+  tools/out/mesen_frame1045/ppu_state.json \
+  tools/out/mesen_frame1045_mode7ppu.ppm \
+  --oam tools/out/mesen_frame1045/oam.bin \
+  --obj-renderer mode7-ppu \
+  --json-out tools/out/mesen_frame1045_mode7ppu.json</code></pre>
+<p>Current reading for that <code>1045</code> proof:</p>
+<ul><li><code>tools/out/visual_contract_probe_1045_live/td2_boot_probe.json</code> records <code>4948</code> write hits with <code>0</code> drops</li><li>the merged contract keeps exact <code>producerTrace.traceWindow = 1038..1045</code></li><li>producer domains:</li><li>OAM writes across <code>1038..1045</code></li><li>VRAM writes at <code>1038</code> and <code>1042</code></li><li><code>tools/out/design_frame1045/sprites/sprites_visible.json</code> reports <code>61</code> visible sprites</li><li><code>tools/out/intro_loop_frame_01045_frame.png</code> is <code>34</code> pixels from <code>tools/out/mesen_frame1045/main_visible.ppm</code></li><li><code>tools/out/mesen_frame1045_mode7ppu.ppm</code> is <code>15</code> pixels from <code>tools/out/mesen_frame1045/main_visible.ppm</code></li><li>the callback family still does not change:</li><li>main callback <code>01:9FE5</code></li><li>IRQ callback <code>00:835F</code></li></ul>
+<p>The same ownership path now also closes the direct bridge-extracted <code>1046..1053</code> block at frame <code>1053</code>:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+make -C tools mesen-design-pack MESEN_FRAME=1053
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=150 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_1053_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=1054 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=1046 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=1053 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS=&#x27;objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122&#x27; \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame1053 \
+  tools/out/visual_contract_frame1053_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_1053_live/td2_boot_probe.json
+
+python3 tools/render_mesen_snes_bg.py \
+  tools/out/mesen_frame1053/vram.bin \
+  tools/out/mesen_frame1053/cgram.bin \
+  tools/out/mesen_frame1053/ppu_state.json \
+  tools/out/mesen_frame1053_mode7ppu.ppm \
+  --oam tools/out/mesen_frame1053/oam.bin \
+  --obj-renderer mode7-ppu \
+  --json-out tools/out/mesen_frame1053_mode7ppu.json</code></pre>
+<p>Current reading for that <code>1053</code> proof:</p>
+<ul><li><code>tools/out/visual_contract_probe_1053_live/td2_boot_probe.json</code> records <code>4948</code> write hits with <code>0</code> drops</li><li>the merged contract keeps exact <code>producerTrace.traceWindow = 1046..1053</code></li><li>producer domains:</li><li>OAM writes across <code>1046..1053</code></li><li>VRAM writes at <code>1046</code> and <code>1050</code></li><li><code>tools/out/design_frame1053/sprites/sprites_visible.json</code> reports <code>61</code> visible sprites</li><li><code>tools/out/intro_loop_frame_01053_frame.png</code> is <code>31</code> pixels from <code>tools/out/mesen_frame1053/main_visible.ppm</code></li><li><code>tools/out/mesen_frame1053_mode7ppu.ppm</code> is <code>14</code> pixels from <code>tools/out/mesen_frame1053/main_visible.ppm</code></li><li>the callback family still does not change:</li><li>main callback <code>01:9FE5</code></li><li>IRQ callback <code>00:835F</code></li></ul>
+<p>The same ownership path now also closes the direct bridge-extracted <code>1054..1061</code> block at frame <code>1061</code>:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+make -C tools mesen-design-pack MESEN_FRAME=1061
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=150 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_1061_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=1062 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=1054 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=1061 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS=&#x27;objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122&#x27; \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame1061 \
+  tools/out/visual_contract_frame1061_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_1061_live/td2_boot_probe.json
+
+python3 tools/render_mesen_snes_bg.py \
+  tools/out/mesen_frame1061/vram.bin \
+  tools/out/mesen_frame1061/cgram.bin \
+  tools/out/mesen_frame1061/ppu_state.json \
+  tools/out/mesen_frame1061_mode7ppu.ppm \
+  --oam tools/out/mesen_frame1061/oam.bin \
+  --obj-renderer mode7-ppu \
+  --json-out tools/out/mesen_frame1061_mode7ppu.json</code></pre>
+<p>Current reading for that <code>1061</code> proof:</p>
+<ul><li><code>tools/out/visual_contract_probe_1061_live/td2_boot_probe.json</code> records <code>4948</code> write hits with <code>0</code> drops</li><li>the merged contract keeps exact <code>producerTrace.traceWindow = 1054..1061</code></li><li>producer domains:</li><li>OAM writes across <code>1054..1061</code></li><li>VRAM writes at <code>1054</code> and <code>1058</code></li><li><code>tools/out/design_frame1061/sprites/sprites_visible.json</code> reports <code>61</code> visible sprites</li><li><code>tools/out/intro_loop_frame_01061_frame.png</code> is <code>36</code> pixels from <code>tools/out/mesen_frame1061/main_visible.ppm</code></li><li><code>tools/out/mesen_frame1061_mode7ppu.ppm</code> is <code>22</code> pixels from <code>tools/out/mesen_frame1061/main_visible.ppm</code></li><li>the callback family still does not change:</li><li>main callback <code>01:9FE5</code></li><li>IRQ callback <code>00:835F</code></li></ul>
+<p>The same ownership path now also closes the direct bridge-extracted <code>1062..1069</code> block at frame <code>1069</code>:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+make -C tools mesen-design-pack MESEN_FRAME=1069
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=150 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_1069_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=1070 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=1062 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=1069 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS=&#x27;objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122&#x27; \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame1069 \
+  tools/out/visual_contract_frame1069_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_1069_live/td2_boot_probe.json
+
+python3 tools/render_mesen_snes_bg.py \
+  tools/out/mesen_frame1069/vram.bin \
+  tools/out/mesen_frame1069/cgram.bin \
+  tools/out/mesen_frame1069/ppu_state.json \
+  tools/out/mesen_frame1069_mode7ppu.ppm \
+  --oam tools/out/mesen_frame1069/oam.bin \
+  --obj-renderer mode7-ppu \
+  --json-out tools/out/mesen_frame1069_mode7ppu.json</code></pre>
+<p>Current reading for that <code>1069</code> proof:</p>
+<ul><li><code>tools/out/visual_contract_probe_1069_live/td2_boot_probe.json</code> records <code>4948</code> write hits with <code>0</code> drops</li><li>the merged contract keeps exact <code>producerTrace.traceWindow = 1062..1069</code></li><li>producer domains:</li><li>OAM writes across <code>1062..1069</code></li><li>VRAM writes at <code>1062</code> and <code>1066</code></li><li><code>tools/out/design_frame1069/sprites/sprites_visible.json</code> reports <code>61</code> visible sprites</li><li><code>tools/out/intro_loop_frame_01069_frame.png</code> is <code>48</code> pixels from <code>tools/out/mesen_frame1069/main_visible.ppm</code></li><li><code>tools/out/mesen_frame1069_mode7ppu.ppm</code> is <code>25</code> pixels from <code>tools/out/mesen_frame1069/main_visible.ppm</code></li><li>the callback family still does not change:</li><li>main callback <code>01:9FE5</code></li><li>IRQ callback <code>00:835F</code></li></ul>
+<p>The same ownership path now also closes the direct bridge-extracted <code>1070..1077</code> block at frame <code>1077</code>:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+make -C tools mesen-design-pack MESEN_FRAME=1077
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=150 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_1077_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=1078 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=1070 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=1077 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS=&#x27;objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122&#x27; \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame1077 \
+  tools/out/visual_contract_frame1077_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_1077_live/td2_boot_probe.json
+
+python3 tools/render_mesen_snes_bg.py \
+  tools/out/mesen_frame1077/vram.bin \
+  tools/out/mesen_frame1077/cgram.bin \
+  tools/out/mesen_frame1077/ppu_state.json \
+  tools/out/mesen_frame1077_mode7ppu.ppm \
+  --oam tools/out/mesen_frame1077/oam.bin \
+  --obj-renderer mode7-ppu \
+  --json-out tools/out/mesen_frame1077_mode7ppu.json</code></pre>
+<p>Current reading for that <code>1077</code> proof:</p>
+<ul><li><code>tools/out/visual_contract_probe_1077_live/td2_boot_probe.json</code> records <code>4948</code> write hits with <code>0</code> drops</li><li>the merged contract keeps exact <code>producerTrace.traceWindow = 1070..1077</code></li><li>producer domains:</li><li>OAM writes across <code>1070..1077</code></li><li>VRAM writes at <code>1070</code> and <code>1074</code></li><li><code>tools/out/design_frame1077/sprites/sprites_visible.json</code> reports <code>61</code> visible sprites</li><li><code>tools/out/intro_loop_frame_01077_frame.png</code> is <code>36</code> pixels from <code>tools/out/mesen_frame1077/main_visible.ppm</code></li><li><code>tools/out/mesen_frame1077_mode7ppu.ppm</code> is <code>52</code> pixels from <code>tools/out/mesen_frame1077/main_visible.ppm</code></li><li>the callback family still does not change:</li><li>main callback <code>01:9FE5</code></li><li>IRQ callback <code>00:835F</code></li></ul>
+<p>The same ownership path now also closes the direct bridge-extracted <code>1078..1085</code> block at frame <code>1085</code>:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+make -C tools mesen-design-pack MESEN_FRAME=1085
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=150 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_1085_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=1086 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=1078 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=1085 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS=&#x27;objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122&#x27; \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame1085 \
+  tools/out/visual_contract_frame1085_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_1085_live/td2_boot_probe.json
+
+python3 tools/render_mesen_snes_bg.py \
+  tools/out/mesen_frame1085/vram.bin \
+  tools/out/mesen_frame1085/cgram.bin \
+  tools/out/mesen_frame1085/ppu_state.json \
+  tools/out/mesen_frame1085_mode7ppu.ppm \
+  --oam tools/out/mesen_frame1085/oam.bin \
+  --obj-renderer mode7-ppu \
+  --json-out tools/out/mesen_frame1085_mode7ppu.json</code></pre>
+<p>Current reading for that <code>1085</code> proof:</p>
+<ul><li><code>tools/out/visual_contract_probe_1085_live/td2_boot_probe.json</code> records <code>4368</code> write hits with <code>0</code> drops</li><li>the merged contract keeps exact <code>producerTrace.traceWindow = 1078..1085</code></li><li>producer domains:</li><li>OAM writes across <code>1078..1085</code></li><li>no sampled VRAM writes fired in that bounded window</li><li><code>tools/out/design_frame1085/sprites/sprites_visible.json</code> reports <code>61</code> visible sprites</li><li><code>tools/out/intro_loop_frame_01085_frame.png</code> is <code>74</code> pixels from <code>tools/out/mesen_frame1085/main_visible.ppm</code></li><li><code>tools/out/mesen_frame1085_mode7ppu.ppm</code> is <code>69</code> pixels from <code>tools/out/mesen_frame1085/main_visible.ppm</code></li><li>the callback family still does not change:</li><li>main callback <code>01:9FE5</code></li><li>IRQ callback <code>00:835F</code></li></ul>
+<p>The same ownership path now also closes the direct bridge-extracted <code>1086..1093</code> block at frame <code>1093</code>:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+make -C tools mesen-design-pack MESEN_FRAME=1093
+
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=150 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/visual_contract_probe_1093_live/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=1094 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=1086 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=1093 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS=&#x27;objsel=00:2101,oamaddl=00:2102,oamaddh=00:2103,oamdata=00:2104,vmaddl=00:2116,vmaddh=00:2117,vmdatal=00:2118,vmdatah=00:2119,cgadd=00:2121,cgdata=00:2122&#x27; \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=8192 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_frame1093 \
+  tools/out/visual_contract_frame1093_live_probe.json \
+  --probe-json tools/out/visual_contract_probe_1093_live/td2_boot_probe.json
+
+python3 tools/render_mesen_snes_bg.py \
+  tools/out/mesen_frame1093/vram.bin \
+  tools/out/mesen_frame1093/cgram.bin \
+  tools/out/mesen_frame1093/ppu_state.json \
+  tools/out/mesen_frame1093_mode7ppu.ppm \
+  --oam tools/out/mesen_frame1093/oam.bin \
+  --obj-renderer mode7-ppu \
+  --json-out tools/out/mesen_frame1093_mode7ppu.json</code></pre>
+<p>Current reading for that <code>1093</code> proof:</p>
+<ul><li><code>tools/out/visual_contract_probe_1093_live/td2_boot_probe.json</code> records <code>4368</code> write hits with <code>0</code> drops</li><li>the merged contract keeps exact <code>producerTrace.traceWindow = 1086..1093</code></li><li>producer domains:</li><li>OAM writes across <code>1086..1093</code></li><li>no sampled VRAM writes fired in that bounded window</li><li><code>tools/out/design_frame1093/sprites/sprites_visible.json</code> reports <code>61</code> visible sprites</li><li><code>tools/out/intro_loop_frame_01093_frame.png</code> is <code>207</code> pixels from <code>tools/out/mesen_frame1093/main_visible.ppm</code></li><li><code>tools/out/mesen_frame1093_mode7ppu.ppm</code> is <code>129</code> pixels from <code>tools/out/mesen_frame1093/main_visible.ppm</code></li><li>the callback family still does not change:</li><li>main callback <code>01:9FE5</code></li><li>IRQ callback <code>00:835F</code></li></ul>
+<p>To dump a whole intro range in one emulator run:</p>
+<pre><code class="language-sh">MESEN_TIMEOUT_SECONDS=75 \
+TD2_BG_RANGE_START_FRAME=654 \
+TD2_BG_RANGE_END_FRAME=2070 \
+TD2_BG_RANGE_STEP=4 \
+TD2_BG_RANGE_DUMP_SCREENSHOTS=1 \
+TD2_BG_RANGE_OUTPUT_PREFIX=tools/out/intro_loop \
+./validation/run_mesen_dump_bg_range.sh</code></pre>
+<p>The same dumper can now replay a simple fixed input window while it captures a seeded gameplay range:</p>
+<pre><code class="language-sh">MESEN_TIMEOUT_SECONDS=60 \
+TD2_BG_RANGE_START_FRAME=86 \
+TD2_BG_RANGE_END_FRAME=93 \
+TD2_BG_RANGE_STEP=1 \
+TD2_BG_RANGE_DUMP_OAM=1 \
+TD2_BG_RANGE_DUMP_SCREENSHOTS=1 \
+TD2_BG_RANGE_INPUT_START_FRAME=60 \
+TD2_BG_RANGE_INPUT_END_FRAME=359 \
+TD2_BG_RANGE_INPUT=b \
+TD2_BG_RANGE_OUTPUT_PREFIX=tools/out/track1_seed_0086_0093 \
+./validation/run_mesen_dump_bg_range.sh ./game.smc ./.mesen-config/Mesen2/SaveStates/game_11.mss</code></pre>
+<p>For multi-stage seeded gameplay schedules, <code>mesen_dump_bg_range.lua</code> also accepts <code>TD2_BG_RANGE_INPUT_WINDOWS</code> in the same <code>start-end:buttons</code> or <code>frame:buttons</code> format:</p>
+<pre><code class="language-sh">MESEN_TIMEOUT_SECONDS=60 \
+TD2_BG_RANGE_START_FRAME=61 \
+TD2_BG_RANGE_END_FRAME=68 \
+TD2_BG_RANGE_STEP=1 \
+TD2_BG_RANGE_DUMP_OAM=1 \
+TD2_BG_RANGE_INPUT_WINDOWS=&#x27;60:start;61-359:a&#x27; \
+TD2_BG_RANGE_OUTPUT_PREFIX=tools/out/track1_start_then_a_0061_0068_v1 \
+./validation/run_mesen_dump_bg_range.sh ./game.smc ./.mesen-config/Mesen2/SaveStates/game_11.mss</code></pre>
+<p>That produces flat files like:</p>
+<ul><li><code>tools/out/intro_loop_frame_00654_vram.bin</code></li><li><code>tools/out/intro_loop_frame_00654_cgram.bin</code></li><li><code>tools/out/intro_loop_frame_00654_ppu_state.json</code></li><li><code>tools/out/intro_loop_frame_00654_frame.png</code></li><li><code>tools/out/intro_loop.json</code></li></ul>
+<p>The boot probe writes a JSON timeline and a final screenshot under the script data folder, using the prefix <code>td2_boot_probe</code>. Set <code>TD2_BOOT_PROBE_OUTPUT_PREFIX</code> to move that output into a repo-owned or per-run location instead of the shared <code>LuaScriptData</code> directory. You can also drive it with simple scripted input via environment variables, for example:</p>
+<pre><code class="language-sh">TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/bootprobe_run/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=3600 \
+TD2_BOOT_PROBE_INPUT_START_FRAME=240 \
+TD2_BOOT_PROBE_INPUT=start,b \
+./validation/run_mesen_probe_boot.sh</code></pre>
+<p>To limit that legacy pattern to a frame window, set <code>TD2_BOOT_PROBE_INPUT_END_FRAME</code>:</p>
+<pre><code class="language-sh">TD2_BOOT_PROBE_TOTAL_FRAMES=1800 \
+TD2_BOOT_PROBE_INPUT_START_FRAME=240 \
+TD2_BOOT_PROBE_INPUT_END_FRAME=359 \
+TD2_BOOT_PROBE_INPUT=start,b \
+./validation/run_mesen_probe_boot.sh</code></pre>
+<p>For richer deterministic sequences, use <code>TD2_BOOT_PROBE_INPUT_WINDOWS</code> with semicolon-separated windows in <code>start-end:buttons</code> or <code>frame:buttons</code> form:</p>
+<pre><code class="language-sh">TD2_BOOT_PROBE_TOTAL_FRAMES=1800 \
+TD2_BOOT_PROBE_INPUT_WINDOWS=&quot;240:start;241-360:b;654:start&quot; \
+./validation/run_mesen_probe_boot.sh</code></pre>
+<p>To capture the deterministic power-on copyright/credits scene around the <code>5</code> second mark:</p>
+<pre><code class="language-sh">TD2_BOOT_PROBE_TOTAL_FRAMES=301 \
+TD2_BOOT_PROBE_SCREENSHOT_FRAME=300 \
+./validation/run_mesen_probe_boot.sh</code></pre>
+<p>To also dump the raw PPU memory and filtered <code>emu.getState()</code> snapshot for that same scene:</p>
+<pre><code class="language-sh">TD2_BOOT_PROBE_TOTAL_FRAMES=301 \
+TD2_BOOT_PROBE_SCREENSHOT_FRAME=300 \
+TD2_BOOT_PROBE_DUMP_PPU_MEMORY=1 \
+./validation/run_mesen_probe_boot.sh</code></pre>
+<p>That writes:</p>
+<ul><li><code>tools/out/bootprobe_run/td2_boot_probe.json</code> when <code>TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/bootprobe_run/td2_boot_probe</code></li><li><code>tools/out/bootprobe_run/td2_boot_probe_frame.png</code></li><li><code>tools/out/bootprobe_run/td2_boot_probe_vram.bin</code></li><li><code>tools/out/bootprobe_run/td2_boot_probe_cgram.bin</code></li><li><code>tools/out/bootprobe_run/td2_boot_probe_oam.bin</code></li><li><code>tools/out/bootprobe_run/td2_boot_probe_ppu_state.json</code></li></ul>
+<p>If <code>TD2_BOOT_PROBE_OUTPUT_PREFIX</code> is unset, the legacy fallback still writes to <code>.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe.*</code>.</p>
+<p>To trace chunk-dispatch usage at <code>00:9210</code> (<code>L001210</code>) with entry-time <code>$0C/$0E/$10</code>:</p>
+<pre><code class="language-sh">TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=3600 \
+TD2_BOOT_PROBE_TRACE_L001210=1 \
+./validation/run_mesen_probe_boot.sh
+
+python3 tools/summarize_l001210_trace.py \
+  tools/out/td2_boot_probe_l001210_exec.json \
+  --json-out tools/out/td2_boot_probe_l001210_summary.json
+
+python3 tools/run_l001210_probe_matrix.py \
+  --out-dir tools/out/l001210_probe_matrix \
+  --total-frames 2200 \
+  --timeout-seconds 90</code></pre>
+<p>To recover the later direct-hit cluster on the restored timed-input scenario:</p>
+<pre><code class="language-sh">TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=7065 \
+TD2_BOOT_PROBE_TRACE_L001210=1 \
+TD2_BOOT_PROBE_L001210_MAX_HITS=256 \
+TD2_BOOT_PROBE_INPUT_WINDOWS=&#x27;6800:start;6900-6920:start,a&#x27; \
+MESEN_TIMEOUT_SECONDS=180 \
+./validation/run_mesen_probe_boot.sh ./game.smc
+
+python3 tools/summarize_l001210_trace.py \
+  tools/out/td2_boot_probe_l001210_exec.json \
+  --json-out tools/out/l001210_probe_7051_inputfix_summary.json</code></pre>
+<p>This is the current headless proof lane for the later direct-hit cluster:</p>
+<ul><li>frame <code>7051</code> -&gt; <code>0D:C4DC</code></li><li>frame <code>7059</code> -&gt; <code>07:BF49</code></li><li>frame <code>7064</code> -&gt; <code>07:C112</code></li></ul>
+<p>The bridge extractor now also reopens the planned interior carry check on the same timed-input scenario:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/path/to/mesen/release \
+./tools/run_mesen_ppu_extract.sh --rom game.smc --frame 7055 \
+  --out-dir tools/out/mesen_range_7055_7061_inputfix_v2/frame_07055 \
+  --frame-timeout-seconds 180 \
+  --input-windows &#x27;6800:start;6900-6920:start,a&#x27;
+
+MESEN_RELEASE_DIR=/path/to/mesen/release \
+./tools/run_mesen_ppu_extract.sh --rom game.smc --frame 7061 \
+  --out-dir tools/out/mesen_range_7055_7061_inputfix_v2/frame_07061 \
+  --frame-timeout-seconds 180 \
+  --input-windows &#x27;6800:start;6900-6920:start,a&#x27;</code></pre>
+<ul><li><code>7055</code> shares the same BG tilemaps and <code>vram.bin</code> as <code>7051</code>, but it does not share the same sprite/OAM composition (<code>10</code> visible sprites -&gt; <code>0</code>)</li><li><code>7061</code> shares the same BG tilemaps as <code>7059</code>, and its visible sprite set remains empty at both frames</li></ul>
+<p>To save a deterministic savestate snapshot at a specific probe frame:</p>
+<pre><code class="language-sh">TD2_BOOT_PROBE_TOTAL_FRAMES=1120 \
+TD2_BOOT_PROBE_SAVE_SAVESTATE_FRAME=1093 \
+TD2_BOOT_PROBE_SAVE_SAVESTATE=tools/out/l001210_state_1093.bin \
+./validation/run_mesen_probe_boot.sh ./game.smc</code></pre>
+<p>Then use that state as a matrix start point:</p>
+<pre><code class="language-sh">python3 tools/run_l001210_probe_matrix.py \
+  --out-dir tools/out/l001210_probe_matrix_from_1093 \
+  --total-frames 2000 \
+  --timeout-seconds 120 \
+  --savestate tools/out/l001210_state_1093.bin</code></pre>
+<p>Current environment note:</p>
+<ul><li>the headless <code>--testRunner</code> build can load a savestate when provided, but probe-side save attempts currently report:</li><li><code>saved_savestate_error = &quot;no supported savestate API found on emu table&quot;</code></li><li>so the save-from-probe flow is documented but currently blocked until that API surface is available.</li></ul>
+<p>To force selector values for targeted branch testing windows:</p>
+<pre><code class="language-sh">TD2_BOOT_PROBE_TOTAL_FRAMES=4000 \
+TD2_BOOT_PROBE_TRACE_L001210=1 \
+TD2_BOOT_PROBE_FORCE_SELECTORS_START_FRAME=0 \
+TD2_BOOT_PROBE_FORCE_SELECTORS_END_FRAME=3999 \
+TD2_BOOT_PROBE_FORCE_1C78=1 \
+TD2_BOOT_PROBE_FORCE_1C80=0 \
+TD2_BOOT_PROBE_FORCE_1CA8=2 \
+TD2_BOOT_PROBE_FORCE_1C86=1 \
+TD2_BOOT_PROBE_FORCE_1D10=16640 \
+TD2_BOOT_PROBE_FORCE_SELECTORS_ON_B1F9=1 \
+./validation/run_mesen_probe_boot.sh ./game.smc</code></pre>
+<p><code>TD2_BOOT_PROBE_FORCE_SELECTORS_ON_B1F9=1</code> re-applies the same forced values at the <code>01:B1F9</code> exec point so the dynamic-index branch sees the requested values. <code>TD2_BOOT_PROBE_FORCE_1C86</code> and <code>TD2_BOOT_PROBE_FORCE_1D10</code> are useful for testing the <code>01:9568/01:95AD -&gt; 01:B1F9</code> branch gates.</p>
+<p>To force the active main callback pointer for a frame window:</p>
+<pre><code class="language-sh">TD2_BOOT_PROBE_TOTAL_FRAMES=3200 \
+TD2_BOOT_PROBE_TRACE_L001210=1 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_START_FRAME=1200 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_END_FRAME=2399 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_ADDR=38248 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_BANK=1 \
+./validation/run_mesen_probe_boot.sh ./game.smc</code></pre>
+<p><code>38248</code> is <code>0x9568</code> in decimal. Use <code>38317</code> (<code>0x95AD</code>) to target the sibling callback branch.</p>
+<p>To trace exact exec points in a targeted branch experiment:</p>
+<pre><code class="language-sh">TD2_BOOT_PROBE_TOTAL_FRAMES=2200 \
+TD2_BOOT_PROBE_TRACE_L001210=1 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_START_FRAME=1200 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_END_FRAME=1800 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_ADDR=38248 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_BANK=1 \
+TD2_BOOT_PROBE_FORCE_SELECTORS_START_FRAME=1200 \
+TD2_BOOT_PROBE_FORCE_SELECTORS_END_FRAME=1800 \
+TD2_BOOT_PROBE_FORCE_1C86=1 \
+TD2_BOOT_PROBE_FORCE_1C78=1 \
+TD2_BOOT_PROBE_FORCE_1C80=0 \
+TD2_BOOT_PROBE_FORCE_1CA8=2 \
+TD2_BOOT_PROBE_FORCE_1D10=16640 \
+TD2_BOOT_PROBE_TRACE_EXEC_POINTS=&#x27;b1f9=01:B1F9,after_050f=01:B202,after_083f=01:B206,b226=01:B226,b256=01:B256,b273=01:B273,b59b=01:B59B,050f=00:050F,083f=00:083F&#x27; \
+TD2_BOOT_PROBE_EXEC_POINT_MAX_HITS=32 \
+./validation/run_mesen_probe_boot.sh ./game.smc</code></pre>
+<p><code>TD2_BOOT_PROBE_TRACE_EXEC_POINTS</code> accepts a comma- or semicolon-separated list of <code>label=BB:AAAA</code> or bare <code>BB:AAAA</code> SNES addresses. Matching exec hits are captured into <code>td2_boot_probe.json</code> under <code>exec_point_trace</code>, and the capture window is bounded by <code>TD2_BOOT_PROBE_TRACE_START_FRAME</code> / <code>TD2_BOOT_PROBE_TRACE_END_FRAME</code>. Use <code>TD2_BOOT_PROBE_EXEC_POINT_MAX_HITS_PER_POINT</code> to cap repeated loop hits per watched address when you only need the first <code>N</code> sightings of each point.</p>
+<p>To trace exact write points in the same forced branch window:</p>
+<pre><code class="language-sh">TD2_BOOT_PROBE_TOTAL_FRAMES=2200 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=1200 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=1202 \
+TD2_BOOT_PROBE_TRACE_L001210=1 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_START_FRAME=1200 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_END_FRAME=1800 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_ADDR=38248 \
+TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_BANK=1 \
+TD2_BOOT_PROBE_FORCE_SELECTORS_START_FRAME=1200 \
+TD2_BOOT_PROBE_FORCE_SELECTORS_END_FRAME=1800 \
+TD2_BOOT_PROBE_FORCE_1C86=1 \
+TD2_BOOT_PROBE_FORCE_1C78=1 \
+TD2_BOOT_PROBE_FORCE_1C80=0 \
+TD2_BOOT_PROBE_FORCE_1CA8=2 \
+TD2_BOOT_PROBE_FORCE_1D10=16640 \
+TD2_BOOT_PROBE_TRACE_WRITE_POINTS=&#x27;hdmaen=00:420C,mosaic=00:2106,bgmode=00:2105,bg1sc=00:2107,bg2sc=00:2108,bg3sc=00:2109,bg12nba=00:210B,objsel=00:2101,tmain=00:212C,cgadsub=00:2131,cgwsel=00:2130,tmw=00:212E,setini=00:2133,tsub=00:212D,tsw=00:212F,w12sel=00:2123,w34sel=00:2124,wobjsel=00:2125,mem0966=7E:0966,mem0968=7E:0968,mem0974=7E:0974,mem0f42=00:0F42&#x27; \
+TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS=128 \
+./validation/run_mesen_probe_boot.sh ./game.smc</code></pre>
+<p><code>TD2_BOOT_PROBE_TRACE_WRITE_POINTS</code> uses the same address syntax as <code>TD2_BOOT_PROBE_TRACE_EXEC_POINTS</code> and records matching writes in <code>td2_boot_probe.json</code> under <code>write_point_trace</code>.</p>
+<p>When that trace is enabled, the probe also writes:</p>
+<ul><li><code>.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json</code></li></ul>
+<p>Recent payload additions in each <code>hits[]</code> entry:</p>
+<ul><li>selector snapshot fields: <code>selector_1c78</code>, <code>selector_1c80</code>, <code>selector_1ca8</code>, <code>selector_1c86</code>, <code>selector_1cac</code>, <code>selector_1cae</code></li><li>additional state field: <code>state_1d10</code></li><li>caller site tagging: <code>caller_id</code>, <code>caller_pc_snes</code>, <code>caller_pc_linear</code></li><li>caller CPU regs: <code>caller_reg_a/x/y/pc/sp/ps/d/dbr/k</code></li><li>derived helper-table provenance for <code>01:A9BD</code>/<code>01:A9E1</code>:</li><li><code>caller_l00a9_table</code></li><li><code>caller_l00a9_table_index</code></li><li><code>caller_l00a9_source_snes</code></li><li><code>caller_l00a9_source_linear</code></li><li><code>caller_l00a9_source_matches</code></li></ul>
+<p>Recent top-level additions in <code>td2_boot_probe.json</code>:</p>
+<ul><li>callback forcing config echo:</li><li><code>force_main_callback_start_frame</code></li><li><code>force_main_callback_end_frame</code></li><li><code>force_main_callback_addr</code></li><li><code>force_main_callback_bank</code></li><li><code>B1F9</code> execution counters:</li><li><code>b1f9_exec_count</code></li><li><code>b1f9_exec_frames</code></li><li><code>b1f9_stage_counts</code> (<code>b226</code>, <code>b256</code>, <code>b273</code>, <code>b59b</code>)</li><li><code>b1f9_stage_frames</code></li><li>exec-point trace bundle:</li><li><code>trace_exec_points</code></li><li><code>exec_point_max_hits</code></li><li><code>exec_point_max_hits_per_point</code></li><li><code>exec_point_trace.hit_count</code></li><li><code>exec_point_trace.dropped_hits</code></li><li><code>exec_point_trace.hits[]</code> with CPU regs, stack bytes/return decode, plus selector/state snapshots</li><li>write-point trace bundle:</li><li><code>trace_write_points</code></li><li><code>write_point_max_hits</code></li><li><code>write_point_trace.hit_count</code></li><li><code>write_point_trace.dropped_hits</code></li><li><code>write_point_trace.hits[]</code> with value, scanline, and selector/state snapshots</li></ul>
+<p>To enforce CI-style pixel gates on a rendered intro sequence:</p>
+<pre><code class="language-sh">python3 tools/check_regression_gates.py \
+  validation/regression_gates_intro.jsonc \
+  --render-dir port/build/regression_frames \
+  --json-out tools/out/regression_gates_intro_report.json</code></pre>
+<p>To validate callback/state checkpoints as machine-readable contracts:</p>
+<pre><code class="language-sh">python3 tools/validate_callback_contracts.py \
+  rom_analysis/docs/callback_state_contracts.jsonc \
+  tools/out/td2_boot_probe.json \
+  --json-out tools/out/callback_state_contracts_report.json</code></pre>
+<p>In the current environment, the frame-<code>300</code> screenshot is the colored copyright/credits scene with blue/red text on black. The interesting RE result is that the tracked bank 1 selectors are still at the trivial early values on that frame:</p>
+<ul><li><code>$1C78 = 1</code></li><li><code>$1C7A = 0</code></li><li><code>$1CAC/$1CCA/$1CCC/$1CCE/$1CD0/$1CE2/$1CE4/$1CE6/$1CEA = 0</code></li></ul>
+<p>That means this scene exists later than raw power-on but still before the richer bank 1 front-end selector state the current boot-state tooling is trying to model.</p>
+<p>The PPU dump for the same scene is now a solved validation target:</p>
+<ul><li><code>tools/render_mesen_snes_bg.py</code> can reconstruct the frame exactly from <code>vram.bin + cgram.bin + ppu_state.json</code></li><li><code>tools/compare_frames.py</code> against <code>td2_boot_probe_frame.png</code> currently reports <code>0</code> mismatched pixels</li><li>the dumped live state shows <code>ppu.bgMode = 1</code> and <code>ppu.mainScreenLayers = 0x04</code></li></ul>
+<p>This makes the frame-<code>300</code> credits scene the best current “golden” screen for validating a PC-side BG text compositor.</p>
+<p>That target is no longer dump-only. <code>tools/build_bank1_credits_scene.py</code> now rebuilds the same screen directly from ROM by following the <code>L009D1C</code> helper trio (<code>L00A9A0(0)</code>, <code>L00A9CB(0)</code>, <code>L00A9F2(0)</code>) and currently compares against the captured frame with <code>0</code> mismatched pixels.</p>
+<p>A bounded 2026-03-22 re-test in the current worktree keeps that reading intact for the capture/build side, but not for the SDL runtime:</p>
+<ul><li><code>python3 tools/build_bank1_credits_scene.py game.smc tools/out/bank1_credits_scene_regolden_20260322</code></li><li><code>python3 tools/compare_frames.py tools/out/td2_boot_probe_frame_300.png tools/out/bank1_credits_scene_regolden_20260322.ppm --diff-out tools/out/bank1_credits_scene_regolden_20260322_vs_mesen_diff.ppm</code></li><li><code>0</code> mismatched pixels</li><li><code>python3 tools/render_mesen_snes_bg.py tools/out/bank1_credits_scene_regolden_20260322_vram.bin tools/out/bank1_credits_scene_regolden_20260322_cgram.bin tools/out/bank1_credits_scene_regolden_20260322_ppu_state.json tools/out/bank1_credits_scene_regolden_20260322_python.ppm</code></li><li><code>python3 tools/compare_frames.py tools/out/td2_boot_probe_frame_300.png tools/out/bank1_credits_scene_regolden_20260322_python.ppm --diff-out tools/out/bank1_credits_scene_regolden_20260322_python_vs_mesen_diff.ppm</code></li><li><code>0</code> mismatched pixels</li><li><code>SDL_VIDEODRIVER=dummy ./port/build/td2_port --headless --snes-bg-prefix ./tools/out/bank1_credits_scene_regolden_20260322 --frames 1 --dump-prefix ./port/build/credits_regolden_20260322</code></li><li><code>python3 tools/compare_frames.py tools/out/td2_boot_probe_frame_300.png port/build/credits_regolden_20260322_00000.ppm --diff-out tools/out/credits_regolden_20260322_vs_mesen_diff.ppm</code></li><li><code>7244</code> mismatched pixels (<code>12.632533%</code>)</li><li>mismatch bbox: <code>16,56 -&gt; 222,167</code></li><li>the generated diff is byte-identical to the pre-existing <code>tools/out/bank1_credits_scene_vs_runtime_diff.ppm</code></li></ul>
+<p>Practical reading:</p>
+<ul><li>frame <code>300</code> remains the promoted golden target for live capture, ROM-side scene rebuild, and the Python SNES BG renderer</li><li>frame <code>300</code> is <strong>not</strong> yet a zero-diff SDL runtime parity gate; the current runtime output still lands on the same historical credits-scene diff surface</li></ul>
+<p>Later no-input power-on probing now shows the next attract/front-end signatures as well:</p>
+<ul><li>frame <code>654</code>: this is now the first clean <code>Ballistic presents</code> anchor on the no-input path</li><li>the active main callback has just switched to <code>01:A39C</code></li><li><code>bg1_visible.ppm</code> from the Mesen bridge compares against the captured screenshot with <code>0</code> mismatched pixels</li><li>visible sprites are still <code>0</code>, so this state is a pure BG scene</li><li>frame <code>900</code>: <code>ppu.bgMode = 1</code>, <code>ppu.mainScreenLayers = 0x01</code>, which matches <code>L00A35A</code></li><li>the active main callback on the sampled frame is <code>01:A39C</code></li><li><code>$20 = 8</code>, so the scene is already inside the callback-driven animation path</li><li>frame <code>1200</code>: <code>ppu.bgMode = 7</code>, <code>ppu.mainScreenLayers = 0x11</code>, which matches <code>L00A00C</code></li><li>by that sampled frame, the active main callback has already fallen back to bank 0 idle <code>00:8029</code></li></ul>
+<p>These are useful map points, but they are not yet golden targets in the same sense as frame <code>300</code>:</p>
+<ul><li>frame <code>654</code> is now good enough to seed sampled intro playback in the PC port</li><li>frame <code>900</code> is already animated enough that the current end-of-frame PPU dump mismatches its screenshot by <code>9.163993%</code></li><li>frame <code>1080</code> and frame <code>1200</code> now render through the shared Mode 7 BG path in <code>tools/render_mesen_snes_bg.py</code></li><li>frame <code>1080</code> mismatches the captured screenshot by <code>12.341309%</code></li><li>frame <code>1200</code> mismatches the captured screenshot by <code>9.125628%</code></li><li>the remaining delta is consistent with missing OBJ or other non-BG overlay composition rather than a broken Mode 7 transform</li></ul>
+<p>The script writes an isolated config to <code>.mesen-config/Mesen2/settings.json</code> and capture output under the script data folder inside that config root. By default it resolves the emulator in this order:</p>
+<ul><li><code>MESEN_BIN</code></li><li><code>MESEN_RELEASE_DIR/Mesen</code></li><li><code>Mesen</code> or <code>mesen</code> on <code>PATH</code></li></ul>
+<p>One useful probe result for the <code>Ballistic presents</code> splash is the callback handoff:</p>
+<ul><li>the active main callback first becomes <code>01:A39C</code> at frame <code>654</code></li><li>the probe timeline then shows <code>$20</code> changing every <code>4</code> frames from frame <code>656</code> onward:</li><li><code>656 -&gt; 13</code></li><li><code>660 -&gt; 12</code></li><li><code>664 -&gt; 11</code></li><li>...</li><li><code>708 -&gt; 0</code></li></ul>
+<p>That makes frames <code>654..710</code> the first clean validation window for the Ballistic splash.</p>
+<p>Longer no-input probing now also pins down the repeat period of the first attract loop:</p>
+<ul><li>the callback cycle beginning with <code>01:A39C</code> at frame <code>654</code> repeats at frame <code>2072</code></li><li>it repeats again at frame <code>3490</code></li><li>the loop period is therefore <code>1418</code> frames</li></ul>
+<p>That repeat period is what the current exact sampled intro manifest uses:</p>
+<ul><li>dump range: frames <code>654..2070</code>, sampled every <code>4</code> frames</li><li>runtime end-exclusive frame: <code>2072</code></li><li>this yields the first full exact no-input loop manifest under <code>tools/out/intro_loop_sequence.txt</code></li></ul>
+<p>The current runtime milestone goes one step further than that sampled manifest:</p>
+<ul><li><code>tools/out/ballistic_native_sequence.txt</code> is the measured Ballistic reference clip</li><li><code>tools/out/ballistic_rom_sequence.txt</code> is the ROM-derived Ballistic runtime clip</li><li><code>tools/out/ballistic_callback_sequence.txt</code> is the direct runtime Ballistic callback clip</li><li><code>tools/out/intro_loop_hybrid_sequence.txt</code> now splices:</li><li>the direct callback clip for <code>654..958</code></li><li>the queue-driven <code>snes_bg</code> window for <code>978..985</code></li><li>sampled <code>image</code> playback for the remaining attract states</li><li>the ROM-derived clip currently compares exactly at:</li><li>frame offset <code>0</code> vs source frame <code>654</code></li><li>frame offset <code>60</code> vs source frame <code>714</code></li><li>frame offset <code>300</code> vs source frame <code>954</code></li><li>the direct callback clip also compares exactly at:</li><li>frame offset <code>0</code></li><li>frame offset <code>60</code></li><li>frame offset <code>300</code></li><li>current exact validation checks for the hybrid path are:</li><li>frame offset <code>0</code> vs source frame <code>654</code></li><li>frame offset <code>320</code> vs source frame <code>974</code></li><li>frame offset <code>676</code> vs source frame <code>1330</code></li><li>current promoted-hybrid validation around the native post-Ballistic splice is:</li><li>frame offset <code>324</code> vs source frame <code>978</code>: <code>2</code> mismatched pixels (<code>0.003488%</code>)</li><li>frame offset <code>328</code> vs source frame <code>982</code>: <code>2</code> mismatched pixels (<code>0.003488%</code>)</li><li>frame offset <code>332</code> vs source frame <code>986</code>: exact sampled fallback</li></ul>
+<p>Current boundary for the next native intro replacement:</p>
+<ul><li><code>958..974</code> is still the unstable bootstrap zone for the <code>L00A00C -&gt; 01:9D69 -&gt; 01:9FE5</code> handoff</li><li>frame <code>978</code> is the first clean extracted-state target after that handoff:</li><li>direct runtime reconstruction from <code>VRAM + CGRAM + PPU state</code> currently lands at <code>4</code> mismatched pixels (<code>0.006975%</code>)</li><li>the SDL runtime now also accepts optional <code>OAM</code> for extracted SNES scenes:</li><li>against a full Mesen frame dump, frame <code>978</code> with auto-loaded sibling <code>oam.bin</code> lands at <code>2</code> mismatched pixels (<code>0.003488%</code>) versus <code>main_visible.ppm</code></li><li>frame <code>990</code> still lands at <code>623</code> mismatched pixels (<code>1.086426%</code>) versus <code>main_visible.ppm</code></li><li>practical reading: OAM support is now in the runtime, but it is not the whole explanation for the later Mode 7 attract drift</li><li>the same extracted-state path then starts drifting again:</li><li>frame <code>986</code>: <code>23</code> mismatched pixels (<code>0.040109%</code>)</li><li>frame <code>990</code>: <code>1295</code> mismatched pixels (<code>2.258301%</code>)</li><li>frame <code>994</code>: <code>2781</code> mismatched pixels (<code>4.849679%</code>)</li><li>practical next step:</li><li>treat <code>958..977</code> as a deeper bootstrap-builder problem rather than a simple scene dump</li><li>keep queue-driven <code>978</code> and <code>982</code> as the first promoted post-Ballistic replacements inside the hybrid loop</li><li>frame <code>986</code> is still the first unresolved edge after those replacements</li><li><code>tools/out/intro_native_978_derived_sequence.txt</code> is now the splice source for the promoted replacement window</li></ul>
+<p>That bootstrap reading is now backed by two extra checks:</p>
+<ul><li>rerunning the probe at frames <code>958</code> and <code>974</code> with <code>TD2_BOOT_PROBE_DUMP_PPU_MEMORY=1</code> shows that start-of-frame dumps do not rescue the scene:</li><li><code>tools/out/bootprobe_958/startframe.ppm</code> vs <code>tools/out/bootprobe_958/td2_boot_probe_frame.png</code>: <code>100.000000%</code></li><li><code>tools/out/bootprobe_958/endframe.ppm</code> vs <code>tools/out/bootprobe_958/td2_boot_probe_frame.png</code>: <code>100.000000%</code></li><li><code>tools/out/bootprobe_974/startframe.ppm</code> vs <code>tools/out/bootprobe_974/td2_boot_probe_frame.png</code>: <code>100.000000%</code></li><li><code>tools/out/bootprobe_974/endframe.ppm</code> vs <code>tools/out/bootprobe_974/td2_boot_probe_frame.png</code>: <code>100.000000%</code></li><li>frame <code>958</code> and frame <code>974</code> screenshots are still identical, so the visible bootstrap window is static even though the extracted PPU state is not usable</li><li>the experimental ROM-side builder at <code>tools/build_bank1_l00a00c_scene.py</code> currently applies:</li><li><code>04:9AED</code> via <code>L001210 -&gt; 42FB -&gt; L00065F</code></li><li><code>04:9BF5</code> via <code>L001210 -&gt; 26FB -&gt; L00073E</code></li><li>optional <code>L00A9F2(1)</code> onto a seeded <code>954</code> CGRAM base</li><li>the current seeded prototype output is <code>tools/out/bank1_l00a00c_scene.ppm</code>, and it is still <code>100.000000%</code> mismatched against both frame <code>958</code> and frame <code>974</code></li><li>practical reading:</li><li>the remaining gap is not just &quot;wrong capture boundary&quot;</li><li>the bootstrap likely depends on additional carried-over or mutated state beyond the obvious direct uploads</li></ul>
+<p>The new bootstrap delta summaries make that sharper:</p>
+<ul><li><code>tools/out/intro_bootstrap_954_958_delta.json</code></li><li>screenshot mismatch: <code>13.741629%</code></li><li><code>VRAM</code> delta: <code>6808</code> bytes</li><li><code>CGRAM</code> delta: <code>0</code> bytes</li><li>reading: the first visible bootstrap step carries Ballistic CGRAM forward unchanged</li><li><code>tools/out/intro_bootstrap_958_974_delta.json</code></li><li>screenshot mismatch: <code>0.000000%</code></li><li><code>VRAM</code> delta: <code>5875</code> bytes, all odd-byte changes</li><li><code>CGRAM</code> delta: <code>278</code> bytes</li><li>active main callback changes from <code>00:8029</code> to <code>01:9D69</code></li><li>key state variables first become nonzero:</li><li><code>$0202 = 1</code></li><li><code>$0208 = 13</code></li><li><code>$020A = 0x9CC3</code></li><li><code>$040A = 0xFFFF</code></li><li>reading: <code>01:9D69</code> is the first live bootstrap callback that populates the state feeding <code>L009DC6</code></li></ul>
+<p>The probe can now also dump low WRAM around those staging queues with <code>TD2_BOOT_PROBE_DUMP_WRAM_MEMORY=1</code>:</p>
+<ul><li><code>td2_boot_probe_wram.bin</code></li><li><code>td2_boot_probe_startframe_wram.bin</code></li></ul>
+<p>That extra dump tightened the bootstrap reading:</p>
+<ul><li>frame <code>958</code></li><li><code>dp_0054 = 0x00</code></li><li><code>state_09A2 = 0</code></li><li><code>state_09A4 = 0x0200</code></li><li>frame <code>974</code></li><li><code>dp_0054 = 0x10</code></li><li><code>state_09A2 = 0</code></li><li><code>state_09A4 = 0x0200</code></li><li>practical reading: exactly <code>2</code> <code>0600</code> DMA descriptors are armed for the next NMI pass</li><li><code>tools/out/intro_bootstrap_958_974_queue.json</code></li><li>decodes that WRAM window into queue structures</li><li>carries both raw probe context and a ready-to-consume active slice:</li><li><code>probe_after.dp_0054 = 16</code></li><li><code>regions.0600_dma_queue.active_dma_descriptor_count_after = 2</code></li><li><code>regions.0600_dma_queue.active_after_entries</code></li><li>the two active <code>0600</code> descriptors at frame <code>974</code> are:</li><li>command <code>0x01</code>, source <code>1A:9948</code>, size <code>0x1040</code>, VRAM destination <code>0x4000</code></li><li>command <code>0x01</code>, source <code>1A:A988</code>, size <code>0x0040</code>, VRAM destination <code>0x4900</code></li><li><code>0700..091F</code> is confirmed as the staged OAM buffer copied by the NMI <code>DMA1 -&gt; $2104</code> upload</li><li>the repeated <code>0xE100</code> head word in that region is the OAM fill/sentinel pattern, not a tile queue entry</li><li><code>tools/out/intro_bootstrap_978_982_queue.json</code></li><li>frame <code>978</code> still runs <code>01:9FE5</code> with <code>4</code> active descriptors</li><li>frame <code>982</code> still runs <code>01:9FE5</code> with <code>5</code> active descriptors</li><li>the new active descriptor is:</li><li><code>1A:AB58 -&gt; VRAM 0x49A0</code>, size <code>0x0100</code></li><li>applying that queue onto the derived frame-<code>978</code> seed yields <code>tools/out/bank1_bootstrap_queue_982.ppm</code></li><li>current compare vs the real frame <code>982</code> target: <code>2</code> mismatched pixels (<code>0.003488%</code>)</li><li><code>tools/out/intro_bootstrap_982_986_queue.json</code></li><li>frame <code>986</code> still runs <code>01:9FE5</code> but grows the active queue to <code>7</code> descriptors</li><li>the two new active descriptors are:</li><li><code>1A:AA10 -&gt; VRAM 0x4920</code>, size <code>0x0100</code></li><li><code>1A:ACA0 -&gt; VRAM 0x49A0</code>, size <code>0x0100</code></li><li>applying that queue onto the derived frame-<code>982</code> seed yields <code>tools/out/bank1_bootstrap_queue_986.ppm</code></li><li>current compare vs the real frame <code>986</code> target: <code>958</code> mismatched pixels (<code>1.670619%</code>)</li><li>disabling OBJ on the same derived scene yields <code>tools/out/bank1_bootstrap_queue_986_noobj.ppm</code></li><li>current compare with OBJ disabled: <code>21</code> mismatched pixels (<code>0.036621%</code>)</li><li>overriding OBJ with the clean Mesen bridge OAM yields <code>tools/out/bank1_bootstrap_queue_986_bridgeoverride.ppm</code></li><li>current compare with bridge OAM override: <code>21</code> mismatched pixels (<code>0.036621%</code>)</li><li>practical reading: queued VRAM plus staged OAM is enough for the frame-<code>986</code> BG path too; the remaining regression is concentrated in Mode 7 OBJ composition</li><li>the concrete late-frame OAM finding is:</li><li><code>make -C tools intro-oam-deltas</code> now writes machine-readable reports under <code>tools/out/intro_oam_deltas/</code></li><li>probe OAM and bridge OAM still match exactly at frames <code>978</code> and <code>982</code></li><li>at frame <code>986</code>, the full <code>544</code>-byte OAM dumps diverge by <code>37</code> bytes (<code>35</code> low-table, <code>2</code> high-table)</li><li>the <code>986</code> sprite-level delta is <code>9</code> changed visible sprites in the probe dump versus <code>0</code> visible sprites in the bridge dump</li><li>at frame <code>990</code>, the full <code>544</code>-byte OAM dumps diverge by <code>92</code> bytes (<code>86</code> low-table, <code>6</code> high-table)</li><li>the <code>990</code> sprite-level delta is <code>23</code> changed visible sprites in the probe dump versus <code>5</code> visible sprites in the bridge dump</li><li>the bad Mode 7 OBJ overlay tracks the probe OAM dump, not the bridge OAM dump</li><li><code>tools/out/intro_bootstrap_986_990_queue.json</code></li><li>frame <code>990</code> still runs <code>01:9FE5</code> and carries the next WRAM queue delta forward from the bridge-accurate <code>986</code> seed</li><li>applying that queue onto <code>tools/out/bank1_bootstrap_queue_986_bridgeoverride_vram.bin</code> with clean bridge OAM yields <code>tools/out/bank1_bootstrap_queue_990_bridgeobj.ppm</code></li><li>current compare vs the real frame <code>990</code> screenshot: <code>1518</code> mismatched pixels (<code>2.647182%</code>)</li><li>current compare vs Mesen <code>main_visible.ppm</code>: <code>2</code> mismatched pixels (<code>0.003488%</code>)</li><li>practical reading: the queue-driven attract path can now advance natively through frame <code>990</code> when measured against extracted Mesen scene output, but the final-screen gap after frame <code>982</code> is still open</li><li>the current committed <code>994</code> scene variants (<code>fromraw990</code> vs <code>bridgeobj</code>) now compare at <code>0</code> OAM bytes / <code>0</code> sprite deltas, so the remaining <code>994</code> screenshot gap is already downstream of raw OAM in the committed artifact set</li><li>bridge-visible late attract modeling now goes further than the queue replay path:</li><li>bridge frame extracts for <code>991..997</code> show that the visible Mode 7 buffers at <code>0x4920</code> and <code>0x49A0</code> rotate among three ROM chunks (<code>1A:AA10</code>, <code>1A:AB58</code>, <code>1A:ACA0</code>) instead of exposing the last traced DMA stream directly</li><li><code>tools/build_mode7_source_scene.py</code> captures that model by seeding from bridge frame <code>990</code> VRAM and patching those two visible regions from ROM</li><li>resulting validation against Mesen <code>main_visible.ppm</code>:</li><li><code>tools/out/bank1_mode7_visible_991.ppm</code>: <code>4</code> mismatched pixels</li><li><code>tools/out/bank1_mode7_visible_992.ppm</code>: <code>4</code> mismatched pixels</li><li><code>tools/out/bank1_mode7_visible_993.ppm</code>: <code>4</code> mismatched pixels</li><li><code>tools/out/bank1_mode7_visible_994.ppm</code>: <code>4</code> mismatched pixels</li><li><code>tools/out/bank1_mode7_visible_995.ppm</code>: <code>4</code> mismatched pixels</li><li><code>tools/out/bank1_mode7_visible_996.ppm</code>: <code>4</code> mismatched pixels</li><li><code>tools/out/bank1_mode7_visible_997.ppm</code>: <code>4</code> mismatched pixels</li><li>practical reading: the derived bridge-visible model now closes <code>991..997</code>, but the callback-level explanation for that visible-buffer rotation is still open</li><li>the next aligned sampled block is now carried directly from extracted SNES state:</li><li><code>tools/out/mesen_range_998_1005_v1/sequence.txt</code></li><li><code>tools/out/mesen_range_1006_1013_v1/sequence.txt</code></li><li><code>tools/out/mesen_range_1014_1021_v1/sequence.txt</code></li><li><code>tools/out/mesen_range_1022_1029_v1/sequence.txt</code></li><li><code>tools/out/mesen_range_1030_1037_v1/sequence.txt</code></li><li><code>tools/out/mesen_range_1038_1045_v1/sequence.txt</code></li><li><code>tools/out/mesen_range_1046_1053_v1/sequence.txt</code></li><li><code>tools/out/mesen_range_1054_1061_v1/sequence.txt</code></li><li><code>tools/out/mesen_range_1062_1069_v1/sequence.txt</code></li><li><code>tools/out/mesen_range_1070_1077_v1/sequence.txt</code></li><li><code>tools/out/mesen_range_1078_1085_v1/sequence.txt</code></li><li><code>tools/out/mesen_range_1086_1093_v1/sequence.txt</code></li><li>probe-confirmed callback continuity:</li><li>frame <code>998</code>: <code>active_main = 01:9FE5</code>, <code>$0202 = 1</code>, <code>$0204 = 2</code>, <code>$0208 = 13</code>, <code>$020A = $9CC3</code>, <code>$0054 = 152</code></li><li>frame <code>1005</code>: <code>active_main = 01:9FE5</code>, <code>$0202 = 1</code>, <code>$0204 = 3</code>, <code>$0208 = 13</code>, <code>$020A = $9CC3</code>, <code>$0054 = 208</code></li><li>frame <code>1013</code>: <code>active_main = 01:9FE5</code>, <code>$0202 = 1</code>, <code>$0204 = 1</code>, <code>$0208 = 13</code>, <code>$020A = $9CC3</code>, <code>$0054 = 8</code></li><li>frame <code>1014</code>: <code>active_main = 01:9FE5</code>, <code>$0202 = 1</code>, <code>$0204 = 2</code>, <code>$0208 = 13</code>, <code>$020A = $9CC3</code>, <code>$0054 = 16</code></li><li>frame <code>1021</code>: <code>active_main = 01:9FE5</code>, <code>$0202 = 1</code>, <code>$0204 = 1</code>, <code>$0208 = 13</code>, <code>$020A = $9CC3</code>, <code>$0054 = 32</code></li><li>frame <code>1022</code>: <code>active_main = 01:9FE5</code>, <code>$0202 = 1</code>, <code>$0204 = 1</code>, <code>$0208 = 13</code>, <code>$020A = $9CC3</code>, <code>$0054 = 32</code></li><li>frame <code>1029</code>: <code>active_main = 01:9FE5</code>, <code>$0202 = 1</code>, <code>$0204 = 1</code>, <code>$0208 = 13</code>, <code>$020A = $9CC3</code>, <code>$0054 = 40</code></li><li>frame <code>1037</code>: <code>active_main = 01:9FE5</code>, <code>$0202 = 1</code>, <code>$0204 = 1</code>, <code>$0208 = 13</code>, <code>$020A = $9CC3</code>, <code>$0054 = 56</code></li><li>frame <code>1045</code>: <code>active_main = 01:9FE5</code>, <code>$0202 = 1</code>, <code>$0204 = 1</code>, <code>$0208 = 13</code>, <code>$020A = $9CC3</code>, <code>$0054 = 72</code></li><li>frame <code>1053</code>: <code>active_main = 01:9FE5</code>, <code>$0202 = 1</code>, <code>$0204 = 1</code>, <code>$0208 = 13</code>, <code>$020A = $9CC3</code>, <code>$0054 = 88</code></li><li>frame <code>1061</code>: <code>active_main = 01:9FE5</code>, <code>$0202 = 1</code>, <code>$0204 = 1</code>, <code>$0206 = 9</code>, <code>$0208 = 13</code>, <code>$020A = $9CC3</code>, <code>$040A = 14</code>, <code>$0054 = 104</code></li><li>frame <code>1069</code>: <code>active_main = 01:9FE5</code>, <code>$0202 = 1</code>, <code>$0204 = 1</code>, <code>$0206 = 11</code>, <code>$0208 = 13</code>, <code>$020A = $9CC3</code>, <code>$040A = 16</code>, <code>$0054 = 120</code></li><li>frame <code>1077</code>: <code>active_main = 01:9FE5</code>, <code>$0202 = 1</code>, <code>$0204 = 1</code>, <code>$0206 = 13</code>, <code>$0208 = 13</code>, <code>$020A = $9CC3</code>, <code>$040A = 17</code>, <code>$0054 = 128</code></li><li>frame <code>1085</code>: <code>active_main = 01:9FE5</code>, <code>$0202 = 1</code>, <code>$0204 = 1</code>, <code>$0206 = 13</code>, <code>$0208 = 13</code>, <code>$020A = $9CC3</code>, <code>$040A = 17</code>, <code>$0054 = 128</code></li><li>frame <code>1093</code>: <code>active_main = 01:9FE5</code>, <code>$0202 = 1</code>, <code>$0204 = 1</code>, <code>$0206 = 13</code>, <code>$0208 = 13</code>, <code>$020A = $9CC3</code>, <code>$040A = 17</code>, <code>$0054 = 128</code></li><li>SDL playback from <code>tools/out/intro_loop_hybrid_bridge_visible_sequence.txt</code> compares against Mesen <code>main_visible.ppm</code> at:</li><li>frame <code>998</code>: <code>4</code> mismatched pixels</li><li>frame <code>999</code>: <code>4</code> mismatched pixels</li><li>frame <code>1000</code>: <code>2</code> mismatched pixels</li><li>frame <code>1001</code>: <code>4</code> mismatched pixels</li><li>frame <code>1002</code>: <code>4</code> mismatched pixels</li><li>frame <code>1003</code>: <code>4</code> mismatched pixels</li><li>frame <code>1004</code>: <code>4</code> mismatched pixels</li><li>frame <code>1005</code>: <code>4</code> mismatched pixels</li><li>frame <code>1006</code>: <code>6</code> mismatched pixels</li><li>frame <code>1007</code>: <code>6</code> mismatched pixels</li><li>frame <code>1008</code>: <code>6</code> mismatched pixels</li><li>frame <code>1009</code>: <code>6</code> mismatched pixels</li><li>frame <code>1010</code>: <code>6</code> mismatched pixels</li><li>frame <code>1011</code>: <code>8</code> mismatched pixels</li><li>frame <code>1012</code>: <code>8</code> mismatched pixels</li><li>frame <code>1013</code>: <code>10</code> mismatched pixels</li><li>frames <code>1014..1021</code>: <code>10</code> mismatched pixels each</li><li>frames <code>1022..1023</code>: <code>10</code> mismatched pixels each</li><li>frames <code>1024..1025</code>: <code>8</code> mismatched pixels each</li><li>frames <code>1026..1029</code>: <code>11</code> mismatched pixels each</li><li>frames <code>1030..1037</code>: <code>0, 0, 0, 0, 4, 3, 0, 0</code> mismatched pixels each</li><li>frames <code>1038..1045</code>: <code>6, 6, 9, 12, 13, 11, 16, 15</code> mismatched pixels each</li><li>frames <code>1046..1053</code>: <code>13, 13, 16, 18, 18, 18, 17, 14</code> mismatched pixels each</li><li>frames <code>1054..1061</code>: <code>14, 14, 15, 16, 19, 20, 21, 22</code> mismatched pixels each</li><li>frames <code>1062..1069</code>: <code>25, 26, 26, 21, 26, 23, 23, 25</code> mismatched pixels each</li><li>frames <code>1070..1077</code>: <code>29, 27, 26, 28, 34, 33, 39, 32</code> mismatched pixels each</li><li>frames <code>1078..1085</code>: <code>41, 41, 47, 47, 58, 63, 60, 69</code> mismatched pixels each</li><li>frames <code>1086..1093</code>: <code>89, 92, 89, 90, 102, 115, 144, 129</code> mismatched pixels each</li><li>the SDL runtime now uses the scanline-accurate <code>mode7-ppu</code> object compositor for Mode 7 <code>snes_bg</code> playback, which is what closed the <code>1022/1023/1025</code> regression window</li><li>practical reading: bridge-visible native coverage now extends through frame <code>1093</code>, and <code>998..1093</code> are still inside the same <code>01:9FE5</code> family as the derived <code>991..997</code> window, but the mismatch ramp from <code>1078..1093</code> suggests a later composition detail is becoming more important</li></ul>
+<p>The probe now also writes a second PPU-memory snapshot at the start of the sampled frame when <code>TD2_BOOT_PROBE_DUMP_PPU_MEMORY=1</code> is enabled:</p>
+<ul><li><code>td2_boot_probe_startframe_vram.bin</code></li><li><code>td2_boot_probe_startframe_cgram.bin</code></li><li><code>td2_boot_probe_startframe_oam.bin</code></li><li><code>td2_boot_probe_startframe_ppu_state.json</code></li></ul>
+<p>That snapshot is useful when a front-end state rewrites VRAM or Mode 7 registers during late vblank and contaminates the simpler end-of-frame dump.</p>
+<p>There is also an optional register trace for Mode 7 and <code>TMAIN</code> writes:</p>
+<pre><code class="language-sh">TD2_BOOT_PROBE_TOTAL_FRAMES=1201 \
+TD2_BOOT_PROBE_SCREENSHOT_FRAME=1200 \
+TD2_BOOT_PROBE_TRACE_MODE7=1 \
+./validation/run_mesen_probe_boot.sh</code></pre>
+<p>This emits <code>td2_boot_probe_mode7_writes.json</code>, which can be summarized with:</p>
+<pre><code class="language-sh">python3 tools/summarize_mode7_trace.py \
+  .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_mode7_writes.json</code></pre>
+<p>Both traces also support a frame window instead of a single sampled frame:</p>
+<pre><code class="language-sh">TD2_BOOT_PROBE_TOTAL_FRAMES=1201 \
+TD2_BOOT_PROBE_SCREENSHOT_FRAME=1200 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=900 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=1200 \
+TD2_BOOT_PROBE_TRACE_DMA=1 \
+./validation/run_mesen_probe_boot.sh</code></pre>
+<p>That emits <code>td2_boot_probe_dma_writes.json</code>, which can be summarized with the same helper:</p>
+<pre><code class="language-sh">python3 tools/summarize_mode7_trace.py \
+  .mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_dma_writes.json</code></pre>
+<p>Current reading from those traces:</p>
+<ul><li>frame <code>1080</code>: only <code>20</code> tracked CPU writes, all clustered at scanlines <code>225-231</code></li><li>frame <code>1200</code>: <code>274</code> tracked writes, with heavy VRAM traffic through <code>$2118/$2119</code> at scanlines <code>227-229</code></li><li>this means the naive end-of-frame VRAM/PPU snapshot can include next-frame preparation data</li><li>however, switching to the new <code>startFrame</code> snapshot does not materially reduce the BG-only mismatch for these frames, so the remaining gap is not explained by a simple “captured the wrong frame state” issue alone</li><li>a wider DMA trace over frames <code>900-1200</code> shows no CPU writes to <code>HDMAEN</code> or channel <code>7</code> setup registers in that window</li><li>the same DMA trace shows the attract Mode 7 path becoming active around frame <code>974</code>:</li><li>frame <code>974</code>: channel <code>1</code> MDMA to <code>BBAD1 = $04</code>, i.e. OAM upload</li><li>frame <code>975</code> onward: repeated channel <code>0</code> MDMA to <code>BBAD0 = $18</code>, i.e. VRAM upload, alongside channel <code>1</code> OAM DMA</li><li>a narrow Mode 7 trace over frames <code>974-977</code> pins the scene handoff more tightly:</li><li>frame <code>975</code>: callback <code>01:9D69</code> is already performing VRAM writes through <code>$2116-$2119</code></li><li>frame <code>976</code>: callback <code>01:9FE5</code> performs the first observed <code>M7A/M7D</code> writes</li><li>by frame <code>977</code>, the Mode 7 attract loop is established under <code>01:9FE5</code></li><li>practical reading from that combined evidence:</li><li>the Mode 7 scene is not being born from a fresh HDMA setup on frames <code>974-1200</code></li><li>the remaining mismatch is more likely either hardware-side HDMA activity armed before the traced window, or a remaining Mode 7 presentation nuance in the renderer, than a missing CPU-visible setup step in that interval</li></ul>
+<p>The scanline-step probe narrows that further for frame <code>1200</code>:</p>
+<pre><code class="language-sh">TD2_SCANLINE_TEST_OUTPUT_PREFIX=tools/out/scanline_frame_1200/td2_scanline_step_test \
+TD2_SCANLINE_TEST_TARGET_FRAME=1200 \
+TD2_SCANLINE_TEST_MAX_SAMPLES=224 \
+./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_scanline_step_test.lua</code></pre>
+<p>That writes <code>tools/out/scanline_frame_1200/td2_scanline_step_test.json</code>. If <code>TD2_SCANLINE_TEST_OUTPUT_PREFIX</code> is unset, the legacy fallback still writes to <code>.mesen-config/Mesen2/LuaScriptData/mesen_scanline_step_test/td2_scanline_step_test.json</code>. Current reading from that probe:</p>
+<ul><li>all <code>224</code> visible scanlines on frame <code>1200</code> report the same sampled <code>ppu.mode7.*</code> values</li><li><code>ppu.bgMode = 7</code> and <code>ppu.mainScreenLayers = 0x11</code> remain stable across the sampled frame</li><li><code>ppu.mode7.matrix[0] = 256</code>, <code>ppu.mode7.matrix[3] = 257</code>, <code>ppu.mode7.hscroll = 0</code>, <code>ppu.mode7.vscroll = 8191</code> remain stable across the sampled frame</li><li>this makes a scanline-varying Mode 7 register state much less likely as the primary explanation for the remaining frame-<code>1200</code> mismatch</li></ul>
+<p>The same scanline-step path now also has a repeatable range wrapper for the next bridge-visible frontier:</p>
+<pre><code class="language-sh">python3 tools/capture_visible_mode7_range.py \
+  1094 1101 \
+  --output tools/out/visible_mode7_1094_1101.json
+python3 tools/apply_visible_mode7_samples.py \
+  tools/out/visible_mode7_1094_1101.json \
+  tools/out/mesen_range_1094_1101_v1</code></pre>
+<p>That wrapper now keeps its raw scanline probe JSON in a repo-owned per-run scratch prefix beside the aggregate output, by default: <code>tools/out/visible_mode7_1094_1101_scanline_probe/td2_scanline_step_test.json</code>.</p>
+<p>For seeded gameplay visible-phase sampling, the same Lua probe can now be driven through a fuller wrapper that preserves every sampled scanline and the probe&#x27;s boundary snapshots:</p>
+<pre><code class="language-sh">python3 tools/capture_scanline_samples_range.py \
+  86 86 \
+  --savestate .mesen-config/Mesen2/SaveStates/game_11.mss \
+  --input-windows &#x27;60-359:b&#x27; \
+  --output tools/out/track1_b_hold_scanline_frame_0086_v1.json \
+  --max-samples 224</code></pre>
+<p>That path is the current debugger-oriented follow-up for gameplay-era lanes where <code>emu.takeScreenshot()</code> and end-of-frame raw <code>PPU</code> dumps disagree.</p>
+<p>Current reading from that <code>1094..1101</code> visible-state pass:</p>
+<ul><li>the captured visible <code>M7A/M7D</code> pairs are:</li><li><code>1094</code>: <code>1152 / 1028</code></li><li><code>1095</code>: <code>1024 / 1028</code></li><li><code>1096</code>: <code>896 / 771</code></li><li><code>1097</code>: <code>768 / 771</code></li><li><code>1098</code>: <code>640 / 514</code></li><li><code>1099</code>: <code>512 / 514</code></li><li><code>1100</code>: <code>384 / 257</code></li><li><code>1101</code>: <code>256 / 257</code></li><li>those visible values do not match the direct bridge-extracted <code>ppu_state.json</code> files for the same frames</li><li>however, applying those visible values onto the extracted <code>1094..1101</code> frame states yields much worse <code>main_visible</code> compares:</li><li>frames <code>1094..1101</code>: <code>362, 414, 606, 700, 1244, 1515, 3962, 5930</code> mismatched pixels</li><li>a focused boot probe at frame <code>1094</code> confirms that the probe <code>startframe</code> snapshot already carries the same visible <code>M7A/M7D = 1152 / 1028</code> pair and still renders at <code>362</code> mismatched pixels against the extracted <code>main_visible</code></li><li>practical reading:</li><li>the late-attract frontier after <code>1093</code> is not blocked by a simple stale end-of-frame <code>ppu_state</code> alone</li><li>native bridge-visible coverage should therefore stay promoted only through <code>1093</code> until the wider composition/export nuance is explained</li></ul>
+<p>The current OBJ experiments line up with that reading:</p>
+<ul><li><code>tools/render_mesen_snes_bg.py</code> now accepts <code>--oam</code> and can compose OBJ over the reconstructed BG frame</li><li>on frame <code>1200</code>, the default <code>--obj-renderer simple</code> path reduces mismatch from <code>9.125628%</code> to <code>7.934570%</code></li><li>on frame <code>1080</code>, the same simple OBJ overlay is still wrong enough to worsen the result to <code>26.457868%</code></li><li>an experimental <code>--obj-renderer mode7-ppu</code> path tries to follow the SNES per-scanline sprite fetch flow more closely, but on frame <code>1200</code> it still lands at <code>8.032227%</code></li><li>practical reading:</li><li>OBJ is definitely part of the remaining delta on the later attract frame</li><li>OBJ alone does not explain the full mismatch, and the current 1080 OBJ decode/composition path is still incomplete or incorrect</li></ul>
+<p>Notes:</p>
+<ul><li><code>tools/run_track1_seed_sweep.py</code> summaries now record the ROM and savestate SHA-256 fingerprints alongside the capture config, because the current <code>game_11.mss</code> seed has already drifted from older promoted sweep results.</li><li>The sweep summary now also runs a short no-input boot-probe audit of the seed surface before classifying the screenshot lanes.</li><li>On the current fingerprinted <code>game_11.mss</code> seed, that audit classifies the savestate as <code>front_end_menu_seed</code> (<code>02:9016</code>, <code>$1C6A = [1]</code>, <code>$0202 = [65535]</code>), so current sweep output must not be promoted as gameplay evidence.</li><li>Within that same menu-bound seed family, <code>a_hold</code> and <code>b_hold</code> are pixel-identical across the first <code>300</code> captured frames, while <code>a+b</code> stays aligned early and first diverges at script frame <code>219</code>.</li><li><code>mesen_capture.lua</code> now calls <code>emu.stop(0)</code> when capture finishes so the <code>--testRunner</code> process exits cleanly.</li><li>In this environment, one downloaded Linux release binary crashed with <code>std::bad_cast</code> under <code>--testRunner</code>, while a local source-build binary resolved through <code>MESEN_BIN</code> completed the same capture successfully.</li><li>Mesen2&#x27;s <code>--testRunner</code> path does not expose a clean CLI hook for loading a <code>.mss</code> savestate before the script runs. The current workaround is a one-shot <code>emu.addMemoryCallback(..., emu.callbackType.exec, ...)</code> that calls <code>emu.loadSavestate(...)</code> on the first executed instruction.</li><li>When <code>run_mesen_capture.sh</code> is called without a third argument, it exports an empty <code>TD2_CAPTURE_SAVESTATE</code> and the script stays on the original power-on plus warm-up flow.</li><li>The no-savestate path was revalidated after this change. The savestate-loading branch was implemented against Mesen&#x27;s shipped Lua API documentation, but it was not exercised here because there was no sample savestate file in the workspace.</li></ul>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

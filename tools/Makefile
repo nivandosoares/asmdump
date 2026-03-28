@@ -180,6 +180,8 @@ REGRESSION_GATES_REPORT_JSON ?= $(OUT_DIR)/regression_gates_intro_report.json
 CALLBACK_CONTRACTS_JSON ?= ../rom_analysis/docs/callback_state_contracts.jsonc
 CALLBACK_PROBE_JSON ?= $(BOOT_PROBE_PREFIX).json
 CALLBACK_CONTRACTS_REPORT_JSON ?= $(OUT_DIR)/callback_state_contracts_report.json
+DOCS_WIKI_MANIFEST ?= ../rom_analysis/docs/wiki_doc_index.json
+DOCS_WIKI_OUT_DIR ?= $(OUT_DIR)/docs_wiki
 TRACK1_SEED_SWEEP_SAVESTATE ?= ../.mesen-config/Mesen2/SaveStates/game_11.mss
 TRACK1_SEED_SWEEP_OUT_DIR ?= $(OUT_DIR)/track1_seed_sweep_v1
 TRACK1_SEED_SWEEP_TIMEOUT_SECONDS ?= 60
@@ -291,7 +293,7 @@ L001210_SAVE_STATE_FRAME ?= 1093
 L001210_SAVE_TOTAL_FRAMES ?= 1120
 L001210_SAVE_STATE_PATH ?= ../tools/out/l001210_state_$(L001210_SAVE_STATE_FRAME).bin
 
-.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank13-headers bank13-validate bank30-headers bank30-validate bank30-registry tilemap-provenance-1086-1093 l001210-probe l001210-save-savestate l001210-probe-matrix l001210-trace-summary track1-seed-sweep track1-b-hold-cycle regression-gates callback-contracts-check portability-path-check obj-vertical-flip-check bg-layer-priority-check intro-oam-deltas clean-generated clean-generated-dry-run bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview bank1-bootstrap-queue-978-preview bank1-bootstrap-queue-982-preview bank1-bootstrap-queue-986-preview bank1-bootstrap-queue-986-noobj-preview bank1-bootstrap-queue-986-bridgeoam-preview bank1-bootstrap-queue-990-bridgeoam-preview bank1-bootstrap-queue-994-bridgeoam-preview bank1-visible-mode7-window-preview intro-bootstrap-deltas intro-bootstrap-queue mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-loop-hybrid-bridge-sequence intro-loop-hybrid-bridge-visible-sequence intro-native-978 intro-native-978-derived intro-native-978-bridge intro-native-978-bridge-visible
+.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank13-headers bank13-validate bank30-headers bank30-validate bank30-registry tilemap-provenance-1086-1093 l001210-probe l001210-save-savestate l001210-probe-matrix l001210-trace-summary track1-seed-sweep track1-b-hold-cycle regression-gates callback-contracts-check docs-wiki portability-path-check terminal-bot-smoke obj-vertical-flip-check bg-layer-priority-check intro-oam-deltas clean-generated clean-generated-dry-run bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview bank1-bootstrap-queue-978-preview bank1-bootstrap-queue-982-preview bank1-bootstrap-queue-986-preview bank1-bootstrap-queue-986-noobj-preview bank1-bootstrap-queue-986-bridgeoam-preview bank1-bootstrap-queue-990-bridgeoam-preview bank1-bootstrap-queue-994-bridgeoam-preview bank1-visible-mode7-window-preview intro-bootstrap-deltas intro-bootstrap-queue mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-loop-hybrid-bridge-sequence intro-loop-hybrid-bridge-visible-sequence intro-native-978 intro-native-978-derived intro-native-978-bridge intro-native-978-bridge-visible
 
 all: previews
 
@@ -516,6 +518,14 @@ callback-contracts-check:
 		$(CALLBACK_CONTRACTS_JSON) \
 		$(CALLBACK_PROBE_JSON) \
 		--json-out $(CALLBACK_CONTRACTS_REPORT_JSON)
+
+docs-wiki:
+	$(PYTHON) build_docs_wiki_report.py \
+		--manifest $(DOCS_WIKI_MANIFEST) \
+		--output-dir $(DOCS_WIKI_OUT_DIR)
+
+terminal-bot-smoke:
+	$(PYTHON) terminal_bot.py self-test
 
 portability-path-check:
 	$(PYTHON) check_portability_paths.py

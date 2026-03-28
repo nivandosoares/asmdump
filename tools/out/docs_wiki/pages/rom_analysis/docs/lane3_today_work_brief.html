@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lane 3 Today Brief | TD2 Archaeology Wiki</title>
+  <link rel="stylesheet" href="../../../assets/wiki.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="site-link" href="../../../index.html">TD2 Archaeology Wiki</a>
+      <p class="sidebar-note">Simple wiki-style index built from curated markdown sources.</p>
+      <section class="sidebar-group"><h3>Source Of Truth</h3><ul><li><a href="../../PORT_PLAN.html">Port Plan</a></li><li><a href="next_steps_roadmap.html">Next Steps Roadmap</a></li><li><a href="progress_checkpoints.html">Progress Checkpoints</a></li><li><a href="validation_gates.html">Validation Gates</a></li><li><a href="../../validation/README.html">Validation README</a></li><li><a href="../../tools/README.html">Tools README</a></li><li><a href="../../port/README.html">Port README</a></li><li><a href="../README.html">ROM Analysis README</a></li></ul></section><section class="sidebar-group"><h3>Attract And Intro</h3><ul><li><a href="intro_00_8029_next_agent_handoff.html">00:8029 Handoff</a></li><li><a href="intro_01_9fe5_window_986_1093.html">01:9FE5 Window 986..1093</a></li><li><a href="intro_01_9fe5_activity_trace_1094_1117.html">01:9FE5 Activity Trace</a></li><li><a href="intro_00_8029_mode7_blob_cycle_1134_1200.html">Mode 7 Blob Cycle 1134..1200</a></li><li><a href="../maps/tilemaps/mesen_range_1086_1093_provenance.html">Tilemap Provenance 1086..1093</a></li><li><a href="mesen_debugger_design_workbench.html">Mesen Design Workbench</a></li></ul></section><section class="sidebar-group"><h3>Front-End And Menu</h3><ul><li><a href="snes_runtime_algorithm_human.html">SNES Runtime Algorithm</a></li><li><a href="../maps/tilemaps/car_select_frame_1500_bg2_provenance.html">Frame 1500 BG2 Provenance</a></li><li><a href="../../tools/out/snes_frontend_top_menu_labels.html">Top Menu Labels</a></li><li><a href="../../tools/out/snes_frontend_rival_selection_grid.html">Rival Selection Grid</a></li><li><a href="../../tools/out/snes_select_opponent_organic_default_path.html">Organic Default Path</a></li><li><a href="../../tools/out/snes_frontend_select_opponent_mode_split.html">Select Opponent Mode Split</a></li></ul></section><section class="sidebar-group"><h3>Gameplay And Lane 3</h3><ul><li><a href="lane3_today_work_brief.html">Lane 3 Work Brief</a></li><li><a href="gameplay_default_rival_next_agent_handoff.html">Gameplay Handoff</a></li><li><a href="lane3_attract_demo_boundary.html">Attract Demo Boundary</a></li><li><a href="../maps/tracks/track1_live_gameplay_entry_route.html">Live Gameplay Entry Route</a></li><li><a href="../maps/tracks/track1_live_race_manual_seed_intake.html">Manual Seed Intake</a></li><li><a href="../maps/tracks/track1_live_race_manual_video_intake.html">Manual Video Intake</a></li><li><a href="../maps/tracks/track1_live_race_visible_layer_stack.html">Visible Layer Stack</a></li><li><a href="../maps/tracks/track1_live_race_bg2_producer_path.html">BG2 Producer Path</a></li><li><a href="../maps/tracks/track1_live_race_l01318d_static_role_split.html">L01318D Role Split</a></li><li><a href="../maps/tracks/track1_02_9016_state_ownership.html">02:9016 State Ownership</a></li></ul></section><section class="sidebar-group"><h3>Runtime And Port Validation</h3><ul><li><a href="port_sdl_runtime_mimetization_smoke.html">SDL Runtime Smoke</a></li><li><a href="mesen_instrumented_backend_architecture.html">Instrumented Backend Architecture</a></li></ul></section>
+    </aside>
+    <main class="content">
+      <nav class="breadcrumbs">
+        <a href="../../../index.html">Index</a>
+        <span>/</span>
+        <a href="../../../index.html#gameplay-lane3">Gameplay And Lane 3</a>
+        <span>/</span>
+        <span>Lane 3 Work Brief</span>
+      </nav>
+      <header class="doc-header">
+        <p class="eyebrow">Gameplay And Lane 3</p>
+        <h1>Lane 3 Today Brief</h1>
+        <p class="doc-note">Current gameplay archaeology state and human-support queue.</p>
+        <div class="doc-meta">
+          <span>Source: <code>rom_analysis/docs/lane3_today_work_brief.md</code></span>
+          <a href="../../../../../../rom_analysis/docs/lane3_today_work_brief.md">Open Raw Markdown</a>
+        </div>
+      </header>
+      <article class="doc-body">
+        <h1 id="lane-3-today-brief">Lane 3 Today Brief</h1>
+<ul><li>Date: <code>2026-03-28</code></li><li>Audience: next dev picking up Lane 3 today</li><li>Current source of truth:</li><li><code>rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md</code></li><li><code>rom_analysis/docs/lane3_visual_annotation_template.md</code></li><li><code>rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md</code></li><li><code>rom_analysis/maps/tracks/track1_live_race_plus30f_lab_backend_boundary.md</code></li></ul>
+<h2 id="situation">Situation</h2>
+<p>The repo already has preserved manual live-race seeds, and that changed the Lane 3 problem materially.</p>
+<p>What is closed:</p>
+<ul><li><code>game_11.mss</code> is no longer admissible as a gameplay seed</li><li><code>lane3_live_race_mid.mss</code> and <code>lane3_live_race_plus30f.mss</code> are preserved and user-identified as real Desert Blast gameplay imagery</li><li>a first human support note is now recorded in <code>manual_artifacts/lane3/responses.txt</code></li><li>the practical route back to <code>live_race_mid</code> is now explicit: keep taking the first menu option / keep pressing <code>A</code> until gameplay; <code>B</code> backs out one screen; in gameplay <code>A</code> accelerates, <code>B</code> reduces speed, and the d-pad steers</li><li>the old post-<code>2050</code> power-on corridor is now a control surface, not the best gameplay anchor</li><li>the first ownership pass is closed on:</li><li><code>state_11f3 -&gt; oam_0730</code></li><li><code>state_09a2</code></li><li><code>state_09a8</code></li><li><code>dp_0053 / dp_0054</code></li><li><code>dp_0020 / dp_0022</code></li><li><code>lane3_live_race_mid</code> already narrows the visible gameplay stack to <code>BG1 + BG2 + OBJ</code></li><li><code>slot2_extra</code> is now explicitly a boundary/control seed, not gameplay; the new human response also still describes it as intro/credits</li></ul>
+<p>What is still open:</p>
+<ul><li>exact semantics of the narrowed <code>L01318D</code> cluster</li><li>a second strong technical replicate for <code>live_race_plus30f</code></li><li>a robust image/export path for the manual seeds</li><li>an equally detailed still-frame note for <code>live_race_plus30f</code>; the new human response is richest on <code>live_race_mid</code></li></ul>
+<h2 id="hard-facts-to-keep-fixed">Hard Facts To Keep Fixed</h2>
+<ul><li><code>lane3_live_race_mid.mss</code></li><li>preserved path: <code>manual_artifacts/lane3/lane3_live_race_mid.mss</code></li><li>current absolute frame anchor: <code>ppu.frameCount = 16655</code></li><li><code>lane3_live_race_plus30f.mss</code></li><li>preserved path: <code>manual_artifacts/lane3/lane3_live_race_plus30f.mss</code></li><li>current absolute frame anchor: <code>ppu.frameCount = 17495</code></li><li>measured absolute delta:</li><li><code>17495 - 16655 = 840</code></li><li>so <code>plus30f</code> is now only a historical filename, not a validated <code>+30f</code> timing claim</li><li>current gameplay-family callback surface for both primary seeds:</li><li><code>main = 02:9016</code></li><li><code>irq = 01:96A0</code></li><li><code>nmi = 02:8F3C</code></li><li>inherited selector block that still survives in those seeds:</li><li><code>$1C6A = 1</code></li><li><code>$1C70 = 0</code></li><li><code>$1C76 = 1</code></li><li><code>$0202 = 0xFFFF</code></li><li>current strongest producer cluster:</li><li><code>02:B042</code></li><li><code>02:B05D</code></li><li><code>02:B0B1</code></li><li><code>02:B0BD</code></li><li><code>02:B134</code></li></ul>
+<h2 id="priority-order-for-today">Priority Order For Today</h2>
+<ol><li>Keep <code>live_race_mid</code> as the primary technical seed.</li><li>Use <code>live_race_plus30f</code> as the second visual reference, but do not assume it is machine-exportable today.</li><li>Spend effort on exact producer attribution inside <code>L01318D</code> before doing broad new sweeps.</li><li>Use human-visual exports and annotations deliberately; they have been the main catalyst on this lane and are still high leverage.</li><li>Do not reopen <code>game_11.mss</code> or <code>slot2_extra</code> as gameplay candidates.</li></ol>
+<h2 id="important-open-questions">Important Open Questions</h2>
+<ol><li>Which exact member of <code>L01318D</code> (<code>02:B042 / 02:B05D / 02:B0B1 / 02:B0BD / 02:B134</code>) is the real road-line builder, and which are support/cursor math?</li><li>Which owner advances the extra live-race movement in <code>state_09A2</code>, <code>state_09A8</code>, <code>dp_0053</code>, and <code>dp_0054</code> alongside the <code>BG2</code> producer path?</li><li>Why do visually real gameplay seeds still surface under <code>02:9016</code> with the inherited selector block?</li><li>Is the current lab-backend failure on <code>live_race_plus30f</code> specific to that seed, or is it a general savestate-boundary bug in the backend path?</li><li>Which visibly distinct gameplay cues are the best anchors for mapping <code>BG1</code>, <code>BG2</code>, <code>OBJ</code>, and rival/HUD ownership without relying on broken headless screenshots?</li></ol>
+<h2 id="documentation-requests">Documentation Requests</h2>
+<p>If another dev or human collaborator touches Lane 3 today, ask for these docs back with the artifacts.</p>
+<p>Preferred quick-fill template:</p>
+<ul><li><code>rom_analysis/docs/lane3_visual_annotation_template.md</code></li></ul>
+<h3 id="technical-docs-to-request">Technical docs to request</h3>
+<ul><li>a short note when any new trace/export is promoted:</li><li>what exact command ran</li><li>which seed was used</li><li>whether frame numbering is absolute or savestate-relative</li><li>what changed in the reading</li><li>a narrow ownership note whenever one PC in <code>L01318D</code> is promoted:</li><li>what it writes</li><li>what upstream operands feed it</li><li>what visible claim it supports</li><li>an explicit failure note for any backend/export failure:</li><li>exact command</li><li>exact error text</li><li>whether artifacts were partially emitted</li></ul>
+<h3 id="human-visual-docs-to-request">Human visual docs to request</h3>
+<ul><li>a short Markdown note per export window with:</li><li>road shape: straight / left curve / right curve / crest / tunnel / bridge / rain</li><li>traffic: none / distant / approaching / side-by-side / passing</li><li>cockpit state: wheel straight / left / right</li><li>HUD state: speed/needle movement, radar marker, police/rival cues, blinking lights</li><li>scenery: horizon, desert props, barriers, roadside objects</li><li>confidence: what is certain vs what is guesswork</li></ul>
+<h2 id="export-queue-worth-doing-today">Export Queue Worth Doing Today</h2>
+<h3 id="e1-manual-screenshot-pair-for-the-preserved-live-race-seeds">E1. Manual screenshot pair for the preserved live-race seeds</h3>
+<p>Goal:</p>
+<ul><li>give the next dev a real visual sidecar for the preserved technical seeds</li></ul>
+<p>Current status:</p>
+<ul><li><code>manual_artifacts/lane3/responses.txt</code> now records a first filled screenshot note for <code>ESTADO 1</code> / <code>live_race_mid</code></li><li>strongest current read from that note:</li><li>green NPC car near on the player&#x27;s right</li><li>wheel straight</li><li>straight road with centered yellow divider</li><li><code>Porsche 959</code> cockpit base</li><li>active radar marker</li><li>the same response also says <code>slot2_extra</code> still looks like intro/credits</li><li>remaining gap:</li><li>no equally detailed still-frame note is recorded there yet for <code>live_race_plus30f</code></li></ul>
+<p>Requested output:</p>
+<ul><li>one screenshot for <code>lane3_live_race_mid.mss</code></li><li>one screenshot for <code>lane3_live_race_plus30f.mss</code></li><li>optional third screenshot for <code>lane3_live_race_slot2_extra.mss</code> as a boundary/control visual contrast</li></ul>
+<p>Human annotation prompts:</p>
+<ul><li>where is the green NPC car?</li><li>is the wheel straight or turned?</li><li>is the road straight or curving?</li><li>which parts of the screen feel like cockpit base vs moving road vs dynamic objects?</li><li>is there any top-strip/radar/rival cue obviously active?</li></ul>
+<h3 id="e2-short-manual-video-clip-around-live-race-mid">E2. Short manual video clip around <code>live_race_mid</code></h3>
+<p>Goal:</p>
+<ul><li>give motion context the static technical traces do not provide</li></ul>
+<p>Current status:</p>
+<ul><li>the new human response already summarizes a short local clip from <code>live_race_mid</code></li><li>strongest current motion/scene hooks from that summary:</li><li>road curves plus elevations/depressions</li><li>insects hitting the windshield</li><li>checkpoint/post stop, gas-station dialog, and partial-results screen</li><li>late police arrival with siren and a third radar marker</li><li>remaining gap:</li><li>if the clip itself needs to become a promoted artifact later, pair this summary with a time-stamped note rather than re-asking for the same human read</li></ul>
+<p>Requested output:</p>
+<ul><li><code>5..10</code> seconds of footage starting from <code>lane3_live_race_mid.mss</code></li></ul>
+<p>Human annotation prompts:</p>
+<ul><li>what visibly moves first: road, horizon, traffic, HUD needle, rival marker, wheel?</li><li>does the green car approach in depth, lateral motion, or both?</li><li>is any layer visibly split near the top strip?</li></ul>
+<h3 id="e3-live-race-mid-producer-side-export-pack">E3. <code>live_race_mid</code> producer-side export pack</h3>
+<p>Goal:</p>
+<ul><li>help the next dev correlate <code>L01318D</code> work with visible gameplay claims</li></ul>
+<p>Use existing promoted artifacts first:</p>
+<ul><li><code>tools/out/lane3_live_race_mid_bg2_producer_summary.json</code></li><li><code>tools/out/lane3_live_race_mid_bg2_producer_summary.md</code></li><li><code>tools/out/lane3_live_race_mid_layer_stack_summary.json</code></li><li><code>tools/out/lane3_live_race_mid_layer_stack_summary.md</code></li></ul>
+<p>If more export work is needed:</p>
+<ul><li>bounded exec/write trace centered on:</li><li><code>02:B042</code></li><li><code>02:B05D</code></li><li><code>02:B0B1</code></li><li><code>02:B0BD</code></li><li><code>02:B134</code></li><li>keep <code>01:960D</code>, <code>01:96A0</code>, and <code>01:9809</code> in the same run</li></ul>
+<p>Human annotation prompts:</p>
+<ul><li>if a trace line is promoted as “road builder”, what concrete visible cue is it meant to explain?</li><li>is the cue road pitch, road curvature, horizon split, NPC placement, or HUD?</li></ul>
+<h3 id="e4-live-race-plus30f-lab-backend-retry-only-if-doing-tooling-work">E4. <code>live_race_plus30f</code> lab-backend retry only if doing tooling work</h3>
+<p>Goal:</p>
+<ul><li>recover a second technical replicate without relying on broken PNG exports</li></ul>
+<p>Current state:</p>
+<ul><li>seed starts at absolute frame <code>17495</code></li><li>current backend fails at boundary correction on both <code>17495</code> and <code>17496</code></li></ul>
+<p>Only do this if you are explicitly touching backend/tooling today.</p>
+<h3 id="e5-boundary-control-contrast-pack">E5. Boundary/control contrast pack</h3>
+<p>Goal:</p>
+<ul><li>stop future confusion between gameplay seeds and nearby non-gameplay seeds</li></ul>
+<p>Use:</p>
+<ul><li><code>lane3_live_race_mid.mss</code></li><li><code>lane3_live_race_slot2_extra.mss</code></li><li>old <code>post9016</code> control compare artifacts</li></ul>
+<p>Human annotation prompts:</p>
+<ul><li>what is visibly missing from <code>slot2_extra</code> that is present in <code>live_race_mid</code>?</li><li>does <code>slot2_extra</code> look like menu, transition, split strip, or attract?</li><li>which visual cue most clearly separates “true live-race feel” from the older <code>00:8029</code> boundary family?</li></ul>
+<h2 id="minimal-human-annotation-template">Minimal Human Annotation Template</h2>
+<p>Use this exact structure if someone sends back a note quickly:</p>
+<pre><code class="language-md"># Lane 3 Visual Note
+
+- artifact:
+- seed:
+- frame/time:
+- road shape:
+- traffic state:
+- cockpit wheel state:
+- HUD/radar/rival cue:
+- scenery cue:
+- strongest moving element:
+- strongest static element:
+- confidence:
+- open doubt:</code></pre>
+<h2 id="recommended-work-split">Recommended Work Split</h2>
+<p>If two people are working today, split like this:</p>
+<ul><li>Dev A: producer attribution inside <code>L01318D</code> and related IRQ scheduler ownership</li><li>Dev B: export/annotation pipeline and visual sidecars for <code>live_race_mid</code> and <code>live_race_plus30f</code></li></ul>
+<p>That keeps the code-facing and human-facing catalyst lanes moving in parallel without redoing the same work.</p>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

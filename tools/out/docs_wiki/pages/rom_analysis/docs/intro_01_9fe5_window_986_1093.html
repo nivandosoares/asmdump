@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Late `01:9FE5` Window Summary (`986..1093`) | TD2 Archaeology Wiki</title>
+  <link rel="stylesheet" href="../../../assets/wiki.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="site-link" href="../../../index.html">TD2 Archaeology Wiki</a>
+      <p class="sidebar-note">Simple wiki-style index built from curated markdown sources.</p>
+      <section class="sidebar-group"><h3>Source Of Truth</h3><ul><li><a href="../../PORT_PLAN.html">Port Plan</a></li><li><a href="next_steps_roadmap.html">Next Steps Roadmap</a></li><li><a href="progress_checkpoints.html">Progress Checkpoints</a></li><li><a href="validation_gates.html">Validation Gates</a></li><li><a href="../../validation/README.html">Validation README</a></li><li><a href="../../tools/README.html">Tools README</a></li><li><a href="../../port/README.html">Port README</a></li><li><a href="../README.html">ROM Analysis README</a></li></ul></section><section class="sidebar-group"><h3>Attract And Intro</h3><ul><li><a href="intro_00_8029_next_agent_handoff.html">00:8029 Handoff</a></li><li><a href="intro_01_9fe5_window_986_1093.html">01:9FE5 Window 986..1093</a></li><li><a href="intro_01_9fe5_activity_trace_1094_1117.html">01:9FE5 Activity Trace</a></li><li><a href="intro_00_8029_mode7_blob_cycle_1134_1200.html">Mode 7 Blob Cycle 1134..1200</a></li><li><a href="../maps/tilemaps/mesen_range_1086_1093_provenance.html">Tilemap Provenance 1086..1093</a></li><li><a href="mesen_debugger_design_workbench.html">Mesen Design Workbench</a></li></ul></section><section class="sidebar-group"><h3>Front-End And Menu</h3><ul><li><a href="snes_runtime_algorithm_human.html">SNES Runtime Algorithm</a></li><li><a href="../maps/tilemaps/car_select_frame_1500_bg2_provenance.html">Frame 1500 BG2 Provenance</a></li><li><a href="../../tools/out/snes_frontend_top_menu_labels.html">Top Menu Labels</a></li><li><a href="../../tools/out/snes_frontend_rival_selection_grid.html">Rival Selection Grid</a></li><li><a href="../../tools/out/snes_select_opponent_organic_default_path.html">Organic Default Path</a></li><li><a href="../../tools/out/snes_frontend_select_opponent_mode_split.html">Select Opponent Mode Split</a></li></ul></section><section class="sidebar-group"><h3>Gameplay And Lane 3</h3><ul><li><a href="lane3_today_work_brief.html">Lane 3 Work Brief</a></li><li><a href="gameplay_default_rival_next_agent_handoff.html">Gameplay Handoff</a></li><li><a href="lane3_attract_demo_boundary.html">Attract Demo Boundary</a></li><li><a href="../maps/tracks/track1_live_gameplay_entry_route.html">Live Gameplay Entry Route</a></li><li><a href="../maps/tracks/track1_live_race_manual_seed_intake.html">Manual Seed Intake</a></li><li><a href="../maps/tracks/track1_live_race_manual_video_intake.html">Manual Video Intake</a></li><li><a href="../maps/tracks/track1_live_race_visible_layer_stack.html">Visible Layer Stack</a></li><li><a href="../maps/tracks/track1_live_race_bg2_producer_path.html">BG2 Producer Path</a></li><li><a href="../maps/tracks/track1_live_race_l01318d_static_role_split.html">L01318D Role Split</a></li><li><a href="../maps/tracks/track1_02_9016_state_ownership.html">02:9016 State Ownership</a></li></ul></section><section class="sidebar-group"><h3>Runtime And Port Validation</h3><ul><li><a href="port_sdl_runtime_mimetization_smoke.html">SDL Runtime Smoke</a></li><li><a href="mesen_instrumented_backend_architecture.html">Instrumented Backend Architecture</a></li></ul></section>
+    </aside>
+    <main class="content">
+      <nav class="breadcrumbs">
+        <a href="../../../index.html">Index</a>
+        <span>/</span>
+        <a href="../../../index.html#attract-intro">Attract And Intro</a>
+        <span>/</span>
+        <span>01:9FE5 Window 986..1093</span>
+      </nav>
+      <header class="doc-header">
+        <p class="eyebrow">Attract And Intro</p>
+        <h1>Late `01:9FE5` Window Summary (`986..1093`)</h1>
+        <p class="doc-note">Consolidated visual-contract note for the bridge-visible intro block.</p>
+        <div class="doc-meta">
+          <span>Source: <code>rom_analysis/docs/intro_01_9fe5_window_986_1093.md</code></span>
+          <a href="../../../../../../rom_analysis/docs/intro_01_9fe5_window_986_1093.md">Open Raw Markdown</a>
+        </div>
+      </header>
+      <article class="doc-body">
+        <h1 id="late-01-9fe5-window-summary-986-1093">Late <code>01:9FE5</code> Window Summary (<code>986..1093</code>)</h1>
+<p>This note consolidates the late bridge-visible intro window that previously lived only as per-frame visual contracts.</p>
+<p>Primary artifact:</p>
+<ul><li><code>tools/out/visual_contract_range_986_1093_live/visual_contract_range.json</code></li></ul>
+<p>Builder path:</p>
+<ul><li><code>python3 tools/build_mesen_visual_contract_range.py tools/out tools/out/visual_contract_range_986_1093_live --frame-glob &#x27;design_frame*&#x27; --probe-pattern &#x27;tools/out/visual_contract_probe_{frame}_live/td2_boot_probe.json&#x27; --clean-out</code></li></ul>
+<h2 id="window-shape">Window Shape</h2>
+<ul><li>sampled frames:</li><li><code>986</code>, <code>990</code>, <code>994</code>, <code>998</code>, <code>1005</code>, <code>1013</code>, <code>1021</code>, <code>1029</code>, <code>1037</code>, <code>1045</code>, <code>1053</code>, <code>1061</code>, <code>1069</code>, <code>1077</code>, <code>1085</code>, <code>1093</code></li><li>callback family is flat across the whole sampled window:</li><li>main callback: <code>01:9FE5</code></li><li>IRQ callback: <code>00:835F</code></li><li>presentation surface is also flat:</li><li><code>bgMode = 7</code></li><li>main-screen layers: <code>bg1</code></li></ul>
+<h2 id="obj-growth">OBJ Growth</h2>
+<ul><li>visible sprite count:</li><li><code>986</code> -&gt; <code>0</code></li><li><code>990</code> -&gt; <code>5</code></li><li><code>994</code> -&gt; <code>19</code></li><li><code>998</code> -&gt; <code>32</code></li><li><code>1005</code> -&gt; <code>53</code></li><li><code>1013..1093</code> -&gt; <code>61</code></li></ul>
+<p>Reading:</p>
+<ul><li>the late overlay grows quickly between <code>986</code> and <code>1005</code></li><li>by <code>1013</code>, the visible OBJ set has reached its stable sampled size</li></ul>
+<h2 id="state-progression">State Progression</h2>
+<ul><li><code>$0204</code> settles back to <code>1</code> from <code>1013</code> onward after the early <code>3 -&gt; 2 -&gt; 1 -&gt; 2 -&gt; 3</code> prelude</li><li><code>$0206</code> stays <code>0</code> through <code>1021</code>, then rises:</li><li><code>1029</code> -&gt; <code>1</code></li><li><code>1037</code> -&gt; <code>3</code></li><li><code>1045</code> -&gt; <code>5</code></li><li><code>1053</code> -&gt; <code>7</code></li><li><code>1061</code> -&gt; <code>9</code></li><li><code>1069</code> -&gt; <code>11</code></li><li><code>1077..1093</code> -&gt; <code>13</code></li><li><code>$040A</code> follows the same later stair-step:</li><li><code>1029</code> -&gt; <code>6</code></li><li><code>1037</code> -&gt; <code>8</code></li><li><code>1045</code> -&gt; <code>10</code></li><li><code>1053</code> -&gt; <code>12</code></li><li><code>1061</code> -&gt; <code>14</code></li><li><code>1069</code> -&gt; <code>16</code></li><li><code>1077..1093</code> -&gt; <code>17</code></li><li><code>$0054</code> wraps and then plateaus:</li><li><code>986</code> -&gt; <code>56</code></li><li><code>990</code> -&gt; <code>88</code></li><li><code>994</code> -&gt; <code>120</code></li><li><code>998</code> -&gt; <code>152</code></li><li><code>1005</code> -&gt; <code>208</code></li><li><code>1013</code> -&gt; <code>8</code></li><li><code>1021</code> -&gt; <code>32</code></li><li><code>1029</code> -&gt; <code>40</code></li><li><code>1037</code> -&gt; <code>56</code></li><li><code>1045</code> -&gt; <code>72</code></li><li><code>1053</code> -&gt; <code>88</code></li><li><code>1061</code> -&gt; <code>104</code></li><li><code>1069</code> -&gt; <code>120</code></li><li><code>1077..1093</code> -&gt; <code>128</code></li></ul>
+<h2 id="producer-domains">Producer Domains</h2>
+<ul><li>distinct sampled producer domains across the whole window:</li><li><code>oam</code></li><li><code>vram</code></li><li>sampled OAM-only windows:</li><li><code>1029</code></li><li><code>1085</code></li><li><code>1093</code></li></ul>
+<p>Reading:</p>
+<ul><li>late ownership stays inside the same callback family even when the sampled <code>vram</code> domain disappears</li><li>this means the next open problem after <code>1093</code> is not callback-family identification</li><li>it is the post-<code>1093</code> composition/export change that makes the visible-state continuation diverge more sharply</li></ul>
+<h2 id="next-reading">Next Reading</h2>
+<ul><li>use this range summary as the current source of truth for the late <code>01:9FE5</code> callback family</li><li>continue with:</li><li><code>rom_analysis/docs/intro_01_9fe5_post_1093_window_1094_1101.md</code></li><li>that note closes the first post-<code>1093</code> read:</li><li><code>main_visible.ppm</code> is exactly the top <code>224</code> lines of <code>main.ppm</code></li><li>swapping only the visible-scanline <code>ppu.mode7.matrix[0]/[3]</code> values makes the render mismatch worse, not better</li></ul>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

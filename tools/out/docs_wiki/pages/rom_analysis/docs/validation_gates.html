@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Validation Gates | TD2 Archaeology Wiki</title>
+  <link rel="stylesheet" href="../../../assets/wiki.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="site-link" href="../../../index.html">TD2 Archaeology Wiki</a>
+      <p class="sidebar-note">Simple wiki-style index built from curated markdown sources.</p>
+      <section class="sidebar-group"><h3>Source Of Truth</h3><ul><li><a href="../../PORT_PLAN.html">Port Plan</a></li><li><a href="next_steps_roadmap.html">Next Steps Roadmap</a></li><li><a href="progress_checkpoints.html">Progress Checkpoints</a></li><li><a href="validation_gates.html">Validation Gates</a></li><li><a href="../../validation/README.html">Validation README</a></li><li><a href="../../tools/README.html">Tools README</a></li><li><a href="../../port/README.html">Port README</a></li><li><a href="../README.html">ROM Analysis README</a></li></ul></section><section class="sidebar-group"><h3>Attract And Intro</h3><ul><li><a href="intro_00_8029_next_agent_handoff.html">00:8029 Handoff</a></li><li><a href="intro_01_9fe5_window_986_1093.html">01:9FE5 Window 986..1093</a></li><li><a href="intro_01_9fe5_activity_trace_1094_1117.html">01:9FE5 Activity Trace</a></li><li><a href="intro_00_8029_mode7_blob_cycle_1134_1200.html">Mode 7 Blob Cycle 1134..1200</a></li><li><a href="../maps/tilemaps/mesen_range_1086_1093_provenance.html">Tilemap Provenance 1086..1093</a></li><li><a href="mesen_debugger_design_workbench.html">Mesen Design Workbench</a></li></ul></section><section class="sidebar-group"><h3>Front-End And Menu</h3><ul><li><a href="snes_runtime_algorithm_human.html">SNES Runtime Algorithm</a></li><li><a href="../maps/tilemaps/car_select_frame_1500_bg2_provenance.html">Frame 1500 BG2 Provenance</a></li><li><a href="../../tools/out/snes_frontend_top_menu_labels.html">Top Menu Labels</a></li><li><a href="../../tools/out/snes_frontend_rival_selection_grid.html">Rival Selection Grid</a></li><li><a href="../../tools/out/snes_select_opponent_organic_default_path.html">Organic Default Path</a></li><li><a href="../../tools/out/snes_frontend_select_opponent_mode_split.html">Select Opponent Mode Split</a></li></ul></section><section class="sidebar-group"><h3>Gameplay And Lane 3</h3><ul><li><a href="lane3_today_work_brief.html">Lane 3 Work Brief</a></li><li><a href="gameplay_default_rival_next_agent_handoff.html">Gameplay Handoff</a></li><li><a href="lane3_attract_demo_boundary.html">Attract Demo Boundary</a></li><li><a href="../maps/tracks/track1_live_gameplay_entry_route.html">Live Gameplay Entry Route</a></li><li><a href="../maps/tracks/track1_live_race_manual_seed_intake.html">Manual Seed Intake</a></li><li><a href="../maps/tracks/track1_live_race_manual_video_intake.html">Manual Video Intake</a></li><li><a href="../maps/tracks/track1_live_race_visible_layer_stack.html">Visible Layer Stack</a></li><li><a href="../maps/tracks/track1_live_race_bg2_producer_path.html">BG2 Producer Path</a></li><li><a href="../maps/tracks/track1_live_race_l01318d_static_role_split.html">L01318D Role Split</a></li><li><a href="../maps/tracks/track1_02_9016_state_ownership.html">02:9016 State Ownership</a></li></ul></section><section class="sidebar-group"><h3>Runtime And Port Validation</h3><ul><li><a href="port_sdl_runtime_mimetization_smoke.html">SDL Runtime Smoke</a></li><li><a href="mesen_instrumented_backend_architecture.html">Instrumented Backend Architecture</a></li></ul></section>
+    </aside>
+    <main class="content">
+      <nav class="breadcrumbs">
+        <a href="../../../index.html">Index</a>
+        <span>/</span>
+        <a href="../../../index.html#source-of-truth">Source Of Truth</a>
+        <span>/</span>
+        <span>Validation Gates</span>
+      </nav>
+      <header class="doc-header">
+        <p class="eyebrow">Source Of Truth</p>
+        <h1>Validation Gates</h1>
+        <p class="doc-note">Bounded pass/fail policy for regression and callback checks.</p>
+        <div class="doc-meta">
+          <span>Source: <code>rom_analysis/docs/validation_gates.md</code></span>
+          <a href="../../../../../../rom_analysis/docs/validation_gates.md">Open Raw Markdown</a>
+        </div>
+      </header>
+      <article class="doc-body">
+        <h1 id="validation-gates">Validation Gates</h1>
+<p>This note formalizes automated pass/fail gates for the intro vertical slice.</p>
+<h2 id="1-pixel-regression-gates">1) Pixel Regression Gates</h2>
+<p>Contract:</p>
+<ul><li><code>validation/regression_gates_intro.jsonc</code></li></ul>
+<p>Runner:</p>
+<pre><code class="language-sh">python3 tools/check_regression_gates.py \
+  validation/regression_gates_intro.jsonc \
+  --render-dir port/build/regression_frames \
+  --json-out tools/out/regression_gates_intro_report.json</code></pre>
+<p>Current policy buckets:</p>
+<ul><li><code>solved_strict</code>: exact parity required (<code>0</code> mismatched pixels)</li><li><code>bootstrap_tolerated</code>: temporary bootstrap tolerance (<code>&lt;=24</code> mismatched pixels)</li><li><code>mode7_tolerated</code>: temporary Mode 7 tolerance (<code>&lt;=8</code> mismatched pixels)</li></ul>
+<p>This enforces explicit error budgets per checkpoint instead of ad hoc checks.</p>
+<h2 id="2-callback-state-contracts">2) Callback/State Contracts</h2>
+<p>Contract:</p>
+<ul><li><code>rom_analysis/docs/callback_state_contracts.jsonc</code></li></ul>
+<p>Runner:</p>
+<pre><code class="language-sh">python3 tools/validate_callback_contracts.py \
+  rom_analysis/docs/callback_state_contracts.jsonc \
+  tools/out/td2_boot_probe.json \
+  --json-out tools/out/callback_state_contracts_report.json</code></pre>
+<p>This validates callback continuity and selected state fields at known frames (<code>01:A39C</code>, <code>01:9D69</code>, <code>01:9FE5</code> windows) as first-class machine checks. Use a probe capture that matches the contract&#x27;s expected profile in <code>expected_probe_profile</code>, for example a run with <code>TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/td2_boot_probe</code>.</p>
+<h2 id="3-practical-gate-policy">3) Practical Gate Policy</h2>
+<p>For each archaeology lane:</p>
+<ol><li>Add or update checkpoint rows in the JSON contracts.</li><li>Keep temporary tolerances only for known unstable windows.</li><li>Reduce tolerances as renderer/state fidelity improves.</li><li>Promote checkpoint to strict (<code>0</code>) once solved.</li></ol>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

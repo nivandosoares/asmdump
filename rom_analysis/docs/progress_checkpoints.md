@@ -49,6 +49,49 @@ next gate needed to advance.
     (cars / tracks / opponent branch), not into forcing one exact match to
     `live_race_mid`
 
+## Docs Wiki And SDL Smoke (`2026-03-28`)
+
+- New tooling:
+  - `tools/build_docs_wiki_report.py`
+- New curation manifest:
+  - `rom_analysis/docs/wiki_doc_index.json`
+- New note:
+  - `rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md`
+- New generated HTML artifact:
+  - `tools/out/docs_wiki/index.html`
+- Closed practical read:
+  - the repo now has a simple wiki-style HTML surface that indexes the current
+    markdown corpus by scene family instead of one flat list
+  - the top-level split is now explicit:
+    - `Source Of Truth`
+    - `Attract And Intro`
+    - `Front-End And Menu`
+    - `Gameplay And Lane 3`
+    - `Runtime And Port Validation`
+  - this is the promoted answer to the current “do not pollute gameplay with
+    menu/front-end material” requirement
+  - from this checkpoint forward, relevant doc/artifact changes are expected
+    to refresh the wiki through the promoted tooling path:
+    `make -C tools docs-wiki`
+- Validation:
+  - `python3 -m py_compile tools/build_docs_wiki_report.py`
+  - `python3 tools/build_docs_wiki_report.py --manifest rom_analysis/docs/wiki_doc_index.json --output-dir tools/out/docs_wiki`
+  - local HTML link check over the generated site: `0` missing links
+  - `make -C port`
+  - `./port/test_regression.sh`
+- SDL smoke read:
+  - the current runtime renders the bridge-visible intro sequence through
+    frame `1000`
+  - exact golden parity holds at checkpoints `978`, `982`, `986`, and `990`
+  - the first measured gap in that smoke is `mode7_visible_991` with only
+    `4` mismatched pixels (`0.006975%`)
+  - `mode7_hold_transition` passes seamlessly
+- Practical implication:
+  - current SDL/runtime parity is already strong enough to use as a real
+    intro/front-end mimic and regression surface
+  - gameplay parity is still not claimed by this smoke; the gameplay lane
+    remains probe/capture-driven
+
 ## Execution Reset (2026-03-19)
 
 - The port plan now treats maintainability cleanup as a first-class execution

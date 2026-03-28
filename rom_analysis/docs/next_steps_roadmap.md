@@ -54,6 +54,35 @@ Validation contract baseline:
   - parameterize it upward into alternate cars / tracks / opponent branches
     instead of continuing to optimize for one exact saved frame
 
+## Docs Wiki And SDL Smoke (`2026-03-28`)
+
+- New tooling:
+  - `tools/build_docs_wiki_report.py`
+- New curation manifest:
+  - `rom_analysis/docs/wiki_doc_index.json`
+- New generated HTML surface:
+  - `tools/out/docs_wiki/index.html`
+- Practical read:
+  - the repo now has a simple wiki-style HTML index for the current markdown
+    corpus
+  - the site keeps `Front-End And Menu` separate from `Gameplay And Lane 3`,
+    and also keeps `Attract And Intro` separate from both
+  - this is now the preferred human-facing review surface when the goal is
+    quick orientation rather than raw file browsing
+  - from this checkpoint forward, relevant doc/artifact updates should refresh
+    the wiki as part of the routine tooling pipeline via
+    `make -C tools docs-wiki`
+- SDL smoke:
+  - `rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md`
+  - `make -C port` reports the runtime already current
+  - `./port/test_regression.sh` renders `1000` frames and keeps exact golden
+    parity at `978/982/986/990`
+  - the first remaining measured gap in that smoke is `mode7_visible_991`
+    with `4` mismatched pixels (`0.006975%`)
+- Boundary:
+  - this smoke is strong evidence for intro/front-end runtime parity
+  - it is **not** yet a gameplay-parity claim
+
 ## Gameplay Capture Heuristics (User-supplied, Unverified)
 
 Use these as guided-capture targets for lane 3, not as promoted ROM claims:

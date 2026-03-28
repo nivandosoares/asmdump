@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SNES Select Opponent Organic Default Path | TD2 Archaeology Wiki</title>
+  <link rel="stylesheet" href="../../../assets/wiki.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="site-link" href="../../../index.html">TD2 Archaeology Wiki</a>
+      <p class="sidebar-note">Simple wiki-style index built from curated markdown sources.</p>
+      <section class="sidebar-group"><h3>Source Of Truth</h3><ul><li><a href="../../PORT_PLAN.html">Port Plan</a></li><li><a href="../../rom_analysis/docs/next_steps_roadmap.html">Next Steps Roadmap</a></li><li><a href="../../rom_analysis/docs/progress_checkpoints.html">Progress Checkpoints</a></li><li><a href="../../rom_analysis/docs/validation_gates.html">Validation Gates</a></li><li><a href="../../validation/README.html">Validation README</a></li><li><a href="../README.html">Tools README</a></li><li><a href="../../port/README.html">Port README</a></li><li><a href="../../rom_analysis/README.html">ROM Analysis README</a></li></ul></section><section class="sidebar-group"><h3>Attract And Intro</h3><ul><li><a href="../../rom_analysis/docs/intro_00_8029_next_agent_handoff.html">00:8029 Handoff</a></li><li><a href="../../rom_analysis/docs/intro_01_9fe5_window_986_1093.html">01:9FE5 Window 986..1093</a></li><li><a href="../../rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.html">01:9FE5 Activity Trace</a></li><li><a href="../../rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.html">Mode 7 Blob Cycle 1134..1200</a></li><li><a href="../../rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.html">Tilemap Provenance 1086..1093</a></li><li><a href="../../rom_analysis/docs/mesen_debugger_design_workbench.html">Mesen Design Workbench</a></li></ul></section><section class="sidebar-group"><h3>Front-End And Menu</h3><ul><li><a href="../../rom_analysis/docs/snes_runtime_algorithm_human.html">SNES Runtime Algorithm</a></li><li><a href="../../rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.html">Frame 1500 BG2 Provenance</a></li><li><a href="snes_frontend_top_menu_labels.html">Top Menu Labels</a></li><li><a href="snes_frontend_rival_selection_grid.html">Rival Selection Grid</a></li><li><a href="snes_select_opponent_organic_default_path.html">Organic Default Path</a></li><li><a href="snes_frontend_select_opponent_mode_split.html">Select Opponent Mode Split</a></li></ul></section><section class="sidebar-group"><h3>Gameplay And Lane 3</h3><ul><li><a href="../../rom_analysis/docs/lane3_today_work_brief.html">Lane 3 Work Brief</a></li><li><a href="../../rom_analysis/docs/gameplay_default_rival_next_agent_handoff.html">Gameplay Handoff</a></li><li><a href="../../rom_analysis/docs/lane3_attract_demo_boundary.html">Attract Demo Boundary</a></li><li><a href="../../rom_analysis/maps/tracks/track1_live_gameplay_entry_route.html">Live Gameplay Entry Route</a></li><li><a href="../../rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.html">Manual Seed Intake</a></li><li><a href="../../rom_analysis/maps/tracks/track1_live_race_manual_video_intake.html">Manual Video Intake</a></li><li><a href="../../rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.html">Visible Layer Stack</a></li><li><a href="../../rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.html">BG2 Producer Path</a></li><li><a href="../../rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.html">L01318D Role Split</a></li><li><a href="../../rom_analysis/maps/tracks/track1_02_9016_state_ownership.html">02:9016 State Ownership</a></li></ul></section><section class="sidebar-group"><h3>Runtime And Port Validation</h3><ul><li><a href="../../rom_analysis/docs/port_sdl_runtime_mimetization_smoke.html">SDL Runtime Smoke</a></li><li><a href="../../rom_analysis/docs/mesen_instrumented_backend_architecture.html">Instrumented Backend Architecture</a></li></ul></section>
+    </aside>
+    <main class="content">
+      <nav class="breadcrumbs">
+        <a href="../../../index.html">Index</a>
+        <span>/</span>
+        <a href="../../../index.html#front-end-menu">Front-End And Menu</a>
+        <span>/</span>
+        <span>Organic Default Path</span>
+      </nav>
+      <header class="doc-header">
+        <p class="eyebrow">Front-End And Menu</p>
+        <h1>SNES Select Opponent Organic Default Path</h1>
+        <p class="doc-note">Recovered no-force path into the default rival corridor.</p>
+        <div class="doc-meta">
+          <span>Source: <code>tools/out/snes_select_opponent_organic_default_path.md</code></span>
+          <a href="../../../../snes_select_opponent_organic_default_path.md">Open Raw Markdown</a>
+        </div>
+      </header>
+      <article class="doc-body">
+        <h1 id="snes-select-opponent-organic-default-path">SNES Select Opponent Organic Default Path</h1>
+<h2 id="claim-audit">Claim Audit</h2>
+<ul><li>Claim: No-force timed-input probes now recover the default top-left <code>Select Opponent</code> path organically through <code>L00C20B -&gt; 01:C1D2 -&gt; L00BE76 -&gt; L008B87 -&gt; 01:902D</code>, followed later by <code>active_main = 02:9016</code>.</li><li>Classification: VERIFIED</li><li>Evidence:</li><li><code>tools/out/select_opponent_clock_path_v1b/td2_boot_probe.json</code> reaches:</li><li><code>L00C20B</code> at frame <code>1562</code></li><li>first <code>01:C1D2</code> at frame <code>1577</code></li><li><code>L00BE76</code> at frame <code>1616</code></li><li><code>L008B87</code> at frame <code>1706</code></li><li><code>01:902D</code> at frame <code>1857</code></li><li>first <code>active_main = 02:9016</code> at frame <code>2014</code></li><li><code>tools/out/select_opponent_clock_path_v2/td2_boot_probe.json</code> reaches:</li><li><code>L00C20B</code> at frame <code>1584</code></li><li>first <code>01:C1D2</code> at frame <code>1599</code></li><li><code>L00BE76</code> at frame <code>1646</code></li><li><code>L008B87</code> at frame <code>1736</code></li><li><code>01:902D</code> at frame <code>1887</code></li><li>first <code>active_main = 02:9016</code> at frame <code>2044</code></li><li>In both runs, <code>$1C70</code> stays <code>0</code> and <code>$1C76</code> flips <code>0 -&gt; 1</code> only after <code>L008B87</code>.</li><li>The attempted <code>right+down</code> windows still land before the first live <code>01:C1D2</code> frame in both runs.</li><li>Notes:</li><li>This closes organic reachability for the default rival path without active-main forcing.</li><li>The remaining proving target is not reachability anymore; it is selecting the fourth clock slot inside the live <code>01:C1D2</code> window so the <code>$1C76 = 0</code> branch can be compared against this baseline.</li></ul>
+<h2 id="scenario-summary">Scenario Summary</h2>
+<p>| Scenario | Input windows | Key frames | | --- | --- | --- | | <code>v1b</code> | <code>1200:start;1280:start;1505-1510:start;1560-1565:right,down;1610-1615:start;1700-1705:start</code> | <code>1562 c20b</code>, <code>1577 c1d2</code>, <code>1616 be76</code>, <code>1706 b87</code>, <code>1857 902d</code>, <code>2014 02:9016</code> | | <code>v2</code> | <code>1200:start;1280:start;1505-1510:start;1584-1589:right,down;1640-1645:start;1730-1735:start</code> | <code>1584 c20b</code>, <code>1599 c1d2</code>, <code>1646 be76</code>, <code>1736 b87</code>, <code>1887 902d</code>, <code>2044 02:9016</code> |</p>
+<h2 id="next-gate">Next Gate</h2>
+<p>Inject <code>right+down</code> only after <code>01:C1D2</code> is already live so <code>$1C70</code> can leave <code>0</code> before the same organic corridor falls through <code>L008B87</code> and <code>01:902D</code>.</p>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

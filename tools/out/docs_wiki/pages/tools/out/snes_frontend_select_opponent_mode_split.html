@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SNES Select Opponent Mode Split | TD2 Archaeology Wiki</title>
+  <link rel="stylesheet" href="../../../assets/wiki.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="site-link" href="../../../index.html">TD2 Archaeology Wiki</a>
+      <p class="sidebar-note">Simple wiki-style index built from curated markdown sources.</p>
+      <section class="sidebar-group"><h3>Source Of Truth</h3><ul><li><a href="../../PORT_PLAN.html">Port Plan</a></li><li><a href="../../rom_analysis/docs/next_steps_roadmap.html">Next Steps Roadmap</a></li><li><a href="../../rom_analysis/docs/progress_checkpoints.html">Progress Checkpoints</a></li><li><a href="../../rom_analysis/docs/validation_gates.html">Validation Gates</a></li><li><a href="../../validation/README.html">Validation README</a></li><li><a href="../README.html">Tools README</a></li><li><a href="../../port/README.html">Port README</a></li><li><a href="../../rom_analysis/README.html">ROM Analysis README</a></li></ul></section><section class="sidebar-group"><h3>Attract And Intro</h3><ul><li><a href="../../rom_analysis/docs/intro_00_8029_next_agent_handoff.html">00:8029 Handoff</a></li><li><a href="../../rom_analysis/docs/intro_01_9fe5_window_986_1093.html">01:9FE5 Window 986..1093</a></li><li><a href="../../rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.html">01:9FE5 Activity Trace</a></li><li><a href="../../rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.html">Mode 7 Blob Cycle 1134..1200</a></li><li><a href="../../rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.html">Tilemap Provenance 1086..1093</a></li><li><a href="../../rom_analysis/docs/mesen_debugger_design_workbench.html">Mesen Design Workbench</a></li></ul></section><section class="sidebar-group"><h3>Front-End And Menu</h3><ul><li><a href="../../rom_analysis/docs/snes_runtime_algorithm_human.html">SNES Runtime Algorithm</a></li><li><a href="../../rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.html">Frame 1500 BG2 Provenance</a></li><li><a href="snes_frontend_top_menu_labels.html">Top Menu Labels</a></li><li><a href="snes_frontend_rival_selection_grid.html">Rival Selection Grid</a></li><li><a href="snes_select_opponent_organic_default_path.html">Organic Default Path</a></li><li><a href="snes_frontend_select_opponent_mode_split.html">Select Opponent Mode Split</a></li></ul></section><section class="sidebar-group"><h3>Gameplay And Lane 3</h3><ul><li><a href="../../rom_analysis/docs/lane3_today_work_brief.html">Lane 3 Work Brief</a></li><li><a href="../../rom_analysis/docs/gameplay_default_rival_next_agent_handoff.html">Gameplay Handoff</a></li><li><a href="../../rom_analysis/docs/lane3_attract_demo_boundary.html">Attract Demo Boundary</a></li><li><a href="../../rom_analysis/maps/tracks/track1_live_gameplay_entry_route.html">Live Gameplay Entry Route</a></li><li><a href="../../rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.html">Manual Seed Intake</a></li><li><a href="../../rom_analysis/maps/tracks/track1_live_race_manual_video_intake.html">Manual Video Intake</a></li><li><a href="../../rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.html">Visible Layer Stack</a></li><li><a href="../../rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.html">BG2 Producer Path</a></li><li><a href="../../rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.html">L01318D Role Split</a></li><li><a href="../../rom_analysis/maps/tracks/track1_02_9016_state_ownership.html">02:9016 State Ownership</a></li></ul></section><section class="sidebar-group"><h3>Runtime And Port Validation</h3><ul><li><a href="../../rom_analysis/docs/port_sdl_runtime_mimetization_smoke.html">SDL Runtime Smoke</a></li><li><a href="../../rom_analysis/docs/mesen_instrumented_backend_architecture.html">Instrumented Backend Architecture</a></li></ul></section>
+    </aside>
+    <main class="content">
+      <nav class="breadcrumbs">
+        <a href="../../../index.html">Index</a>
+        <span>/</span>
+        <a href="../../../index.html#front-end-menu">Front-End And Menu</a>
+        <span>/</span>
+        <span>Select Opponent Mode Split</span>
+      </nav>
+      <header class="doc-header">
+        <p class="eyebrow">Front-End And Menu</p>
+        <h1>SNES Select Opponent Mode Split</h1>
+        <p class="doc-note">Separates rival slots from the no-opponent stopwatch branch.</p>
+        <div class="doc-meta">
+          <span>Source: <code>tools/out/snes_frontend_select_opponent_mode_split.md</code></span>
+          <a href="../../../../snes_frontend_select_opponent_mode_split.md">Open Raw Markdown</a>
+        </div>
+      </header>
+      <article class="doc-body">
+        <h1 id="snes-select-opponent-mode-split">SNES Select Opponent Mode Split</h1>
+<h3 id="claim-audit">CLAIM AUDIT</h3>
+<ul><li>Claim: The fourth <code>Select Opponent</code> slot is already a downstream no-opponent handoff at <code>L008B87</code>, not just a visual clock icon.</li><li>Classification: VERIFIED</li><li>Evidence:</li><li><code>L008B87</code> loads <code>X = 1</code> and <code>A = $1C70</code>; only on <code>$1C70 == 3</code> it executes <code>dex</code> and <code>lda #$0000</code> before storing <code>X -&gt; $1C76</code> and <code>A -&gt; $1C7A</code>.</li><li>For selector values <code>0..2</code>, the same path stores <code>$1C76 = 1</code> and preserves <code>$1C7A = $1C70</code>.</li><li><code>$1C7A</code> later selects rival-facing tables in <code>bank1.asm:1820-1837</code>, <code>bank1.asm:1965-1975</code>, and <code>bank2.asm:2675-2702</code>.</li><li><code>$1C76</code> later gates opponent-side branches in <code>bank1.asm:2403-2405</code> and <code>bank2.asm:2943-2958</code>, <code>bank2.asm:4118-4129</code>, <code>bank2.asm:4671-4682</code>.</li><li>The fourth slot is already visually closed as a helper-<code>8</code> <code>BG1</code> stopwatch/clock surface in <code>tools/out/snes_frontend_select_opponent_clock_summary.json</code>.</li><li>Notes:</li><li>This closes the immediate semantic split between the three rival-car cells and the fourth clock slot at the bank-1 handoff boundary.</li><li>The stronger runtime reading is now: <code>clock slot -&gt; no-opponent branch verified</code>.</li><li>The remaining open edge is narrower: exact live gameplay/HUD behavior for that no-opponent branch is still not directly captured, so full &quot;time-only&quot; semantics remain <code>PROBABLE</code>.</li></ul>
+<h2 id="downstream-consumers">Downstream Consumers</h2>
+<p>| Field | Site | Observed effect | Classification | | --- | --- | --- | --- | | <code>$1C7A</code> | <code>bank1.asm:1820-1837</code> | selects <code>01:8384..01:838A</code> before CGRAM upload at <code>0x00A0</code> | <code>VERIFIED</code> | | <code>$1C7A</code> | <code>bank1.asm:1965-1975</code> | selects <code>01:8614 + ($1C7A &lt;&lt; 5)</code> for <code>VRAM 0x60C0</code> | <code>VERIFIED</code> | | <code>$1C7A</code> | <code>bank2.asm:2675-2702</code> | selects <code>02:8306 / 02:830C</code> tables into <code>14DC</code> and <code>13FC</code> | <code>VERIFIED</code> | | <code>$1C76</code> | <code>bank1.asm:2403-2405</code> | branches to <code>L00948A</code> vs <code>L009568</code> | <code>VERIFIED</code> | | <code>$1C76</code> | <code>bank2.asm:2943-2958</code> | gates extra opponent-side init | <code>VERIFIED</code> | | <code>$1C76</code> | <code>bank2.asm:4118-4129</code> | gates the second actor/path update | <code>VERIFIED</code> | | <code>$1C76</code> | <code>bank2.asm:4671-4682</code> | gates later opponent-side runtime work | <code>VERIFIED</code> |</p>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

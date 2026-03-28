@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Late `00:8029` Mode 7 Blob Cycle (`1134..1200`) | TD2 Archaeology Wiki</title>
+  <link rel="stylesheet" href="../../../assets/wiki.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="site-link" href="../../../index.html">TD2 Archaeology Wiki</a>
+      <p class="sidebar-note">Simple wiki-style index built from curated markdown sources.</p>
+      <section class="sidebar-group"><h3>Source Of Truth</h3><ul><li><a href="../../PORT_PLAN.html">Port Plan</a></li><li><a href="next_steps_roadmap.html">Next Steps Roadmap</a></li><li><a href="progress_checkpoints.html">Progress Checkpoints</a></li><li><a href="validation_gates.html">Validation Gates</a></li><li><a href="../../validation/README.html">Validation README</a></li><li><a href="../../tools/README.html">Tools README</a></li><li><a href="../../port/README.html">Port README</a></li><li><a href="../README.html">ROM Analysis README</a></li></ul></section><section class="sidebar-group"><h3>Attract And Intro</h3><ul><li><a href="intro_00_8029_next_agent_handoff.html">00:8029 Handoff</a></li><li><a href="intro_01_9fe5_window_986_1093.html">01:9FE5 Window 986..1093</a></li><li><a href="intro_01_9fe5_activity_trace_1094_1117.html">01:9FE5 Activity Trace</a></li><li><a href="intro_00_8029_mode7_blob_cycle_1134_1200.html">Mode 7 Blob Cycle 1134..1200</a></li><li><a href="../maps/tilemaps/mesen_range_1086_1093_provenance.html">Tilemap Provenance 1086..1093</a></li><li><a href="mesen_debugger_design_workbench.html">Mesen Design Workbench</a></li></ul></section><section class="sidebar-group"><h3>Front-End And Menu</h3><ul><li><a href="snes_runtime_algorithm_human.html">SNES Runtime Algorithm</a></li><li><a href="../maps/tilemaps/car_select_frame_1500_bg2_provenance.html">Frame 1500 BG2 Provenance</a></li><li><a href="../../tools/out/snes_frontend_top_menu_labels.html">Top Menu Labels</a></li><li><a href="../../tools/out/snes_frontend_rival_selection_grid.html">Rival Selection Grid</a></li><li><a href="../../tools/out/snes_select_opponent_organic_default_path.html">Organic Default Path</a></li><li><a href="../../tools/out/snes_frontend_select_opponent_mode_split.html">Select Opponent Mode Split</a></li></ul></section><section class="sidebar-group"><h3>Gameplay And Lane 3</h3><ul><li><a href="lane3_today_work_brief.html">Lane 3 Work Brief</a></li><li><a href="gameplay_default_rival_next_agent_handoff.html">Gameplay Handoff</a></li><li><a href="lane3_attract_demo_boundary.html">Attract Demo Boundary</a></li><li><a href="../maps/tracks/track1_live_gameplay_entry_route.html">Live Gameplay Entry Route</a></li><li><a href="../maps/tracks/track1_live_race_manual_seed_intake.html">Manual Seed Intake</a></li><li><a href="../maps/tracks/track1_live_race_manual_video_intake.html">Manual Video Intake</a></li><li><a href="../maps/tracks/track1_live_race_visible_layer_stack.html">Visible Layer Stack</a></li><li><a href="../maps/tracks/track1_live_race_bg2_producer_path.html">BG2 Producer Path</a></li><li><a href="../maps/tracks/track1_live_race_l01318d_static_role_split.html">L01318D Role Split</a></li><li><a href="../maps/tracks/track1_02_9016_state_ownership.html">02:9016 State Ownership</a></li></ul></section><section class="sidebar-group"><h3>Runtime And Port Validation</h3><ul><li><a href="port_sdl_runtime_mimetization_smoke.html">SDL Runtime Smoke</a></li><li><a href="mesen_instrumented_backend_architecture.html">Instrumented Backend Architecture</a></li></ul></section>
+    </aside>
+    <main class="content">
+      <nav class="breadcrumbs">
+        <a href="../../../index.html">Index</a>
+        <span>/</span>
+        <a href="../../../index.html#attract-intro">Attract And Intro</a>
+        <span>/</span>
+        <span>Mode 7 Blob Cycle 1134..1200</span>
+      </nav>
+      <header class="doc-header">
+        <p class="eyebrow">Attract And Intro</p>
+        <h1>Late `00:8029` Mode 7 Blob Cycle (`1134..1200`)</h1>
+        <p class="doc-note">Late 00:8029 blob rotation report and selector narrowing.</p>
+        <div class="doc-meta">
+          <span>Source: <code>rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md</code></span>
+          <a href="../../../../../../rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md">Open Raw Markdown</a>
+        </div>
+      </header>
+      <article class="doc-body">
+        <h1 id="late-00-8029-mode-7-blob-cycle-1134-1200">Late <code>00:8029</code> Mode 7 Blob Cycle (<code>1134..1200</code>)</h1>
+<p>This note closes the next ownership question for the late <code>00:8029</code> tail: what exactly owns the producer-side reactivation after the flat <code>1114..1133</code> steady block?</p>
+<p>The answer is now stronger than &quot;DMA came back at <code>1165</code>&quot;:</p>
+<ul><li>the resumed late cycle is still under <code>00:8029</code></li><li>the <code>VRAM</code> burst path is the same <code>1A:AA10 / 1A:AB58 / 1A:ACA0</code> blob family already used by the earlier <code>build_mode7_source_scene.py</code> bridge-visible model</li><li>the direct <code>VMDATA</code> burst and the <code>DMA0 -&gt; VMDATAL</code> burst match the same ROM blob on every sampled burst frame</li><li>the resumed <code>OAM</code> DMA is the normal <code>$096A -&gt; $0700 -&gt; OAMDATA</code> path, not a separate late special-case uploader</li></ul>
+<p>Primary artifacts:</p>
+<ul><li><code>tools/out/activity_trace_1134_1200/activity_trace.json</code></li><li><code>tools/out/activity_trace_1134_1200/activity_trace.md</code></li><li><code>tools/out/mode7_blob_cycle_1134_1200/report.json</code></li><li><code>tools/out/mode7_blob_cycle_1134_1200/report.md</code></li></ul>
+<p>Builder path:</p>
+<ul><li><code>python3 -m py_compile tools/build_mode7_blob_cycle_report.py</code></li><li><code>python3 tools/build_mode7_blob_cycle_report.py game.smc tools/out/activity_trace_1134_1200/td2_boot_probe.json tools/out/activity_trace_1134_1200/td2_boot_probe_dma_writes.json tools/out/activity_trace_1134_1200/td2_boot_probe_vram_writes.json tools/out/mode7_blob_cycle_1134_1200/report.json --blob AA10:0x1AAA10:0x100 --blob AB58:0x1AAB58:0x100 --blob ACA0:0x1AACA0:0x100 --markdown-out tools/out/mode7_blob_cycle_1134_1200/report.md</code></li></ul>
+<h2 id="runtime-read">Runtime Read</h2>
+<p>The wide <code>1134..1200</code> trace now splits into three layers:</p>
+<ul><li><code>1134..1163</code></li><li>still the solved flat <code>00:8029</code> surface</li><li>no DMA/direct writes</li><li><code>Mode 7</code> register loop only</li><li><code>1164</code></li><li>still no producer burst</li><li>but <code>state0204</code> and <code>dp0054</code> step to <code>2</code> / <code>0x88</code></li><li><code>1165..1200</code></li><li><code>OAM</code> DMA resumes every frame sampled by the probe</li><li><code>VRAM</code> burst frames recur under the same callback family</li></ul>
+<p>The new blob-cycle report proves the producer-side burst identity precisely:</p>
+<ul><li>the refreshed report now also filters strictly to the traced <code>1134..1200</code> window and emits per-transition schedule rows instead of only burst rows</li><li>burst frames sampled in this report:</li><li><code>1165, 1170, 1172, 1174, 1175, 1177, 1178, 1179, 1180, 1181, 1182, 1183, 1184, 1185, 1186, 1187, 1188, 1189, 1190, 1191, 1192, 1193, 1194, 1195, 1196, 1198, 1199, 1200</code></li><li>transition rows now make the cadence explicit:</li><li>isolated early burst probes: <code>1165</code>, <code>1170</code>, <code>1172</code></li><li>first double-burst pair: <code>1174..1175</code></li><li>first near-continuous burst run: <code>1177..1196</code></li><li>late tail after one idle break: <code>1198..1200</code></li><li>on every burst frame:</li><li>the direct <code>VMDATAL/VMDATAH</code> byte stream is a full <code>0x100</code>-byte exact match for one known ROM blob</li><li>the <code>DMA0</code> source points at the same blob label</li><li>the direct target alternates between <code>VMADD = 0x4920</code> and <code>VMADD = 0x49A0</code></li><li>distinct matched blob labels:</li><li><code>AA10</code></li><li><code>AB58</code></li><li><code>ACA0</code></li></ul>
+<p>Concrete examples from the report:</p>
+<ul><li><code>1165</code></li><li><code>state0204 = 2</code></li><li><code>dp0054 = 0x88</code></li><li><code>VMADD = 0x49A0</code></li><li>direct burst = <code>AB58</code></li><li><code>DMA0</code> source = <code>1A:AB58</code></li><li><code>1170</code></li><li><code>state0204 = 3</code></li><li><code>dp0054 = 0x90</code></li><li><code>VMADD = 0x4920</code></li><li>direct burst = <code>ACA0</code></li><li><code>DMA0</code> source = <code>1A:ACA0</code></li><li><code>1172</code></li><li><code>state0204 = 1</code></li><li><code>dp0054 = 0x98</code></li><li><code>VMADD = 0x49A0</code></li><li>direct burst = <code>AA10</code></li><li><code>DMA0</code> source = <code>1A:AA10</code></li></ul>
+<p>Reading:</p>
+<ul><li>the late <code>00:8029</code> reactivation is not just &quot;some VRAM work came back&quot;</li><li>it is the same three-blob Mode 7 producer family already seen earlier in the attract path</li><li>the direct-write and DMA views are now reconciled: they are two programming paths carrying the same blob identity on the same burst frame</li><li>the schedule read is now also sharper:</li><li><code>state0204</code> alone is not the blob selector</li><li>in the sampled burst window, each observed <code>state0204</code> value (<code>1/2/3</code>) reaches all three blob labels (<code>AA10/AB58/ACA0</code>) and both <code>VMADD</code> targets (<code>0x4920/0x49A0</code>)</li><li>the two same-<code>dp0054</code> double-burst pairs (<code>1174/1175</code>, <code>1195/1196</code>) flip blob + <code>VMADD</code> without advancing <code>dp0054</code>, which argues for a deeper phase/stage owner than a simple <code>state0204 -&gt; blob</code> lookup</li></ul>
+<h2 id="native-replacement-link">Native-Replacement Link</h2>
+<p>This blob family is not new to the repo.</p>
+<p>The earlier bridge-visible late-attract model already uses <code>tools/build_mode7_source_scene.py</code> plus exact ROM patches from:</p>
+<ul><li><code>1A:AA10</code></li><li><code>1A:AB58</code></li><li><code>1A:ACA0</code></li></ul>
+<p>and it applies them directly onto the same visible Mode 7 destinations:</p>
+<ul><li><code>0x4920</code></li><li><code>0x49A0</code></li></ul>
+<p>Reading:</p>
+<ul><li>the late <code>1165+</code> <code>00:8029</code> cycle is now tied back to an existing native replacement model family, not a newly discovered data source</li><li>the remaining gap is schedule/selection ownership inside this later tail, not blob provenance</li></ul>
+<h2 id="static-ownership-path">Static Ownership Path</h2>
+<p>The static bank read now explains how the resumed late uploads fit into the normal producer pipeline.</p>
+<h3 id="1-l00b6e3-is-the-late-state-machine-that-re-enters-the-producer-path">1. <code>L00B6E3</code> is the late state machine that re-enters the producer path</h3>
+<p>At <code>01:B6E3</code>, the code:</p>
+<ul><li>advances internal counters via <code>$0440/$0442</code></li><li>checks stage thresholds</li><li>updates <code>$0444</code></li><li>calls <code>jsl L009DC6</code> with the current <code>$0204/$0206</code> pair</li></ul>
+<p>That is the same pair the probe records changing across the late cycle.</p>
+<h3 id="2-l009dc6-rebuilds-scene-oam-work-and-finishes-by-arming-oam-dma">2. <code>L009DC6</code> rebuilds scene/OAM work and finishes by arming OAM DMA</h3>
+<p>At <code>01:9DC6</code>, the routine:</p>
+<ul><li>stores the incoming <code>X/Y</code> into <code>$0204/$0206</code></li><li>runs several <code>jsl L001662</code> builder calls</li><li>conditionally runs more <code>L001662</code> work from <code>$0444</code></li><li>always ends with <code>jsl L0015BD</code></li></ul>
+<p>Practical reading:</p>
+<ul><li>the late <code>state0204</code> changes are not passive metadata</li><li>they are inputs to the same builder path that repopulates the late scene work and then hands control to the standard OAM-DMA arming helper</li></ul>
+<h3 id="3-l0015bd-and-the-bank-0-nmi-path-explain-the-resumed-00-0700-dma">3. <code>L0015BD</code> and the bank-0 NMI path explain the resumed <code>00:0700</code> DMA</h3>
+<p><code>L0015BD</code> in bank 0:</p>
+<ul><li>pads the remaining <code>$0700</code> OAM staging entries with <code>0xE100</code></li><li>stores <code>#$01</code> into <code>$096A</code></li></ul>
+<p>The bank-0 NMI path then:</p>
+<ul><li>checks <code>$096A</code></li><li>clears it</li><li>runs <code>DMA1</code></li><li>source <code>0x0700</code></li><li>size <code>0x0220</code></li><li>target <code>OAMDATA</code> (<code>$2104</code>)</li></ul>
+<p>Reading:</p>
+<ul><li>the resumed late <code>00:0700 -&gt; OAMDATA</code> transfer is the normal staged OAM DMA path already documented earlier</li><li>the <code>1165+</code> behavior is therefore owned by the standard builder/NMI handoff, not by a separate hidden late uploader</li></ul>
+<h2 id="practical-reading">Practical Reading</h2>
+<ul><li>Lane 2 now has a concrete ownership read for the late <code>00:8029</code> producer cycle:</li><li>stage loop <code>01:B6E3</code></li><li>scene builder <code>01:9DC6</code></li><li>builder helpers <code>00:9662</code> / <code>00:979B</code></li><li>OAM arm helper <code>00:95BD</code></li><li>NMI consume path via <code>$096A</code> and <code>$0700</code></li><li>the <code>VRAM</code> burst side is now tied to the same <code>AA10/AB58/ACA0</code> family and the same <code>0x4920/0x49A0</code> Mode 7 destinations already used by the existing native bridge-visible model</li><li>the next Lane 2 step is no longer &quot;which producer owns the late cycle?&quot;</li><li>the next step is:</li><li>derive the later-frame selection/schedule rule strongly enough to express the full <code>00:8029</code> late producer cycle as a native replacement path, not just as individual matched burst frames</li><li>the stronger immediate static target is now the <code>$0440/$0442</code> phase loop in <code>L00B6E3</code>, because the refreshed transition report now rules out <code>state0204</code> as a sufficient selector by itself</li></ul>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

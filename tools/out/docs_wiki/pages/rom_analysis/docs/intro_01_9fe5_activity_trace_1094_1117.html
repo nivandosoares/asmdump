@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Active Mesen Behavior Trace: `1094..1117` | TD2 Archaeology Wiki</title>
+  <link rel="stylesheet" href="../../../assets/wiki.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="site-link" href="../../../index.html">TD2 Archaeology Wiki</a>
+      <p class="sidebar-note">Simple wiki-style index built from curated markdown sources.</p>
+      <section class="sidebar-group"><h3>Source Of Truth</h3><ul><li><a href="../../PORT_PLAN.html">Port Plan</a></li><li><a href="next_steps_roadmap.html">Next Steps Roadmap</a></li><li><a href="progress_checkpoints.html">Progress Checkpoints</a></li><li><a href="validation_gates.html">Validation Gates</a></li><li><a href="../../validation/README.html">Validation README</a></li><li><a href="../../tools/README.html">Tools README</a></li><li><a href="../../port/README.html">Port README</a></li><li><a href="../README.html">ROM Analysis README</a></li></ul></section><section class="sidebar-group"><h3>Attract And Intro</h3><ul><li><a href="intro_00_8029_next_agent_handoff.html">00:8029 Handoff</a></li><li><a href="intro_01_9fe5_window_986_1093.html">01:9FE5 Window 986..1093</a></li><li><a href="intro_01_9fe5_activity_trace_1094_1117.html">01:9FE5 Activity Trace</a></li><li><a href="intro_00_8029_mode7_blob_cycle_1134_1200.html">Mode 7 Blob Cycle 1134..1200</a></li><li><a href="../maps/tilemaps/mesen_range_1086_1093_provenance.html">Tilemap Provenance 1086..1093</a></li><li><a href="mesen_debugger_design_workbench.html">Mesen Design Workbench</a></li></ul></section><section class="sidebar-group"><h3>Front-End And Menu</h3><ul><li><a href="snes_runtime_algorithm_human.html">SNES Runtime Algorithm</a></li><li><a href="../maps/tilemaps/car_select_frame_1500_bg2_provenance.html">Frame 1500 BG2 Provenance</a></li><li><a href="../../tools/out/snes_frontend_top_menu_labels.html">Top Menu Labels</a></li><li><a href="../../tools/out/snes_frontend_rival_selection_grid.html">Rival Selection Grid</a></li><li><a href="../../tools/out/snes_select_opponent_organic_default_path.html">Organic Default Path</a></li><li><a href="../../tools/out/snes_frontend_select_opponent_mode_split.html">Select Opponent Mode Split</a></li></ul></section><section class="sidebar-group"><h3>Gameplay And Lane 3</h3><ul><li><a href="lane3_today_work_brief.html">Lane 3 Work Brief</a></li><li><a href="gameplay_default_rival_next_agent_handoff.html">Gameplay Handoff</a></li><li><a href="lane3_attract_demo_boundary.html">Attract Demo Boundary</a></li><li><a href="../maps/tracks/track1_live_gameplay_entry_route.html">Live Gameplay Entry Route</a></li><li><a href="../maps/tracks/track1_live_race_manual_seed_intake.html">Manual Seed Intake</a></li><li><a href="../maps/tracks/track1_live_race_manual_video_intake.html">Manual Video Intake</a></li><li><a href="../maps/tracks/track1_live_race_visible_layer_stack.html">Visible Layer Stack</a></li><li><a href="../maps/tracks/track1_live_race_bg2_producer_path.html">BG2 Producer Path</a></li><li><a href="../maps/tracks/track1_live_race_l01318d_static_role_split.html">L01318D Role Split</a></li><li><a href="../maps/tracks/track1_02_9016_state_ownership.html">02:9016 State Ownership</a></li></ul></section><section class="sidebar-group"><h3>Runtime And Port Validation</h3><ul><li><a href="port_sdl_runtime_mimetization_smoke.html">SDL Runtime Smoke</a></li><li><a href="mesen_instrumented_backend_architecture.html">Instrumented Backend Architecture</a></li></ul></section>
+    </aside>
+    <main class="content">
+      <nav class="breadcrumbs">
+        <a href="../../../index.html">Index</a>
+        <span>/</span>
+        <a href="../../../index.html#attract-intro">Attract And Intro</a>
+        <span>/</span>
+        <span>01:9FE5 Activity Trace</span>
+      </nav>
+      <header class="doc-header">
+        <p class="eyebrow">Attract And Intro</p>
+        <h1>Active Mesen Behavior Trace: `1094..1117`</h1>
+        <p class="doc-note">Producer-side activity narrowing for the post-1093 window.</p>
+        <div class="doc-meta">
+          <span>Source: <code>rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md</code></span>
+          <a href="../../../../../../rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md">Open Raw Markdown</a>
+        </div>
+      </header>
+      <article class="doc-body">
+        <h1 id="active-mesen-behavior-trace-1094-1117">Active Mesen Behavior Trace: <code>1094..1117</code></h1>
+<p>This note captures the first lane-oriented &quot;active behavior&quot; read built from <code>mesen_probe_boot.lua</code> trace outputs rather than only from frame dumps and compare images.</p>
+<h2 id="goal">Goal</h2>
+<p>Map what the game is actively programming during the post-<code>1093</code> late-attract window:</p>
+<ul><li><code>DMA/HDMA</code></li><li>direct <code>VRAM/CGRAM</code> writes</li><li><code>Mode 7</code> / related PPU register programming</li><li>callback-family ownership at the same frames</li></ul>
+<p>This is meant to answer &quot;what is the game doing?&quot; before deciding whether the next mismatch is:</p>
+<ul><li>renderer behavior</li><li>export/composition choice</li><li>hidden upload activity</li><li>callback-family transition</li></ul>
+<h2 id="commands">Commands</h2>
+<p>Capture the active trace:</p>
+<pre><code class="language-sh">MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+MESEN_TIMEOUT_SECONDS=180 \
+TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/activity_trace_1094_1117/td2_boot_probe \
+TD2_BOOT_PROBE_TOTAL_FRAMES=1118 \
+TD2_BOOT_PROBE_TRACE_START_FRAME=1094 \
+TD2_BOOT_PROBE_TRACE_END_FRAME=1117 \
+TD2_BOOT_PROBE_TRACE_DMA=1 \
+TD2_BOOT_PROBE_TRACE_VRAM=1 \
+TD2_BOOT_PROBE_TRACE_MODE7=1 \
+./validation/run_mesen_probe_boot.sh</code></pre>
+<p>Build the normalized activity trace:</p>
+<pre><code class="language-sh">python3 tools/build_mesen_activity_trace.py \
+  tools/out/activity_trace_1094_1117/td2_boot_probe.json \
+  tools/out/activity_trace_1094_1117/activity_trace.json \
+  --markdown-out tools/out/activity_trace_1094_1117/activity_trace.md</code></pre>
+<h2 id="artifacts">Artifacts</h2>
+<ul><li><code>tools/out/activity_trace_1094_1117/td2_boot_probe.json</code></li><li><code>tools/out/activity_trace_1094_1117/td2_boot_probe_dma_writes.json</code></li><li><code>tools/out/activity_trace_1094_1117/td2_boot_probe_vram_writes.json</code></li><li><code>tools/out/activity_trace_1094_1117/td2_boot_probe_mode7_writes.json</code></li><li><code>tools/out/activity_trace_1094_1117/activity_trace.json</code></li><li><code>tools/out/activity_trace_1094_1117/activity_trace.md</code></li></ul>
+<h2 id="current-reading">Current Reading</h2>
+<h3 id="1-there-are-no-direct-vram-cgram-data-writes-in-1094-1117">1. There are no direct <code>VRAM/CGRAM</code> data writes in <code>1094..1117</code></h3>
+<ul><li><code>td2_boot_probe_vram_writes.json</code> records <code>0</code> writes.</li><li>The normalized activity trace reports:</li><li>direct write events: <code>0</code></li><li>direct write kinds: <code>{}</code>.</li></ul>
+<p>Practical reading:</p>
+<ul><li>this window is not hiding a direct <code>VMDATAL/VMDATAH</code> or <code>CGDATA</code> upload path</li><li>the next mismatch work should not assume a missed direct <code>VRAM/CGRAM</code> transfer in this block</li></ul>
+<h3 id="2-oam-dma-remains-active-through-1113-then-stops">2. <code>OAM</code> DMA remains active through <code>1113</code>, then stops</h3>
+<ul><li>The activity trace records exactly <code>20</code> DMA events across frames <code>1094..1113</code>.</li><li>Every DMA event is the same:</li><li><code>DMAEN = 0x02</code></li><li>channel <code>1</code></li><li>target <code>OAMDATA</code> (<code>00:2104</code>)</li><li>source <code>00:0700</code></li><li>size <code>544</code> bytes</li><li>scanline <code>227</code></li><li>Frames <code>1114..1117</code> record no DMA event at all.</li></ul>
+<p>Practical reading:</p>
+<ul><li>there is a clean late-window boundary at <code>1114</code></li><li>if visual behavior changes after <code>1113</code>, it is now reasonable to test that boundary against the disappearance of the per-frame OAM upload rather than treating <code>1102..1117</code> as one uniform block</li></ul>
+<h3 id="3-the-callback-family-switch-happens-at-1102">3. The callback-family switch happens at <code>1102</code></h3>
+<ul><li>Frame snapshots in <code>td2_boot_probe.json</code> show:</li><li><code>1094..1101</code>: <code>active_main = 01:9FE5</code></li><li><code>1102..1117</code>: <code>active_main = 00:8029</code></li><li><code>active_irq</code> stays <code>00:835F</code> across the whole traced window.</li></ul>
+<p>Practical reading:</p>
+<ul><li>the late continuation is not a pure &quot;same callback family keeps going&quot;</li><li>the next follow-up should split the post-<code>1093</code> lane at <code>1102</code>, not only at <code>1094</code></li></ul>
+<h3 id="4-the-main-state-tuple-stays-stable-across-that-callback-switch">4. The main state tuple stays stable across that callback switch</h3>
+<p>Across <code>1094..1117</code>, frame snapshots keep:</p>
+<ul><li><code>$0204 = 1</code></li><li><code>$0206 = 13</code></li><li><code>$040A = 17</code></li><li><code>$0054 = 128</code></li></ul>
+<p>Practical reading:</p>
+<ul><li>the <code>1101 -&gt; 1102</code> transition is not explained by the currently sampled state tuple alone</li><li>this points back to callback ownership and active upload/programming behavior rather than an obvious coarse state change</li></ul>
+<h3 id="5-mode-7-programming-narrows-after-1101">5. <code>Mode 7</code> programming narrows after <code>1101</code></h3>
+<p>The normalized activity trace shows:</p>
+<ul><li><code>1094..1101</code></li><li><code>4</code> Mode 7 events per frame</li><li>scanlines <code>225</code>, <code>226</code>, <code>227</code>, and <code>231</code></li><li>includes a late <code>M7A/M7D</code> pair at scanline <code>231</code></li><li><code>1102..1117</code></li><li><code>3</code> Mode 7 events per frame</li><li>scanlines <code>225</code>, <code>226</code>, <code>227</code> only</li><li>no <code>M7A/M7D</code> event remains</li><li>the remaining repeated register set after <code>1101</code> is:</li><li><code>M7HOFS</code></li><li><code>M7VOFS</code></li><li><code>$210F..$2114</code></li></ul>
+<p>Practical reading:</p>
+<ul><li>there is a second concrete boundary at <code>1102</code></li><li>the late window after the callback switch is not only &quot;same writes under a different callback&quot;; it is a smaller repeated register program</li></ul>
+<h2 id="summary">Summary</h2>
+<p>The active-trace read narrows the late attract problem substantially:</p>
+<ul><li><code>1094..1101</code></li><li>still under <code>01:9FE5</code></li><li>per-frame <code>OAM</code> DMA continues</li><li>per-frame <code>M7A/M7D</code> scanline-<code>231</code> update still exists</li><li><code>1102..1113</code></li><li>now under <code>00:8029</code></li><li>per-frame <code>OAM</code> DMA still exists</li><li>the <code>M7A/M7D</code> update is gone</li><li><code>1114..1117</code></li><li>still under <code>00:8029</code></li><li>no per-frame <code>OAM</code> DMA remains</li><li>only the smaller repeated <code>Mode 7</code> register program continues</li></ul>
+<p>This is stronger than the earlier compare-only reading because it shows the window is not one monolithic &quot;post-<code>1093</code> continuation.&quot; It has at least two real active-behavior boundaries:</p>
+<ul><li><code>1102</code></li><li><code>1114</code></li></ul>
+<h2 id="next-best-step">Next Best Step</h2>
+<p>Use those boundaries explicitly in the Lane 2 follow-up:</p>
+<ol><li>treat <code>1094..1101</code>, <code>1102..1113</code>, and <code>1114..1117</code> as separate compare and ownership subwindows</li><li>test whether the residual mismatch pattern tracks:</li></ol>
+<ul><li>the <code>01:9FE5 -&gt; 00:8029</code> callback switch at <code>1102</code></li><li>the disappearance of the <code>00:0700 -&gt; OAMDATA</code> DMA at <code>1114</code></li></ul>
+<ol><li>do not spend time searching for hidden direct <code>VRAM/CGRAM</code> uploads in this window unless a later targeted trace contradicts the current proof</li></ol>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mesen Debugger Design Workbench | TD2 Archaeology Wiki</title>
+  <link rel="stylesheet" href="../../../assets/wiki.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="site-link" href="../../../index.html">TD2 Archaeology Wiki</a>
+      <p class="sidebar-note">Simple wiki-style index built from curated markdown sources.</p>
+      <section class="sidebar-group"><h3>Source Of Truth</h3><ul><li><a href="../../PORT_PLAN.html">Port Plan</a></li><li><a href="next_steps_roadmap.html">Next Steps Roadmap</a></li><li><a href="progress_checkpoints.html">Progress Checkpoints</a></li><li><a href="validation_gates.html">Validation Gates</a></li><li><a href="../../validation/README.html">Validation README</a></li><li><a href="../../tools/README.html">Tools README</a></li><li><a href="../../port/README.html">Port README</a></li><li><a href="../README.html">ROM Analysis README</a></li></ul></section><section class="sidebar-group"><h3>Attract And Intro</h3><ul><li><a href="intro_00_8029_next_agent_handoff.html">00:8029 Handoff</a></li><li><a href="intro_01_9fe5_window_986_1093.html">01:9FE5 Window 986..1093</a></li><li><a href="intro_01_9fe5_activity_trace_1094_1117.html">01:9FE5 Activity Trace</a></li><li><a href="intro_00_8029_mode7_blob_cycle_1134_1200.html">Mode 7 Blob Cycle 1134..1200</a></li><li><a href="../maps/tilemaps/mesen_range_1086_1093_provenance.html">Tilemap Provenance 1086..1093</a></li><li><a href="mesen_debugger_design_workbench.html">Mesen Design Workbench</a></li></ul></section><section class="sidebar-group"><h3>Front-End And Menu</h3><ul><li><a href="snes_runtime_algorithm_human.html">SNES Runtime Algorithm</a></li><li><a href="../maps/tilemaps/car_select_frame_1500_bg2_provenance.html">Frame 1500 BG2 Provenance</a></li><li><a href="../../tools/out/snes_frontend_top_menu_labels.html">Top Menu Labels</a></li><li><a href="../../tools/out/snes_frontend_rival_selection_grid.html">Rival Selection Grid</a></li><li><a href="../../tools/out/snes_select_opponent_organic_default_path.html">Organic Default Path</a></li><li><a href="../../tools/out/snes_frontend_select_opponent_mode_split.html">Select Opponent Mode Split</a></li></ul></section><section class="sidebar-group"><h3>Gameplay And Lane 3</h3><ul><li><a href="lane3_today_work_brief.html">Lane 3 Work Brief</a></li><li><a href="gameplay_default_rival_next_agent_handoff.html">Gameplay Handoff</a></li><li><a href="lane3_attract_demo_boundary.html">Attract Demo Boundary</a></li><li><a href="../maps/tracks/track1_live_gameplay_entry_route.html">Live Gameplay Entry Route</a></li><li><a href="../maps/tracks/track1_live_race_manual_seed_intake.html">Manual Seed Intake</a></li><li><a href="../maps/tracks/track1_live_race_manual_video_intake.html">Manual Video Intake</a></li><li><a href="../maps/tracks/track1_live_race_visible_layer_stack.html">Visible Layer Stack</a></li><li><a href="../maps/tracks/track1_live_race_bg2_producer_path.html">BG2 Producer Path</a></li><li><a href="../maps/tracks/track1_live_race_l01318d_static_role_split.html">L01318D Role Split</a></li><li><a href="../maps/tracks/track1_02_9016_state_ownership.html">02:9016 State Ownership</a></li></ul></section><section class="sidebar-group"><h3>Runtime And Port Validation</h3><ul><li><a href="port_sdl_runtime_mimetization_smoke.html">SDL Runtime Smoke</a></li><li><a href="mesen_instrumented_backend_architecture.html">Instrumented Backend Architecture</a></li></ul></section>
+    </aside>
+    <main class="content">
+      <nav class="breadcrumbs">
+        <a href="../../../index.html">Index</a>
+        <span>/</span>
+        <a href="../../../index.html#attract-intro">Attract And Intro</a>
+        <span>/</span>
+        <span>Mesen Design Workbench</span>
+      </nav>
+      <header class="doc-header">
+        <p class="eyebrow">Attract And Intro</p>
+        <h1>Mesen Debugger Design Workbench</h1>
+        <p class="doc-note">Design-pack workflow and extraction surface.</p>
+        <div class="doc-meta">
+          <span>Source: <code>rom_analysis/docs/mesen_debugger_design_workbench.md</code></span>
+          <a href="../../../../../../rom_analysis/docs/mesen_debugger_design_workbench.md">Open Raw Markdown</a>
+        </div>
+      </header>
+      <article class="doc-body">
+        <h1 id="mesen-debugger-design-workbench">Mesen Debugger Design Workbench</h1>
+<p>This document maps current project tooling to Mesen debugger capabilities for full visual inspection workflows (tilemaps, tilesets, sprites, palette, raw VRAM/CGRAM/OAM) and design-team asset handoff.</p>
+<h2 id="what-mesen-already-gives-us">What Mesen Already Gives Us</h2>
+<p>The <code>tools/mesen_ppu_extract/Program.cs</code> bridge calls these debugger APIs:</p>
+<ul><li><code>GetTilemap</code> + <code>GetTilemapSize</code></li><li>Produces layer-composed tilemap renders (<code>bg1..bg4</code>, <code>main</code>, <code>sub</code>)</li><li>Also emits viewport crops (<code>*_visible.ppm</code>) using live scroll state</li><li><code>GetTileView</code></li><li>Produces per-layer CHR/tile sheets (<code>tiles_bg1..tiles_bg4.ppm</code>)</li><li><code>GetSpritePreviewInfo</code> + <code>GetSpriteList</code></li><li>Produces sprite screen preview, metadata, and per-sprite preview images</li><li><code>GetPaletteInfo</code></li><li>Produces palette metadata + swatch image</li><li><code>GetMemoryState</code></li><li>Dumps <code>vram.bin</code>, <code>cgram.bin</code>, <code>oam.bin</code> for custom tools/round-trip</li><li><code>GetPpuState</code> / <code>GetPpuToolsState</code></li><li>Dumps <code>state.json</code> and port-compatible flat <code>ppu_state.json</code></li></ul>
+<h2 id="current-output-coverage">Current Output Coverage</h2>
+<p>For each extracted frame folder, the bridge can output:</p>
+<ul><li>Tilemaps/layers:</li><li><code>bg1.ppm</code>..<code>bg4.ppm</code>, <code>main.ppm</code>, <code>sub.ppm</code></li><li><code>bg1_visible.ppm</code>..<code>sub_visible.ppm</code></li><li>Tilesets:</li><li><code>tiles_bg1.ppm</code>..<code>tiles_bg4.ppm</code> plus matching json metadata</li><li>Sprites:</li><li><code>sprites_screen.ppm</code>, <code>sprites.json</code></li><li><code>sprite_previews/sprite_###.ppm</code></li><li>Palette:</li><li><code>palette.ppm</code>, <code>palette.json</code></li><li>Raw memories and state:</li><li><code>vram.bin</code>, <code>cgram.bin</code>, <code>oam.bin</code></li><li><code>state.json</code>, <code>ppu_state.json</code></li></ul>
+<p>This is enough to support full design-time inspection and redraw workflows.</p>
+<h2 id="new-design-pack-tool">New Design Pack Tool</h2>
+<p>To make extracted frames easier for artists/designers, use:</p>
+<ul><li><code>tools/build_mesen_design_pack.py</code></li><li><code>tools/build_mesen_design_pack_range.py</code> (batch frame folders)</li><li><code>tools/build_mesen_visual_contract.py</code></li><li><code>tools/build_mesen_visual_contract_range.py</code></li></ul>
+<p>It repacks a raw frame dump into:</p>
+<ul><li><code>layers/</code></li><li><code>tilemaps/</code> (decoded per-cell tile index/palette/flip/priority JSON+CSV)</li><li><code>tilesets/</code></li><li><code>sprites/</code></li><li><code>palette/</code></li><li><code>raw/</code></li><li><code>design_pack.json</code> (single manifest + quick <code>ppu_summary</code> + tilemap/sprite analysis refs)</li></ul>
+<p>The visual-contract builders sit one layer above that pack and emit a translation-oriented IR:</p>
+<ul><li>BG stays tilemap-driven:</li><li>active layer state</li><li>unique tile ranges</li><li>CHR byte ranges per layer</li><li>optional chunk provenance binding from <code>mesen_range_*_provenance.jsonc</code></li><li>OBJ stays OAM-driven:</li><li>visible sprite list</li><li>base tile/address ranges</li><li>palette/priority/size counts</li><li>heuristic horizontal strip candidates for later metasprite archaeology</li><li>optional producer-side ownership:</li><li>summarized <code>VRAM/CGRAM/OAM</code> write-breakpoint domains from <code>mesen_probe_boot.lua</code></li><li>top write callsites and active callbacks per domain</li></ul>
+<p>The shared headless launcher now normalizes repo-relative output prefixes like <code>tools/out/...</code> to absolute repo paths before invoking <code>Mesen --testRunner</code>, so the probe/contract commands below land in the repo again instead of the isolated config tree.</p>
+<h2 id="design-workflow">Design Workflow</h2>
+<ol><li>Extract one frame from Mesen:</li></ol>
+<pre><code class="language-sh">make -C tools mesen-ppu-frame MESEN_FRAME=300</code></pre>
+<ol><li>Build a design pack:</li></ol>
+<pre><code class="language-sh">make -C tools mesen-design-pack MESEN_FRAME=300</code></pre>
+<p>For timeline review packs from a range dump:</p>
+<pre><code class="language-sh">make -C tools mesen-design-pack-range MESEN_RANGE_FRAMES_DIR=out/mesen_range_1086_1093_v1</code></pre>
+<ol><li>Inspect from <code>tools/out/design_frame300/</code>:</li></ol>
+<ul><li>tilemap composition: <code>layers/*.ppm</code></li><li>viewport composition: <code>layers/*_visible.ppm</code></li><li>raw tilemap entries: <code>tilemaps/bg*_tilemap.json</code> or <code>tilemaps/bg*_tilemap.csv</code></li><li>tileset source art: <code>tilesets/tiles_bg*.ppm</code></li><li>sprites and metadata: <code>sprites/</code></li><li>draw-order aid: <code>sprites/sprites_visible.json</code></li><li>palette: <code>palette/</code></li><li>editable raw memory basis: <code>raw/vram.bin</code>, <code>raw/cgram.bin</code>, <code>raw/oam.bin</code></li></ul>
+<ol><li>Build a visual contract when you want a code-translation surface instead of raw art inspection:</li></ol>
+<pre><code class="language-sh">python3 tools/build_mesen_visual_contract.py \
+  tools/out/design_mesen_range_7051_inputfix_v1/frame_07051 \
+  tools/out/visual_contract_7051.json \
+  --provenance-json rom_analysis/maps/tilemaps/mesen_range_7051_provenance.jsonc \
+  --probe-json tools/out/visual_contract_probe_7051/td2_boot_probe.json</code></pre>
+<p>For a whole reviewed range:</p>
+<pre><code class="language-sh">python3 tools/build_mesen_visual_contract_range.py \
+  tools/out/design_mesen_range_7055_7061_inputfix_v2 \
+  tools/out/visual_contract_range_7055_7061 \
+  --provenance-json rom_analysis/maps/tilemaps/mesen_range_7055_7061_provenance.jsonc \
+  --probe-json tools/out/visual_contract_probe_7055_7061/td2_boot_probe.json \
+  --clean-out</code></pre>
+<p>That emits:</p>
+<ul><li><code>*_visual_contract.json</code> per frame</li><li><code>visual_contract_range.json</code> as a compact index</li></ul>
+<p>The important contract boundary is explicit:</p>
+<ul><li>BG/CHR reconstruction comes from tilemaps + tilesets + <code>VRAM</code></li><li>OBJ reconstruction comes from visible sprites + <code>OAM/CGRAM/PPU</code></li><li>producer ownership comes from write-breakpoint traces, not from end-frame pixels alone</li><li>translating assembly against visuals should bind BG layers to chunk provenance first, then bind OBJ producers through breakpoint/write traces</li></ul>
+<p>A current live headless proof artifact for that producer side exists at:</p>
+<ul><li><code>tools/out/frame300_live_probe_cap2048/td2_boot_probe.json</code></li><li><code>tools/out/visual_contract_frame300_live_probe_cap2048.json</code></li></ul>
+<p>That frame-<code>300</code> proof is intentionally early and broad: it closes the headless path itself and proves live <code>vram/cgram/oam/obj_state</code> domains. It does not yet answer the later-scene ownership questions around <code>986</code> or <code>7051</code>.</p>
+<h2 id="gap-to-close-next">Gap to Close Next</h2>
+<ol><li>Reapply the now-working producer-side <code>VRAM/CGRAM/OAM</code> trace path to later translation-facing windows (<code>986</code>, <code>7051</code>, <code>7055</code>, <code>7059</code>, <code>7061</code>) so OBJ ownership is tied to the right callsites instead of only early proof frames or end-frame state.</li><li>Add optional round-trip patch manifests (edited tiles/palette back to ROM-space references).</li><li>Add design-side layer toggles and diff manifests for frame-range review packs.</li></ol>
+<h2 id="runtime-provenance-bridge">Runtime Provenance Bridge</h2>
+<p>To connect Mesen design-pack frames back to compressed chunk sources:</p>
+<ol><li>Run dispatcher trace on deterministic no-input playback:</li></ol>
+<pre><code class="language-sh">make -C tools l001210-probe L001210_PROBE_TOTAL_FRAMES=3600 MESEN_TIMEOUT_SECONDS=90</code></pre>
+<ol><li>Summarize chunk-source usage:</li></ol>
+<pre><code class="language-sh">make -C tools l001210-trace-summary</code></pre>
+<ol><li>Correlate <code>tools/out/td2_boot_probe_l001210_summary.json</code> with design-pack tilemaps (<code>tilemaps/bg*_tilemap.json</code>) to build:</li></ol>
+<ul><li>frame/layer/tile-index -&gt; chunk-source provenance</li><li>runtime-confirmed vs table-confirmed chunk coverage</li></ul>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

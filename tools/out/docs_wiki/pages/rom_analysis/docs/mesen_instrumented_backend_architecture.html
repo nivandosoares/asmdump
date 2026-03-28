@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Instrumented Mesen Backend Architecture | TD2 Archaeology Wiki</title>
+  <link rel="stylesheet" href="../../../assets/wiki.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="site-link" href="../../../index.html">TD2 Archaeology Wiki</a>
+      <p class="sidebar-note">Simple wiki-style index built from curated markdown sources.</p>
+      <section class="sidebar-group"><h3>Source Of Truth</h3><ul><li><a href="../../PORT_PLAN.html">Port Plan</a></li><li><a href="next_steps_roadmap.html">Next Steps Roadmap</a></li><li><a href="progress_checkpoints.html">Progress Checkpoints</a></li><li><a href="validation_gates.html">Validation Gates</a></li><li><a href="../../validation/README.html">Validation README</a></li><li><a href="../../tools/README.html">Tools README</a></li><li><a href="../../port/README.html">Port README</a></li><li><a href="../README.html">ROM Analysis README</a></li></ul></section><section class="sidebar-group"><h3>Attract And Intro</h3><ul><li><a href="intro_00_8029_next_agent_handoff.html">00:8029 Handoff</a></li><li><a href="intro_01_9fe5_window_986_1093.html">01:9FE5 Window 986..1093</a></li><li><a href="intro_01_9fe5_activity_trace_1094_1117.html">01:9FE5 Activity Trace</a></li><li><a href="intro_00_8029_mode7_blob_cycle_1134_1200.html">Mode 7 Blob Cycle 1134..1200</a></li><li><a href="../maps/tilemaps/mesen_range_1086_1093_provenance.html">Tilemap Provenance 1086..1093</a></li><li><a href="mesen_debugger_design_workbench.html">Mesen Design Workbench</a></li></ul></section><section class="sidebar-group"><h3>Front-End And Menu</h3><ul><li><a href="snes_runtime_algorithm_human.html">SNES Runtime Algorithm</a></li><li><a href="../maps/tilemaps/car_select_frame_1500_bg2_provenance.html">Frame 1500 BG2 Provenance</a></li><li><a href="../../tools/out/snes_frontend_top_menu_labels.html">Top Menu Labels</a></li><li><a href="../../tools/out/snes_frontend_rival_selection_grid.html">Rival Selection Grid</a></li><li><a href="../../tools/out/snes_select_opponent_organic_default_path.html">Organic Default Path</a></li><li><a href="../../tools/out/snes_frontend_select_opponent_mode_split.html">Select Opponent Mode Split</a></li></ul></section><section class="sidebar-group"><h3>Gameplay And Lane 3</h3><ul><li><a href="lane3_today_work_brief.html">Lane 3 Work Brief</a></li><li><a href="gameplay_default_rival_next_agent_handoff.html">Gameplay Handoff</a></li><li><a href="lane3_attract_demo_boundary.html">Attract Demo Boundary</a></li><li><a href="../maps/tracks/track1_live_gameplay_entry_route.html">Live Gameplay Entry Route</a></li><li><a href="../maps/tracks/track1_live_race_manual_seed_intake.html">Manual Seed Intake</a></li><li><a href="../maps/tracks/track1_live_race_manual_video_intake.html">Manual Video Intake</a></li><li><a href="../maps/tracks/track1_live_race_visible_layer_stack.html">Visible Layer Stack</a></li><li><a href="../maps/tracks/track1_live_race_bg2_producer_path.html">BG2 Producer Path</a></li><li><a href="../maps/tracks/track1_live_race_l01318d_static_role_split.html">L01318D Role Split</a></li><li><a href="../maps/tracks/track1_02_9016_state_ownership.html">02:9016 State Ownership</a></li></ul></section><section class="sidebar-group"><h3>Runtime And Port Validation</h3><ul><li><a href="port_sdl_runtime_mimetization_smoke.html">SDL Runtime Smoke</a></li><li><a href="mesen_instrumented_backend_architecture.html">Instrumented Backend Architecture</a></li></ul></section>
+    </aside>
+    <main class="content">
+      <nav class="breadcrumbs">
+        <a href="../../../index.html">Index</a>
+        <span>/</span>
+        <a href="../../../index.html#runtime-port">Runtime And Port Validation</a>
+        <span>/</span>
+        <span>Instrumented Backend Architecture</span>
+      </nav>
+      <header class="doc-header">
+        <p class="eyebrow">Runtime And Port Validation</p>
+        <h1>Instrumented Mesen Backend Architecture</h1>
+        <p class="doc-note">Architecture note for the experimental Mesen backend path.</p>
+        <div class="doc-meta">
+          <span>Source: <code>rom_analysis/docs/mesen_instrumented_backend_architecture.md</code></span>
+          <a href="../../../../../../rom_analysis/docs/mesen_instrumented_backend_architecture.md">Open Raw Markdown</a>
+        </div>
+      </header>
+      <article class="doc-body">
+        <h1 id="instrumented-mesen-backend-architecture">Instrumented Mesen Backend Architecture</h1>
+<p>Date: <code>2026-03-22</code></p>
+<p>This note documents the first engineering pass toward turning the local <code>Mesen2</code> tree into a laboratory backend for ROM archaeology and native-port evidence capture.</p>
+<p>The intent is not generic emulator hacking. The backend is meant to produce repeatable, structured evidence bundles that reduce ambiguity in the original ROM behavior.</p>
+<h2 id="1-source-findings">1. Source Findings</h2>
+<p>Verified in <code>/home/nivando-soares/Mesen2</code>.</p>
+<h3 id="1-1-existing-backend-entrypoint">1.1 Existing backend entrypoint</h3>
+<ul><li><code>UI/Program.cs</code></li><li>already routes <code>--testRunner</code> before Avalonia UI startup</li><li><code>UI/Utilities/TestRunner.cs</code></li><li>initializes the emulator headlessly</li><li>loads one ROM</li><li>loads debugger workspace</li><li>can run without normal GUI lifecycle</li></ul>
+<p>Reading:</p>
+<ul><li>a new backend mode can sit beside <code>TestRunner</code> with minimal disruption</li><li>this is the lowest-risk integration point for an MVP</li></ul>
+<h3 id="1-2-frame-ownership-and-boundaries">1.2 Frame ownership and boundaries</h3>
+<ul><li><code>Core/Shared/Emulator.cpp</code></li><li><code>Emulator::Run()</code> drives <code>_console-&gt;RunFrame()</code></li><li><code>Emulator::ProcessEvent()</code> already routes <code>StartFrame</code>, <code>EndFrame</code>, <code>Nmi</code>, <code>Irq</code>, <code>StateLoaded</code>, etc through the debugger/script path</li><li><code>Core/SNES/SnesConsole.cpp</code></li><li><code>SnesConsole::RunFrame()</code> loops on <code>_cpu-&gt;Exec()</code> until <code>_frameRunning</code> becomes false</li><li><code>ProcessEndOfFrame()</code> performs end-of-frame housekeeping</li><li><code>Core/SNES/SnesPpu.cpp</code></li><li><code>EventType::EndFrame</code> is emitted at the NMI/VBlank-side frame completion</li><li><code>_frameCount++</code> happens there</li><li><code>ConsoleNotificationType::PpuFrameDone</code> is sent from <code>SendFrame()</code></li><li><code>EventType::StartFrame</code> is emitted when scanline wraps to the next frame</li></ul>
+<p>Reading:</p>
+<ul><li>the stable architectural boundaries already exist</li><li>the MVP can consume them indirectly through debugger stepping and frame count</li><li>a future lab sink should attach directly at these <code>StartFrame</code>/<code>EndFrame</code> sites to remove boundary ambiguity</li></ul>
+<h3 id="1-3-vram-cgram-oam-mode-7-write-paths">1.3 VRAM / CGRAM / OAM / Mode 7 write paths</h3>
+<ul><li><code>Core/SNES/SnesPpu.cpp</code></li><li><code>0x2104</code> OAM writes call <code>ProcessPpuWrite(..., MemoryType::SnesSpriteRam)</code></li><li><code>0x2118/0x2119</code> VRAM writes call <code>ProcessPpuWrite(..., MemoryType::SnesVideoRam)</code></li><li><code>0x2122</code> CGRAM writes call <code>ProcessPpuWrite(..., MemoryType::SnesCgRam)</code></li><li><code>0x211A..0x2120</code> update <code>_state.Mode7.*</code> directly</li></ul>
+<p>Reading:</p>
+<ul><li>VRAM/CGRAM/OAM already have single choke points</li><li>Mode 7 register writes are similarly centralized, even if not all of them use the same <code>ProcessPpuWrite</code> path</li></ul>
+<h3 id="1-4-dma-paths">1.4 DMA paths</h3>
+<ul><li><code>Core/SNES/SnesDmaController.cpp</code></li><li><code>Write(0x420B)</code> arms manual DMA</li><li><code>Write(0x420C)</code> arms HDMA</li><li><code>CopyDmaByte(...)</code> is the byte-level transfer choke point</li><li><code>RunDma(...)</code> and <code>RunHdmaTransfer(...)</code> sit above it</li></ul>
+<p>Reading:</p>
+<ul><li><code>CopyDmaByte(...)</code> is the best eventual core hook for a first-class DMA lab sink</li><li>for the MVP, debugger events already carry enough DMA attribution to avoid touching the core</li></ul>
+<h3 id="1-5-existing-debugger-export-infrastructure">1.5 Existing debugger/export infrastructure</h3>
+<ul><li><code>Core/SNES/Debugger/SnesEventManager.cpp</code></li><li>already classifies SNES register activity into:</li><li>OAM writes</li><li>BG option writes</li><li>BG scroll writes</li><li>VRAM writes</li><li>Mode 7 writes</li><li>CGRAM writes</li><li>other writes</li><li>attaches scanline, cycle, DMA channel, DMA channel config, and program counter</li><li><code>UI/Interop/DebugApi.cs</code></li><li>exposes:</li><li><code>InitializeDebugger</code></li><li><code>Step</code></li><li><code>GetConsoleState</code></li><li><code>GetCpuState</code></li><li><code>GetPpuState</code></li><li><code>GetMemoryState</code></li><li><code>SetInputOverrides</code></li><li><code>TakeEventSnapshot</code></li><li><code>GetDebugEvents</code></li><li><code>UI/Interop/ConsoleState/SnesState.cs</code></li><li>already exposes <code>SnesState</code>, <code>SnesPpuState</code>, <code>Mode7Config</code>, <code>SnesDmaControllerState</code>, etc</li><li><code>UI/Interop/NotificationListener.cs</code></li><li>already exposes <code>PpuFrameDone</code> notifications</li></ul>
+<p>Reading:</p>
+<ul><li>the MVP can be implemented entirely in C# against real emulator execution</li><li>this avoids immediate C++ core surgery</li><li>this is appropriate for a first vertical slice</li></ul>
+<h2 id="2-instrumentation-architecture">2. Instrumentation Architecture</h2>
+<h3 id="2-1-mvp-architecture">2.1 MVP architecture</h3>
+<ul><li><code>LabRunner</code></li><li>new backend-oriented runner beside <code>TestRunner</code></li><li>execution controller</li><li>loads ROM</li><li>optionally loads savestate</li><li>aligns to a frame boundary</li><li>applies scripted input windows</li><li>advances through a requested range</li><li>probe selection</li><li>configures existing debugger event categories and memory dumps</li><li>artifact writer</li><li>writes deterministic per-frame JSON and binary outputs</li><li>manifest writer</li><li>records ROM hash, build version, range, probe sets, capture semantics, and artifact paths</li></ul>
+<h3 id="2-2-data-flow">2.2 Data flow</h3>
+<ol><li><code>Program.Main</code> detects <code>--labRunner</code></li><li><code>LabRunner</code> initializes headless emulation</li><li><code>LabRunner</code> initializes debugger access</li><li><code>LabRunner</code> configures the SNES event viewer categories for the selected probe sets</li><li>For each frame:</li></ol>
+<ul><li>capture <code>startBoundary</code></li><li>apply input override</li><li>advance to the next frame boundary</li><li>capture <code>endBoundary</code></li><li>snapshot debugger events with previous-frame visibility enabled</li><li>dump optional <code>VRAM/CGRAM/OAM</code></li><li>write <code>frame.json</code> and <code>events.json</code></li></ul>
+<ol><li>At end:</li></ol>
+<ul><li>write <code>summary.json</code></li><li>write <code>manifest.json</code></li></ul>
+<h3 id="2-3-enable-disable-strategy">2.3 Enable/disable strategy</h3>
+<ul><li>when <code>--labRunner</code> is not used, nothing changes for normal emulator startup</li><li>within <code>--labRunner</code>, probe selection gates:</li><li>event categories</li><li>memory dumps</li><li>Mode 7 state export emphasis</li></ul>
+<h3 id="2-4-why-this-is-the-right-first-split">2.4 Why this is the right first split</h3>
+<ul><li>it reuses proven debugger infrastructure instead of duplicating it</li><li>it keeps the core untouched for the first slice</li><li>it produces real artifacts now</li><li>it leaves a clean path for a later core-native sink layer</li></ul>
+<h3 id="2-5-known-mvp-limitation">2.5 Known MVP limitation</h3>
+<p>The debugger stepping surface does not yet give a perfectly canonical single-instant “frame snapshot”. The current runner therefore exports both:</p>
+<ul><li><code>startBoundary</code></li><li><code>endBoundary</code></li></ul>
+<p>and uses previous-frame event snapshots explicitly. That is deliberate. The backend should expose the ambiguity rather than hide it.</p>
+<h2 id="3-backend-cli-design">3. Backend/CLI Design</h2>
+<p>Current implemented mode:</p>
+<pre><code class="language-sh">Mesen --labRunner &lt;rom&gt; \
+  --load-state &lt;file&gt; \
+  --run-range &lt;start:end&gt; \
+  --input-script &lt;windows&gt; \
+  --probe-set &lt;list&gt; \
+  --export-dir &lt;path&gt; \
+  [--manifest-out &lt;file&gt;]</code></pre>
+<p>Implemented options:</p>
+<ul><li><code>--load-state &lt;file&gt;</code></li><li><code>--run-range &lt;start:end&gt;</code></li><li><code>--input-script &lt;windows&gt;</code></li><li><code>--probe-set frame_core_probe,dma_vram_probe,mode7_probe</code></li><li><code>--export-dir &lt;path&gt;</code></li><li><code>--manifest-out &lt;file&gt;</code></li></ul>
+<p>Input-script format:</p>
+<ul><li><code>frame:buttons</code></li><li><code>start-end:buttons</code></li><li>buttons use the same comma-separated tokens already used in the repo:</li><li><code>a,b,x,y,l,r,u,d,up,down,left,right,select,start</code></li></ul>
+<p>Example:</p>
+<pre><code class="language-sh">./validation/run_mesen_lab_backend.sh \
+  ./game.smc \
+  --load-state ./.mesen-config/Mesen2/SaveStates/game_11.mss \
+  --run-range 18030:18032 \
+  --probe-set frame_core_probe,dma_vram_probe,mode7_probe \
+  --export-dir tools/out/mesen_lab_mvp_18030_18032</code></pre>
+<p>Next CLI step after the MVP:</p>
+<ul><li>add relative range syntax for savestate-seeded work such as <code>+0:+16</code></li><li>add named probe presets instead of comma-only flags</li><li>optionally add a JSON spec mode once the direct CLI surface stabilizes</li></ul>
+<h2 id="4-probe-sets">4. Probe Sets</h2>
+<h3 id="4-1-frame-core-probe">4.1 <code>frame_core_probe</code></h3>
+<p>Purpose:</p>
+<ul><li>provide frame-indexed timing and execution context for reproducible windows</li></ul>
+<p>Signals:</p>
+<ul><li>frame index</li><li>master clock</li><li>CPU register surface</li><li>PPU frame/scanline/cycle state</li><li>layer scroll/base config</li><li>NMI/IRQ event counts</li></ul>
+<p>Schema:</p>
+<ul><li>in <code>frame.json</code></li><li><code>startBoundary</code></li><li><code>endBoundary</code></li><li><code>eventSummary</code></li></ul>
+<p>Port value:</p>
+<ul><li>creates the minimal behavioral contract needed to anchor later comparison</li></ul>
+<h3 id="4-2-dma-vram-probe">4.2 <code>dma_vram_probe</code></h3>
+<p>Purpose:</p>
+<ul><li>capture data motion that directly changes rendered state</li></ul>
+<p>Signals:</p>
+<ul><li>DMA-attributed register events</li><li>VRAM write events</li><li>CGRAM write events</li><li>OAM write events</li><li>raw <code>vram.bin</code></li><li>raw <code>cgram.bin</code></li><li>raw <code>oam.bin</code></li><li>per-dump SHA-256</li></ul>
+<p>Schema:</p>
+<ul><li><code>events.json</code></li><li><code>frame.json -&gt; memoryDumps</code></li><li><code>frame_XXXXXX/vram.bin</code></li><li><code>frame_XXXXXX/cgram.bin</code></li><li><code>frame_XXXXXX/oam.bin</code></li></ul>
+<p>Port value:</p>
+<ul><li>exposes exactly which memory surfaces changed and preserves a diffable binary end state</li></ul>
+<h3 id="4-3-mode7-probe">4.3 <code>mode7_probe</code></h3>
+<p>Purpose:</p>
+<ul><li>surface transformation-relevant state for Mode 7 reconstruction</li></ul>
+<p>Signals:</p>
+<ul><li>Mode 7 matrix values</li><li>scroll</li><li>center</li><li>mirroring/fill flags</li><li>Mode 7 register write events</li></ul>
+<p>Schema:</p>
+<ul><li><code>frame.json -&gt; startBoundary.ppu.mode7</code></li><li><code>frame.json -&gt; endBoundary.ppu.mode7</code></li><li><code>events.json</code> entries with category <code>mode7_write</code></li></ul>
+<p>Port value:</p>
+<ul><li>reduces ambiguity around producer switches vs parameter-only changes</li></ul>
+<h3 id="4-4-planned-ownership-probe">4.4 Planned <code>ownership_probe</code></h3>
+<p>Purpose:</p>
+<ul><li>infer producer / callback / dispatcher ownership transitions</li></ul>
+<p>Planned signals:</p>
+<ul><li>repeated PC hotspots from event sources</li><li>optional callstack surface</li><li>optional callback/dispatcher watch fields</li></ul>
+<p>Current status:</p>
+<ul><li>designed only</li><li>not implemented in the MVP</li></ul>
+<h3 id="4-5-planned-visual-contract-probe">4.5 Planned <code>visual_contract_probe</code></h3>
+<p>Purpose:</p>
+<ul><li>bind runtime state to visual outputs and downstream scene comparison</li></ul>
+<p>Planned signals:</p>
+<ul><li>frame metadata</li><li>layer state</li><li>relevant writes</li><li>optional screenshot/tilemap/sprite surfaces</li></ul>
+<p>Current status:</p>
+<ul><li>designed only</li><li>not implemented in the MVP</li></ul>
+<h2 id="5-implementation-plan">5. Implementation Plan</h2>
+<h3 id="5-1-smallest-valuable-slice">5.1 Smallest valuable slice</h3>
+<ul><li>add a backend runner in <code>UI</code></li><li>keep it SNES-only for the first pass</li><li>reuse debugger stepping/events/state/memory APIs</li><li>emit deterministic JSON + binary bundles</li></ul>
+<h3 id="5-2-files-touched-in-the-first-pass">5.2 Files touched in the first pass</h3>
+<p>In <code>Mesen2</code>:</p>
+<ul><li><code>UI/Program.cs</code></li><li><code>UI/Utilities/CommandLineHelper.cs</code></li><li><code>UI/Utilities/DependencyHelper.cs</code></li><li><code>UI/Utilities/LabRunner.cs</code></li></ul>
+<p>In <code>asmdump</code>:</p>
+<ul><li><code>validation/run_mesen_lab_backend.sh</code></li><li><code>validation/README.md</code></li><li>this note</li></ul>
+<h3 id="5-3-main-risks">5.3 Main risks</h3>
+<ul><li>debugger step semantics at frame boundaries are subtle</li><li>long warm-up ranges are expensive with frame-by-frame stepping</li><li>the current MVP still depends on debugger lifetime and event snapshot semantics</li><li>compile/publish behavior in the local <code>Mesen2</code> tree is noisier than the minimal code delta itself</li></ul>
+<h2 id="6-implementation-progress">6. Implementation Progress</h2>
+<p>Actually implemented:</p>
+<ul><li><code>--labRunner</code> mode wired into <code>Program.Main</code></li><li>CLI parsing for:</li><li><code>--load-state</code></li><li><code>--run-range</code></li><li><code>--input-script</code></li><li><code>--probe-set</code></li><li><code>--export-dir</code></li><li><code>--manifest-out</code></li><li>SNES-only MVP exporter</li><li>deterministic artifact layout</li><li>frame-core state export</li><li>debugger event export</li><li>optional <code>VRAM/CGRAM/OAM</code> dumps with SHA-256</li><li>shell launcher in <code>validation/</code></li><li>fallback dependency loading from on-disk <code>Dependencies.zip</code> beside the local executable</li></ul>
+<p>Still planned / not implemented:</p>
+<ul><li>first-class core-native lab sink</li><li>screenshot/tilemap/sprite capture integration in the backend mode</li><li>ownership/callback-focused probe set</li><li>visual-contract probe set</li><li>relative frame ranges</li><li>condition/event-based stop rules</li></ul>
+<h2 id="7-validation">7. Validation</h2>
+<h3 id="7-1-what-was-tested">7.1 What was tested</h3>
+<p>Code-level validation:</p>
+<ul><li><code>dotnet build UI/UI.csproj -c Release -p:RuntimeIdentifier=linux-x64 -t:Compile --no-restore</code></li><li>succeeded for the first MVP cut before the later frame-boundary fix</li></ul>
+<p>Runtime/backend validation:</p>
+<ul><li>savestate frame discovery:</li><li><code>./validation/run_mesen_lab_backend.sh ... --load-state game_11.mss --run-range 0:0</code></li><li>result: fast failure with verified message <code>loaded state starts at frame 18030</code></li><li>first exact-range run against that savestate:</li><li><code>--run-range 18030:18032</code></li><li>result: exposed a real frame-boundary mismatch <code>expected 18031, got 18030</code></li><li>attempted no-savestate validation at <code>300:302</code></li><li>result: too expensive for the first backend cut and not useful enough to justify repeated retries before fixing the stepping surface</li></ul>
+<h3 id="7-2-what-was-learned">7.2 What was learned</h3>
+<ul><li>the savestate path is usable and provides a precise absolute frame anchor</li><li><code>Step(PpuFrame)</code> is not sufficient by itself for this backend contract</li><li>the runner must explicitly handle “advance until frame count changes” instead of assuming one <code>PpuFrame</code> step equals one frame-count transition</li></ul>
+<h3 id="7-3-artifact-examples">7.3 Artifact examples</h3>
+<p>Produced during validation:</p>
+<ul><li><code>tools/out/mesen_lab_state_probe/</code></li><li>run attempt used to discover that <code>game_11.mss</code> begins at frame <code>18030</code></li></ul>
+<p>Not yet produced successfully after the stepping fix:</p>
+<ul><li>a clean <code>18030..18032</code> three-frame bundle with all probes</li></ul>
+<p>That makes the current state a partial implementation with a concrete, narrowed runtime blocker rather than a completed validated backend.</p>
+<h2 id="8-recommended-next-steps">8. Recommended Next Steps</h2>
+<ol><li>Rebuild the local <code>Mesen2</code> output cleanly after the stepping fix and rerun the <code>18030..18032</code> savestate-backed capture.</li><li>Promote the current boundary workaround into a cleaner helper with explicit metadata about any correction <code>PpuStep</code> count used.</li><li>Add relative-range syntax for savestate-seeded workflows.</li><li>Add a first ownership-focused summary surface:</li></ol>
+<ul><li>top event PCs</li><li>optional callstack head</li><li>callback/watch fields from known WRAM/state points</li></ul>
+<ol><li>Move the second slice into the core:</li></ol>
+<ul><li>a lab sink fed directly from <code>StartFrame</code> / <code>EndFrame</code>, <code>ProcessPpuWrite(...)</code>, and <code>CopyDmaByte(...)</code></li><li>keep the C# runner as the orchestration layer above it</li></ul>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

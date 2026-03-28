@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SDL Runtime Mimetization Smoke | TD2 Archaeology Wiki</title>
+  <link rel="stylesheet" href="../../../assets/wiki.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="site-link" href="../../../index.html">TD2 Archaeology Wiki</a>
+      <p class="sidebar-note">Simple wiki-style index built from curated markdown sources.</p>
+      <section class="sidebar-group"><h3>Source Of Truth</h3><ul><li><a href="../../PORT_PLAN.html">Port Plan</a></li><li><a href="next_steps_roadmap.html">Next Steps Roadmap</a></li><li><a href="progress_checkpoints.html">Progress Checkpoints</a></li><li><a href="validation_gates.html">Validation Gates</a></li><li><a href="../../validation/README.html">Validation README</a></li><li><a href="../../tools/README.html">Tools README</a></li><li><a href="../../port/README.html">Port README</a></li><li><a href="../README.html">ROM Analysis README</a></li></ul></section><section class="sidebar-group"><h3>Attract And Intro</h3><ul><li><a href="intro_00_8029_next_agent_handoff.html">00:8029 Handoff</a></li><li><a href="intro_01_9fe5_window_986_1093.html">01:9FE5 Window 986..1093</a></li><li><a href="intro_01_9fe5_activity_trace_1094_1117.html">01:9FE5 Activity Trace</a></li><li><a href="intro_00_8029_mode7_blob_cycle_1134_1200.html">Mode 7 Blob Cycle 1134..1200</a></li><li><a href="../maps/tilemaps/mesen_range_1086_1093_provenance.html">Tilemap Provenance 1086..1093</a></li><li><a href="mesen_debugger_design_workbench.html">Mesen Design Workbench</a></li></ul></section><section class="sidebar-group"><h3>Front-End And Menu</h3><ul><li><a href="snes_runtime_algorithm_human.html">SNES Runtime Algorithm</a></li><li><a href="../maps/tilemaps/car_select_frame_1500_bg2_provenance.html">Frame 1500 BG2 Provenance</a></li><li><a href="../../tools/out/snes_frontend_top_menu_labels.html">Top Menu Labels</a></li><li><a href="../../tools/out/snes_frontend_rival_selection_grid.html">Rival Selection Grid</a></li><li><a href="../../tools/out/snes_select_opponent_organic_default_path.html">Organic Default Path</a></li><li><a href="../../tools/out/snes_frontend_select_opponent_mode_split.html">Select Opponent Mode Split</a></li></ul></section><section class="sidebar-group"><h3>Gameplay And Lane 3</h3><ul><li><a href="lane3_today_work_brief.html">Lane 3 Work Brief</a></li><li><a href="gameplay_default_rival_next_agent_handoff.html">Gameplay Handoff</a></li><li><a href="lane3_attract_demo_boundary.html">Attract Demo Boundary</a></li><li><a href="../maps/tracks/track1_live_gameplay_entry_route.html">Live Gameplay Entry Route</a></li><li><a href="../maps/tracks/track1_live_race_manual_seed_intake.html">Manual Seed Intake</a></li><li><a href="../maps/tracks/track1_live_race_manual_video_intake.html">Manual Video Intake</a></li><li><a href="../maps/tracks/track1_live_race_visible_layer_stack.html">Visible Layer Stack</a></li><li><a href="../maps/tracks/track1_live_race_bg2_producer_path.html">BG2 Producer Path</a></li><li><a href="../maps/tracks/track1_live_race_l01318d_static_role_split.html">L01318D Role Split</a></li><li><a href="../maps/tracks/track1_02_9016_state_ownership.html">02:9016 State Ownership</a></li></ul></section><section class="sidebar-group"><h3>Runtime And Port Validation</h3><ul><li><a href="port_sdl_runtime_mimetization_smoke.html">SDL Runtime Smoke</a></li><li><a href="mesen_instrumented_backend_architecture.html">Instrumented Backend Architecture</a></li></ul></section>
+    </aside>
+    <main class="content">
+      <nav class="breadcrumbs">
+        <a href="../../../index.html">Index</a>
+        <span>/</span>
+        <a href="../../../index.html#runtime-port">Runtime And Port Validation</a>
+        <span>/</span>
+        <span>SDL Runtime Smoke</span>
+      </nav>
+      <header class="doc-header">
+        <p class="eyebrow">Runtime And Port Validation</p>
+        <h1>SDL Runtime Mimetization Smoke</h1>
+        <p class="doc-note">Bounded regression read for current intro/front-end parity in the C/SDL runtime.</p>
+        <div class="doc-meta">
+          <span>Source: <code>rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md</code></span>
+          <a href="../../../../../../rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md">Open Raw Markdown</a>
+        </div>
+      </header>
+      <article class="doc-body">
+        <h1 id="sdl-runtime-mimetization-smoke">SDL Runtime Mimetization Smoke</h1>
+<p>Date: <code>2026-03-28</code></p>
+<h2 id="goal">Goal</h2>
+<p>Measure, with one bounded regression pass, how far the current C/SDL runtime already mimics the promoted SNES intro/attract sequence.</p>
+<p>This is explicitly an intro/front-end smoke, not a gameplay-parity claim.</p>
+<h2 id="run">Run</h2>
+<pre><code class="language-sh">make -C port
+./port/test_regression.sh</code></pre>
+<p>Sequence under test:</p>
+<ul><li><code>tools/out/intro_loop_hybrid_bridge_visible_sequence.txt</code></li></ul>
+<h2 id="result">Result</h2>
+<ul><li><code>make -C port</code> reported the runtime already up to date</li><li>the headless regression rendered <code>1000</code> frames successfully</li><li>frame-format sanity passed on the dumped PPM output</li><li>golden checks:</li><li><code>bootstrap_queue_978</code> at frame <code>324</code>: <code>0</code> mismatched pixels</li><li><code>bootstrap_queue_982</code> at frame <code>328</code>: <code>0</code> mismatched pixels</li><li><code>bridgeoverride_986</code> at frame <code>332</code>: <code>0</code> mismatched pixels</li><li><code>bridgeobj_990</code> at frame <code>336</code>: <code>0</code> mismatched pixels</li><li><code>mode7_visible_991</code> at frame <code>337</code>: <code>4</code> mismatched pixels (<code>0.006975%</code>)</li><li>transition check:</li><li><code>mode7_hold_transition</code>: <code>PASS</code></li></ul>
+<p>Regression summary:</p>
+<ul><li><code>5</code> passed</li><li><code>1</code> failed</li><li><code>0</code> skipped</li></ul>
+<h2 id="practical-read">Practical Read</h2>
+<ul><li>The current SDL runtime reproduces the promoted bridge-visible intro path exactly through the checked <code>978/982/986/990</code> checkpoints.</li><li>The first remaining measured parity gap in this smoke sits immediately after that block at frame <code>991</code>, and it is small: <code>4</code> pixels.</li><li>For intro/front-end regression work, the runtime is already good enough to act as a useful SNES mimic and checkpoint surface.</li><li>For gameplay, this smoke does <strong>not</strong> prove parity yet; the gameplay lane still relies on live-entry probe/capture work rather than direct SDL replay.</li></ul>
+<h2 id="next-gate">Next Gate</h2>
+<ul><li>either close the <code>4</code>-pixel <code>991</code> gap directly</li><li>or formalize that boundary explicitly if the runtime should treat it as a temporary tolerated Mode 7 edge</li></ul>
+      </article>
+    </main>
+  </div>
+</body>
+</html>
