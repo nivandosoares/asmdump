@@ -166,6 +166,16 @@
           "note": "Promoted power-on route for reproducible gameplay entry."
         },
         {
+          "path": "rom_analysis/maps/tracks/track1_live_race_asset_focus.md",
+          "label": "Gameplay Asset Focus",
+          "note": "Asset-first gameplay taxonomy that maps BG/OBJ buckets to tracing targets."
+        },
+        {
+          "path": "tools/out/lane3_live_race_mid_asset_focus.md",
+          "label": "Live-Race Asset Report",
+          "note": "Generated gameplay inventory with supporting frame/layer artifact references."
+        },
+        {
           "path": "rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md",
           "label": "Manual Seed Intake",
           "note": "Human note for preserved live-race savestates and controls."

@@ -266,6 +266,25 @@ blockquote {
   font-size: 0.88rem;
 }
 
+.last-updated {
+  margin: 0.55rem 0 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.update-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  border: 1px solid #cfe0f5;
+  color: var(--accent);
+  font-size: 0.84rem;
+  white-space: nowrap;
+}
+
 .doc-card .doc-links {
   margin-top: 0.85rem;
 }

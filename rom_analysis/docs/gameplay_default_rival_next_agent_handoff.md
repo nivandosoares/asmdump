@@ -13,6 +13,7 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `rom_analysis/maps/tracks/track1_seed_sweep_v3_ab_compare.md`
 - `rom_analysis/maps/tracks/track1_b_hold_scanline_recheck_0090_0093_current_seed.md`
 - `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
+- `rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
 - `rom_analysis/maps/tracks/track1_live_race_vs_post9016_control.md`
 - `rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
 - `rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
@@ -22,6 +23,7 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `rom_analysis/docs/lane3_visual_annotation_template.md`
 - `manual_artifacts/lane3/lane3_live_race_notes.txt`
 - `tools/out/lane3_live_race_mid_bg2_producer_summary.md`
+- `tools/out/lane3_live_race_mid_asset_focus.md`
 - `tools/out/lane3_live_race_slot2_boundary_summary.md`
 - `tools/out/lane3_live_race_slot2_vs_mid_probe_compare.md`
 - `tools/out/post9016_default_rival_probe_none_vs_a_compare.md`

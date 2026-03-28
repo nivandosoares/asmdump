@@ -182,6 +182,19 @@ CALLBACK_PROBE_JSON ?= $(BOOT_PROBE_PREFIX).json
 CALLBACK_CONTRACTS_REPORT_JSON ?= $(OUT_DIR)/callback_state_contracts_report.json
 DOCS_WIKI_MANIFEST ?= ../rom_analysis/docs/wiki_doc_index.json
 DOCS_WIKI_OUT_DIR ?= $(OUT_DIR)/docs_wiki
+LANE3_LIVE_RACE_MID_ASSET_FOCUS_JSON := $(OUT_DIR)/lane3_live_race_mid_asset_focus.json
+LANE3_LIVE_RACE_MID_ASSET_FOCUS_MD := $(OUT_DIR)/lane3_live_race_mid_asset_focus.md
+LANE3_LIVE_RACE_MID_FRAME_IMAGE := ../manual_artifacts/lane3/Screenshots/lane3_live_race_video_frame0000_start.png
+LANE3_LIVE_RACE_MID_BG1_IMAGE := $(OUT_DIR)/lane3_live_race_mid_bg1.ppm
+LANE3_LIVE_RACE_MID_BG2_IMAGE := $(OUT_DIR)/lane3_live_race_mid_bg2.ppm
+LANE3_LIVE_RACE_MID_OBJ_IMAGE := $(OUT_DIR)/lane3_live_race_mid_obj.ppm
+LANE3_LIVE_RACE_MID_DESIGN_PACK := $(OUT_DIR)/design_lane3_live_race_mid_frame0/design_pack.json
+LANE3_LIVE_RACE_MID_LAYER_SUMMARY := $(OUT_DIR)/lane3_live_race_mid_layer_stack_summary.json
+LANE3_LIVE_RACE_MID_PRODUCER_SUMMARY := $(OUT_DIR)/lane3_live_race_mid_bg2_producer_summary.json
+LANE3_LIVE_RACE_MID_BG1_RENDER := $(OUT_DIR)/lane3_live_race_mid_bg1_render.json
+LANE3_LIVE_RACE_MID_BG2_RENDER := $(OUT_DIR)/lane3_live_race_mid_bg2_render.json
+LANE3_LIVE_RACE_MID_OBJ_RENDER := $(OUT_DIR)/lane3_live_race_mid_obj_render.json
+LANE3_LIVE_RACE_MID_PPU_STATE := $(OUT_DIR)/lane3_live_race_mid_bg1_bg2_ppu_state.json
 TRACK1_SEED_SWEEP_SAVESTATE ?= ../.mesen-config/Mesen2/SaveStates/game_11.mss
 TRACK1_SEED_SWEEP_OUT_DIR ?= $(OUT_DIR)/track1_seed_sweep_v1
 TRACK1_SEED_SWEEP_TIMEOUT_SECONDS ?= 60
@@ -293,7 +306,7 @@ L001210_SAVE_STATE_FRAME ?= 1093
 L001210_SAVE_TOTAL_FRAMES ?= 1120
 L001210_SAVE_STATE_PATH ?= ../tools/out/l001210_state_$(L001210_SAVE_STATE_FRAME).bin
 
-.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank13-headers bank13-validate bank30-headers bank30-validate bank30-registry tilemap-provenance-1086-1093 l001210-probe l001210-save-savestate l001210-probe-matrix l001210-trace-summary track1-seed-sweep track1-b-hold-cycle regression-gates callback-contracts-check docs-wiki portability-path-check terminal-bot-smoke obj-vertical-flip-check bg-layer-priority-check intro-oam-deltas clean-generated clean-generated-dry-run bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview bank1-bootstrap-queue-978-preview bank1-bootstrap-queue-982-preview bank1-bootstrap-queue-986-preview bank1-bootstrap-queue-986-noobj-preview bank1-bootstrap-queue-986-bridgeoam-preview bank1-bootstrap-queue-990-bridgeoam-preview bank1-bootstrap-queue-994-bridgeoam-preview bank1-visible-mode7-window-preview intro-bootstrap-deltas intro-bootstrap-queue mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-loop-hybrid-bridge-sequence intro-loop-hybrid-bridge-visible-sequence intro-native-978 intro-native-978-derived intro-native-978-bridge intro-native-978-bridge-visible
+.PHONY: all previews bank3-palettes boot-palettes boot-palettes-flat boot-screen-manifest boot-vram-preview boot-vram-overlay-preview boot-screen-preview boot-screen-overlay-preview bank6-preview bank7-scan bank7-headers bank7-42fb0 bank7-42fb0-preview bank7-26fb0 bank7-26fb0-preview bank7-chunk1-preview bank9-preview bank13-headers bank13-validate bank30-headers bank30-validate bank30-registry tilemap-provenance-1086-1093 l001210-probe l001210-save-savestate l001210-probe-matrix l001210-trace-summary track1-seed-sweep track1-b-hold-cycle lane3-live-race-asset-focus regression-gates callback-contracts-check docs-wiki portability-path-check terminal-bot-smoke obj-vertical-flip-check bg-layer-priority-check intro-oam-deltas clean-generated clean-generated-dry-run bank1-credits-scene-preview bank1-credits-scene-compare bank1-a35a-scene-preview bank1-a00c-scene-preview bank1-bootstrap-queue-978-preview bank1-bootstrap-queue-982-preview bank1-bootstrap-queue-986-preview bank1-bootstrap-queue-986-noobj-preview bank1-bootstrap-queue-986-bridgeoam-preview bank1-bootstrap-queue-990-bridgeoam-preview bank1-bootstrap-queue-994-bridgeoam-preview bank1-visible-mode7-window-preview intro-bootstrap-deltas intro-bootstrap-queue mesen-ppu-frame intro-loop-dump intro-loop-sequence ballistic-native-clip ballistic-rom-clip ballistic-callback-asset intro-loop-hybrid-sequence intro-loop-hybrid-bridge-sequence intro-loop-hybrid-bridge-visible-sequence intro-native-978 intro-native-978-derived intro-native-978-bridge intro-native-978-bridge-visible
 
 all: previews
 
@@ -445,6 +458,38 @@ track1-b-hold-cycle: track1-seed-sweep
 		--json-out $(TRACK1_B_HOLD_CYCLE_SEQUENCE_JSON) \
 		--start-frame $(TRACK1_B_HOLD_CYCLE_START_FRAME) \
 		--end-frame-exclusive $(TRACK1_B_HOLD_CYCLE_END_FRAME_EXCLUSIVE)
+
+$(LANE3_LIVE_RACE_MID_ASSET_FOCUS_JSON) $(LANE3_LIVE_RACE_MID_ASSET_FOCUS_MD): \
+	build_gameplay_asset_report.py \
+	$(LANE3_LIVE_RACE_MID_FRAME_IMAGE) \
+	$(LANE3_LIVE_RACE_MID_BG1_IMAGE) \
+	$(LANE3_LIVE_RACE_MID_BG2_IMAGE) \
+	$(LANE3_LIVE_RACE_MID_OBJ_IMAGE) \
+	$(LANE3_LIVE_RACE_MID_DESIGN_PACK) \
+	$(LANE3_LIVE_RACE_MID_LAYER_SUMMARY) \
+	$(LANE3_LIVE_RACE_MID_PRODUCER_SUMMARY) \
+	$(LANE3_LIVE_RACE_MID_BG1_RENDER) \
+	$(LANE3_LIVE_RACE_MID_BG2_RENDER) \
+	$(LANE3_LIVE_RACE_MID_OBJ_RENDER) \
+	$(LANE3_LIVE_RACE_MID_PPU_STATE) | $(OUT_DIR)
+	$(PYTHON) build_gameplay_asset_report.py \
+		--label lane3_live_race_mid \
+		--source-seed ../manual_artifacts/lane3/lane3_live_race_mid.mss \
+		--frame-image $(LANE3_LIVE_RACE_MID_FRAME_IMAGE) \
+		--bg1-image $(LANE3_LIVE_RACE_MID_BG1_IMAGE) \
+		--bg2-image $(LANE3_LIVE_RACE_MID_BG2_IMAGE) \
+		--obj-image $(LANE3_LIVE_RACE_MID_OBJ_IMAGE) \
+		--design-pack $(LANE3_LIVE_RACE_MID_DESIGN_PACK) \
+		--layer-summary $(LANE3_LIVE_RACE_MID_LAYER_SUMMARY) \
+		--producer-summary $(LANE3_LIVE_RACE_MID_PRODUCER_SUMMARY) \
+		--bg1-render $(LANE3_LIVE_RACE_MID_BG1_RENDER) \
+		--bg2-render $(LANE3_LIVE_RACE_MID_BG2_RENDER) \
+		--obj-render $(LANE3_LIVE_RACE_MID_OBJ_RENDER) \
+		--ppu-state $(LANE3_LIVE_RACE_MID_PPU_STATE) \
+		--out-json $(LANE3_LIVE_RACE_MID_ASSET_FOCUS_JSON) \
+		--markdown-out $(LANE3_LIVE_RACE_MID_ASSET_FOCUS_MD)
+
+lane3-live-race-asset-focus: $(LANE3_LIVE_RACE_MID_ASSET_FOCUS_JSON) $(LANE3_LIVE_RACE_MID_ASSET_FOCUS_MD)
 
 $(L001210_TRACE_SUMMARY_JSON): summarize_l001210_trace.py $(L001210_TRACE_JSON) | $(OUT_DIR)
 	$(PYTHON) summarize_l001210_trace.py $(L001210_TRACE_JSON) --json-out $(L001210_TRACE_SUMMARY_JSON)

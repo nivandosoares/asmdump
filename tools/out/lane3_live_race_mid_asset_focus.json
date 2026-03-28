@@ -1,0 +1,329 @@
+{
+  "schema": "td2.gameplay_asset_focus.v1",
+  "note_date": "2026-03-28",
+  "label": "lane3_live_race_mid",
+  "source_seed": "manual_artifacts/lane3/lane3_live_race_mid.mss",
+  "frame_anchor": 3,
+  "sources": {
+    "frame_image": "manual_artifacts/lane3/Screenshots/lane3_live_race_video_frame0000_start.png",
+    "bg1_image": "tools/out/lane3_live_race_mid_bg1.ppm",
+    "bg2_image": "tools/out/lane3_live_race_mid_bg2.ppm",
+    "obj_image": "tools/out/lane3_live_race_mid_obj.ppm",
+    "design_pack": "tools/out/design_lane3_live_race_mid_frame0/design_pack.json",
+    "layer_summary": "tools/out/lane3_live_race_mid_layer_stack_summary.json",
+    "producer_summary": "tools/out/lane3_live_race_mid_bg2_producer_summary.json",
+    "bg1_render": "tools/out/lane3_live_race_mid_bg1_render.json",
+    "bg2_render": "tools/out/lane3_live_race_mid_bg2_render.json",
+    "obj_render": "tools/out/lane3_live_race_mid_obj_render.json",
+    "ppu_state": "tools/out/lane3_live_race_mid_bg1_bg2_ppu_state.json"
+  },
+  "ppu_surface": {
+    "bg_mode": 1,
+    "main_layers_enabled": [
+      "bg1",
+      "bg2",
+      "obj"
+    ],
+    "sub_layers_enabled": [],
+    "main_layers_mask": 19,
+    "sub_layers_mask": 0,
+    "flat_main_layers": 3,
+    "flat_sub_layers": 0
+  },
+  "tilemap_profiles": {
+    "bg1": {
+      "entry_count": 2048,
+      "unique_tiles": 458,
+      "non_zero_tiles": 1351,
+      "palette_usage": [
+        {
+          "palette": 2,
+          "count": 1348
+        },
+        {
+          "palette": 0,
+          "count": 697
+        },
+        {
+          "palette": 4,
+          "count": 3
+        }
+      ],
+      "top_tiles": [
+        {
+          "tile_index": 0,
+          "count": 697
+        },
+        {
+          "tile_index": 337,
+          "count": 97
+        },
+        {
+          "tile_index": 114,
+          "count": 38
+        },
+        {
+          "tile_index": 13,
+          "count": 21
+        },
+        {
+          "tile_index": 14,
+          "count": 21
+        }
+      ]
+    },
+    "bg2": {
+      "entry_count": 4096,
+      "unique_tiles": 66,
+      "non_zero_tiles": 1536,
+      "palette_usage": [
+        {
+          "palette": 0,
+          "count": 2560
+        },
+        {
+          "palette": 1,
+          "count": 1536
+        }
+      ],
+      "top_tiles": [
+        {
+          "tile_index": 0,
+          "count": 2560
+        },
+        {
+          "tile_index": 8,
+          "count": 792
+        },
+        {
+          "tile_index": 66,
+          "count": 388
+        },
+        {
+          "tile_index": 2,
+          "count": 120
+        },
+        {
+          "tile_index": 132,
+          "count": 24
+        }
+      ]
+    },
+    "bg3": {
+      "entry_count": 2048,
+      "unique_tiles": 177,
+      "non_zero_tiles": 1007,
+      "palette_usage": [
+        {
+          "palette": 0,
+          "count": 1116
+        },
+        {
+          "palette": 2,
+          "count": 839
+        },
+        {
+          "palette": 3,
+          "count": 69
+        },
+        {
+          "palette": 1,
+          "count": 24
+        }
+      ],
+      "top_tiles": [
+        {
+          "tile_index": 0,
+          "count": 1041
+        },
+        {
+          "tile_index": 176,
+          "count": 832
+        },
+        {
+          "tile_index": 1,
+          "count": 1
+        },
+        {
+          "tile_index": 2,
+          "count": 1
+        },
+        {
+          "tile_index": 3,
+          "count": 1
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "surface": "BG1",
+      "role": "cockpit / dashboard / HUD base",
+      "visibility": "main-screen visible",
+      "vram": {
+        "tilemap_base": 0,
+        "chr_base": 12288
+      },
+      "evidence": [
+        "Stable scroll across sampled visible scanlines.",
+        "Static render keeps 48026 non-backdrop pixels.",
+        "Tilemap uses 458 unique tiles across 2048 entries."
+      ],
+      "trace_targets": [
+        "BG1HOFS",
+        "BG1VOFS",
+        "TMAIN @ scanline 120"
+      ],
+      "confidence": "high"
+    },
+    {
+      "surface": "BG2",
+      "role": "road / horizon / world raster",
+      "visibility": "main-screen visible",
+      "vram": {
+        "tilemap_base": 2048,
+        "chr_base": 8192
+      },
+      "evidence": [
+        "Per-scanline scroll changes while staying enabled on the main screen.",
+        "BG2VOFS/BG2HOFS receive 246/246 writes.",
+        "BG2VOFS touches 123 sampled scanlines across 0..226.",
+        "Tilemap is low-variety (66 unique tiles / 4096 entries), which fits a repeating road surface."
+      ],
+      "trace_targets": [
+        "$22/$23",
+        "BG2HOFS",
+        "BG2VOFS",
+        "next_irq_ptr",
+        "VTIMEL",
+        "dp_0020/0022",
+        "01:9185 -> 02:9165",
+        "02:B18D",
+        "02:B134 (L012BE2)",
+        "02:B101 -> L012D5A"
+      ],
+      "confidence": "high"
+    },
+    {
+      "surface": "OBJ",
+      "role": "traffic / radar markers / dynamic actors / HUD details",
+      "visibility": "main-screen visible",
+      "vram": {
+        "tilemap_base": 24576,
+        "chr_base": 4096
+      },
+      "evidence": [
+        "OBJ render reports 37 visible sprites and 1665 drawn pixels.",
+        "Static OBJ bbox is [38, 18, 234, 175].",
+        "Existing lane-3 ownership notes already close rival/radar state into OAM output."
+      ],
+      "trace_targets": [
+        "state_11f3",
+        "oam_0730",
+        "state_09a2",
+        "state_09a8",
+        "dp_0053/0054",
+        "00:95BD",
+        "OAM DMA / OAMDATA"
+      ],
+      "confidence": "high"
+    },
+    {
+      "surface": "BG3",
+      "role": "top-strip / split-phase auxiliary layer",
+      "visibility": "transient only",
+      "vram": {
+        "tilemap_base": 6144,
+        "chr_base": 20480
+      },
+      "evidence": [
+        "Not enabled on the visible main screen in the base gameplay sample.",
+        "Temporarily enabled by TMAIN at scanline 23 before the later split returns to BG1+BG2+OBJ.",
+        "Tilemap keeps 177 unique tiles across 2048 entries, which fits a lighter helper surface than the road plane."
+      ],
+      "trace_targets": [
+        "TMAIN",
+        "BG3HOFS",
+        "BG3VOFS",
+        "VTIMEL @ scanline 23/24"
+      ],
+      "confidence": "medium"
+    }
+  ],
+  "behavior_watchlist": [
+    {
+      "behavior": "steering / curvature / lane motion",
+      "visual_owner": "BG2 first, then mixed with OBJ only if traffic overlaps",
+      "watchlist": [
+        "$22/$23",
+        "dp_0020/0022",
+        "BG2HOFS/BG2VOFS",
+        "next_irq_ptr",
+        "01:9185 -> 02:9165 -> 02:B18D",
+        "02:B134 / 02:B101"
+      ],
+      "why": "These are the already-proven producer-side operands and emitters behind the raster road surface."
+    },
+    {
+      "behavior": "traffic / green car / police arrival",
+      "visual_owner": "OBJ",
+      "watchlist": [
+        "state_09a2",
+        "state_09a8",
+        "dp_0053/0054",
+        "oam_0730",
+        "OAM DMA / OAMDATA"
+      ],
+      "why": "Dynamic actors and late radar/police markers already land in the OAM-side workload."
+    },
+    {
+      "behavior": "rival radar / top-strip alerts",
+      "visual_owner": "OBJ with transient BG3/TMAIN support",
+      "watchlist": [
+        "state_11f3",
+        "oam_0730",
+        "TMAIN",
+        "BG3HOFS/BG3VOFS"
+      ],
+      "why": "The rival marker path is already closed as state_11f3 -> oam_0730, while BG3 only joins briefly at the top split."
+    },
+    {
+      "behavior": "cockpit / wheel pose / dashboard stability",
+      "visual_owner": "BG1 base, possibly with small OBJ overlays",
+      "watchlist": [
+        "BG1HOFS",
+        "BG1VOFS",
+        "frame-to-frame capture compare"
+      ],
+      "why": "BG1 is the stable full-screen layer in the gameplay sample and is the best current cockpit anchor."
+    },
+    {
+      "behavior": "checkpoint / STOP sign / post-stop fade",
+      "visual_owner": "mixed BG2 + OBJ + transient strip control",
+      "watchlist": [
+        "$22/$23",
+        "BG2HOFS/BG2VOFS",
+        "state_09a2",
+        "state_09a8",
+        "dp_0053/0054",
+        "TMAIN"
+      ],
+      "why": "The preserved video suggests a mixed surface rather than one pure layer, so the next good move is a later-frame asset report on the same scheme."
+    }
+  ],
+  "supporting_readings": {
+    "layer_strongest_fit": [
+      "Visible gameplay stack on this sample is BG1 + BG2 + OBJ, not BG1 + BG2 + BG3 + OBJ.",
+      "BG1 stays scroll-stable across sampled visible scanlines and is the current best cockpit/HUD-base candidate.",
+      "BG2 varies per scanline and is the current best road/world raster layer candidate.",
+      "BG3 exists in VRAM state but is not enabled on main or sub screens in this sample."
+    ],
+    "layer_caveat": "Static single-state BG2 rendering falls back to backdrop, which fits a per-scanline/rasterized layer rather than disproving BG2 visibility.",
+    "producer_current_reading": [
+      "The active live-race frame stays inside 02:9016 / 01:96A0 while repeatedly rewriting $22/$23 and then writing BG2VOFS from those operands.",
+      "The next-IRQ pointer flips between 01:960D and 01:96A0 inside the frame, so gameplay uses a two-phase IRQ split rather than a single static visible pass.",
+      "BG2 registers are written across most visible scanlines, while BG1 writes only land at the deeper split and frame edge and BG3 writes cluster around the early top-strip split.",
+      "This supports using the user debugger observation as a guide: BG1 is a strong cockpit-base candidate, BG2 is the strongest road/world raster candidate, and BG3 looks more like a temporary strip/auxiliary layer in this confirmed sample than the full gameplay world layer."
+    ]
+  }
+}

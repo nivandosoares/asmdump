@@ -593,6 +593,12 @@ def render_artifact_gallery(page_path: Path, images: list[ArtifactImage]) -> str
     )
 
 
+def source_last_updated(source_rel: Path) -> str:
+    source_abs = REPO_ROOT / source_rel
+    timestamp = datetime.fromtimestamp(source_abs.stat().st_mtime)
+    return timestamp.strftime("%Y-%m-%d %H:%M")
+
+
 def build_sidebar(manifest: dict, page_map: dict[Path, Path], current_page: Path) -> str:
     sections_html: list[str] = []
     for section in manifest["sections"]:
@@ -623,6 +629,7 @@ def render_doc_page(
     images: list[ArtifactImage],
 ) -> str:
     title = first_heading(source_text, entry.label)
+    last_updated = source_last_updated(entry.path)
     content_html = render_markdown(source_text, entry.path, page_path, page_map)
     gallery_html = render_artifact_gallery(page_path, images)
     gallery_block = f"{gallery_html}\n" if gallery_html else ""
@@ -661,6 +668,7 @@ def render_doc_page(
         <p class="doc-note">{html.escape(entry.note)}</p>
         <div class="doc-meta">
           <span>Source: <code>{html.escape(entry.path.as_posix())}</code></span>
+          <span class="update-pill">Last updated {html.escape(last_updated)}</span>
           <a href="{html.escape(raw_href)}">Open Raw Markdown</a>
         </div>
       </header>
@@ -694,6 +702,7 @@ def render_index_page(
             source_text = source_cache[entry.path]
             title = first_heading(source_text, entry.label)
             excerpt = first_excerpt(source_text, entry.note)
+            last_updated = source_last_updated(entry.path)
             href = relative_file_href(output_dir / "index.html", page_map[rel])
             raw_href = relative_file_href(output_dir / "index.html", REPO_ROOT / rel)
             visuals = artifact_map.get(entry.path, [])
@@ -712,6 +721,7 @@ def render_index_page(
                 f"<h3><a href=\"{html.escape(href)}\">{html.escape(entry.label)}</a></h3>"
                 f"<p class=\"doc-path\"><code>{html.escape(entry.path.as_posix())}</code></p>"
                 f"<p class=\"doc-note\">{html.escape(entry.note)}</p>"
+                f"<p class=\"last-updated\">Last updated {html.escape(last_updated)}</p>"
                 f"{visual_badge}"
                 f"<p class=\"doc-excerpt\">{html.escape(excerpt)}</p>"
                 "<div class=\"doc-links\">"
@@ -1054,6 +1064,25 @@ blockquote {
   font-size: 0.88rem;
 }
 
+.last-updated {
+  margin: 0.55rem 0 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.update-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  border: 1px solid #cfe0f5;
+  color: var(--accent);
+  font-size: 0.84rem;
+  white-space: nowrap;
+}
+
 .doc-card .doc-links {
   margin-top: 0.85rem;
 }
@@ -1214,6 +1243,7 @@ def build_site(manifest: dict, entries: list[DocEntry], output_dir: Path) -> Non
                 "source": entry.path.as_posix(),
                 "label": entry.label,
                 "section": entry.section_title,
+                "last_updated": source_last_updated(entry.path),
                 "page": relative_file_href(output_dir / "index.html", page_map[entry.path]),
             }
             for entry in entries

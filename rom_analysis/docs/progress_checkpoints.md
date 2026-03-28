@@ -45,9 +45,39 @@ next gate needed to advance.
 - Practical implication:
   - this route is now the best current base for live gameplay probing,
     gameplay-relative input programs, and later live capture/debug loops
-  - next leverage should go into selector parameterization
+- next leverage should go into selector parameterization
     (cars / tracks / opponent branch), not into forcing one exact match to
     `live_race_mid`
+
+## Lane 3 Gameplay Asset Focus (`2026-03-28`)
+
+- New tooling:
+  - `tools/build_gameplay_asset_report.py`
+- New note:
+  - `rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
+- New generated artifacts:
+  - `tools/out/lane3_live_race_mid_asset_focus.json`
+  - `tools/out/lane3_live_race_mid_asset_focus.md`
+- Closed practical read:
+  - lane 3 now has a gameplay-first asset inventory built from the confirmed
+    `live_race_mid` seed instead of only separate layer and producer notes
+  - the promoted split is now explicit and traceable:
+    - `BG1` = cockpit / dashboard / HUD base
+    - `BG2` = road / horizon / world raster
+    - `OBJ` = traffic, radar markers, police, and other dynamic actors
+    - `BG3` = transient top-strip / split-phase auxiliary layer
+  - the report also closes the first behavior-facing watchlist:
+    - steering / curvature:
+      `$22/$23`, `dp_0020/0022`, `BG2HOFS/BG2VOFS`, `next_irq_ptr`,
+      `01:9185 -> 02:9165 -> 02:B18D`, `02:B134`, `02:B101 -> L012D5A`
+    - traffic / police / radar:
+      `state_11f3`, `oam_0730`, `state_09a2`, `state_09a8`, `dp_0053/0054`,
+      later OAM DMA
+- Practical implication:
+  - gameplay probes can now be widened against named visible buckets instead
+    of tracing whole-frame deltas blindly
+  - this is the gameplay-side equivalent of the earlier lane-2 asset-first
+    gain that helped disambiguate car extraction
 
 ## Docs Wiki And SDL Smoke (`2026-03-28`)
 
@@ -85,6 +115,9 @@ next gate needed to advance.
   - the wiki theme now also keeps code blocks and inline code on a white,
     high-contrast surface instead of the earlier dark code panel, which was
     making some generated pages hard to read
+  - the wiki now also surfaces a per-document `Last updated` label on both
+    index cards and rendered pages, sourced from the underlying Markdown
+    file timestamp so recent updates are visible in the HTML surface itself
 - SDL smoke read:
   - the current runtime renders the bridge-visible intro sequence through
     frame `1000`

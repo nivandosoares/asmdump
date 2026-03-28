@@ -41,6 +41,7 @@ Current Sprint 0 tooling:
 - `run_l001210_probe_matrix.py`: runs multiple deterministic `mesen_probe_boot.lua` scenarios and aggregates bank30 candidate hit coverage into one matrix report; scenarios may include `extra_env` to inject probe env overrides per run
 - `run_track1_seed_sweep.py`: runs a bounded deterministic input sweep against a seeded savestate, hashes screenshot pixels, classifies each scenario as fully static, static-after-first-nontrivial, or dynamic, and now also records a short no-input seed-surface audit so menu/front-end seeds are not silently mislabeled as gameplay
 - `run_lane3_gameplay_entry.py`: wraps the current Lane 3 menu-`A` route back into gameplay, then appends gameplay-relative input windows from the first known gameplay frame so later probe/capture runs can be scripted from a traced live-entry lane instead of one long absolute boot-time string
+- `build_gameplay_asset_report.py`: consolidates one gameplay seed's frame capture, isolated layer renders, tilemap stats, and producer notes into an asset-first JSON/Markdown report so lane-3 tracing can target the right visual owner (`BG1`, `BG2`, `OBJ`, `BG3`) instead of mixing gameplay with front-end material
 - `compare_capture_sequences.py`: compares two `mesen_capture.lua` screenshot directories frame-by-frame, reports the first cross-sequence divergence, and also summarizes the first adjacent-motion step inside each lane
 - `search_boot_probe_matches.py`: scans a longer `td2_boot_probe.json` for the window that best matches a target probe window by exact field equality, useful when a live gameplay route is valuable even without one exact absolute frame match
 - `build_capture_sequence_manifest.py`: converts `mesen_capture.lua` screenshot runs (`*_input_log.json` + `*_frame_XXXXX.png`) into collapsed runtime `image` sequence manifests
@@ -99,6 +100,7 @@ python3 tools/render_mesen_snes_bg.py tools/out/td2_boot_probe_vram.bin tools/ou
 python3 tools/render_mesen_snes_bg.py tools/out/td2_boot_probe_startframe_vram_1200.bin tools/out/td2_boot_probe_startframe_cgram_1200.bin tools/out/td2_boot_probe_startframe_ppu_state_1200.json tools/out/td2_boot_probe_bg_obj_1200.ppm --oam tools/out/td2_boot_probe_startframe_oam_1200.bin --json-out tools/out/td2_boot_probe_bg_obj_1200.json
 python3 tools/render_mesen_snes_bg.py tools/out/td2_boot_probe_startframe_vram_1200.bin tools/out/td2_boot_probe_startframe_cgram_1200.bin tools/out/td2_boot_probe_startframe_ppu_state_1200.json tools/out/td2_boot_probe_bg_obj_1200_ppu.ppm --oam tools/out/td2_boot_probe_startframe_oam_1200.bin --obj-renderer mode7-ppu --json-out tools/out/td2_boot_probe_bg_obj_1200_ppu.json
 python3 tools/run_track1_seed_sweep.py --out-dir tools/out/track1_seed_sweep_v1
+python3 tools/build_gameplay_asset_report.py --label lane3_live_race_mid --source-seed manual_artifacts/lane3/lane3_live_race_mid.mss --frame-image manual_artifacts/lane3/Screenshots/lane3_live_race_video_frame0000_start.png --bg1-image tools/out/lane3_live_race_mid_bg1.ppm --bg2-image tools/out/lane3_live_race_mid_bg2.ppm --obj-image tools/out/lane3_live_race_mid_obj.ppm --design-pack tools/out/design_lane3_live_race_mid_frame0/design_pack.json --layer-summary tools/out/lane3_live_race_mid_layer_stack_summary.json --producer-summary tools/out/lane3_live_race_mid_bg2_producer_summary.json --bg1-render tools/out/lane3_live_race_mid_bg1_render.json --bg2-render tools/out/lane3_live_race_mid_bg2_render.json --obj-render tools/out/lane3_live_race_mid_obj_render.json --ppu-state tools/out/lane3_live_race_mid_bg1_bg2_ppu_state.json --out-json tools/out/lane3_live_race_mid_asset_focus.json --markdown-out tools/out/lane3_live_race_mid_asset_focus.md
 python3 tools/build_capture_sequence_manifest.py tools/out/track1_seed_sweep_v1/b_hold/capture_input_log.json tools/out/track1_b_hold_cycle_0076_0156_sequence.txt --json-out tools/out/track1_b_hold_cycle_0076_0156_sequence.json --start-frame 76 --end-frame-exclusive 156
 python3 tools/capture_visible_mode7_range.py 1094 1101 --output tools/out/visible_mode7_1094_1101.json
 python3 tools/apply_visible_mode7_samples.py tools/out/visible_mode7_1094_1101.json tools/out/mesen_range_1094_1101_v1
@@ -197,6 +199,7 @@ Current environment note:
 - `make -C tools mesen-design-pack MESEN_FRAME=300`
 - `make -C tools mesen-design-pack-range MESEN_RANGE_FRAMES_DIR=out/mesen_range_1086_1093_v1`
 - `make -C tools track1-seed-sweep TRACK1_SEED_SWEEP_SAVESTATE=../.mesen-config/Mesen2/SaveStates/game_11.mss`
+- `make -C tools lane3-live-race-asset-focus`
 - `make -C tools intro-loop-dump`
 - `make -C tools intro-loop-sequence`
 - `make -C tools intro-native-978`

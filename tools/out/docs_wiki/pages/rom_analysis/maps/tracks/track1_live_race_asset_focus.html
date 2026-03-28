@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Track 1 Live-Race Asset Focus | TD2 Archaeology Wiki</title>
+  <link rel="stylesheet" href="../../../../assets/wiki.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="site-link" href="../../../../index.html">TD2 Archaeology Wiki</a>
+      <p class="sidebar-note">Simple wiki-style index built from curated markdown sources.</p>
+      <section class="sidebar-group"><h3>Source Of Truth</h3><ul><li><a href="../../../PORT_PLAN.html">Port Plan</a></li><li><a href="../../docs/next_steps_roadmap.html">Next Steps Roadmap</a></li><li><a href="../../docs/progress_checkpoints.html">Progress Checkpoints</a></li><li><a href="../../docs/validation_gates.html">Validation Gates</a></li><li><a href="../../../validation/README.html">Validation README</a></li><li><a href="../../../tools/README.html">Tools README</a></li><li><a href="../../../port/README.html">Port README</a></li><li><a href="../../README.html">ROM Analysis README</a></li></ul></section><section class="sidebar-group"><h3>Compression And Bank30</h3><ul><li><a href="../../docs/bank30_decompression_report.html">Bank30 Decompression</a></li><li><a href="../../docs/bank30_b1f9_forced_lane_stall.html">B1F9 Forced-Lane Stall</a></li></ul></section><section class="sidebar-group"><h3>Attract And Intro</h3><ul><li><a href="../../docs/intro_00_8029_next_agent_handoff.html">00:8029 Handoff</a></li><li><a href="../../docs/intro_01_9fe5_window_986_1093.html">01:9FE5 Window 986..1093</a></li><li><a href="../../docs/intro_01_9fe5_activity_trace_1094_1117.html">01:9FE5 Activity Trace</a></li><li><a href="../../docs/intro_00_8029_mode7_blob_cycle_1134_1200.html">Mode 7 Blob Cycle 1134..1200</a></li><li><a href="../tilemaps/mesen_range_1086_1093_provenance.html">Tilemap Provenance 1086..1093</a></li><li><a href="../../docs/mesen_debugger_design_workbench.html">Mesen Design Workbench</a></li></ul></section><section class="sidebar-group"><h3>Front-End And Menu</h3><ul><li><a href="../../docs/snes_runtime_algorithm_human.html">SNES Runtime Algorithm</a></li><li><a href="../tilemaps/car_select_frame_1500_bg2_provenance.html">Frame 1500 BG2 Provenance</a></li><li><a href="../../../tools/out/snes_frontend_top_menu_labels.html">Top Menu Labels</a></li><li><a href="../../../tools/out/snes_frontend_rival_selection_grid.html">Rival Selection Grid</a></li><li><a href="../../../tools/out/snes_select_opponent_organic_default_path.html">Organic Default Path</a></li><li><a href="../../../tools/out/snes_frontend_select_opponent_mode_split.html">Select Opponent Mode Split</a></li></ul></section><section class="sidebar-group"><h3>Gameplay And Lane 3</h3><ul><li><a href="../../docs/lane3_today_work_brief.html">Lane 3 Work Brief</a></li><li><a href="../../docs/gameplay_default_rival_next_agent_handoff.html">Gameplay Handoff</a></li><li><a href="../../docs/lane3_attract_demo_boundary.html">Attract Demo Boundary</a></li><li><a href="track1_live_gameplay_entry_route.html">Live Gameplay Entry Route</a></li><li><a href="track1_live_race_asset_focus.html">Gameplay Asset Focus</a></li><li><a href="../../../tools/out/lane3_live_race_mid_asset_focus.html">Live-Race Asset Report</a></li><li><a href="track1_live_race_manual_seed_intake.html">Manual Seed Intake</a></li><li><a href="track1_live_race_manual_video_intake.html">Manual Video Intake</a></li><li><a href="track1_live_race_visible_layer_stack.html">Visible Layer Stack</a></li><li><a href="track1_live_race_bg2_producer_path.html">BG2 Producer Path</a></li><li><a href="track1_live_race_l01318d_static_role_split.html">L01318D Role Split</a></li><li><a href="track1_02_9016_state_ownership.html">02:9016 State Ownership</a></li></ul></section><section class="sidebar-group"><h3>Runtime And Port Validation</h3><ul><li><a href="../../docs/port_sdl_runtime_mimetization_smoke.html">SDL Runtime Smoke</a></li><li><a href="../../docs/mesen_instrumented_backend_architecture.html">Instrumented Backend Architecture</a></li></ul></section>
+    </aside>
+    <main class="content">
+      <nav class="breadcrumbs">
+        <a href="../../../../index.html">Index</a>
+        <span>/</span>
+        <a href="../../../../index.html#gameplay-lane3">Gameplay And Lane 3</a>
+        <span>/</span>
+        <span>Gameplay Asset Focus</span>
+      </nav>
+      <header class="doc-header">
+        <p class="eyebrow">Gameplay And Lane 3</p>
+        <h1>Track 1 Live-Race Asset Focus</h1>
+        <p class="doc-note">Asset-first gameplay taxonomy that maps BG/OBJ buckets to tracing targets.</p>
+        <div class="doc-meta">
+          <span>Source: <code>rom_analysis/maps/tracks/track1_live_race_asset_focus.md</code></span>
+          <span class="update-pill">Last updated 2026-03-28 11:36</span>
+          <a href="../../../../../../../rom_analysis/maps/tracks/track1_live_race_asset_focus.md">Open Raw Markdown</a>
+        </div>
+      </header>
+      <article class="doc-body">
+        <h1 id="track-1-live-race-asset-focus">Track 1 Live-Race Asset Focus</h1>
+<ul><li>Note date: <code>2026-03-28</code></li><li>Primary anchor:</li><li><code>manual_artifacts/lane3/lane3_live_race_mid.mss</code></li><li>Goal:</li><li>promote the same asset-first workflow that accelerated lane 2, but now against confirmed gameplay so later lane-3 probes can target the right visible owner before widening memory/VRAM tracing</li></ul>
+<h2 id="what-was-added">What Was Added</h2>
+<ul><li>gameplay asset report builder:</li><li><code>tools/build_gameplay_asset_report.py</code></li><li>repeatable target:</li><li><code>make -C tools lane3-live-race-asset-focus</code></li></ul>
+<h2 id="what-was-run">What Was Run</h2>
+<ul><li>asset-focus report build from the existing confirmed gameplay artifact set:</li><li><code>make -C tools lane3-live-race-asset-focus</code></li></ul>
+<h2 id="promoted-artifacts">Promoted Artifacts</h2>
+<ul><li><code>tools/out/lane3_live_race_mid_asset_focus.json</code></li><li><code>tools/out/lane3_live_race_mid_asset_focus.md</code></li></ul>
+<h2 id="current-reading">Current Reading</h2>
+<ul><li>the lane now has a gameplay-facing asset inventory instead of only separate layer, producer, and seed notes</li><li>the confirmed <code>live_race_mid</code> split is now practical to work from:</li><li><code>BG1</code> = cockpit / dashboard / HUD base</li><li><code>BG2</code> = road / horizon / world raster</li><li><code>OBJ</code> = traffic, radar markers, and other dynamic actors</li><li><code>BG3</code> = transient top-strip / split-phase auxiliary layer, not the main world plane on this sample</li><li>that asset-first split immediately sharpens what to trace:</li><li>steering / curvature / road motion: <code>$22/$23</code>, <code>dp_0020/0022</code>, <code>BG2HOFS/BG2VOFS</code>, <code>next_irq_ptr</code>, <code>01:9185 -&gt; 02:9165 -&gt; 02:B18D</code>, and the narrowed emitter split <code>02:B134 (L012BE2)</code> vs <code>02:B101 -&gt; L012D5A</code></li><li>traffic / police / radar: <code>state_11f3</code>, <code>oam_0730</code>, <code>state_09a2</code>, <code>state_09a8</code>, <code>dp_0053/0054</code>, and the later OAM DMA path</li><li>cockpit / wheel / dashboard stability: <code>BG1HOFS/BG1VOFS</code> plus frame-to-frame capture compare on the live-entry steering lane</li><li>practical implication: the next gameplay probes no longer need to ask &quot;what might this field be drawing?&quot; in the abstract; they can ask which already-named visible bucket changed first</li></ul>
+<h2 id="separation-rule">Separation Rule</h2>
+<ul><li>keep this report tied to confirmed gameplay artifacts only</li><li>do <strong>not</strong> reuse front-end car-presentation helpers or attract screenshots when classifying gameplay surfaces</li><li>this is the same discipline the wiki now enforces structurally: gameplay stays in the gameplay section, front-end/menu material stays in the front-end section, and attract material stays separate from both</li></ul>
+<h2 id="next-best-step">Next Best Step</h2>
+<ul><li>reuse the same report shape on one later gameplay moment from the preserved video or the live-entry lane, especially the checkpoint and police windows</li><li>once the second gameplay moment exists, diff the two reports by asset bucket instead of diffing the whole frame blindly</li></ul>
+      </article>
+    </main>
+  </div>
+</body>
+</html>
