@@ -1,0 +1,92 @@
+{
+  "packId": "longplay_prison_finale_phase_pack",
+  "title": "Longplay Arrest and Prison Finale Pack",
+  "description": "Final non-gameplay outcome corridor from the local longplay: arrest/prison screen and immediate handoff into the high-score panel.",
+  "generatedAtUtc": "2026-03-28T18:27:43.616391+00:00",
+  "sourceVideo": "the_duel_longplay.mp4",
+  "videoMetadata": {
+    "programs": [],
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "vp9",
+        "codec_type": "video",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "60/1",
+        "avg_frame_rate": "312278000/5204633",
+        "nb_frames": "312278"
+      },
+      {
+        "index": 1,
+        "codec_name": "opus",
+        "codec_type": "audio",
+        "r_frame_rate": "0/0",
+        "avg_frame_rate": "0/0",
+        "nb_frames": "260233"
+      }
+    ],
+    "format": {
+      "duration": "5204.661000",
+      "size": "298768113"
+    },
+    "source": "the_duel_longplay.mp4"
+  },
+  "anchorSheet": "tools/out/longplay_prison_finale_phase_pack/anchor_sheet.png",
+  "phases": [
+    {
+      "index": 1,
+      "id": "arrest_prelude",
+      "title": "Arrest Prelude",
+      "note": "Beginning of the final arrest/prison message strip before the clearer license-revoked still.",
+      "anchorSeconds": 5176.0,
+      "anchorTimestamp": "01:26:16.000",
+      "windowStartSeconds": 5176.0,
+      "windowStartTimestamp": "01:26:16.000",
+      "windowDurationSeconds": 5.0,
+      "windowEndTimestamp": "01:26:21.000",
+      "windowExpectedFrameCount": 5,
+      "sheetFps": 1.0,
+      "sheetTile": "5x1",
+      "sheetScale": "320:180",
+      "anchorImage": "tools/out/longplay_prison_finale_phase_pack/01_arrest_prelude_anchor.png",
+      "windowSheet": "tools/out/longplay_prison_finale_phase_pack/01_arrest_prelude_window.png"
+    },
+    {
+      "index": 2,
+      "id": "license_revoked",
+      "title": "License Revoked Prison Screen",
+      "note": "Clearest final prison/license-revoked still before the flow continues into the high-score presentation.",
+      "anchorSeconds": 5180.0,
+      "anchorTimestamp": "01:26:20.000",
+      "windowStartSeconds": 5178.0,
+      "windowStartTimestamp": "01:26:18.000",
+      "windowDurationSeconds": 6.0,
+      "windowEndTimestamp": "01:26:24.000",
+      "windowExpectedFrameCount": 6,
+      "sheetFps": 1.0,
+      "sheetTile": "3x2",
+      "sheetScale": "320:180",
+      "anchorImage": "tools/out/longplay_prison_finale_phase_pack/02_license_revoked_anchor.png",
+      "windowSheet": "tools/out/longplay_prison_finale_phase_pack/02_license_revoked_window.png"
+    },
+    {
+      "index": 3,
+      "id": "high_score_followthrough",
+      "title": "High-Score Follow-Through",
+      "note": "Shows that the prison screen in this recording hands off directly into the high-score panel instead of returning to live play.",
+      "anchorSeconds": 5182.0,
+      "anchorTimestamp": "01:26:22.000",
+      "windowStartSeconds": 5181.0,
+      "windowStartTimestamp": "01:26:21.000",
+      "windowDurationSeconds": 4.0,
+      "windowEndTimestamp": "01:26:25.000",
+      "windowExpectedFrameCount": 4,
+      "sheetFps": 1.0,
+      "sheetTile": "4x1",
+      "sheetScale": "320:180",
+      "anchorImage": "tools/out/longplay_prison_finale_phase_pack/03_high_score_followthrough_anchor.png",
+      "windowSheet": "tools/out/longplay_prison_finale_phase_pack/03_high_score_followthrough_window.png"
+    }
+  ]
+}

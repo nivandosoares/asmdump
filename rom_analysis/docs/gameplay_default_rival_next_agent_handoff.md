@@ -14,6 +14,9 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `rom_analysis/maps/tracks/track1_b_hold_scanline_recheck_0090_0093_current_seed.md`
 - `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
 - `rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
+- `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
+- `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
+- `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
 - `rom_analysis/maps/tracks/track1_live_race_vs_post9016_control.md`
 - `rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
 - `rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
@@ -143,6 +146,10 @@ This note is the explicit resume point for the next agent on Lane 3.
     - treat `BG1/BG2/BG3` plus `OBJ` outputs as trusted gameplay review
       surfaces from here forward; this is now ratified by the designer read
       even though composed native `main/sub` export remains fenced
+    - treat the new video phase packs as human-facing targeting surfaces only:
+      use them to locate `service/post`, `partial-results`, `hard-phase`, and
+      `prison-finale` moments, then return to `BG/OBJ` extraction whenever an
+      emulator-side path exists
     - use `world_visible_support.png` for human road/background labeling
     - use `bg2.png` for VRAM/PPU-state correlation only
   - reason:
@@ -222,6 +229,15 @@ This note is the explicit resume point for the next agent on Lane 3.
   - that means a missing long gameplay segment after injected input is not
     strong evidence that the lane was "never gameplay"; the input may simply
     have cut a short demo slice before it developed further
+- the repo now also has named video phase packs for the still-missing gameplay
+  moments the user called out:
+  - `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
+  - `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
+  - `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
+  - practical read:
+    these close the human-facing lookup surface for checkpoint service/post,
+    partial-results, later hard phases, and the arrest/prison finale, without
+    pretending those longplay/video anchors are already `BG/OBJ`-resolved
 
 ## Do Not Repeat
 

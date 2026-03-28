@@ -12,14 +12,14 @@
       "source": "rom_analysis/docs/next_steps_roadmap.md",
       "label": "Next Steps Roadmap",
       "section": "Source Of Truth",
-      "last_updated": "2026-03-28 14:56",
+      "last_updated": "2026-03-28 15:29",
       "page": "pages/rom_analysis/docs/next_steps_roadmap.html"
     },
     {
       "source": "rom_analysis/docs/progress_checkpoints.md",
       "label": "Progress Checkpoints",
       "section": "Source Of Truth",
-      "last_updated": "2026-03-28 14:56",
+      "last_updated": "2026-03-28 15:29",
       "page": "pages/rom_analysis/docs/progress_checkpoints.html"
     },
     {
@@ -40,7 +40,7 @@
       "source": "tools/README.md",
       "label": "Tools README",
       "section": "Source Of Truth",
-      "last_updated": "2026-03-28 14:55",
+      "last_updated": "2026-03-28 15:29",
       "page": "pages/tools/README.html"
     },
     {
@@ -166,7 +166,7 @@
       "source": "rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md",
       "label": "Gameplay Handoff",
       "section": "Gameplay And Lane 3",
-      "last_updated": "2026-03-28 14:55",
+      "last_updated": "2026-03-28 15:29",
       "page": "pages/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.html"
     },
     {
@@ -247,6 +247,27 @@
       "page": "pages/rom_analysis/maps/tracks/track1_live_race_manual_video_intake.html"
     },
     {
+      "source": "rom_analysis/maps/tracks/track1_live_race_service_status_screens.md",
+      "label": "Service / Partial Screens",
+      "section": "Gameplay And Lane 3",
+      "last_updated": "2026-03-28 15:29",
+      "page": "pages/rom_analysis/maps/tracks/track1_live_race_service_status_screens.html"
+    },
+    {
+      "source": "rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md",
+      "label": "Hard-Phase Anchors",
+      "section": "Gameplay And Lane 3",
+      "last_updated": "2026-03-28 15:29",
+      "page": "pages/rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.html"
+    },
+    {
+      "source": "rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md",
+      "label": "Prison Finale Anchor",
+      "section": "Gameplay And Lane 3",
+      "last_updated": "2026-03-28 15:29",
+      "page": "pages/rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.html"
+    },
+    {
       "source": "rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md",
       "label": "Visible Layer Stack",
       "section": "Gameplay And Lane 3",
@@ -295,6 +316,6 @@
     "index_markdown": "../docs_wiki_markdown_bundle/wiki_bundle_index.md",
     "combined_markdown": "../docs_wiki_markdown_bundle/wiki_combined.md",
     "index_json": "../docs_wiki_markdown_bundle/wiki_bundle_index.json",
-    "doc_count": 41
+    "doc_count": 44
   }
 }

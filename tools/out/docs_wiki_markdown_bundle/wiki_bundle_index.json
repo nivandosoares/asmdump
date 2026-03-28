@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-03-28 14:58:13",
-  "doc_count": 41,
+  "generated_at": "2026-03-28 15:30:10",
+  "doc_count": 44,
   "manifest": "rom_analysis/docs/wiki_doc_index.json",
   "docs": [
     {
@@ -19,7 +19,7 @@
       "note": "Current lane status, open gates, and practical follow-up targets.",
       "source": "rom_analysis/docs/next_steps_roadmap.md",
       "bundle_copy": "sources/rom_analysis/docs/next_steps_roadmap.md",
-      "last_updated": "2026-03-28 14:56"
+      "last_updated": "2026-03-28 15:29"
     },
     {
       "section_id": "source-of-truth",
@@ -28,7 +28,7 @@
       "note": "Checkpoint log with evidence-bearing milestones.",
       "source": "rom_analysis/docs/progress_checkpoints.md",
       "bundle_copy": "sources/rom_analysis/docs/progress_checkpoints.md",
-      "last_updated": "2026-03-28 14:56"
+      "last_updated": "2026-03-28 15:29"
     },
     {
       "section_id": "source-of-truth",
@@ -55,7 +55,7 @@
       "note": "Promoted extraction and analysis tooling surface.",
       "source": "tools/README.md",
       "bundle_copy": "sources/tools/README.md",
-      "last_updated": "2026-03-28 14:55"
+      "last_updated": "2026-03-28 15:29"
     },
     {
       "section_id": "source-of-truth",
@@ -217,7 +217,7 @@
       "note": "Primary gameplay-oriented handoff note.",
       "source": "rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md",
       "bundle_copy": "sources/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md",
-      "last_updated": "2026-03-28 14:55"
+      "last_updated": "2026-03-28 15:29"
     },
     {
       "section_id": "gameplay-lane3",
@@ -317,6 +317,33 @@
       "source": "rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md",
       "bundle_copy": "sources/rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md",
       "last_updated": "2026-03-28 09:05"
+    },
+    {
+      "section_id": "gameplay-lane3",
+      "section_title": "Gameplay And Lane 3",
+      "label": "Service / Partial Screens",
+      "note": "Named still pack for the checkpoint service/post corridor, partial-results screen, and restart back into driving.",
+      "source": "rom_analysis/maps/tracks/track1_live_race_service_status_screens.md",
+      "bundle_copy": "sources/rom_analysis/maps/tracks/track1_live_race_service_status_screens.md",
+      "last_updated": "2026-03-28 15:29"
+    },
+    {
+      "section_id": "gameplay-lane3",
+      "section_title": "Gameplay And Lane 3",
+      "label": "Hard-Phase Anchors",
+      "note": "Longplay-backed visual anchors for night, bridge, mountain-wall, tunnel, and rain.",
+      "source": "rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md",
+      "bundle_copy": "sources/rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md",
+      "last_updated": "2026-03-28 15:29"
+    },
+    {
+      "section_id": "gameplay-lane3",
+      "section_title": "Gameplay And Lane 3",
+      "label": "Prison Finale Anchor",
+      "note": "Longplay-backed arrest/prison ending pack and high-score handoff.",
+      "source": "rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md",
+      "bundle_copy": "sources/rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md",
+      "last_updated": "2026-03-28 15:29"
     },
     {
       "section_id": "gameplay-lane3",

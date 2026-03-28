@@ -1,0 +1,128 @@
+{
+  "packId": "lane3_service_status_phase_pack",
+  "title": "Lane 3 Service and Partial-Results Phase Pack",
+  "description": "Promote the previously unseen service/post corridor from the preserved live-race AVI: checkpoint stop, gas-station exterior, attendant dialog, partial-results screen, and the next checkpoint restart.",
+  "generatedAtUtc": "2026-03-28T18:27:32.224199+00:00",
+  "sourceVideo": "manual_artifacts/lane3/lane3_live_race_video.avi",
+  "videoMetadata": {
+    "programs": [],
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "cscd",
+        "codec_type": "video",
+        "width": 256,
+        "height": 224,
+        "r_frame_rate": "60098811/1000000",
+        "avg_frame_rate": "60098811/1000000",
+        "nb_frames": "2636"
+      },
+      {
+        "index": 1,
+        "codec_name": "pcm_s16le",
+        "codec_type": "audio",
+        "r_frame_rate": "0/0",
+        "avg_frame_rate": "0/0",
+        "nb_frames": "2104535"
+      }
+    ],
+    "format": {
+      "duration": "43.861101",
+      "size": "10680624"
+    },
+    "source": "manual_artifacts/lane3/lane3_live_race_video.avi"
+  },
+  "anchorSheet": "tools/out/lane3_service_status_phase_pack/anchor_sheet.png",
+  "phases": [
+    {
+      "index": 1,
+      "id": "stop_sign_boundary",
+      "title": "Checkpoint STOP Sign Boundary",
+      "note": "Last driving-side boundary before the black transition into the service/post corridor.",
+      "anchorSeconds": 24.96,
+      "anchorTimestamp": "00:00:24.960",
+      "windowStartSeconds": 24.0,
+      "windowStartTimestamp": "00:00:24.000",
+      "windowDurationSeconds": 3.0,
+      "windowEndTimestamp": "00:00:27.000",
+      "windowExpectedFrameCount": 3,
+      "sheetFps": 1.0,
+      "sheetTile": "3x1",
+      "sheetScale": "256:224",
+      "anchorImage": "tools/out/lane3_service_status_phase_pack/01_stop_sign_boundary_anchor.png",
+      "windowSheet": "tools/out/lane3_service_status_phase_pack/01_stop_sign_boundary_window.png"
+    },
+    {
+      "index": 2,
+      "id": "gas_station_exterior",
+      "title": "Gas-Station Exterior",
+      "note": "Exterior service/post view preserved directly from the local live-race continuity clip.",
+      "anchorSeconds": 31.5,
+      "anchorTimestamp": "00:00:31.500",
+      "windowStartSeconds": 30.0,
+      "windowStartTimestamp": "00:00:30.000",
+      "windowDurationSeconds": 3.0,
+      "windowEndTimestamp": "00:00:33.000",
+      "windowExpectedFrameCount": 3,
+      "sheetFps": 1.0,
+      "sheetTile": "3x1",
+      "sheetScale": "256:224",
+      "anchorImage": "tools/out/lane3_service_status_phase_pack/02_gas_station_exterior_anchor.png",
+      "windowSheet": "tools/out/lane3_service_status_phase_pack/02_gas_station_exterior_window.png"
+    },
+    {
+      "index": 3,
+      "id": "attendant_dialog",
+      "title": "Attendant Dialog",
+      "note": "Dialogue scene with the frentista beside the car; this was previously present only in the human note.",
+      "anchorSeconds": 31.75,
+      "anchorTimestamp": "00:00:31.750",
+      "windowStartSeconds": 31.0,
+      "windowStartTimestamp": "00:00:31.000",
+      "windowDurationSeconds": 3.0,
+      "windowEndTimestamp": "00:00:34.000",
+      "windowExpectedFrameCount": 3,
+      "sheetFps": 1.0,
+      "sheetTile": "3x1",
+      "sheetScale": "256:224",
+      "anchorImage": "tools/out/lane3_service_status_phase_pack/03_attendant_dialog_anchor.png",
+      "windowSheet": "tools/out/lane3_service_status_phase_pack/03_attendant_dialog_window.png"
+    },
+    {
+      "index": 4,
+      "id": "partial_results",
+      "title": "Partial-Results Screen",
+      "note": "Mid-race section summary shown after the frentista scene.",
+      "anchorSeconds": 34.0,
+      "anchorTimestamp": "00:00:34.000",
+      "windowStartSeconds": 32.0,
+      "windowStartTimestamp": "00:00:32.000",
+      "windowDurationSeconds": 6.0,
+      "windowEndTimestamp": "00:00:38.000",
+      "windowExpectedFrameCount": 6,
+      "sheetFps": 1.0,
+      "sheetTile": "3x2",
+      "sheetScale": "256:224",
+      "anchorImage": "tools/out/lane3_service_status_phase_pack/04_partial_results_anchor.png",
+      "windowSheet": "tools/out/lane3_service_status_phase_pack/04_partial_results_window.png"
+    },
+    {
+      "index": 5,
+      "id": "next_checkpoint_restart",
+      "title": "Next Checkpoint Restart",
+      "note": "The same local clip returns to live driving after the partial-results sequence, closing the next checkpoint start.",
+      "anchorSeconds": 41.0,
+      "anchorTimestamp": "00:00:41.000",
+      "windowStartSeconds": 40.0,
+      "windowStartTimestamp": "00:00:40.000",
+      "windowDurationSeconds": 3.0,
+      "windowEndTimestamp": "00:00:43.000",
+      "windowExpectedFrameCount": 6,
+      "sheetFps": 2.0,
+      "sheetTile": "3x2",
+      "sheetScale": "256:224",
+      "anchorImage": "tools/out/lane3_service_status_phase_pack/05_next_checkpoint_restart_anchor.png",
+      "windowSheet": "tools/out/lane3_service_status_phase_pack/05_next_checkpoint_restart_window.png"
+    }
+  ]
+}

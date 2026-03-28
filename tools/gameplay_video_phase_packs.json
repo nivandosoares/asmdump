@@ -1,0 +1,180 @@
+{
+  "packs": [
+    {
+      "id": "lane3_service_status_phase_pack",
+      "title": "Lane 3 Service and Partial-Results Phase Pack",
+      "description": "Promote the previously unseen service/post corridor from the preserved live-race AVI: checkpoint stop, gas-station exterior, attendant dialog, partial-results screen, and the next checkpoint restart.",
+      "source": "manual_artifacts/lane3/lane3_live_race_video.avi",
+      "out_dir": "tools/out/lane3_service_status_phase_pack",
+      "anchor_sheet_tile": "3x2",
+      "anchor_sheet_scale": "256:224",
+      "phases": [
+        {
+          "id": "stop_sign_boundary",
+          "title": "Checkpoint STOP Sign Boundary",
+          "note": "Last driving-side boundary before the black transition into the service/post corridor.",
+          "anchor_seconds": 24.960,
+          "window_start_seconds": 24.000,
+          "window_duration_seconds": 3.000,
+          "sheet_fps": 1.0,
+          "sheet_tile": "3x1",
+          "sheet_scale": "256:224"
+        },
+        {
+          "id": "gas_station_exterior",
+          "title": "Gas-Station Exterior",
+          "note": "Exterior service/post view preserved directly from the local live-race continuity clip.",
+          "anchor_seconds": 31.500,
+          "window_start_seconds": 30.000,
+          "window_duration_seconds": 3.000,
+          "sheet_fps": 1.0,
+          "sheet_tile": "3x1",
+          "sheet_scale": "256:224"
+        },
+        {
+          "id": "attendant_dialog",
+          "title": "Attendant Dialog",
+          "note": "Dialogue scene with the frentista beside the car; this was previously present only in the human note.",
+          "anchor_seconds": 31.750,
+          "window_start_seconds": 31.000,
+          "window_duration_seconds": 3.000,
+          "sheet_fps": 1.0,
+          "sheet_tile": "3x1",
+          "sheet_scale": "256:224"
+        },
+        {
+          "id": "partial_results",
+          "title": "Partial-Results Screen",
+          "note": "Mid-race section summary shown after the frentista scene.",
+          "anchor_seconds": 34.000,
+          "window_start_seconds": 32.000,
+          "window_duration_seconds": 6.000,
+          "sheet_fps": 1.0,
+          "sheet_tile": "3x2",
+          "sheet_scale": "256:224"
+        },
+        {
+          "id": "next_checkpoint_restart",
+          "title": "Next Checkpoint Restart",
+          "note": "The same local clip returns to live driving after the partial-results sequence, closing the next checkpoint start.",
+          "anchor_seconds": 41.000,
+          "window_start_seconds": 40.000,
+          "window_duration_seconds": 3.000,
+          "sheet_fps": 2.0,
+          "sheet_tile": "3x2",
+          "sheet_scale": "256:224"
+        }
+      ]
+    },
+    {
+      "id": "longplay_hard_phase_anchor_pack",
+      "title": "Longplay Hard-Phase Anchor Pack",
+      "description": "Representative later gameplay phases from the local longplay: night, bridge, mountain-wall/no-shoulder, tunnel, and rain.",
+      "source": "the_duel_longplay.mp4",
+      "out_dir": "tools/out/longplay_hard_phase_anchor_pack",
+      "anchor_sheet_tile": "3x2",
+      "anchor_sheet_scale": "320:180",
+      "phases": [
+        {
+          "id": "night_start",
+          "title": "Night Driving",
+          "note": "The roadmap anchor `24:11` lands on the end-of-section transition; the first clean night-driving still in the same local window appears around `24:13`.",
+          "anchor_seconds": 1453.000,
+          "window_start_seconds": 1450.000,
+          "window_duration_seconds": 8.000,
+          "sheet_fps": 1.0,
+          "sheet_tile": "4x2",
+          "sheet_scale": "320:180"
+        },
+        {
+          "id": "bridge_crossing",
+          "title": "Bridge Crossing",
+          "note": "Bridge/water crossing with mountain horizon and traffic on the right lane.",
+          "anchor_seconds": 1832.000,
+          "window_start_seconds": 1830.000,
+          "window_duration_seconds": 6.000,
+          "sheet_fps": 1.0,
+          "sheet_tile": "3x2",
+          "sheet_scale": "320:180"
+        },
+        {
+          "id": "mountain_wall",
+          "title": "Mountain Wall / No-Shoulder Corridor",
+          "note": "Representative visible still for the hard mountain corridor with the left stone wall and no right shoulder; the roadmap `33:40` anchor quickly collapses into the tunnel in this recording.",
+          "anchor_seconds": 2004.000,
+          "window_start_seconds": 1998.000,
+          "window_duration_seconds": 8.000,
+          "sheet_fps": 1.0,
+          "sheet_tile": "4x2",
+          "sheet_scale": "320:180"
+        },
+        {
+          "id": "tunnel_run",
+          "title": "Tunnel Run",
+          "note": "Tunnel driving segment with traffic already visible inside the dark corridor.",
+          "anchor_seconds": 2058.000,
+          "window_start_seconds": 2056.000,
+          "window_duration_seconds": 6.000,
+          "sheet_fps": 1.0,
+          "sheet_tile": "3x2",
+          "sheet_scale": "320:180"
+        },
+        {
+          "id": "rain_segment",
+          "title": "Rain Segment",
+          "note": "Late hard-phase rain scene with visible droplets on the windshield and traffic ahead.",
+          "anchor_seconds": 2718.000,
+          "window_start_seconds": 2716.000,
+          "window_duration_seconds": 6.000,
+          "sheet_fps": 1.0,
+          "sheet_tile": "3x2",
+          "sheet_scale": "320:180"
+        }
+      ]
+    },
+    {
+      "id": "longplay_prison_finale_phase_pack",
+      "title": "Longplay Arrest and Prison Finale Pack",
+      "description": "Final non-gameplay outcome corridor from the local longplay: arrest/prison screen and immediate handoff into the high-score panel.",
+      "source": "the_duel_longplay.mp4",
+      "out_dir": "tools/out/longplay_prison_finale_phase_pack",
+      "anchor_sheet_tile": "3x1",
+      "anchor_sheet_scale": "320:180",
+      "phases": [
+        {
+          "id": "arrest_prelude",
+          "title": "Arrest Prelude",
+          "note": "Beginning of the final arrest/prison message strip before the clearer license-revoked still.",
+          "anchor_seconds": 5176.000,
+          "window_start_seconds": 5176.000,
+          "window_duration_seconds": 5.000,
+          "sheet_fps": 1.0,
+          "sheet_tile": "5x1",
+          "sheet_scale": "320:180"
+        },
+        {
+          "id": "license_revoked",
+          "title": "License Revoked Prison Screen",
+          "note": "Clearest final prison/license-revoked still before the flow continues into the high-score presentation.",
+          "anchor_seconds": 5180.000,
+          "window_start_seconds": 5178.000,
+          "window_duration_seconds": 6.000,
+          "sheet_fps": 1.0,
+          "sheet_tile": "3x2",
+          "sheet_scale": "320:180"
+        },
+        {
+          "id": "high_score_followthrough",
+          "title": "High-Score Follow-Through",
+          "note": "Shows that the prison screen in this recording hands off directly into the high-score panel instead of returning to live play.",
+          "anchor_seconds": 5182.000,
+          "window_start_seconds": 5181.000,
+          "window_duration_seconds": 4.000,
+          "sheet_fps": 1.0,
+          "sheet_tile": "4x1",
+          "sheet_scale": "320:180"
+        }
+      ]
+    }
+  ]
+}

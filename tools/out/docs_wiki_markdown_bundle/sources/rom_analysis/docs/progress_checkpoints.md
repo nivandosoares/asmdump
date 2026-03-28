@@ -6310,3 +6310,39 @@ Current status:
   - lane-3 handoff guidance is now explicit too:
     treat `BG` and `OBJ` surfaces as trusted gameplay review surfaces, and
     keep the next-agent handoff current whenever a checkpoint lands
+
+### CP-129: gameplay video phase packs now close service/post, hard-phase, and prison lookup surfaces
+
+- promoted docs:
+  - `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
+  - `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
+  - `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
+  - `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
+  - `rom_analysis/docs/next_steps_roadmap.md`
+- updated tooling:
+  - `tools/build_video_phase_pack.py`
+  - `tools/gameplay_video_phase_packs.json`
+- promoted artifacts:
+  - `tools/out/lane3_service_status_phase_pack/`
+  - `tools/out/longplay_hard_phase_anchor_pack/`
+  - `tools/out/longplay_prison_finale_phase_pack/`
+- bounded validation:
+  - `python3 -m py_compile tools/build_video_phase_pack.py`
+  - `python3 tools/build_video_phase_pack.py --spec tools/gameplay_video_phase_packs.json`
+- observed result:
+  - the preserved `live_race_mid` AVI now has promoted named stills for the
+    previously unseen checkpoint corridor:
+    service/post exterior, attendant dialog, partial-results screen, and next
+    checkpoint restart
+  - the local longplay now also carries promoted anchor stills for later
+    difficult phases:
+    night, bridge, mountain-wall/no-shoulder, tunnel, and rain
+  - the same longplay now closes the user-requested prison finale explicitly:
+    arrest prelude -> license revoked / prison still -> high-score follow-up
+- practical reading:
+  - lane 3 no longer lacks human-facing lookup surfaces for those missing
+    gameplay moments
+  - those packs are intentionally fenced as video anchors, not as substitutes
+    for the trusted savestate-backed `BG/OBJ` gameplay surfaces
+  - the next good use of effort is to target one of these named moments with a
+    real emulator-side `BG/OBJ` capture path instead of searching videos again

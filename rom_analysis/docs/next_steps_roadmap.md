@@ -211,6 +211,41 @@ Validation contract baseline:
   - this smoke is strong evidence for intro/front-end runtime parity
   - it is **not** yet a gameplay-parity claim
 
+## Lane 3 Video Phase Packs (`2026-03-28`)
+
+- New tooling:
+  - `tools/build_video_phase_pack.py`
+- New phase-pack spec:
+  - `tools/gameplay_video_phase_packs.json`
+- New notes:
+  - `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
+  - `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
+  - `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
+- New generated artifacts:
+  - `tools/out/lane3_service_status_phase_pack/`
+  - `tools/out/longplay_hard_phase_anchor_pack/`
+  - `tools/out/longplay_prison_finale_phase_pack/`
+- Practical read:
+  - the previously unseen checkpoint `service/post`, `partial-results`, and
+    `next checkpoint restart` corridor from the preserved local AVI is now
+    promoted as a named still pack instead of only a prose note
+  - the difficult longplay phases now also have promoted visual anchors for:
+    - night
+    - bridge
+    - mountain-wall/no-shoulder corridor
+    - tunnel
+    - rain
+  - the player-arrest / prison ending is also now preserved explicitly as its
+    own named pack instead of a vague end-of-longplay expectation
+- Boundary:
+  - these packs are visual targeting surfaces only
+  - they do **not** replace the trusted `BG1/BG2/BG3/OBJ` extraction path
+- Next gate:
+  - use these anchors to decide which later gameplay phases deserve the next
+    emulator-side `BG/OBJ` capture
+  - prefer later hard-phase or service/post routes over more whole-frame-only
+    live-entry diffs
+
 ## Gameplay Capture Heuristics (User-supplied, Unverified)
 
 Use these as guided-capture targets for lane 3, not as promoted ROM claims:

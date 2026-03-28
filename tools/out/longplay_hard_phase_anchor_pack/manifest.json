@@ -1,0 +1,128 @@
+{
+  "packId": "longplay_hard_phase_anchor_pack",
+  "title": "Longplay Hard-Phase Anchor Pack",
+  "description": "Representative later gameplay phases from the local longplay: night, bridge, mountain-wall/no-shoulder, tunnel, and rain.",
+  "generatedAtUtc": "2026-03-28T18:27:39.696730+00:00",
+  "sourceVideo": "the_duel_longplay.mp4",
+  "videoMetadata": {
+    "programs": [],
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "vp9",
+        "codec_type": "video",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "60/1",
+        "avg_frame_rate": "312278000/5204633",
+        "nb_frames": "312278"
+      },
+      {
+        "index": 1,
+        "codec_name": "opus",
+        "codec_type": "audio",
+        "r_frame_rate": "0/0",
+        "avg_frame_rate": "0/0",
+        "nb_frames": "260233"
+      }
+    ],
+    "format": {
+      "duration": "5204.661000",
+      "size": "298768113"
+    },
+    "source": "the_duel_longplay.mp4"
+  },
+  "anchorSheet": "tools/out/longplay_hard_phase_anchor_pack/anchor_sheet.png",
+  "phases": [
+    {
+      "index": 1,
+      "id": "night_start",
+      "title": "Night Driving",
+      "note": "The roadmap anchor `24:11` lands on the end-of-section transition; the first clean night-driving still in the same local window appears around `24:13`.",
+      "anchorSeconds": 1453.0,
+      "anchorTimestamp": "00:24:13.000",
+      "windowStartSeconds": 1450.0,
+      "windowStartTimestamp": "00:24:10.000",
+      "windowDurationSeconds": 8.0,
+      "windowEndTimestamp": "00:24:18.000",
+      "windowExpectedFrameCount": 8,
+      "sheetFps": 1.0,
+      "sheetTile": "4x2",
+      "sheetScale": "320:180",
+      "anchorImage": "tools/out/longplay_hard_phase_anchor_pack/01_night_start_anchor.png",
+      "windowSheet": "tools/out/longplay_hard_phase_anchor_pack/01_night_start_window.png"
+    },
+    {
+      "index": 2,
+      "id": "bridge_crossing",
+      "title": "Bridge Crossing",
+      "note": "Bridge/water crossing with mountain horizon and traffic on the right lane.",
+      "anchorSeconds": 1832.0,
+      "anchorTimestamp": "00:30:32.000",
+      "windowStartSeconds": 1830.0,
+      "windowStartTimestamp": "00:30:30.000",
+      "windowDurationSeconds": 6.0,
+      "windowEndTimestamp": "00:30:36.000",
+      "windowExpectedFrameCount": 6,
+      "sheetFps": 1.0,
+      "sheetTile": "3x2",
+      "sheetScale": "320:180",
+      "anchorImage": "tools/out/longplay_hard_phase_anchor_pack/02_bridge_crossing_anchor.png",
+      "windowSheet": "tools/out/longplay_hard_phase_anchor_pack/02_bridge_crossing_window.png"
+    },
+    {
+      "index": 3,
+      "id": "mountain_wall",
+      "title": "Mountain Wall / No-Shoulder Corridor",
+      "note": "Representative visible still for the hard mountain corridor with the left stone wall and no right shoulder; the roadmap `33:40` anchor quickly collapses into the tunnel in this recording.",
+      "anchorSeconds": 2004.0,
+      "anchorTimestamp": "00:33:24.000",
+      "windowStartSeconds": 1998.0,
+      "windowStartTimestamp": "00:33:18.000",
+      "windowDurationSeconds": 8.0,
+      "windowEndTimestamp": "00:33:26.000",
+      "windowExpectedFrameCount": 8,
+      "sheetFps": 1.0,
+      "sheetTile": "4x2",
+      "sheetScale": "320:180",
+      "anchorImage": "tools/out/longplay_hard_phase_anchor_pack/03_mountain_wall_anchor.png",
+      "windowSheet": "tools/out/longplay_hard_phase_anchor_pack/03_mountain_wall_window.png"
+    },
+    {
+      "index": 4,
+      "id": "tunnel_run",
+      "title": "Tunnel Run",
+      "note": "Tunnel driving segment with traffic already visible inside the dark corridor.",
+      "anchorSeconds": 2058.0,
+      "anchorTimestamp": "00:34:18.000",
+      "windowStartSeconds": 2056.0,
+      "windowStartTimestamp": "00:34:16.000",
+      "windowDurationSeconds": 6.0,
+      "windowEndTimestamp": "00:34:22.000",
+      "windowExpectedFrameCount": 6,
+      "sheetFps": 1.0,
+      "sheetTile": "3x2",
+      "sheetScale": "320:180",
+      "anchorImage": "tools/out/longplay_hard_phase_anchor_pack/04_tunnel_run_anchor.png",
+      "windowSheet": "tools/out/longplay_hard_phase_anchor_pack/04_tunnel_run_window.png"
+    },
+    {
+      "index": 5,
+      "id": "rain_segment",
+      "title": "Rain Segment",
+      "note": "Late hard-phase rain scene with visible droplets on the windshield and traffic ahead.",
+      "anchorSeconds": 2718.0,
+      "anchorTimestamp": "00:45:18.000",
+      "windowStartSeconds": 2716.0,
+      "windowStartTimestamp": "00:45:16.000",
+      "windowDurationSeconds": 6.0,
+      "windowEndTimestamp": "00:45:22.000",
+      "windowExpectedFrameCount": 6,
+      "sheetFps": 1.0,
+      "sheetTile": "3x2",
+      "sheetScale": "320:180",
+      "anchorImage": "tools/out/longplay_hard_phase_anchor_pack/05_rain_segment_anchor.png",
+      "windowSheet": "tools/out/longplay_hard_phase_anchor_pack/05_rain_segment_window.png"
+    }
+  ]
+}

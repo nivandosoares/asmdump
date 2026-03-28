@@ -1,6 +1,6 @@
 # TD2 Wiki Markdown Bundle
 
-Generated: `2026-03-28 14:58:13`
+Generated: `2026-03-28 15:30:10`
 
 This folder mirrors the markdown files curated by the HTML wiki so they can be reviewed or ingested outside the browser surface.
 
@@ -10,15 +10,15 @@ This folder mirrors the markdown files curated by the HTML wiki so they can be r
 
 - `sources/PORT_PLAN.md` | source `PORT_PLAN.md` | updated `2026-03-19 18:01`
   note: Primary execution contract and long-range port target.
-- `sources/rom_analysis/docs/next_steps_roadmap.md` | source `rom_analysis/docs/next_steps_roadmap.md` | updated `2026-03-28 14:56`
+- `sources/rom_analysis/docs/next_steps_roadmap.md` | source `rom_analysis/docs/next_steps_roadmap.md` | updated `2026-03-28 15:29`
   note: Current lane status, open gates, and practical follow-up targets.
-- `sources/rom_analysis/docs/progress_checkpoints.md` | source `rom_analysis/docs/progress_checkpoints.md` | updated `2026-03-28 14:56`
+- `sources/rom_analysis/docs/progress_checkpoints.md` | source `rom_analysis/docs/progress_checkpoints.md` | updated `2026-03-28 15:29`
   note: Checkpoint log with evidence-bearing milestones.
 - `sources/rom_analysis/docs/validation_gates.md` | source `rom_analysis/docs/validation_gates.md` | updated `2026-03-19 23:14`
   note: Bounded pass/fail policy for regression and callback checks.
 - `sources/validation/README.md` | source `validation/README.md` | updated `2026-03-28 14:05`
   note: Current Mesen capture, probe, and export workflow.
-- `sources/tools/README.md` | source `tools/README.md` | updated `2026-03-28 14:55`
+- `sources/tools/README.md` | source `tools/README.md` | updated `2026-03-28 15:29`
   note: Promoted extraction and analysis tooling surface.
 - `sources/port/README.md` | source `port/README.md` | updated `2026-03-22 16:26`
   note: SDL runtime scope, usage, and current sequence playback path.
@@ -66,7 +66,7 @@ This folder mirrors the markdown files curated by the HTML wiki so they can be r
 
 - `sources/rom_analysis/docs/lane3_today_work_brief.md` | source `rom_analysis/docs/lane3_today_work_brief.md` | updated `2026-03-28 08:41`
   note: Current gameplay archaeology state and human-support queue.
-- `sources/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md` | source `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md` | updated `2026-03-28 14:55`
+- `sources/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md` | source `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md` | updated `2026-03-28 15:29`
   note: Primary gameplay-oriented handoff note.
 - `sources/rom_analysis/docs/lane3_attract_demo_boundary.md` | source `rom_analysis/docs/lane3_attract_demo_boundary.md` | updated `2026-03-27 22:02`
   note: Boundary note explaining why some old seeds were misleading.
@@ -90,6 +90,12 @@ This folder mirrors the markdown files curated by the HTML wiki so they can be r
   note: Human note for preserved live-race savestates and controls.
 - `sources/rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md` | source `rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md` | updated `2026-03-28 09:05`
   note: Video-backed still capture summary for the live-race lane.
+- `sources/rom_analysis/maps/tracks/track1_live_race_service_status_screens.md` | source `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md` | updated `2026-03-28 15:29`
+  note: Named still pack for the checkpoint service/post corridor, partial-results screen, and restart back into driving.
+- `sources/rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md` | source `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md` | updated `2026-03-28 15:29`
+  note: Longplay-backed visual anchors for night, bridge, mountain-wall, tunnel, and rain.
+- `sources/rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md` | source `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md` | updated `2026-03-28 15:29`
+  note: Longplay-backed arrest/prison ending pack and high-score handoff.
 - `sources/rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md` | source `rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md` | updated `2026-03-27 22:59`
   note: Layer composition read for a real gameplay seed.
 - `sources/rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md` | source `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md` | updated `2026-03-27 22:58`

@@ -1,8 +1,8 @@
 # TD2 Wiki Markdown Bundle
 
-- Generated: `2026-03-28 14:58:13`
+- Generated: `2026-03-28 15:30:10`
 - Manifest: `rom_analysis/docs/wiki_doc_index.json`
-- Total docs: `41`
+- Total docs: `44`
 
 Use `wiki_bundle_index.md` for the curated file list or `wiki_combined.md` for a single-file ingest path.
 
@@ -504,7 +504,7 @@ The work above assumes option 1 first, then selective enhancement after parity.
 
 - Source: `rom_analysis/docs/next_steps_roadmap.md`
 - Bundle copy: `sources/rom_analysis/docs/next_steps_roadmap.md`
-- Last updated: `2026-03-28 14:56`
+- Last updated: `2026-03-28 15:29`
 - Note: Current lane status, open gates, and practical follow-up targets.
 
 ---
@@ -721,6 +721,41 @@ Validation contract baseline:
 - Boundary:
   - this smoke is strong evidence for intro/front-end runtime parity
   - it is **not** yet a gameplay-parity claim
+
+## Lane 3 Video Phase Packs (`2026-03-28`)
+
+- New tooling:
+  - `tools/build_video_phase_pack.py`
+- New phase-pack spec:
+  - `tools/gameplay_video_phase_packs.json`
+- New notes:
+  - `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
+  - `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
+  - `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
+- New generated artifacts:
+  - `tools/out/lane3_service_status_phase_pack/`
+  - `tools/out/longplay_hard_phase_anchor_pack/`
+  - `tools/out/longplay_prison_finale_phase_pack/`
+- Practical read:
+  - the previously unseen checkpoint `service/post`, `partial-results`, and
+    `next checkpoint restart` corridor from the preserved local AVI is now
+    promoted as a named still pack instead of only a prose note
+  - the difficult longplay phases now also have promoted visual anchors for:
+    - night
+    - bridge
+    - mountain-wall/no-shoulder corridor
+    - tunnel
+    - rain
+  - the player-arrest / prison ending is also now preserved explicitly as its
+    own named pack instead of a vague end-of-longplay expectation
+- Boundary:
+  - these packs are visual targeting surfaces only
+  - they do **not** replace the trusted `BG1/BG2/BG3/OBJ` extraction path
+- Next gate:
+  - use these anchors to decide which later gameplay phases deserve the next
+    emulator-side `BG/OBJ` capture
+  - prefer later hard-phase or service/post routes over more whole-frame-only
+    live-entry diffs
 
 ## Gameplay Capture Heuristics (User-supplied, Unverified)
 
@@ -2047,7 +2082,7 @@ Update findings in:
 
 - Source: `rom_analysis/docs/progress_checkpoints.md`
 - Bundle copy: `sources/rom_analysis/docs/progress_checkpoints.md`
-- Last updated: `2026-03-28 14:56`
+- Last updated: `2026-03-28 15:29`
 - Note: Checkpoint log with evidence-bearing milestones.
 
 ---
@@ -8365,6 +8400,42 @@ Current status:
     treat `BG` and `OBJ` surfaces as trusted gameplay review surfaces, and
     keep the next-agent handoff current whenever a checkpoint lands
 
+### CP-129: gameplay video phase packs now close service/post, hard-phase, and prison lookup surfaces
+
+- promoted docs:
+  - `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
+  - `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
+  - `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
+  - `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
+  - `rom_analysis/docs/next_steps_roadmap.md`
+- updated tooling:
+  - `tools/build_video_phase_pack.py`
+  - `tools/gameplay_video_phase_packs.json`
+- promoted artifacts:
+  - `tools/out/lane3_service_status_phase_pack/`
+  - `tools/out/longplay_hard_phase_anchor_pack/`
+  - `tools/out/longplay_prison_finale_phase_pack/`
+- bounded validation:
+  - `python3 -m py_compile tools/build_video_phase_pack.py`
+  - `python3 tools/build_video_phase_pack.py --spec tools/gameplay_video_phase_packs.json`
+- observed result:
+  - the preserved `live_race_mid` AVI now has promoted named stills for the
+    previously unseen checkpoint corridor:
+    service/post exterior, attendant dialog, partial-results screen, and next
+    checkpoint restart
+  - the local longplay now also carries promoted anchor stills for later
+    difficult phases:
+    night, bridge, mountain-wall/no-shoulder, tunnel, and rain
+  - the same longplay now closes the user-requested prison finale explicitly:
+    arrest prelude -> license revoked / prison still -> high-score follow-up
+- practical reading:
+  - lane 3 no longer lacks human-facing lookup surfaces for those missing
+    gameplay moments
+  - those packs are intentionally fenced as video anchors, not as substitutes
+    for the trusted savestate-backed `BG/OBJ` gameplay surfaces
+  - the next good use of effort is to target one of these named moments with a
+    real emulator-side `BG/OBJ` capture path instead of searching videos again
+
 
 ## Source Of Truth :: Validation Gates
 
@@ -10645,7 +10716,7 @@ Notes:
 
 - Source: `tools/README.md`
 - Bundle copy: `sources/tools/README.md`
-- Last updated: `2026-03-28 14:55`
+- Last updated: `2026-03-28 15:29`
 - Note: Promoted extraction and analysis tooling surface.
 
 ---
@@ -10696,6 +10767,7 @@ Current Sprint 0 tooling:
 - `build_gameplay_asset_report.py`: consolidates one gameplay seed's frame capture, isolated layer renders, tilemap stats, and producer notes into an asset-first JSON/Markdown report so lane-3 tracing can target the right visual owner (`BG1`, `BG2`, `OBJ`, `BG3`) instead of mixing gameplay with front-end material
 - `build_gameplay_frame_bundle.py`: packages one raw gameplay frame dump into a self-contained review bundle with screenshot, isolated `BG1/BG2/OBJ` renders, designer-facing `PNG` previews, screenshot-derived `world/background-stack` support PNGs for raster-heavy gameplay frames, raw memory, and a lightweight design pack; it now also accepts `--native-frame-dir` to promote Mesen-native gameplay visible layers (`bg*_visible`, sprite screen, native design pack) into the same bundle when a savestate-backed extraction exists
 - `build_gameplay_bundle_compare.py`: compares two gameplay frame bundles and emits a compact JSON/Markdown delta report so lane 3 can separate road/world persistence from overlay/HUD/OBJ changes while also pointing human review at the screenshot-derived support surfaces when raw `BG2` is only a static-state approximation
+- `build_video_phase_pack.py`: builds named still/contact-sheet packs from local gameplay videos using a small JSON spec, useful for promoting unseen manual-video or longplay moments into stable review anchors without pretending they are already `BG/OBJ`-resolved
 - `compare_capture_sequences.py`: compares two `mesen_capture.lua` screenshot directories frame-by-frame, reports the first cross-sequence divergence, and also summarizes the first adjacent-motion step inside each lane
 - `search_boot_probe_matches.py`: scans a longer `td2_boot_probe.json` for the window that best matches a target probe window by exact field equality, useful when a live gameplay route is valuable even without one exact absolute frame match
 - `build_capture_sequence_manifest.py`: converts `mesen_capture.lua` screenshot runs (`*_input_log.json` + `*_frame_XXXXX.png`) into collapsed runtime `image` sequence manifests
@@ -10757,6 +10829,7 @@ python3 tools/run_track1_seed_sweep.py --out-dir tools/out/track1_seed_sweep_v1
 python3 tools/build_gameplay_asset_report.py --label lane3_live_race_mid --source-seed manual_artifacts/lane3/lane3_live_race_mid.mss --frame-image manual_artifacts/lane3/Screenshots/lane3_live_race_video_frame0000_start.png --bg1-image tools/out/lane3_live_race_mid_bg1.ppm --bg2-image tools/out/lane3_live_race_mid_bg2.ppm --obj-image tools/out/lane3_live_race_mid_obj.ppm --design-pack tools/out/design_lane3_live_race_mid_frame0/design_pack.json --layer-summary tools/out/lane3_live_race_mid_layer_stack_summary.json --producer-summary tools/out/lane3_live_race_mid_bg2_producer_summary.json --bg1-render tools/out/lane3_live_race_mid_bg1_render.json --bg2-render tools/out/lane3_live_race_mid_bg2_render.json --obj-render tools/out/lane3_live_race_mid_obj_render.json --ppu-state tools/out/lane3_live_race_mid_bg1_bg2_ppu_state.json --out-json tools/out/lane3_live_race_mid_asset_focus.json --markdown-out tools/out/lane3_live_race_mid_asset_focus.md
 python3 tools/build_gameplay_frame_bundle.py --label lane3_live_entry_frame03250 --frame 3250 --vram tools/out/lane3_live_entry_frame03250_frame_03250_vram.bin --cgram tools/out/lane3_live_entry_frame03250_frame_03250_cgram.bin --ppu-state tools/out/lane3_live_entry_frame03250_frame_03250_ppu_state.json --oam tools/out/lane3_live_entry_frame03250_frame_03250_oam.bin --screenshot tools/out/lane3_live_entry_frame03250_frame_03250_frame.png --out-dir tools/out/lane3_live_entry_frame03250_bundle
 python3 tools/build_gameplay_bundle_compare.py tools/out/lane3_live_entry_frame03250_bundle tools/out/lane3_live_entry_frame03550_bundle tools/out/lane3_live_entry_frame03250_vs_03550_compare.json --markdown-out tools/out/lane3_live_entry_frame03250_vs_03550_compare.md --label-a live_entry_3250 --label-b live_entry_3550
+python3 tools/build_video_phase_pack.py --spec tools/gameplay_video_phase_packs.json
 python3 tools/build_capture_sequence_manifest.py tools/out/track1_seed_sweep_v1/b_hold/capture_input_log.json tools/out/track1_b_hold_cycle_0076_0156_sequence.txt --json-out tools/out/track1_b_hold_cycle_0076_0156_sequence.json --start-frame 76 --end-frame-exclusive 156
 python3 tools/capture_visible_mode7_range.py 1094 1101 --output tools/out/visible_mode7_1094_1101.json
 python3 tools/apply_visible_mode7_samples.py tools/out/visible_mode7_1094_1101.json tools/out/mesen_range_1094_1101_v1
@@ -13441,7 +13514,7 @@ without redoing the same work.
 
 - Source: `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
 - Bundle copy: `sources/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
-- Last updated: `2026-03-28 14:55`
+- Last updated: `2026-03-28 15:29`
 - Note: Primary gameplay-oriented handoff note.
 
 ---
@@ -13462,6 +13535,9 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `rom_analysis/maps/tracks/track1_b_hold_scanline_recheck_0090_0093_current_seed.md`
 - `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
 - `rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
+- `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
+- `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
+- `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
 - `rom_analysis/maps/tracks/track1_live_race_vs_post9016_control.md`
 - `rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
 - `rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
@@ -13591,6 +13667,10 @@ This note is the explicit resume point for the next agent on Lane 3.
     - treat `BG1/BG2/BG3` plus `OBJ` outputs as trusted gameplay review
       surfaces from here forward; this is now ratified by the designer read
       even though composed native `main/sub` export remains fenced
+    - treat the new video phase packs as human-facing targeting surfaces only:
+      use them to locate `service/post`, `partial-results`, `hard-phase`, and
+      `prison-finale` moments, then return to `BG/OBJ` extraction whenever an
+      emulator-side path exists
     - use `world_visible_support.png` for human road/background labeling
     - use `bg2.png` for VRAM/PPU-state correlation only
   - reason:
@@ -13670,6 +13750,15 @@ This note is the explicit resume point for the next agent on Lane 3.
   - that means a missing long gameplay segment after injected input is not
     strong evidence that the lane was "never gameplay"; the input may simply
     have cut a short demo slice before it developed further
+- the repo now also has named video phase packs for the still-missing gameplay
+  moments the user called out:
+  - `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
+  - `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
+  - `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
+  - practical read:
+    these close the human-facing lookup surface for checkpoint service/post,
+    partial-results, later hard phases, and the arrest/prison finale, without
+    pretending those longplay/video anchors are already `BG/OBJ`-resolved
 
 ## Do Not Repeat
 
@@ -15218,6 +15307,215 @@ intake time.
   - the late extra radar marker is preserved in a local still, so future work
     can compare it against `state_11f3`, `oam_0730`, and the narrowed
     `L01318D` producer cluster without depending on memory alone
+
+
+## Gameplay And Lane 3 :: Service / Partial Screens
+
+- Source: `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
+- Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
+- Last updated: `2026-03-28 15:29`
+- Note: Named still pack for the checkpoint service/post corridor, partial-results screen, and restart back into driving.
+
+---
+
+# Track 1 Live-Race Service / Partial-Results Screens
+
+- Intake date: `2026-03-28`
+- Source video:
+  - `manual_artifacts/lane3/lane3_live_race_video.avi`
+- Builder:
+  - `tools/build_video_phase_pack.py`
+- Spec:
+  - `tools/gameplay_video_phase_packs.json`
+- Promoted phase pack:
+  - `tools/out/lane3_service_status_phase_pack/`
+
+## Key Artifacts
+
+- `tools/out/lane3_service_status_phase_pack/anchor_sheet.png`
+- `tools/out/lane3_service_status_phase_pack/02_gas_station_exterior_anchor.png`
+- `tools/out/lane3_service_status_phase_pack/03_attendant_dialog_anchor.png`
+- `tools/out/lane3_service_status_phase_pack/04_partial_results_anchor.png`
+- `tools/out/lane3_service_status_phase_pack/05_next_checkpoint_restart_anchor.png`
+- `tools/out/lane3_service_status_phase_pack/manifest.json`
+
+## What Was Run
+
+- `python3 -m py_compile tools/build_video_phase_pack.py`
+- `python3 tools/build_video_phase_pack.py --spec tools/gameplay_video_phase_packs.json`
+
+## Closed Read
+
+- the previously unseen checkpoint/post corridor from the preserved local
+  `live_race_mid` continuity clip is now promoted as stable named stills
+- the live gameplay-to-service boundary is no longer only implied by the older
+  `STOP` sign still:
+  - `24.960s`: checkpoint `STOP` sign
+  - `31.500s`: gas-station exterior without the car fully in frame
+  - `31.750s`: attendant/dialog still with the car and station worker in view
+  - `34.000s`: player's partial-results screen
+  - `41.000s`: next checkpoint restart back in cockpit driving
+- the local AVI keeps the service/post corridor compact:
+  - the station exterior and the attendant/dialog still are only a short
+    fraction of a second apart
+  - the results screen then persists much longer than either service still
+- practical reading:
+  - lane 3 now has preserved visual anchors for the user's human note about
+    frentista dialog plus parciais
+  - these are human-facing phase anchors, not replacements for the trusted
+    `BG1/BG2/BG3/OBJ` gameplay surfaces
+
+## Why This Matters
+
+- later gameplay capture can now target the service/post corridor by name
+  instead of searching the manual clip again
+- the next agent can aim emulator-side `BG/OBJ` extraction at these same named
+  moments rather than treating the checkpoint sequence as one vague block
+
+## Next Best Step
+
+- treat this pack as the visual boundary for the service/post sequence
+- when a reproducible live capture reaches this corridor, bind:
+  - service/post presentation to the trusted `BG` surfaces
+  - any dynamic actor or message-strip changes to `OBJ` and the existing
+    gameplay-side watchlist
+
+
+## Gameplay And Lane 3 :: Hard-Phase Anchors
+
+- Source: `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
+- Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
+- Last updated: `2026-03-28 15:29`
+- Note: Longplay-backed visual anchors for night, bridge, mountain-wall, tunnel, and rain.
+
+---
+
+# Track 1 Longplay Hard-Phase Anchors
+
+- Intake date: `2026-03-28`
+- Source video:
+  - local `the_duel_longplay.mp4`
+- Builder:
+  - `tools/build_video_phase_pack.py`
+- Spec:
+  - `tools/gameplay_video_phase_packs.json`
+- Promoted phase pack:
+  - `tools/out/longplay_hard_phase_anchor_pack/`
+
+## Key Artifacts
+
+- `tools/out/longplay_hard_phase_anchor_pack/anchor_sheet.png`
+- `tools/out/longplay_hard_phase_anchor_pack/01_night_start_anchor.png`
+- `tools/out/longplay_hard_phase_anchor_pack/02_bridge_crossing_anchor.png`
+- `tools/out/longplay_hard_phase_anchor_pack/03_mountain_wall_anchor.png`
+- `tools/out/longplay_hard_phase_anchor_pack/04_tunnel_run_anchor.png`
+- `tools/out/longplay_hard_phase_anchor_pack/05_rain_segment_anchor.png`
+- `tools/out/longplay_hard_phase_anchor_pack/manifest.json`
+
+## What Was Run
+
+- `python3 tools/build_video_phase_pack.py --spec tools/gameplay_video_phase_packs.json`
+
+## Closed Read
+
+- the later hard-phase corridor now has preserved local visual anchors instead
+  of only roadmap timestamps
+- promoted anchors from the local longplay:
+  - `24:13` (`1453s`): first clean night-driving still after the earlier
+    transition/result boundary around the roadmap's `24:11`
+  - `30:32` (`1832s`): bridge crossing with purple water, mountain horizon,
+    and traffic on the right lane
+  - `33:24` (`2004s`): mountain-wall / no-right-shoulder corridor chosen as a
+    clearer representative still than the roadmap's rougher `33:40` anchor,
+    which falls very close to tunnel entry in this recording
+  - `34:18` (`2058s`): tunnel driving
+  - `45:18` (`2718s`): rain segment with windshield droplets and traffic ahead
+- the difficult later phases now expose concrete visual targets that were
+  missing from the gameplay pack family:
+  - dark/night palette shift
+  - bridge/water/mountain horizon stack
+  - mountain-wall/no-shoulder road geometry
+  - tunnel enclosure
+  - rain-on-windshield presentation
+
+## Boundary
+
+- these anchors come from a local longplay recording, not from the trusted
+  savestate-backed `BG1/BG2/BG3/OBJ` extraction path
+- use them as visual targeting surfaces for later emulator/native capture, not
+  as proof of exact runtime ownership by themselves
+
+## Next Best Step
+
+- use these anchors to drive later hard-phase-specific capture requests or live
+  reproduction attempts
+- once any of these phases is reachable in a reproducible emulator path, keep
+  the later analysis on the ratified `BG` plus `OBJ` surfaces instead of
+  collapsing back to whole-frame-only review
+
+
+## Gameplay And Lane 3 :: Prison Finale Anchor
+
+- Source: `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
+- Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
+- Last updated: `2026-03-28 15:29`
+- Note: Longplay-backed arrest/prison ending pack and high-score handoff.
+
+---
+
+# Track 1 Longplay Prison Finale Anchor
+
+- Intake date: `2026-03-28`
+- Source video:
+  - local `the_duel_longplay.mp4`
+- Builder:
+  - `tools/build_video_phase_pack.py`
+- Spec:
+  - `tools/gameplay_video_phase_packs.json`
+- Promoted phase pack:
+  - `tools/out/longplay_prison_finale_phase_pack/`
+
+## Key Artifacts
+
+- `tools/out/longplay_prison_finale_phase_pack/anchor_sheet.png`
+- `tools/out/longplay_prison_finale_phase_pack/01_arrest_prelude_anchor.png`
+- `tools/out/longplay_prison_finale_phase_pack/02_license_revoked_anchor.png`
+- `tools/out/longplay_prison_finale_phase_pack/03_high_score_followthrough_anchor.png`
+- `tools/out/longplay_prison_finale_phase_pack/manifest.json`
+
+## What Was Run
+
+- `python3 tools/build_video_phase_pack.py --spec tools/gameplay_video_phase_packs.json`
+
+## Closed Read
+
+- the user-requested final prison outcome screen is now preserved as a stable
+  local artifact instead of only an end-of-longplay assumption
+- promoted finale anchors from the local longplay:
+  - `01:26:16` (`5176s`): arrest prelude message strip
+  - `01:26:20` (`5180s`): clearest `license revoked` / prison still
+  - `01:26:22` (`5182s`): direct handoff into the high-score panel
+- practical reading:
+  - this recording does not return from the prison still into more gameplay
+  - it goes straight from the arrest/prison outcome into the score screen
+
+## Why This Matters
+
+- lane 3 now has the full requested visual boundary for the end-state outcome
+  corridor:
+  - in-race checkpoint service/post sequence
+  - partial-results screen
+  - final prison outcome
+- future capture or runtime-mimetization work can target this finale by name
+  instead of re-scanning the longplay ending manually
+
+## Next Best Step
+
+- keep this finale pack as the human-facing reference for the arrest/prison
+  corridor
+- if a later emulator/live-debug route reaches the same outcome, compare it
+  against this pack while keeping `BG/OBJ` extraction as the trusted ownership
+  surface
 
 
 ## Gameplay And Lane 3 :: Visible Layer Stack

@@ -211,6 +211,21 @@
           "note": "Video-backed still capture summary for the live-race lane."
         },
         {
+          "path": "rom_analysis/maps/tracks/track1_live_race_service_status_screens.md",
+          "label": "Service / Partial Screens",
+          "note": "Named still pack for the checkpoint service/post corridor, partial-results screen, and restart back into driving."
+        },
+        {
+          "path": "rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md",
+          "label": "Hard-Phase Anchors",
+          "note": "Longplay-backed visual anchors for night, bridge, mountain-wall, tunnel, and rain."
+        },
+        {
+          "path": "rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md",
+          "label": "Prison Finale Anchor",
+          "note": "Longplay-backed arrest/prison ending pack and high-score handoff."
+        },
+        {
           "path": "rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md",
           "label": "Visible Layer Stack",
           "note": "Layer composition read for a real gameplay seed."
