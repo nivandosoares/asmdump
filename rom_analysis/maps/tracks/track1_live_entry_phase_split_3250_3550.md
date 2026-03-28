@@ -54,6 +54,10 @@
 Each bundle keeps the same top-level review surface:
 
 - `frame.png`
+- `main.png`
+- `bg1.png`
+- `bg2.png`
+- `obj.png`
 - `bg1.ppm`
 - `bg2.ppm`
 - `obj.ppm`

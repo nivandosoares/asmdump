@@ -112,6 +112,48 @@ next gate needed to advance.
   - the next best gameplay pair is now a checkpoint/post-stop or
     police/radar-oriented phase, not another blind whole-frame diff
 
+## Lane 3 Traffic Emergence Pair (`2026-03-28`)
+
+- New note:
+  - `rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
+- Updated tooling:
+  - `tools/build_gameplay_frame_bundle.py`
+  - `tools/build_gameplay_bundle_compare.py`
+- New generated artifacts:
+  - `tools/out/lane3_live_entry_review_wiggle_3600_contact_sheet.png`
+  - `tools/out/lane3_live_entry_review_brake_3600_contact_sheet.png`
+  - `tools/out/lane3_live_entry_brake_probe_v1/td2_boot_probe.json`
+  - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/`
+  - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/`
+  - `tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.json`
+  - `tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md`
+- Closed practical read:
+  - the first bounded post-collision follow-up does **not** yet recover the
+    manual checkpoint/post-stop or police/radar flow from the live-entry lane
+  - the steering-heavy `wiggle` attempt still crashes early
+  - a bounded braking variant delays that failure and promotes a better event
+    pair first:
+    - frame `3250` keeps the road/signage surface without the red traffic car
+    - frame `3400` introduces the red traffic car while preserving the same
+      background stack
+  - the promoted split is now cleaner than the earlier collision pair:
+    - `BG1`, `BG2`, `BG3`, and the sampled `BG2` layer state all stay
+      identical
+    - only `OBJ` workload changes materially (`37 -> 41` visible sprites,
+      `1138 -> 2117` drawn pixels)
+  - matching probe rows now also narrow the dynamic side of that event:
+    - `state_11f3`: `179 -> 208`
+    - `oam_0730`: `4627 -> 4628`
+    - `state_09a2`: `43 -> 47`
+    - `dp_0053/0054`: `16 -> 224`
+    - `dp_0022`: `22 -> 6`
+- Practical implication:
+  - the best current live-entry target is now traffic emergence as an
+    `OBJ`-side event, not more whole-frame collision review
+  - bundle builders now also emit designer-facing `PNG` previews beside the
+    original `PPM` files, so labeling can happen directly on the promoted
+    artifacts
+
 ## Docs Wiki And SDL Smoke (`2026-03-28`)
 
 - New tooling:

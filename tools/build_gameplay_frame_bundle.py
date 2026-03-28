@@ -6,7 +6,9 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
+import struct
 import subprocess
+import zlib
 from pathlib import Path
 
 
@@ -47,6 +49,121 @@ def repo_rel(path: Path) -> str:
 def copy_file(src: Path, dst: Path) -> None:
     dst.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(src, dst)
+
+
+def skip_pnm_space_and_comments(data: bytes, offset: int) -> int:
+    while offset < len(data):
+        byte = data[offset]
+        if byte in b" \t\r\n":
+            offset += 1
+            continue
+        if byte == 35:
+            while offset < len(data) and data[offset] not in b"\r\n":
+                offset += 1
+            continue
+        break
+    return offset
+
+
+def read_pnm_token(data: bytes, offset: int) -> tuple[str, int]:
+    offset = skip_pnm_space_and_comments(data, offset)
+    start = offset
+    while offset < len(data) and data[offset] not in b" \t\r\n#":
+        offset += 1
+    if start == offset:
+        raise ValueError("unexpected end of PNM header")
+    return data[start:offset].decode("ascii"), offset
+
+
+def scale_sample(sample: int, maxval: int) -> int:
+    if maxval <= 0:
+        return 0
+    if maxval == 255:
+        return sample
+    return round(sample * 255 / maxval)
+
+
+def read_pnm_rgb(source_path: Path) -> tuple[int, int, bytes]:
+    data = source_path.read_bytes()
+    magic, offset = read_pnm_token(data, 0)
+    if magic not in {"P6", "P5", "P3", "P2"}:
+        raise ValueError(f"unsupported PNM format: {magic}")
+
+    width_token, offset = read_pnm_token(data, offset)
+    height_token, offset = read_pnm_token(data, offset)
+    maxval_token, offset = read_pnm_token(data, offset)
+    width = int(width_token)
+    height = int(height_token)
+    maxval = int(maxval_token)
+    if width <= 0 or height <= 0:
+        raise ValueError("invalid PNM dimensions")
+
+    if magic in {"P6", "P5"}:
+        offset = skip_pnm_space_and_comments(data, offset)
+        channels = 3 if magic == "P6" else 1
+        bytes_per_sample = 1 if maxval < 256 else 2
+        sample_count = width * height * channels
+        expected_bytes = sample_count * bytes_per_sample
+        payload = data[offset : offset + expected_bytes]
+        if len(payload) != expected_bytes:
+            raise ValueError("truncated PNM payload")
+        if bytes_per_sample == 1:
+            samples = list(payload)
+        else:
+            samples = [
+                int.from_bytes(payload[index : index + 2], "big")
+                for index in range(0, len(payload), 2)
+            ]
+    else:
+        channels = 3 if magic == "P3" else 1
+        sample_count = width * height * channels
+        samples = []
+        for _ in range(sample_count):
+            token, offset = read_pnm_token(data, offset)
+            samples.append(int(token))
+
+    samples = [scale_sample(sample, maxval) for sample in samples]
+    if channels == 3:
+        rgb = bytes(samples)
+    else:
+        rgb = bytes(component for sample in samples for component in (sample, sample, sample))
+    return width, height, rgb
+
+
+def png_chunk(tag: bytes, payload: bytes) -> bytes:
+    return (
+        struct.pack(">I", len(payload))
+        + tag
+        + payload
+        + struct.pack(">I", zlib.crc32(tag + payload) & 0xFFFFFFFF)
+    )
+
+
+def write_png_from_rgb(dest_path: Path, width: int, height: int, rgb: bytes) -> None:
+    rows = []
+    stride = width * 3
+    for row_index in range(height):
+        start = row_index * stride
+        rows.append(b"\x00" + rgb[start : start + stride])
+    payload = zlib.compress(b"".join(rows), level=9)
+    ihdr = struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)
+    png_bytes = (
+        b"\x89PNG\r\n\x1a\n"
+        + png_chunk(b"IHDR", ihdr)
+        + png_chunk(b"IDAT", payload)
+        + png_chunk(b"IEND", b"")
+    )
+    dest_path.parent.mkdir(parents=True, exist_ok=True)
+    dest_path.write_bytes(png_bytes)
+
+
+def write_png_preview(source_ppm: Path, dest_png: Path) -> bool:
+    try:
+        width, height, rgb = read_pnm_rgb(source_ppm)
+    except ValueError:
+        return False
+    write_png_from_rgb(dest_png, width, height, rgb)
+    return True
 
 
 def render_scene(
@@ -176,6 +293,12 @@ def main() -> None:
     copy_file(render_targets["main"], out_dir / "main.ppm")
     copy_file(render_jsons["main"], out_dir / "main_render.json")
 
+    png_outputs: dict[str, str | None] = {}
+    for name in ("main", "bg1", "bg2", "obj"):
+        ppm_path = out_dir / f"{name}.ppm"
+        png_path = out_dir / f"{name}.png"
+        png_outputs[f"{name}_png"] = repo_rel(png_path) if write_png_preview(ppm_path, png_path) else None
+
     subprocess.run(
         [
             "python3",
@@ -206,6 +329,7 @@ def main() -> None:
             "bg2_ppm": repo_rel(out_dir / "bg2.ppm"),
             "obj_ppm": repo_rel(out_dir / "obj.ppm"),
             "design_pack": repo_rel(design_pack_dir / "design_pack.json"),
+            **png_outputs,
         },
     }
     write_json(out_dir / "bundle_manifest.json", manifest)

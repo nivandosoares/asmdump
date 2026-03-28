@@ -7,12 +7,12 @@
 
 ## Visual Anchors
 
-- `live_entry_3250` `BG1`: `tools/out/lane3_live_entry_frame03250_bundle/bg1.ppm`
-- `live_entry_3250` `BG2`: `tools/out/lane3_live_entry_frame03250_bundle/bg2.ppm`
-- `live_entry_3250` `OBJ`: `tools/out/lane3_live_entry_frame03250_bundle/obj.ppm`
-- `live_entry_3550` `BG1`: `tools/out/lane3_live_entry_frame03550_bundle/bg1.ppm`
-- `live_entry_3550` `BG2`: `tools/out/lane3_live_entry_frame03550_bundle/bg2.ppm`
-- `live_entry_3550` `OBJ`: `tools/out/lane3_live_entry_frame03550_bundle/obj.ppm`
+- `live_entry_3250` `BG1`: `tools/out/lane3_live_entry_frame03250_bundle/bg1.png`
+- `live_entry_3250` `BG2`: `tools/out/lane3_live_entry_frame03250_bundle/bg2.png`
+- `live_entry_3250` `OBJ`: `tools/out/lane3_live_entry_frame03250_bundle/obj.png`
+- `live_entry_3550` `BG1`: `tools/out/lane3_live_entry_frame03550_bundle/bg1.png`
+- `live_entry_3550` `BG2`: `tools/out/lane3_live_entry_frame03550_bundle/bg2.png`
+- `live_entry_3550` `OBJ`: `tools/out/lane3_live_entry_frame03550_bundle/obj.png`
 
 ## Current Reading
 

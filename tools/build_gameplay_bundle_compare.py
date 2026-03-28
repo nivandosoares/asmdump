@@ -64,6 +64,10 @@ def load_bundle_summary(bundle_dir: Path) -> dict:
         "bundle_dir": repo_rel(bundle_dir),
         "frame": manifest.get("frame"),
         "frame_png": outputs.get("frame_png"),
+        "main_png": outputs.get("main_png"),
+        "bg1_png": outputs.get("bg1_png"),
+        "bg2_png": outputs.get("bg2_png"),
+        "obj_png": outputs.get("obj_png"),
         "bg1_ppm": outputs.get("bg1_ppm"),
         "bg2_ppm": outputs.get("bg2_ppm"),
         "obj_ppm": outputs.get("obj_ppm"),
@@ -94,13 +98,19 @@ def build_report(bundle_a: Path, bundle_b: Path, label_a: str, label_b: str) -> 
 
     bg2_same_tilemap_stats = summary_a["tilemaps"]["bg2"] == summary_b["tilemaps"]["bg2"]
     bg1_same_tilemap_stats = summary_a["tilemaps"]["bg1"] == summary_b["tilemaps"]["bg1"]
+    bg3_same_tilemap_stats = summary_a["tilemaps"]["bg3"] == summary_b["tilemaps"]["bg3"]
+    obj_changed = summary_a["obj"] != summary_b["obj"]
 
     reading: list[str] = []
+    if bg1_same_tilemap_stats and bg2_same_tilemap_stats and bg3_same_tilemap_stats and obj_changed:
+        reading.append(
+            "BG1/BG2/BG3 tilemap stats stay unchanged while OBJ alone changes, so the strongest current fit is a pure actor/event update over a stable road/cockpit background stack."
+        )
     if bg2_same_tilemap_stats and not bg1_same_tilemap_stats:
         reading.append(
             "BG2 tilemap stats stay unchanged while BG1 changes, so the strongest current fit is that the road/world plane persists and the later overlay loads onto the cockpit/HUD side."
         )
-    if summary_a["obj"] != summary_b["obj"]:
+    if obj_changed:
         reading.append(
             "OBJ workload changes across the pair, so dynamic actor/overlay work contributes materially to the visible transition."
         )
@@ -144,12 +154,12 @@ def build_markdown(report: dict) -> str:
         "",
         "## Visual Anchors",
         "",
-        f"- `{label_a}` `BG1`: `{a['bg1_ppm']}`",
-        f"- `{label_a}` `BG2`: `{a['bg2_ppm']}`",
-        f"- `{label_a}` `OBJ`: `{a['obj_ppm']}`",
-        f"- `{label_b}` `BG1`: `{b['bg1_ppm']}`",
-        f"- `{label_b}` `BG2`: `{b['bg2_ppm']}`",
-        f"- `{label_b}` `OBJ`: `{b['obj_ppm']}`",
+        f"- `{label_a}` `BG1`: `{a['bg1_png'] or a['bg1_ppm']}`",
+        f"- `{label_a}` `BG2`: `{a['bg2_png'] or a['bg2_ppm']}`",
+        f"- `{label_a}` `OBJ`: `{a['obj_png'] or a['obj_ppm']}`",
+        f"- `{label_b}` `BG1`: `{b['bg1_png'] or b['bg1_ppm']}`",
+        f"- `{label_b}` `BG2`: `{b['bg2_png'] or b['bg2_ppm']}`",
+        f"- `{label_b}` `OBJ`: `{b['obj_png'] or b['obj_ppm']}`",
         "",
         "## Current Reading",
         "",

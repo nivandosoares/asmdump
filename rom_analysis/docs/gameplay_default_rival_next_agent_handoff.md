@@ -20,12 +20,14 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
 - `rom_analysis/maps/tracks/track1_live_race_plus30f_lab_backend_boundary.md`
 - `rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
+- `rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
 - `rom_analysis/docs/lane3_today_work_brief.md`
 - `rom_analysis/docs/lane3_visual_annotation_template.md`
 - `manual_artifacts/lane3/lane3_live_race_notes.txt`
 - `tools/out/lane3_live_race_mid_bg2_producer_summary.md`
 - `tools/out/lane3_live_race_mid_asset_focus.md`
 - `tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
+- `tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md`
 - `tools/out/lane3_live_race_slot2_boundary_summary.md`
 - `tools/out/lane3_live_race_slot2_vs_mid_probe_compare.md`
 - `tools/out/post9016_default_rival_probe_none_vs_a_compare.md`
@@ -250,10 +252,16 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `tools/out/lane3_live_entry_frame03550_bundle/bundle_manifest.json`
 - `tools/out/lane3_live_entry_frame03250_vs_03550_compare.json`
 - `tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
+- `tools/out/lane3_live_entry_brake_probe_v1/td2_boot_probe.json`
+- `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/bundle_manifest.json`
+- `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bundle_manifest.json`
+- `tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.json`
+- `tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md`
 - `tools/out/lane3_live_race_mid_bg2_producer_summary.json`
 - `tools/out/lane3_live_race_mid_bg2_producer_summary.md`
 - `rom_analysis/maps/tracks/track1_live_race_plus30f_lab_backend_boundary.md`
 - `rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
+- `rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
 - `rom_analysis/docs/lane3_today_work_brief.md`
 - `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
 - `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
@@ -390,6 +398,16 @@ The question is now narrower:
   - practical next move after this split:
     repeat the same bundle/compare workflow on a checkpoint or police/radar
     pair, not only on the collision transition
+  - the first bounded follow-up after that collision pair is now also closed:
+    - a steering-heavy `wiggle` attempt still crashes too early to recover a
+      checkpoint/post-stop or police/radar phase
+    - a bounded braking variant still does not reach checkpoint/post-stop, but
+      it does promote a stronger traffic-emergence pair at `3250 -> 3400`
+    - on that pair, `BG1/BG2/BG3` and the sampled `BG2` layer state stay
+      identical while `OBJ` workload alone rises
+    - practical fit:
+      this is currently the best live-entry target for traffic-actor labeling
+      and OAM-side tracing
 
 ## Recommended Next Experiment
 
@@ -441,10 +459,16 @@ The question is now narrower:
    - `3550` = collision overlay dominant
    - the next equivalent pair should target checkpoint/post-stop or the later
      police/radar event so lane 3 can compare more than one gameplay phase
-12. If another dev is available today, use
+12. Use the newly promoted braking-variant pair as the current `OBJ`-side
+    template:
+   - `3250` = road/signage phase without the red traffic car
+   - `3400` = same background stack with the red traffic car introduced
+   - because only `OBJ` changes cleanly there, prefer this pair over the
+     collision pair when the goal is actor labeling or OAM tracing
+13. If another dev is available today, use
    `rom_analysis/docs/lane3_today_work_brief.md` as the working brief rather
    than reconstructing the queue from multiple archaeology notes.
-13. If a human needs to re-enter the same gameplay corridor manually, use the
+14. If a human needs to re-enter the same gameplay corridor manually, use the
     new route/control note in `manual_artifacts/lane3/responses.txt` instead
     of rediscovering the menu flow from scratch.
 

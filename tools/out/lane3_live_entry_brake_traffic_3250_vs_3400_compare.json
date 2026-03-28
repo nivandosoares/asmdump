@@ -1,0 +1,530 @@
+{
+  "schema": "td2.gameplay_bundle_compare.v1",
+  "labels": {
+    "a": "brake_3250",
+    "b": "brake_3400"
+  },
+  "bundle_a": {
+    "bundle_dir": "tools/out/lane3_live_entry_brake_traffic_frame03250_bundle",
+    "frame": 3250,
+    "frame_png": "tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/frame.png",
+    "main_png": "tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/main.png",
+    "bg1_png": "tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/bg1.png",
+    "bg2_png": "tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/bg2.png",
+    "obj_png": "tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/obj.png",
+    "bg1_ppm": "tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/bg1.ppm",
+    "bg2_ppm": "tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/bg2.ppm",
+    "obj_ppm": "tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/obj.ppm",
+    "bg_mode": 1,
+    "main_screen_layers": 19,
+    "layer_states": [
+      {
+        "layer_index": 0,
+        "tilemapAddress": 0,
+        "chrAddress": 12288,
+        "doubleWidth": true,
+        "doubleHeight": false,
+        "largeTiles": false,
+        "hscroll": 0,
+        "vscroll": 1023
+      },
+      {
+        "layer_index": 1,
+        "tilemapAddress": 2048,
+        "chrAddress": 8192,
+        "doubleWidth": true,
+        "doubleHeight": true,
+        "largeTiles": true,
+        "hscroll": 261,
+        "vscroll": 283
+      },
+      {
+        "layer_index": 2,
+        "tilemapAddress": 6144,
+        "chrAddress": 20480,
+        "doubleWidth": true,
+        "doubleHeight": false,
+        "largeTiles": false,
+        "hscroll": 500,
+        "vscroll": 20
+      }
+    ],
+    "obj": {
+      "visible_sprites": 37,
+      "drawn_pixels": 1138
+    },
+    "tilemaps": {
+      "bg1": {
+        "entry_count": 2048,
+        "unique_tiles": 458,
+        "non_zero_tiles": 1350,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 698
+          },
+          {
+            "tileIndex": 337,
+            "count": 97
+          },
+          {
+            "tileIndex": 114,
+            "count": 38
+          },
+          {
+            "tileIndex": 13,
+            "count": 21
+          },
+          {
+            "tileIndex": 14,
+            "count": 21
+          }
+        ]
+      },
+      "bg2": {
+        "entry_count": 4096,
+        "unique_tiles": 66,
+        "non_zero_tiles": 1536,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 2560
+          },
+          {
+            "tileIndex": 8,
+            "count": 792
+          },
+          {
+            "tileIndex": 66,
+            "count": 388
+          },
+          {
+            "tileIndex": 2,
+            "count": 120
+          },
+          {
+            "tileIndex": 132,
+            "count": 24
+          }
+        ]
+      },
+      "bg3": {
+        "entry_count": 2048,
+        "unique_tiles": 177,
+        "non_zero_tiles": 1007,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 1041
+          },
+          {
+            "tileIndex": 176,
+            "count": 832
+          },
+          {
+            "tileIndex": 1,
+            "count": 1
+          },
+          {
+            "tileIndex": 2,
+            "count": 1
+          },
+          {
+            "tileIndex": 3,
+            "count": 1
+          }
+        ]
+      }
+    }
+  },
+  "bundle_b": {
+    "bundle_dir": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle",
+    "frame": 3400,
+    "frame_png": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/frame.png",
+    "main_png": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/main.png",
+    "bg1_png": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg1.png",
+    "bg2_png": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg2.png",
+    "obj_png": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/obj.png",
+    "bg1_ppm": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg1.ppm",
+    "bg2_ppm": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg2.ppm",
+    "obj_ppm": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/obj.ppm",
+    "bg_mode": 1,
+    "main_screen_layers": 19,
+    "layer_states": [
+      {
+        "layer_index": 0,
+        "tilemapAddress": 0,
+        "chrAddress": 12288,
+        "doubleWidth": true,
+        "doubleHeight": false,
+        "largeTiles": false,
+        "hscroll": 0,
+        "vscroll": 1023
+      },
+      {
+        "layer_index": 1,
+        "tilemapAddress": 2048,
+        "chrAddress": 8192,
+        "doubleWidth": true,
+        "doubleHeight": true,
+        "largeTiles": true,
+        "hscroll": 261,
+        "vscroll": 283
+      },
+      {
+        "layer_index": 2,
+        "tilemapAddress": 6144,
+        "chrAddress": 20480,
+        "doubleWidth": true,
+        "doubleHeight": false,
+        "largeTiles": false,
+        "hscroll": 500,
+        "vscroll": 20
+      }
+    ],
+    "obj": {
+      "visible_sprites": 41,
+      "drawn_pixels": 2117
+    },
+    "tilemaps": {
+      "bg1": {
+        "entry_count": 2048,
+        "unique_tiles": 458,
+        "non_zero_tiles": 1350,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 698
+          },
+          {
+            "tileIndex": 337,
+            "count": 97
+          },
+          {
+            "tileIndex": 114,
+            "count": 38
+          },
+          {
+            "tileIndex": 13,
+            "count": 21
+          },
+          {
+            "tileIndex": 14,
+            "count": 21
+          }
+        ]
+      },
+      "bg2": {
+        "entry_count": 4096,
+        "unique_tiles": 66,
+        "non_zero_tiles": 1536,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 2560
+          },
+          {
+            "tileIndex": 8,
+            "count": 792
+          },
+          {
+            "tileIndex": 66,
+            "count": 388
+          },
+          {
+            "tileIndex": 2,
+            "count": 120
+          },
+          {
+            "tileIndex": 132,
+            "count": 24
+          }
+        ]
+      },
+      "bg3": {
+        "entry_count": 2048,
+        "unique_tiles": 177,
+        "non_zero_tiles": 1007,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 1041
+          },
+          {
+            "tileIndex": 176,
+            "count": 832
+          },
+          {
+            "tileIndex": 1,
+            "count": 1
+          },
+          {
+            "tileIndex": 2,
+            "count": 1
+          },
+          {
+            "tileIndex": 3,
+            "count": 1
+          }
+        ]
+      }
+    }
+  },
+  "comparisons": {
+    "bg1_tilemap": {
+      "a": {
+        "entry_count": 2048,
+        "unique_tiles": 458,
+        "non_zero_tiles": 1350,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 698
+          },
+          {
+            "tileIndex": 337,
+            "count": 97
+          },
+          {
+            "tileIndex": 114,
+            "count": 38
+          },
+          {
+            "tileIndex": 13,
+            "count": 21
+          },
+          {
+            "tileIndex": 14,
+            "count": 21
+          }
+        ]
+      },
+      "b": {
+        "entry_count": 2048,
+        "unique_tiles": 458,
+        "non_zero_tiles": 1350,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 698
+          },
+          {
+            "tileIndex": 337,
+            "count": 97
+          },
+          {
+            "tileIndex": 114,
+            "count": 38
+          },
+          {
+            "tileIndex": 13,
+            "count": 21
+          },
+          {
+            "tileIndex": 14,
+            "count": 21
+          }
+        ]
+      },
+      "same": true
+    },
+    "bg2_tilemap": {
+      "a": {
+        "entry_count": 4096,
+        "unique_tiles": 66,
+        "non_zero_tiles": 1536,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 2560
+          },
+          {
+            "tileIndex": 8,
+            "count": 792
+          },
+          {
+            "tileIndex": 66,
+            "count": 388
+          },
+          {
+            "tileIndex": 2,
+            "count": 120
+          },
+          {
+            "tileIndex": 132,
+            "count": 24
+          }
+        ]
+      },
+      "b": {
+        "entry_count": 4096,
+        "unique_tiles": 66,
+        "non_zero_tiles": 1536,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 2560
+          },
+          {
+            "tileIndex": 8,
+            "count": 792
+          },
+          {
+            "tileIndex": 66,
+            "count": 388
+          },
+          {
+            "tileIndex": 2,
+            "count": 120
+          },
+          {
+            "tileIndex": 132,
+            "count": 24
+          }
+        ]
+      },
+      "same": true
+    },
+    "bg3_tilemap": {
+      "a": {
+        "entry_count": 2048,
+        "unique_tiles": 177,
+        "non_zero_tiles": 1007,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 1041
+          },
+          {
+            "tileIndex": 176,
+            "count": 832
+          },
+          {
+            "tileIndex": 1,
+            "count": 1
+          },
+          {
+            "tileIndex": 2,
+            "count": 1
+          },
+          {
+            "tileIndex": 3,
+            "count": 1
+          }
+        ]
+      },
+      "b": {
+        "entry_count": 2048,
+        "unique_tiles": 177,
+        "non_zero_tiles": 1007,
+        "top_tiles": [
+          {
+            "tileIndex": 0,
+            "count": 1041
+          },
+          {
+            "tileIndex": 176,
+            "count": 832
+          },
+          {
+            "tileIndex": 1,
+            "count": 1
+          },
+          {
+            "tileIndex": 2,
+            "count": 1
+          },
+          {
+            "tileIndex": 3,
+            "count": 1
+          }
+        ]
+      },
+      "same": true
+    },
+    "obj": {
+      "a": {
+        "visible_sprites": 37,
+        "drawn_pixels": 1138
+      },
+      "b": {
+        "visible_sprites": 41,
+        "drawn_pixels": 2117
+      },
+      "same": false
+    },
+    "bg1_scroll": {
+      "a": {
+        "layer_index": 0,
+        "tilemapAddress": 0,
+        "chrAddress": 12288,
+        "doubleWidth": true,
+        "doubleHeight": false,
+        "largeTiles": false,
+        "hscroll": 0,
+        "vscroll": 1023
+      },
+      "b": {
+        "layer_index": 0,
+        "tilemapAddress": 0,
+        "chrAddress": 12288,
+        "doubleWidth": true,
+        "doubleHeight": false,
+        "largeTiles": false,
+        "hscroll": 0,
+        "vscroll": 1023
+      },
+      "same": true
+    },
+    "bg2_scroll": {
+      "a": {
+        "layer_index": 1,
+        "tilemapAddress": 2048,
+        "chrAddress": 8192,
+        "doubleWidth": true,
+        "doubleHeight": true,
+        "largeTiles": true,
+        "hscroll": 261,
+        "vscroll": 283
+      },
+      "b": {
+        "layer_index": 1,
+        "tilemapAddress": 2048,
+        "chrAddress": 8192,
+        "doubleWidth": true,
+        "doubleHeight": true,
+        "largeTiles": true,
+        "hscroll": 261,
+        "vscroll": 283
+      },
+      "same": true
+    },
+    "bg3_scroll": {
+      "a": {
+        "layer_index": 2,
+        "tilemapAddress": 6144,
+        "chrAddress": 20480,
+        "doubleWidth": true,
+        "doubleHeight": false,
+        "largeTiles": false,
+        "hscroll": 500,
+        "vscroll": 20
+      },
+      "b": {
+        "layer_index": 2,
+        "tilemapAddress": 6144,
+        "chrAddress": 20480,
+        "doubleWidth": true,
+        "doubleHeight": false,
+        "largeTiles": false,
+        "hscroll": 500,
+        "vscroll": 20
+      },
+      "same": true
+    }
+  },
+  "current_reading": [
+    "BG1/BG2/BG3 tilemap stats stay unchanged while OBJ alone changes, so the strongest current fit is a pure actor/event update over a stable road/cockpit background stack.",
+    "OBJ workload changes across the pair, so dynamic actor/overlay work contributes materially to the visible transition."
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "label": "lane3_live_entry_brake_traffic_frame03400",
+  "frame": 3400,
+  "bundle_dir": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle",
+  "sources": {
+    "vram": "tools/out/lane3_live_entry_brake_frame03400_frame_03400_vram.bin",
+    "cgram": "tools/out/lane3_live_entry_brake_frame03400_frame_03400_cgram.bin",
+    "ppu_state": "tools/out/lane3_live_entry_brake_frame03400_frame_03400_ppu_state.json",
+    "oam": "tools/out/lane3_live_entry_brake_frame03400_frame_03400_oam.bin",
+    "screenshot": "tools/out/lane3_live_entry_brake_frame03400_frame_03400_frame.png"
+  },
+  "outputs": {
+    "main_ppm": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/main.ppm",
+    "frame_png": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/frame.png",
+    "bg1_ppm": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg1.ppm",
+    "bg2_ppm": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg2.ppm",
+    "obj_ppm": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/obj.ppm",
+    "design_pack": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/design_pack/design_pack.json",
+    "main_png": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/main.png",
+    "bg1_png": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg1.png",
+    "bg2_png": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg2.png",
+    "obj_png": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/obj.png"
+  }
+}

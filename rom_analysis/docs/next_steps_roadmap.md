@@ -80,6 +80,34 @@ Validation contract baseline:
     police/radar pair so lane 3 can compare multiple gameplay phases through
     named `BG1/BG2/OBJ` buckets instead of whole-frame screenshots alone
 
+## Lane 3 Traffic Emergence Pair (`2026-03-28`)
+
+- New note:
+  - `rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
+- Updated tooling:
+  - `tools/build_gameplay_frame_bundle.py`
+  - `tools/build_gameplay_bundle_compare.py`
+- New generated artifacts:
+  - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/`
+  - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/`
+  - `tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md`
+- Practical read:
+  - a bounded steering-heavy follow-up still crashes too early to close the
+    checkpoint/post-stop or police/radar target
+  - a bounded braking variant still does not reach checkpoint/post-stop, but
+    it does promote a cleaner actor/event pair:
+    - frame `3250` without the red traffic car
+    - frame `3400` with the red traffic car introduced
+  - this pair keeps `BG1/BG2/BG3` and sampled `BG2` state unchanged while
+    changing only `OBJ` workload
+  - the bundle builder now also emits `PNG` previews next to the `PPM`
+    renders, so designers can review the same promoted artifacts directly
+- Next gate:
+  - tie the `3250 -> 3400` traffic-emergence pair to OAM-side ownership first
+  - only then spend another bounded attempt trying to push the live-entry lane
+    past the `2400`-relative crash boundary toward checkpoint/post-stop or
+    police/radar
+
 ## Docs Wiki And SDL Smoke (`2026-03-28`)
 
 - New tooling:

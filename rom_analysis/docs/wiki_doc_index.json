@@ -171,6 +171,11 @@
           "note": "First promoted late gameplay pair from the live-entry route, with stable artifact bundles for both phases."
         },
         {
+          "path": "rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md",
+          "label": "Brake Traffic Pair 3250..3400",
+          "note": "Bounded live-entry follow-up that isolates traffic emergence as a cleaner OBJ-side event."
+        },
+        {
           "path": "rom_analysis/maps/tracks/track1_live_race_asset_focus.md",
           "label": "Gameplay Asset Focus",
           "note": "Asset-first gameplay taxonomy that maps BG/OBJ buckets to tracing targets."
@@ -179,6 +184,11 @@
           "path": "tools/out/lane3_live_entry_frame03250_vs_03550_compare.md",
           "label": "Live Entry Bundle Compare",
           "note": "Generated BG1/BG2/OBJ compare for the first late live-entry gameplay pair."
+        },
+        {
+          "path": "tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md",
+          "label": "Traffic Emergence Compare",
+          "note": "Generated compare showing the red traffic car as the current best OBJ-side live-entry event."
         },
         {
           "path": "tools/out/lane3_live_race_mid_asset_focus.md",
