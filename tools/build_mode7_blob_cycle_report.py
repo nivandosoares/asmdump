@@ -131,6 +131,64 @@ def collapse_ranges(rows: list[dict], key: str) -> list[dict]:
     return ranges
 
 
+def build_transition_rows(rows: list[dict]) -> list[dict]:
+    transitions: list[dict] = []
+    prev_signature: dict[str, object] | None = None
+    prev_frame: int | None = None
+    for row in rows:
+        signature = {
+            "state0204": row.get("state0204"),
+            "dp0054Hex": row.get("dp0054Hex"),
+            "burstState": "burst" if row.get("directByteCount") else "idle",
+            "directBlobLabel": row.get("directBlobLabel"),
+            "directVmaddHex": row.get("directVmaddHex"),
+        }
+        if prev_signature is None:
+            changed_fields = list(signature.keys())
+        else:
+            changed_fields = [
+                key for key, value in signature.items()
+                if prev_signature.get(key) != value
+            ]
+        if not changed_fields:
+            continue
+        transitions.append(
+            {
+                "frame": row["frame"],
+                "state0204": row.get("state0204"),
+                "dp0054Hex": row.get("dp0054Hex"),
+                "burstState": signature["burstState"],
+                "directBlobLabel": row.get("directBlobLabel"),
+                "directVmaddHex": row.get("directVmaddHex"),
+                "changedFields": changed_fields,
+                "framesSincePreviousTransition": (
+                    None if prev_frame is None else row["frame"] - prev_frame
+                ),
+            }
+        )
+        prev_signature = signature
+        prev_frame = row["frame"]
+    return transitions
+
+
+def build_state_value_map(
+    rows: list[dict],
+    state_key: str,
+    value_key: str,
+) -> dict[str, list[str]]:
+    mapping: dict[str, set[str]] = {}
+    for row in rows:
+        state_value = row.get(state_key)
+        value = row.get(value_key)
+        if state_value is None or value is None:
+            continue
+        mapping.setdefault(str(state_value), set()).add(str(value))
+    return {
+        state: sorted(values)
+        for state, values in sorted(mapping.items(), key=lambda item: int(item[0]))
+    }
+
+
 def render_markdown(report: dict) -> str:
     trace = report["traceWindow"]
     summary = report["summary"]
@@ -150,18 +208,44 @@ def render_markdown(report: dict) -> str:
         "",
         "## Summary",
         "",
+        f"- transition frames: `{summary['transitionFrameCount']}` across "
+        f"`{', '.join(str(frame) for frame in summary['transitionFrames']) or 'none'}`",
         f"- burst frames: `{summary['burstFrameCount']}` across "
         f"`{', '.join(str(frame) for frame in summary['burstFrames']) or 'none'}`",
         f"- distinct direct blob labels: `{', '.join(summary['distinctDirectBlobLabels']) or 'none'}`",
         f"- distinct DMA blob labels: `{', '.join(summary['distinctDmaBlobLabels']) or 'none'}`",
         f"- distinct VMADD targets: `{', '.join(summary['distinctVmaddTargets']) or 'none'}`",
         f"- frames with OAM DMA: `{', '.join(str(frame) for frame in summary['framesWithOamDma']) or 'none'}`",
+        f"- `state0204 -> direct blobs` on burst frames: `{summary['state0204ToDirectBlobLabels']}`",
+        f"- `state0204 -> VMADD` on burst frames: `{summary['state0204ToVmaddTargets']}`",
         "",
-        "## Burst Frames",
+        "## Transition Rows",
         "",
-        "| frame | main | irq | state0204 | dp0054 | vmadd | direct blob | dma blob | oam dma |",
-        "|---|---|---|---:|---:|---|---|---|---|",
+        "| frame | state0204 | dp0054 | burst | direct blob | VMADD | changed |",
+        "|---|---:|---:|---|---|---|---|",
     ]
+    for row in report["transitionRows"]:
+        lines.append(
+            "| {frame} | {state0204} | {dp0054_hex} | {burst_state} | {direct_blob} | "
+            "{vmadd_hex} | {changed} |".format(
+                frame=row["frame"],
+                state0204=row.get("state0204"),
+                dp0054_hex=row.get("dp0054Hex"),
+                burst_state=row.get("burstState"),
+                direct_blob=row.get("directBlobLabel") or "None",
+                vmadd_hex=row.get("directVmaddHex") or "None",
+                changed=", ".join(row.get("changedFields") or []),
+            )
+        )
+    lines.extend(
+        [
+            "",
+            "## Burst Frames",
+            "",
+            "| frame | main | irq | state0204 | dp0054 | vmadd | direct blob | dma blob | oam dma |",
+            "|---|---|---|---:|---:|---|---|---|---|",
+        ]
+    )
     for row in report["burstFrames"]:
         lines.append(
             "| {frame} | {main} | {irq} | {state0204} | {dp0054_hex} | {vmadd_hex} | "
@@ -211,12 +295,35 @@ def main() -> int:
         for spec in blob_specs
     }
 
+    trace_start = (
+        probe_json.get("trace_start_frame")
+        or dma_json.get("trace_start_frame")
+        or vram_json.get("trace_start_frame")
+    )
+    trace_end = (
+        probe_json.get("trace_end_frame")
+        or dma_json.get("trace_end_frame")
+        or vram_json.get("trace_end_frame")
+    )
+
+    def frame_in_window(frame: int) -> bool:
+        if trace_start is not None and frame < int(trace_start):
+            return False
+        if trace_end is not None and frame > int(trace_end):
+            return False
+        return True
+
     probe_frames = {
         int(row["frame"]): row
         for row in probe_json.get("frames", [])
+        if frame_in_window(int(row["frame"]))
     }
-    dma_by_frame = index_rows_by_frame(dma_json.get("writes", []))
-    vram_by_frame = index_rows_by_frame(vram_json.get("writes", []))
+    dma_by_frame = index_rows_by_frame(
+        [row for row in dma_json.get("writes", []) if frame_in_window(int(row["frame"]))]
+    )
+    vram_by_frame = index_rows_by_frame(
+        [row for row in vram_json.get("writes", []) if frame_in_window(int(row["frame"]))]
+    )
 
     all_frames = sorted(set(probe_frames) | set(dma_by_frame) | set(vram_by_frame))
     rows: list[dict] = []
@@ -303,19 +410,12 @@ def main() -> int:
         if row["dmaBlobSource"] is not None or row["directByteCount"]:
             burst_rows.append(row)
 
-    trace_start = (
-        probe_json.get("trace_start_frame")
-        or dma_json.get("trace_start_frame")
-        or vram_json.get("trace_start_frame")
-        or (min(all_frames) if all_frames else None)
-    )
-    trace_end = (
-        probe_json.get("trace_end_frame")
-        or dma_json.get("trace_end_frame")
-        or vram_json.get("trace_end_frame")
-        or (max(all_frames) if all_frames else None)
-    )
+    trace_start = trace_start if trace_start is not None else (min(all_frames) if all_frames else None)
+    trace_end = trace_end if trace_end is not None else (max(all_frames) if all_frames else None)
+    transition_rows = build_transition_rows(rows)
     summary = {
+        "transitionFrameCount": len(transition_rows),
+        "transitionFrames": [row["frame"] for row in transition_rows],
         "burstFrameCount": len(burst_rows),
         "burstFrames": [row["frame"] for row in burst_rows],
         "distinctDirectBlobLabels": sorted(
@@ -334,6 +434,12 @@ def main() -> int:
         "dp0054Ranges": collapse_ranges(burst_rows, "dp0054Hex"),
         "directBlobRanges": collapse_ranges(burst_rows, "directBlobLabel"),
         "vmaddRanges": collapse_ranges(burst_rows, "directVmaddHex"),
+        "state0204ToDirectBlobLabels": build_state_value_map(
+            burst_rows, "state0204", "directBlobLabel"
+        ),
+        "state0204ToVmaddTargets": build_state_value_map(
+            burst_rows, "state0204", "directVmaddHex"
+        ),
     }
     report = {
         "title": "Mode 7 Blob Cycle Report",
@@ -357,6 +463,7 @@ def main() -> int:
         ],
         "summary": summary,
         "frames": rows,
+        "transitionRows": transition_rows,
         "burstFrames": burst_rows,
     }
 

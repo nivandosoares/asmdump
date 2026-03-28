@@ -44,8 +44,19 @@ The wide `1134..1200` trace now splits into three layers:
 
 The new blob-cycle report proves the producer-side burst identity precisely:
 
+- the refreshed report now also filters strictly to the traced `1134..1200`
+  window and emits per-transition schedule rows instead of only burst rows
 - burst frames sampled in this report:
   - `1165, 1170, 1172, 1174, 1175, 1177, 1178, 1179, 1180, 1181, 1182, 1183, 1184, 1185, 1186, 1187, 1188, 1189, 1190, 1191, 1192, 1193, 1194, 1195, 1196, 1198, 1199, 1200`
+- transition rows now make the cadence explicit:
+  - isolated early burst probes:
+    `1165`, `1170`, `1172`
+  - first double-burst pair:
+    `1174..1175`
+  - first near-continuous burst run:
+    `1177..1196`
+  - late tail after one idle break:
+    `1198..1200`
 - on every burst frame:
   - the direct `VMDATAL/VMDATAH` byte stream is a full `0x100`-byte exact
     match for one known ROM blob
@@ -85,6 +96,14 @@ Reading:
   attract path
 - the direct-write and DMA views are now reconciled: they are two programming
   paths carrying the same blob identity on the same burst frame
+- the schedule read is now also sharper:
+  - `state0204` alone is not the blob selector
+  - in the sampled burst window, each observed `state0204` value (`1/2/3`)
+    reaches all three blob labels (`AA10/AB58/ACA0`) and both `VMADD`
+    targets (`0x4920/0x49A0`)
+  - the two same-`dp0054` double-burst pairs (`1174/1175`, `1195/1196`) flip
+    blob + `VMADD` without advancing `dp0054`, which argues for a deeper
+    phase/stage owner than a simple `state0204 -> blob` lookup
 
 ## Native-Replacement Link
 
@@ -180,3 +199,6 @@ Reading:
   - derive the later-frame selection/schedule rule strongly enough to express
     the full `00:8029` late producer cycle as a native replacement path, not
     just as individual matched burst frames
+  - the stronger immediate static target is now the `$0440/$0442` phase loop
+    in `L00B6E3`, because the refreshed transition report now rules out
+    `state0204` as a sufficient selector by itself

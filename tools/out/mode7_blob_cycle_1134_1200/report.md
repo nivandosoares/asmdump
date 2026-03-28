@@ -13,11 +13,55 @@
 
 ## Summary
 
+- transition frames: `36` across `1134, 1164, 1165, 1166, 1169, 1170, 1171, 1172, 1173, 1174, 1175, 1176, 1177, 1178, 1179, 1180, 1181, 1182, 1183, 1184, 1185, 1186, 1187, 1188, 1189, 1190, 1191, 1192, 1193, 1194, 1195, 1196, 1197, 1198, 1199, 1200`
 - burst frames: `28` across `1165, 1170, 1172, 1174, 1175, 1177, 1178, 1179, 1180, 1181, 1182, 1183, 1184, 1185, 1186, 1187, 1188, 1189, 1190, 1191, 1192, 1193, 1194, 1195, 1196, 1198, 1199, 1200`
 - distinct direct blob labels: `AA10, AB58, ACA0`
 - distinct DMA blob labels: `AA10, AB58, ACA0`
 - distinct VMADD targets: `0x4920, 0x49A0`
 - frames with OAM DMA: `1165, 1166, 1167, 1168, 1169, 1170, 1171, 1172, 1173, 1174, 1175, 1176, 1177, 1178, 1179, 1180, 1181, 1182, 1183, 1184, 1185, 1186, 1187, 1188, 1189, 1190, 1191, 1192, 1193, 1194, 1195, 1196, 1197, 1198, 1199, 1200`
+- `state0204 -> direct blobs` on burst frames: `{'1': ['AA10', 'AB58', 'ACA0'], '2': ['AA10', 'AB58', 'ACA0'], '3': ['AA10', 'AB58', 'ACA0']}`
+- `state0204 -> VMADD` on burst frames: `{'1': ['0x4920', '0x49A0'], '2': ['0x4920', '0x49A0'], '3': ['0x4920', '0x49A0']}`
+
+## Transition Rows
+
+| frame | state0204 | dp0054 | burst | direct blob | VMADD | changed |
+|---|---:|---:|---|---|---|---|
+| 1134 | 1 | 0x80 | idle | None | None | state0204, dp0054Hex, burstState, directBlobLabel, directVmaddHex |
+| 1164 | 2 | 0x88 | idle | None | None | state0204, dp0054Hex |
+| 1165 | 2 | 0x88 | burst | AB58 | 0x49A0 | burstState, directBlobLabel, directVmaddHex |
+| 1166 | 2 | 0x88 | idle | None | None | burstState, directBlobLabel, directVmaddHex |
+| 1169 | 3 | 0x90 | idle | None | None | state0204, dp0054Hex |
+| 1170 | 3 | 0x90 | burst | ACA0 | 0x4920 | burstState, directBlobLabel, directVmaddHex |
+| 1171 | 1 | 0x98 | idle | None | None | state0204, dp0054Hex, burstState, directBlobLabel, directVmaddHex |
+| 1172 | 1 | 0x98 | burst | AA10 | 0x49A0 | burstState, directBlobLabel, directVmaddHex |
+| 1173 | 2 | 0xA0 | idle | None | None | state0204, dp0054Hex, burstState, directBlobLabel, directVmaddHex |
+| 1174 | 3 | 0xA8 | burst | AB58 | 0x4920 | state0204, dp0054Hex, burstState, directBlobLabel, directVmaddHex |
+| 1175 | 3 | 0xA8 | burst | ACA0 | 0x49A0 | directBlobLabel, directVmaddHex |
+| 1176 | 1 | 0xB0 | idle | None | None | state0204, dp0054Hex, burstState, directBlobLabel, directVmaddHex |
+| 1177 | 2 | 0xB8 | burst | AA10 | 0x4920 | state0204, dp0054Hex, burstState, directBlobLabel, directVmaddHex |
+| 1178 | 3 | 0xC0 | burst | AB58 | 0x49A0 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
+| 1179 | 1 | 0xC8 | burst | ACA0 | 0x4920 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
+| 1180 | 2 | 0xD0 | burst | AA10 | 0x49A0 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
+| 1181 | 3 | 0xD8 | burst | AB58 | 0x4920 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
+| 1182 | 1 | 0xE0 | burst | ACA0 | 0x49A0 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
+| 1183 | 3 | 0xE8 | burst | AA10 | 0x4920 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
+| 1184 | 1 | 0xF0 | burst | ACA0 | 0x49A0 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
+| 1185 | 2 | 0xF8 | burst | AA10 | 0x4920 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
+| 1186 | 1 | 0x00 | burst | AB58 | 0x49A0 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
+| 1187 | 2 | 0x08 | burst | AA10 | 0x4920 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
+| 1188 | 1 | 0x10 | burst | AB58 | 0x49A0 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
+| 1189 | 2 | 0x18 | burst | AA10 | 0x4920 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
+| 1190 | 1 | 0x20 | burst | AB58 | 0x49A0 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
+| 1191 | 3 | 0x28 | burst | AA10 | 0x4920 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
+| 1192 | 2 | 0x30 | burst | ACA0 | 0x49A0 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
+| 1193 | 1 | 0x38 | burst | AB58 | 0x4920 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
+| 1194 | 2 | 0x40 | burst | AA10 | 0x49A0 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
+| 1195 | 1 | 0x48 | burst | AB58 | 0x4920 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
+| 1196 | 1 | 0x48 | burst | AA10 | 0x49A0 | directBlobLabel, directVmaddHex |
+| 1197 | 3 | 0x50 | idle | None | None | state0204, dp0054Hex, burstState, directBlobLabel, directVmaddHex |
+| 1198 | 2 | 0x58 | burst | ACA0 | 0x4920 | state0204, dp0054Hex, burstState, directBlobLabel, directVmaddHex |
+| 1199 | 1 | 0x60 | burst | AB58 | 0x49A0 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
+| 1200 | 3 | 0x68 | burst | AA10 | 0x4920 | state0204, dp0054Hex, directBlobLabel, directVmaddHex |
 
 ## Burst Frames
 

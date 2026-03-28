@@ -31,6 +31,12 @@ This note is the explicit resume point for the next agent on Lane 2.
     every sampled burst frame
   - blob family: `AA10`, `AB58`, `ACA0`
   - visible Mode 7 destinations: `0x4920`, `0x49A0`
+- the blob-cycle report is now stronger as a schedule surface:
+  - it filters strictly to the traced `1134..1200` window
+  - it emits transition rows, not only burst rows
+  - it now proves `state0204` is not a sufficient blob/`VMADD` selector:
+    each sampled `state0204` value (`1/2/3`) reaches all three blob labels and
+    both visible `VMADD` targets
 - tilemap-to-ROM provenance remains intentionally capped at `1117`
   - no new direct tilemap chunk anchor exists beyond that point
 
@@ -51,23 +57,28 @@ The open question is no longer "which producer owns this?" It is:
 
 - which later frames pick `AA10`, `AB58`, or `ACA0`
 - which later frames target `0x4920` vs `0x49A0`
-- how that schedule relates to `state0204`, `dp0054`, and the `01:B6E3`
-  state-machine advance
+- how that schedule relates to `dp0054` plus the deeper `01:B6E3`
+  phase loop (`$0440/$0442`)
+- `state0204` is still useful telemetry, but the refreshed report now rules out
+  a simple `state0204 -> blob/VMADD` lookup
 
 ## Recommended Next Experiment
 
 1. Start from the existing `1134..1200` report instead of launching a new wide
    Mesen capture immediately.
-2. Extend `tools/build_mode7_blob_cycle_report.py` or add a companion
-   summarizer that emits transition rows:
+2. Use the transition rows from the refreshed
+   `tools/build_mode7_blob_cycle_report.py` output as the schedule surface:
    - `frame`
    - `state0204`
    - `dp0054`
    - burst/no-burst
    - blob label
    - `VMADD`
-3. Use static reads around `01:B6E3`, `01:9DC6`, and any consumers of `$0054`
-   or the `0x4920/0x49A0` pair before adding more probe volume.
+3. Push the static read one layer deeper around `01:B6E3`:
+   - `$0440/$0442` phase advance
+   - the `01:AAB2/01:AAD2` threshold/data tables
+   - any downstream read that can explain why the same `state0204` value still
+     reaches different blob/`VMADD` pairs
 4. Only after a concrete schedule hypothesis, run one bounded verification
    probe on a narrowed burst window.
 
