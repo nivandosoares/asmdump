@@ -42,5 +42,15 @@
       "hscroll": 0,
       "vscroll": 1023
     }
-  ]
+  ],
+  "obj": {
+    "oam_mode": 0,
+    "oam_base_address": 24576,
+    "oam_address_offset": 4096,
+    "enable_oam_priority": false,
+    "internal_oam_address": 0,
+    "priority_groups": null,
+    "visible_sprites": 41,
+    "drawn_pixels": 2117
+  }
 }

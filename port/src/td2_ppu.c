@@ -485,6 +485,7 @@ static void render_snes_bg_layer_pass(AppState *app, int layer_index, int priori
     int bpp = snes_bg_bpp(scene->bg_mode, layer_index);
     int width_tiles = 0;
     int height_tiles = 0;
+    int tile_pixel_size = 0;
     int palette_stride = 0;
     int hscroll = 0;
     int vscroll = 0;
@@ -494,32 +495,50 @@ static void render_snes_bg_layer_pass(AppState *app, int layer_index, int priori
     }
 
     snes_bg_tilemap_size(layer, &width_tiles, &height_tiles);
+    tile_pixel_size = layer->large_tiles ? 16 : 8;
     palette_stride = bpp == 2 ? 4 : (bpp == 4 ? 16 : 256);
     hscroll = snes_normalize_scroll(layer->hscroll);
     vscroll = snes_normalize_scroll(layer->vscroll);
 
     for (int screen_y = 0; screen_y < SCREEN_HEIGHT; screen_y++) {
-        int world_y = (screen_y + vscroll) % (height_tiles * 8);
-        int tile_y = world_y / 8;
-        int pixel_y = world_y & 7;
+        int world_y = (screen_y + vscroll) % (height_tiles * tile_pixel_size);
+        int tile_y = world_y / tile_pixel_size;
+        int pixel_y = world_y & (tile_pixel_size - 1);
 
         for (int screen_x = 0; screen_x < SCREEN_WIDTH; screen_x++) {
-            int world_x = (screen_x + hscroll) % (width_tiles * 8);
-            int tile_x = world_x / 8;
-            int pixel_x = world_x & 7;
+            int world_x = (screen_x + hscroll) % (width_tiles * tile_pixel_size);
+            int tile_x = world_x / tile_pixel_size;
+            int pixel_x = world_x & (tile_pixel_size - 1);
             uint16_t entry = snes_bg_read_tilemap_entry(scene, layer->tilemap_address, width_tiles, tile_x, tile_y);
             int tile_index = entry & 0x03ff;
             int palette_index = (entry >> 10) & 0x07;
             bool tile_priority = (entry & 0x2000u) != 0;
             bool hflip = (entry & 0x4000u) != 0;
             bool vflip = (entry & 0x8000u) != 0;
-            const uint8_t *pixels = snes_bg_get_tile_pixels(scene, layer_index, tile_index, bpp);
-            int sample_x = hflip ? (7 - pixel_x) : pixel_x;
-            int sample_y = vflip ? (7 - pixel_y) : pixel_y;
+            const uint8_t *pixels = NULL;
+            int sample_x = 0;
+            int sample_y = 0;
             uint8_t color_index = 0;
             int cgram_index = 0;
 
-            if ((tile_priority ? 1 : 0) != priority_bit || !pixels) {
+            if ((tile_priority ? 1 : 0) != priority_bit) {
+                continue;
+            }
+
+            if (layer->large_tiles) {
+                int full_x = hflip ? (15 - pixel_x) : pixel_x;
+                int full_y = vflip ? (15 - pixel_y) : pixel_y;
+                tile_index += (full_y >> 3) << 4;
+                tile_index += full_x >> 3;
+                sample_x = full_x & 0x07;
+                sample_y = full_y & 0x07;
+            } else {
+                sample_x = hflip ? (7 - pixel_x) : pixel_x;
+                sample_y = vflip ? (7 - pixel_y) : pixel_y;
+            }
+
+            pixels = snes_bg_get_tile_pixels(scene, layer_index, tile_index, bpp);
+            if (!pixels) {
                 continue;
             }
 

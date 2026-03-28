@@ -108,6 +108,41 @@ Validation contract baseline:
     past the `2400`-relative crash boundary toward checkpoint/post-stop or
     police/radar
 
+## Lane 3 World-Support Follow-Up (`2026-03-28`)
+
+- Updated tooling:
+  - `tools/render_mesen_snes_bg.py`
+  - `tools/build_gameplay_frame_bundle.py`
+  - `tools/build_gameplay_bundle_compare.py`
+  - `port/src/td2_ppu.c`
+- Updated generated artifacts:
+  - `tools/out/lane3_live_entry_frame03250_bundle/`
+  - `tools/out/lane3_live_entry_frame03550_bundle/`
+  - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/`
+  - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/`
+- Practical read:
+  - designer review closed an important presentation gap:
+    the first gameplay bundles were already good for cockpit `BG1` and `OBJ`,
+    but still failed to expose the road/background side clearly
+  - the promoted renderer now respects `largeTiles = true`, so the technical
+    `BG2` output is no longer the old sky-only false surface
+  - that still does **not** make raw `BG2` a fully faithful visible-world
+    extraction for gameplay:
+    one flat frame-end `ppu_state.json` still misses the per-scanline
+    presentation that shapes the road/background stack
+  - gameplay bundles therefore now carry screenshot-derived support anchors:
+    - `bg_stack_visible_support.png`
+    - `world_visible_support.png`
+  - practical rule:
+    use those support PNGs for human road/background labeling, while keeping
+    `bg2.png` as the state/VRAM-facing artifact
+- Next gate:
+  - use the corrected traffic pair plus the new support surfaces to assign the
+    `3250 -> 3400` event more exactly on the OAM side
+  - if exact road/world ownership becomes the next blocker, pivot to a
+    scanline-aware gameplay export instead of treating one flat `BG2` render
+    as sufficient
+
 ## Docs Wiki And SDL Smoke (`2026-03-28`)
 
 - New tooling:

@@ -21,7 +21,8 @@
 - exact raw dumps for the promoted pair:
   - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=240 TD2_BG_RANGE_START_FRAME=3250 TD2_BG_RANGE_END_FRAME=3250 TD2_BG_RANGE_STEP=1 TD2_BG_RANGE_DUMP_OAM=1 TD2_BG_RANGE_DUMP_SCREENSHOTS=1 TD2_BG_RANGE_INPUT_WINDOWS='1200:a;1280:a;1505-1510:a;1640-1645:a;1730-1735:a;2050-2949:a;2950-3400:b;3401-5649:a' TD2_BG_RANGE_OUTPUT_PREFIX=tools/out/lane3_live_entry_brake_frame03250 ./validation/run_mesen_dump_bg_range.sh ./game.smc`
   - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=240 TD2_BG_RANGE_START_FRAME=3400 TD2_BG_RANGE_END_FRAME=3400 TD2_BG_RANGE_STEP=1 TD2_BG_RANGE_DUMP_OAM=1 TD2_BG_RANGE_DUMP_SCREENSHOTS=1 TD2_BG_RANGE_INPUT_WINDOWS='1200:a;1280:a;1505-1510:a;1640-1645:a;1730-1735:a;2050-2949:a;2950-3400:b;3401-5649:a' TD2_BG_RANGE_OUTPUT_PREFIX=tools/out/lane3_live_entry_brake_frame03400 ./validation/run_mesen_dump_bg_range.sh ./game.smc`
-- bundle materialization with designer-facing `PNG` previews:
+- bundle materialization with designer-facing `PNG` previews plus
+  screenshot-derived world/background support surfaces:
   - `python3 tools/build_gameplay_frame_bundle.py --label lane3_live_entry_brake_traffic_frame03250 --frame 3250 --vram tools/out/lane3_live_entry_brake_frame03250_frame_03250_vram.bin --cgram tools/out/lane3_live_entry_brake_frame03250_frame_03250_cgram.bin --ppu-state tools/out/lane3_live_entry_brake_frame03250_frame_03250_ppu_state.json --oam tools/out/lane3_live_entry_brake_frame03250_frame_03250_oam.bin --screenshot tools/out/lane3_live_entry_brake_frame03250_frame_03250_frame.png --out-dir tools/out/lane3_live_entry_brake_traffic_frame03250_bundle`
   - `python3 tools/build_gameplay_frame_bundle.py --label lane3_live_entry_brake_traffic_frame03400 --frame 3400 --vram tools/out/lane3_live_entry_brake_frame03400_frame_03400_vram.bin --cgram tools/out/lane3_live_entry_brake_frame03400_frame_03400_cgram.bin --ppu-state tools/out/lane3_live_entry_brake_frame03400_frame_03400_ppu_state.json --oam tools/out/lane3_live_entry_brake_frame03400_frame_03400_oam.bin --screenshot tools/out/lane3_live_entry_brake_frame03400_frame_03400_frame.png --out-dir tools/out/lane3_live_entry_brake_traffic_frame03400_bundle`
 - pairwise compare:
@@ -53,15 +54,40 @@
 Designer-facing anchors for the promoted pair:
 
 - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/frame.png`
+- `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/bg_stack_visible_support.png`
+- `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/world_visible_support.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/main.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/bg1.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/bg2.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/obj.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/frame.png`
+- `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg_stack_visible_support.png`
+- `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/world_visible_support.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/main.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg1.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg2.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/obj.png`
+
+## Designer Review Follow-Up
+
+- first designer read:
+  - `BG1` cockpit extraction is correct
+  - `OBJ` sprites are visually correct
+  - the initial packs still did **not** make the road/background readable
+- root cause:
+  - gameplay `BG2` in this lane uses both `largeTiles = true` and a
+    per-scanline presentation surface
+  - fixing `16x16` tile geometry improves the raw `BG2` render materially, but
+    one flat frame-end `ppu_state.json` still cannot reconstruct the full
+    visible road/background stack by itself
+- new practical split inside the bundle:
+  - `bg2.png` is the corrected static-state `BG2` render for memory/VRAM
+    correlation
+  - `world_visible_support.png` is the exact screenshot-derived road/world
+    surface for human labeling
+  - `bg_stack_visible_support.png` is the exact screenshot-derived background
+    stack without `OBJ`, useful when designers want the cockpit plus world but
+    not the traffic/event layer
 
 ## Current Reading
 
@@ -90,6 +116,9 @@ Designer-facing anchors for the promoted pair:
   - this is currently the cleanest live-entry proof that a visible gameplay
     event can land primarily on the `OBJ` bucket while the road/cockpit
     backgrounds remain stable
+  - for designer review, the new screenshot-derived support surfaces now close
+    the earlier road/background visibility gap without pretending the raw
+    `BG2` render is fully scanline-accurate
   - it is therefore a better designer-labeling and memory-trace target than
     another whole-frame collision compare
 

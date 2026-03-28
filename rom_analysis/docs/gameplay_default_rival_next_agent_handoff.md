@@ -108,6 +108,18 @@ This note is the explicit resume point for the next agent on Lane 3.
       - stop-sign and gas-station/post continuity before the checkpoint pause
       - a late resumed-driving frame with an extra colored radar marker,
         matching the earlier police/third-marker human note
+  - gameplay frame bundles now carry two different image families on purpose:
+    - raw-state renders:
+      `bg1.png`, `bg2.png`, `obj.png`
+    - screenshot-derived review surfaces:
+      `bg_stack_visible_support.png`, `world_visible_support.png`
+  - practical rule for later lane-3 review:
+    - use `world_visible_support.png` for human road/background labeling
+    - use `bg2.png` for VRAM/PPU-state correlation only
+  - reason:
+    gameplay `BG2` still depends on per-scanline presentation; even after the
+    `16x16` `largeTiles` fix, one flat frame-end `ppu_state.json` is not yet a
+    fully faithful visible-world extractor on its own
   - both manual seeds still load onto:
     - `main = 02:9016`
     - `irq = 01:96A0`

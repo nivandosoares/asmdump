@@ -12,14 +12,14 @@
       "source": "rom_analysis/docs/next_steps_roadmap.md",
       "label": "Next Steps Roadmap",
       "section": "Source Of Truth",
-      "last_updated": "2026-03-28 13:03",
+      "last_updated": "2026-03-28 13:42",
       "page": "pages/rom_analysis/docs/next_steps_roadmap.html"
     },
     {
       "source": "rom_analysis/docs/progress_checkpoints.md",
       "label": "Progress Checkpoints",
       "section": "Source Of Truth",
-      "last_updated": "2026-03-28 13:03",
+      "last_updated": "2026-03-28 13:42",
       "page": "pages/rom_analysis/docs/progress_checkpoints.html"
     },
     {
@@ -40,7 +40,7 @@
       "source": "tools/README.md",
       "label": "Tools README",
       "section": "Source Of Truth",
-      "last_updated": "2026-03-28 13:00",
+      "last_updated": "2026-03-28 13:42",
       "page": "pages/tools/README.html"
     },
     {
@@ -166,7 +166,7 @@
       "source": "rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md",
       "label": "Gameplay Handoff",
       "section": "Gameplay And Lane 3",
-      "last_updated": "2026-03-28 13:03",
+      "last_updated": "2026-03-28 13:42",
       "page": "pages/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.html"
     },
     {
@@ -187,14 +187,14 @@
       "source": "rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md",
       "label": "Live Entry Phase Split 3250..3550",
       "section": "Gameplay And Lane 3",
-      "last_updated": "2026-03-28 13:03",
+      "last_updated": "2026-03-28 13:42",
       "page": "pages/rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.html"
     },
     {
       "source": "rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md",
       "label": "Brake Traffic Pair 3250..3400",
       "section": "Gameplay And Lane 3",
-      "last_updated": "2026-03-28 13:03",
+      "last_updated": "2026-03-28 13:42",
       "page": "pages/rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.html"
     },
     {
@@ -208,14 +208,14 @@
       "source": "tools/out/lane3_live_entry_frame03250_vs_03550_compare.md",
       "label": "Live Entry Bundle Compare",
       "section": "Gameplay And Lane 3",
-      "last_updated": "2026-03-28 13:04",
+      "last_updated": "2026-03-28 13:40",
       "page": "pages/tools/out/lane3_live_entry_frame03250_vs_03550_compare.html"
     },
     {
       "source": "tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md",
       "label": "Traffic Emergence Compare",
       "section": "Gameplay And Lane 3",
-      "last_updated": "2026-03-28 13:04",
+      "last_updated": "2026-03-28 13:40",
       "page": "pages/tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.html"
     },
     {

@@ -7,9 +7,13 @@
 
 ## Visual Anchors
 
+- `brake_3250` screenshot-derived background stack support: `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/bg_stack_visible_support.png`
+- `brake_3250` screenshot-derived world support: `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/world_visible_support.png`
 - `brake_3250` `BG1`: `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/bg1.png`
 - `brake_3250` `BG2`: `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/bg2.png`
 - `brake_3250` `OBJ`: `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/obj.png`
+- `brake_3400` screenshot-derived background stack support: `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg_stack_visible_support.png`
+- `brake_3400` screenshot-derived world support: `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/world_visible_support.png`
 - `brake_3400` `BG1`: `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg1.png`
 - `brake_3400` `BG2`: `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg2.png`
 - `brake_3400` `OBJ`: `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/obj.png`
@@ -31,5 +35,6 @@
 
 ## Practical Fit
 
+- For gameplay packs, prefer `world_visible_support.png` when the goal is human labeling of road/background content. It is screenshot-derived and preserves the exact visible world even when the raw `BG2` render is only a static-state approximation.
 - If `BG2` stats hold while `BG1` and `OBJ` change, the right next memory targets are overlay/collision-side fields before widening the road emitter search again.
 - If a future pair flips `BG2` too, that will be the better moment to reopen pure road/world provenance inside `L01318D`.

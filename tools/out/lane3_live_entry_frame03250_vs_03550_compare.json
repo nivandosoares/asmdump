@@ -1,13 +1,15 @@
 {
   "schema": "td2.gameplay_bundle_compare.v1",
   "labels": {
-    "a": "live_entry_3250",
-    "b": "live_entry_3550"
+    "a": "frame_3250",
+    "b": "frame_3550"
   },
   "bundle_a": {
     "bundle_dir": "tools/out/lane3_live_entry_frame03250_bundle",
     "frame": 3250,
     "frame_png": "tools/out/lane3_live_entry_frame03250_bundle/frame.png",
+    "bg_stack_visible_support_png": "tools/out/lane3_live_entry_frame03250_bundle/bg_stack_visible_support.png",
+    "world_visible_support_png": "tools/out/lane3_live_entry_frame03250_bundle/world_visible_support.png",
     "main_png": "tools/out/lane3_live_entry_frame03250_bundle/main.png",
     "bg1_png": "tools/out/lane3_live_entry_frame03250_bundle/bg1.png",
     "bg2_png": "tools/out/lane3_live_entry_frame03250_bundle/bg2.png",
@@ -141,6 +143,8 @@
     "bundle_dir": "tools/out/lane3_live_entry_frame03550_bundle",
     "frame": 3550,
     "frame_png": "tools/out/lane3_live_entry_frame03550_bundle/frame.png",
+    "bg_stack_visible_support_png": "tools/out/lane3_live_entry_frame03550_bundle/bg_stack_visible_support.png",
+    "world_visible_support_png": "tools/out/lane3_live_entry_frame03550_bundle/world_visible_support.png",
     "main_png": "tools/out/lane3_live_entry_frame03550_bundle/main.png",
     "bg1_png": "tools/out/lane3_live_entry_frame03550_bundle/bg1.png",
     "bg2_png": "tools/out/lane3_live_entry_frame03550_bundle/bg2.png",

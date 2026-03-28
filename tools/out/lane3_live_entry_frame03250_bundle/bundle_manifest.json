@@ -19,6 +19,8 @@
     "main_png": "tools/out/lane3_live_entry_frame03250_bundle/main.png",
     "bg1_png": "tools/out/lane3_live_entry_frame03250_bundle/bg1.png",
     "bg2_png": "tools/out/lane3_live_entry_frame03250_bundle/bg2.png",
-    "obj_png": "tools/out/lane3_live_entry_frame03250_bundle/obj.png"
+    "obj_png": "tools/out/lane3_live_entry_frame03250_bundle/obj.png",
+    "bg_stack_visible_support_png": "tools/out/lane3_live_entry_frame03250_bundle/bg_stack_visible_support.png",
+    "world_visible_support_png": "tools/out/lane3_live_entry_frame03250_bundle/world_visible_support.png"
   }
 }

@@ -8,6 +8,7 @@ import json
 import shutil
 import struct
 import subprocess
+import tempfile
 import zlib
 from pathlib import Path
 
@@ -157,6 +158,24 @@ def write_png_from_rgb(dest_path: Path, width: int, height: int, rgb: bytes) -> 
     dest_path.write_bytes(png_bytes)
 
 
+def write_png_from_rgba(dest_path: Path, width: int, height: int, rgba: bytes) -> None:
+    rows = []
+    stride = width * 4
+    for row_index in range(height):
+        start = row_index * stride
+        rows.append(b"\x00" + rgba[start : start + stride])
+    payload = zlib.compress(b"".join(rows), level=9)
+    ihdr = struct.pack(">IIBBBBB", width, height, 8, 6, 0, 0, 0)
+    png_bytes = (
+        b"\x89PNG\r\n\x1a\n"
+        + png_chunk(b"IHDR", ihdr)
+        + png_chunk(b"IDAT", payload)
+        + png_chunk(b"IEND", b"")
+    )
+    dest_path.parent.mkdir(parents=True, exist_ok=True)
+    dest_path.write_bytes(png_bytes)
+
+
 def write_png_preview(source_ppm: Path, dest_png: Path) -> bool:
     try:
         width, height, rgb = read_pnm_rgb(source_ppm)
@@ -164,6 +183,92 @@ def write_png_preview(source_ppm: Path, dest_png: Path) -> bool:
         return False
     write_png_from_rgb(dest_png, width, height, rgb)
     return True
+
+
+def read_backdrop_rgb(cgram_path: Path) -> tuple[int, int, int]:
+    cgram = cgram_path.read_bytes()
+    if len(cgram) < 2:
+        return (0, 0, 0)
+    value = cgram[0] | (cgram[1] << 8)
+    red = value & 0x1F
+    green = (value >> 5) & 0x1F
+    blue = (value >> 10) & 0x1F
+    return (
+        (red << 3) | (red >> 2),
+        (green << 3) | (green >> 2),
+        (blue << 3) | (blue >> 2),
+    )
+
+
+def convert_image_to_ppm(source_path: Path, dest_path: Path) -> bool:
+    try:
+        subprocess.run(
+            [
+                "ffmpeg",
+                "-y",
+                "-loglevel",
+                "error",
+                "-i",
+                str(source_path),
+                "-frames:v",
+                "1",
+                str(dest_path),
+            ],
+            check=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return False
+    return True
+
+
+def build_visible_support_assets(
+    screenshot_path: Path,
+    bg1_ppm_path: Path,
+    obj_ppm_path: Path,
+    cgram_path: Path,
+    out_dir: Path,
+) -> dict[str, str]:
+    with tempfile.TemporaryDirectory(prefix="td2_gameplay_bundle_") as temp_dir:
+        frame_ppm = Path(temp_dir) / "frame.ppm"
+        if not convert_image_to_ppm(screenshot_path, frame_ppm):
+            return {}
+
+        frame_width, frame_height, frame_rgb = read_pnm_rgb(frame_ppm)
+        bg1_width, bg1_height, bg1_rgb = read_pnm_rgb(bg1_ppm_path)
+        obj_width, obj_height, obj_rgb = read_pnm_rgb(obj_ppm_path)
+        if (frame_width, frame_height) != (bg1_width, bg1_height) or (frame_width, frame_height) != (obj_width, obj_height):
+            return {}
+
+        backdrop = read_backdrop_rgb(cgram_path)
+        world_rgba = bytearray(frame_width * frame_height * 4)
+        bg_stack_rgba = bytearray(frame_width * frame_height * 4)
+
+        for pixel_index in range(frame_width * frame_height):
+            src_offset = pixel_index * 3
+            dst_offset = pixel_index * 4
+            frame_pixel = frame_rgb[src_offset : src_offset + 3]
+            bg1_pixel = tuple(bg1_rgb[src_offset : src_offset + 3])
+            obj_pixel = tuple(obj_rgb[src_offset : src_offset + 3])
+            bg1_visible = bg1_pixel != backdrop
+            obj_visible = obj_pixel != backdrop
+
+            if not obj_visible:
+                bg_stack_rgba[dst_offset : dst_offset + 4] = frame_pixel + b"\xFF"
+            if not bg1_visible and not obj_visible:
+                world_rgba[dst_offset : dst_offset + 4] = frame_pixel + b"\xFF"
+
+        outputs: dict[str, str] = {}
+        support_targets = {
+            "bg_stack_visible_support_png": bg_stack_rgba,
+            "world_visible_support_png": world_rgba,
+        }
+        for name, rgba in support_targets.items():
+            dest_path = out_dir / name.replace("_png", ".png")
+            write_png_from_rgba(dest_path, frame_width, frame_height, bytes(rgba))
+            outputs[name] = repo_rel(dest_path)
+        return outputs
 
 
 def render_scene(
@@ -271,6 +376,7 @@ def main() -> None:
             raw_cgram,
             layer_ppu_paths[name],
             render_targets[name],
+            oam=raw_oam if (name == "main" and oam_src is not None) else None,
             json_out=render_jsons[name],
         )
     render_scene(
@@ -298,6 +404,16 @@ def main() -> None:
         ppm_path = out_dir / f"{name}.ppm"
         png_path = out_dir / f"{name}.png"
         png_outputs[f"{name}_png"] = repo_rel(png_path) if write_png_preview(ppm_path, png_path) else None
+    if screenshot_src is not None:
+        png_outputs.update(
+            build_visible_support_assets(
+                out_dir / "frame.png",
+                out_dir / "bg1.ppm",
+                out_dir / "obj.ppm",
+                raw_cgram,
+                out_dir,
+            )
+        )
 
     subprocess.run(
         [

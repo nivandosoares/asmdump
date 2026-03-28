@@ -154,6 +154,47 @@ next gate needed to advance.
     original `PPM` files, so labeling can happen directly on the promoted
     artifacts
 
+## Lane 3 World-Support Follow-Up (`2026-03-28`)
+
+- Updated tooling:
+  - `tools/render_mesen_snes_bg.py`
+  - `tools/build_gameplay_frame_bundle.py`
+  - `tools/build_gameplay_bundle_compare.py`
+  - `port/src/td2_ppu.c`
+- Updated generated artifacts:
+  - `tools/out/lane3_live_entry_frame03250_bundle/`
+  - `tools/out/lane3_live_entry_frame03550_bundle/`
+  - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/`
+  - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/`
+- Closed practical read:
+  - designer review confirmed the earlier gameplay bundles were already good
+    for `BG1` cockpit content and `OBJ` sprites, but still poor for visible
+    road/background review
+  - the raw renderer bug was real:
+    gameplay `BG2` uses `largeTiles = true`, and the older layer renderer was
+    still stepping that tilemap as if it were `8x8`
+  - the renderer now respects `16x16` tile geometry in both the Python tool
+    path and the SDL runtime path
+  - even with that fix, gameplay `BG2` remains a static-state approximation
+    because one end-frame `ppu_state.json` still does not capture the
+    per-scanline presentation shaping the visible world/road plane
+  - the promoted answer for human review is now explicit inside each gameplay
+    bundle:
+    - `world_visible_support.png` for exact screenshot-derived road/background
+    - `bg_stack_visible_support.png` for exact screenshot-derived background
+      stack without `OBJ`
+    - `bg2.png` retained as the corrected state/VRAM-facing render
+- Validation:
+  - `python3 -m py_compile tools/render_mesen_snes_bg.py tools/build_gameplay_frame_bundle.py tools/build_gameplay_bundle_compare.py`
+  - `make -C port`
+  - rebuild of the promoted `3250/3550` and `3250/3400` gameplay bundles
+  - rebuild of the associated compare reports
+- Practical implication:
+  - the designer-facing gameplay packs are now useful for road/background
+    labeling without hiding the remaining raster limitation
+  - lane 3 can now continue with `OBJ` ownership on the traffic pair while
+    deferring scanline-aware world reconstruction until it is actually needed
+
 ## Docs Wiki And SDL Smoke (`2026-03-28`)
 
 - New tooling:

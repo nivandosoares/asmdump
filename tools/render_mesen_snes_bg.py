@@ -105,6 +105,10 @@ def tilemap_size(layer_state: dict) -> tuple[int, int]:
     )
 
 
+def tile_pixel_size(layer_state: dict) -> int:
+    return 16 if layer_state.get("largeTiles", False) else 8
+
+
 def read_tilemap_entry(vram: bytes, base: int, width_tiles: int, tile_x: int, tile_y: int) -> int:
     tile_x %= width_tiles
     block_x = tile_x // 32
@@ -267,6 +271,7 @@ def render_layer(
 
     palette_stride = 4 if bpp == 2 else 16
     width_tiles, height_tiles = tilemap_size(layer_state)
+    tile_pixels = tile_pixel_size(layer_state)
     base = int(layer_state["tilemapAddress"]) << 1
     chr_base = int(layer_state["chrAddress"]) << 1
     hscroll = normalize_scroll(int(layer_state.get("hscroll", 0)))
@@ -274,14 +279,14 @@ def render_layer(
     tile_cache: dict[int, list[int]] = {}
 
     for screen_y in range(SCREEN_HEIGHT):
-        world_y = (screen_y + vscroll) % (height_tiles * 8)
-        tile_y = world_y // 8
-        pixel_y = world_y & 7
+        world_y = (screen_y + vscroll) % (height_tiles * tile_pixels)
+        tile_y = world_y // tile_pixels
+        pixel_y = world_y & (tile_pixels - 1)
 
         for screen_x in range(SCREEN_WIDTH):
-            world_x = (screen_x + hscroll) % (width_tiles * 8)
-            tile_x = world_x // 8
-            pixel_x = world_x & 7
+            world_x = (screen_x + hscroll) % (width_tiles * tile_pixels)
+            tile_x = world_x // tile_pixels
+            pixel_x = world_x & (tile_pixels - 1)
 
             entry = read_tilemap_entry(vram, base, width_tiles, tile_x, tile_y)
             tile_index = entry & 0x03FF
@@ -293,13 +298,22 @@ def render_layer(
             if priority != priority_filter:
                 continue
 
+            if layer_state.get("largeTiles", False):
+                full_x = (15 - pixel_x) if hflip else pixel_x
+                full_y = (15 - pixel_y) if vflip else pixel_y
+                tile_index += (full_y >> 3) << 4
+                tile_index += full_x >> 3
+                sample_x = full_x & 0x07
+                sample_y = full_y & 0x07
+            else:
+                sample_x = 7 - pixel_x if hflip else pixel_x
+                sample_y = 7 - pixel_y if vflip else pixel_y
+
             pixels = tile_cache.get(tile_index)
             if pixels is None:
                 pixels = fetch_tile_pixels(vram, chr_base, tile_index, bpp)
                 tile_cache[tile_index] = pixels
 
-            sample_x = 7 - pixel_x if hflip else pixel_x
-            sample_y = 7 - pixel_y if vflip else pixel_y
             color_index = pixels[(sample_y * 8) + sample_x]
             if color_index == 0:
                 continue

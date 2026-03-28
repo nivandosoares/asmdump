@@ -23,7 +23,8 @@
 - one-frame raw dumps from the same route:
   - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=240 TD2_BG_RANGE_START_FRAME=3250 TD2_BG_RANGE_END_FRAME=3250 TD2_BG_RANGE_STEP=1 TD2_BG_RANGE_DUMP_OAM=1 TD2_BG_RANGE_DUMP_SCREENSHOTS=1 TD2_BG_RANGE_INPUT_WINDOWS='1200:a;1280:a;1505-1510:a;1640-1645:a;1730-1735:a;2050-4800:a' TD2_BG_RANGE_OUTPUT_PREFIX=tools/out/lane3_live_entry_frame03250 ./validation/run_mesen_dump_bg_range.sh ./game.smc`
   - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=240 TD2_BG_RANGE_START_FRAME=3550 TD2_BG_RANGE_END_FRAME=3550 TD2_BG_RANGE_STEP=1 TD2_BG_RANGE_DUMP_OAM=1 TD2_BG_RANGE_DUMP_SCREENSHOTS=1 TD2_BG_RANGE_INPUT_WINDOWS='1200:a;1280:a;1505-1510:a;1640-1645:a;1730-1735:a;2050-4800:a' TD2_BG_RANGE_OUTPUT_PREFIX=tools/out/lane3_live_entry_frame03550 ./validation/run_mesen_dump_bg_range.sh ./game.smc`
-- bundle materialization:
+- bundle materialization with screenshot-derived support surfaces for human
+  review:
   - `python3 tools/build_gameplay_frame_bundle.py --label lane3_live_entry_frame03250 --frame 3250 --vram tools/out/lane3_live_entry_frame03250_frame_03250_vram.bin --cgram tools/out/lane3_live_entry_frame03250_frame_03250_cgram.bin --ppu-state tools/out/lane3_live_entry_frame03250_frame_03250_ppu_state.json --oam tools/out/lane3_live_entry_frame03250_frame_03250_oam.bin --screenshot tools/out/lane3_live_entry_frame03250_frame_03250_frame.png --out-dir tools/out/lane3_live_entry_frame03250_bundle`
   - `python3 tools/build_gameplay_frame_bundle.py --label lane3_live_entry_frame03550 --frame 3550 --vram tools/out/lane3_live_entry_frame03550_frame_03550_vram.bin --cgram tools/out/lane3_live_entry_frame03550_frame_03550_cgram.bin --ppu-state tools/out/lane3_live_entry_frame03550_frame_03550_ppu_state.json --oam tools/out/lane3_live_entry_frame03550_frame_03550_oam.bin --screenshot tools/out/lane3_live_entry_frame03550_frame_03550_frame.png --out-dir tools/out/lane3_live_entry_frame03550_bundle`
 - bundle compare:
@@ -58,6 +59,8 @@ Each bundle keeps the same top-level review surface:
 - `bg1.png`
 - `bg2.png`
 - `obj.png`
+- `bg_stack_visible_support.png`
+- `world_visible_support.png`
 - `bg1.ppm`
 - `bg2.ppm`
 - `obj.ppm`
@@ -73,13 +76,30 @@ Each bundle keeps the same top-level review surface:
 Primary wiki/gallery image refs for this pair:
 
 - `tools/out/lane3_live_entry_frame03250_bundle/frame.png`
-- `tools/out/lane3_live_entry_frame03250_bundle/bg1.ppm`
-- `tools/out/lane3_live_entry_frame03250_bundle/bg2.ppm`
-- `tools/out/lane3_live_entry_frame03250_bundle/obj.ppm`
+- `tools/out/lane3_live_entry_frame03250_bundle/bg_stack_visible_support.png`
+- `tools/out/lane3_live_entry_frame03250_bundle/world_visible_support.png`
+- `tools/out/lane3_live_entry_frame03250_bundle/bg1.png`
+- `tools/out/lane3_live_entry_frame03250_bundle/bg2.png`
+- `tools/out/lane3_live_entry_frame03250_bundle/obj.png`
 - `tools/out/lane3_live_entry_frame03550_bundle/frame.png`
-- `tools/out/lane3_live_entry_frame03550_bundle/bg1.ppm`
-- `tools/out/lane3_live_entry_frame03550_bundle/bg2.ppm`
-- `tools/out/lane3_live_entry_frame03550_bundle/obj.ppm`
+- `tools/out/lane3_live_entry_frame03550_bundle/bg_stack_visible_support.png`
+- `tools/out/lane3_live_entry_frame03550_bundle/world_visible_support.png`
+- `tools/out/lane3_live_entry_frame03550_bundle/bg1.png`
+- `tools/out/lane3_live_entry_frame03550_bundle/bg2.png`
+- `tools/out/lane3_live_entry_frame03550_bundle/obj.png`
+
+## Raster Boundary
+
+- the promoted `BG2` render is now better than the original blank/sky-only
+  output because the bundle renderer finally respects `largeTiles = true`
+  (`16x16` tile geometry)
+- that fix is still not enough to make gameplay `BG2` a faithful human-facing
+  extraction on its own:
+  the visible road/world plane depends on per-scanline gameplay presentation,
+  while the raw bundle still starts from one flat end-frame `ppu_state.json`
+- practical rule:
+  - use `world_visible_support.png` for human road/background labeling
+  - use `bg2.png` for VRAM/PPU-state correlation only
 
 ## Current Reading
 
@@ -103,6 +123,9 @@ Primary wiki/gallery image refs for this pair:
   - the road/world plane stays live through the transition
   - the later collision/overlay phase loads primarily onto the
     cockpit/HUD/overlay side (`BG1`) plus `OBJ`
+  - the screenshot-derived support surfaces are now the correct human-facing
+    answer for the road/world side of this pair; the raw `BG2` render remains
+    a state-only approximation
   - this means the right next memory targets for this specific transition are
     not the core road emitter fields first, but the overlay/collision-side
     workload that sits on top of the still-live road plane
