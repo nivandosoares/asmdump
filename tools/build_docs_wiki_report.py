@@ -698,6 +698,7 @@ def render_index_page(
     entry_lookup = {entry.path: entry for entry in entries}
     sections_html: list[str] = []
     total_docs = len(entries)
+    latest_articles: list[dict[str, object]] = []
 
     for section in manifest["sections"]:
         section_cards: list[dict[str, object]] = []
@@ -742,11 +743,14 @@ def render_index_page(
                     "entry": entry,
                     "label": entry.label,
                     "href": href,
+                    "raw_href": raw_href,
+                    "section_title": entry.section_title,
                     "last_updated": last_updated,
                     "last_updated_dt": last_updated_dt,
                     "card_html": card_html,
                 }
             )
+            latest_articles.append(section_cards[-1])
 
         if section["id"] == "attract-intro":
             section_cards.sort(
@@ -756,6 +760,10 @@ def render_index_page(
                 "<li>"
                 f"<a href=\"{html.escape(str(row['href']))}\">{html.escape(str(row['label']))}</a>"
                 f"<span>Last updated {html.escape(str(row['last_updated']))}</span>"
+                "<span class=\"latest-links\">"
+                f"<a href=\"{html.escape(str(row['href']))}\">Rendered</a>"
+                f"<a href=\"{html.escape(str(row['raw_href']))}\">Raw</a>"
+                "</span>"
                 "</li>"
                 for row in section_cards
             )
@@ -784,6 +792,22 @@ def render_index_page(
     nav_links = "".join(
         f'<li><a href="#{html.escape(section["id"])}">{html.escape(section["title"])}</a></li>'
         for section in manifest["sections"]
+    )
+
+    latest_articles.sort(
+        key=lambda row: (-float(row["last_updated_dt"].timestamp()), str(row["label"]).lower()),
+    )
+    latest_articles_html = "".join(
+        "<li>"
+        f"<a href=\"{html.escape(str(row['href']))}\">{html.escape(str(row['label']))}</a>"
+        f"<span>{html.escape(str(row['section_title']))}</span>"
+        f"<span>Last updated {html.escape(str(row['last_updated']))}</span>"
+        "<span class=\"latest-links\">"
+        f"<a href=\"{html.escape(str(row['href']))}\">Rendered</a>"
+        f"<a href=\"{html.escape(str(row['raw_href']))}\">Raw</a>"
+        "</span>"
+        "</li>"
+        for row in latest_articles[:10]
     )
 
     generated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -828,6 +852,17 @@ def render_index_page(
           <input id="doc-filter" type="search" placeholder="Search by lane, surface, file, or topic">
         </label>
       </header>
+      <section class="section-block latest-articles-block">
+        <header class="section-header">
+          <h2>Latest Articles</h2>
+          <p>Most recently updated docs across the whole wiki, shown first for quick orientation.</p>
+        </header>
+        <div class="latest-panel">
+          <ol class="latest-list latest-list-wide">
+            {latest_articles_html}
+          </ol>
+        </div>
+      </section>
       {''.join(sections_html)}
     </main>
   </div>
@@ -1112,6 +1147,23 @@ blockquote {
   margin-left: 0.55rem;
   color: var(--muted);
   font-size: 0.88rem;
+}
+
+.latest-links {
+  display: inline-flex;
+  gap: 0.5rem;
+  margin-left: 0.75rem;
+}
+
+.latest-links a {
+  font-size: 0.88rem;
+}
+
+.latest-list-wide li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem;
 }
 
 .doc-card {

@@ -269,6 +269,9 @@ next gate needed to advance.
   - the `Attract And Intro` section on the index page now also exposes a
     `Latest` block and sorts its cards by most recent update first, so the
     current intro-facing read is visible without scanning the older notes
+  - the index page now also exposes a global `Latest Articles` block with
+    explicit `Rendered` and `Raw` links, so the newest docs stay visible at
+    the top without hiding the section-level cards underneath
 - SDL smoke read:
   - the current runtime renders the bridge-visible intro sequence through
     frame `1000`
