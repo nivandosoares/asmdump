@@ -319,7 +319,7 @@ def collect_tilemaps(frame_dir: Path, out_dir: Path, ppu_state_json: dict | None
 
         json_path.write_text(json.dumps(layer_payload, indent=2) + "\n", encoding="utf-8")
         with csv_path.open("w", encoding="utf-8", newline="") as csv_file:
-            writer = csv.writer(csv_file)
+            writer = csv.writer(csv_file, lineterminator="\n")
             writer.writerow(("row", "col", "entryHex", "tileIndex", "palette", "priority", "hflip", "vflip"))
             for tile_y in range(height_tiles):
                 for tile_x in range(width_tiles):

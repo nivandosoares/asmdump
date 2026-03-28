@@ -64,15 +64,23 @@ internal static class Program
             Trace("Pause after LoadRom");
             MesenCore.Pause();
 
+            if(!string.IsNullOrWhiteSpace(options.LoadStatePath)) {
+                Trace($"LoadStateFile({options.LoadStatePath})");
+                MesenCore.LoadStateFile(options.LoadStatePath);
+            }
+
+            int loadedFrame = checked((int)MesenCore.GetTimingInfo(CpuType.Snes).FrameCount);
+            int targetFrame = options.ResolveTargetFrame(loadedFrame);
+
             if(options.RequiresDebuggerStepping) {
                 Trace("InitializeDebugger for timed input stepping");
                 MesenCore.InitializeDebugger();
-                AdvanceToRequestedFrame(options);
+                AdvanceToRequestedFrame(options, targetFrame);
             } else {
-                if(options.Frame > 0) {
-                    Trace($"Resume until frame >= {options.Frame}");
+                if(targetFrame > 0) {
+                    Trace($"Resume until frame >= {targetFrame}");
                     MesenCore.Resume();
-                    MesenCore.WaitForFrame(CpuType.Snes, (uint)options.Frame, TimeSpan.FromSeconds(options.FrameTimeoutSeconds));
+                    MesenCore.WaitForFrame(CpuType.Snes, (uint)targetFrame, TimeSpan.FromSeconds(options.FrameTimeoutSeconds));
                     Trace("Pause at target frame");
                     MesenCore.Pause();
                 }
@@ -287,6 +295,9 @@ internal static class Program
             SaveJson(Path.Combine(options.OutDir, "state.json"), new {
                 rom = options.RomPath,
                 frameRequest = options.Frame,
+                frameTarget = targetFrame,
+                frameIsOffset = options.FrameIsOffset,
+                loadState = options.LoadStatePath,
                 holdB = options.HoldB,
                 holdStart = options.HoldStart,
                 inputWindows = options.InputWindows.Select(window => new {
@@ -347,18 +358,18 @@ internal static class Program
         }
     }
 
-    private static void AdvanceToRequestedFrame(Options options)
+    private static void AdvanceToRequestedFrame(Options options, int targetFrame)
     {
         DateTime deadline = DateTime.UtcNow + TimeSpan.FromSeconds(options.FrameTimeoutSeconds);
         int currentFrame = checked((int)MesenCore.GetTimingInfo(CpuType.Snes).FrameCount);
-        while(currentFrame < options.Frame) {
+        while(currentFrame < targetFrame) {
             TimeSpan remaining = deadline - DateTime.UtcNow;
             if(remaining <= TimeSpan.Zero) {
-                throw new TimeoutException($"Timed out waiting for frame {options.Frame}.");
+                throw new TimeoutException($"Timed out waiting for frame {targetFrame}.");
             }
 
             DebugControllerState input = options.ResolveInputState(currentFrame);
-            int nextChangeFrame = options.FindNextInputChangeFrame(currentFrame, options.Frame);
+            int nextChangeFrame = options.FindNextInputChangeFrame(currentFrame, targetFrame);
             int framesToAdvance = Math.Min(nextChangeFrame - currentFrame, MaxTimedInputStepFrames);
             if(framesToAdvance <= 0) {
                 throw new InvalidOperationException(
@@ -736,6 +747,8 @@ internal sealed record Options(
     string RomPath,
     int Frame,
     string OutDir,
+    string? LoadStatePath,
+    bool FrameIsOffset,
     bool HoldB,
     bool HoldStart,
     double FrameTimeoutSeconds,
@@ -743,6 +756,14 @@ internal sealed record Options(
 )
 {
     public bool RequiresDebuggerStepping => HoldB || HoldStart || InputWindows.Count > 0;
+
+    public int ResolveTargetFrame(int currentFrame)
+    {
+        if(string.IsNullOrWhiteSpace(LoadStatePath) || !FrameIsOffset) {
+            return Frame;
+        }
+        return checked(currentFrame + Frame);
+    }
 
     public DebugControllerState ResolveInputState(int frame)
     {
@@ -779,6 +800,8 @@ internal sealed record Options(
         string? romPath = null;
         int frame = 0;
         string? outDir = null;
+        string? loadStatePath = null;
+        bool frameIsOffset = false;
         bool holdB = false;
         bool holdStart = false;
         double frameTimeoutSeconds = 30.0;
@@ -794,6 +817,12 @@ internal sealed record Options(
                     break;
                 case "--out-dir":
                     outDir = RequireValue(args, ref i, "--out-dir");
+                    break;
+                case "--load-state":
+                    loadStatePath = RequireValue(args, ref i, "--load-state");
+                    break;
+                case "--frame-is-offset":
+                    frameIsOffset = true;
                     break;
                 case "--frame-timeout-seconds":
                     frameTimeoutSeconds = double.Parse(RequireValue(args, ref i, "--frame-timeout-seconds"));
@@ -833,6 +862,8 @@ internal sealed record Options(
             Path.GetFullPath(romPath),
             frame,
             Path.GetFullPath(outDir),
+            string.IsNullOrWhiteSpace(loadStatePath) ? null : Path.GetFullPath(loadStatePath),
+            frameIsOffset,
             holdB,
             holdStart,
             frameTimeoutSeconds,
@@ -842,7 +873,7 @@ internal sealed record Options(
 
     public static void PrintUsage()
     {
-        Console.Error.WriteLine("Usage: mesen_ppu_extract --rom <path> --frame <n> --out-dir <dir> [--frame-timeout-seconds <seconds>] [--hold-b] [--hold-start] [--input-windows <start-end:buttons;...>]");
+        Console.Error.WriteLine("Usage: mesen_ppu_extract --rom <path> --frame <n> --out-dir <dir> [--load-state <file>] [--frame-is-offset] [--frame-timeout-seconds <seconds>] [--hold-b] [--hold-start] [--input-windows <start-end:buttons;...>]");
     }
 
     private static string RequireValue(string[] args, ref int index, string argName)
@@ -894,6 +925,9 @@ internal static class MesenCore
         [MarshalAs(UnmanagedType.LPUTF8Str)] string filepath,
         [MarshalAs(UnmanagedType.LPUTF8Str)] string patchFile
     );
+
+    [DllImport(DllPath)]
+    public static extern void LoadStateFile([MarshalAs(UnmanagedType.LPUTF8Str)] string filepath);
 
     [DllImport(DllPath)]
     public static extern TimingInfo GetTimingInfo(CpuType cpuType);

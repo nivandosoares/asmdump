@@ -195,6 +195,38 @@ next gate needed to advance.
   - lane 3 can now continue with `OBJ` ownership on the traffic pair while
     deferring scanline-aware world reconstruction until it is actually needed
 
+## Lane 3 Native Visible-Layer Extraction (`2026-03-28`)
+
+- Updated tooling:
+  - `tools/mesen_ppu_extract/Program.cs`
+  - `tools/build_gameplay_frame_bundle.py`
+- New note:
+  - `rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md`
+- New generated artifacts:
+  - `tools/out/mesen_lane3_live_race_mid_native/`
+  - `tools/out/lane3_live_race_mid_native_bundle/`
+- Closed practical read:
+  - the gameplay-native blocker is now narrowed materially
+  - `mesen_ppu_extract` can load a preserved savestate directly via
+    `--load-state` and treat `--frame` as a relative offset via
+    `--frame-is-offset`
+  - on the promoted `lane3_live_race_mid.mss` seed, the native extractor now
+    provides exact separable gameplay surfaces that were previously missing
+    from the bundle pipeline:
+    - `bg2_visible` closes the road/pista layer
+    - `bg3_visible` closes the scenery/horizon layer
+    - `sprites_screen` closes the dynamic actor/traffic/police side
+  - the remaining boundary is no longer “BG2/BG3 are absent”; it is the final
+    composed export:
+    `main_visible` and `sub_visible` are still black on this gameplay seed
+- Practical implication:
+  - gameplay review can now prefer savestate-backed native visible layers
+    instead of leaning on screenshot-derived world-support surfaces whenever a
+    preserved seed exists
+  - `build_gameplay_frame_bundle.py --native-frame-dir ...` now promotes those
+    native visible layers into the same gameplay bundle as the older
+    state-facing renders
+
 ## Docs Wiki And SDL Smoke (`2026-03-28`)
 
 - New tooling:

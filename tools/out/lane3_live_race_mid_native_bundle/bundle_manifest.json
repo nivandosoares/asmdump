@@ -1,0 +1,36 @@
+{
+  "label": "lane3_live_race_mid_native",
+  "frame": 16655,
+  "bundle_dir": "tools/out/lane3_live_race_mid_native_bundle",
+  "sources": {
+    "vram": "tools/out/mesen_lane3_live_race_mid_native/vram.bin",
+    "cgram": "tools/out/mesen_lane3_live_race_mid_native/cgram.bin",
+    "ppu_state": "tools/out/mesen_lane3_live_race_mid_native/ppu_state.json",
+    "oam": "tools/out/mesen_lane3_live_race_mid_native/oam.bin",
+    "screenshot": null,
+    "native_frame_dir": "tools/out/mesen_lane3_live_race_mid_native"
+  },
+  "outputs": {
+    "main_ppm": "tools/out/lane3_live_race_mid_native_bundle/main.ppm",
+    "frame_png": null,
+    "bg1_ppm": "tools/out/lane3_live_race_mid_native_bundle/bg1.ppm",
+    "bg2_ppm": "tools/out/lane3_live_race_mid_native_bundle/bg2.ppm",
+    "obj_ppm": "tools/out/lane3_live_race_mid_native_bundle/obj.ppm",
+    "design_pack": "tools/out/lane3_live_race_mid_native_bundle/design_pack/design_pack.json",
+    "main_png": "tools/out/lane3_live_race_mid_native_bundle/main.png",
+    "bg1_png": "tools/out/lane3_live_race_mid_native_bundle/bg1.png",
+    "bg2_png": "tools/out/lane3_live_race_mid_native_bundle/bg2.png",
+    "obj_png": "tools/out/lane3_live_race_mid_native_bundle/obj.png",
+    "native_design_pack": "tools/out/lane3_live_race_mid_native_bundle/design_pack_native/design_pack.json",
+    "native_bg1_visible_ppm": "tools/out/lane3_live_race_mid_native_bundle/bg1_visible_native.ppm",
+    "native_bg1_visible_png": "tools/out/lane3_live_race_mid_native_bundle/bg1_visible_native.png",
+    "native_bg2_visible_ppm": "tools/out/lane3_live_race_mid_native_bundle/bg2_visible_native.ppm",
+    "native_bg2_visible_png": "tools/out/lane3_live_race_mid_native_bundle/bg2_visible_native.png",
+    "native_bg3_visible_ppm": "tools/out/lane3_live_race_mid_native_bundle/bg3_visible_native.ppm",
+    "native_bg3_visible_png": "tools/out/lane3_live_race_mid_native_bundle/bg3_visible_native.png",
+    "native_main_visible_ppm": "tools/out/lane3_live_race_mid_native_bundle/main_visible_native.ppm",
+    "native_main_visible_png": "tools/out/lane3_live_race_mid_native_bundle/main_visible_native.png",
+    "native_sprites_screen_ppm": "tools/out/lane3_live_race_mid_native_bundle/sprites_screen_native.ppm",
+    "native_sprites_screen_png": "tools/out/lane3_live_race_mid_native_bundle/sprites_screen_native.png"
+  }
+}

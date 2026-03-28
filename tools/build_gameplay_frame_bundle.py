@@ -31,6 +31,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--ppu-state", type=Path, required=True, help="PPU-state JSON path.")
     parser.add_argument("--oam", type=Path, help="Optional OAM dump path.")
     parser.add_argument("--screenshot", type=Path, help="Optional screenshot path.")
+    parser.add_argument(
+        "--native-frame-dir",
+        type=Path,
+        help=(
+            "Optional mesen_ppu_extract frame directory. When provided, the bundle also "
+            "promotes native visible-layer and sprite artifacts from that extraction."
+        ),
+    )
     parser.add_argument("--out-dir", type=Path, required=True, help="Bundle output directory.")
     return parser.parse_args()
 
@@ -296,6 +304,51 @@ def render_scene(
     subprocess.run(command, cwd=root, check=True)
 
 
+def import_native_frame_dir(
+    root: Path,
+    native_frame_dir: Path,
+    out_dir: Path,
+) -> dict[str, str | None]:
+    outputs: dict[str, str | None] = {}
+    design_pack_native_dir = out_dir / "design_pack_native"
+
+    subprocess.run(
+        [
+            "python3",
+            "tools/build_mesen_design_pack.py",
+            str(native_frame_dir),
+            str(design_pack_native_dir),
+            "--clean-out",
+        ],
+        cwd=root,
+        check=True,
+    )
+    outputs["native_design_pack"] = repo_rel(design_pack_native_dir / "design_pack.json")
+
+    promoted_files = {
+        "native_bg1_visible_ppm": ("bg1_visible.ppm", "bg1_visible_native.ppm"),
+        "native_bg2_visible_ppm": ("bg2_visible.ppm", "bg2_visible_native.ppm"),
+        "native_bg3_visible_ppm": ("bg3_visible.ppm", "bg3_visible_native.ppm"),
+        "native_main_visible_ppm": ("main_visible.ppm", "main_visible_native.ppm"),
+        "native_sprites_screen_ppm": ("sprites_screen.ppm", "sprites_screen_native.ppm"),
+    }
+    for manifest_key, (source_name, dest_name) in promoted_files.items():
+        source_path = native_frame_dir / source_name
+        if not source_path.is_file():
+            outputs[manifest_key] = None
+            png_key = manifest_key.replace("_ppm", "_png")
+            outputs[png_key] = None
+            continue
+        dest_path = out_dir / dest_name
+        copy_file(source_path, dest_path)
+        outputs[manifest_key] = repo_rel(dest_path)
+        png_key = manifest_key.replace("_ppm", "_png")
+        png_path = out_dir / dest_name.replace(".ppm", ".png")
+        outputs[png_key] = repo_rel(png_path) if write_png_preview(dest_path, png_path) else None
+
+    return outputs
+
+
 def write_json(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
@@ -310,6 +363,7 @@ def main() -> None:
     ppu_src = resolve_path(args.ppu_state)
     oam_src = resolve_path(args.oam) if args.oam else None
     screenshot_src = resolve_path(args.screenshot) if args.screenshot else None
+    native_frame_dir = resolve_path(args.native_frame_dir) if args.native_frame_dir else None
     out_dir = resolve_path(args.out_dir)
     frame_dir = out_dir / "frame_dir"
     raw_dir = out_dir / "raw"
@@ -427,6 +481,10 @@ def main() -> None:
         check=True,
     )
 
+    native_outputs: dict[str, str | None] = {}
+    if native_frame_dir is not None:
+        native_outputs = import_native_frame_dir(root, native_frame_dir, out_dir)
+
     manifest = {
         "label": args.label,
         "frame": args.frame,
@@ -437,6 +495,7 @@ def main() -> None:
             "ppu_state": repo_rel(ppu_src),
             "oam": repo_rel(oam_src) if oam_src is not None else None,
             "screenshot": repo_rel(screenshot_src) if screenshot_src is not None else None,
+            "native_frame_dir": repo_rel(native_frame_dir) if native_frame_dir is not None else None,
         },
         "outputs": {
             "main_ppm": repo_rel(out_dir / "main.ppm"),
@@ -446,6 +505,7 @@ def main() -> None:
             "obj_ppm": repo_rel(out_dir / "obj.ppm"),
             "design_pack": repo_rel(design_pack_dir / "design_pack.json"),
             **png_outputs,
+            **native_outputs,
         },
     }
     write_json(out_dir / "bundle_manifest.json", manifest)

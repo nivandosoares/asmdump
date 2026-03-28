@@ -1,0 +1,29 @@
+{
+  "name": "bg2",
+  "layer": 1,
+  "enabled": true,
+  "size": {
+    "width": 1024,
+    "height": 1024
+  },
+  "visibleSize": {
+    "width": 256,
+    "height": 224
+  },
+  "tilemap": {
+    "bpp": 4,
+    "format": "Bpp4",
+    "mirroring": "None",
+    "tileWidth": 16,
+    "tileHeight": 16,
+    "scrollX": 10,
+    "scrollWidth": 256,
+    "scrollY": 283,
+    "scrollHeight": 224,
+    "rowCount": 64,
+    "columnCount": 64,
+    "tilemapAddress": 4096,
+    "tilesetAddress": 16384,
+    "priority": -1
+  }
+}

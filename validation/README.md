@@ -171,6 +171,24 @@ For the bridge extractor path, `tools/run_mesen_ppu_extract.sh` uses
 `MESEN_RELEASE_DIR` to locate `MesenCore.so` and can also derive that directory
 from `MESEN_BIN` or `PATH`.
 
+`mesen_ppu_extract` now also accepts preserved savestates directly:
+
+```sh
+MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release \
+./tools/run_mesen_ppu_extract.sh \
+  --rom ./game.smc \
+  --load-state manual_artifacts/lane3/lane3_live_race_mid.mss \
+  --frame 0 \
+  --frame-is-offset \
+  --out-dir tools/out/mesen_lane3_live_race_mid_native \
+  --frame-timeout-seconds 60
+```
+
+Use this path for gameplay-native layer extraction when a preserved seed exists.
+It avoids the long replay route back into gameplay and is now the preferred
+way to recover native `bg2_visible.ppm`, `bg3_visible.ppm`, `sprites.json`,
+and related design-pack material from lane-3 savestates.
+
 `mesen_capture.lua` now accepts the same lightweight env-style overrides used by
 the other probes:
 

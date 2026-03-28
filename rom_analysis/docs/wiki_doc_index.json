@@ -181,6 +181,11 @@
           "note": "Asset-first gameplay taxonomy that maps BG/OBJ buckets to tracing targets."
         },
         {
+          "path": "rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md",
+          "label": "Native Visible Layers",
+          "note": "Savestate-backed gameplay extraction that now closes native `BG2` road and `BG3` scenery surfaces."
+        },
+        {
           "path": "tools/out/lane3_live_entry_frame03250_vs_03550_compare.md",
           "label": "Live Entry Bundle Compare",
           "note": "Generated BG1/BG2/OBJ compare for the first late live-entry gameplay pair."

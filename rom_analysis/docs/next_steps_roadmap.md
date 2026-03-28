@@ -143,6 +143,32 @@ Validation contract baseline:
     scanline-aware gameplay export instead of treating one flat `BG2` render
     as sufficient
 
+## Lane 3 Native Visible Layers (`2026-03-28`)
+
+- New note:
+  - `rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md`
+- Updated tooling:
+  - `tools/mesen_ppu_extract/Program.cs`
+  - `tools/build_gameplay_frame_bundle.py`
+- New generated artifacts:
+  - `tools/out/mesen_lane3_live_race_mid_native/`
+  - `tools/out/lane3_live_race_mid_native_bundle/`
+- Practical read:
+  - gameplay-native layer extraction is now promoted from a preserved
+    savestate instead of only from long live-entry reproduction
+  - `mesen_ppu_extract` now accepts `--load-state` and `--frame-is-offset`,
+    which makes the real gameplay seeds usable directly
+  - on `lane3_live_race_mid.mss`, the native extractor now closes:
+    - `BG2 visible` as the road/pista layer
+    - `BG3 visible` as the scenery/horizon layer
+    - `sprites_screen` as the dynamic `OBJ` surface
+  - the older question “where are `BG2/BG3`?” is now closed on the native
+    path; the remaining boundary is narrower:
+    `main_visible` and `sub_visible` are still black on this seed
+- Next gate:
+  - repeat the same native extraction on `lane3_live_race_plus30f.mss`
+  - then explain or fence the black `main_visible` gameplay-native output
+
 ## Docs Wiki And SDL Smoke (`2026-03-28`)
 
 - New tooling:

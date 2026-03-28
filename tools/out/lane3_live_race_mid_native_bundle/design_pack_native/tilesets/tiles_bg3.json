@@ -1,0 +1,15 @@
+{
+  "layer": 2,
+  "name": "bg3",
+  "startAddress": 40960,
+  "format": "Bpp2",
+  "palette": 0,
+  "widthTiles": 16,
+  "heightTiles": 64,
+  "widthPixels": 128,
+  "heightPixels": 512,
+  "chrAddress": 20480,
+  "bgMode": 1,
+  "directColor": false,
+  "extBg": false
+}

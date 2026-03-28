@@ -17,6 +17,7 @@ This note is the explicit resume point for the next agent on Lane 3.
 - `rom_analysis/maps/tracks/track1_live_race_vs_post9016_control.md`
 - `rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
 - `rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
+- `rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md`
 - `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
 - `rom_analysis/maps/tracks/track1_live_race_plus30f_lab_backend_boundary.md`
 - `rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
@@ -113,7 +114,25 @@ This note is the explicit resume point for the next agent on Lane 3.
       `bg1.png`, `bg2.png`, `obj.png`
     - screenshot-derived review surfaces:
       `bg_stack_visible_support.png`, `world_visible_support.png`
+  - a new savestate-backed native extraction path is now promoted for exact
+    gameplay layer review:
+    - command surface:
+      `tools/run_mesen_ppu_extract.sh --load-state ... --frame 0 --frame-is-offset`
+    - first promoted artifact:
+      `tools/out/mesen_lane3_live_race_mid_native/`
+    - promoted bundle:
+      `tools/out/lane3_live_race_mid_native_bundle/`
+    - closed read:
+      `bg2_visible_native.png` closes the road layer,
+      `bg3_visible_native.png` closes the scenery layer,
+      `sprites_screen_native.png` closes the dynamic `OBJ` side
+    - remaining native boundary:
+      `main_visible_native.png` is still black on this seed, so final composed
+      main-screen export is still open even though the separable gameplay
+      layers are now available
   - practical rule for later lane-3 review:
+    - prefer the savestate-backed native extractor when the target question is
+      “what does `BG2` or `BG3` really look like in gameplay?”
     - use `world_visible_support.png` for human road/background labeling
     - use `bg2.png` for VRAM/PPU-state correlation only
   - reason:
