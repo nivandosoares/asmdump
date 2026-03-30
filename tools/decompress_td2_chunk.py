@@ -441,11 +441,13 @@ def decode_67fb(chunk: bytes) -> tuple[bytes, dict]:
         return low, high
 
     while len(output) < declared_output_size:
-        token = require_byte()
+        token = chunk[ptr]
+        ptr += 1
         token_count += 1
 
         if token >= 0x80:
             run_length = ((token ^ 0xFF) + 1) & 0xFF
+
             if run_length == 0:
                 run_length = 256
             literal_ops += 1
