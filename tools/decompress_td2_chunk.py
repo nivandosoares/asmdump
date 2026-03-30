@@ -161,19 +161,32 @@ def decode_42fb(chunk: bytes) -> tuple[bytes, dict]:
         return value
 
     def emit_symbol(symbol: int) -> None:
-        if len(output) >= declared_output_size:
-            return
-
-        flag = node_flags[symbol]
-        if flag == 0:
-            output.append(symbol)
-            return
-        if flag & 0x80:
-            output.append(read_literal())
-            return
-
-        emit_symbol(left[symbol])
-        emit_symbol(right[symbol])
+        # Iterative emitter to avoid Python recursion limits and to detect
+        # malformed circular node references. The original recursive emitter
+        # could exceed recursion depth when node tables contain cycles.
+        stack = [symbol]
+        visited_depth = 0
+        while stack and len(output) < declared_output_size:
+            s = stack.pop()
+            flag = node_flags[s]
+            if flag == 0:
+                output.append(s)
+                continue
+            if flag & 0x80:
+                # literal: consume one byte from the compressed stream
+                output.append(read_literal())
+                continue
+            # Non-leaf: push children onto stack. Push right first so left
+            # is processed before right (to preserve original order).
+            # Basic sanity checks to avoid runaway indices.
+            if not (0 <= left[s] < 256 and 0 <= right[s] < 256):
+                raise ValueError(f"42FB node children out of range: node={s} left={left[s]} right={right[s]}")
+            # Detect trivial self-reference loops: if both children equal s, this
+            # will produce infinite loop; guard and report.
+            if left[s] == s and right[s] == s:
+                raise ValueError(f"42FB node {s} is self-referential and cannot be emitted")
+            stack.append(right[s])
+            stack.append(left[s])
 
     while len(output) < declared_output_size:
         if ptr >= len(chunk):
