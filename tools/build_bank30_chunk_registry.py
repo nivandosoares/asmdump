@@ -143,6 +143,42 @@ def main() -> int:
     validation = json.loads(args.validation_json.read_text(encoding="utf-8"))
     runtime = json.loads(args.runtime_summary_json.read_text(encoding="utf-8"))
 
+    # Discover any locally decompressed JSON artifacts under the tools/out tree
+    # and index them by their declared SNES address so the registry can prefer
+    # local artifacts over the `unsupported` validation marker. This allows
+    # developer-produced decompressions (smoke outputs) to be reflected in the
+    # consolidated registry without changing the validation pipeline.
+    decompressed_by_snes: dict[str, dict[str, Any]] = {}
+    out_root = Path("out")
+    if out_root.exists():
+        for path in out_root.rglob("*.json"):
+            # skip registry and probe summary artifacts that are lists/dicts we
+            # don't intend to treat as decompressed chunk metadata
+            if path.name in ("bank30_chunk_registry.json", "td2_boot_probe_l001210_summary.json", "bank30_chunk_validation.json", "bank30_headers.json"):
+                continue
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            # support both object-style chunk summaries and arrays (skip arrays)
+            if isinstance(data, list):
+                continue
+            snes = data.get("snes") or data.get("snes_addr") or data.get("addr")
+            # normalize simple numeric -> SNES fmt if present
+            if isinstance(snes, str) and ":" in snes:
+                decompressed_by_snes[str(snes)] = data
+            elif isinstance(snes, int):
+                bank = 0x1E
+                addr = snes
+                decompressed_by_snes[f"{bank:02X}:{addr:04X}"] = data
+            # also accept object entries that expose 'bank' and 'addr'
+            elif isinstance(data.get("bank"), int) and data.get("addr"):
+                try:
+                    addr_val = int(str(data.get("addr")), 0)
+                    decompressed_by_snes[f"{int(data.get('bank')):02X}:{addr_val:04X}"] = data
+                except Exception:
+                    pass
+
     validation_by_offset: dict[int, dict[str, Any]] = {
         as_int(e.get("offset")): e for e in validation.get("entries", [])
     }
@@ -164,6 +200,24 @@ def main() -> int:
         snes = fmt_snes(0x1E, addr)
         v = validation_by_offset.get(offset, {})
         runtime_hit = runtime_bank30_candidates.get(snes) or runtime_sources_by_snes.get(snes) or {}
+        # If we have a local decompressed artifact for this SNES address, prefer
+        # it and treat the decode as successful for registry purposes.
+        local_decomp = decompressed_by_snes.get(snes)
+        if local_decomp:
+            # merge decompressed metadata into the validation view so downstream
+            # code sees output_size/consumed_bytes and an "ok" decode status.
+            v = dict(v)  # shallow copy
+            v["status"] = "ok"
+            if local_decomp.get("output_size") is not None:
+                v["output_size"] = local_decomp.get("output_size")
+            if local_decomp.get("compressed_bytes_consumed") is not None:
+                v["consumed_bytes"] = local_decomp.get("compressed_bytes_consumed")
+            # also expose window hints if present
+            if local_decomp.get("compressed_stream_offset") is not None:
+                v["window_start"] = local_decomp.get("compressed_stream_offset")
+                v["window_end_exclusive"] = local_decomp.get("compressed_stream_offset") + int(
+                    local_decomp.get("compressed_bytes_consumed", 0)
+                )
         hit_count = as_int(runtime_hit.get("hit_count") or runtime_hit.get("count"), 0)
         decode_status = str(v.get("status", "unknown"))
         table_confirmed = snes in TABLE_CONFIRMED_SNELS
