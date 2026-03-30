@@ -1,30 +1,14 @@
-CC ?= cc
-TARGET := td2_port
-BUILD_DIR := build
-SRC := src/main.c src/td2_io.c src/td2_ppu.c
+CC = gcc
+CFLAGS = -O2 -std=c11 -Wall -Wextra `sdl2-config --cflags`
+LDFLAGS = `sdl2-config --libs`
 
-SDL_CFLAGS := $(shell pkg-config --cflags sdl2)
-SDL_LIBS := $(shell pkg-config --libs sdl2)
+SRCS = main.c platform_sdl.c framebuffer.c
+OBJS = $(SRCS:.c=.o)
 
-CFLAGS ?= -std=c11 -O2 -Wall -Wextra -Wpedantic
-CPPFLAGS += $(SDL_CFLAGS)
-LDFLAGS += $(SDL_LIBS)
+all: port
 
-.PHONY: all clean run assets
-
-all: $(BUILD_DIR)/$(TARGET)
-
-$(BUILD_DIR):
-	mkdir -p $(BUILD_DIR)
-
-$(BUILD_DIR)/$(TARGET): $(SRC) | $(BUILD_DIR)
-	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ $(SRC) $(LDFLAGS)
-
-run: $(BUILD_DIR)/$(TARGET)
-	./$(BUILD_DIR)/$(TARGET)
-
-assets:
-	$(MAKE) -C ../tools
+port: $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LDFLAGS)
 
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -f $(OBJS) port
