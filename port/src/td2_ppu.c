@@ -86,6 +86,66 @@ static int td2_sign_extend(int value, int bits) {
     return (masked & sign_bit) ? (masked - full_range) : masked;
 }
 
+static int td2_ppu_scanline_main_layers(const Td2PpuState* ppu, int scanline) {
+    if (!ppu->scanline_profile.enabled ||
+        scanline < 0 ||
+        scanline >= TD2_FRAME_HEIGHT ||
+        scanline >= (int)ppu->scanline_profile.line_count) {
+        return ppu->main_screen_layers;
+    }
+    return ppu->scanline_profile.main_screen_layers[scanline];
+}
+
+static int td2_ppu_scanline_layer_hscroll(
+    const Td2PpuState* ppu,
+    int layer_index,
+    int scanline
+) {
+    if (!ppu->scanline_profile.enabled ||
+        layer_index < 0 ||
+        layer_index >= TD2_PPU_LAYER_COUNT ||
+        scanline < 0 ||
+        scanline >= TD2_FRAME_HEIGHT ||
+        scanline >= (int)ppu->scanline_profile.line_count) {
+        return ppu->layers[layer_index].hscroll;
+    }
+    return ppu->scanline_profile.layer_hscroll[layer_index][scanline];
+}
+
+static int td2_ppu_scanline_layer_vscroll(
+    const Td2PpuState* ppu,
+    int layer_index,
+    int scanline
+) {
+    if (!ppu->scanline_profile.enabled ||
+        layer_index < 0 ||
+        layer_index >= TD2_PPU_LAYER_COUNT ||
+        scanline < 0 ||
+        scanline >= TD2_FRAME_HEIGHT ||
+        scanline >= (int)ppu->scanline_profile.line_count) {
+        return ppu->layers[layer_index].vscroll;
+    }
+    return ppu->scanline_profile.layer_vscroll[layer_index][scanline];
+}
+
+static bool td2_ppu_any_scanline_layer_enabled(
+    const Td2PpuState* ppu,
+    int layer_index
+) {
+    int scanline;
+
+    if (!ppu->scanline_profile.enabled) {
+        return td2_layer_enabled(ppu->main_screen_layers, layer_index);
+    }
+
+    for (scanline = 0; scanline < TD2_FRAME_HEIGHT; scanline++) {
+        if (td2_layer_enabled(td2_ppu_scanline_main_layers(ppu, scanline), layer_index)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 static void td2_bg_tilemap_size(
     const Td2PpuLayerState* layer,
     int* out_width_tiles,
@@ -269,6 +329,10 @@ static void td2_render_objects(
     int start_index = ppu->enable_oam_priority ? ((ppu->internal_oam_address & 0x01fcu) >> 2) : 0;
     int i;
 
+    if (!td2_ppu_any_scanline_layer_enabled(ppu, 4)) {
+        return;
+    }
+
     for (i = 0; i < 128; i++) {
         int sprite_index = start_index - i - 1;
         int addr;
@@ -355,6 +419,9 @@ static void td2_render_objects(
             if (y_pos < 0 || y_pos >= TD2_FRAME_HEIGHT) {
                 continue;
             }
+            if (!td2_layer_enabled(td2_ppu_scanline_main_layers(ppu, y_pos), 4)) {
+                continue;
+            }
 
             for (x = 0; x < width; x++) {
                 int pixel_x;
@@ -411,25 +478,33 @@ static void td2_render_bg_layer_pass(
     int height_tiles;
     int tile_pixel_size;
     int palette_stride;
-    int hscroll;
-    int vscroll;
     int screen_y;
 
-    if (!td2_layer_enabled(ppu->main_screen_layers, layer_index) || bpp == 0) {
+    if (bpp == 0) {
         return;
     }
 
     td2_bg_tilemap_size(layer, &width_tiles, &height_tiles);
     tile_pixel_size = layer->large_tiles ? 16 : 8;
     palette_stride = bpp == 2 ? 4 : (bpp == 4 ? 16 : 256);
-    hscroll = td2_normalize_scroll(layer->hscroll);
-    vscroll = td2_normalize_scroll(layer->vscroll);
 
     for (screen_y = 0; screen_y < TD2_FRAME_HEIGHT; screen_y++) {
-        int world_y = (screen_y + vscroll) % (height_tiles * tile_pixel_size);
-        int tile_y = world_y / tile_pixel_size;
-        int pixel_y = world_y & (tile_pixel_size - 1);
+        int hscroll;
+        int vscroll;
+        int world_y;
+        int tile_y;
+        int pixel_y;
         int screen_x;
+
+        if (!td2_layer_enabled(td2_ppu_scanline_main_layers(ppu, screen_y), layer_index)) {
+            continue;
+        }
+
+        hscroll = td2_normalize_scroll(td2_ppu_scanline_layer_hscroll(ppu, layer_index, screen_y));
+        vscroll = td2_normalize_scroll(td2_ppu_scanline_layer_vscroll(ppu, layer_index, screen_y));
+        world_y = (screen_y + vscroll) % (height_tiles * tile_pixel_size);
+        tile_y = world_y / tile_pixel_size;
+        pixel_y = world_y & (tile_pixel_size - 1);
 
         for (screen_x = 0; screen_x < TD2_FRAME_WIDTH; screen_x++) {
             int world_x = (screen_x + hscroll) % (width_tiles * tile_pixel_size);
@@ -513,6 +588,10 @@ static void td2_render_mode7(Td2PpuState* ppu, uint32_t* framebuffer_argb) {
         int y_step = matrix_c;
         int screen_x;
 
+        if (!td2_layer_enabled(td2_ppu_scanline_main_layers(ppu, screen_y), 0)) {
+            continue;
+        }
+
         if (ppu->mode7.horizontal_mirroring) {
             x_value += x_step * (TD2_FRAME_WIDTH - 1);
             y_value += y_step * (TD2_FRAME_WIDTH - 1);
@@ -564,6 +643,10 @@ static void td2_render_mode7_objects_ppu_accurate(
     int odd_frame = ppu->ppu_frame_count & 0x01;
     int scanline;
 
+    if (!td2_ppu_any_scanline_layer_enabled(ppu, 4)) {
+        return;
+    }
+
     for (scanline = 0; scanline < TD2_FRAME_HEIGHT; scanline++) {
         int visible_indices[32];
         int visible_count = 0;
@@ -578,6 +661,10 @@ static void td2_render_mode7_objects_ppu_accurate(
         memset(sprite_priority, 0xff, sizeof(sprite_priority));
         memset(sprite_palette, 0, sizeof(sprite_palette));
         memset(sprite_color, 0, sizeof(sprite_color));
+
+        if (!td2_layer_enabled(td2_ppu_scanline_main_layers(ppu, scanline), 4)) {
+            continue;
+        }
 
         for (i = 0; i < 128; i++) {
             int addr = (oam_eval_index << 2) & 0x01ff;
@@ -788,10 +875,10 @@ void td2_ppu_render_frame(Td2PpuState* ppu, uint32_t* framebuffer_argb) {
     }
 
     if (ppu->bg_mode == 7) {
-        if (td2_layer_enabled(ppu->main_screen_layers, 0)) {
+        if (td2_ppu_any_scanline_layer_enabled(ppu, 0)) {
             td2_render_mode7(ppu, framebuffer_argb);
         }
-        if (td2_layer_enabled(ppu->main_screen_layers, 4)) {
+        if (td2_ppu_any_scanline_layer_enabled(ppu, 4)) {
             td2_render_mode7_objects_ppu_accurate(ppu, framebuffer_argb);
         }
         return;
@@ -806,7 +893,7 @@ void td2_ppu_render_frame(Td2PpuState* ppu, uint32_t* framebuffer_argb) {
         );
     }
 
-    if (td2_layer_enabled(ppu->main_screen_layers, 4)) {
+    if (td2_ppu_any_scanline_layer_enabled(ppu, 4)) {
         td2_render_objects(ppu, framebuffer_argb, -1);
     }
 }

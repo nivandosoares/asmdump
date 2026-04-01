@@ -10,6 +10,14 @@
 #define TD2_PPU_TILE_CACHE_TILES 1024
 
 typedef struct {
+    bool enabled;
+    unsigned line_count;
+    uint8_t main_screen_layers[TD2_FRAME_HEIGHT];
+    int layer_hscroll[TD2_PPU_LAYER_COUNT][TD2_FRAME_HEIGHT];
+    int layer_vscroll[TD2_PPU_LAYER_COUNT][TD2_FRAME_HEIGHT];
+} Td2PpuScanlineProfile;
+
+typedef struct {
     uint8_t vram[TD2_VRAM_BYTES];
     uint8_t cgram[TD2_CGRAM_BYTES];
     uint8_t oam[TD2_OAM_BYTES];
@@ -29,6 +37,7 @@ typedef struct {
     bool obj_interlace;
     bool overscan_mode;
     Td2PpuLayerState layers[TD2_PPU_LAYER_COUNT];
+    Td2PpuScanlineProfile scanline_profile;
     uint32_t cgram_colors[256];
     uint8_t tile_cache[TD2_PPU_LAYER_COUNT][TD2_PPU_TILE_CACHE_TILES][64];
     uint8_t tile_cache_valid[TD2_PPU_LAYER_COUNT][TD2_PPU_TILE_CACHE_TILES];

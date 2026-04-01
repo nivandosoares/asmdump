@@ -168,6 +168,18 @@ int main(int argc, char** argv) {
             break;
         }
 
+        if (!td2_runtime_set_live_input_mask(
+                runtime,
+                platform_sdl_current_input_mask(&platform),
+                error,
+                sizeof(error))) {
+            fprintf(stderr, "live input failed: %s\n", error);
+            platform_sdl_shutdown(&platform);
+            td2_runtime_free(runtime);
+            free(runtime);
+            return 1;
+        }
+
         if (!td2_runtime_render_frame(runtime, error, sizeof(error))) {
             fprintf(stderr, "render failed: %s\n", error);
             platform_sdl_shutdown(&platform);

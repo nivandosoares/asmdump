@@ -1,6 +1,172 @@
 Date: 2026-04-01
 
 Summary
+- Promoted the first gameplay scanline-aware presentation path in the SDL
+  runtime for the `gameplay_live_race_mid` rail instead of treating that seed
+  as one flat frame-end `ppu_state`.
+- The runtime now attaches the measured visible-scanline profile from
+  `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
+  and feeds per-scanline `main_layers` plus `bg1/bg2/bg3` scroll values into
+  `td2_ppu`.
+- Refreshed the local design-review PNG pack under
+  `tools/out/port_live_input_runtime_pngs_20260401/` so the gameplay review
+  frame now shows the restored horizon/roadside split instead of the old flat
+  road/horizon collapse.
+
+What I ran
+- `make -C port clean && make -C port`
+- `make -C port test`
+- headless gameplay export:
+  - `./port/build/td2_port --scene-dir tools/out/design_lane3_live_race_mid_frame0_native --scheduler-profile gameplay_live_race_mid --input-script '3:a' --headless --frames 4 --dump-prefix tools/out/port_live_input_runtime_pngs_20260401/gameplay_live_a_frame`
+- manual visual review against:
+  - `tools/out/port_live_input_runtime_pngs_20260401/gameplay_live_a_frame_00003.png`
+  - `tools/out/port_live_input_runtime_pngs_20260401/gameplay_live_a_bg_stack_support.png`
+  - `tools/out/port_live_input_runtime_pngs_20260401/gameplay_live_a_world_support.png`
+
+Findings / Interpretation
+- The promoted live-race bundle now renders with the horizon and roadside
+  separation restored in the native runtime. The prior failure mode where the
+  road swallowed the shoulders/horizon was caused by flattening gameplay to
+  one global `main_layers/BG2VOFS` state.
+- The measured scanline overlay is enough to correct that first-order visual
+  boundary without changing the scheduler rail or inventing a new gameplay
+  heuristic.
+- The new scheduler smoke now closes two useful guardrails on the same lane:
+  - the scanline profile must load with the expected `224` visible lines and
+    selected `main_layers/bg2/bg3` checkpoints
+  - the rendered framebuffer must preserve a few stable sky/mountain/grass
+    pixels on the first promoted gameplay frame
+
+What I learned (actionable)
+- For gameplay, the renderer can advance one rail at a time with measured
+  per-scanline overlays before the deeper road emitter family is fully
+  reconstructed.
+- The current sibling-artifact attachment is good enough for one promoted
+  rail, but the next clean replacement is to move this into versioned contract
+  data so later gameplay bundles can opt in without path-specific glue.
+
+Next steps / Checkpoints
+1) Move the live-race scanline attachment into versioned contract data instead
+   of the current sibling raw JSON path.
+2) Promote a second gameplay phase on the same scanline-aware surface so
+   checkpoint/post-stop or police/radar bundles stop falling back to flat
+   presentation.
+3) Only after a second gameplay phase closes cleanly, decide whether more of
+   the road emitter family must move from measured overlay to executed logic.
+
+Immediate recommendation
+- Use `tools/out/port_live_input_runtime_pngs_20260401/gameplay_live_a_frame0003.png`
+  as the current designer-facing gameplay PNG for this checkpoint.
+- Keep `./port/test_scheduler.sh` as the cheapest falsifier when touching the
+  live-race gameplay presenter, because it now proves both scanline profile
+  attachment and a small set of render pixels.
+
+Files updated in this turn
+- `port/include/td2_ppu.h`
+- `port/src/td2_ppu.c`
+- `port/src/td2_runtime.c`
+- `port/test_scheduler.c`
+- `PORT_PLAN.md`
+- `port/README.md`
+- `port/docs/ARCHITECTURE.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+
+Next reading
+- `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
+- `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
+- `port/src/td2_ppu.c`
+
+Date: 2026-04-01
+
+Summary
+- Promoted the first real SDL live-input path into the runtime instead of
+  keeping interactive input separate from the scripted mutator lane.
+- `platform_sdl` now maps keyboard and SDL game-controller samples into SNES
+  `JOY1` bits, and `td2_scheduler` records that history on the same surface
+  already used by `--input-script`.
+- Materialized a local PNG review pack under
+  `tools/out/port_live_input_runtime_pngs_20260401/` with baseline, routed
+  menu, and gameplay snapshots generated from the same runtime path.
+
+What I ran
+- `make -C port clean && make -C port`
+- `./port/test_live_input.sh`
+- `./port/test_input_mutation.sh`
+- `make -C port test`
+- local PNG review export with `./port/build/td2_port` on:
+  - `tools/out/design_frame1500_car_select`
+  - `tools/out/design_lane3_live_race_mid_frame0_native`
+
+Findings / Interpretation
+- The SDL host is no longer a side channel for input. Live keyboard/controller
+  state now lands in the exact same scheduler/mutator surface used by replay
+  scripts, so route logic and current-frame `JOY1` sampling are validated once
+  instead of separately.
+- Three useful proofs are now closed cheaply:
+  - live menu history can trigger the traced no-opponent handoff
+  - live current input can drive gameplay `JOY1` sampling on the live-race
+    seed
+  - scripted prehistory and live current input can merge on the same measured
+    default-rival corridor
+- The important remaining boundary is temporal, not architectural: if the
+  bundle starts after the first required route decisions, fully live
+  reproduction still needs earlier scene bases or promoted prehistory.
+
+What I learned (actionable)
+- Feeding SDL input through the shared scheduler surface is the right
+  abstraction boundary: route semantics, current-button mirroring, and later
+  gameplay mutations all stay behind one validation wall.
+- The next leverage point is not more SDL mapping work; it is promoting
+  earlier scene bases or compiled route seeds for branches whose history begins
+  before the current bundle base frame.
+
+Next steps / Checkpoints
+1) Promote compare-backed fixtures for the live-input menu/gameplay rails
+   wherever trusted goldens exist.
+2) Move pre-bundle route history into earlier scene bases or compiled route
+   seeds for menu/gameplay branches that start before the current bundle.
+3) Extend the measured menu corridor past `2088` only when a new bounded
+   probe block closes cleanly.
+
+Immediate recommendation
+- Use the local PNG pack under
+  `tools/out/port_live_input_runtime_pngs_20260401/` as the current
+  designer-facing review surface for this checkpoint.
+- Keep `./port/test_live_input.sh` and `./port/test_input_mutation.sh` as the
+  cheapest falsifiers when touching interactive input on the current runtime.
+
+Files updated in this turn
+- `port/Makefile`
+- `port/main.c`
+- `port/platform_sdl.c`
+- `port/platform_sdl.h`
+- `port/include/td2_input.h`
+- `port/include/td2_runtime.h`
+- `port/include/td2_scheduler.h`
+- `port/src/td2_input.c`
+- `port/src/td2_runtime.c`
+- `port/src/td2_scheduler.c`
+- `port/test_live_input.c`
+- `port/test_live_input.sh`
+- `PORT_PLAN.md`
+- `port/README.md`
+- `port/docs/ARCHITECTURE.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+
+Next reading
+- `port/platform_sdl.c`
+- `port/src/td2_scheduler.c`
+- `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
+
+Date: 2026-04-01
+
+Summary
 - Promoted the `menu_gameplay_entry` baseline from sparse post-`2050` anchors
   to an exact sampled scheduler-contract window across frames `2052..2088`.
 - Expanded the default-rival `A` mutator in the runtime from isolated anchors

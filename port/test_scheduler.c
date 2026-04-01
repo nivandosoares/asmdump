@@ -107,6 +107,32 @@ static bool expect_u16(
     return true;
 }
 
+static bool expect_pixel(
+    const char* rail,
+    unsigned frame,
+    int x,
+    int y,
+    uint32_t actual_value,
+    uint32_t expected_value,
+    unsigned* total_checks,
+    unsigned* failed_checks
+) {
+    (*total_checks)++;
+    if (actual_value != expected_value) {
+        fprintf(stderr,
+                "FAIL %s frame %u pixel(%d,%d) expected 0x%08X got 0x%08X\n",
+                rail,
+                frame,
+                x,
+                y,
+                expected_value,
+                actual_value);
+        (*failed_checks)++;
+        return false;
+    }
+    return true;
+}
+
 static bool expect_source(
     const char* rail,
     unsigned frame,
@@ -467,6 +493,67 @@ static void verify_gameplay_frame(
     expect_u16("gameplay_live_race_mid", frame, "dp_0054", state->has_dp_0054, state->dp_0054, 200U, total_checks, failed_checks);
 }
 
+static void verify_gameplay_scanline_profile(
+    const Td2Runtime* runtime,
+    unsigned* total_checks,
+    unsigned* failed_checks
+) {
+    const Td2PpuScanlineProfile* profile = &runtime->ppu.scanline_profile;
+
+    expect_bool("gameplay_live_race_mid",
+                "scanline_profile.enabled",
+                profile->enabled,
+                true,
+                total_checks,
+                failed_checks);
+    expect_u16("gameplay_live_race_mid",
+               0U,
+               "scanline_profile.line_count",
+               true,
+               (uint16_t)profile->line_count,
+               (uint16_t)TD2_FRAME_HEIGHT,
+               total_checks,
+               failed_checks);
+
+    expect_u16("gameplay_live_race_mid", 0U, "scanline[0].main_layers", true, profile->main_screen_layers[0], 19U, total_checks, failed_checks);
+    expect_u16("gameplay_live_race_mid", 0U, "scanline[0].bg2_vscroll", true, (uint16_t)profile->layer_vscroll[1][0], 1023U, total_checks, failed_checks);
+    expect_u16("gameplay_live_race_mid", 23U, "scanline[23].main_layers", true, profile->main_screen_layers[23], 23U, total_checks, failed_checks);
+    expect_u16("gameplay_live_race_mid", 23U, "scanline[23].bg3_hscroll", true, (uint16_t)profile->layer_hscroll[2][23], 85U, total_checks, failed_checks);
+    expect_u16("gameplay_live_race_mid", 24U, "scanline[24].bg3_vscroll", true, (uint16_t)profile->layer_vscroll[2][24], 20U, total_checks, failed_checks);
+    expect_u16("gameplay_live_race_mid", 121U, "scanline[121].main_layers", true, profile->main_screen_layers[121], 19U, total_checks, failed_checks);
+    expect_u16("gameplay_live_race_mid", 121U, "scanline[121].bg2_hscroll", true, (uint16_t)profile->layer_hscroll[1][121], 8U, total_checks, failed_checks);
+    expect_u16("gameplay_live_race_mid", 122U, "scanline[122].bg2_hscroll", true, (uint16_t)profile->layer_hscroll[1][122], 9U, total_checks, failed_checks);
+    expect_u16("gameplay_live_race_mid", 223U, "scanline[223].bg2_vscroll", true, (uint16_t)profile->layer_vscroll[1][223], 283U, total_checks, failed_checks);
+}
+
+static void verify_gameplay_render_pixels(
+    const Td2Runtime* runtime,
+    unsigned frame,
+    unsigned* total_checks,
+    unsigned* failed_checks
+) {
+    expect_pixel("gameplay_live_race_mid", frame, 40, 40,
+                 runtime->framebuffer[(40 * TD2_FRAME_WIDTH) + 40],
+                 0xFF529CF7U,
+                 total_checks,
+                 failed_checks);
+    expect_pixel("gameplay_live_race_mid", frame, 80, 40,
+                 runtime->framebuffer[(40 * TD2_FRAME_WIDTH) + 80],
+                 0xFF396363U,
+                 total_checks,
+                 failed_checks);
+    expect_pixel("gameplay_live_race_mid", frame, 30, 80,
+                 runtime->framebuffer[(80 * TD2_FRAME_WIDTH) + 30],
+                 0xFF005200U,
+                 total_checks,
+                 failed_checks);
+    expect_pixel("gameplay_live_race_mid", frame, 235, 80,
+                 runtime->framebuffer[(80 * TD2_FRAME_WIDTH) + 235],
+                 0xFF005200U,
+                 total_checks,
+                 failed_checks);
+}
+
 static bool verify_rail(
     const Td2RailCase* rail,
     unsigned* total_checks,
@@ -503,6 +590,9 @@ static bool verify_rail(
                (uint16_t)rail->expected_segment_count,
                total_checks,
                failed_checks);
+    if (rail->profile == TD2_SCHEDULER_PROFILE_GAMEPLAY_LIVE_RACE_MID) {
+        verify_gameplay_scanline_profile(&runtime, total_checks, failed_checks);
+    }
 
     for (i = 0U; i < rail->checkpoint_count; i++) {
         unsigned target_frame = rail->checkpoints[i];
@@ -531,6 +621,9 @@ static bool verify_rail(
                 (*failed_checks)++;
                 td2_runtime_free(&runtime);
                 return false;
+            }
+            if (rail->profile == TD2_SCHEDULER_PROFILE_GAMEPLAY_LIVE_RACE_MID) {
+                verify_gameplay_render_pixels(&runtime, target_frame, total_checks, failed_checks);
             }
             rendered = true;
         }

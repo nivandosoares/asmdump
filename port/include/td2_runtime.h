@@ -60,5 +60,11 @@ bool td2_runtime_dump_frame(
     char* error,
     size_t error_size
 );
+bool td2_runtime_set_live_input_mask(
+    Td2Runtime* runtime,
+    uint16_t mask,
+    char* error,
+    size_t error_size
+);
 
 #endif

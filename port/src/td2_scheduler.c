@@ -522,6 +522,43 @@ static void td2_scheduler_apply_measured_menu_frame(
     }
 }
 
+static uint16_t td2_scheduler_mask_for_frame(
+    const Td2Scheduler* scheduler,
+    unsigned frame_number
+) {
+    uint16_t mask = TD2_INPUT_MASK_NONE;
+
+    if (scheduler == NULL) {
+        return TD2_INPUT_MASK_NONE;
+    }
+
+    mask |= td2_input_script_mask_for_frame(&scheduler->input_script, frame_number);
+    mask |= td2_input_script_mask_for_frame(&scheduler->live_input_history, frame_number);
+    return mask;
+}
+
+static bool td2_scheduler_has_mask_in_range(
+    const Td2Scheduler* scheduler,
+    uint16_t required_mask,
+    unsigned start_frame,
+    unsigned end_frame
+) {
+    if (scheduler == NULL) {
+        return false;
+    }
+
+    return td2_input_script_has_mask_in_range(
+               &scheduler->input_script,
+               required_mask,
+               start_frame,
+               end_frame) ||
+           td2_input_script_has_mask_in_range(
+               &scheduler->live_input_history,
+               required_mask,
+               start_frame,
+               end_frame);
+}
+
 static void td2_scheduler_apply_current_input(
     const Td2Scheduler* scheduler,
     unsigned frame_number,
@@ -533,7 +570,7 @@ static void td2_scheduler_apply_current_input(
         return;
     }
 
-    input_mask = td2_input_script_mask_for_frame(&scheduler->input_script, frame_number);
+    input_mask = td2_scheduler_mask_for_frame(scheduler, frame_number);
     if (input_mask == TD2_INPUT_MASK_NONE) {
         return;
     }
@@ -544,18 +581,18 @@ static void td2_scheduler_apply_current_input(
 static bool td2_scheduler_has_menu_no_opponent_route(
     const Td2Scheduler* scheduler
 ) {
-    bool has_diagonal = td2_input_script_has_mask_in_range(
-        &scheduler->input_script,
+    bool has_diagonal = td2_scheduler_has_mask_in_range(
+        scheduler,
         (uint16_t)(TD2_INPUT_MASK_RIGHT | TD2_INPUT_MASK_DOWN),
         1584U,
         1589U);
-    bool has_confirm = td2_input_script_has_mask_in_range(
-        &scheduler->input_script,
+    bool has_confirm = td2_scheduler_has_mask_in_range(
+        scheduler,
         TD2_INPUT_MASK_START,
         1730U,
         1735U) ||
-        td2_input_script_has_mask_in_range(
-            &scheduler->input_script,
+        td2_scheduler_has_mask_in_range(
+            scheduler,
             TD2_INPUT_MASK_A,
             1730U,
             1735U);
@@ -566,33 +603,33 @@ static bool td2_scheduler_has_menu_no_opponent_route(
 static bool td2_scheduler_has_menu_default_rival_route(
     const Td2Scheduler* scheduler
 ) {
-    return td2_input_script_has_mask_in_range(
-               &scheduler->input_script,
+    return td2_scheduler_has_mask_in_range(
+               scheduler,
                TD2_INPUT_MASK_START,
                1200U,
                1200U) &&
-           td2_input_script_has_mask_in_range(
-               &scheduler->input_script,
+           td2_scheduler_has_mask_in_range(
+               scheduler,
                TD2_INPUT_MASK_START,
                1280U,
                1280U) &&
-           td2_input_script_has_mask_in_range(
-               &scheduler->input_script,
+           td2_scheduler_has_mask_in_range(
+               scheduler,
                TD2_INPUT_MASK_START,
                1505U,
                1510U) &&
-           td2_input_script_has_mask_in_range(
-               &scheduler->input_script,
+           td2_scheduler_has_mask_in_range(
+               scheduler,
                (uint16_t)(TD2_INPUT_MASK_RIGHT | TD2_INPUT_MASK_DOWN),
                1584U,
                1589U) &&
-           td2_input_script_has_mask_in_range(
-               &scheduler->input_script,
+           td2_scheduler_has_mask_in_range(
+               scheduler,
                TD2_INPUT_MASK_START,
                1640U,
                1645U) &&
-           td2_input_script_has_mask_in_range(
-               &scheduler->input_script,
+           td2_scheduler_has_mask_in_range(
+               scheduler,
                TD2_INPUT_MASK_START,
                1730U,
                1735U);
@@ -602,8 +639,8 @@ static bool td2_scheduler_has_menu_default_rival_a_hold(
     const Td2Scheduler* scheduler
 ) {
     return td2_scheduler_has_menu_default_rival_route(scheduler) &&
-           td2_input_script_has_mask_in_range(
-               &scheduler->input_script,
+           td2_scheduler_has_mask_in_range(
+               scheduler,
                TD2_INPUT_MASK_A,
                2050U,
                2208U);
@@ -880,6 +917,7 @@ bool td2_scheduler_init(
     if (!td2_input_script_parse(&scheduler->input_script, input_script, error, error_size)) {
         return false;
     }
+    td2_input_script_reset(&scheduler->live_input_history);
     scheduler->requested_profile = requested_profile;
     scheduler->active_profile = requested_profile == TD2_SCHEDULER_PROFILE_AUTO
         ? td2_scheduler_resolve_auto_profile(scene_dir, pack)
@@ -929,4 +967,23 @@ bool td2_scheduler_build_state(
         default:
             return false;
     }
+}
+
+bool td2_scheduler_record_live_input(
+    Td2Scheduler* scheduler,
+    unsigned frame_number,
+    uint16_t mask,
+    char* error,
+    size_t error_size
+) {
+    if (scheduler == NULL) {
+        set_error(error, error_size, "missing scheduler");
+        return false;
+    }
+    return td2_input_script_record_mask(
+        &scheduler->live_input_history,
+        frame_number,
+        mask,
+        error,
+        error_size);
 }

@@ -20,19 +20,28 @@ This mirrors the working pattern from the local `../zelda3/` reference:
 The current code intentionally does only the minimum clean work:
 
 - `platform_sdl.*`
-  SDL host shell with optional headless mode.
+  SDL host shell with optional headless mode, plus live keyboard/controller
+  sampling mapped into SNES-style `JOY1` bits.
 - `td2_io.*`
   Loads a design pack plus the raw `vram.bin`, `cgram.bin`, `oam.bin`, and
   `ppu_state.json` state that belongs to it.
 - `td2_ppu.*`
   Holds the SNES PPU shadow state and rasterizes BG/OBJ/Mode7 directly from
-  raw state.
+  raw state. For the promoted `gameplay_live_race_mid` rail, it now also
+  accepts a measured visible-scanline overlay so gameplay is not forced
+  through one flat frame-end `ppu_state`.
 - `td2_runtime.*`
   Fixed-frame orchestration, scheduler-backed runtime-state shadow,
   compare-lane metrics, and PPM+PNG dumping for smoke tests and design review.
+  It also resolves the current optional gameplay scanline profile
+  attachment. The first promoted consumer is the sibling artifact
+  `../tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`,
+  which feeds per-scanline `main_layers` and `bg1/bg2/bg3` scroll values into
+  the live-race renderer.
 - `td2_input.*`
-  Shared parser/query layer for scripted input windows using the same
-  `frame:buttons` / `start-end:buttons` syntax used by the Mesen-side tools.
+  Shared parser/query layer for scripted input windows and recorded live input
+  history, using the same `frame:buttons` / `start-end:buttons` syntax used by
+  the Mesen-side tools.
 - `td2_compare.*`
   Trusted-frame compare bundle generation (`runtime | golden | diff`) plus
   machine-readable drift metrics plus seeded PPU-state and callback-state
@@ -45,10 +54,11 @@ The current code intentionally does only the minimum clean work:
   intro no-input, menu gameplay-entry, and reproducible live-race gameplay.
   The menu/gameplay rails are now loaded from
   `rom_analysis/docs/scheduler_rail_contracts.jsonc`, while intro remains on
-  the callback model path. The first input overlay now also lives here:
-  current `JOY1` sample into `state_0960`, plus the traced no-opponent route
-  mutator for the menu corridor. The next promoted layer on top of that is a
-  measured post-`2050` default-rival `A` overlay over the exact
+  the callback model path. The input overlay now also lives here, with live
+  SDL history and `--input-script` windows merged into the same route/mutator
+  surface: current `JOY1` sample into `state_0960`, the traced no-opponent
+  route mutator for the menu corridor, and a measured post-`2050`
+  default-rival `A` overlay over the exact
   `2052..2088` window plus later anchors `2104` and `2125`, covering
   `state_09a2/state_09a8/state_137c` and
   `dp_0020/dp_0022/dp_0053/dp_0054`.
@@ -65,8 +75,10 @@ bundles that only carry local `raw/` dumps and no golden frame.
 
 ## Next replacement steps
 
-1. Feed live SDL input through the same input-script/mutator surface.
+1. Move the promoted live-race scanline overlay from a sibling raw artifact
+   into the same versioned contract flow already used by scheduler rails.
 2. Promote compare-backed menu/gameplay fixtures so the same
    runtime-or-golden workflow used on intro can gate later rails too.
-3. Extend the measured post-`2050` menu window beyond `2088` only when a new
-   bounded probe window is promoted.
+3. Replace pre-bundle scripted route history with earlier scene bases or
+   compiled route seeds where the current bundle starts too late for fully
+   interactive live input to reproduce the branch on its own.

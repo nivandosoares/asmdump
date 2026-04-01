@@ -25,7 +25,11 @@ Current checkpoint:
 - contract-fed scheduler rails for menu/gameplay playback in
   `../rom_analysis/docs/scheduler_rail_contracts.jsonc`
 - scripted input windows via `--input-script`
-- first input-driven mutations on top of scheduler rails:
+- shared scripted/live input mutator surface on top of scheduler rails
+- measured visible-scanline gameplay overlay for
+  `gameplay_live_race_mid`, loaded from
+  `../tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
+- first input-driven mutations on top of that shared surface:
   current `JOY1` sample mirrored into runtime state as `state_0960`, plus the
   traced no-opponent menu handoff on `menu_gameplay_entry`
 - promoted post-`2050` default-rival `A` anchors on `menu_gameplay_entry`
@@ -88,6 +92,14 @@ Direct scheduler playback with scripted input:
   --frames 1
 ```
 
+Interactive SDL playback:
+
+```sh
+./port/build/td2_port \
+  --scene-dir tools/out/design_frame1500_car_select \
+  --scheduler-profile menu_gameplay_entry
+```
+
 Notes:
 
 - `../zelda3/` and `../sentrysearch/` are local investigation aids only and
@@ -108,7 +120,9 @@ Notes:
   three promoted scheduler rails:
   intro no-input, menu with input, and the reproducible live-race gameplay
   seed. Menu and gameplay now prove `scheduler_contract` state coming from
-  the shared JSONC contract, not hardcoded C anchors.
+  the shared JSONC contract, not hardcoded C anchors. The gameplay rail also
+  proves that its scanline profile is loaded and that key framebuffer pixels
+  preserve the restored sky/mountain/roadside split.
 - `make -C port test` now also runs `test_input_mutation.sh`, which proves:
   - gameplay `--input-script` buttons mirror into `state_0960`
   - the traced menu no-opponent route mutates the downstream
@@ -116,8 +130,34 @@ Notes:
   - the default-rival `A` lane mutates promoted post-`2050` anchors over
     `state_09a2/state_09a8/state_137c` and
     `dp_0020/dp_0022/dp_0053/dp_0054`
+- `make -C port test` now also runs `test_live_input.sh`, which proves:
+  - SDL keyboard mapping into SNES `JOY1` bits
+  - SDL game-controller mapping into the same `JOY1` bits
+  - live-input history can drive the traced no-opponent menu handoff
+  - live current input and scripted prehistory merge on the same mutator
+    surface for the default-rival `A` corridor
 - `--dump-prefix` now emits `PATH_00000.ppm` and `PATH_00000.png`; compare
   dumps also emit PNG siblings for `_reference`, `_diff`, and `_compare`.
+- interactive keyboard mapping:
+  - `Z/X/A/S` -> `B/A/Y/X`
+  - `Q/W` -> `L/R`
+  - `Enter` -> `Start`
+  - `Tab` or `Backspace` -> `Select`
+  - arrow keys -> d-pad
+- interactive controller mapping:
+  - south/east/west/north face buttons -> `B/A/Y/X`
+  - shoulders -> `L/R`
+  - start/back -> `Start/Select`
+  - d-pad or left stick -> directions
+- current practical boundary: if a menu/gameplay branch depends on decisions
+  that happen before the design-pack base frame, fully live reproduction on
+  that bundle still needs earlier seeds or scripted prehistory. Live SDL input
+  now shares the same mutator surface, but it does not fabricate missing
+  history before the loaded bundle.
+- current gameplay-specific boundary: only the promoted
+  `gameplay_live_race_mid` seed is scanline-aware. Later gameplay phases still
+  need their own promoted scanline contracts instead of falling back to one
+  flat frame-end `ppu_state`.
 - `tools/push_checkpoint.sh` is the repo-local wrapper for the post-push step:
   it pushes the current checkpoint, refreshes the curated wiki in an isolated
   temporary `git worktree`, and issues a follow-up wiki refresh commit/push

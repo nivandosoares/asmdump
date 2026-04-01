@@ -177,6 +177,79 @@ bool td2_input_script_parse(
     return true;
 }
 
+bool td2_input_script_record_mask(
+    Td2InputScript* script,
+    unsigned frame_number,
+    uint16_t mask,
+    char* error,
+    size_t error_size
+) {
+    Td2InputWindow* window = NULL;
+
+    if (script == NULL) {
+        set_error(error, error_size, "missing input history");
+        return false;
+    }
+    if (mask == TD2_INPUT_MASK_NONE) {
+        if (error_size > 0U) {
+            error[0] = '\0';
+        }
+        return true;
+    }
+
+    if (script->window_count > 0U) {
+        Td2InputWindow* last = &script->windows[script->window_count - 1U];
+
+        if (last->available &&
+            frame_number >= last->start_frame &&
+            frame_number <= last->end_frame) {
+            if (last->start_frame == frame_number &&
+                last->end_frame == frame_number) {
+                last->mask = mask;
+                if (error_size > 0U) {
+                    error[0] = '\0';
+                }
+                return true;
+            }
+            if (last->mask == mask && last->end_frame == frame_number) {
+                if (error_size > 0U) {
+                    error[0] = '\0';
+                }
+                return true;
+            }
+            set_error(error, error_size, "cannot overwrite recorded multi-frame input window");
+            return false;
+        }
+
+        if (last->available &&
+            last->mask == mask &&
+            last->end_frame + 1U == frame_number) {
+            last->end_frame = frame_number;
+            if (error_size > 0U) {
+                error[0] = '\0';
+            }
+            return true;
+        }
+    }
+
+    if (script->window_count >= TD2_INPUT_WINDOWS_MAX) {
+        set_error(error, error_size, "input history exceeds TD2_INPUT_WINDOWS_MAX");
+        return false;
+    }
+
+    window = &script->windows[script->window_count++];
+    memset(window, 0, sizeof(*window));
+    window->available = true;
+    window->start_frame = frame_number;
+    window->end_frame = frame_number;
+    window->mask = mask;
+    script->available = true;
+    if (error_size > 0U) {
+        error[0] = '\0';
+    }
+    return true;
+}
+
 uint16_t td2_input_script_mask_for_frame(
     const Td2InputScript* script,
     unsigned frame_number

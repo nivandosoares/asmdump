@@ -5,7 +5,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define TD2_INPUT_WINDOWS_MAX 64
+#define TD2_INPUT_WINDOWS_MAX 512
 
 typedef enum {
     TD2_INPUT_MASK_NONE = 0x0000U,
@@ -40,6 +40,13 @@ void td2_input_script_reset(Td2InputScript* script);
 bool td2_input_script_parse(
     Td2InputScript* script,
     const char* text,
+    char* error,
+    size_t error_size
+);
+bool td2_input_script_record_mask(
+    Td2InputScript* script,
+    unsigned frame_number,
+    uint16_t mask,
     char* error,
     size_t error_size
 );

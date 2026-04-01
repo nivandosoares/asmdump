@@ -119,6 +119,33 @@ New useful state beyond the original plan:
     later anchors `2104` and `2125`, over tracked fields
     `state_09a2/state_09a8/state_137c` and
     `dp_0020/dp_0022/dp_0053/dp_0054`
+- the SDL host now also feeds live keyboard/controller state into that same
+  runtime mutator surface instead of keeping live input separate from replay:
+  - `platform_sdl` maps keyboard and SDL game-controller samples into SNES
+    `JOY1` bits
+  - `td2_scheduler` merges recorded live input history with scripted windows
+    for route tests and downstream mutators
+  - the current promoted live proofs are:
+    - frame-local gameplay `JOY1` sampling on `gameplay_live_race_mid`
+    - traced no-opponent handoff on `menu_gameplay_entry`
+    - scripted-history plus live-`A` merge for the measured
+      default-rival `2050..2088` corridor
+  - practical boundary: branches whose required history starts before the
+    bundle base frame still need earlier seeds or scripted prehistory; live
+    SDL input now uses the same surface, but it does not invent missing
+    pre-bundle route history
+- the promoted `gameplay_live_race_mid` rail now also carries a measured
+  visible-scanline presentation profile from
+  `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`:
+  - the runtime loads per-scanline `main_layers`,
+    `bg1/bg2/bg3` `HOFS/VOFS` for that rail instead of treating gameplay as
+    one flat end-of-frame `ppu_state`
+  - the first practical fix is the live-race horizon/roadside boundary:
+    `BG3` now re-enters only on scanlines `23..120`, while `BG2` scroll uses
+    the measured `224`-scanline staircase rather than one global `VOFS`
+  - scheduler smoke now proves both the loaded scanline profile and a handful
+    of gameplay framebuffer pixels, so the restored horizon does not regress
+    silently
 - runtime frame dumps now emit PNG siblings next to the existing PPM artifacts
   so design review can follow each checkpoint without manual conversion
 - that scheduler now executes validated callback-family handoffs across:
@@ -249,12 +276,13 @@ New useful state beyond the original plan:
 
 Immediate next focus:
 
-1. Feed live SDL keyboard/controller input into the same mutator surface that
-   now accepts scripted windows.
-2. Promote compare-backed fixtures for the new menu/gameplay rails wherever a
+1. Promote compare-backed fixtures for the new menu/gameplay rails wherever a
    trusted `main_visible` golden exists.
-3. Extend the measured menu window beyond `2088` only when fresh probes close
+2. Extend the measured menu window beyond `2088` only when fresh probes close
    another bounded post-`2050` block.
+3. Move pre-bundle route history out of ad hoc scripts by promoting earlier
+   scene bases or trace-compiled route seeds for menu/gameplay branches whose
+   first required decisions happen before the current bundle start.
 4. Keep intro archaeology moving only where it tightens callback ownership or
    renderer behavior, not as a polishing lane by itself.
 5. Use the local SentrySearch chunk workflow plus the longplay anchor packs to

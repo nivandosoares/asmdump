@@ -45,6 +45,8 @@ That smoke now validates the first native synthetic PPU checkpoint:
   intro no-input, menu with input, and reproducible gameplay seed
 - validate the promoted runtime input mutations on top of those rails,
   including the measured post-`2050` default-rival `A` window
+- validate the SDL live-input host path against that same mutator/history
+  surface
 
 Current bootstrap fixtures:
 
@@ -120,6 +122,20 @@ Current scheduler-backed promoted rails:
 - `menu_gameplay_entry`: `tools/out/design_frame1500_car_select`
 - `gameplay_live_race_mid`: `tools/out/design_lane3_live_race_mid_frame0_native`
 
+Current promoted gameplay scanline overlay:
+
+- `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
+- consumed by the runtime only for the promoted
+  `gameplay_live_race_mid` rail
+- current attached fields:
+  - `main_layers`
+  - `bg1_hscroll/bg1_vscroll`
+  - `bg2_hscroll/bg2_vscroll`
+  - `bg3_hscroll/bg3_vscroll`
+- practical effect:
+  - the live-race SDL output no longer flattens the horizon/shoulders into one
+    frame-end road presentation
+
 The non-intro rails now load from:
 
 - `rom_analysis/docs/scheduler_rail_contracts.jsonc`
@@ -128,15 +144,61 @@ Current runtime input surface:
 
 - `--input-script <windows>` uses the same window syntax as the Mesen-side
   wrappers
+- live SDL keyboard/controller input is recorded onto the same scheduler
+  surface and merged with scripted windows instead of bypassing them
 - current buttons mirror into `state_0960`
 - the traced menu no-opponent route mutates the downstream
   `$1C70 / $1C76` handoff on `menu_gameplay_entry`
 - the default-rival `A` lane now also mutates the promoted exact
   `2052..2088` window plus later checkpoints `2104` and `2125`
+- keyboard mapping:
+  - `Z/X/A/S` -> `B/A/Y/X`
+  - `Q/W` -> `L/R`
+  - `Enter` -> `Start`
+  - `Tab` or `Backspace` -> `Select`
+  - arrow keys -> d-pad
+- controller mapping:
+  - south/east/west/north face buttons -> `B/A/Y/X`
+  - shoulders -> `L/R`
+  - start/back -> `Start/Select`
+  - d-pad or left stick -> directions
 - first design-review PNG bundle for the original promoted anchors:
   `tools/out/port_input_mutation_anchor_pngs_20260401/`
 - follow-up design-review PNG bundle for the densified `2054..2088` window:
   `tools/out/port_input_mutation_window2054_2088_pngs_20260401/`
+- current local-only live-input review bundle:
+  `tools/out/port_live_input_runtime_pngs_20260401/`
+  - now includes the scanline-aware gameplay sequence
+    `gameplay_live_a_frame_00000.png` through
+    `gameplay_live_a_frame_00003.png`
+  - `gameplay_live_a_frame0003.png` remains the design-stable alias for the
+    latest promoted gameplay PNG
+
+Current live-input smoke:
+
+```sh
+./port/test_live_input.sh
+```
+
+That proves:
+
+- pure SDL keyboard mapping
+- pure SDL controller mapping
+- live-input history driving the traced no-opponent menu handoff
+- scripted prehistory plus live `A` merging on the default-rival corridor
+
+The scheduler smoke also now proves:
+
+- the live-race scanline profile is loaded with the expected line count and
+  selected `main_layers/bg2/bg3` samples
+- selected gameplay framebuffer pixels stay on the restored sky/mountain/grass
+  colors, so the scanline-aware horizon fix does not silently regress
+
+Current practical boundary:
+
+- if a route depends on decisions that happen before the loaded design-pack
+  base frame, fully live reproduction on that bundle still needs earlier
+  seeds or scripted prehistory
 
 Post-push wiki refresh wrapper:
 

@@ -30,6 +30,7 @@ typedef struct {
     Td2SchedulerProfile active_profile;
     bool contract_loaded;
     Td2InputScript input_script;
+    Td2InputScript live_input_history;
     unsigned segment_count;
     Td2SchedulerSegment segments[TD2_SCHEDULER_SEGMENTS_MAX];
 } Td2Scheduler;
@@ -52,6 +53,13 @@ bool td2_scheduler_build_state(
     const Td2Scheduler* scheduler,
     unsigned frame_number,
     Td2RuntimeState* state
+);
+bool td2_scheduler_record_live_input(
+    Td2Scheduler* scheduler,
+    unsigned frame_number,
+    uint16_t mask,
+    char* error,
+    size_t error_size
 );
 
 #endif
