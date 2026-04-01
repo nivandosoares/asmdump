@@ -24,6 +24,10 @@ Current checkpoint:
   - `gameplay_live_race_mid`
 - contract-fed scheduler rails for menu/gameplay playback in
   `../rom_analysis/docs/scheduler_rail_contracts.jsonc`
+- scripted input windows via `--input-script`
+- first input-driven mutations on top of scheduler rails:
+  current `JOY1` sample mirrored into runtime state as `state_0960`, plus the
+  traced no-opponent menu handoff on `menu_gameplay_entry`
 - headless frame dumping for regression smoke
 
 This is deliberately not the final renderer. It is the clean replacement for
@@ -70,6 +74,17 @@ Direct scheduler playback on a tracked bundle without a golden:
   --dump-prefix port/build/menu1500
 ```
 
+Direct scheduler playback with scripted input:
+
+```sh
+./port/build/td2_port \
+  --scene-dir tools/out/design_lane3_live_race_mid_frame0_native \
+  --scheduler-profile gameplay_live_race_mid \
+  --input-script '3:a' \
+  --headless \
+  --frames 1
+```
+
 Notes:
 
 - `../zelda3/` and `../sentrysearch/` are local investigation aids only and
@@ -91,6 +106,10 @@ Notes:
   intro no-input, menu with input, and the reproducible live-race gameplay
   seed. Menu and gameplay now prove `scheduler_contract` state coming from
   the shared JSONC contract, not hardcoded C anchors.
+- `make -C port test` now also runs `test_input_mutation.sh`, which proves:
+  - gameplay `--input-script` buttons mirror into `state_0960`
+  - the traced menu no-opponent route mutates the downstream
+    `$1C70 / $1C76` handoff
 - `tools/push_checkpoint.sh` is the repo-local wrapper for the post-push step:
   it pushes the current checkpoint, refreshes the curated wiki in an isolated
   temporary `git worktree`, and issues a follow-up wiki refresh commit/push

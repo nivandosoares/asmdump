@@ -36,7 +36,7 @@
         <p class="doc-note">Current Mesen capture, probe, and export workflow.</p>
         <div class="doc-meta">
           <span>Source: <code>validation/README.md</code></span>
-          <span class="update-pill">Last updated 2026-04-01 12:28</span>
+          <span class="update-pill">Last updated 2026-04-01 14:28</span>
           <a href="../../../../../validation/README.md">Open Raw Markdown</a>
         </div>
       </header>
@@ -54,7 +54,7 @@
 <pre><code class="language-sh">make -C port
 make -C port test</code></pre>
 <p>That smoke now validates the first native synthetic PPU checkpoint:</p>
-<ul><li>load a promoted design pack</li><li>seed <code>VRAM/CGRAM/OAM</code> shadow state</li><li>seed visible layer, Mode 7, and OBJ registers from <code>ppu_state.json</code></li><li>dump a headless frame</li><li>compare it against the extracted <code>layers/main_visible.ppm</code> golden</li><li>generate the side-by-side compare bundle for the same promoted fixtures</li><li>validate the minimal scheduler across the three promoted rails: intro no-input, menu with input, and reproducible gameplay seed</li></ul>
+<ul><li>load a promoted design pack</li><li>seed <code>VRAM/CGRAM/OAM</code> shadow state</li><li>seed visible layer, Mode 7, and OBJ registers from <code>ppu_state.json</code></li><li>dump a headless frame</li><li>compare it against the extracted <code>layers/main_visible.ppm</code> golden</li><li>generate the side-by-side compare bundle for the same promoted fixtures</li><li>validate the minimal scheduler across the three promoted rails: intro no-input, menu with input, and reproducible gameplay seed</li><li>validate the first runtime input mutations on top of those rails</li></ul>
 <p>Current bootstrap fixtures:</p>
 <ul><li><code>port/assets/test_dump_frame300/design_pack</code></li><li><code>port/assets/test_dump_range_1086_1093/design_pack_range/frame_01086</code></li></ul>
 <p>Current exact-native parity fixtures:</p>
@@ -73,6 +73,13 @@ make -C port test</code></pre>
   --headless \
   --frames 1 \
   --dump-prefix port/build/menu1500</code></pre>
+<p>Direct runtime scheduler playback with scripted input:</p>
+<pre><code class="language-sh">./port/build/td2_port \
+  --scene-dir tools/out/design_lane3_live_race_mid_frame0_native \
+  --scheduler-profile gameplay_live_race_mid \
+  --input-script &#x27;3:a&#x27; \
+  --headless \
+  --frames 1</code></pre>
 <p>That emits:</p>
 <ul><li><code>..._00000.ppm</code>: native runtime frame</li><li><code>..._00000_reference.ppm</code>: trusted <code>main_visible</code> golden</li><li><code>..._00000_diff.ppm</code>: absolute RGB error map</li><li><code>..._00000_compare.ppm</code>: <code>runtime | golden | diff</code> strip</li><li><code>..._00000_compare.json</code>: machine-readable pixel metrics plus <code>state_contract</code> over seeded PPU/layer/raw-memory state and <code>callback_contract</code> for frames covered by validated intro checkpoints</li></ul>
 <p>With <code>--fail-on-compare-diff</code>, the runtime now exits non-zero on either:</p>
@@ -83,6 +90,8 @@ make -C port test</code></pre>
 <ul><li><code>intro_noinput</code>: <code>tools/out/design_frame986</code> through the validated <code>1093 -&gt; 1102 -&gt; 1117</code> callback handoff</li><li><code>menu_gameplay_entry</code>: <code>tools/out/design_frame1500_car_select</code></li><li><code>gameplay_live_race_mid</code>: <code>tools/out/design_lane3_live_race_mid_frame0_native</code></li></ul>
 <p>The non-intro rails now load from:</p>
 <ul><li><code>rom_analysis/docs/scheduler_rail_contracts.jsonc</code></li></ul>
+<p>Current runtime input surface:</p>
+<ul><li><code>--input-script &lt;windows&gt;</code> uses the same window syntax as the Mesen-side wrappers</li><li>current buttons mirror into <code>state_0960</code></li><li>the traced menu no-opponent route mutates the downstream <code>$1C70 / $1C76</code> handoff on <code>menu_gameplay_entry</code></li></ul>
 <p>Post-push wiki refresh wrapper:</p>
 <pre><code class="language-sh">./tools/push_checkpoint.sh</code></pre>
 <p>That wrapper pushes the current checkpoint, rebuilds the curated docs wiki in an isolated temporary <code>git worktree</code>, and creates a follow-up wiki refresh commit/push when the generated wiki changes. Because the refresh happens in a clean worktree, unrelated local dirty files no longer block wiki publication.</p>

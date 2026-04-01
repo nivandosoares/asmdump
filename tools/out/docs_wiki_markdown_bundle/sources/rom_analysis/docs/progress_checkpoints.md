@@ -1,6 +1,87 @@
 Date: 2026-04-01
 
 Summary
+- Added the first real input-driven mutation layer on top of the contract-fed
+  scheduler rails.
+- The runtime now accepts `--input-script` windows in the same
+  `frame:buttons` / `start-end:buttons` syntax already used by the Mesen-side
+  tooling.
+- The new input layer currently proves two grounded mutations:
+  - `state_0960` mirrors the current `JOY1` sample from active buttons
+  - the traced menu no-opponent route (`right+down`, then confirm) mutates
+    the downstream `menu_gameplay_entry` handoff to `$1C70 = 3 / $1C76 = 0`
+
+What I ran
+- `make -C port clean && make -C port`
+- `./port/test_input_mutation.sh`
+- `make -C port test`
+- direct runtime probes:
+  - `./port/build/td2_port --scene-dir tools/out/design_lane3_live_race_mid_frame0_native --scheduler-profile gameplay_live_race_mid --input-script '3:a' --headless --frames 1 --dump-prefix <tmp>/gameplay`
+  - `./port/build/td2_port --scene-dir tools/out/design_frame1500_car_select --scheduler-profile menu_gameplay_entry --input-script '1584-1589:right,down;1730-1735:start' --headless --frames 545`
+
+Findings / Interpretation
+- The port now has an explicit input surface instead of only frame-indexed
+  playback. It is still bootstrap-scoped, but it is no longer input-blind.
+- The new smoke closes two useful facts cheaply:
+  - gameplay rails can now carry a real current-button sample
+  - menu rails can now switch between default-rival and no-opponent handoffs
+    using traced input history
+- Existing regression, compare, callback-model, and scheduler rails stayed
+  green under the new input layer.
+
+What I learned (actionable)
+- `state_0960` is a good first-class runtime field for scripted/live input
+  because it is direct, cheap to validate, and already grounded by the memory
+  map as the `JOY1` sample copied in NMI.
+- The no-opponent route should stay framed as a traced menu mutator, not as a
+  generic “menu AI”: it is grounded by the recovered `right+down` plus
+  confirm corridor and should be extended only when more route semantics are
+  actually validated.
+
+Next steps / Checkpoints
+1) Extend the input mutator beyond `state_0960` and the no-opponent handoff
+   into post-`2050` gameplay deltas like `state_09a2/state_09a8/dp_0053/0054`.
+2) Feed live SDL keyboard/controller input into the same runtime input layer.
+3) Promote compare-backed fixtures for input-mutated menu/gameplay windows
+   where trusted goldens already exist.
+
+Immediate recommendation
+- Use `--input-script` for bounded runtime experiments before adding new
+  scheduler contract rows.
+- Keep `./port/test_input_mutation.sh` as the cheapest falsifier for
+  input-driven work on menu/gameplay rails.
+
+Files updated in this turn
+- `port/Makefile`
+- `port/main.c`
+- `port/include/td2_contracts.h`
+- `port/include/td2_input.h`
+- `port/include/td2_runtime.h`
+- `port/include/td2_scheduler.h`
+- `port/src/td2_compare.c`
+- `port/src/td2_contracts.c`
+- `port/src/td2_input.c`
+- `port/src/td2_scheduler.c`
+- `port/src/td2_runtime.c`
+- `port/test_callback_model.c`
+- `port/test_input_mutation.c`
+- `port/test_input_mutation.sh`
+- `PORT_PLAN.md`
+- `port/README.md`
+- `port/docs/ARCHITECTURE.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+
+Next reading
+- `port/src/td2_input.c`
+- `port/src/td2_scheduler.c`
+- `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
+
+Date: 2026-04-01
+
+Summary
 - Promoted the menu/gameplay scheduler rails from hardcoded C anchors into
   the new contract surface `rom_analysis/docs/scheduler_rail_contracts.jsonc`.
 - `td2_scheduler` now loads versioned rail segments for

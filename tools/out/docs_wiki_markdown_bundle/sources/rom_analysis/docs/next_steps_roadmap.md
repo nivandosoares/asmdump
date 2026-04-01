@@ -55,6 +55,9 @@ Validation contract baseline:
     intro no-input, menu gameplay-entry, and live-race gameplay seed, with
     menu/gameplay resolved from
     `rom_analysis/docs/scheduler_rail_contracts.jsonc`
+  - input mutation smoke `12/12` checks pass across:
+    menu no-opponent handoff plus gameplay `JOY1` samples driven by
+    scripted input windows
 
 ## Lane 3 Live Entry Update (`2026-03-28`)
 
