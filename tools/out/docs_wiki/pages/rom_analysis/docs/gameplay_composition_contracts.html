@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SDL Runtime Mimetization Smoke | TD2 Archaeology Wiki</title>
+  <title>Gameplay Composition Contracts | TD2 Archaeology Wiki</title>
   <link rel="stylesheet" href="../../../assets/wiki.css">
 </head>
 <body>
@@ -26,39 +26,23 @@
       <nav class="breadcrumbs">
         <a href="../../../index.html">Index</a>
         <span>/</span>
-        <a href="../../../index.html#runtime-port">Runtime And Port Validation</a>
+        <a href="../../../index.html#gameplay-lane3">Gameplay And Lane 3</a>
         <span>/</span>
-        <span>SDL Runtime Smoke</span>
+        <span>Gameplay Composition Contracts</span>
       </nav>
       <header class="doc-header">
-        <p class="eyebrow">Runtime And Port Validation</p>
-        <h1>SDL Runtime Mimetization Smoke</h1>
-        <p class="doc-note">Bounded regression read for current intro/front-end parity in the C/SDL runtime.</p>
+        <p class="eyebrow">Gameplay And Lane 3</p>
+        <h1>Gameplay Composition Contracts</h1>
+        <p class="doc-note">Versioned late-gameplay top-band BG3 composition rules for promoted SDL runtime bundles.</p>
         <div class="doc-meta">
-          <span>Source: <code>rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md</code></span>
+          <span>Source: <code>rom_analysis/docs/gameplay_composition_contracts.jsonc</code></span>
           <span class="update-pill">Last updated 2026-04-01 17:45</span>
-          <a href="../../../../../../rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md">Open Raw Markdown</a>
+          <a href="../../../../../../rom_analysis/docs/gameplay_composition_contracts.jsonc">Open Raw Markdown</a>
         </div>
       </header>
+<section class="artifact-panel"><header class="artifact-header"><h2>Artifact Support</h2><p>Resolved image references found in this note.</p></header><div class="artifact-grid"><figure class="artifact-card"><a href="../../../../lane3_live_entry_frame03250_bundle/bg_stack_visible_support.png"><img src="../../../artifacts/tools/out/lane3_live_entry_frame03250_bundle/bg_stack_visible_support.png" alt="tools/out/lane3_live_entry_frame03250_bundle/bg_stack_visible_support.png" loading="lazy"></a><figcaption><code>tools/out/lane3_live_entry_frame03250_bundle/bg_stack_visible_support.png</code><span>Copied original artifact.</span></figcaption></figure><figure class="artifact-card"><a href="../../../../lane3_live_entry_brake_traffic_frame03400_bundle/bg_stack_visible_support.png"><img src="../../../artifacts/tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg_stack_visible_support.png" alt="tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg_stack_visible_support.png" loading="lazy"></a><figcaption><code>tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg_stack_visible_support.png</code><span>Copied original artifact.</span></figcaption></figure><figure class="artifact-card"><a href="../../../../lane3_live_entry_frame03550_bundle/bg_stack_visible_support.png"><img src="../../../artifacts/tools/out/lane3_live_entry_frame03550_bundle/bg_stack_visible_support.png" alt="tools/out/lane3_live_entry_frame03550_bundle/bg_stack_visible_support.png" loading="lazy"></a><figcaption><code>tools/out/lane3_live_entry_frame03550_bundle/bg_stack_visible_support.png</code><span>Copied original artifact.</span></figcaption></figure></div></section>
       <article class="doc-body">
-        <h1 id="sdl-runtime-mimetization-smoke">SDL Runtime Mimetization Smoke</h1>
-<p>Date: <code>2026-03-28</code></p>
-<h2 id="goal">Goal</h2>
-<p>Measure, with one bounded regression pass, how far the current C/SDL runtime already mimics the promoted SNES intro/attract sequence.</p>
-<p>This is explicitly an intro/front-end smoke, not a gameplay-parity claim.</p>
-<h2 id="run">Run</h2>
-<pre><code class="language-sh">make -C port
-./port/test_regression.sh</code></pre>
-<p>Sequence under test:</p>
-<ul><li><code>tools/out/intro_loop_hybrid_bridge_visible_sequence.txt</code></li></ul>
-<h2 id="result">Result</h2>
-<ul><li><code>make -C port</code> reported the runtime already up to date</li><li>the headless regression rendered <code>1000</code> frames successfully</li><li>frame-format sanity passed on the dumped PPM output</li><li>golden checks:</li><li><code>bootstrap_queue_978</code> at frame <code>324</code>: <code>0</code> mismatched pixels</li><li><code>bootstrap_queue_982</code> at frame <code>328</code>: <code>0</code> mismatched pixels</li><li><code>bridgeoverride_986</code> at frame <code>332</code>: <code>0</code> mismatched pixels</li><li><code>bridgeobj_990</code> at frame <code>336</code>: <code>0</code> mismatched pixels</li><li><code>mode7_visible_991</code> at frame <code>337</code>: <code>4</code> mismatched pixels (<code>0.006975%</code>)</li><li>transition check:</li><li><code>mode7_hold_transition</code>: <code>PASS</code></li></ul>
-<p>Regression summary:</p>
-<ul><li><code>5</code> passed</li><li><code>1</code> failed</li><li><code>0</code> skipped</li></ul>
-<h2 id="practical-read">Practical Read</h2>
-<ul><li>The current SDL runtime reproduces the promoted bridge-visible intro path exactly through the checked <code>978/982/986/990</code> checkpoints.</li><li>The first remaining measured parity gap in this smoke sits immediately after that block at frame <code>991</code>, and it is small: <code>4</code> pixels.</li><li>For intro/front-end regression work, the runtime is already good enough to act as a useful SNES mimic and checkpoint surface.</li><li>For gameplay, this smoke does <strong>not</strong> prove parity yet; the gameplay lane still relies on live-entry probe/capture work rather than direct SDL replay.</li></ul>
-<h2 id="next-gate">Next Gate</h2>
-<ul><li>either close the <code>4</code>-pixel <code>991</code> gap directly</li><li>or formalize that boundary explicitly if the runtime should treat it as a temporary tolerated Mode 7 edge</li></ul>
+        <p>{ &quot;schema_version&quot;: 1, &quot;description&quot;: &quot;Measured late-gameplay background composition cutoffs for promoted SDL runtime bundles.&quot;, &quot;profiles&quot;: [ { &quot;id&quot;: &quot;lane3_live_entry_frame03250_bg3_top_band&quot;, &quot;scene_match&quot;: &quot;lane3_live_entry_frame03250_bundle/design_pack&quot;, &quot;bg3_enable_top_scanlines&quot;: 79, &quot;bg3_above_bg2_top_scanlines&quot;: 79, &quot;support_surface&quot;: &quot;tools/out/lane3_live_entry_frame03250_bundle/bg_stack_visible_support.png&quot;, &quot;notes&quot;: [ &quot;Measured from the promoted late-entry open-road frame.&quot;, &quot;Best current candidate keeps BG3 above BG2 only in the top 79 visible lines.&quot; ] }, { &quot;id&quot;: &quot;lane3_live_entry_brake_traffic_frame03400_bg3_top_band&quot;, &quot;scene_match&quot;: &quot;lane3_live_entry_brake_traffic_frame03400_bundle/design_pack&quot;, &quot;bg3_enable_top_scanlines&quot;: 79, &quot;bg3_above_bg2_top_scanlines&quot;: 79, &quot;support_surface&quot;: &quot;tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg_stack_visible_support.png&quot;, &quot;notes&quot;: [ &quot;Traffic-emergence follow-up keeps the same measured top-band cutoff as frame 3250.&quot;, &quot;Useful evidence that the late background rule survives an OBJ-heavy gameplay event.&quot; ] }, { &quot;id&quot;: &quot;lane3_live_entry_frame03550_bg3_top_band&quot;, &quot;scene_match&quot;: &quot;lane3_live_entry_frame03550_bundle/design_pack&quot;, &quot;bg3_enable_top_scanlines&quot;: 95, &quot;bg3_above_bg2_top_scanlines&quot;: 95, &quot;support_surface&quot;: &quot;tools/out/lane3_live_entry_frame03550_bundle/bg_stack_visible_support.png&quot;, &quot;notes&quot;: [ &quot;Later collision-heavy phase needs a deeper top-band helper strip than the 3250/3400 pair.&quot;, &quot;Current best measured cutoff is 95 visible lines.&quot; ] } ] }</p>
       </article>
     </main>
   </div>

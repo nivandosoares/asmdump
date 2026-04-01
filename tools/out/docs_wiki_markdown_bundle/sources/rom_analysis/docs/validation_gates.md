@@ -166,7 +166,7 @@ This gate is intentionally scoped to the shared input surface, not to broad
 interactive gameplay claims. It proves the SDL host is no longer bypassing the
 validated route/mutator layer.
 
-## 8) Scanline Contract Smoke
+## 8) Scanline / Composition Contract Smoke
 
 Runner:
 
@@ -174,16 +174,20 @@ Runner:
 ./port/test_scanline_contract.sh
 ```
 
-This validates the versioned gameplay scanline-contract surface independently
-of the scheduler rails:
+This validates the versioned gameplay scanline-contract surface, plus the new
+late-gameplay composition-contract surface, independently of the scheduler
+rails:
 
 - a bootstrap bundle with no matching contract stays flat
 - `gameplay_live_race_mid` loads its contract from
   `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
 - the solved live-race consumer still preserves selected sky/mountain/grass
   framebuffer pixels after loading that contract
-- `lane3_live_entry_frame03250_bundle/design_pack` now also loads a promoted
-  contract-backed scanline profile even without a scheduler rail
+- the late-entry bundles `3250`, `3400`, and `3550` now load promoted
+  composition profiles from
+  `rom_analysis/docs/gameplay_composition_contracts.jsonc`
+- those late-entry bundles preserve promoted top-band framebuffer anchors
+  after enabling `BG3` and keeping `BG3 > BG2` in the measured upper window
 
 This gate is intentionally narrow. It protects the new contract-selection path
 and keeps later gameplay bundles from silently falling back to ad hoc runtime

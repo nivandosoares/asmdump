@@ -148,10 +148,23 @@ New useful state beyond the original plan:
   - current practical read:
     - the live-race seed is the first solved consumer of that surface and now
       restores the horizon/roadside boundary natively
-    - the `3250` late-entry bundle now loads through the same contract path,
-      but current compare against a no-contract clone is still `0` pixels
-      different, which is strong evidence that this later phase needs more
-      than `main_layers/bg1/bg2/bg3` scrolls to recover the visible stack
+    - the `3250` late-entry bundle still needs more than
+      `main_layers/bg1/bg2/bg3` scrolls alone, but the runtime now also loads
+      a separate gameplay composition contract:
+      - `rom_analysis/docs/gameplay_composition_contracts.jsonc`
+      - current promoted consumers:
+        - `lane3_live_entry_frame03250_bundle/design_pack`
+        - `lane3_live_entry_brake_traffic_frame03400_bundle/design_pack`
+        - `lane3_live_entry_frame03550_bundle/design_pack`
+      - current measured rule:
+        - enable `BG3` in a top band and keep `BG3 > BG2` there
+      - current promoted cutoffs:
+        - `3250`: `79`
+        - `3400`: `79`
+        - `3550`: `95`
+      - practical read:
+        - later gameplay is now narrowed past “missing BG3 asset” and into a
+          concrete late-frame composition rule
 - runtime frame dumps now emit PNG siblings next to the existing PPM artifacts
   so design review can follow each checkpoint without manual conversion
 - that scheduler now executes validated callback-family handoffs across:

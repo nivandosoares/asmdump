@@ -1,6 +1,90 @@
 Date: 2026-04-01
 
 Summary
+- Promoted the late-gameplay `BG3` top-band hypothesis from a sweep artifact
+  into a versioned runtime contract in
+  `rom_analysis/docs/gameplay_composition_contracts.jsonc`.
+- Extended the native PPU path so later gameplay bundles can enable `BG3` on
+  the main screen only in a measured upper band and keep `BG3 > BG2` there.
+- Closed the immediate design-review loop with a fresh runtime PNG pack in
+  `tools/out/port_gameplay_composition_runtime_pngs_20260401/` for the
+  promoted late-entry anchors `3250`, `3400`, and `3550`.
+- Added a root-level handoff note in `NEXT_AGENT.md` so the next agent can
+  resume lane 3 without reconstructing this checkpoint from scattered notes.
+
+What I ran
+- full runtime validation:
+  - `make -C port test`
+- local design-review PNG pack:
+  - `./port/build/td2_port --scene-dir tools/out/lane3_live_entry_frame03250_bundle/design_pack --headless --frames 1 --dump-prefix tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3250`
+  - `./port/build/td2_port --scene-dir tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/design_pack --headless --frames 1 --dump-prefix tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3400`
+  - `./port/build/td2_port --scene-dir tools/out/lane3_live_entry_frame03550_bundle/design_pack --headless --frames 1 --dump-prefix tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3550`
+- wiki refresh:
+  - `python3 tools/build_docs_wiki_report.py --manifest rom_analysis/docs/wiki_doc_index.json --output-dir tools/out/docs_wiki --markdown-bundle-dir tools/out/docs_wiki_markdown_bundle`
+
+Findings / Interpretation
+- The promoted late-gameplay rule is now explicit and versioned instead of
+  living only in `tools/out/gameplay_bg3_cutoff_sweep_20260401/`:
+  - `3250`: enable `BG3` on the top `79` scanlines and keep `BG3 > BG2`
+    there
+  - `3400`: same `79`-line window
+  - `3550`: same rule with a deeper `95`-line window
+- This closed the renderer boundary one step further:
+  the SDL runtime no longer needs a separate ad hoc late-gameplay lookup to
+  restore the horizon strip on those anchors.
+- Validation stayed cheap and sufficient:
+  - `make -C port test` passed in full
+  - `./port/test_scanline_contract.sh` now closes `39` checks across the
+    solved live-race consumer plus the three late-entry composition consumers
+
+What I learned (actionable)
+- The late-gameplay family now has a defensible contract boundary for one
+  concrete presentation rule: top-band `BG3` enable + precedence.
+- The next useful narrowing is no longer “is there a good cutoff?”; it is
+  whether the same family now needs more state than this static band rule, or
+  whether extending the same composition profile to another later anchor still
+  pays off.
+
+Next steps / Checkpoints
+1) Decide whether the late-entry family should keep growing through the same
+   composition contract surface or switch back to stronger measured scanline
+   fields on the same bundles.
+2) Keep the new runtime PNG pack in design review so the team is reacting to
+   the promoted SDL output, not only to sweep candidates.
+3) Use the now-versioned `BG3` top-band rule as the cheap falsifier before any
+   broader gameplay-layer rewrite.
+
+Immediate recommendation
+- Use these fresh runtime PNGs for the next design review:
+  - `tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3250_00000.png`
+  - `tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3400_00000.png`
+  - `tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3550_00000.png`
+
+Files updated in this turn
+- `port/include/td2_ppu.h`
+- `port/src/td2_ppu.c`
+- `port/src/td2_runtime.c`
+- `port/test_scanline_contract.c`
+- `rom_analysis/docs/gameplay_composition_contracts.jsonc`
+- `PORT_PLAN.md`
+- `port/README.md`
+- `port/docs/ARCHITECTURE.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/validation_gates.md`
+- `rom_analysis/docs/wiki_doc_index.json`
+- `validation/README.md`
+- `NEXT_AGENT.md`
+- `tools/out/port_gameplay_composition_runtime_pngs_20260401/`
+
+Next reading
+- `rom_analysis/docs/gameplay_composition_contracts.jsonc`
+- `tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3250_00000.png`
+- `tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3400_00000.png`
+
+Date: 2026-04-01
+
+Summary
 - Added a dedicated late-gameplay cutoff sweep tool in
   `tools/analyze_gameplay_bg3_cutoff.py` to test one narrow composition rule:
   `BG3` above `BG2` in a top band, `BG3` under `BG2` below it.

@@ -251,6 +251,11 @@
           "note": "Versioned scanline-overlay selection for promoted gameplay bundles in the SDL runtime."
         },
         {
+          "path": "rom_analysis/docs/gameplay_composition_contracts.jsonc",
+          "label": "Gameplay Composition Contracts",
+          "note": "Versioned late-gameplay top-band BG3 composition rules for promoted SDL runtime bundles."
+        },
+        {
           "path": "rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md",
           "label": "L01318D Role Split",
           "note": "Static role split for the narrowed gameplay cluster."
