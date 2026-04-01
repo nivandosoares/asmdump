@@ -165,8 +165,9 @@ static bool find_repo_root(const char* scene_dir, char* out, size_t out_size) {
     return false;
 }
 
-static bool resolve_contracts_path(
+bool td2_contracts_resolve_repo_relative_path(
     const char* scene_dir,
+    const char* relative_path,
     char* out,
     size_t out_size
 ) {
@@ -177,14 +178,14 @@ static bool resolve_contracts_path(
     }
 
     if (repo_root[0] == '\0') {
-        snprintf(out, out_size, "rom_analysis/docs/callback_state_contracts.jsonc");
+        snprintf(out, out_size, "%s", relative_path);
     } else {
-        join_path(out, out_size, repo_root, "rom_analysis/docs/callback_state_contracts.jsonc");
+        join_path(out, out_size, repo_root, relative_path);
     }
     return true;
 }
 
-static bool extract_object_block(
+bool td2_contracts_extract_object_block(
     const char* json,
     const char* anchor,
     char* out,
@@ -284,6 +285,44 @@ void td2_runtime_state_seed_from_contract(
     state->source = TD2_RUNTIME_STATE_SOURCE_CONTRACT_SEED;
 }
 
+void td2_runtime_state_parse_json_fields(
+    Td2RuntimeState* state,
+    const char* block
+) {
+    if (state == NULL || block == NULL) {
+        return;
+    }
+
+    state->has_active_main_callback = parse_snes_pointer(
+        block,
+        "\"active_main_callback\": \"",
+        &state->active_main_callback_bank,
+        &state->active_main_callback_addr);
+    state->has_active_irq_callback = parse_snes_pointer(
+        block,
+        "\"active_irq_callback\": \"",
+        &state->active_irq_callback_bank,
+        &state->active_irq_callback_addr);
+    state->has_active_nmi_callback = parse_snes_pointer(
+        block,
+        "\"active_nmi_callback\": \"",
+        &state->active_nmi_callback_bank,
+        &state->active_nmi_callback_addr);
+
+    parse_optional_u16(block, "\"state_0202\":", &state->has_state_0202, &state->state_0202);
+    parse_optional_u16(block, "\"state_0204\":", &state->has_state_0204, &state->state_0204);
+    parse_optional_u16(block, "\"state_0206\":", &state->has_state_0206, &state->state_0206);
+    parse_optional_u16(block, "\"state_0208\":", &state->has_state_0208, &state->state_0208);
+    parse_optional_u16(block, "\"state_020a\":", &state->has_state_020a, &state->state_020a);
+    parse_optional_u16(block, "\"state_040a\":", &state->has_state_040a, &state->state_040a);
+    parse_optional_u16(block, "\"state_1c6a\":", &state->has_state_1c6a, &state->state_1c6a);
+    parse_optional_u16(block, "\"state_1c70\":", &state->has_state_1c70, &state->state_1c70);
+    parse_optional_u16(block, "\"state_1c76\":", &state->has_state_1c76, &state->state_1c76);
+    parse_optional_u16(block, "\"state_11f3\":", &state->has_state_11f3, &state->state_11f3);
+    parse_optional_u16(block, "\"dp_0053\":", &state->has_dp_0053, &state->dp_0053);
+    parse_optional_u16(block, "\"dp_0054\":", &state->has_dp_0054, &state->dp_0054);
+}
+
 bool td2_callback_contract_load_for_frame(
     Td2CallbackTraceContract* contract,
     const char* scene_dir,
@@ -308,7 +347,11 @@ bool td2_callback_contract_load_for_frame(
         return true;
     }
 
-    if (!resolve_contracts_path(scene_dir, contracts_path, sizeof(contracts_path)) ||
+    if (!td2_contracts_resolve_repo_relative_path(
+            scene_dir,
+            "rom_analysis/docs/callback_state_contracts.jsonc",
+            contracts_path,
+            sizeof(contracts_path)) ||
         !file_exists(contracts_path)) {
         if (error_size > 0U) {
             error[0] = '\0';
@@ -332,7 +375,7 @@ bool td2_callback_contract_load_for_frame(
         return true;
     }
 
-    if (!extract_object_block(json, frame_anchor, check_block, sizeof(check_block))) {
+    if (!td2_contracts_extract_object_block(json, frame_anchor, check_block, sizeof(check_block))) {
         free(json);
         set_error(error, error_size, "failed to extract callback contract check");
         return false;
@@ -350,34 +393,7 @@ bool td2_callback_contract_load_for_frame(
     }
     parse_json_string(check_block, "\"note\": \"", contract->note, sizeof(contract->note));
 
-    contract->expected_state.has_active_main_callback = parse_snes_pointer(
-        check_block,
-        "\"active_main_callback\": \"",
-        &contract->expected_state.active_main_callback_bank,
-        &contract->expected_state.active_main_callback_addr);
-    contract->expected_state.has_active_irq_callback = parse_snes_pointer(
-        check_block,
-        "\"active_irq_callback\": \"",
-        &contract->expected_state.active_irq_callback_bank,
-        &contract->expected_state.active_irq_callback_addr);
-    contract->expected_state.has_active_nmi_callback = parse_snes_pointer(
-        check_block,
-        "\"active_nmi_callback\": \"",
-        &contract->expected_state.active_nmi_callback_bank,
-        &contract->expected_state.active_nmi_callback_addr);
-
-    parse_optional_u16(check_block, "\"state_0202\":", &contract->expected_state.has_state_0202, &contract->expected_state.state_0202);
-    parse_optional_u16(check_block, "\"state_0204\":", &contract->expected_state.has_state_0204, &contract->expected_state.state_0204);
-    parse_optional_u16(check_block, "\"state_0206\":", &contract->expected_state.has_state_0206, &contract->expected_state.state_0206);
-    parse_optional_u16(check_block, "\"state_0208\":", &contract->expected_state.has_state_0208, &contract->expected_state.state_0208);
-    parse_optional_u16(check_block, "\"state_020a\":", &contract->expected_state.has_state_020a, &contract->expected_state.state_020a);
-    parse_optional_u16(check_block, "\"state_040a\":", &contract->expected_state.has_state_040a, &contract->expected_state.state_040a);
-    parse_optional_u16(check_block, "\"state_1c6a\":", &contract->expected_state.has_state_1c6a, &contract->expected_state.state_1c6a);
-    parse_optional_u16(check_block, "\"state_1c70\":", &contract->expected_state.has_state_1c70, &contract->expected_state.state_1c70);
-    parse_optional_u16(check_block, "\"state_1c76\":", &contract->expected_state.has_state_1c76, &contract->expected_state.state_1c76);
-    parse_optional_u16(check_block, "\"state_11f3\":", &contract->expected_state.has_state_11f3, &contract->expected_state.state_11f3);
-    parse_optional_u16(check_block, "\"dp_0053\":", &contract->expected_state.has_dp_0053, &contract->expected_state.dp_0053);
-    parse_optional_u16(check_block, "\"dp_0054\":", &contract->expected_state.has_dp_0054, &contract->expected_state.dp_0054);
+    td2_runtime_state_parse_json_fields(&contract->expected_state, check_block);
 
     free(json);
     if (error_size > 0U) {

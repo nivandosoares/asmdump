@@ -103,15 +103,20 @@ Current scheduler-backed promoted rails:
 - `menu_gameplay_entry`: `tools/out/design_frame1500_car_select`
 - `gameplay_live_race_mid`: `tools/out/design_lane3_live_race_mid_frame0_native`
 
+The non-intro rails now load from:
+
+- `rom_analysis/docs/scheduler_rail_contracts.jsonc`
+
 Post-push wiki refresh wrapper:
 
 ```sh
 ./tools/push_checkpoint.sh
 ```
 
-That wrapper pushes the current checkpoint, rebuilds the curated docs wiki,
-and only creates a follow-up wiki refresh commit/push if the generated wiki
-actually changed and no unrelated dirty files would be swept into that commit.
+That wrapper pushes the current checkpoint, rebuilds the curated docs wiki in
+an isolated temporary `git worktree`, and creates a follow-up wiki refresh
+commit/push when the generated wiki changes. Because the refresh happens in a
+clean worktree, unrelated local dirty files no longer block wiki publication.
 
 For short review windows where you want a reproducible bundle of visual
 artifacts instead of a one-off capture, use:

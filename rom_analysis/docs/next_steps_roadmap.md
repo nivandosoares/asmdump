@@ -51,8 +51,10 @@ Validation contract baseline:
   - regression gates `6/6` pass
   - compare lane `3/3` pass
   - intro callback model smoke `183/183` checks pass
-  - scheduler smoke `156/156` checks pass across:
-    intro no-input, menu gameplay-entry, and live-race gameplay seed
+  - scheduler smoke `175/175` checks pass across:
+    intro no-input, menu gameplay-entry, and live-race gameplay seed, with
+    menu/gameplay resolved from
+    `rom_analysis/docs/scheduler_rail_contracts.jsonc`
 
 ## Lane 3 Live Entry Update (`2026-03-28`)
 

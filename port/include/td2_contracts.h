@@ -13,6 +13,7 @@ typedef enum {
     TD2_RUNTIME_STATE_SOURCE_NONE = 0,
     TD2_RUNTIME_STATE_SOURCE_CONTRACT_SEED = 1,
     TD2_RUNTIME_STATE_SOURCE_CALLBACK_MODEL = 2,
+    TD2_RUNTIME_STATE_SOURCE_SCHEDULER_CONTRACT = 3,
 } Td2RuntimeStateSource;
 
 typedef struct {
@@ -65,6 +66,22 @@ void td2_runtime_state_reset(Td2RuntimeState* state);
 void td2_runtime_state_seed_from_contract(
     Td2RuntimeState* state,
     const Td2CallbackTraceContract* contract
+);
+void td2_runtime_state_parse_json_fields(
+    Td2RuntimeState* state,
+    const char* block
+);
+bool td2_contracts_resolve_repo_relative_path(
+    const char* scene_dir,
+    const char* relative_path,
+    char* out,
+    size_t out_size
+);
+bool td2_contracts_extract_object_block(
+    const char* json,
+    const char* anchor,
+    char* out,
+    size_t out_size
 );
 bool td2_callback_contract_load_for_frame(
     Td2CallbackTraceContract* contract,

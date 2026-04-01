@@ -116,7 +116,10 @@ This validates the minimal callback scheduler over the three promoted rails:
 
 This smoke is intentionally state-first. It proves that the runtime now steps
 callback families and handoffs for the three target rails, even when a given
-design pack has no trusted `main_visible.ppm` golden.
+design pack has no trusted `main_visible.ppm` golden. It also now proves that
+menu/gameplay are loading `scheduler_contract` state from
+`rom_analysis/docs/scheduler_rail_contracts.jsonc` instead of hardcoded C
+anchors.
 
 ## 6) Practical Gate Policy
 

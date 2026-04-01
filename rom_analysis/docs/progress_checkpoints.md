@@ -1,6 +1,83 @@
 Date: 2026-04-01
 
 Summary
+- Promoted the menu/gameplay scheduler rails from hardcoded C anchors into
+  the new contract surface `rom_analysis/docs/scheduler_rail_contracts.jsonc`.
+- `td2_scheduler` now loads versioned rail segments for
+  `menu_gameplay_entry` and `gameplay_live_race_mid`, while intro continues
+  to use the callback model path.
+- `tools/push_checkpoint.sh` no longer depends on a clean main worktree to
+  refresh the curated wiki: it now rebuilds and commits the wiki in an
+  isolated temporary `git worktree`, then cleans local generated wiki output
+  back to the pushed state.
+
+What I ran
+- `make -C port clean && make -C port`
+- `./port/test_scheduler.sh`
+- `make -C port test`
+- direct runtime probes:
+  - `./port/build/td2_port --scene-dir tools/out/design_frame1500_car_select --scheduler-profile menu_gameplay_entry --headless --frames 1 --dump-prefix <tmp>/menu`
+  - `./port/build/td2_port --scene-dir tools/out/design_lane3_live_race_mid_frame0_native --scheduler-profile gameplay_live_race_mid --headless --frames 1 --dump-prefix <tmp>/gameplay`
+
+Findings / Interpretation
+- The scheduler gate is now closed in reusable form for the non-intro rails:
+  the smoke still proves the same menu/gameplay checkpoints, but those rails
+  are now sourced from a shared JSONC contract instead of branches in
+  `td2_scheduler.c`.
+- The scheduler smoke grew from `156` to `175` checks because it now also
+  proves rail origin (`scheduler.contract_loaded`, `segment_count`, and
+  `scheduler_contract` source) in addition to frame state.
+- The wiki refresh path is no longer blocked by unrelated dirty files in the
+  main worktree, because the follow-up commit is created from a clean
+  temporary worktree at the pushed checkpoint.
+
+What I learned (actionable)
+- The next port gate should move off rail externalization and onto mutation:
+  menu/gameplay now have a stable contract surface that can absorb real
+  input-driven state deltas without recompiling the scheduler.
+- The repo no longer needs the older "skip wiki auto-commit when anything
+  else is dirty" safety rule for generated wiki output. Isolating the refresh
+  in a clean worktree is safer and more useful.
+
+Next steps / Checkpoints
+1) Start mutating `menu_gameplay_entry` and `gameplay_live_race_mid` under
+   input instead of replaying fixed contract rows.
+2) Promote compare-backed menu/gameplay fixtures wherever trusted goldens
+   exist.
+3) Expand the scheduler contract only when a new rail or new checkpoint is
+   validated, not as a substitute for input/state execution.
+
+Immediate recommendation
+- Treat `rom_analysis/docs/scheduler_rail_contracts.jsonc` as the editable
+  proving surface for menu/gameplay rail checkpoints.
+- Keep `./port/test_scheduler.sh` as the cheapest falsifier before broader
+  compare or bundle work.
+
+Files updated in this turn
+- `port/include/td2_contracts.h`
+- `port/include/td2_scheduler.h`
+- `port/src/td2_compare.c`
+- `port/src/td2_contracts.c`
+- `port/src/td2_scheduler.c`
+- `port/test_scheduler.c`
+- `tools/push_checkpoint.sh`
+- `rom_analysis/docs/scheduler_rail_contracts.jsonc`
+- `PORT_PLAN.md`
+- `port/README.md`
+- `port/docs/ARCHITECTURE.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+
+Next reading
+- `rom_analysis/docs/scheduler_rail_contracts.jsonc`
+- `port/src/td2_scheduler.c`
+- `tools/push_checkpoint.sh`
+
+Date: 2026-04-01
+
+Summary
 - Replaced the old one-shot callback seed path with a minimal scheduler that
   executes validated callback families and handoffs on three promoted rails:
   `intro_noinput`, `menu_gameplay_entry`, and `gameplay_live_race_mid`.

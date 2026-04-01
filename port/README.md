@@ -22,6 +22,8 @@ Current checkpoint:
   - `intro_noinput`
   - `menu_gameplay_entry`
   - `gameplay_live_race_mid`
+- contract-fed scheduler rails for menu/gameplay playback in
+  `../rom_analysis/docs/scheduler_rail_contracts.jsonc`
 - headless frame dumping for regression smoke
 
 This is deliberately not the final renderer. It is the clean replacement for
@@ -87,8 +89,10 @@ Notes:
 - `make -C port test` now also runs `test_scheduler.sh`, which validates the
   three promoted scheduler rails:
   intro no-input, menu with input, and the reproducible live-race gameplay
-  seed.
+  seed. Menu and gameplay now prove `scheduler_contract` state coming from
+  the shared JSONC contract, not hardcoded C anchors.
 - `tools/push_checkpoint.sh` is the repo-local wrapper for the post-push step:
-  it pushes the current checkpoint, refreshes the curated wiki, and issues a
-  follow-up wiki refresh commit/push only if the generated wiki changed and
-  the worktree is otherwise clean enough to avoid mixing unrelated changes.
+  it pushes the current checkpoint, refreshes the curated wiki in an isolated
+  temporary `git worktree`, and issues a follow-up wiki refresh commit/push
+  without sweeping unrelated local dirty files into that commit. It also
+  cleans the local generated wiki outputs back to the pushed state.

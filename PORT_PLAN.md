@@ -104,6 +104,9 @@ New useful state beyond the original plan:
   - `intro_noinput`
   - `menu_gameplay_entry`
   - `gameplay_live_race_mid`
+- the non-intro scheduler rails now load from
+  `rom_analysis/docs/scheduler_rail_contracts.jsonc` instead of hardcoded C
+  anchors, so menu/gameplay playback is driven by versioned contract data
 - that scheduler now executes validated callback-family handoffs across:
   - intro `986 -> 1117`
   - menu/input corridor `1500 -> 2050`
@@ -232,16 +235,13 @@ New useful state beyond the original plan:
 
 Immediate next focus:
 
-1. Promote the current anchor-driven scheduler profiles into reusable
-   contract-driven rails so menu and gameplay no longer depend on hardcoded
-   checkpoints in the smoke.
-2. Start mutating real front-end and post-`02:9016` gameplay state under
+1. Start mutating real front-end and post-`02:9016` gameplay state under
    input, instead of only replaying callback families and handoffs.
-3. Promote compare-backed fixtures for the new menu/gameplay rails wherever a
+2. Promote compare-backed fixtures for the new menu/gameplay rails wherever a
    trusted `main_visible` golden exists.
-4. Keep intro archaeology moving only where it tightens callback ownership or
+3. Keep intro archaeology moving only where it tightens callback ownership or
    renderer behavior, not as a polishing lane by itself.
-5. Use the local SentrySearch chunk workflow plus the longplay anchor packs to
+4. Use the local SentrySearch chunk workflow plus the longplay anchor packs to
    keep gameplay investigation keyed to named windows and reusable query terms.
 
 ## Execution Reset

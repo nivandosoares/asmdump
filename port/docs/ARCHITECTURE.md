@@ -40,6 +40,9 @@ The current code intentionally does only the minimum clean work:
 - `td2_scheduler.*`
   Minimal callback-family playback for the three promoted rails:
   intro no-input, menu gameplay-entry, and reproducible live-race gameplay.
+  The menu/gameplay rails are now loaded from
+  `rom_analysis/docs/scheduler_rail_contracts.jsonc`, while intro remains on
+  the callback model path.
 
 The promoted smoke fixtures are now exact through the native compositor itself.
 `main_visible.ppm` stays in the loop only as the regression golden surface,
@@ -53,9 +56,7 @@ bundles that only carry local `raw/` dumps and no golden frame.
 
 ## Next replacement steps
 
-1. Move the new scheduler profiles from hardcoded anchor playback into
-   contract-driven callback/state rails.
-2. Start applying real input-driven state mutation on top of the
+1. Start applying real input-driven state mutation on top of the
    `menu_gameplay_entry` and `gameplay_live_race_mid` families.
-3. Promote compare-backed menu/gameplay fixtures so the same
+2. Promote compare-backed menu/gameplay fixtures so the same
    runtime-or-golden workflow used on intro can gate later rails too.

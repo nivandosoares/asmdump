@@ -7,6 +7,8 @@
 #include "td2_contracts.h"
 #include "td2_io.h"
 
+#define TD2_SCHEDULER_SEGMENTS_MAX 32
+
 typedef enum {
     TD2_SCHEDULER_PROFILE_NONE = 0,
     TD2_SCHEDULER_PROFILE_AUTO = 1,
@@ -16,8 +18,18 @@ typedef enum {
 } Td2SchedulerProfile;
 
 typedef struct {
+    bool available;
+    unsigned start_frame;
+    unsigned end_frame;
+    Td2RuntimeState state;
+} Td2SchedulerSegment;
+
+typedef struct {
     Td2SchedulerProfile requested_profile;
     Td2SchedulerProfile active_profile;
+    bool contract_loaded;
+    unsigned segment_count;
+    Td2SchedulerSegment segments[TD2_SCHEDULER_SEGMENTS_MAX];
 } Td2Scheduler;
 
 bool td2_scheduler_parse_profile(

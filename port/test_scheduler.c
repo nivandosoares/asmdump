@@ -9,6 +9,9 @@ typedef struct {
     const char* label;
     const char* scene_dir;
     Td2SchedulerProfile profile;
+    Td2RuntimeStateSource expected_source;
+    bool expected_contract_loaded;
+    unsigned expected_segment_count;
     unsigned checkpoints[8];
     unsigned checkpoint_count;
 } Td2RailCase;
@@ -18,6 +21,9 @@ static const Td2RailCase k_rails[] = {
         "intro_noinput",
         "../tools/out/design_frame986",
         TD2_SCHEDULER_PROFILE_INTRO_NOINPUT,
+        TD2_RUNTIME_STATE_SOURCE_CALLBACK_MODEL,
+        false,
+        0U,
         {986U, 1093U, 1102U, 1117U},
         4U,
     },
@@ -25,6 +31,9 @@ static const Td2RailCase k_rails[] = {
         "menu_gameplay_entry",
         "../tools/out/design_frame1500_car_select",
         TD2_SCHEDULER_PROFILE_MENU_GAMEPLAY_ENTRY,
+        TD2_RUNTIME_STATE_SOURCE_SCHEDULER_CONTRACT,
+        true,
+        7U,
         {1500U, 1640U, 1677U, 1857U, 2014U, 2044U, 2050U},
         7U,
     },
@@ -32,6 +41,9 @@ static const Td2RailCase k_rails[] = {
         "gameplay_live_race_mid",
         "../tools/out/design_lane3_live_race_mid_frame0_native",
         TD2_SCHEDULER_PROFILE_GAMEPLAY_LIVE_RACE_MID,
+        TD2_RUNTIME_STATE_SOURCE_SCHEDULER_CONTRACT,
+        true,
+        12U,
         {3U, 11U},
         2U,
     },
@@ -117,6 +129,28 @@ static bool expect_source(
     return true;
 }
 
+static bool expect_bool(
+    const char* rail,
+    const char* key,
+    bool actual_value,
+    bool expected_value,
+    unsigned* total_checks,
+    unsigned* failed_checks
+) {
+    (*total_checks)++;
+    if (actual_value != expected_value) {
+        fprintf(stderr,
+                "FAIL %s %s expected %s got %s\n",
+                rail,
+                key,
+                expected_value ? "true" : "false",
+                actual_value ? "true" : "false");
+        (*failed_checks)++;
+        return false;
+    }
+    return true;
+}
+
 static void verify_intro_frame(
     const Td2Runtime* runtime,
     unsigned frame,
@@ -185,7 +219,7 @@ static void verify_menu_frame(
 ) {
     const Td2RuntimeState* state = &runtime->state;
 
-    expect_source("menu_gameplay_entry", frame, state->source, TD2_RUNTIME_STATE_SOURCE_CALLBACK_MODEL, total_checks, failed_checks);
+    expect_source("menu_gameplay_entry", frame, state->source, TD2_RUNTIME_STATE_SOURCE_SCHEDULER_CONTRACT, total_checks, failed_checks);
     if (frame >= 2044U) {
         expect_pointer("menu_gameplay_entry", frame, "active_main_callback",
                        state->has_active_main_callback,
@@ -317,7 +351,7 @@ static void verify_gameplay_frame(
 ) {
     const Td2RuntimeState* state = &runtime->state;
 
-    expect_source("gameplay_live_race_mid", frame, state->source, TD2_RUNTIME_STATE_SOURCE_CALLBACK_MODEL, total_checks, failed_checks);
+    expect_source("gameplay_live_race_mid", frame, state->source, TD2_RUNTIME_STATE_SOURCE_SCHEDULER_CONTRACT, total_checks, failed_checks);
     expect_pointer("gameplay_live_race_mid", frame, "active_main_callback",
                    state->has_active_main_callback,
                    state->active_main_callback_bank,
@@ -379,6 +413,21 @@ static bool verify_rail(
         return false;
     }
 
+    expect_bool(rail->label,
+                "scheduler.contract_loaded",
+                runtime.scheduler.contract_loaded,
+                rail->expected_contract_loaded,
+                total_checks,
+                failed_checks);
+    expect_u16(rail->label,
+               0U,
+               "scheduler.segment_count",
+               true,
+               (uint16_t)runtime.scheduler.segment_count,
+               (uint16_t)rail->expected_segment_count,
+               total_checks,
+               failed_checks);
+
     for (i = 0U; i < rail->checkpoint_count; i++) {
         unsigned target_frame = rail->checkpoints[i];
 
@@ -417,6 +466,12 @@ static bool verify_rail(
         } else if (rail->profile == TD2_SCHEDULER_PROFILE_GAMEPLAY_LIVE_RACE_MID) {
             verify_gameplay_frame(&runtime, target_frame, total_checks, failed_checks);
         }
+        expect_source(rail->label,
+                      target_frame,
+                      runtime.state.source,
+                      rail->expected_source,
+                      total_checks,
+                      failed_checks);
         expect_u16(rail->label,
                    target_frame,
                    "ppu.frame_number",

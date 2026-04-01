@@ -113,6 +113,8 @@ static const char* td2_runtime_state_source_name(Td2RuntimeStateSource source) {
             return "contract_seed";
         case TD2_RUNTIME_STATE_SOURCE_CALLBACK_MODEL:
             return "callback_model";
+        case TD2_RUNTIME_STATE_SOURCE_SCHEDULER_CONTRACT:
+            return "scheduler_contract";
         case TD2_RUNTIME_STATE_SOURCE_NONE:
         default:
             return "none";
