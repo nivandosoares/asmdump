@@ -22,25 +22,22 @@ The current code intentionally does only the minimum clean work:
 - `platform_sdl.*`
   SDL host shell with optional headless mode.
 - `td2_io.*`
-  Loads a design pack plus the raw `vram.bin`, `cgram.bin`, and `oam.bin`
-  state that belongs to it.
+  Loads a design pack plus the raw `vram.bin`, `cgram.bin`, `oam.bin`, and
+  `ppu_state.json` state that belongs to it.
 - `td2_ppu.*`
-  Holds the SNES PPU shadow state and renders the exact extracted
-  `main_visible.ppm` reference frame.
+  Holds the SNES PPU shadow state and rasterizes BG/OBJ/Mode7 directly from
+  raw state.
 - `td2_runtime.*`
   Fixed-frame orchestration plus PPM dumping for smoke tests.
 
-The renderer is therefore exact for promoted design-pack fixtures while the
-synthetic PPU compositor is still pending. This is deliberate: the repo now has
-the right host/runtime shape without carrying fake gameplay code forward.
+The promoted smoke fixtures are now exact through the native compositor itself.
+`main_visible.ppm` stays in the loop only as the regression golden surface.
 
 ## Next replacement steps
 
-1. Replace `main_visible.ppm` blitting with rasterization from raw
-   `VRAM/CGRAM/OAM/PPU` state.
-2. Add a callback/state execution spine driven by validated bank ownership,
+1. Add a callback/state execution spine driven by validated bank ownership,
    starting with front-end callback families.
-3. Add a side-by-side compare lane, Zelda3-style, so frame/state drift is
+2. Add a side-by-side compare lane, Zelda3-style, so frame/state drift is
    reported automatically against trusted traces.
-4. Feed gameplay windows from the archaeology docs and SentrySearch chunk
+3. Feed gameplay windows from the archaeology docs and SentrySearch chunk
    workflow into the same runtime/validation loop.

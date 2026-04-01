@@ -36,7 +36,7 @@ static bool parse_uint(const char* text, unsigned* value) {
 
 int main(int argc, char** argv) {
     Td2RuntimeConfig config;
-    Td2Runtime runtime;
+    Td2Runtime* runtime = NULL;
     PlatformSdl platform;
     char error[256];
     char frame_label[32];
@@ -79,8 +79,15 @@ int main(int argc, char** argv) {
         config.frame_limit = 1U;
     }
 
-    if (!td2_runtime_init(&runtime, &config, error, sizeof(error))) {
+    runtime = (Td2Runtime*)calloc(1U, sizeof(*runtime));
+    if (runtime == NULL) {
+        fprintf(stderr, "runtime init failed: out of memory\n");
+        return 1;
+    }
+
+    if (!td2_runtime_init(runtime, &config, error, sizeof(error))) {
         fprintf(stderr, "runtime init failed: %s\n", error);
+        free(runtime);
         return 1;
     }
 
@@ -92,12 +99,13 @@ int main(int argc, char** argv) {
             error,
             sizeof(error))) {
         fprintf(stderr, "platform init failed: %s\n", error);
-        td2_runtime_free(&runtime);
+        td2_runtime_free(runtime);
+        free(runtime);
         return 1;
     }
 
-    if (runtime.design_pack.has_frame_number) {
-        snprintf(frame_label, sizeof(frame_label), "%u", runtime.design_pack.frame_number);
+    if (runtime->design_pack.has_frame_number) {
+        snprintf(frame_label, sizeof(frame_label), "%u", runtime->design_pack.frame_number);
     } else {
         snprintf(frame_label, sizeof(frame_label), "n/a");
     }
@@ -106,9 +114,9 @@ int main(int argc, char** argv) {
         "Loaded scene %s (frame=%s, bgMode=%u, main=%u, sub=%u)\n",
         config.scene_dir,
         frame_label,
-        runtime.design_pack.bg_mode,
-        runtime.design_pack.main_screen_layers,
-        runtime.design_pack.sub_screen_layers
+        runtime->design_pack.bg_mode,
+        runtime->design_pack.main_screen_layers,
+        runtime->design_pack.sub_screen_layers
     );
 
     while (!platform.quit_requested) {
@@ -122,38 +130,42 @@ int main(int argc, char** argv) {
             }
         }
 
-        if (config.frame_limit != 0U && runtime.frame_counter >= config.frame_limit) {
+        if (config.frame_limit != 0U && runtime->frame_counter >= config.frame_limit) {
             break;
         }
 
-        if (!td2_runtime_render_frame(&runtime, error, sizeof(error))) {
+        if (!td2_runtime_render_frame(runtime, error, sizeof(error))) {
             fprintf(stderr, "render failed: %s\n", error);
             platform_sdl_shutdown(&platform);
-            td2_runtime_free(&runtime);
+            td2_runtime_free(runtime);
+            free(runtime);
             return 1;
         }
 
         if (config.dump_prefix != NULL) {
-            if (!td2_runtime_dump_frame(&runtime, config.dump_prefix, runtime.frame_counter, error, sizeof(error))) {
+            if (!td2_runtime_dump_frame(runtime, config.dump_prefix, runtime->frame_counter, error, sizeof(error))) {
                 fprintf(stderr, "dump failed: %s\n", error);
                 platform_sdl_shutdown(&platform);
-                td2_runtime_free(&runtime);
+                td2_runtime_free(runtime);
+                free(runtime);
                 return 1;
             }
         }
 
-        if (!platform_sdl_present(&platform, runtime.framebuffer, TD2_FRAME_WIDTH, TD2_FRAME_HEIGHT, error, sizeof(error))) {
+        if (!platform_sdl_present(&platform, runtime->framebuffer, TD2_FRAME_WIDTH, TD2_FRAME_HEIGHT, error, sizeof(error))) {
             fprintf(stderr, "present failed: %s\n", error);
             platform_sdl_shutdown(&platform);
-            td2_runtime_free(&runtime);
+            td2_runtime_free(runtime);
+            free(runtime);
             return 1;
         }
 
-        runtime.frame_counter++;
+        runtime->frame_counter++;
         platform_sdl_sleep_for_frame(&platform, frame_start);
     }
 
     platform_sdl_shutdown(&platform);
-    td2_runtime_free(&runtime);
+    td2_runtime_free(runtime);
+    free(runtime);
     return 0;
 }

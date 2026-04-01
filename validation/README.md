@@ -33,11 +33,11 @@ make -C port
 ./port/test_regression.sh
 ```
 
-That smoke does **not** claim synthetic PPU parity yet. It validates the new
-host/runtime spine instead:
+That smoke now validates the first native synthetic PPU checkpoint:
 
 - load a promoted design pack
 - seed `VRAM/CGRAM/OAM` shadow state
+- seed visible layer, Mode 7, and OBJ registers from `ppu_state.json`
 - dump a headless frame
 - compare it against the extracted `layers/main_visible.ppm` golden
 
@@ -45,6 +45,11 @@ Current bootstrap fixtures:
 
 - `port/assets/test_dump_frame300/design_pack`
 - `port/assets/test_dump_range_1086_1093/design_pack_range/frame_01086`
+
+Current exact-native parity fixtures:
+
+- frame `300`: BG-only credits scene
+- frame `1086`: Mode 7 plus OBJ gameplay scene
 
 For short review windows where you want a reproducible bundle of visual
 artifacts instead of a one-off capture, use:

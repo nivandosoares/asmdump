@@ -9,8 +9,8 @@ decoded tilemaps and sprite visibility metadata.
 - The local `zelda3/` repo is the architecture model:
   extracted assets + SNES-like runtime state + side-by-side compare.
 - Old `port/` gameplay/physics stand-ins are retired; the new `port/`
-  bootstrap now only loads design packs, seeds raw state, and validates exact
-  `main_visible` parity for promoted fixtures.
+  bootstrap now loads design packs, seeds raw state, and renders exact
+  promoted fixtures synthetically from that state.
 - `zelda3/`, `sentrysearch/`, and `the_duel_longplay.mp4` are local-only
   references and must stay ignored in Git.
 - Lane order is unchanged, but every active lane now feeds the new runtime /

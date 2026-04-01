@@ -85,6 +85,10 @@ new SNES-mimetic runtime, not define the final port architecture.
 
 New useful state beyond the original plan:
 
+- the new `port/` bootstrap now renders promoted design-pack fixtures
+  synthetically from raw `VRAM/CGRAM/OAM/PPU` state, with exact parity on
+  frame `300` and frame `1086`
+
 - the frame-`300` copyright/credits scene is an exact solved target from both live Mesen dumps and a ROM-side builder
 - the `Ballistic presents` splash now has a deterministic entry anchor at frame `654`
 - the `L00A35A -> 01:A39C` path is identified as a palette-driven BG attract state, not a sprite-heavy scene
@@ -206,14 +210,12 @@ Immediate next focus:
 
 1. Replace the old `port/` scaffolds with a clean SNES-mimetic bootstrap:
    SDL host, state shadow, design-pack loader, and bounded regression smoke.
-2. Replace reference-frame blitting with synthetic PPU rasterization from raw
-   `VRAM/CGRAM/OAM/PPU` state.
-3. Add a Zelda3-style side-by-side compare lane so callback/state drift is
+2. Add a Zelda3-style side-by-side compare lane so callback/state drift is
    reported automatically against trusted traces.
-4. Keep the intro archaeology lanes moving, but use them to ratify callback
+3. Keep the intro archaeology lanes moving, but use them to ratify callback
    families and renderer contracts rather than to justify sampled playback as
    the end architecture.
-5. Use the local SentrySearch chunk workflow plus the longplay anchor packs to
+4. Use the local SentrySearch chunk workflow plus the longplay anchor packs to
    keep gameplay investigation keyed to named windows and reusable query terms.
 
 ## Execution Reset

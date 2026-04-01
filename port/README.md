@@ -12,8 +12,9 @@ layer. The immediate model is the local `../zelda3/` port:
 Current checkpoint:
 
 - fixed 60 Hz SDL host loop
-- `Td2PpuState` shadow seeded from extracted design packs
-- exact-reference bootstrap that presents `main_visible.ppm`
+- `Td2PpuState` shadow seeded from extracted design packs plus `ppu_state.json`
+- synthetic SNES BG/OBJ/Mode7 rasterization from raw `VRAM/CGRAM/OAM/PPU`
+  state
 - headless frame dumping for regression smoke
 
 This is deliberately not the final renderer. It is the clean replacement for
@@ -42,6 +43,6 @@ Notes:
 
 - `../zelda3/` and `../sentrysearch/` are local investigation aids only and
   are intentionally ignored by the repo git.
-- The current renderer prefers exact extracted visible layers so the host,
-  asset loading, and validation spine can stabilize before the synthetic PPU
-  path replaces the bootstrap.
+- The promoted smoke fixtures now render exactly from raw state in the native
+  runtime; `layers/main_visible.ppm` remains a regression golden, not the
+  render source.

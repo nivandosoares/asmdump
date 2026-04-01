@@ -219,6 +219,148 @@ static void derive_raw_dir(char* raw_dir, size_t raw_dir_size, const char* scene
     snprintf(raw_dir, raw_dir_size, "%s", scene_dir);
 }
 
+static bool load_ppu_state(const char* raw_dir, Td2DesignPack* pack) {
+    char path[1200];
+    char key[64];
+    char* json = NULL;
+    size_t json_size = 0;
+    int value = 0;
+    unsigned layer_index;
+
+    join_path(path, sizeof(path), raw_dir, "ppu_state.json");
+    json = read_text_file(path, &json_size);
+    if (json == NULL || json_size == 0U) {
+        free(json);
+        return false;
+    }
+
+    if (!parse_json_int(json, "\"ppu.bgMode\":", &value)) {
+        free(json);
+        return false;
+    }
+    pack->bg_mode = (uint8_t)value;
+
+    if (!parse_json_int(json, "\"ppu.mainScreenLayers\":", &value)) {
+        free(json);
+        return false;
+    }
+    pack->main_screen_layers = (uint8_t)value;
+
+    if (!parse_json_int(json, "\"ppu.subScreenLayers\":", &value)) {
+        free(json);
+        return false;
+    }
+    pack->sub_screen_layers = (uint8_t)value;
+
+    if (parse_json_int(json, "\"ppu.brightness\":", &value)) {
+        pack->brightness = (uint8_t)value;
+    }
+    if (!parse_json_bool(json, "\"ppu.forcedBlank\":", &pack->forced_blank)) {
+        free(json);
+        return false;
+    }
+    if (!parse_json_bool(json, "\"ppu.mode1Bg3Priority\":", &pack->mode1_bg3_priority)) {
+        pack->mode1_bg3_priority = false;
+    }
+
+    if (!parse_json_bool(json, "\"ppu.mode7.fillWithTile0\":", &pack->mode7.fill_with_tile0) ||
+        !parse_json_bool(json, "\"ppu.mode7.horizontalMirroring\":", &pack->mode7.horizontal_mirroring) ||
+        !parse_json_bool(json, "\"ppu.mode7.verticalMirroring\":", &pack->mode7.vertical_mirroring) ||
+        !parse_json_bool(json, "\"ppu.mode7.largeMap\":", &pack->mode7.large_map) ||
+        !parse_json_int(json, "\"ppu.mode7.centerX\":", &pack->mode7.center_x) ||
+        !parse_json_int(json, "\"ppu.mode7.centerY\":", &pack->mode7.center_y) ||
+        !parse_json_int(json, "\"ppu.mode7.hscroll\":", &pack->mode7.hscroll) ||
+        !parse_json_int(json, "\"ppu.mode7.vscroll\":", &pack->mode7.vscroll) ||
+        !parse_json_int(json, "\"ppu.mode7.matrix[0]\":", &pack->mode7.matrix[0]) ||
+        !parse_json_int(json, "\"ppu.mode7.matrix[1]\":", &pack->mode7.matrix[1]) ||
+        !parse_json_int(json, "\"ppu.mode7.matrix[2]\":", &pack->mode7.matrix[2]) ||
+        !parse_json_int(json, "\"ppu.mode7.matrix[3]\":", &pack->mode7.matrix[3])) {
+        free(json);
+        return false;
+    }
+
+    if (!parse_json_int(json, "\"ppu.oamMode\":", &value)) {
+        free(json);
+        return false;
+    }
+    pack->oam_mode = (uint8_t)value;
+
+    if (!parse_json_int(json, "\"ppu.oamBaseAddress\":", &value)) {
+        free(json);
+        return false;
+    }
+    pack->oam_base_address = (uint16_t)value;
+    if (!parse_json_int(json, "\"ppu.oamAddressOffset\":", &value)) {
+        free(json);
+        return false;
+    }
+    pack->oam_address_offset = (uint16_t)value;
+    if (!parse_json_int(json, "\"ppu.internalOamAddress\":", &value)) {
+        free(json);
+        return false;
+    }
+    pack->internal_oam_address = (uint16_t)value;
+    if (parse_json_int(json, "\"ppu.frameCount\":", &value)) {
+        pack->ppu_frame_count = (unsigned)value;
+    }
+
+    if (!parse_json_bool(json, "\"ppu.enableOamPriority\":", &pack->enable_oam_priority) ||
+        !parse_json_bool(json, "\"ppu.objInterlace\":", &pack->obj_interlace) ||
+        !parse_json_bool(json, "\"ppu.overscanMode\":", &pack->overscan_mode)) {
+        free(json);
+        return false;
+    }
+
+    for (layer_index = 0; layer_index < TD2_PPU_LAYER_COUNT; layer_index++) {
+        Td2PpuLayerState* layer = &pack->layers[layer_index];
+
+        snprintf(key, sizeof(key), "\"ppu.layers[%u].tilemapAddress\":", layer_index);
+        if (!parse_json_int(json, key, &layer->tilemap_address)) {
+            free(json);
+            return false;
+        }
+
+        snprintf(key, sizeof(key), "\"ppu.layers[%u].chrAddress\":", layer_index);
+        if (!parse_json_int(json, key, &layer->chr_address)) {
+            free(json);
+            return false;
+        }
+
+        snprintf(key, sizeof(key), "\"ppu.layers[%u].doubleWidth\":", layer_index);
+        if (!parse_json_bool(json, key, &layer->double_width)) {
+            free(json);
+            return false;
+        }
+
+        snprintf(key, sizeof(key), "\"ppu.layers[%u].doubleHeight\":", layer_index);
+        if (!parse_json_bool(json, key, &layer->double_height)) {
+            free(json);
+            return false;
+        }
+
+        snprintf(key, sizeof(key), "\"ppu.layers[%u].largeTiles\":", layer_index);
+        if (!parse_json_bool(json, key, &layer->large_tiles)) {
+            free(json);
+            return false;
+        }
+
+        snprintf(key, sizeof(key), "\"ppu.layers[%u].hscroll\":", layer_index);
+        if (!parse_json_int(json, key, &layer->hscroll)) {
+            free(json);
+            return false;
+        }
+
+        snprintf(key, sizeof(key), "\"ppu.layers[%u].vscroll\":", layer_index);
+        if (!parse_json_int(json, key, &layer->vscroll)) {
+            free(json);
+            return false;
+        }
+    }
+
+    free(json);
+    return true;
+}
+
 bool td2_design_pack_load(
     Td2DesignPack* pack,
     const char* scene_dir,
@@ -284,6 +426,13 @@ bool td2_design_pack_load(
     pack->cgram = read_binary_file(raw_path, &pack->cgram_size);
     join_path(raw_path, sizeof(raw_path), pack->raw_dir, "oam.bin");
     pack->oam = read_binary_file(raw_path, &pack->oam_size);
+
+    if (!load_ppu_state(pack->raw_dir, pack)) {
+        set_error(error, error_size, "failed to load raw/ppu_state.json");
+        free(manifest_text);
+        td2_design_pack_free(pack);
+        return false;
+    }
 
     free(manifest_text);
     if (error_size > 0U) {

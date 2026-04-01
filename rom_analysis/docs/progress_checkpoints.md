@@ -1,6 +1,70 @@
 Date: 2026-04-01
 
 Summary
+- Promoted the new `port/` bootstrap from reference-frame blitting to a real
+  synthetic PPU path over raw `VRAM/CGRAM/OAM/PPU` state.
+- Extended the design-pack loader so `td2_io.*` now also consumes
+  `raw/ppu_state.json` and populates layer, Mode 7, and OAM register state.
+- Ported the working SNES BG/OBJ/Mode7 rasterization core into the new
+  `Td2PpuState` architecture.
+- Moved the large `Td2Runtime` allocation off the stack in `main.c` so the
+  expanded PPU cache/state remains stable in headless and SDL runs.
+
+What I ran
+- `make -C port`
+- `./port/test_regression.sh`
+
+Findings / Interpretation
+- The promoted fixtures are now exact through the native runtime compositor
+  itself, not through `main_visible.ppm` blitting.
+- Exact parity still holds on both current checkpoint scenes:
+  - `frame300_bootstrap`: `0` mismatched pixels
+  - `frame1086_bootstrap`: `0` mismatched pixels
+- The new runtime spine now has the right ownership split for the next gate:
+  trusted raw-state ingest on one side and synthetic frame generation on the
+  other, with extracted `main_visible.ppm` kept only as a regression golden.
+
+What I learned (actionable)
+- The old renderer core was reusable with limited adaptation; the shortest
+  path forward is continuing to lift proven renderer/contract pieces into the
+  new runtime shape instead of rebuilding them from scratch.
+- The next port checkpoint should focus on Zelda3-style side-by-side compare
+  and callback/state drift reporting, not on more bootstrap rendering work.
+
+Next steps / Checkpoints
+1) Add the side-by-side compare lane between the runtime and trusted traces.
+2) Start feeding validated callback/state contracts into the runtime loop.
+3) Keep using the promoted frame-`300` and frame-`1086` fixtures as the cheap
+   native smoke while broadening compare coverage.
+
+Immediate recommendation
+- Use `make -C port` plus `./port/test_regression.sh` as the default falsifier
+  after any PPU/runtime change.
+- Treat `layers/main_visible.ppm` strictly as a compare surface from this
+  checkpoint onward.
+
+Files updated in this turn
+- `port/include/td2_io.h`
+- `port/include/td2_ppu.h`
+- `port/main.c`
+- `port/src/td2_io.c`
+- `port/src/td2_ppu.c`
+- `port/src/td2_runtime.c`
+- `port/README.md`
+- `port/docs/ARCHITECTURE.md`
+- `validation/README.md`
+- `PORT_PLAN.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `PORT_PLAN.md`
+- `port/docs/ARCHITECTURE.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+
+Date: 2026-04-01
+
+Summary
 - Reset the port lane to the new SNES-mimetic strategy and replaced the old
   gameplay/physics stand-ins in `port/` with a clean bootstrap runtime.
 - Added repo ignore protection for the local-only reference inputs:

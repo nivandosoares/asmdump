@@ -50,7 +50,7 @@ bool td2_runtime_render_frame(
     char* error,
     size_t error_size
 ) {
-    td2_ppu_render_reference(&runtime->ppu, &runtime->design_pack, runtime->framebuffer);
+    td2_ppu_render_frame(&runtime->ppu, runtime->framebuffer);
     if (error_size > 0U) {
         error[0] = '\0';
     }
