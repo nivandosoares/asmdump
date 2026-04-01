@@ -1,6 +1,78 @@
 Date: 2026-04-01
 
 Summary
+- Added a dedicated late-gameplay cutoff sweep tool in
+  `tools/analyze_gameplay_bg3_cutoff.py` to test one narrow composition rule:
+  `BG3` above `BG2` in a top band, `BG3` under `BG2` below it.
+- Promoted a tracked artifact pack in
+  `tools/out/gameplay_bg3_cutoff_sweep_20260401/` with candidate PNGs and
+  compare strips for the late-entry anchors `3250`, `3400`, and `3550`.
+- Closed a stronger late-gameplay renderer reading:
+  the best measured fix is no longer “somehow use BG3 more”; it is a
+  top-band precedence shift with stable cutoffs near `79` lines on `3250`
+  and `3400`, and a deeper `95`-line window on `3550`.
+
+What I ran
+- tooling validation:
+  - `python3 -m py_compile tools/analyze_gameplay_bg3_cutoff.py`
+- promoted cutoff sweep:
+  - `python3 tools/analyze_gameplay_bg3_cutoff.py tools/out/lane3_live_entry_frame03250_bundle tools/out/lane3_live_entry_brake_traffic_frame03400_bundle tools/out/lane3_live_entry_frame03550_bundle --output-dir tools/out/gameplay_bg3_cutoff_sweep_20260401`
+
+Findings / Interpretation
+- The sweep compares three surfaces against `bg_stack_visible_support.png`:
+  - tracked `main.png`
+  - flat `BG3 under BG2`
+  - flat `BG3 over BG2`
+  - a mixed stack with a swept top-band cutoff
+- Best cutoffs landed at:
+  - `3250`: `79`
+  - `3400`: `79`
+  - `3550`: `95`
+- The mixed candidate beats the tracked `main.png` on all three anchors:
+  - `3250`: `sad_rgb 4813358 -> 4285002`
+  - `3400`: `sad_rgb 4425905 -> 3791435`
+  - `3550`: `sad_rgb 4751245 -> 3983097`
+- That is strong enough to rule out “missing BG3 asset” and materially narrow
+  the remaining gap to a top-band composition rule.
+
+What I learned (actionable)
+- Late gameplay now has a cheap falsifier for one concrete renderer idea:
+  top-band `BG3 > BG2` precedence.
+- The consistency between `3250` and `3400` is especially useful because it
+  suggests one stable background rule can survive an `OBJ`-heavy gameplay
+  event without a full background-family rewrite.
+
+Next steps / Checkpoints
+1) Decide whether the `79/95` top-band cutoffs should be promoted first as a
+   measured late-gameplay contract or translated directly into a renderer-side
+   rule.
+2) Keep the cutoff compare strips in design review so future tweaks are judged
+   against the same tracked reference.
+3) Only after this top-band precedence hypothesis is proven or falsified,
+   reopen broader late-gameplay scanline-field collection.
+
+Immediate recommendation
+- Use these tracked design PNGs for the next renderer review:
+  - `tools/out/gameplay_bg3_cutoff_sweep_20260401/lane3_live_entry_frame03250_bundle_bg3_cutoff_candidate.png`
+  - `tools/out/gameplay_bg3_cutoff_sweep_20260401/lane3_live_entry_brake_traffic_frame03400_bundle_bg3_cutoff_candidate.png`
+  - `tools/out/gameplay_bg3_cutoff_sweep_20260401/lane3_live_entry_frame03550_bundle_bg3_cutoff_candidate.png`
+
+Files updated in this turn
+- `tools/analyze_gameplay_bg3_cutoff.py`
+- `tools/out/gameplay_bg3_cutoff_sweep_20260401/`
+- `rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
+- `rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `tools/out/gameplay_bg3_cutoff_sweep_20260401/summary.md`
+- `tools/out/gameplay_bg3_cutoff_sweep_20260401/lane3_live_entry_frame03250_bundle_bg3_cutoff_compare.png`
+- `tools/out/gameplay_bg3_cutoff_sweep_20260401/lane3_live_entry_brake_traffic_frame03400_bundle_bg3_cutoff_compare.png`
+
+Date: 2026-04-01
+
+Summary
 - Promoted raw `BG3` bundle previews for late gameplay archaeology by
   extending `tools/build_gameplay_frame_bundle.py` to emit `bg3.ppm` and
   `bg3.png` next to the existing `bg1/bg2/obj/main` outputs.

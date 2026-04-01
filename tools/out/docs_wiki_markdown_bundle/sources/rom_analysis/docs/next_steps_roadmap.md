@@ -112,6 +112,35 @@ decoded tilemaps and sprite visibility metadata.
   - keep design review anchored on tracked `PNG` outputs instead of only the
     screenshot-derived support masks
 
+## Lane 3 BG3 Cutoff Sweep (`2026-04-01`)
+
+- New tooling:
+  - `tools/analyze_gameplay_bg3_cutoff.py`
+- New promoted artifact pack:
+  - `tools/out/gameplay_bg3_cutoff_sweep_20260401/summary.json`
+  - `tools/out/gameplay_bg3_cutoff_sweep_20260401/summary.md`
+  - per-bundle candidate PNGs and compare strips for:
+    - `lane3_live_entry_frame03250_bundle`
+    - `lane3_live_entry_brake_traffic_frame03400_bundle`
+    - `lane3_live_entry_frame03550_bundle`
+- Practical result:
+  - a mixed stack where `BG3` sits above `BG2` only in the top band beats the
+    tracked `main.png` on all three late anchors when scored against
+    `bg_stack_visible_support.png`
+  - best cutoffs landed at:
+    - `3250`: `79`
+    - `3400`: `79`
+    - `3550`: `95`
+  - this narrows the late-gameplay renderer boundary again:
+    the next promising rule is not “turn BG3 on everywhere”, but “promote a
+    top-band `BG3 > BG2` precedence window and prove or falsify it”
+- Next gate:
+  - decide whether that top-band precedence should be implemented as a
+    measured late-gameplay contract surface or as a real PPU-facing rule in
+    the native renderer
+  - keep using the compare strips from this sweep as the cheap falsifier
+    before any broader gameplay-layer rewrite
+
 ## Current Status Snapshot (2026-03-27)
 
 Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.

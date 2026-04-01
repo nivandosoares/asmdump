@@ -85,6 +85,8 @@ Primary wiki/gallery image refs for this pair:
 - `tools/out/lane3_live_entry_frame03250_bundle/bg2.png`
 - `tools/out/lane3_live_entry_frame03250_bundle/bg3.png`
 - `tools/out/lane3_live_entry_frame03250_bundle/obj.png`
+- `tools/out/gameplay_bg3_cutoff_sweep_20260401/lane3_live_entry_frame03250_bundle_bg3_cutoff_candidate.png`
+- `tools/out/gameplay_bg3_cutoff_sweep_20260401/lane3_live_entry_frame03250_bundle_bg3_cutoff_compare.png`
 - `tools/out/lane3_live_entry_frame03550_bundle/frame.png`
 - `tools/out/lane3_live_entry_frame03550_bundle/bg_stack_visible_support.png`
 - `tools/out/lane3_live_entry_frame03550_bundle/world_visible_support.png`
@@ -92,6 +94,8 @@ Primary wiki/gallery image refs for this pair:
 - `tools/out/lane3_live_entry_frame03550_bundle/bg2.png`
 - `tools/out/lane3_live_entry_frame03550_bundle/bg3.png`
 - `tools/out/lane3_live_entry_frame03550_bundle/obj.png`
+- `tools/out/gameplay_bg3_cutoff_sweep_20260401/lane3_live_entry_frame03550_bundle_bg3_cutoff_candidate.png`
+- `tools/out/gameplay_bg3_cutoff_sweep_20260401/lane3_live_entry_frame03550_bundle_bg3_cutoff_compare.png`
 
 ## Raster Boundary
 
@@ -134,6 +138,11 @@ Primary wiki/gallery image refs for this pair:
     keep the expected sky-to-horizon gradient, which narrows the old question
     from “is BG3 missing?” to “how is that helper strip gated/composited
     through the frame?”
+  - the first cutoff sweep now tightens that further:
+    letting `BG3` sit above `BG2` only in the top band improves the
+    screenshot-derived stack match on both anchors, with the best measured
+    cutoffs landing at `79` lines for frame `3250` and `95` lines for
+    frame `3550`
   - the screenshot-derived support surfaces are now the correct human-facing
     answer for the road/world side of this pair; the raw `BG2` render remains
     a state-only approximation
@@ -161,5 +170,8 @@ Primary wiki/gallery image refs for this pair:
 - use the new `bg3.png` surfaces to keep late-gameplay sky/horizon review on
   tracked raw-state artifacts instead of only the screenshot-derived support
   layers
+- use the promoted cutoff candidates to test whether the next runtime step
+  should be a top-band `BG3 > BG2` precedence rule instead of a broader
+  full-frame layering rewrite
 - compare those future pairs against the preserved manual video stills so the
   route-live lane and the manual-seed lane share one bucket vocabulary
