@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TD2 Port Runtime Skeleton | TD2 Archaeology Wiki</title>
+  <title>Port README | TD2 Archaeology Wiki</title>
   <link rel="stylesheet" href="../../assets/wiki.css">
 </head>
 <body>
@@ -32,93 +32,43 @@
       </nav>
       <header class="doc-header">
         <p class="eyebrow">Source Of Truth</p>
-        <h1>TD2 Port Runtime Skeleton</h1>
+        <h1>Port README</h1>
         <p class="doc-note">SDL runtime scope, usage, and current sequence playback path.</p>
         <div class="doc-meta">
           <span>Source: <code>port/README.md</code></span>
-          <span class="update-pill">Last updated 2026-03-22 16:26</span>
+          <span class="update-pill">Last updated 2026-04-01 12:28</span>
           <a href="../../../../../port/README.md">Open Raw Markdown</a>
         </div>
       </header>
       <article class="doc-body">
-        <h1 id="td2-port-runtime-skeleton">TD2 Port Runtime Skeleton</h1>
-<p>This directory contains the first PC runtime skeleton for the SNES-to-PC port.</p>
-<p>Current scope:</p>
-<ul><li>SDL2 window and renderer</li><li>fixed-timestep 60 Hz main loop</li><li>256x224 framebuffer presentation</li><li>palette JSON loader for bank 3 experiments</li><li>palette swatch and gradient viewer</li><li>PPM image viewer for extracted assets</li><li>direct SNES BG renderer from extracted <code>VRAM + CGRAM + PPU state</code></li><li>optional OBJ/OAM composition for extracted SNES scenes</li><li>sequence playback for extracted intro/front-end scenes</li><li>indexed palette-animation playback for native intro clips</li></ul>
+        <p>TD2 SNES-mimetic runtime bootstrap.</p>
+<p>This directory now tracks the new port direction: a faithful reimplementation that owns SNES-like runtime state and uses SDL only as the host/presentation layer. The immediate model is the local <code>../zelda3/</code> port:</p>
+<ul><li>extracted asset packs are separate from the runtime</li><li>the runtime keeps WRAM/VRAM/OAM/CGRAM shadow state</li><li>SDL presents a native window and audio/input host</li><li>frame/state comparison stays a first-class validation path</li></ul>
+<p>Current checkpoint:</p>
+<ul><li>fixed 60 Hz SDL host loop</li><li><code>Td2PpuState</code> shadow seeded from extracted design packs plus <code>ppu_state.json</code></li><li>synthetic SNES BG/OBJ/Mode7 rasterization from raw <code>VRAM/CGRAM/OAM/PPU</code> state</li><li>Zelda3-style compare lane: runtime | golden | diff bundle plus JSON drift summary plus seeded PPU-state and callback-state contract checks</li><li>minimal callback scheduler profiles for:</li><li><code>intro_noinput</code></li><li><code>menu_gameplay_entry</code></li><li><code>gameplay_live_race_mid</code></li><li>contract-fed scheduler rails for menu/gameplay playback in <code>../rom_analysis/docs/scheduler_rail_contracts.jsonc</code></li><li>headless frame dumping for regression smoke</li></ul>
+<p>This is deliberately not the final renderer. It is the clean replacement for the old “invented gameplay” scaffolds and the base for real callback/state execution.</p>
 <p>Build:</p>
 <pre><code class="language-sh">make -C port</code></pre>
 <p>Run:</p>
-<pre><code class="language-sh">./port/build/td2_port
-./port/build/td2_port --palette ./tools/out/bank3_palettes.json
-./port/build/td2_port --palette ./tools/out/bank3_palettes.json --palette-index 12
-./port/build/td2_port --image ./tools/out/bank6_tiles_gray.ppm
-./port/build/td2_port --snes-bg-prefix ./tools/out/bank1_credits_scene
-./port/build/td2_port --sequence ./tools/out/ballistic_sequence/sequence.txt
-./port/build/td2_port --sequence ./tools/out/ballistic_native_sequence.txt
-./port/build/td2_port --sequence ./tools/out/ballistic_rom_sequence.txt
-./port/build/td2_port --sequence ./tools/out/ballistic_callback_sequence.txt
-./port/build/td2_port --sequence ./tools/out/intro_loop_sequence.txt
-./port/build/td2_port --sequence ./tools/out/intro_loop_hybrid_sequence.txt
-./port/build/td2_port --sequence ./tools/out/intro_loop_hybrid_bridge_sequence.txt
-./port/build/td2_port --sequence ./tools/out/intro_loop_hybrid_bridge_visible_sequence.txt
-./port/build/td2_port --headless --palette ./tools/out/bank3_palettes.json --frames 1 --dump-prefix /tmp/td2_frame</code></pre>
-<p>Controls:</p>
-<ul><li><code>Esc</code>: quit</li><li><code>Left</code> / <code>Right</code>: previous or next 16-color palette, or pan image horizontally</li><li><code>Up</code> / <code>Down</code>: pan image vertically</li><li><code>Home</code> / <code>End</code>: jump to first or last palette, or move image view to top-left / bottom-right</li><li><code>Space</code>: toggle automatic palette cycling</li></ul>
-<p>For headless smoke tests, run with SDL&#x27;s dummy video driver:</p>
-<pre><code class="language-sh">./port/build/td2_port --headless --palette ./tools/out/bank3_palettes.json --frames 5</code></pre>
-<p>For validation-oriented frame dumps:</p>
-<pre><code class="language-sh">./port/build/td2_port --headless --palette ./tools/out/bank3_palettes.json --frames 1 --dump-prefix ./port/build/frame
-./port/build/td2_port --headless --snes-bg-prefix ./tools/out/bank1_credits_scene --frames 1 --dump-prefix ./port/build/credits
-./port/build/td2_port --headless --sequence ./tools/out/ballistic_sequence/sequence.txt --sequence-no-loop --frames 60 --dump-prefix ./port/build/ballistic
-./port/build/td2_port --headless --sequence ./tools/out/ballistic_native_sequence.txt --sequence-no-loop --frames 304 --dump-prefix ./port/build/ballistic_native
-./port/build/td2_port --headless --sequence ./tools/out/ballistic_rom_sequence.txt --sequence-no-loop --frames 304 --dump-prefix ./port/build/ballistic_rom
-./port/build/td2_port --headless --sequence ./tools/out/ballistic_callback_sequence.txt --sequence-no-loop --frames 304 --dump-prefix ./port/build/ballistic_callback
-./port/build/td2_port --headless --sequence ./tools/out/intro_loop_sequence.txt --sequence-no-loop --frames 1418 --dump-prefix ./port/build/intro_loop
-./port/build/td2_port --headless --sequence ./tools/out/intro_loop_hybrid_sequence.txt --sequence-no-loop --frames 1418 --dump-prefix ./port/build/intro_loop_hybrid
-./port/build/td2_port --headless --sequence ./tools/out/intro_loop_hybrid_bridge_sequence.txt --sequence-no-loop --frames 1418 --dump-prefix ./port/build/intro_loop_hybrid_bridge
-./port/build/td2_port --headless --sequence ./tools/out/intro_loop_hybrid_bridge_visible_sequence.txt --sequence-no-loop --frames 1418 --dump-prefix ./port/build/intro_loop_hybrid_bridge_visible</code></pre>
-<p>This writes <code>./port/build/frame_00000.ppm</code> or <code>./port/build/credits_00000.ppm</code>.</p>
-<p>The SNES BG path accepts either a shared prefix or explicit files:</p>
-<pre><code class="language-sh">./port/build/td2_port --snes-bg-prefix ./tools/out/bank1_credits_scene
-
-./port/build/td2_port \
-  --snes-bg-vram ./tools/out/bank1_credits_scene_vram.bin \
-  --snes-bg-cgram ./tools/out/bank1_credits_scene_cgram.bin \
-  --snes-bg-state ./tools/out/bank1_credits_scene_ppu_state.json
-
-./port/build/td2_port \
-  --snes-bg-vram ./tools/out/mesen_frame978_assets/vram.bin \
-  --snes-bg-cgram ./tools/out/mesen_frame978_assets/cgram.bin \
-  --snes-bg-state ./tools/out/mesen_frame978_assets/ppu_state.json \
-  --snes-bg-oam ./tools/out/mesen_frame978_assets/oam.bin</code></pre>
-<p>This uses the extracted VRAM/CGRAM/state directly and renders the BG layers inside the SDL runtime, without going through a prebuilt PPM. When an OAM dump is provided, or when a sibling <code>oam.bin</code> is present next to the VRAM dump, the runtime also composites OBJ sprites.</p>
-<p>For isolated <code>--snes-bg-*</code> validation, also pass an explicit empty sequence so the default intro-loop manifest does not overwrite the requested scene:</p>
+<pre><code class="language-sh">./port/build/td2_port --scene-dir port/assets/test_dump_frame300/design_pack</code></pre>
+<p>Headless smoke:</p>
+<pre><code class="language-sh">make -C port test</code></pre>
+<p>Direct compare lane:</p>
 <pre><code class="language-sh">./port/build/td2_port \
-  --sequence /dev/null \
+  --scene-dir port/assets/test_dump_frame300/design_pack \
   --headless \
   --frames 1 \
-  --dump-prefix ./port/build/frame \
-  --snes-bg-vram ./tools/out/mesen_frame978_assets/vram.bin \
-  --snes-bg-cgram ./tools/out/mesen_frame978_assets/cgram.bin \
-  --snes-bg-state ./tools/out/mesen_frame978_assets/ppu_state.json \
-  --snes-bg-oam ./tools/out/mesen_frame978_assets/oam.bin</code></pre>
-<p>That same path now supports Mode 7 BG scenes from live Mesen dumps:</p>
+  --compare \
+  --dump-prefix port/build/frame300_compare</code></pre>
+<p>Direct scheduler playback on a tracked bundle without a golden:</p>
 <pre><code class="language-sh">./port/build/td2_port \
-  --snes-bg-vram ./tools/out/td2_boot_probe_vram_1080.bin \
-  --snes-bg-cgram ./tools/out/td2_boot_probe_cgram_1080.bin \
-  --snes-bg-state ./tools/out/td2_boot_probe_ppu_state_1080.json</code></pre>
-<p>Sequence manifests are simple text files. Each line is one playback entry:</p>
-<pre><code class="language-txt"># type duration_frames path_a [path_b path_c path_d]
-snes_bg 4 frame_00654/vram.bin frame_00654/cgram.bin frame_00654/ppu_state.json
-snes_bg 4 frame_00978/vram.bin frame_00978/cgram.bin frame_00978/ppu_state.json frame_00978/oam.bin
-indexed_anim 304 ballistic_rom/ballistic_splash.txt
-ballistic_a39c 304 ballistic_callback/ballistic_a39c.txt</code></pre>
-<p>Paths can be relative to the manifest itself. This is the current path for sampled intro playback such as the <code>Ballistic presents</code> splash.</p>
-<p>The current exact no-input intro-loop milestone uses an <code>image</code> sequence built from Mesen screenshots:</p>
-<pre><code class="language-txt">image 4 intro_loop_sequence_images/frame_00654.ppm</code></pre>
-<p>The current screenshot-exact intro-loop runtime artifact is <code>tools/out/intro_loop_hybrid_sequence.txt</code>: direct runtime Ballistic via <code>ballistic_a39c</code>, then a native OAM-aware <code>snes_bg</code> splice for <code>978..985</code>, then sampled <code>image</code> playback for the remaining later attract states.</p>
-<p>The current bridge-accurate native-coverage artifacts are:</p>
-<ul><li><code>tools/out/intro_loop_hybrid_bridge_sequence.txt</code>: the same Ballistic and bootstrap path, then a longer queue-driven <code>snes_bg</code> splice covering <code>978..993</code>, then sampled <code>image</code> playback from <code>994</code> onward.</li><li><code>tools/out/intro_loop_hybrid_bridge_visible_sequence.txt</code>: the same Ballistic and bootstrap path, then native <code>snes_bg</code> playback through frame <code>1093</code>.</li></ul>
+  --scene-dir tools/out/design_frame1500_car_select \
+  --scheduler-profile menu_gameplay_entry \
+  --headless \
+  --frames 1 \
+  --dump-prefix port/build/menu1500</code></pre>
+<p>Notes:</p>
+<ul><li><code>../zelda3/</code> and <code>../sentrysearch/</code> are local investigation aids only and are intentionally ignored by the repo git.</li><li>The promoted smoke fixtures now render exactly from raw state in the native runtime; <code>layers/main_visible.ppm</code> remains a regression golden, not the render source.</li><li>Design packs that only carry <code>raw/</code> dumps and no <code>layers/main_visible.ppm</code> now load correctly when compare is not requested. This is what makes the promoted menu/gameplay investigation bundles runnable in the SDL runtime.</li><li>The compare JSON now carries <code>state_contract</code>, so <code>--fail-on-compare-diff</code> fails on both pixel drift and semantic drift in the seeded scene state.</li><li>For frames that exist in <code>rom_analysis/docs/callback_state_contracts.jsonc</code>, the runtime also seeds a callback/state shadow and emits <code>callback_contract</code> in the compare JSON. The first promoted callback-backed fixture is <code>frame_01093</code>.</li><li><code>make -C port test</code> now also runs <code>test_scheduler.sh</code>, which validates the three promoted scheduler rails: intro no-input, menu with input, and the reproducible live-race gameplay seed. Menu and gameplay now prove <code>scheduler_contract</code> state coming from the shared JSONC contract, not hardcoded C anchors.</li><li><code>tools/push_checkpoint.sh</code> is the repo-local wrapper for the post-push step: it pushes the current checkpoint, refreshes the curated wiki in an isolated temporary <code>git worktree</code>, and issues a follow-up wiki refresh commit/push without sweeping unrelated local dirty files into that commit. It also cleans the local generated wiki outputs back to the pushed state.</li></ul>
       </article>
     </main>
   </div>

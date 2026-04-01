@@ -36,7 +36,7 @@
         <p class="doc-note">Bounded pass/fail policy for regression and callback checks.</p>
         <div class="doc-meta">
           <span>Source: <code>rom_analysis/docs/validation_gates.md</code></span>
-          <span class="update-pill">Last updated 2026-03-19 23:14</span>
+          <span class="update-pill">Last updated 2026-04-01 12:28</span>
           <a href="../../../../../../rom_analysis/docs/validation_gates.md">Open Raw Markdown</a>
         </div>
       </header>
@@ -63,7 +63,37 @@
   tools/out/td2_boot_probe.json \
   --json-out tools/out/callback_state_contracts_report.json</code></pre>
 <p>This validates callback continuity and selected state fields at known frames (<code>01:A39C</code>, <code>01:9D69</code>, <code>01:9FE5</code> windows) as first-class machine checks. Use a probe capture that matches the contract&#x27;s expected profile in <code>expected_probe_profile</code>, for example a run with <code>TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/td2_boot_probe</code>.</p>
-<h2 id="3-practical-gate-policy">3) Practical Gate Policy</h2>
+<h2 id="3-bootstrap-compare-state-contract">3) Bootstrap Compare-State Contract</h2>
+<p>Runner:</p>
+<pre><code class="language-sh">./port/build/td2_port \
+  --scene-dir port/assets/test_dump_frame300/design_pack \
+  --headless \
+  --frames 1 \
+  --compare \
+  --fail-on-compare-diff \
+  --dump-prefix port/build/frame300_compare</code></pre>
+<p>Current compare JSON now also carries <code>state_contract</code>, which validates the loaded design pack against live runtime state for:</p>
+<ul><li>visible PPU/OAM registers</li><li>Mode 7 fields</li><li>per-layer tilemap/CHR/scroll metadata</li><li>raw <code>VRAM/CGRAM/OAM</code> byte parity</li></ul>
+<p>This is intentionally bootstrap-scoped: it protects the static seeded-state path now, and becomes the cheap semantic guardrail underneath later callback/state execution work.</p>
+<h2 id="4-bootstrap-callback-state-contract">4) Bootstrap Callback-State Contract</h2>
+<p>Runner:</p>
+<pre><code class="language-sh">./port/build/td2_port \
+  --scene-dir port/assets/test_dump_range_1086_1093/design_pack_range/frame_01093 \
+  --headless \
+  --frames 1 \
+  --compare \
+  --fail-on-compare-diff \
+  --dump-prefix port/build/frame1093_compare</code></pre>
+<p>For frames covered by <code>rom_analysis/docs/callback_state_contracts.jsonc</code>, the runtime now seeds a bootstrap callback/state shadow and emits <code>callback_contract</code> in the compare JSON. Current promoted callback-backed fixture:</p>
+<ul><li>frame <code>1093</code>: <code>01:9FE5</code> continuity checkpoint with <code>8</code> validated fields</li></ul>
+<p>This is also bootstrap-scoped: it proves the runtime can carry validated callback/state checkpoints in-band with compare output, but it does not yet prove that the runtime executed those callbacks to reach the state on its own.</p>
+<h2 id="5-scheduler-rail-smoke">5) Scheduler Rail Smoke</h2>
+<p>Runner:</p>
+<pre><code class="language-sh">./port/test_scheduler.sh</code></pre>
+<p>This validates the minimal callback scheduler over the three promoted rails:</p>
+<ul><li><code>intro_noinput</code>: validates the <code>986 -&gt; 1117</code> family and the <code>1093 -&gt; 1102</code> handoff</li><li><code>menu_gameplay_entry</code>: validates the input-driven menu corridor <code>1500 -&gt; 2050</code></li><li><code>gameplay_live_race_mid</code>: validates the reproducible gameplay seed over the promoted <code>3 -&gt; 11</code> window</li></ul>
+<p>This smoke is intentionally state-first. It proves that the runtime now steps callback families and handoffs for the three target rails, even when a given design pack has no trusted <code>main_visible.ppm</code> golden. It also now proves that menu/gameplay are loading <code>scheduler_contract</code> state from <code>rom_analysis/docs/scheduler_rail_contracts.jsonc</code> instead of hardcoded C anchors.</p>
+<h2 id="6-practical-gate-policy">6) Practical Gate Policy</h2>
 <p>For each archaeology lane:</p>
 <ol><li>Add or update checkpoint rows in the JSON contracts.</li><li>Keep temporary tolerances only for known unstable windows.</li><li>Reduce tolerances as renderer/state fidelity improves.</li><li>Promote checkpoint to strict (<code>0</code>) once solved.</li></ol>
       </article>

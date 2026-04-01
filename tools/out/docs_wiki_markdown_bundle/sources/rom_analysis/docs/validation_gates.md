@@ -46,7 +46,82 @@ Use a probe capture that matches the contract's expected profile in
 `expected_probe_profile`, for example a run with
 `TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/td2_boot_probe`.
 
-## 3) Practical Gate Policy
+## 3) Bootstrap Compare-State Contract
+
+Runner:
+
+```sh
+./port/build/td2_port \
+  --scene-dir port/assets/test_dump_frame300/design_pack \
+  --headless \
+  --frames 1 \
+  --compare \
+  --fail-on-compare-diff \
+  --dump-prefix port/build/frame300_compare
+```
+
+Current compare JSON now also carries `state_contract`, which validates the
+loaded design pack against live runtime state for:
+
+- visible PPU/OAM registers
+- Mode 7 fields
+- per-layer tilemap/CHR/scroll metadata
+- raw `VRAM/CGRAM/OAM` byte parity
+
+This is intentionally bootstrap-scoped: it protects the static seeded-state
+path now, and becomes the cheap semantic guardrail underneath later
+callback/state execution work.
+
+## 4) Bootstrap Callback-State Contract
+
+Runner:
+
+```sh
+./port/build/td2_port \
+  --scene-dir port/assets/test_dump_range_1086_1093/design_pack_range/frame_01093 \
+  --headless \
+  --frames 1 \
+  --compare \
+  --fail-on-compare-diff \
+  --dump-prefix port/build/frame1093_compare
+```
+
+For frames covered by `rom_analysis/docs/callback_state_contracts.jsonc`, the
+runtime now seeds a bootstrap callback/state shadow and emits
+`callback_contract` in the compare JSON. Current promoted callback-backed
+fixture:
+
+- frame `1093`: `01:9FE5` continuity checkpoint with `8` validated fields
+
+This is also bootstrap-scoped: it proves the runtime can carry validated
+callback/state checkpoints in-band with compare output, but it does not yet
+prove that the runtime executed those callbacks to reach the state on its own.
+
+## 5) Scheduler Rail Smoke
+
+Runner:
+
+```sh
+./port/test_scheduler.sh
+```
+
+This validates the minimal callback scheduler over the three promoted rails:
+
+- `intro_noinput`: validates the `986 -> 1117` family and the `1093 -> 1102`
+  handoff
+- `menu_gameplay_entry`: validates the input-driven menu corridor
+  `1500 -> 2050`
+- `gameplay_live_race_mid`: validates the reproducible gameplay seed over the
+  promoted `3 -> 11` window
+
+This smoke is intentionally state-first. It proves that the runtime now steps
+callback families and handoffs for the three target rails, even when a given
+design pack has no trusted `main_visible.ppm` golden. It also now proves that
+menu/gameplay are loading `scheduler_contract` state from
+`rom_analysis/docs/scheduler_rail_contracts.jsonc` instead of hardcoded C
+anchors.
+
+## 6) Practical Gate Policy
 
 For each archaeology lane:
 

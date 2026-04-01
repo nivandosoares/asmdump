@@ -26,6 +26,98 @@ For automated headless runs with Mesen2's test runner:
 ./validation/run_mesen_capture.sh
 ```
 
+For the current SNES-mimetic port bootstrap, build and run:
+
+```sh
+make -C port
+make -C port test
+```
+
+That smoke now validates the first native synthetic PPU checkpoint:
+
+- load a promoted design pack
+- seed `VRAM/CGRAM/OAM` shadow state
+- seed visible layer, Mode 7, and OBJ registers from `ppu_state.json`
+- dump a headless frame
+- compare it against the extracted `layers/main_visible.ppm` golden
+- generate the side-by-side compare bundle for the same promoted fixtures
+- validate the minimal scheduler across the three promoted rails:
+  intro no-input, menu with input, and reproducible gameplay seed
+
+Current bootstrap fixtures:
+
+- `port/assets/test_dump_frame300/design_pack`
+- `port/assets/test_dump_range_1086_1093/design_pack_range/frame_01086`
+
+Current exact-native parity fixtures:
+
+- frame `300`: BG-only credits scene
+- frame `1086`: Mode 7 plus OBJ gameplay scene
+
+Direct runtime compare lane:
+
+```sh
+./port/build/td2_port \
+  --scene-dir port/assets/test_dump_frame300/design_pack \
+  --headless \
+  --frames 1 \
+  --compare \
+  --dump-prefix port/build/frame300_compare
+```
+
+Direct runtime scheduler playback on a tracked menu/gameplay bundle:
+
+```sh
+./port/build/td2_port \
+  --scene-dir tools/out/design_frame1500_car_select \
+  --scheduler-profile menu_gameplay_entry \
+  --headless \
+  --frames 1 \
+  --dump-prefix port/build/menu1500
+```
+
+That emits:
+
+- `..._00000.ppm`: native runtime frame
+- `..._00000_reference.ppm`: trusted `main_visible` golden
+- `..._00000_diff.ppm`: absolute RGB error map
+- `..._00000_compare.ppm`: `runtime | golden | diff` strip
+- `..._00000_compare.json`: machine-readable pixel metrics plus
+  `state_contract` over seeded PPU/layer/raw-memory state and
+  `callback_contract` for frames covered by validated intro checkpoints
+
+With `--fail-on-compare-diff`, the runtime now exits non-zero on either:
+
+- pixel drift vs the trusted golden
+- semantic drift in the seeded `state_contract`
+- semantic drift in the seeded `callback_contract`
+
+Current callback-backed promoted fixture:
+
+- `port/assets/test_dump_range_1086_1093/design_pack_range/frame_01093`
+
+Current scheduler-backed promoted rails:
+
+- `intro_noinput`: `tools/out/design_frame986` through the validated
+  `1093 -> 1102 -> 1117` callback handoff
+- `menu_gameplay_entry`: `tools/out/design_frame1500_car_select`
+- `gameplay_live_race_mid`: `tools/out/design_lane3_live_race_mid_frame0_native`
+
+The non-intro rails now load from:
+
+- `rom_analysis/docs/scheduler_rail_contracts.jsonc`
+
+Post-push wiki refresh wrapper:
+
+```sh
+./tools/push_checkpoint.sh
+```
+
+That wrapper pushes the current checkpoint, rebuilds the curated docs wiki in
+an isolated temporary `git worktree`, and creates a follow-up wiki refresh
+commit/push when the generated wiki changes. Because the refresh happens in a
+clean worktree, unrelated local dirty files no longer block wiki publication.
+
 For short review windows where you want a reproducible bundle of visual
 artifacts instead of a one-off capture, use:
 

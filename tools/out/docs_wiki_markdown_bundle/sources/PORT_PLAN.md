@@ -2,9 +2,34 @@
 
 ## Goal
 
-Deliver a faithful PC port in C with SDL by rebuilding the game runtime around extracted ROM assets and verified game behavior.
+Deliver a faithful PC reimplementation in C with SDL by rebuilding the game
+runtime around extracted ROM assets, verified game behavior, and SNES-mimetic
+runtime state.
 
 This should be treated as a reimplementation, not a direct assembly-to-C translation.
+
+## Strategy Reset
+
+Reviewed on `2026-04-01`.
+
+The dev team changed the port target. The runtime must now mimic SNES-visible
+behavior directly while using SDL only as the native host/presentation layer.
+The attached local `zelda3/` repo is the reference architecture pattern for
+this approach, but it is not a vendored dependency and must stay outside our
+Git history.
+
+Reset rules:
+
+- stop carrying forward bespoke PC-side gameplay or physics substitutions
+  unless they are explicitly demoted to temporary debug viewers
+- keep archaeology, extraction, and validation lanes; they now feed a
+  side-by-side runtime/compare spine instead of a translated “new engine”
+- build the runtime around SNES-like `WRAM`, `VRAM`, `OAM`, `CGRAM`, `PPU`,
+  and later `APU/DMA/IRQ/NMI` state ownership
+- treat extracted `design_pack` / `main_visible.ppm` surfaces as bootstrap
+  fixtures and regression goldens, not the final rendering model
+- use the attached local `sentrysearch/` repo and `the_duel_longplay.mp4`
+  only as ignored investigation aids
 
 ## Why This Strategy
 
@@ -27,27 +52,69 @@ That means the fastest path to a shippable port is:
 ### Runtime
 
 - Language: C99 or C11
-- Platform layer: SDL2
+- Host platform: SDL2 window, timing, input, audio
 - Internal framebuffer: 256x224 at 60 Hz
-- Renderer: software rasterizer into an SDL texture
-- Audio: SDL audio callback / queued audio with a mixer layer
-- Simulation: fixed timestep, deterministic updates
-- Asset source: extracted ROM data converted to neutral files or compiled blobs
+- Core state: SNES-like `WRAM`, `VRAM`, `OAM`, `CGRAM`, visible PPU register
+  shadow, and later DMA / IRQ / NMI / APU ownership
+- Frame execution: deterministic callback/state stepping driven by validated
+  bank ownership
+- Renderer bootstrap: exact extracted visible layers for smoke and regression
+- Renderer target: synthetic PPU-style rasterization from raw state
+- Validation: optional side-by-side frame/state compare against ROM traces in
+  the Zelda3 pattern
+- Asset source: extracted ROM data converted to stable neutral files or
+  compiled blobs
 
 ### Code Modules
 
-- `platform/`: window, timing, input, audio, file I/O
-- `core/`: main loop, state machine, memory-like game state
-- `render/`: road rasterizer, sprite composition, HUD, palettes
-- `game/`: physics, AI, track progression, collisions, rules
-- `content/`: loaders for tracks, palettes, sprites, tilemaps, text, audio
+- `platform/`: SDL host shell, window, timing, input, audio
+- `runtime/`: frame step, scheduler, callback families, system state shadow
+- `ppu/`: BG/OBJ/Mode7/color math/HDMA-visible behavior
+- `apu/`: SPC-facing command/mixer path once promoted
+- `content/`: design-pack loaders, raw-state bundles, typed extracted assets
+- `contracts/`: frame/state compare, checkpoints, replay and diff helpers
 - `tools/`: ROM extraction, validation, diff, replay helpers
 
 ## Current Milestone Update
 
-Reviewed on 2026-02-28.
+Reviewed on `2026-04-01`.
+
+The archaeology evidence below still matters, but the old sampled/front-end
+runtime path is now demoted to a bootstrap/reference lane. It should feed the
+new SNES-mimetic runtime, not define the final port architecture.
 
 New useful state beyond the original plan:
+
+- the new `port/` bootstrap now renders promoted design-pack fixtures
+  synthetically from raw `VRAM/CGRAM/OAM/PPU` state, with exact parity on
+  frame `300` and frame `1086`
+- the runtime now also has a first Zelda3-style compare lane for promoted
+  design-pack fixtures:
+  - native runtime frame
+  - trusted `main_visible` golden
+  - absolute RGB diff map
+  - side-by-side strip plus JSON drift metrics
+  - seeded PPU-state contract report over visible registers, layer metadata,
+    and raw `VRAM/CGRAM/OAM` parity
+  - seeded callback/state contract report for frames covered by validated
+    intro checkpoints, with the first promoted callback-backed fixture at
+    frame `1093`
+- the runtime now also has a minimal callback scheduler with three promoted
+  rails instead of only seeded state:
+  - `intro_noinput`
+  - `menu_gameplay_entry`
+  - `gameplay_live_race_mid`
+- the non-intro scheduler rails now load from
+  `rom_analysis/docs/scheduler_rail_contracts.jsonc` instead of hardcoded C
+  anchors, so menu/gameplay playback is driven by versioned contract data
+- that scheduler now executes validated callback-family handoffs across:
+  - intro `986 -> 1117`
+  - menu/input corridor `1500 -> 2050`
+  - live gameplay seed `3 -> 11`
+- the design-pack loader now tolerates tracked bundles that only carry local
+  `raw/` memory dumps and no `layers/main_visible.ppm`; this makes promoted
+  menu/gameplay investigation packs directly runnable in the SDL runtime when
+  compare is not requested
 
 - the frame-`300` copyright/credits scene is an exact solved target from both live Mesen dumps and a ROM-side builder
 - the `Ballistic presents` splash now has a deterministic entry anchor at frame `654`
@@ -168,11 +235,14 @@ New useful state beyond the original plan:
 
 Immediate next focus:
 
-1. Replace the later sampled attract segments with native front-end state machines one callback family at a time.
-2. Push backward into the unstable `958..977` bootstrap using the repeatable `L00A00C` scene builder, the carry-over state model from the end of Ballistic, and the decoded `0600` DMA queue manifest from frame `974`.
-3. Explain the `991..1093` `01:9FE5` presentation path in callback terms, especially the `991..997` visible-buffer rotation and the direct bridge-extracted `998..1093` continuation.
-4. Fix the final-screen composition gap after `982`, because the bridge-visible path is now native through frame `1093` but still not screenshot-accurate there.
-5. Keep building standalone extraction formats so later artist/mod tooling can sit on stable data instead of volatile reverse-engineering experiments.
+1. Start mutating real front-end and post-`02:9016` gameplay state under
+   input, instead of only replaying callback families and handoffs.
+2. Promote compare-backed fixtures for the new menu/gameplay rails wherever a
+   trusted `main_visible` golden exists.
+3. Keep intro archaeology moving only where it tightens callback ownership or
+   renderer behavior, not as a polishing lane by itself.
+4. Use the local SentrySearch chunk workflow plus the longplay anchor packs to
+   keep gameplay investigation keyed to named windows and reusable query terms.
 
 ## Execution Reset
 

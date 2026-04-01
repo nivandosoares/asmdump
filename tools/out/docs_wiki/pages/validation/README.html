@@ -36,11 +36,11 @@
         <p class="doc-note">Current Mesen capture, probe, and export workflow.</p>
         <div class="doc-meta">
           <span>Source: <code>validation/README.md</code></span>
-          <span class="update-pill">Last updated 2026-03-28 14:05</span>
+          <span class="update-pill">Last updated 2026-04-01 12:28</span>
           <a href="../../../../../validation/README.md">Open Raw Markdown</a>
         </div>
       </header>
-<section class="artifact-panel"><header class="artifact-header"><h2>Artifact Support</h2><p>Resolved image references found in this note.</p></header><div class="artifact-grid"><figure class="artifact-card"><a href="../../../mesen_frame990/main_visible.ppm"><img src="../../artifacts/tools/out/mesen_frame990/main_visible.png" alt="tools/out/mesen_frame990/main_visible.ppm" loading="lazy"></a><figcaption><code>tools/out/mesen_frame990/main_visible.ppm</code><span>Converted from PPM for browser preview.</span></figcaption></figure><figure class="artifact-card"><a href="../../../bank1_bootstrap_queue_990_bridgeobj.ppm"><img src="../../artifacts/tools/out/bank1_bootstrap_queue_990_bridgeobj.png" alt="tools/out/bank1_bootstrap_queue_990_bridgeobj.ppm" loading="lazy"></a><figcaption><code>tools/out/bank1_bootstrap_queue_990_bridgeobj.ppm</code><span>Converted from PPM for browser preview.</span></figcaption></figure><figure class="artifact-card"><a href="../../../mesen_frame994/main_visible.ppm"><img src="../../artifacts/tools/out/mesen_frame994/main_visible.png" alt="tools/out/mesen_frame994/main_visible.ppm" loading="lazy"></a><figcaption><code>tools/out/mesen_frame994/main_visible.ppm</code><span>Converted from PPM for browser preview.</span></figcaption></figure><figure class="artifact-card"><a href="../../../bank1_bootstrap_queue_994_bridgeobj.ppm"><img src="../../artifacts/tools/out/bank1_bootstrap_queue_994_bridgeobj.png" alt="tools/out/bank1_bootstrap_queue_994_bridgeobj.ppm" loading="lazy"></a><figcaption><code>tools/out/bank1_bootstrap_queue_994_bridgeobj.ppm</code><span>Converted from PPM for browser preview.</span></figcaption></figure><figure class="artifact-card"><a href="../../../mesen_frame998_mode7ppu.ppm"><img src="../../artifacts/tools/out/mesen_frame998_mode7ppu.png" alt="tools/out/mesen_frame998_mode7ppu.ppm" loading="lazy"></a><figcaption><code>tools/out/mesen_frame998_mode7ppu.ppm</code><span>Converted from PPM for browser preview.</span></figcaption></figure><figure class="artifact-card"><a href="../../../mesen_frame998/main_visible.ppm"><img src="../../artifacts/tools/out/mesen_frame998/main_visible.png" alt="tools/out/mesen_frame998/main_visible.ppm" loading="lazy"></a><figcaption><code>tools/out/mesen_frame998/main_visible.ppm</code><span>Converted from PPM for browser preview.</span></figcaption></figure><figure class="artifact-card"><a href="../../../mesen_frame1005_mode7ppu.ppm"><img src="../../artifacts/tools/out/mesen_frame1005_mode7ppu.png" alt="tools/out/mesen_frame1005_mode7ppu.ppm" loading="lazy"></a><figcaption><code>tools/out/mesen_frame1005_mode7ppu.ppm</code><span>Converted from PPM for browser preview.</span></figcaption></figure><figure class="artifact-card"><a href="../../../intro_loop_frame_01005_frame.png"><img src="../../artifacts/tools/out/intro_loop_frame_01005_frame.png" alt="tools/out/intro_loop_frame_01005_frame.png" loading="lazy"></a><figcaption><code>tools/out/intro_loop_frame_01005_frame.png</code><span>Copied original artifact.</span></figcaption></figure></div></section>
+<section class="artifact-panel"><header class="artifact-header"><h2>Artifact Support</h2><p>Resolved image references found in this note.</p></header><div class="artifact-grid"><figure class="artifact-card"><a href="../../../intro_loop_frame_00654_frame.png"><img src="../../artifacts/tools/out/intro_loop_frame_00654_frame.png" alt="tools/out/intro_loop_frame_00654_frame.png" loading="lazy"></a><figcaption><code>tools/out/intro_loop_frame_00654_frame.png</code><span>Copied original artifact.</span></figcaption></figure><figure class="artifact-card"><a href="../../../td2_boot_probe_frame_300.png"><img src="../../artifacts/tools/out/td2_boot_probe_frame_300.png" alt="tools/out/td2_boot_probe_frame_300.png" loading="lazy"></a><figcaption><code>tools/out/td2_boot_probe_frame_300.png</code><span>Copied original artifact.</span></figcaption></figure></div></section>
       <article class="doc-body">
         <h1 id="validation">Validation</h1>
 <p>This directory contains the first validation harness artifact for Sprint 0.</p>
@@ -50,6 +50,42 @@
 <ol><li>Boot the ROM in Mesen-S.</li><li>Navigate manually to a deterministic starting point, or load a known savestate at the start of track 1.</li><li>Load <code>validation/mesen_capture.lua</code>.</li><li>Let the script wait through its configured warm-up frames.</li><li>The script will hold the configured input pattern for 300 frames and dump PNGs plus a JSON log.</li></ol>
 <p>For automated headless runs with Mesen2&#x27;s test runner:</p>
 <pre><code class="language-sh">./validation/run_mesen_capture.sh</code></pre>
+<p>For the current SNES-mimetic port bootstrap, build and run:</p>
+<pre><code class="language-sh">make -C port
+make -C port test</code></pre>
+<p>That smoke now validates the first native synthetic PPU checkpoint:</p>
+<ul><li>load a promoted design pack</li><li>seed <code>VRAM/CGRAM/OAM</code> shadow state</li><li>seed visible layer, Mode 7, and OBJ registers from <code>ppu_state.json</code></li><li>dump a headless frame</li><li>compare it against the extracted <code>layers/main_visible.ppm</code> golden</li><li>generate the side-by-side compare bundle for the same promoted fixtures</li><li>validate the minimal scheduler across the three promoted rails: intro no-input, menu with input, and reproducible gameplay seed</li></ul>
+<p>Current bootstrap fixtures:</p>
+<ul><li><code>port/assets/test_dump_frame300/design_pack</code></li><li><code>port/assets/test_dump_range_1086_1093/design_pack_range/frame_01086</code></li></ul>
+<p>Current exact-native parity fixtures:</p>
+<ul><li>frame <code>300</code>: BG-only credits scene</li><li>frame <code>1086</code>: Mode 7 plus OBJ gameplay scene</li></ul>
+<p>Direct runtime compare lane:</p>
+<pre><code class="language-sh">./port/build/td2_port \
+  --scene-dir port/assets/test_dump_frame300/design_pack \
+  --headless \
+  --frames 1 \
+  --compare \
+  --dump-prefix port/build/frame300_compare</code></pre>
+<p>Direct runtime scheduler playback on a tracked menu/gameplay bundle:</p>
+<pre><code class="language-sh">./port/build/td2_port \
+  --scene-dir tools/out/design_frame1500_car_select \
+  --scheduler-profile menu_gameplay_entry \
+  --headless \
+  --frames 1 \
+  --dump-prefix port/build/menu1500</code></pre>
+<p>That emits:</p>
+<ul><li><code>..._00000.ppm</code>: native runtime frame</li><li><code>..._00000_reference.ppm</code>: trusted <code>main_visible</code> golden</li><li><code>..._00000_diff.ppm</code>: absolute RGB error map</li><li><code>..._00000_compare.ppm</code>: <code>runtime | golden | diff</code> strip</li><li><code>..._00000_compare.json</code>: machine-readable pixel metrics plus <code>state_contract</code> over seeded PPU/layer/raw-memory state and <code>callback_contract</code> for frames covered by validated intro checkpoints</li></ul>
+<p>With <code>--fail-on-compare-diff</code>, the runtime now exits non-zero on either:</p>
+<ul><li>pixel drift vs the trusted golden</li><li>semantic drift in the seeded <code>state_contract</code></li><li>semantic drift in the seeded <code>callback_contract</code></li></ul>
+<p>Current callback-backed promoted fixture:</p>
+<ul><li><code>port/assets/test_dump_range_1086_1093/design_pack_range/frame_01093</code></li></ul>
+<p>Current scheduler-backed promoted rails:</p>
+<ul><li><code>intro_noinput</code>: <code>tools/out/design_frame986</code> through the validated <code>1093 -&gt; 1102 -&gt; 1117</code> callback handoff</li><li><code>menu_gameplay_entry</code>: <code>tools/out/design_frame1500_car_select</code></li><li><code>gameplay_live_race_mid</code>: <code>tools/out/design_lane3_live_race_mid_frame0_native</code></li></ul>
+<p>The non-intro rails now load from:</p>
+<ul><li><code>rom_analysis/docs/scheduler_rail_contracts.jsonc</code></li></ul>
+<p>Post-push wiki refresh wrapper:</p>
+<pre><code class="language-sh">./tools/push_checkpoint.sh</code></pre>
+<p>That wrapper pushes the current checkpoint, rebuilds the curated docs wiki in an isolated temporary <code>git worktree</code>, and creates a follow-up wiki refresh commit/push when the generated wiki changes. Because the refresh happens in a clean worktree, unrelated local dirty files no longer block wiki publication.</p>
 <p>For short review windows where you want a reproducible bundle of visual artifacts instead of a one-off capture, use:</p>
 <pre><code class="language-sh">python3 tools/run_mesen_guided_export.py \
   intro_mode7_rotation \
