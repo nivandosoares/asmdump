@@ -420,6 +420,105 @@ static bool td2_runtime_load_scanline_contract_profile(
     return true;
 }
 
+static bool td2_runtime_load_composition_contract_profile(
+    Td2PpuState* ppu,
+    const char* scene_dir,
+    char* error,
+    size_t error_size
+) {
+    char contracts_path[1400];
+    char* json = NULL;
+    const char* cursor = NULL;
+    bool matched = false;
+
+    if (scene_dir == NULL) {
+        if (error_size > 0U) {
+            error[0] = '\0';
+        }
+        return true;
+    }
+
+    if (!td2_contracts_resolve_repo_relative_path(
+            scene_dir,
+            "rom_analysis/docs/gameplay_composition_contracts.jsonc",
+            contracts_path,
+            sizeof(contracts_path))) {
+        if (error_size > 0U) {
+            error[0] = '\0';
+        }
+        return true;
+    }
+
+    json = read_text_file(contracts_path, NULL);
+    if (json == NULL) {
+        if (error_size > 0U) {
+            error[0] = '\0';
+        }
+        return true;
+    }
+
+    cursor = json;
+    while ((cursor = strstr(cursor, "\"scene_match\":")) != NULL) {
+        char profile_block[4096];
+        char scene_match[512];
+        int enable_top_scanlines;
+        int top_scanlines;
+
+        if (!td2_contracts_extract_object_block(json, cursor, profile_block, sizeof(profile_block))) {
+            free(json);
+            set_error(error, error_size, "failed to extract gameplay composition contract block");
+            return false;
+        }
+
+        if (!parse_string_in_range(
+                profile_block,
+                profile_block + strlen(profile_block),
+                "\"scene_match\":",
+                scene_match,
+                sizeof(scene_match)) ||
+            !parse_int_in_range(
+                profile_block,
+                profile_block + strlen(profile_block),
+                "\"bg3_enable_top_scanlines\":",
+                &enable_top_scanlines) ||
+            !parse_int_in_range(
+                profile_block,
+                profile_block + strlen(profile_block),
+                "\"bg3_above_bg2_top_scanlines\":",
+                &top_scanlines)) {
+            free(json);
+            set_error(error, error_size, "gameplay composition contract missing scene_match/top_scanlines");
+            return false;
+        }
+
+        if (strstr(scene_dir, scene_match) == NULL) {
+            cursor += strlen("\"scene_match\":");
+            continue;
+        }
+
+        if (enable_top_scanlines < 0 ||
+            enable_top_scanlines > TD2_FRAME_HEIGHT ||
+            top_scanlines < 0 ||
+            top_scanlines > TD2_FRAME_HEIGHT) {
+            free(json);
+            set_error(error, error_size, "gameplay composition contract has invalid top scanline count");
+            return false;
+        }
+
+        matched = true;
+        ppu->composition_profile.enabled = true;
+        ppu->composition_profile.bg3_enable_top_scanlines = (unsigned)enable_top_scanlines;
+        ppu->composition_profile.bg3_above_bg2_top_scanlines = (unsigned)top_scanlines;
+        break;
+    }
+
+    free(json);
+    if (!matched && error_size > 0U) {
+        error[0] = '\0';
+    }
+    return true;
+}
+
 bool td2_runtime_init(
     Td2Runtime* runtime,
     const Td2RuntimeConfig* config,
@@ -455,6 +554,14 @@ bool td2_runtime_init(
 
     td2_ppu_seed_from_design_pack(&runtime->ppu, &runtime->design_pack);
     if (!td2_runtime_load_scanline_contract_profile(
+            &runtime->ppu,
+            config->scene_dir,
+            error,
+            error_size)) {
+        td2_runtime_free(runtime);
+        return false;
+    }
+    if (!td2_runtime_load_composition_contract_profile(
             &runtime->ppu,
             config->scene_dir,
             error,

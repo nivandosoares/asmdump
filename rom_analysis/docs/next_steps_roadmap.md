@@ -141,6 +141,43 @@ decoded tilemaps and sprite visibility metadata.
   - keep using the compare strips from this sweep as the cheap falsifier
     before any broader gameplay-layer rewrite
 
+## Lane 3 BG3 Composition Contracts (`2026-04-01`)
+
+- New promoted runtime/data surface:
+  - `rom_analysis/docs/gameplay_composition_contracts.jsonc`
+- Runtime change:
+  - `td2_runtime` now resolves late-gameplay composition profiles from that
+    contract
+  - `td2_ppu` now accepts a composition profile that can:
+    - enable `BG3` on the main screen only in a measured top band
+    - render `BG3` above `BG2` only in that same band
+- Current promoted consumers:
+  - `lane3_live_entry_frame03250_bundle/design_pack`
+  - `lane3_live_entry_brake_traffic_frame03400_bundle/design_pack`
+  - `lane3_live_entry_frame03550_bundle/design_pack`
+- Current promoted cutoffs:
+  - `3250`: `79`
+  - `3400`: `79`
+  - `3550`: `95`
+- Practical result:
+  - the late-gameplay top-band `BG3` hypothesis is no longer just a sweep
+    artifact; it is now a versioned contract consumed by the native SDL
+    runtime
+  - this closes a stronger renderer boundary:
+    later gameplay is now narrowed past “missing BG3 asset” and past “maybe a
+    useful cutoff exists” into one promoted composition rule with tracked
+    consumers
+- New cheap falsifier:
+  - `./port/test_scanline_contract.sh` now proves:
+    - the solved live-race scanline consumer still renders correctly
+    - the late-entry bundles load promoted composition profiles
+    - selected top-band framebuffer anchors stay on the promoted horizon-strip
+      colors for `3250`, `3400`, and `3550`
+- Next gate:
+  - decide whether the next promotion should keep extending this static
+    top-band rule or replace it with stronger measured scanline/state fields
+    on the same late-gameplay family
+
 ## Current Status Snapshot (2026-03-27)
 
 Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
@@ -174,9 +211,9 @@ Validation contract baseline:
     pure SDL mapping, live no-opponent menu route, gameplay live `JOY1`
     sampling, and scripted-history plus live-`A` merge on the measured menu
     corridor
-  - scanline contract smoke `19/19` checks pass across:
-    one no-contract bundle, the solved `live_race_mid` consumer, and the new
-    `lane3_live_entry_frame03250` contract consumer
+  - scanline / composition contract smoke `39/39` checks pass across:
+    one no-contract bundle, the solved `live_race_mid` consumer, and the late
+    `3250/3400/3550` composition-contract consumers
   - runtime `--dump-prefix` now emits PNG siblings for the same frame and
     compare artifacts already used by the port smoke path
 

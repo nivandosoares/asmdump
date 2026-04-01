@@ -178,12 +178,124 @@ static void verify_live_entry_3250(
     profile = &runtime.ppu.scanline_profile;
     expect_bool("live_entry_3250", "scanline_profile.enabled", profile->enabled, true, total_checks, failed_checks);
     expect_u16("live_entry_3250", "scanline_profile.line_count", (uint16_t)profile->line_count, (uint16_t)TD2_FRAME_HEIGHT, total_checks, failed_checks);
+    expect_bool("live_entry_3250", "composition_profile.enabled", runtime.ppu.composition_profile.enabled, true, total_checks, failed_checks);
+    expect_u16(
+        "live_entry_3250",
+        "composition_profile.bg3_enable_top_scanlines",
+        (uint16_t)runtime.ppu.composition_profile.bg3_enable_top_scanlines,
+        79U,
+        total_checks,
+        failed_checks);
+    expect_u16(
+        "live_entry_3250",
+        "composition_profile.bg3_above_bg2_top_scanlines",
+        (uint16_t)runtime.ppu.composition_profile.bg3_above_bg2_top_scanlines,
+        79U,
+        total_checks,
+        failed_checks);
     expect_u16("live_entry_3250", "scanline[23].main_layers", profile->main_screen_layers[23], 23U, total_checks, failed_checks);
     expect_u16("live_entry_3250", "scanline[23].bg3_hscroll", (uint16_t)profile->layer_hscroll[2][23], 510U, total_checks, failed_checks);
     expect_u16("live_entry_3250", "scanline[24].bg3_vscroll", (uint16_t)profile->layer_vscroll[2][24], 12U, total_checks, failed_checks);
     expect_u16("live_entry_3250", "scanline[121].bg2_hscroll", (uint16_t)profile->layer_hscroll[1][121], 193U, total_checks, failed_checks);
     expect_u16("live_entry_3250", "scanline[122].bg2_hscroll", (uint16_t)profile->layer_hscroll[1][122], 197U, total_checks, failed_checks);
     expect_u16("live_entry_3250", "scanline[223].bg2_vscroll", (uint16_t)profile->layer_vscroll[1][223], 27U, total_checks, failed_checks);
+    expect_pixel("live_entry_3250", 148, 45, runtime.framebuffer[(45 * TD2_FRAME_WIDTH) + 148], 0xFF396363U, total_checks, failed_checks);
+    expect_pixel("live_entry_3250", 149, 45, runtime.framebuffer[(45 * TD2_FRAME_WIDTH) + 149], 0xFF103942U, total_checks, failed_checks);
+    expect_pixel("live_entry_3250", 217, 44, runtime.framebuffer[(44 * TD2_FRAME_WIDTH) + 217], 0xFF103942U, total_checks, failed_checks);
+
+    td2_runtime_free(&runtime);
+}
+
+static void verify_live_entry_3400(
+    unsigned* total_checks,
+    unsigned* failed_checks
+) {
+    Td2Runtime runtime;
+    char error[256];
+
+    if (!init_runtime(
+            &runtime,
+            "../tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/design_pack",
+            TD2_SCHEDULER_PROFILE_NONE,
+            error,
+            sizeof(error))) {
+        fprintf(stderr, "FAIL live_entry_3400 init: %s\n", error);
+        (*failed_checks)++;
+        return;
+    }
+    if (!td2_runtime_render_frame(&runtime, error, sizeof(error))) {
+        fprintf(stderr, "FAIL live_entry_3400 render: %s\n", error);
+        (*failed_checks)++;
+        td2_runtime_free(&runtime);
+        return;
+    }
+
+    expect_bool("live_entry_3400", "scanline_profile.enabled", runtime.ppu.scanline_profile.enabled, false, total_checks, failed_checks);
+    expect_bool("live_entry_3400", "composition_profile.enabled", runtime.ppu.composition_profile.enabled, true, total_checks, failed_checks);
+    expect_u16(
+        "live_entry_3400",
+        "composition_profile.bg3_enable_top_scanlines",
+        (uint16_t)runtime.ppu.composition_profile.bg3_enable_top_scanlines,
+        79U,
+        total_checks,
+        failed_checks);
+    expect_u16(
+        "live_entry_3400",
+        "composition_profile.bg3_above_bg2_top_scanlines",
+        (uint16_t)runtime.ppu.composition_profile.bg3_above_bg2_top_scanlines,
+        79U,
+        total_checks,
+        failed_checks);
+    expect_pixel("live_entry_3400", 156, 37, runtime.framebuffer[(37 * TD2_FRAME_WIDTH) + 156], 0xFF738C8CU, total_checks, failed_checks);
+    expect_pixel("live_entry_3400", 158, 37, runtime.framebuffer[(37 * TD2_FRAME_WIDTH) + 158], 0xFF396363U, total_checks, failed_checks);
+    expect_pixel("live_entry_3400", 227, 36, runtime.framebuffer[(36 * TD2_FRAME_WIDTH) + 227], 0xFF103942U, total_checks, failed_checks);
+
+    td2_runtime_free(&runtime);
+}
+
+static void verify_live_entry_3550(
+    unsigned* total_checks,
+    unsigned* failed_checks
+) {
+    Td2Runtime runtime;
+    char error[256];
+
+    if (!init_runtime(
+            &runtime,
+            "../tools/out/lane3_live_entry_frame03550_bundle/design_pack",
+            TD2_SCHEDULER_PROFILE_NONE,
+            error,
+            sizeof(error))) {
+        fprintf(stderr, "FAIL live_entry_3550 init: %s\n", error);
+        (*failed_checks)++;
+        return;
+    }
+    if (!td2_runtime_render_frame(&runtime, error, sizeof(error))) {
+        fprintf(stderr, "FAIL live_entry_3550 render: %s\n", error);
+        (*failed_checks)++;
+        td2_runtime_free(&runtime);
+        return;
+    }
+
+    expect_bool("live_entry_3550", "scanline_profile.enabled", runtime.ppu.scanline_profile.enabled, false, total_checks, failed_checks);
+    expect_bool("live_entry_3550", "composition_profile.enabled", runtime.ppu.composition_profile.enabled, true, total_checks, failed_checks);
+    expect_u16(
+        "live_entry_3550",
+        "composition_profile.bg3_enable_top_scanlines",
+        (uint16_t)runtime.ppu.composition_profile.bg3_enable_top_scanlines,
+        95U,
+        total_checks,
+        failed_checks);
+    expect_u16(
+        "live_entry_3550",
+        "composition_profile.bg3_above_bg2_top_scanlines",
+        (uint16_t)runtime.ppu.composition_profile.bg3_above_bg2_top_scanlines,
+        95U,
+        total_checks,
+        failed_checks);
+    expect_pixel("live_entry_3550", 23, 44, runtime.framebuffer[(44 * TD2_FRAME_WIDTH) + 23], 0xFF103942U, total_checks, failed_checks);
+    expect_pixel("live_entry_3550", 24, 45, runtime.framebuffer[(45 * TD2_FRAME_WIDTH) + 24], 0xFF103942U, total_checks, failed_checks);
+    expect_pixel("live_entry_3550", 59, 44, runtime.framebuffer[(44 * TD2_FRAME_WIDTH) + 59], 0xFF103942U, total_checks, failed_checks);
 
     td2_runtime_free(&runtime);
 }
@@ -195,6 +307,8 @@ int main(void) {
     verify_no_contract(&total_checks, &failed_checks);
     verify_live_race_mid(&total_checks, &failed_checks);
     verify_live_entry_3250(&total_checks, &failed_checks);
+    verify_live_entry_3400(&total_checks, &failed_checks);
+    verify_live_entry_3550(&total_checks, &failed_checks);
 
     if (failed_checks != 0U) {
         fprintf(stderr,

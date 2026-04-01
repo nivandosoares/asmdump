@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "description": "Measured late-gameplay background composition cutoffs for promoted SDL runtime bundles.",
+  "profiles": [
+    {
+      "id": "lane3_live_entry_frame03250_bg3_top_band",
+      "scene_match": "lane3_live_entry_frame03250_bundle/design_pack",
+      "bg3_enable_top_scanlines": 79,
+      "bg3_above_bg2_top_scanlines": 79,
+      "support_surface": "tools/out/lane3_live_entry_frame03250_bundle/bg_stack_visible_support.png",
+      "notes": [
+        "Measured from the promoted late-entry open-road frame.",
+        "Best current candidate keeps BG3 above BG2 only in the top 79 visible lines."
+      ]
+    },
+    {
+      "id": "lane3_live_entry_brake_traffic_frame03400_bg3_top_band",
+      "scene_match": "lane3_live_entry_brake_traffic_frame03400_bundle/design_pack",
+      "bg3_enable_top_scanlines": 79,
+      "bg3_above_bg2_top_scanlines": 79,
+      "support_surface": "tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg_stack_visible_support.png",
+      "notes": [
+        "Traffic-emergence follow-up keeps the same measured top-band cutoff as frame 3250.",
+        "Useful evidence that the late background rule survives an OBJ-heavy gameplay event."
+      ]
+    },
+    {
+      "id": "lane3_live_entry_frame03550_bg3_top_band",
+      "scene_match": "lane3_live_entry_frame03550_bundle/design_pack",
+      "bg3_enable_top_scanlines": 95,
+      "bg3_above_bg2_top_scanlines": 95,
+      "support_surface": "tools/out/lane3_live_entry_frame03550_bundle/bg_stack_visible_support.png",
+      "notes": [
+        "Later collision-heavy phase needs a deeper top-band helper strip than the 3250/3400 pair.",
+        "Current best measured cutoff is 95 visible lines."
+      ]
+    }
+  ]
+}

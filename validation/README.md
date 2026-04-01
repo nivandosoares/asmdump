@@ -139,9 +139,28 @@ Current promoted gameplay scanline contract:
 - practical effect:
   - the live-race SDL output no longer flattens the horizon/shoulders into one
     frame-end road presentation
-  - the `3250` late-entry bundle now loads through the same contract path, but
-    current flat-vs-contract compare is still `0` mismatched pixels, which
-    narrows the remaining gap there to fields beyond the current attached set
+  - the `3250` late-entry bundle still loads through the same contract path,
+    but its flat-vs-contract compare remains `0` mismatched pixels, which is
+    why later gameplay now also uses a separate composition contract
+
+Current promoted gameplay composition contract:
+
+- `rom_analysis/docs/gameplay_composition_contracts.jsonc`
+- current consumers:
+  - `tools/out/lane3_live_entry_frame03250_bundle/design_pack`
+  - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/design_pack`
+  - `tools/out/lane3_live_entry_frame03550_bundle/design_pack`
+- current attached fields:
+  - `bg3_enable_top_scanlines`
+  - `bg3_above_bg2_top_scanlines`
+- promoted cutoffs:
+  - `3250`: `79`
+  - `3400`: `79`
+  - `3550`: `95`
+- practical effect:
+  - later gameplay bundles now restore the top-band sky/horizon helper strip
+    in the native SDL output by enabling `BG3` on the main screen only in the
+    measured upper window and keeping `BG3 > BG2` there
 
 The non-intro rails now load from:
 
@@ -212,8 +231,9 @@ That proves:
 - bundles with no matching gameplay scanline contract stay flat
 - `gameplay_live_race_mid` loads the versioned contract and keeps the solved
   render anchors
-- `lane3_live_entry_frame03250_bundle/design_pack` now also loads the same
-  versioned contract surface even without a scheduler rail
+- the late-entry bundles `3250`, `3400`, and `3550` now also load the
+  versioned gameplay composition contract and keep promoted top-band render
+  anchors without a scheduler rail
 
 Current practical boundary:
 

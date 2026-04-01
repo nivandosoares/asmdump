@@ -30,7 +30,9 @@ The current code intentionally does only the minimum clean work:
   raw state. For the promoted `gameplay_live_race_mid` rail, it now also
   accepts a measured visible-scanline overlay so gameplay is not forced
   through one flat frame-end `ppu_state`. That overlay is now selected from a
-  versioned contract file instead of one ad hoc sibling-path lookup.
+  versioned contract file instead of one ad hoc sibling-path lookup. The same
+  PPU path now also accepts a versioned late-gameplay composition profile
+  that can enable `BG3` on a top band and keep `BG3 > BG2` there.
 - `td2_runtime.*`
   Fixed-frame orchestration, scheduler-backed runtime-state shadow,
   compare-lane metrics, and PPM+PNG dumping for smoke tests and design review.
@@ -40,6 +42,12 @@ The current code intentionally does only the minimum clean work:
   `main_layers` and `bg1/bg2/bg3` scroll values into:
   - `../tools/out/design_lane3_live_race_mid_frame0_native`
   - `../tools/out/lane3_live_entry_frame03250_bundle/design_pack`
+  The same runtime layer now also resolves optional gameplay composition
+  profiles from `../rom_analysis/docs/gameplay_composition_contracts.jsonc`
+  for:
+  - `../tools/out/lane3_live_entry_frame03250_bundle/design_pack`
+  - `../tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/design_pack`
+  - `../tools/out/lane3_live_entry_frame03550_bundle/design_pack`
 - `td2_input.*`
   Shared parser/query layer for scripted input windows and recorded live input
   history, using the same `frame:buttons` / `start-end:buttons` syntax used by
@@ -77,10 +85,9 @@ bundles that only carry local `raw/` dumps and no golden frame.
 
 ## Next replacement steps
 
-1. Expand the scanline contract beyond `main_layers/bg1/bg2/bg3` scrolls for
-   later gameplay phases like `lane3_live_entry_frame03250`, where the
-   current attachment still produces `0` pixel change against a no-contract
-   clone.
+1. Grow the later-gameplay composition path beyond the current static top-band
+   `BG3` rule, or replace it with a stronger measured per-scanline family if
+   the same late bundles prove to need more than `BG3` enable/precedence.
 2. Promote compare-backed menu/gameplay fixtures so the same
    runtime-or-golden workflow used on intro can gate later rails too.
 3. Replace pre-bundle scripted route history with earlier scene bases or

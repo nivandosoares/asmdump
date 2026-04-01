@@ -31,9 +31,14 @@ static const uint8_t TD2_OAM_SIZE_TABLE[8][2][2] = {
 
 static const uint8_t TD2_MODE7_SPRITE_PRIORITIES[4] = {2, 4, 6, 7};
 
-static const Td2BgRenderPass TD2_BG_RENDER_PASSES[] = {
+static const Td2BgRenderPass TD2_BG_RENDER_PASSES_DEFAULT[] = {
     {3, 0}, {2, 0}, {1, 0}, {0, 0},
     {3, 1}, {2, 1}, {1, 1}, {0, 1},
+};
+
+static const Td2BgRenderPass TD2_BG_RENDER_PASSES_BG3_ABOVE_BG2[] = {
+    {3, 0}, {1, 0}, {2, 0}, {0, 0},
+    {3, 1}, {1, 1}, {2, 1}, {0, 1},
 };
 
 static uint8_t td2_scale_component(uint8_t component, uint8_t brightness) {
@@ -87,13 +92,24 @@ static int td2_sign_extend(int value, int bits) {
 }
 
 static int td2_ppu_scanline_main_layers(const Td2PpuState* ppu, int scanline) {
+    int layers;
+
     if (!ppu->scanline_profile.enabled ||
         scanline < 0 ||
         scanline >= TD2_FRAME_HEIGHT ||
         scanline >= (int)ppu->scanline_profile.line_count) {
-        return ppu->main_screen_layers;
+        layers = ppu->main_screen_layers;
+    } else {
+        layers = ppu->scanline_profile.main_screen_layers[scanline];
     }
-    return ppu->scanline_profile.main_screen_layers[scanline];
+
+    if (ppu->composition_profile.enabled &&
+        scanline >= 0 &&
+        scanline < (int)ppu->composition_profile.bg3_enable_top_scanlines) {
+        layers |= (1 << 2);
+    }
+
+    return layers;
 }
 
 static int td2_ppu_scanline_layer_hscroll(
@@ -470,7 +486,9 @@ static void td2_render_bg_layer_pass(
     Td2PpuState* ppu,
     uint32_t* framebuffer_argb,
     int layer_index,
-    int priority_bit
+    int priority_bit,
+    int start_y,
+    int end_y
 ) {
     const Td2PpuLayerState* layer = &ppu->layers[layer_index];
     int bpp = td2_bg_bpp(ppu->bg_mode, layer_index);
@@ -488,7 +506,17 @@ static void td2_render_bg_layer_pass(
     tile_pixel_size = layer->large_tiles ? 16 : 8;
     palette_stride = bpp == 2 ? 4 : (bpp == 4 ? 16 : 256);
 
-    for (screen_y = 0; screen_y < TD2_FRAME_HEIGHT; screen_y++) {
+    if (start_y < 0) {
+        start_y = 0;
+    }
+    if (end_y > TD2_FRAME_HEIGHT) {
+        end_y = TD2_FRAME_HEIGHT;
+    }
+    if (end_y <= start_y) {
+        return;
+    }
+
+    for (screen_y = start_y; screen_y < end_y; screen_y++) {
         int hscroll;
         int vscroll;
         int world_y;
@@ -555,6 +583,27 @@ static void td2_render_bg_layer_pass(
 
             framebuffer_argb[(screen_y * TD2_FRAME_WIDTH) + screen_x] = ppu->cgram_colors[cgram_index];
         }
+    }
+}
+
+static void td2_render_bg_pass_sequence(
+    Td2PpuState* ppu,
+    uint32_t* framebuffer_argb,
+    const Td2BgRenderPass* passes,
+    size_t pass_count,
+    int start_y,
+    int end_y
+) {
+    size_t pass_index;
+
+    for (pass_index = 0; pass_index < pass_count; pass_index++) {
+        td2_render_bg_layer_pass(
+            ppu,
+            framebuffer_argb,
+            passes[pass_index].layer_index,
+            passes[pass_index].priority_bit,
+            start_y,
+            end_y);
     }
 }
 
@@ -884,13 +933,37 @@ void td2_ppu_render_frame(Td2PpuState* ppu, uint32_t* framebuffer_argb) {
         return;
     }
 
-    for (i = 0; i < (sizeof(TD2_BG_RENDER_PASSES) / sizeof(TD2_BG_RENDER_PASSES[0])); i++) {
-        td2_render_bg_layer_pass(
+    if (ppu->composition_profile.enabled &&
+        ppu->composition_profile.bg3_above_bg2_top_scanlines > 0U) {
+        int top_scanlines = (int)ppu->composition_profile.bg3_above_bg2_top_scanlines;
+        size_t pass_count = sizeof(TD2_BG_RENDER_PASSES_DEFAULT) / sizeof(TD2_BG_RENDER_PASSES_DEFAULT[0]);
+
+        if (top_scanlines > TD2_FRAME_HEIGHT) {
+            top_scanlines = TD2_FRAME_HEIGHT;
+        }
+
+        td2_render_bg_pass_sequence(
             ppu,
             framebuffer_argb,
-            TD2_BG_RENDER_PASSES[i].layer_index,
-            TD2_BG_RENDER_PASSES[i].priority_bit
-        );
+            TD2_BG_RENDER_PASSES_BG3_ABOVE_BG2,
+            pass_count,
+            0,
+            top_scanlines);
+        td2_render_bg_pass_sequence(
+            ppu,
+            framebuffer_argb,
+            TD2_BG_RENDER_PASSES_DEFAULT,
+            pass_count,
+            top_scanlines,
+            TD2_FRAME_HEIGHT);
+    } else {
+        td2_render_bg_pass_sequence(
+            ppu,
+            framebuffer_argb,
+            TD2_BG_RENDER_PASSES_DEFAULT,
+            sizeof(TD2_BG_RENDER_PASSES_DEFAULT) / sizeof(TD2_BG_RENDER_PASSES_DEFAULT[0]),
+            0,
+            TD2_FRAME_HEIGHT);
     }
 
     if (td2_ppu_any_scanline_layer_enabled(ppu, 4)) {

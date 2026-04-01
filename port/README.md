@@ -29,6 +29,8 @@ Current checkpoint:
 - measured visible-scanline gameplay overlay for
   promoted gameplay bundles, selected from
   `../rom_analysis/docs/gameplay_scanline_contracts.jsonc`
+- measured late-gameplay composition overlay for top-band `BG3`, selected
+  from `../rom_analysis/docs/gameplay_composition_contracts.jsonc`
 - first input-driven mutations on top of that shared surface:
   current `JOY1` sample mirrored into runtime state as `state_0960`, plus the
   traced no-opponent menu handoff on `menu_gameplay_entry`
@@ -140,8 +142,10 @@ Notes:
   - bundles without a matching gameplay scanline contract stay flat
   - `gameplay_live_race_mid` loads its versioned scanline overlay and keeps
     the restored sky/mountain/grass split
-  - `lane3_live_entry_frame03250_bundle/design_pack` now also loads through
-    the same contract surface even without a scheduler rail
+  - the late-entry bundles `3250`, `3400`, and `3550` now also load a
+    versioned gameplay composition contract even without a scheduler rail
+  - those late-entry bundles now enable `BG3` on the top band and keep
+    `BG3 > BG2` there with the promoted cutoffs `79/79/95`
 - `--dump-prefix` now emits `PATH_00000.ppm` and `PATH_00000.png`; compare
   dumps also emit PNG siblings for `_reference`, `_diff`, and `_compare`.
 - interactive keyboard mapping:
@@ -161,11 +165,11 @@ Notes:
   now shares the same mutator surface, but it does not fabricate missing
   history before the loaded bundle.
 - current gameplay-specific boundary: only the promoted
-  `gameplay_live_race_mid` seed is visually closed by the current scanline
-  contract fields. The promoted `lane3_live_entry_frame03250` bundle now also
-  loads a scanline contract, but its current render is still `0` pixels
-  different from a no-contract clone, which means later gameplay phases still
-  need more fields than `main_layers/bg1/bg2/bg3` scrolls alone.
+  `gameplay_live_race_mid` seed is fully closed by the current scanline
+  contract fields. The promoted late-entry bundles `3250`, `3400`, and
+  `3550` now also load composition contracts that restore the top-band
+  horizon strip, but later gameplay still needs more than this static
+  `BG3` top-band rule to explain the full frame family.
 - `tools/push_checkpoint.sh` is the repo-local wrapper for the post-push step:
   it pushes the current checkpoint, refreshes the curated wiki in an isolated
   temporary `git worktree`, and issues a follow-up wiki refresh commit/push
