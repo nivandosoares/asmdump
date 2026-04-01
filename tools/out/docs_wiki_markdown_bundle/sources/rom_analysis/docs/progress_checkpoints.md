@@ -1,6 +1,102 @@
 Date: 2026-04-01
 
 Summary
+- Extended the runtime input mutator beyond `state_0960` and the first
+  no-opponent handoff into the first measured post-`2050` default-rival `A`
+  anchors on `menu_gameplay_entry`.
+- Promoted exact scheduler-contract baseline checkpoints for sampled
+  no-input frames `2052`, `2053`, `2083`, `2104`, and `2125`, then overlaid
+  the traced `A` route deltas on top of them.
+- Runtime dumps and compare bundles now emit PNG siblings next to the
+  existing PPM artifacts, and this turn also materialized a design-review
+  anchor pack under `tools/out/port_input_mutation_anchor_pngs_20260401/`.
+
+What I ran
+- `make -C port clean && make -C port`
+- `./port/test_scheduler.sh`
+- `./port/test_input_mutation.sh`
+- `./port/test_compare_lane.sh`
+- `./port/test_regression.sh`
+- `make -C port test`
+- PNG writer sanity check:
+  - `./port/build/td2_port --scene-dir port/assets/test_dump_frame300/design_pack --headless --frames 1 --dump-prefix <tmp>/frame300`
+  - `python3 tools/compare_frames.py <tmp>/frame300_00000.ppm <tmp>/frame300_00000.png`
+- design-review export:
+  - `./port/build/td2_port --scene-dir tools/out/design_frame1500_car_select --scheduler-profile menu_gameplay_entry --input-script '1200:start;1280:start;1505-1510:start;1584-1589:right,down;1640-1645:start;1730-1735:start;2050-2208:a' --headless --frames 626 --dump-prefix <tmp>/a`
+  - `./port/build/td2_port --scene-dir tools/out/design_frame1500_car_select --scheduler-profile menu_gameplay_entry --input-script '1200:start;1280:start;1505-1510:start;1584-1589:right,down;1640-1645:start;1730-1735:start;2050-2208:b' --headless --frames 626 --dump-prefix <tmp>/b`
+
+Findings / Interpretation
+- The menu rail now has a defensible first post-`2050` mutation layer that is
+  grounded by the existing probe compares instead of hand-written heuristics:
+  - `2052`: `dp_0020 = 89`, `dp_0054 = 0`
+  - `2053`: `dp_0053 = 0`, `dp_0054 = 0`, `state_09a8 = 2`
+  - `2083`: `dp_0020 = 170`, `dp_0022 = 289`, `dp_0053 = 128`,
+    `dp_0054 = 128`
+  - `2104`: `dp_0020 = 105`, `dp_0053 = 200`, `dp_0054 = 208`,
+    `state_137c = 1`
+  - `2125`: `dp_0020 = 19`, `dp_0022 = 289`, `dp_0053 = 8`,
+    `dp_0054 = 8`, `state_09a2 = 26`, `state_137c = 1`
+- The old no-opponent mutator was too permissive once the traced default-rival
+  route was added to the same smoke surface; tightening that overlap was
+  necessary so `default-rival` and `no-opponent` stop aliasing the same menu
+  handoff.
+- PNG dump output is now machine-validated against the existing PPM path with
+  `0` mismatched pixels on the frame-`300` smoke, so design review can trust
+  the new format as a faithful sibling artifact, not a separate render path.
+
+What I learned (actionable)
+- For the current bootstrap, exact sampled anchors are a good way to advance
+  the post-`2050` corridor without pretending the whole lane is already
+  continuously modeled. The next useful expansion is short windows, not a
+  speculative all-frame rewrite.
+- Design-review artifacts should stay in-band with the validation path.
+  Emitting PNG next to the existing PPM/JSON bundle keeps regression and
+  human review on the same artifact set.
+
+Next steps / Checkpoints
+1) Densify the new post-`2050` anchors into short `2054..2088` windows, where
+   the visible dashboard/radar divergence is already bounded.
+2) Feed live SDL keyboard/controller input into the same mutator surface that
+   now accepts both sampled anchors and scripted windows.
+3) Promote compare-backed menu/gameplay fixtures for those post-`2050`
+   anchors whenever trusted goldens exist.
+
+Immediate recommendation
+- Use the PNG pack under `tools/out/port_input_mutation_anchor_pngs_20260401/`
+  as the current designer-facing review surface for this checkpoint.
+- Keep `./port/test_input_mutation.sh` as the cheapest falsifier when adding
+  new post-`2050` anchor rows or mutator overlays.
+
+Files updated in this turn
+- `port/main.c`
+- `port/include/td2_compare.h`
+- `port/include/td2_contracts.h`
+- `port/src/td2_compare.c`
+- `port/src/td2_contracts.c`
+- `port/src/td2_runtime.c`
+- `port/src/td2_scheduler.c`
+- `port/test_compare_lane.sh`
+- `port/test_regression.sh`
+- `port/test_scheduler.c`
+- `port/test_input_mutation.c`
+- `port/docs/ARCHITECTURE.md`
+- `port/README.md`
+- `PORT_PLAN.md`
+- `rom_analysis/docs/scheduler_rail_contracts.jsonc`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+- `tools/out/port_input_mutation_anchor_pngs_20260401/`
+
+Next reading
+- `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
+- `tools/out/post9016_default_rival_probe_none_vs_a_compare.md`
+- `port/src/td2_scheduler.c`
+
+Date: 2026-04-01
+
+Summary
 - Added the first real input-driven mutation layer on top of the contract-fed
   scheduler rails.
 - The runtime now accepts `--input-script` windows in the same

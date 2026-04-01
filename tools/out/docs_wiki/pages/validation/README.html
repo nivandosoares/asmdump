@@ -36,7 +36,7 @@
         <p class="doc-note">Current Mesen capture, probe, and export workflow.</p>
         <div class="doc-meta">
           <span>Source: <code>validation/README.md</code></span>
-          <span class="update-pill">Last updated 2026-04-01 14:28</span>
+          <span class="update-pill">Last updated 2026-04-01 14:52</span>
           <a href="../../../../../validation/README.md">Open Raw Markdown</a>
         </div>
       </header>
@@ -54,7 +54,7 @@
 <pre><code class="language-sh">make -C port
 make -C port test</code></pre>
 <p>That smoke now validates the first native synthetic PPU checkpoint:</p>
-<ul><li>load a promoted design pack</li><li>seed <code>VRAM/CGRAM/OAM</code> shadow state</li><li>seed visible layer, Mode 7, and OBJ registers from <code>ppu_state.json</code></li><li>dump a headless frame</li><li>compare it against the extracted <code>layers/main_visible.ppm</code> golden</li><li>generate the side-by-side compare bundle for the same promoted fixtures</li><li>validate the minimal scheduler across the three promoted rails: intro no-input, menu with input, and reproducible gameplay seed</li><li>validate the first runtime input mutations on top of those rails</li></ul>
+<ul><li>load a promoted design pack</li><li>seed <code>VRAM/CGRAM/OAM</code> shadow state</li><li>seed visible layer, Mode 7, and OBJ registers from <code>ppu_state.json</code></li><li>dump a headless frame</li><li>compare it against the extracted <code>layers/main_visible.ppm</code> golden</li><li>generate the side-by-side compare bundle for the same promoted fixtures</li><li>validate the minimal scheduler across the three promoted rails: intro no-input, menu with input, and reproducible gameplay seed</li><li>validate the promoted runtime input mutations on top of those rails, including post-<code>2050</code> default-rival <code>A</code> anchors</li></ul>
 <p>Current bootstrap fixtures:</p>
 <ul><li><code>port/assets/test_dump_frame300/design_pack</code></li><li><code>port/assets/test_dump_range_1086_1093/design_pack_range/frame_01086</code></li></ul>
 <p>Current exact-native parity fixtures:</p>
@@ -81,7 +81,7 @@ make -C port test</code></pre>
   --headless \
   --frames 1</code></pre>
 <p>That emits:</p>
-<ul><li><code>..._00000.ppm</code>: native runtime frame</li><li><code>..._00000_reference.ppm</code>: trusted <code>main_visible</code> golden</li><li><code>..._00000_diff.ppm</code>: absolute RGB error map</li><li><code>..._00000_compare.ppm</code>: <code>runtime | golden | diff</code> strip</li><li><code>..._00000_compare.json</code>: machine-readable pixel metrics plus <code>state_contract</code> over seeded PPU/layer/raw-memory state and <code>callback_contract</code> for frames covered by validated intro checkpoints</li></ul>
+<ul><li><code>..._00000.ppm</code>: native runtime frame</li><li><code>..._00000.png</code>: PNG sibling of the native runtime frame for design review</li><li><code>..._00000_reference.ppm</code>: trusted <code>main_visible</code> golden</li><li><code>..._00000_reference.png</code>: PNG sibling of the trusted golden</li><li><code>..._00000_diff.ppm</code>: absolute RGB error map</li><li><code>..._00000_diff.png</code>: PNG sibling of the diff map</li><li><code>..._00000_compare.ppm</code>: <code>runtime | golden | diff</code> strip</li><li><code>..._00000_compare.png</code>: PNG sibling of the compare strip</li><li><code>..._00000_compare.json</code>: machine-readable pixel metrics plus <code>state_contract</code> over seeded PPU/layer/raw-memory state and <code>callback_contract</code> for frames covered by validated intro checkpoints</li></ul>
 <p>With <code>--fail-on-compare-diff</code>, the runtime now exits non-zero on either:</p>
 <ul><li>pixel drift vs the trusted golden</li><li>semantic drift in the seeded <code>state_contract</code></li><li>semantic drift in the seeded <code>callback_contract</code></li></ul>
 <p>Current callback-backed promoted fixture:</p>
@@ -91,7 +91,7 @@ make -C port test</code></pre>
 <p>The non-intro rails now load from:</p>
 <ul><li><code>rom_analysis/docs/scheduler_rail_contracts.jsonc</code></li></ul>
 <p>Current runtime input surface:</p>
-<ul><li><code>--input-script &lt;windows&gt;</code> uses the same window syntax as the Mesen-side wrappers</li><li>current buttons mirror into <code>state_0960</code></li><li>the traced menu no-opponent route mutates the downstream <code>$1C70 / $1C76</code> handoff on <code>menu_gameplay_entry</code></li></ul>
+<ul><li><code>--input-script &lt;windows&gt;</code> uses the same window syntax as the Mesen-side wrappers</li><li>current buttons mirror into <code>state_0960</code></li><li>the traced menu no-opponent route mutates the downstream <code>$1C70 / $1C76</code> handoff on <code>menu_gameplay_entry</code></li><li>the default-rival <code>A</code> lane now also mutates promoted post-<code>2050</code> anchor frames at <code>2052</code>, <code>2053</code>, <code>2083</code>, <code>2104</code>, and <code>2125</code></li><li>first design-review PNG bundle for those anchors: <code>tools/out/port_input_mutation_anchor_pngs_20260401/</code></li></ul>
 <p>Post-push wiki refresh wrapper:</p>
 <pre><code class="language-sh">./tools/push_checkpoint.sh</code></pre>
 <p>That wrapper pushes the current checkpoint, rebuilds the curated docs wiki in an isolated temporary <code>git worktree</code>, and creates a follow-up wiki refresh commit/push when the generated wiki changes. Because the refresh happens in a clean worktree, unrelated local dirty files no longer block wiki publication.</p>

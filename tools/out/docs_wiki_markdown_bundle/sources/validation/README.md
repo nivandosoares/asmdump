@@ -43,7 +43,8 @@ That smoke now validates the first native synthetic PPU checkpoint:
 - generate the side-by-side compare bundle for the same promoted fixtures
 - validate the minimal scheduler across the three promoted rails:
   intro no-input, menu with input, and reproducible gameplay seed
-- validate the first runtime input mutations on top of those rails
+- validate the promoted runtime input mutations on top of those rails,
+  including post-`2050` default-rival `A` anchors
 
 Current bootstrap fixtures:
 
@@ -91,9 +92,13 @@ Direct runtime scheduler playback with scripted input:
 That emits:
 
 - `..._00000.ppm`: native runtime frame
+- `..._00000.png`: PNG sibling of the native runtime frame for design review
 - `..._00000_reference.ppm`: trusted `main_visible` golden
+- `..._00000_reference.png`: PNG sibling of the trusted golden
 - `..._00000_diff.ppm`: absolute RGB error map
+- `..._00000_diff.png`: PNG sibling of the diff map
 - `..._00000_compare.ppm`: `runtime | golden | diff` strip
+- `..._00000_compare.png`: PNG sibling of the compare strip
 - `..._00000_compare.json`: machine-readable pixel metrics plus
   `state_contract` over seeded PPU/layer/raw-memory state and
   `callback_contract` for frames covered by validated intro checkpoints
@@ -126,6 +131,10 @@ Current runtime input surface:
 - current buttons mirror into `state_0960`
 - the traced menu no-opponent route mutates the downstream
   `$1C70 / $1C76` handoff on `menu_gameplay_entry`
+- the default-rival `A` lane now also mutates promoted post-`2050` anchor
+  frames at `2052`, `2053`, `2083`, `2104`, and `2125`
+- first design-review PNG bundle for those anchors:
+  `tools/out/port_input_mutation_anchor_pngs_20260401/`
 
 Post-push wiki refresh wrapper:
 

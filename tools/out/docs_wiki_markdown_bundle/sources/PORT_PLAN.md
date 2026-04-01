@@ -114,6 +114,12 @@ New useful state beyond the original plan:
   - the menu rail now recognizes the traced no-opponent route
     (`right+down`, then confirm) and carries the downstream
     `$1C70 = 3 / $1C76 = 0` handoff instead of the default rival baseline
+  - the same menu rail now also carries promoted post-`2050`
+    default-rival `A` anchors at `2052`, `2053`, `2083`, `2104`, and `2125`
+    over tracked fields `state_09a2/state_09a8/state_137c` and
+    `dp_0020/dp_0022/dp_0053/dp_0054`
+- runtime frame dumps now emit PNG siblings next to the existing PPM artifacts
+  so design review can follow each checkpoint without manual conversion
 - that scheduler now executes validated callback-family handoffs across:
   - intro `986 -> 1117`
   - menu/input corridor `1500 -> 2050`
@@ -242,9 +248,9 @@ New useful state beyond the original plan:
 
 Immediate next focus:
 
-1. Extend the new input mutation layer beyond `state_0960` and the first
-   no-opponent menu handoff into post-`2050` gameplay deltas like
-   `state_09a2/state_09a8/dp_0053/dp_0054`.
+1. Extend the new post-`2050` input anchors from exact sampled checkpoints
+   into denser reusable windows, especially around the `2054..2088`
+   dashboard/radar divergence.
 2. Feed live SDL keyboard/controller input into the same mutator surface that
    now accepts scripted windows.
 3. Promote compare-backed fixtures for the new menu/gameplay rails wherever a

@@ -1,6 +1,6 @@
 # TD2 Wiki Markdown Bundle
 
-- Generated: `2026-04-01 14:28:56`
+- Generated: `2026-04-01 14:52:46`
 - Manifest: `rom_analysis/docs/wiki_doc_index.json`
 - Total docs: `46`
 
@@ -10,7 +10,7 @@ Use `wiki_bundle_index.md` for the curated file list or `wiki_combined.md` for a
 
 - Source: `PORT_PLAN.md`
 - Bundle copy: `sources/PORT_PLAN.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Primary execution contract and long-range port target.
 
 ---
@@ -131,6 +131,12 @@ New useful state beyond the original plan:
   - the menu rail now recognizes the traced no-opponent route
     (`right+down`, then confirm) and carries the downstream
     `$1C70 = 3 / $1C76 = 0` handoff instead of the default rival baseline
+  - the same menu rail now also carries promoted post-`2050`
+    default-rival `A` anchors at `2052`, `2053`, `2083`, `2104`, and `2125`
+    over tracked fields `state_09a2/state_09a8/state_137c` and
+    `dp_0020/dp_0022/dp_0053/dp_0054`
+- runtime frame dumps now emit PNG siblings next to the existing PPM artifacts
+  so design review can follow each checkpoint without manual conversion
 - that scheduler now executes validated callback-family handoffs across:
   - intro `986 -> 1117`
   - menu/input corridor `1500 -> 2050`
@@ -259,9 +265,9 @@ New useful state beyond the original plan:
 
 Immediate next focus:
 
-1. Extend the new input mutation layer beyond `state_0960` and the first
-   no-opponent menu handoff into post-`2050` gameplay deltas like
-   `state_09a2/state_09a8/dp_0053/dp_0054`.
+1. Extend the new post-`2050` input anchors from exact sampled checkpoints
+   into denser reusable windows, especially around the `2054..2088`
+   dashboard/radar divergence.
 2. Feed live SDL keyboard/controller input into the same mutator surface that
    now accepts scripted windows.
 3. Promote compare-backed fixtures for the new menu/gameplay rails wherever a
@@ -584,7 +590,7 @@ The work above assumes option 1 first, then selective enhancement after parity.
 
 - Source: `rom_analysis/docs/next_steps_roadmap.md`
 - Bundle copy: `sources/rom_analysis/docs/next_steps_roadmap.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Current lane status, open gates, and practical follow-up targets.
 
 ---
@@ -642,13 +648,15 @@ Validation contract baseline:
   - regression gates `6/6` pass
   - compare lane `3/3` pass
   - intro callback model smoke `183/183` checks pass
-  - scheduler smoke `175/175` checks pass across:
+  - scheduler smoke `224/224` checks pass across:
     intro no-input, menu gameplay-entry, and live-race gameplay seed, with
     menu/gameplay resolved from
     `rom_analysis/docs/scheduler_rail_contracts.jsonc`
-  - input mutation smoke `12/12` checks pass across:
-    menu no-opponent handoff plus gameplay `JOY1` samples driven by
-    scripted input windows
+  - input mutation smoke `100/100` checks pass across:
+    menu no-opponent handoff, gameplay `JOY1` samples, and promoted
+    post-`2050` default-rival `A` anchors driven by scripted input windows
+  - runtime `--dump-prefix` now emits PNG siblings for the same frame and
+    compare artifacts already used by the port smoke path
 
 ## Lane 3 Live Entry Update (`2026-03-28`)
 
@@ -2217,10 +2225,106 @@ Update findings in:
 
 - Source: `rom_analysis/docs/progress_checkpoints.md`
 - Bundle copy: `sources/rom_analysis/docs/progress_checkpoints.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Checkpoint log with evidence-bearing milestones.
 
 ---
+
+Date: 2026-04-01
+
+Summary
+- Extended the runtime input mutator beyond `state_0960` and the first
+  no-opponent handoff into the first measured post-`2050` default-rival `A`
+  anchors on `menu_gameplay_entry`.
+- Promoted exact scheduler-contract baseline checkpoints for sampled
+  no-input frames `2052`, `2053`, `2083`, `2104`, and `2125`, then overlaid
+  the traced `A` route deltas on top of them.
+- Runtime dumps and compare bundles now emit PNG siblings next to the
+  existing PPM artifacts, and this turn also materialized a design-review
+  anchor pack under `tools/out/port_input_mutation_anchor_pngs_20260401/`.
+
+What I ran
+- `make -C port clean && make -C port`
+- `./port/test_scheduler.sh`
+- `./port/test_input_mutation.sh`
+- `./port/test_compare_lane.sh`
+- `./port/test_regression.sh`
+- `make -C port test`
+- PNG writer sanity check:
+  - `./port/build/td2_port --scene-dir port/assets/test_dump_frame300/design_pack --headless --frames 1 --dump-prefix <tmp>/frame300`
+  - `python3 tools/compare_frames.py <tmp>/frame300_00000.ppm <tmp>/frame300_00000.png`
+- design-review export:
+  - `./port/build/td2_port --scene-dir tools/out/design_frame1500_car_select --scheduler-profile menu_gameplay_entry --input-script '1200:start;1280:start;1505-1510:start;1584-1589:right,down;1640-1645:start;1730-1735:start;2050-2208:a' --headless --frames 626 --dump-prefix <tmp>/a`
+  - `./port/build/td2_port --scene-dir tools/out/design_frame1500_car_select --scheduler-profile menu_gameplay_entry --input-script '1200:start;1280:start;1505-1510:start;1584-1589:right,down;1640-1645:start;1730-1735:start;2050-2208:b' --headless --frames 626 --dump-prefix <tmp>/b`
+
+Findings / Interpretation
+- The menu rail now has a defensible first post-`2050` mutation layer that is
+  grounded by the existing probe compares instead of hand-written heuristics:
+  - `2052`: `dp_0020 = 89`, `dp_0054 = 0`
+  - `2053`: `dp_0053 = 0`, `dp_0054 = 0`, `state_09a8 = 2`
+  - `2083`: `dp_0020 = 170`, `dp_0022 = 289`, `dp_0053 = 128`,
+    `dp_0054 = 128`
+  - `2104`: `dp_0020 = 105`, `dp_0053 = 200`, `dp_0054 = 208`,
+    `state_137c = 1`
+  - `2125`: `dp_0020 = 19`, `dp_0022 = 289`, `dp_0053 = 8`,
+    `dp_0054 = 8`, `state_09a2 = 26`, `state_137c = 1`
+- The old no-opponent mutator was too permissive once the traced default-rival
+  route was added to the same smoke surface; tightening that overlap was
+  necessary so `default-rival` and `no-opponent` stop aliasing the same menu
+  handoff.
+- PNG dump output is now machine-validated against the existing PPM path with
+  `0` mismatched pixels on the frame-`300` smoke, so design review can trust
+  the new format as a faithful sibling artifact, not a separate render path.
+
+What I learned (actionable)
+- For the current bootstrap, exact sampled anchors are a good way to advance
+  the post-`2050` corridor without pretending the whole lane is already
+  continuously modeled. The next useful expansion is short windows, not a
+  speculative all-frame rewrite.
+- Design-review artifacts should stay in-band with the validation path.
+  Emitting PNG next to the existing PPM/JSON bundle keeps regression and
+  human review on the same artifact set.
+
+Next steps / Checkpoints
+1) Densify the new post-`2050` anchors into short `2054..2088` windows, where
+   the visible dashboard/radar divergence is already bounded.
+2) Feed live SDL keyboard/controller input into the same mutator surface that
+   now accepts both sampled anchors and scripted windows.
+3) Promote compare-backed menu/gameplay fixtures for those post-`2050`
+   anchors whenever trusted goldens exist.
+
+Immediate recommendation
+- Use the PNG pack under `tools/out/port_input_mutation_anchor_pngs_20260401/`
+  as the current designer-facing review surface for this checkpoint.
+- Keep `./port/test_input_mutation.sh` as the cheapest falsifier when adding
+  new post-`2050` anchor rows or mutator overlays.
+
+Files updated in this turn
+- `port/main.c`
+- `port/include/td2_compare.h`
+- `port/include/td2_contracts.h`
+- `port/src/td2_compare.c`
+- `port/src/td2_contracts.c`
+- `port/src/td2_runtime.c`
+- `port/src/td2_scheduler.c`
+- `port/test_compare_lane.sh`
+- `port/test_regression.sh`
+- `port/test_scheduler.c`
+- `port/test_input_mutation.c`
+- `port/docs/ARCHITECTURE.md`
+- `port/README.md`
+- `PORT_PLAN.md`
+- `rom_analysis/docs/scheduler_rail_contracts.jsonc`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+- `tools/out/port_input_mutation_anchor_pngs_20260401/`
+
+Next reading
+- `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
+- `tools/out/post9016_default_rival_probe_none_vs_a_compare.md`
+- `port/src/td2_scheduler.c`
 
 Date: 2026-04-01
 
@@ -3025,7 +3129,7 @@ Next reading
 
 - Source: `rom_analysis/docs/validation_gates.md`
 - Bundle copy: `sources/rom_analysis/docs/validation_gates.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Bounded pass/fail policy for regression and callback checks.
 
 ---
@@ -3142,7 +3246,7 @@ This validates the minimal callback scheduler over the three promoted rails:
 - `intro_noinput`: validates the `986 -> 1117` family and the `1093 -> 1102`
   handoff
 - `menu_gameplay_entry`: validates the input-driven menu corridor
-  `1500 -> 2050`
+  `1500 -> 2050` plus promoted sampled post-`2050` baseline anchors
 - `gameplay_live_race_mid`: validates the reproducible gameplay seed over the
   promoted `3 -> 11` window
 
@@ -3165,6 +3269,10 @@ This validates the first runtime input surface on top of the scheduler rails:
 
 - current-button mirroring into `state_0960` (`JOY1`)
 - traced menu no-opponent handoff on `menu_gameplay_entry`
+- default-rival `A` anchor mutations on `menu_gameplay_entry` for
+  `state_09a2/state_09a8/state_137c` and
+  `dp_0020/dp_0022/dp_0053/dp_0054`
+- PNG artifact generation next to runtime and compare PPM dumps
 
 This is intentionally narrow. It proves the runtime is no longer input-blind
 for menu/gameplay rails before the later gameplay-state mutators are promoted.
@@ -3183,7 +3291,7 @@ For each archaeology lane:
 
 - Source: `validation/README.md`
 - Bundle copy: `sources/validation/README.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Current Mesen capture, probe, and export workflow.
 
 ---
@@ -3233,7 +3341,8 @@ That smoke now validates the first native synthetic PPU checkpoint:
 - generate the side-by-side compare bundle for the same promoted fixtures
 - validate the minimal scheduler across the three promoted rails:
   intro no-input, menu with input, and reproducible gameplay seed
-- validate the first runtime input mutations on top of those rails
+- validate the promoted runtime input mutations on top of those rails,
+  including post-`2050` default-rival `A` anchors
 
 Current bootstrap fixtures:
 
@@ -3281,9 +3390,13 @@ Direct runtime scheduler playback with scripted input:
 That emits:
 
 - `..._00000.ppm`: native runtime frame
+- `..._00000.png`: PNG sibling of the native runtime frame for design review
 - `..._00000_reference.ppm`: trusted `main_visible` golden
+- `..._00000_reference.png`: PNG sibling of the trusted golden
 - `..._00000_diff.ppm`: absolute RGB error map
+- `..._00000_diff.png`: PNG sibling of the diff map
 - `..._00000_compare.ppm`: `runtime | golden | diff` strip
+- `..._00000_compare.png`: PNG sibling of the compare strip
 - `..._00000_compare.json`: machine-readable pixel metrics plus
   `state_contract` over seeded PPU/layer/raw-memory state and
   `callback_contract` for frames covered by validated intro checkpoints
@@ -3316,6 +3429,10 @@ Current runtime input surface:
 - current buttons mirror into `state_0960`
 - the traced menu no-opponent route mutates the downstream
   `$1C70 / $1C76` handoff on `menu_gameplay_entry`
+- the default-rival `A` lane now also mutates promoted post-`2050` anchor
+  frames at `2052`, `2053`, `2083`, `2104`, and `2125`
+- first design-review PNG bundle for those anchors:
+  `tools/out/port_input_mutation_anchor_pngs_20260401/`
 
 Post-push wiki refresh wrapper:
 
@@ -5503,7 +5620,7 @@ Notes:
 
 - Source: `tools/README.md`
 - Bundle copy: `sources/tools/README.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Promoted extraction and analysis tooling surface.
 
 ---
@@ -6193,7 +6310,7 @@ This should be treated as the scene's static setup, not a guarantee of exact fra
 
 - Source: `port/README.md`
 - Bundle copy: `sources/port/README.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: SDL runtime scope, usage, and current sequence playback path.
 
 ---
@@ -6228,7 +6345,10 @@ Current checkpoint:
 - first input-driven mutations on top of scheduler rails:
   current `JOY1` sample mirrored into runtime state as `state_0960`, plus the
   traced no-opponent menu handoff on `menu_gameplay_entry`
-- headless frame dumping for regression smoke
+- promoted post-`2050` default-rival `A` anchors on `menu_gameplay_entry`
+  across `2052`, `2053`, `2083`, `2104`, and `2125`
+- headless frame dumping for regression smoke and design review in both PPM
+  and PNG
 
 This is deliberately not the final renderer. It is the clean replacement for
 the old “invented gameplay” scaffolds and the base for real callback/state
@@ -6310,6 +6430,11 @@ Notes:
   - gameplay `--input-script` buttons mirror into `state_0960`
   - the traced menu no-opponent route mutates the downstream
     `$1C70 / $1C76` handoff
+  - the default-rival `A` lane mutates promoted post-`2050` anchors over
+    `state_09a2/state_09a8/state_137c` and
+    `dp_0020/dp_0022/dp_0053/dp_0054`
+- `--dump-prefix` now emits `PATH_00000.ppm` and `PATH_00000.png`; compare
+  dumps also emit PNG siblings for `_reference`, `_diff`, and `_compare`.
 - `tools/push_checkpoint.sh` is the repo-local wrapper for the post-push step:
   it pushes the current checkpoint, refreshes the curated wiki in an isolated
   temporary `git worktree`, and issues a follow-up wiki refresh commit/push
@@ -6321,7 +6446,7 @@ Notes:
 
 - Source: `rom_analysis/README.md`
 - Bundle copy: `sources/rom_analysis/README.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Top-level archaeology tree orientation.
 
 ---
@@ -6403,7 +6528,7 @@ make -C tools bank30-registry
 
 - Source: `rom_analysis/docs/bank30_decompression_report.md`
 - Bundle copy: `sources/rom_analysis/docs/bank30_decompression_report.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Current registry-backed read of bank30 markers and the active unresolved queue.
 
 ---
@@ -6590,7 +6715,7 @@ Observed decode geometry:
 
 - Source: `rom_analysis/docs/bank30_b1f9_forced_lane_stall.md`
 - Bundle copy: `sources/rom_analysis/docs/bank30_b1f9_forced_lane_stall.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Why the current headless `B1F9` forcing lane is low-yield for `EE7F`.
 
 ---
@@ -6686,7 +6811,7 @@ observe the `EE7F` selector. It is a later worker loop centered on
 
 - Source: `rom_analysis/docs/intro_00_8029_next_agent_handoff.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_00_8029_next_agent_handoff.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Active handoff for the later attract continuation lane.
 
 ---
@@ -6791,7 +6916,7 @@ The open question is no longer "which producer owns this?" It is:
 
 - Source: `rom_analysis/docs/intro_01_9fe5_window_986_1093.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_01_9fe5_window_986_1093.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Consolidated visual-contract note for the bridge-visible intro block.
 
 ---
@@ -6906,7 +7031,7 @@ Reading:
 
 - Source: `rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Producer-side activity narrowing for the post-1093 window.
 
 ---
@@ -7098,7 +7223,7 @@ Use those boundaries explicitly in the Lane 2 follow-up:
 
 - Source: `rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Late 00:8029 blob rotation report and selector narrowing.
 
 ---
@@ -7313,7 +7438,7 @@ Reading:
 
 - Source: `rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md`
 - Bundle copy: `sources/rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: First promoted tilemap-to-ROM provenance window.
 
 ---
@@ -7340,7 +7465,7 @@ Reading:
 
 - Source: `rom_analysis/docs/mesen_debugger_design_workbench.md`
 - Bundle copy: `sources/rom_analysis/docs/mesen_debugger_design_workbench.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Design-pack workflow and extraction surface.
 
 ---
@@ -7541,7 +7666,7 @@ make -C tools l001210-trace-summary
 
 - Source: `rom_analysis/docs/snes_runtime_algorithm_human.md`
 - Bundle copy: `sources/rom_analysis/docs/snes_runtime_algorithm_human.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Human-readable interpretation of the front-end and handoff corridor.
 
 ---
@@ -7717,7 +7842,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md`
 - Bundle copy: `sources/rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Car-presentation BG2 ownership without treating it as gameplay.
 
 ---
@@ -7760,7 +7885,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_frontend_top_menu_labels.md`
 - Bundle copy: `sources/tools/out/snes_frontend_top_menu_labels.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Closed rendered label set for the top signboard menu.
 
 ---
@@ -7792,7 +7917,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_frontend_rival_selection_grid.md`
 - Bundle copy: `sources/tools/out/snes_frontend_rival_selection_grid.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Rendered and structural read of the 2x2 opponent grid.
 
 ---
@@ -7858,7 +7983,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_select_opponent_organic_default_path.md`
 - Bundle copy: `sources/tools/out/snes_select_opponent_organic_default_path.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Recovered no-force path into the default rival corridor.
 
 ---
@@ -7907,7 +8032,7 @@ Inject `right+down` only after `01:C1D2` is already live so `$1C70` can leave
 
 - Source: `tools/out/snes_frontend_select_opponent_mode_split.md`
 - Bundle copy: `sources/tools/out/snes_frontend_select_opponent_mode_split.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Separates rival slots from the no-opponent stopwatch branch.
 
 ---
@@ -7957,7 +8082,7 @@ Inject `right+down` only after `01:C1D2` is already live so `$1C70` can leave
 
 - Source: `rom_analysis/docs/lane3_today_work_brief.md`
 - Bundle copy: `sources/rom_analysis/docs/lane3_today_work_brief.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Current gameplay archaeology state and human-support queue.
 
 ---
@@ -8278,7 +8403,7 @@ without redoing the same work.
 
 - Source: `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
 - Bundle copy: `sources/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Primary gameplay-oriented handoff note.
 
 ---
@@ -8859,7 +8984,7 @@ The question is now narrower:
 
 - Source: `rom_analysis/docs/lane3_attract_demo_boundary.md`
 - Bundle copy: `sources/rom_analysis/docs/lane3_attract_demo_boundary.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Boundary note explaining why some old seeds were misleading.
 
 ---
@@ -8920,7 +9045,7 @@ evidence looked like "menu" in one pass and "gameplay" in another.
 
 - Source: `rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Promoted power-on route for reproducible gameplay entry.
 
 ---
@@ -9078,7 +9203,7 @@ evidence looked like "menu" in one pass and "gameplay" in another.
 
 - Source: `rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: First promoted late gameplay pair from the live-entry route, with stable artifact bundles for both phases.
 
 ---
@@ -9240,7 +9365,7 @@ Primary wiki/gallery image refs for this pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Bounded live-entry follow-up that isolates traffic emergence as a cleaner OBJ-side event.
 
 ---
@@ -9392,7 +9517,7 @@ Designer-facing anchors for the promoted pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Asset-first gameplay taxonomy that maps BG/OBJ buckets to tracing targets.
 
 ---
@@ -9471,7 +9596,7 @@ Designer-facing anchors for the promoted pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Savestate-backed gameplay extraction that now closes native `BG2` road and `BG3` scenery surfaces.
 
 ---
@@ -9615,7 +9740,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
 - Bundle copy: `sources/tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Generated BG1/BG2/OBJ compare for the first late live-entry gameplay pair.
 
 ---
@@ -9667,7 +9792,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md`
 - Bundle copy: `sources/tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Generated compare showing the red traffic car as the current best OBJ-side live-entry event.
 
 ---
@@ -9718,7 +9843,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_race_mid_asset_focus.md`
 - Bundle copy: `sources/tools/out/lane3_live_race_mid_asset_focus.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Generated gameplay inventory with supporting frame/layer artifact references.
 
 ---
@@ -9785,7 +9910,7 @@ native PNGs:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Human note for preserved live-race savestates and controls.
 
 ---
@@ -9999,7 +10124,7 @@ native PNGs:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Video-backed still capture summary for the live-race lane.
 
 ---
@@ -10087,7 +10212,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Named still pack for the checkpoint service/post corridor, partial-results screen, and restart back into driving.
 
 ---
@@ -10159,7 +10284,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Longplay-backed visual anchors for night, bridge, mountain-wall, tunnel, and rain.
 
 ---
@@ -10232,7 +10357,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Longplay-backed snow-driving anchors starting at the one-hour mark.
 
 ---
@@ -10297,7 +10422,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Boundary note showing why phase-4 snow is now a savestate-first capture target.
 
 ---
@@ -10384,7 +10509,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Longplay-backed arrest/prison ending pack and high-score handoff.
 
 ---
@@ -10448,7 +10573,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Layer composition read for a real gameplay seed.
 
 ---
@@ -10580,7 +10705,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Producer-side narrowing for the gameplay road/world path.
 
 ---
@@ -10729,7 +10854,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Static role split for the narrowed gameplay cluster.
 
 ---
@@ -10857,7 +10982,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Semantic ownership pass for post-handoff gameplay fields.
 
 ---
@@ -10982,7 +11107,7 @@ Optional but useful:
 
 - Source: `rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md`
 - Bundle copy: `sources/rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Bounded regression read for current intro/front-end parity in the C/SDL runtime.
 
 ---
@@ -11052,7 +11177,7 @@ Regression summary:
 
 - Source: `rom_analysis/docs/mesen_instrumented_backend_architecture.md`
 - Bundle copy: `sources/rom_analysis/docs/mesen_instrumented_backend_architecture.md`
-- Last updated: `2026-04-01 14:28`
+- Last updated: `2026-04-01 14:52`
 - Note: Architecture note for the experimental Mesen backend path.
 
 ---

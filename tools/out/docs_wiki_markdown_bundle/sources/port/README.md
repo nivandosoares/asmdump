@@ -28,7 +28,10 @@ Current checkpoint:
 - first input-driven mutations on top of scheduler rails:
   current `JOY1` sample mirrored into runtime state as `state_0960`, plus the
   traced no-opponent menu handoff on `menu_gameplay_entry`
-- headless frame dumping for regression smoke
+- promoted post-`2050` default-rival `A` anchors on `menu_gameplay_entry`
+  across `2052`, `2053`, `2083`, `2104`, and `2125`
+- headless frame dumping for regression smoke and design review in both PPM
+  and PNG
 
 This is deliberately not the final renderer. It is the clean replacement for
 the old “invented gameplay” scaffolds and the base for real callback/state
@@ -110,6 +113,11 @@ Notes:
   - gameplay `--input-script` buttons mirror into `state_0960`
   - the traced menu no-opponent route mutates the downstream
     `$1C70 / $1C76` handoff
+  - the default-rival `A` lane mutates promoted post-`2050` anchors over
+    `state_09a2/state_09a8/state_137c` and
+    `dp_0020/dp_0022/dp_0053/dp_0054`
+- `--dump-prefix` now emits `PATH_00000.ppm` and `PATH_00000.png`; compare
+  dumps also emit PNG siblings for `_reference`, `_diff`, and `_compare`.
 - `tools/push_checkpoint.sh` is the repo-local wrapper for the post-push step:
   it pushes the current checkpoint, refreshes the curated wiki in an isolated
   temporary `git worktree`, and issues a follow-up wiki refresh commit/push
