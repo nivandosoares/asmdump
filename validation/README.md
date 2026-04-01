@@ -44,7 +44,7 @@ That smoke now validates the first native synthetic PPU checkpoint:
 - validate the minimal scheduler across the three promoted rails:
   intro no-input, menu with input, and reproducible gameplay seed
 - validate the promoted runtime input mutations on top of those rails,
-  including post-`2050` default-rival `A` anchors
+  including the measured post-`2050` default-rival `A` window
 
 Current bootstrap fixtures:
 
@@ -131,10 +131,12 @@ Current runtime input surface:
 - current buttons mirror into `state_0960`
 - the traced menu no-opponent route mutates the downstream
   `$1C70 / $1C76` handoff on `menu_gameplay_entry`
-- the default-rival `A` lane now also mutates promoted post-`2050` anchor
-  frames at `2052`, `2053`, `2083`, `2104`, and `2125`
-- first design-review PNG bundle for those anchors:
+- the default-rival `A` lane now also mutates the promoted exact
+  `2052..2088` window plus later checkpoints `2104` and `2125`
+- first design-review PNG bundle for the original promoted anchors:
   `tools/out/port_input_mutation_anchor_pngs_20260401/`
+- follow-up design-review PNG bundle for the densified `2054..2088` window:
+  `tools/out/port_input_mutation_window2054_2088_pngs_20260401/`
 
 Post-push wiki refresh wrapper:
 

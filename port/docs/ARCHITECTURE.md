@@ -48,9 +48,10 @@ The current code intentionally does only the minimum clean work:
   the callback model path. The first input overlay now also lives here:
   current `JOY1` sample into `state_0960`, plus the traced no-opponent route
   mutator for the menu corridor. The next promoted layer on top of that is a
-  measured post-`2050` default-rival `A` overlay over
+  measured post-`2050` default-rival `A` overlay over the exact
+  `2052..2088` window plus later anchors `2104` and `2125`, covering
   `state_09a2/state_09a8/state_137c` and
-  `dp_0020/dp_0022/dp_0053/dp_0054` at exact sampled anchors.
+  `dp_0020/dp_0022/dp_0053/dp_0054`.
 
 The promoted smoke fixtures are now exact through the native compositor itself.
 `main_visible.ppm` stays in the loop only as the regression golden surface,
@@ -64,8 +65,8 @@ bundles that only carry local `raw/` dumps and no golden frame.
 
 ## Next replacement steps
 
-1. Extend the new post-`2050` input anchors beyond the first sampled
-   checkpoints and start covering short windows instead of isolated frames.
-2. Feed live SDL input through the same input-script/mutator surface.
-3. Promote compare-backed menu/gameplay fixtures so the same
+1. Feed live SDL input through the same input-script/mutator surface.
+2. Promote compare-backed menu/gameplay fixtures so the same
    runtime-or-golden workflow used on intro can gate later rails too.
+3. Extend the measured post-`2050` menu window beyond `2088` only when a new
+   bounded probe window is promoted.

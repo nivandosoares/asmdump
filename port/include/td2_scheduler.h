@@ -8,7 +8,7 @@
 #include "td2_input.h"
 #include "td2_io.h"
 
-#define TD2_SCHEDULER_SEGMENTS_MAX 32
+#define TD2_SCHEDULER_SEGMENTS_MAX 64
 
 typedef enum {
     TD2_SCHEDULER_PROFILE_NONE = 0,

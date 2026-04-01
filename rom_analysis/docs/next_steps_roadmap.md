@@ -51,13 +51,13 @@ Validation contract baseline:
   - regression gates `6/6` pass
   - compare lane `3/3` pass
   - intro callback model smoke `183/183` checks pass
-  - scheduler smoke `224/224` checks pass across:
+  - scheduler smoke `320/320` checks pass across:
     intro no-input, menu gameplay-entry, and live-race gameplay seed, with
     menu/gameplay resolved from
     `rom_analysis/docs/scheduler_rail_contracts.jsonc`
-  - input mutation smoke `100/100` checks pass across:
+  - input mutation smoke `200/200` checks pass across:
     menu no-opponent handoff, gameplay `JOY1` samples, and promoted
-    post-`2050` default-rival `A` anchors driven by scripted input windows
+    post-`2050` default-rival `A` windows driven by scripted input windows
   - runtime `--dump-prefix` now emits PNG siblings for the same frame and
     compare artifacts already used by the port smoke path
 

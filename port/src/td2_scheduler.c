@@ -100,6 +100,428 @@ static void td2_scheduler_set_u16(bool* has_value, uint16_t* value, uint16_t nex
     *value = next_value;
 }
 
+typedef struct {
+    unsigned frame_number;
+    bool has_state_09a2;
+    uint16_t state_09a2;
+    bool has_state_09a8;
+    uint16_t state_09a8;
+    bool has_state_137c;
+    uint16_t state_137c;
+    bool has_dp_0020;
+    uint16_t dp_0020;
+    bool has_dp_0022;
+    uint16_t dp_0022;
+    bool has_dp_0053;
+    uint16_t dp_0053;
+    bool has_dp_0054;
+    uint16_t dp_0054;
+} Td2MeasuredMenuFrame;
+
+static const Td2MeasuredMenuFrame k_menu_default_rival_a_frames[] = {
+    {
+        2052U,
+        true, 40U,
+        true, 2U,
+        true, 0U,
+        true, 89U,
+        true, 9U,
+        true, 248U,
+        true, 0U,
+    },
+    {
+        2053U,
+        true, 27U,
+        true, 2U,
+        true, 0U,
+        true, 18U,
+        true, 4U,
+        true, 0U,
+        true, 0U,
+    },
+    {
+        2054U,
+        true, 40U,
+        true, 2U,
+        true, 0U,
+        true, 88U,
+        true, 9U,
+        true, 0U,
+        true, 8U,
+    },
+    {
+        2055U,
+        true, 27U,
+        true, 2U,
+        true, 0U,
+        true, 18U,
+        true, 4U,
+        true, 8U,
+        true, 8U,
+    },
+    {
+        2056U,
+        true, 40U,
+        true, 2U,
+        true, 0U,
+        true, 88U,
+        true, 9U,
+        true, 8U,
+        true, 16U,
+    },
+    {
+        2057U,
+        true, 27U,
+        true, 2U,
+        true, 0U,
+        true, 18U,
+        true, 4U,
+        true, 16U,
+        true, 16U,
+    },
+    {
+        2058U,
+        true, 40U,
+        true, 2U,
+        true, 0U,
+        true, 88U,
+        true, 9U,
+        true, 16U,
+        true, 24U,
+    },
+    {
+        2059U,
+        true, 27U,
+        true, 2U,
+        true, 0U,
+        true, 18U,
+        true, 4U,
+        true, 24U,
+        true, 24U,
+    },
+    {
+        2060U,
+        true, 40U,
+        true, 2U,
+        true, 0U,
+        true, 88U,
+        true, 9U,
+        true, 24U,
+        true, 32U,
+    },
+    {
+        2061U,
+        true, 27U,
+        true, 2U,
+        true, 0U,
+        true, 18U,
+        true, 4U,
+        true, 32U,
+        true, 32U,
+    },
+    {
+        2062U,
+        true, 40U,
+        true, 2U,
+        true, 0U,
+        true, 82U,
+        true, 9U,
+        true, 32U,
+        true, 40U,
+    },
+    {
+        2063U,
+        true, 27U,
+        true, 2U,
+        true, 0U,
+        true, 18U,
+        true, 4U,
+        true, 40U,
+        true, 40U,
+    },
+    {
+        2064U,
+        true, 40U,
+        true, 2U,
+        true, 0U,
+        true, 82U,
+        true, 9U,
+        true, 40U,
+        true, 48U,
+    },
+    {
+        2065U,
+        true, 27U,
+        true, 2U,
+        true, 0U,
+        true, 18U,
+        true, 4U,
+        true, 48U,
+        true, 48U,
+    },
+    {
+        2066U,
+        true, 38U,
+        true, 2U,
+        true, 0U,
+        true, 192U,
+        true, 9U,
+        true, 48U,
+        true, 48U,
+    },
+    {
+        2067U,
+        true, 27U,
+        true, 2U,
+        true, 0U,
+        true, 18U,
+        true, 4U,
+        true, 48U,
+        true, 48U,
+    },
+    {
+        2068U,
+        true, 38U,
+        true, 2U,
+        true, 0U,
+        true, 83U,
+        true, 9U,
+        true, 48U,
+        true, 56U,
+    },
+    {
+        2069U,
+        true, 27U,
+        true, 10U,
+        true, 0U,
+        true, 18U,
+        true, 4U,
+        true, 56U,
+        true, 56U,
+    },
+    {
+        2070U,
+        true, 38U,
+        true, 2U,
+        true, 0U,
+        true, 84U,
+        true, 9U,
+        true, 56U,
+        true, 64U,
+    },
+    {
+        2071U,
+        true, 27U,
+        true, 2U,
+        true, 0U,
+        true, 18U,
+        true, 4U,
+        true, 64U,
+        true, 64U,
+    },
+    {
+        2072U,
+        true, 38U,
+        true, 2U,
+        true, 0U,
+        true, 84U,
+        true, 9U,
+        true, 64U,
+        true, 72U,
+    },
+    {
+        2073U,
+        true, 27U,
+        true, 10U,
+        true, 0U,
+        true, 18U,
+        true, 4U,
+        true, 72U,
+        true, 72U,
+    },
+    {
+        2074U,
+        true, 38U,
+        true, 2U,
+        true, 0U,
+        true, 88U,
+        true, 9U,
+        true, 72U,
+        true, 80U,
+    },
+    {
+        2075U,
+        true, 27U,
+        true, 2U,
+        true, 0U,
+        true, 18U,
+        true, 4U,
+        true, 80U,
+        true, 80U,
+    },
+    {
+        2076U,
+        true, 38U,
+        true, 2U,
+        true, 0U,
+        true, 88U,
+        true, 9U,
+        true, 80U,
+        true, 88U,
+    },
+    {
+        2077U,
+        true, 27U,
+        true, 10U,
+        true, 0U,
+        true, 18U,
+        true, 4U,
+        true, 88U,
+        true, 88U,
+    },
+    {
+        2078U,
+        true, 38U,
+        true, 2U,
+        true, 0U,
+        true, 89U,
+        true, 9U,
+        true, 88U,
+        true, 96U,
+    },
+    {
+        2079U,
+        true, 27U,
+        true, 2U,
+        true, 0U,
+        true, 18U,
+        true, 4U,
+        true, 96U,
+        true, 96U,
+    },
+    {
+        2080U,
+        true, 38U,
+        true, 2U,
+        true, 0U,
+        true, 89U,
+        true, 9U,
+        true, 96U,
+        true, 104U,
+    },
+    {
+        2081U,
+        true, 27U,
+        true, 10U,
+        true, 0U,
+        true, 18U,
+        true, 4U,
+        true, 104U,
+        true, 104U,
+    },
+    {
+        2082U,
+        true, 40U,
+        true, 2U,
+        true, 0U,
+        true, 89U,
+        true, 9U,
+        true, 104U,
+        true, 128U,
+    },
+    {
+        2083U,
+        true, 27U,
+        true, 2U,
+        true, 0U,
+        true, 170U,
+        true, 289U,
+        true, 128U,
+        true, 128U,
+    },
+    {
+        2084U,
+        true, 40U,
+        true, 2U,
+        true, 0U,
+        true, 89U,
+        true, 9U,
+        true, 128U,
+        true, 136U,
+    },
+    {
+        2085U,
+        true, 27U,
+        true, 2U,
+        true, 0U,
+        true, 18U,
+        true, 4U,
+        true, 136U,
+        true, 136U,
+    },
+    {
+        2086U,
+        true, 40U,
+        true, 2U,
+        true, 0U,
+        true, 89U,
+        true, 9U,
+        true, 136U,
+        true, 144U,
+    },
+    {
+        2087U,
+        true, 27U,
+        true, 2U,
+        true, 0U,
+        true, 18U,
+        true, 4U,
+        true, 144U,
+        true, 144U,
+    },
+    {
+        2088U,
+        true, 40U,
+        true, 2U,
+        true, 0U,
+        true, 87U,
+        true, 9U,
+        true, 144U,
+        true, 152U,
+    },
+};
+
+static void td2_scheduler_apply_measured_menu_frame(
+    const Td2MeasuredMenuFrame* frame,
+    Td2RuntimeState* state
+) {
+    if (frame == NULL || state == NULL) {
+        return;
+    }
+
+    if (frame->has_state_09a2) {
+        td2_scheduler_set_u16(&state->has_state_09a2, &state->state_09a2, frame->state_09a2);
+    }
+    if (frame->has_state_09a8) {
+        td2_scheduler_set_u16(&state->has_state_09a8, &state->state_09a8, frame->state_09a8);
+    }
+    if (frame->has_state_137c) {
+        td2_scheduler_set_u16(&state->has_state_137c, &state->state_137c, frame->state_137c);
+    }
+    if (frame->has_dp_0020) {
+        td2_scheduler_set_u16(&state->has_dp_0020, &state->dp_0020, frame->dp_0020);
+    }
+    if (frame->has_dp_0022) {
+        td2_scheduler_set_u16(&state->has_dp_0022, &state->dp_0022, frame->dp_0022);
+    }
+    if (frame->has_dp_0053) {
+        td2_scheduler_set_u16(&state->has_dp_0053, &state->dp_0053, frame->dp_0053);
+    }
+    if (frame->has_dp_0054) {
+        td2_scheduler_set_u16(&state->has_dp_0054, &state->dp_0054, frame->dp_0054);
+    }
+}
+
 static void td2_scheduler_apply_current_input(
     const Td2Scheduler* scheduler,
     unsigned frame_number,
@@ -191,38 +613,37 @@ static void td2_scheduler_apply_menu_default_rival_a_anchor(
     unsigned frame_number,
     Td2RuntimeState* state
 ) {
+    size_t i;
+
+    for (i = 0U; i < sizeof(k_menu_default_rival_a_frames) / sizeof(k_menu_default_rival_a_frames[0]); i++) {
+        if (k_menu_default_rival_a_frames[i].frame_number != frame_number) {
+            continue;
+        }
+        td2_scheduler_apply_measured_menu_frame(&k_menu_default_rival_a_frames[i], state);
+        return;
+    }
+
     switch (frame_number) {
-        case 2052U:
-            td2_scheduler_set_u16(&state->has_dp_0020, &state->dp_0020, 89U);
-            td2_scheduler_set_u16(&state->has_dp_0054, &state->dp_0054, 0U);
-            break;
-        case 2053U:
-            td2_scheduler_set_u16(&state->has_dp_0053, &state->dp_0053, 0U);
-            td2_scheduler_set_u16(&state->has_dp_0054, &state->dp_0054, 0U);
-            td2_scheduler_set_u16(&state->has_state_09a8, &state->state_09a8, 2U);
-            break;
-        case 2083U:
-            td2_scheduler_set_u16(&state->has_dp_0020, &state->dp_0020, 170U);
-            td2_scheduler_set_u16(&state->has_dp_0022, &state->dp_0022, 289U);
-            td2_scheduler_set_u16(&state->has_dp_0053, &state->dp_0053, 128U);
-            td2_scheduler_set_u16(&state->has_dp_0054, &state->dp_0054, 128U);
-            break;
         case 2104U:
+            td2_scheduler_set_u16(&state->has_state_09a2, &state->state_09a2, 38U);
+            td2_scheduler_set_u16(&state->has_state_09a8, &state->state_09a8, 2U);
+            td2_scheduler_set_u16(&state->has_state_137c, &state->state_137c, 1U);
             td2_scheduler_set_u16(&state->has_dp_0020, &state->dp_0020, 105U);
+            td2_scheduler_set_u16(&state->has_dp_0022, &state->dp_0022, 9U);
             td2_scheduler_set_u16(&state->has_dp_0053, &state->dp_0053, 200U);
             td2_scheduler_set_u16(&state->has_dp_0054, &state->dp_0054, 208U);
-            td2_scheduler_set_u16(&state->has_state_137c, &state->state_137c, 1U);
-            break;
+            return;
         case 2125U:
+            td2_scheduler_set_u16(&state->has_state_09a2, &state->state_09a2, 26U);
+            td2_scheduler_set_u16(&state->has_state_09a8, &state->state_09a8, 10U);
+            td2_scheduler_set_u16(&state->has_state_137c, &state->state_137c, 1U);
             td2_scheduler_set_u16(&state->has_dp_0020, &state->dp_0020, 19U);
             td2_scheduler_set_u16(&state->has_dp_0022, &state->dp_0022, 289U);
             td2_scheduler_set_u16(&state->has_dp_0053, &state->dp_0053, 8U);
             td2_scheduler_set_u16(&state->has_dp_0054, &state->dp_0054, 8U);
-            td2_scheduler_set_u16(&state->has_state_09a2, &state->state_09a2, 26U);
-            td2_scheduler_set_u16(&state->has_state_137c, &state->state_137c, 1U);
-            break;
+            return;
         default:
-            break;
+            return;
     }
 }
 
@@ -281,8 +702,8 @@ static bool td2_scheduler_load_contract_segments(
     char contracts_path[1400];
     char profile_pattern[128];
     const char* profile_id = td2_profile_id_text(profile);
-    char profile_block[12288];
-    char segment_block[2048];
+    char profile_block[65536];
+    char segment_block[4096];
     char* json = NULL;
     size_t json_size = 0U;
     const char* profile_anchor = NULL;

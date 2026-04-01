@@ -1,6 +1,82 @@
 Date: 2026-04-01
 
 Summary
+- Promoted the `menu_gameplay_entry` baseline from sparse post-`2050` anchors
+  to an exact sampled scheduler-contract window across frames `2052..2088`.
+- Expanded the default-rival `A` mutator in the runtime from isolated anchors
+  into the measured `2052..2088` window, while preserving the later promoted
+  checkpoints at `2104` and `2125`.
+- Materialized a second local PNG review pack under
+  `tools/out/port_input_mutation_window2054_2088_pngs_20260401/` with paired
+  `A/B` outputs for frames `2054`, `2066`, `2083`, and `2088`.
+
+What I ran
+- `make -C port clean && make -C port`
+- `./port/test_scheduler.sh`
+- `./port/test_input_mutation.sh`
+- `./port/test_compare_lane.sh`
+- `./port/test_regression.sh`
+- `make -C port test`
+- local PNG review export with `./port/build/td2_port` on
+  `tools/out/design_frame1500_car_select` for frames
+  `2054/2066/2083/2088` under both scripted `A` and scripted `B`
+
+Findings / Interpretation
+- The `2054..2088` corridor is deterministic enough to promote verbatim. The
+  no-input rail is no longer inferred from a handful of checkpoints; it now
+  has exact sampled baseline state for every frame in that bounded window.
+- The default-rival `A` lane also has a real measured shape rather than a
+  guessed extrapolation: `dp_0053/dp_0054` advance as a staircase,
+  `dp_0020` changes only on selected even frames, and `state_09a8` flips
+  only on a subset of odd frames.
+- The new scheduler and mutator coverage stayed compatible with the existing
+  compare lane and native renderer: no regression gate loosened to land this
+  window.
+
+What I learned (actionable)
+- When probe data already exposes a bounded staircase window, exact promotion
+  is cheaper and safer than inventing a generalized heuristic early.
+- The next useful port step is no longer more manual densification inside
+  `2054..2088`; it is feeding SDL live input into the same mutator surface
+  that now already matches scripted replay on this corridor.
+
+Next steps / Checkpoints
+1) Feed live SDL keyboard/controller input into the same runtime mutator
+   surface that currently accepts `--input-script`.
+2) Promote compare-backed menu/gameplay fixtures wherever trusted goldens
+   exist for this corridor.
+3) Extend the measured menu corridor past `2088` only when a new bounded
+   probe block closes cleanly.
+
+Immediate recommendation
+- Use the PNG pack under
+  `tools/out/port_input_mutation_window2054_2088_pngs_20260401/` as the
+  current designer-facing review surface for this checkpoint.
+- Keep `./port/test_scheduler.sh` and `./port/test_input_mutation.sh` as the
+  cheapest falsifiers when promoting the next measured menu window.
+
+Files updated in this turn
+- `port/include/td2_scheduler.h`
+- `port/src/td2_scheduler.c`
+- `port/test_scheduler.c`
+- `port/test_input_mutation.c`
+- `rom_analysis/docs/scheduler_rail_contracts.jsonc`
+- `PORT_PLAN.md`
+- `port/docs/ARCHITECTURE.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+- `tools/out/port_input_mutation_window2054_2088_pngs_20260401/`
+
+Next reading
+- `tools/out/post9016_default_rival_probe_none_vs_a_compare.md`
+- `rom_analysis/docs/scheduler_rail_contracts.jsonc`
+- `port/src/td2_scheduler.c`
+
+Date: 2026-04-01
+
+Summary
 - Extended the runtime input mutator beyond `state_0960` and the first
   no-opponent handoff into the first measured post-`2050` default-rival `A`
   anchors on `menu_gameplay_entry`.

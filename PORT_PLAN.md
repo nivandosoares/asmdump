@@ -115,8 +115,9 @@ New useful state beyond the original plan:
     (`right+down`, then confirm) and carries the downstream
     `$1C70 = 3 / $1C76 = 0` handoff instead of the default rival baseline
   - the same menu rail now also carries promoted post-`2050`
-    default-rival `A` anchors at `2052`, `2053`, `2083`, `2104`, and `2125`
-    over tracked fields `state_09a2/state_09a8/state_137c` and
+    default-rival `A` measurements across the exact `2052..2088` window plus
+    later anchors `2104` and `2125`, over tracked fields
+    `state_09a2/state_09a8/state_137c` and
     `dp_0020/dp_0022/dp_0053/dp_0054`
 - runtime frame dumps now emit PNG siblings next to the existing PPM artifacts
   so design review can follow each checkpoint without manual conversion
@@ -248,13 +249,12 @@ New useful state beyond the original plan:
 
 Immediate next focus:
 
-1. Extend the new post-`2050` input anchors from exact sampled checkpoints
-   into denser reusable windows, especially around the `2054..2088`
-   dashboard/radar divergence.
-2. Feed live SDL keyboard/controller input into the same mutator surface that
+1. Feed live SDL keyboard/controller input into the same mutator surface that
    now accepts scripted windows.
-3. Promote compare-backed fixtures for the new menu/gameplay rails wherever a
+2. Promote compare-backed fixtures for the new menu/gameplay rails wherever a
    trusted `main_visible` golden exists.
+3. Extend the measured menu window beyond `2088` only when fresh probes close
+   another bounded post-`2050` block.
 4. Keep intro archaeology moving only where it tightens callback ownership or
    renderer behavior, not as a polishing lane by itself.
 5. Use the local SentrySearch chunk workflow plus the longplay anchor packs to
