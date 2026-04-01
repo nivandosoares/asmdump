@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-01 16:51:19",
+  "generated_at": "2026-04-01 17:10:05",
   "doc_count": 47,
   "manifest": "rom_analysis/docs/wiki_doc_index.json",
   "docs": [
@@ -10,7 +10,7 @@
       "note": "Primary execution contract and long-range port target.",
       "source": "PORT_PLAN.md",
       "bundle_copy": "sources/PORT_PLAN.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "source-of-truth",
@@ -19,7 +19,7 @@
       "note": "Current lane status, open gates, and practical follow-up targets.",
       "source": "rom_analysis/docs/next_steps_roadmap.md",
       "bundle_copy": "sources/rom_analysis/docs/next_steps_roadmap.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "source-of-truth",
@@ -28,7 +28,7 @@
       "note": "Checkpoint log with evidence-bearing milestones.",
       "source": "rom_analysis/docs/progress_checkpoints.md",
       "bundle_copy": "sources/rom_analysis/docs/progress_checkpoints.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "source-of-truth",
@@ -37,7 +37,7 @@
       "note": "Bounded pass/fail policy for regression and callback checks.",
       "source": "rom_analysis/docs/validation_gates.md",
       "bundle_copy": "sources/rom_analysis/docs/validation_gates.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "source-of-truth",
@@ -46,7 +46,7 @@
       "note": "Current Mesen capture, probe, and export workflow.",
       "source": "validation/README.md",
       "bundle_copy": "sources/validation/README.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "source-of-truth",
@@ -55,7 +55,7 @@
       "note": "Promoted extraction and analysis tooling surface.",
       "source": "tools/README.md",
       "bundle_copy": "sources/tools/README.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "source-of-truth",
@@ -64,7 +64,7 @@
       "note": "SDL runtime scope, usage, and current sequence playback path.",
       "source": "port/README.md",
       "bundle_copy": "sources/port/README.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "source-of-truth",
@@ -73,7 +73,7 @@
       "note": "Top-level archaeology tree orientation.",
       "source": "rom_analysis/README.md",
       "bundle_copy": "sources/rom_analysis/README.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "compression-bank30",
@@ -82,7 +82,7 @@
       "note": "Current registry-backed read of bank30 markers and the active unresolved queue.",
       "source": "rom_analysis/docs/bank30_decompression_report.md",
       "bundle_copy": "sources/rom_analysis/docs/bank30_decompression_report.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "compression-bank30",
@@ -91,7 +91,7 @@
       "note": "Why the current headless `B1F9` forcing lane is low-yield for `EE7F`.",
       "source": "rom_analysis/docs/bank30_b1f9_forced_lane_stall.md",
       "bundle_copy": "sources/rom_analysis/docs/bank30_b1f9_forced_lane_stall.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "attract-intro",
@@ -100,7 +100,7 @@
       "note": "Active handoff for the later attract continuation lane.",
       "source": "rom_analysis/docs/intro_00_8029_next_agent_handoff.md",
       "bundle_copy": "sources/rom_analysis/docs/intro_00_8029_next_agent_handoff.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "attract-intro",
@@ -109,7 +109,7 @@
       "note": "Consolidated visual-contract note for the bridge-visible intro block.",
       "source": "rom_analysis/docs/intro_01_9fe5_window_986_1093.md",
       "bundle_copy": "sources/rom_analysis/docs/intro_01_9fe5_window_986_1093.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "attract-intro",
@@ -118,7 +118,7 @@
       "note": "Producer-side activity narrowing for the post-1093 window.",
       "source": "rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md",
       "bundle_copy": "sources/rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "attract-intro",
@@ -127,7 +127,7 @@
       "note": "Late 00:8029 blob rotation report and selector narrowing.",
       "source": "rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md",
       "bundle_copy": "sources/rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "attract-intro",
@@ -136,7 +136,7 @@
       "note": "First promoted tilemap-to-ROM provenance window.",
       "source": "rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md",
       "bundle_copy": "sources/rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "attract-intro",
@@ -145,7 +145,7 @@
       "note": "Design-pack workflow and extraction surface.",
       "source": "rom_analysis/docs/mesen_debugger_design_workbench.md",
       "bundle_copy": "sources/rom_analysis/docs/mesen_debugger_design_workbench.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "front-end-menu",
@@ -154,7 +154,7 @@
       "note": "Human-readable interpretation of the front-end and handoff corridor.",
       "source": "rom_analysis/docs/snes_runtime_algorithm_human.md",
       "bundle_copy": "sources/rom_analysis/docs/snes_runtime_algorithm_human.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "front-end-menu",
@@ -163,7 +163,7 @@
       "note": "Car-presentation BG2 ownership without treating it as gameplay.",
       "source": "rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md",
       "bundle_copy": "sources/rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "front-end-menu",
@@ -172,7 +172,7 @@
       "note": "Closed rendered label set for the top signboard menu.",
       "source": "tools/out/snes_frontend_top_menu_labels.md",
       "bundle_copy": "sources/tools/out/snes_frontend_top_menu_labels.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "front-end-menu",
@@ -181,7 +181,7 @@
       "note": "Rendered and structural read of the 2x2 opponent grid.",
       "source": "tools/out/snes_frontend_rival_selection_grid.md",
       "bundle_copy": "sources/tools/out/snes_frontend_rival_selection_grid.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "front-end-menu",
@@ -190,7 +190,7 @@
       "note": "Recovered no-force path into the default rival corridor.",
       "source": "tools/out/snes_select_opponent_organic_default_path.md",
       "bundle_copy": "sources/tools/out/snes_select_opponent_organic_default_path.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "front-end-menu",
@@ -199,7 +199,7 @@
       "note": "Separates rival slots from the no-opponent stopwatch branch.",
       "source": "tools/out/snes_frontend_select_opponent_mode_split.md",
       "bundle_copy": "sources/tools/out/snes_frontend_select_opponent_mode_split.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -208,7 +208,7 @@
       "note": "Current gameplay archaeology state and human-support queue.",
       "source": "rom_analysis/docs/lane3_today_work_brief.md",
       "bundle_copy": "sources/rom_analysis/docs/lane3_today_work_brief.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -217,7 +217,7 @@
       "note": "Primary gameplay-oriented handoff note.",
       "source": "rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md",
       "bundle_copy": "sources/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -226,7 +226,7 @@
       "note": "Boundary note explaining why some old seeds were misleading.",
       "source": "rom_analysis/docs/lane3_attract_demo_boundary.md",
       "bundle_copy": "sources/rom_analysis/docs/lane3_attract_demo_boundary.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -235,7 +235,7 @@
       "note": "Promoted power-on route for reproducible gameplay entry.",
       "source": "rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md",
       "bundle_copy": "sources/rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -244,7 +244,7 @@
       "note": "First promoted late gameplay pair from the live-entry route, with stable artifact bundles for both phases.",
       "source": "rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md",
       "bundle_copy": "sources/rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -253,7 +253,7 @@
       "note": "Bounded live-entry follow-up that isolates traffic emergence as a cleaner OBJ-side event.",
       "source": "rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md",
       "bundle_copy": "sources/rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -262,7 +262,7 @@
       "note": "Asset-first gameplay taxonomy that maps BG/OBJ buckets to tracing targets.",
       "source": "rom_analysis/maps/tracks/track1_live_race_asset_focus.md",
       "bundle_copy": "sources/rom_analysis/maps/tracks/track1_live_race_asset_focus.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -271,7 +271,7 @@
       "note": "Savestate-backed gameplay extraction that now closes native `BG2` road and `BG3` scenery surfaces.",
       "source": "rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md",
       "bundle_copy": "sources/rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -280,7 +280,7 @@
       "note": "Generated BG1/BG2/OBJ compare for the first late live-entry gameplay pair.",
       "source": "tools/out/lane3_live_entry_frame03250_vs_03550_compare.md",
       "bundle_copy": "sources/tools/out/lane3_live_entry_frame03250_vs_03550_compare.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -289,7 +289,7 @@
       "note": "Generated compare showing the red traffic car as the current best OBJ-side live-entry event.",
       "source": "tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md",
       "bundle_copy": "sources/tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -298,7 +298,7 @@
       "note": "Generated gameplay inventory with supporting frame/layer artifact references.",
       "source": "tools/out/lane3_live_race_mid_asset_focus.md",
       "bundle_copy": "sources/tools/out/lane3_live_race_mid_asset_focus.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -307,7 +307,7 @@
       "note": "Human note for preserved live-race savestates and controls.",
       "source": "rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md",
       "bundle_copy": "sources/rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -316,7 +316,7 @@
       "note": "Video-backed still capture summary for the live-race lane.",
       "source": "rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md",
       "bundle_copy": "sources/rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -325,7 +325,7 @@
       "note": "Named still pack for the checkpoint service/post corridor, partial-results screen, and restart back into driving.",
       "source": "rom_analysis/maps/tracks/track1_live_race_service_status_screens.md",
       "bundle_copy": "sources/rom_analysis/maps/tracks/track1_live_race_service_status_screens.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -334,7 +334,7 @@
       "note": "Longplay-backed visual anchors for night, bridge, mountain-wall, tunnel, and rain.",
       "source": "rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md",
       "bundle_copy": "sources/rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -343,7 +343,7 @@
       "note": "Longplay-backed snow-driving anchors starting at the one-hour mark.",
       "source": "rom_analysis/maps/tracks/track1_longplay_snow_anchors.md",
       "bundle_copy": "sources/rom_analysis/maps/tracks/track1_longplay_snow_anchors.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -352,7 +352,7 @@
       "note": "Boundary note showing why phase-4 snow is now a savestate-first capture target.",
       "source": "rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md",
       "bundle_copy": "sources/rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -361,7 +361,7 @@
       "note": "Longplay-backed arrest/prison ending pack and high-score handoff.",
       "source": "rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md",
       "bundle_copy": "sources/rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -370,7 +370,7 @@
       "note": "Layer composition read for a real gameplay seed.",
       "source": "rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md",
       "bundle_copy": "sources/rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -379,7 +379,7 @@
       "note": "Producer-side narrowing for the gameplay road/world path.",
       "source": "rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md",
       "bundle_copy": "sources/rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -388,7 +388,7 @@
       "note": "Versioned scanline-overlay selection for promoted gameplay bundles in the SDL runtime.",
       "source": "rom_analysis/docs/gameplay_scanline_contracts.jsonc",
       "bundle_copy": "sources/rom_analysis/docs/gameplay_scanline_contracts.jsonc",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -397,7 +397,7 @@
       "note": "Static role split for the narrowed gameplay cluster.",
       "source": "rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md",
       "bundle_copy": "sources/rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "gameplay-lane3",
@@ -406,7 +406,7 @@
       "note": "Semantic ownership pass for post-handoff gameplay fields.",
       "source": "rom_analysis/maps/tracks/track1_02_9016_state_ownership.md",
       "bundle_copy": "sources/rom_analysis/maps/tracks/track1_02_9016_state_ownership.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "runtime-port",
@@ -415,7 +415,7 @@
       "note": "Bounded regression read for current intro/front-end parity in the C/SDL runtime.",
       "source": "rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md",
       "bundle_copy": "sources/rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     },
     {
       "section_id": "runtime-port",
@@ -424,7 +424,7 @@
       "note": "Architecture note for the experimental Mesen backend path.",
       "source": "rom_analysis/docs/mesen_instrumented_backend_architecture.md",
       "bundle_copy": "sources/rom_analysis/docs/mesen_instrumented_backend_architecture.md",
-      "last_updated": "2026-04-01 16:51"
+      "last_updated": "2026-04-01 17:10"
     }
   ]
 }

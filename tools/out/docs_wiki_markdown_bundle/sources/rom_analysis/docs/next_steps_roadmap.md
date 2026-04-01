@@ -93,6 +93,25 @@ decoded tilemaps and sprite visibility metadata.
     follow-up or another later gameplay bundle such as the traffic-emergence
     `3400` pair
 
+## Lane 3 BG3 Bundle Surface (`2026-04-01`)
+
+- `tools/build_gameplay_frame_bundle.py` now emits first-class `bg3.ppm` and
+  `bg3.png` artifacts alongside the existing `bg1/bg2/obj/main` outputs.
+- The promoted late gameplay bundles were refreshed on that surface:
+  - `tools/out/lane3_live_entry_frame03250_bundle/bg3.png`
+  - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg3.png`
+  - `tools/out/lane3_live_entry_frame03550_bundle/bg3.png`
+- Practical result:
+  - the raw `BG3` surface is not blank on these late gameplay anchors
+  - it carries the sky/horizon helper strip much more directly than `BG2`
+  - this closes the old uncertainty around “is `BG3` absent here?” for the
+    tracked late-entry bundles
+- Next gate:
+  - use the new `BG3` bundle surface to narrow the remaining late-gameplay
+    renderer boundary from missing assets to missing composition/gating rules
+  - keep design review anchored on tracked `PNG` outputs instead of only the
+    screenshot-derived support masks
+
 ## Current Status Snapshot (2026-03-27)
 
 Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.

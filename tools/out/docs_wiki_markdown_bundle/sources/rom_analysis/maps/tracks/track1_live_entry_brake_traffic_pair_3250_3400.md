@@ -59,6 +59,7 @@ Designer-facing anchors for the promoted pair:
 - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/main.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/bg1.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/bg2.png`
+- `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/bg3.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/obj.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/frame.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg_stack_visible_support.png`
@@ -66,6 +67,7 @@ Designer-facing anchors for the promoted pair:
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/main.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg1.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg2.png`
+- `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg3.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/obj.png`
 
 ## Designer Review Follow-Up
@@ -83,6 +85,8 @@ Designer-facing anchors for the promoted pair:
 - new practical split inside the bundle:
   - `bg2.png` is the corrected static-state `BG2` render for memory/VRAM
     correlation
+  - `bg3.png` is the closest raw-state sky/horizon helper surface and is now
+    available directly in the tracked bundle
   - `world_visible_support.png` is the exact screenshot-derived road/world
     surface for human labeling
   - `bg_stack_visible_support.png` is the exact screenshot-derived background
@@ -116,6 +120,9 @@ Designer-facing anchors for the promoted pair:
   - this is currently the cleanest live-entry proof that a visible gameplay
     event can land primarily on the `OBJ` bucket while the road/cockpit
     backgrounds remain stable
+  - the new raw `BG3` previews stay populated and nearly unchanged across the
+    pair, which reinforces the current read that this transition is
+    background-stable and `OBJ`-driven rather than a fresh road-layer swap
   - for designer review, the new screenshot-derived support surfaces now close
     the earlier road/background visibility gap without pretending the raw
     `BG2` render is fully scanline-accurate
@@ -136,6 +143,9 @@ Designer-facing anchors for the promoted pair:
 
 - use the new traffic-emergence pair as the best current target for `OBJ`-side
   gameplay labeling and OAM tracing
+- keep `bg3.png` in the review loop so sky/horizon discussion stays anchored
+  to tracked raw-state output rather than only the screenshot-derived support
+  masks
 - if another bounded live-entry attempt is made, optimize it specifically for
   getting past the `2400`-relative crash boundary toward checkpoint/post-stop,
   not for rediscovering the already-promoted traffic pair again

@@ -1,6 +1,6 @@
 # TD2 Wiki Markdown Bundle
 
-- Generated: `2026-04-01 16:51:19`
+- Generated: `2026-04-01 17:10:05`
 - Manifest: `rom_analysis/docs/wiki_doc_index.json`
 - Total docs: `47`
 
@@ -10,7 +10,7 @@ Use `wiki_bundle_index.md` for the curated file list or `wiki_combined.md` for a
 
 - Source: `PORT_PLAN.md`
 - Bundle copy: `sources/PORT_PLAN.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Primary execution contract and long-range port target.
 
 ---
@@ -624,7 +624,7 @@ The work above assumes option 1 first, then selective enhancement after parity.
 
 - Source: `rom_analysis/docs/next_steps_roadmap.md`
 - Bundle copy: `sources/rom_analysis/docs/next_steps_roadmap.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Current lane status, open gates, and practical follow-up targets.
 
 ---
@@ -723,6 +723,25 @@ decoded tilemaps and sprite visibility metadata.
   - choose whether the next cheapest promotion target is a stronger `3250`
     follow-up or another later gameplay bundle such as the traffic-emergence
     `3400` pair
+
+## Lane 3 BG3 Bundle Surface (`2026-04-01`)
+
+- `tools/build_gameplay_frame_bundle.py` now emits first-class `bg3.ppm` and
+  `bg3.png` artifacts alongside the existing `bg1/bg2/obj/main` outputs.
+- The promoted late gameplay bundles were refreshed on that surface:
+  - `tools/out/lane3_live_entry_frame03250_bundle/bg3.png`
+  - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg3.png`
+  - `tools/out/lane3_live_entry_frame03550_bundle/bg3.png`
+- Practical result:
+  - the raw `BG3` surface is not blank on these late gameplay anchors
+  - it carries the sky/horizon helper strip much more directly than `BG2`
+  - this closes the old uncertainty around “is `BG3` absent here?” for the
+    tracked late-entry bundles
+- Next gate:
+  - use the new `BG3` bundle surface to narrow the remaining late-gameplay
+    renderer boundary from missing assets to missing composition/gating rules
+  - keep design review anchored on tracked `PNG` outputs instead of only the
+    screenshot-derived support masks
 
 ## Current Status Snapshot (2026-03-27)
 
@@ -2330,10 +2349,82 @@ Update findings in:
 
 - Source: `rom_analysis/docs/progress_checkpoints.md`
 - Bundle copy: `sources/rom_analysis/docs/progress_checkpoints.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Checkpoint log with evidence-bearing milestones.
 
 ---
+
+Date: 2026-04-01
+
+Summary
+- Promoted raw `BG3` bundle previews for late gameplay archaeology by
+  extending `tools/build_gameplay_frame_bundle.py` to emit `bg3.ppm` and
+  `bg3.png` next to the existing `bg1/bg2/obj/main` outputs.
+- Refreshed the tracked late-entry bundles for frames `3250`, `3400`, and
+  `3550` so design review now has direct `BG3` PNGs instead of only
+  screenshot-derived support masks for the sky/horizon side.
+- Closed a useful ambiguity on the late gameplay stack:
+  `BG3` is populated and visually meaningful on these bundles, so the next
+  renderer question is composition/gating, not whether the raw helper layer is
+  missing.
+
+What I ran
+- refreshed late gameplay bundles with the updated builder:
+  - `python3 tools/build_gameplay_frame_bundle.py --label lane3_live_entry_frame03250 --frame 3250 --vram tools/out/lane3_live_entry_frame03250_frame_03250_vram.bin --cgram tools/out/lane3_live_entry_frame03250_frame_03250_cgram.bin --ppu-state tools/out/lane3_live_entry_frame03250_frame_03250_ppu_state.json --oam tools/out/lane3_live_entry_frame03250_frame_03250_oam.bin --screenshot tools/out/lane3_live_entry_frame03250_frame_03250_frame.png --out-dir tools/out/lane3_live_entry_frame03250_bundle`
+  - `python3 tools/build_gameplay_frame_bundle.py --label lane3_live_entry_brake_traffic_frame03400 --frame 3400 --vram tools/out/lane3_live_entry_brake_frame03400_frame_03400_vram.bin --cgram tools/out/lane3_live_entry_brake_frame03400_frame_03400_cgram.bin --ppu-state tools/out/lane3_live_entry_brake_frame03400_frame_03400_ppu_state.json --oam tools/out/lane3_live_entry_brake_frame03400_frame_03400_oam.bin --screenshot tools/out/lane3_live_entry_brake_frame03400_frame_03400_frame.png --out-dir tools/out/lane3_live_entry_brake_traffic_frame03400_bundle`
+  - `python3 tools/build_gameplay_frame_bundle.py --label lane3_live_entry_frame03550 --frame 3550 --vram tools/out/lane3_live_entry_frame03550_frame_03550_vram.bin --cgram tools/out/lane3_live_entry_frame03550_frame_03550_cgram.bin --ppu-state tools/out/lane3_live_entry_frame03550_frame_03550_ppu_state.json --oam tools/out/lane3_live_entry_frame03550_frame_03550_oam.bin --screenshot tools/out/lane3_live_entry_frame03550_frame_03550_frame.png --out-dir tools/out/lane3_live_entry_frame03550_bundle`
+- targeted builder/tooling validation:
+  - `python3 -m py_compile tools/build_gameplay_frame_bundle.py`
+  - manifest + PNG existence check on the refreshed bundles
+
+Findings / Interpretation
+- The new raw `BG3` previews are populated on all three late anchors and keep
+  the expected sky-to-horizon gradient:
+  - `3250`: `tools/out/lane3_live_entry_frame03250_bundle/bg3.png`
+  - `3400`: `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg3.png`
+  - `3550`: `tools/out/lane3_live_entry_frame03550_bundle/bg3.png`
+- This materially improves design review because the sky/horizon discussion no
+  longer depends only on `world_visible_support.png` or `bg_stack_visible_support.png`.
+- It also sharpens the renderer read:
+  the late gameplay boundary is no longer “does this bundle have usable BG3?”
+  but “which composition/gating rule makes that helper layer visible in the
+  final frame?”
+
+What I learned (actionable)
+- Late gameplay archaeology now has a tracked raw-state `BG3` surface that is
+  useful for both design review and renderer debugging.
+- The cheapest next renderer experiments should stay focused on composition
+  rules over existing assets, not on collecting yet another proof that the
+  horizon strip exists in VRAM.
+
+Next steps / Checkpoints
+1) Keep `bg3.png` in the late-gameplay bundle surface whenever new anchor
+   pairs are promoted.
+2) Use the refreshed `3250/3400/3550` raw `BG3` previews to narrow the next
+   late-gameplay renderer rule instead of chasing fresh asset extraction.
+3) Re-open scanline/composition work only where the new `BG3` preview and the
+   screenshot-derived support masks still diverge in a defensible way.
+
+Immediate recommendation
+- Use the new tracked PNGs directly in design review:
+  - `tools/out/lane3_live_entry_frame03250_bundle/bg3.png`
+  - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg3.png`
+  - `tools/out/lane3_live_entry_frame03550_bundle/bg3.png`
+
+Files updated in this turn
+- `tools/build_gameplay_frame_bundle.py`
+- `tools/out/lane3_live_entry_frame03250_bundle/`
+- `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/`
+- `tools/out/lane3_live_entry_frame03550_bundle/`
+- `rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
+- `rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `tools/out/lane3_live_entry_frame03250_bundle/bg3.png`
+- `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg3.png`
+- `tools/out/lane3_live_entry_frame03550_bundle/bg3.png`
 
 Date: 2026-04-01
 
@@ -3561,7 +3652,7 @@ Next reading
 
 - Source: `rom_analysis/docs/validation_gates.md`
 - Bundle copy: `sources/rom_analysis/docs/validation_gates.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Bounded pass/fail policy for regression and callback checks.
 
 ---
@@ -3771,7 +3862,7 @@ For each archaeology lane:
 
 - Source: `validation/README.md`
 - Bundle copy: `sources/validation/README.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Current Mesen capture, probe, and export workflow.
 
 ---
@@ -6185,7 +6276,7 @@ Notes:
 
 - Source: `tools/README.md`
 - Bundle copy: `sources/tools/README.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Promoted extraction and analysis tooling surface.
 
 ---
@@ -6875,7 +6966,7 @@ This should be treated as the scene's static setup, not a guarantee of exact fra
 
 - Source: `port/README.md`
 - Bundle copy: `sources/port/README.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: SDL runtime scope, usage, and current sequence playback path.
 
 ---
@@ -7059,7 +7150,7 @@ Notes:
 
 - Source: `rom_analysis/README.md`
 - Bundle copy: `sources/rom_analysis/README.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Top-level archaeology tree orientation.
 
 ---
@@ -7141,7 +7232,7 @@ make -C tools bank30-registry
 
 - Source: `rom_analysis/docs/bank30_decompression_report.md`
 - Bundle copy: `sources/rom_analysis/docs/bank30_decompression_report.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Current registry-backed read of bank30 markers and the active unresolved queue.
 
 ---
@@ -7328,7 +7419,7 @@ Observed decode geometry:
 
 - Source: `rom_analysis/docs/bank30_b1f9_forced_lane_stall.md`
 - Bundle copy: `sources/rom_analysis/docs/bank30_b1f9_forced_lane_stall.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Why the current headless `B1F9` forcing lane is low-yield for `EE7F`.
 
 ---
@@ -7424,7 +7515,7 @@ observe the `EE7F` selector. It is a later worker loop centered on
 
 - Source: `rom_analysis/docs/intro_00_8029_next_agent_handoff.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_00_8029_next_agent_handoff.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Active handoff for the later attract continuation lane.
 
 ---
@@ -7529,7 +7620,7 @@ The open question is no longer "which producer owns this?" It is:
 
 - Source: `rom_analysis/docs/intro_01_9fe5_window_986_1093.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_01_9fe5_window_986_1093.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Consolidated visual-contract note for the bridge-visible intro block.
 
 ---
@@ -7644,7 +7735,7 @@ Reading:
 
 - Source: `rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Producer-side activity narrowing for the post-1093 window.
 
 ---
@@ -7836,7 +7927,7 @@ Use those boundaries explicitly in the Lane 2 follow-up:
 
 - Source: `rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Late 00:8029 blob rotation report and selector narrowing.
 
 ---
@@ -8051,7 +8142,7 @@ Reading:
 
 - Source: `rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md`
 - Bundle copy: `sources/rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: First promoted tilemap-to-ROM provenance window.
 
 ---
@@ -8078,7 +8169,7 @@ Reading:
 
 - Source: `rom_analysis/docs/mesen_debugger_design_workbench.md`
 - Bundle copy: `sources/rom_analysis/docs/mesen_debugger_design_workbench.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Design-pack workflow and extraction surface.
 
 ---
@@ -8279,7 +8370,7 @@ make -C tools l001210-trace-summary
 
 - Source: `rom_analysis/docs/snes_runtime_algorithm_human.md`
 - Bundle copy: `sources/rom_analysis/docs/snes_runtime_algorithm_human.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Human-readable interpretation of the front-end and handoff corridor.
 
 ---
@@ -8455,7 +8546,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md`
 - Bundle copy: `sources/rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Car-presentation BG2 ownership without treating it as gameplay.
 
 ---
@@ -8498,7 +8589,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_frontend_top_menu_labels.md`
 - Bundle copy: `sources/tools/out/snes_frontend_top_menu_labels.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Closed rendered label set for the top signboard menu.
 
 ---
@@ -8530,7 +8621,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_frontend_rival_selection_grid.md`
 - Bundle copy: `sources/tools/out/snes_frontend_rival_selection_grid.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Rendered and structural read of the 2x2 opponent grid.
 
 ---
@@ -8596,7 +8687,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_select_opponent_organic_default_path.md`
 - Bundle copy: `sources/tools/out/snes_select_opponent_organic_default_path.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Recovered no-force path into the default rival corridor.
 
 ---
@@ -8645,7 +8736,7 @@ Inject `right+down` only after `01:C1D2` is already live so `$1C70` can leave
 
 - Source: `tools/out/snes_frontend_select_opponent_mode_split.md`
 - Bundle copy: `sources/tools/out/snes_frontend_select_opponent_mode_split.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Separates rival slots from the no-opponent stopwatch branch.
 
 ---
@@ -8695,7 +8786,7 @@ Inject `right+down` only after `01:C1D2` is already live so `$1C70` can leave
 
 - Source: `rom_analysis/docs/lane3_today_work_brief.md`
 - Bundle copy: `sources/rom_analysis/docs/lane3_today_work_brief.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Current gameplay archaeology state and human-support queue.
 
 ---
@@ -9016,7 +9107,7 @@ without redoing the same work.
 
 - Source: `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
 - Bundle copy: `sources/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Primary gameplay-oriented handoff note.
 
 ---
@@ -9597,7 +9688,7 @@ The question is now narrower:
 
 - Source: `rom_analysis/docs/lane3_attract_demo_boundary.md`
 - Bundle copy: `sources/rom_analysis/docs/lane3_attract_demo_boundary.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Boundary note explaining why some old seeds were misleading.
 
 ---
@@ -9658,7 +9749,7 @@ evidence looked like "menu" in one pass and "gameplay" in another.
 
 - Source: `rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Promoted power-on route for reproducible gameplay entry.
 
 ---
@@ -9816,7 +9907,7 @@ evidence looked like "menu" in one pass and "gameplay" in another.
 
 - Source: `rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: First promoted late gameplay pair from the live-entry route, with stable artifact bundles for both phases.
 
 ---
@@ -9881,15 +9972,18 @@ Each bundle keeps the same top-level review surface:
 - `main.png`
 - `bg1.png`
 - `bg2.png`
+- `bg3.png`
 - `obj.png`
 - `bg_stack_visible_support.png`
 - `world_visible_support.png`
 - `bg1.ppm`
 - `bg2.ppm`
+- `bg3.ppm`
 - `obj.ppm`
 - `main_render.json`
 - `bg1_render.json`
 - `bg2_render.json`
+- `bg3_render.json`
 - `obj_render.json`
 - `raw/`
 - `design_pack/`
@@ -9903,12 +9997,14 @@ Primary wiki/gallery image refs for this pair:
 - `tools/out/lane3_live_entry_frame03250_bundle/world_visible_support.png`
 - `tools/out/lane3_live_entry_frame03250_bundle/bg1.png`
 - `tools/out/lane3_live_entry_frame03250_bundle/bg2.png`
+- `tools/out/lane3_live_entry_frame03250_bundle/bg3.png`
 - `tools/out/lane3_live_entry_frame03250_bundle/obj.png`
 - `tools/out/lane3_live_entry_frame03550_bundle/frame.png`
 - `tools/out/lane3_live_entry_frame03550_bundle/bg_stack_visible_support.png`
 - `tools/out/lane3_live_entry_frame03550_bundle/world_visible_support.png`
 - `tools/out/lane3_live_entry_frame03550_bundle/bg1.png`
 - `tools/out/lane3_live_entry_frame03550_bundle/bg2.png`
+- `tools/out/lane3_live_entry_frame03550_bundle/bg3.png`
 - `tools/out/lane3_live_entry_frame03550_bundle/obj.png`
 
 ## Raster Boundary
@@ -9923,6 +10019,8 @@ Primary wiki/gallery image refs for this pair:
 - practical rule:
   - use `world_visible_support.png` for human road/background labeling
   - use `bg2.png` for VRAM/PPU-state correlation only
+  - use `bg3.png` as the closest raw-state sky/horizon strip when designers
+    want the gameplay background without the screenshot-derived support mask
 
 ## Current Reading
 
@@ -9946,6 +10044,10 @@ Primary wiki/gallery image refs for this pair:
   - the road/world plane stays live through the transition
   - the later collision/overlay phase loads primarily onto the
     cockpit/HUD/overlay side (`BG1`) plus `OBJ`
+  - the newly promoted raw `BG3` previews are populated on both anchors and
+    keep the expected sky-to-horizon gradient, which narrows the old question
+    from “is BG3 missing?” to “how is that helper strip gated/composited
+    through the frame?”
   - the screenshot-derived support surfaces are now the correct human-facing
     answer for the road/world side of this pair; the raw `BG2` render remains
     a state-only approximation
@@ -9970,6 +10072,9 @@ Primary wiki/gallery image refs for this pair:
 
 - repeat the same bundle/compare workflow on a checkpoint-oriented or
   police/radar-oriented pair, not only on this collision transition
+- use the new `bg3.png` surfaces to keep late-gameplay sky/horizon review on
+  tracked raw-state artifacts instead of only the screenshot-derived support
+  layers
 - compare those future pairs against the preserved manual video stills so the
   route-live lane and the manual-seed lane share one bucket vocabulary
 
@@ -9978,7 +10083,7 @@ Primary wiki/gallery image refs for this pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Bounded live-entry follow-up that isolates traffic emergence as a cleaner OBJ-side event.
 
 ---
@@ -10044,6 +10149,7 @@ Designer-facing anchors for the promoted pair:
 - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/main.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/bg1.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/bg2.png`
+- `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/bg3.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/obj.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/frame.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg_stack_visible_support.png`
@@ -10051,6 +10157,7 @@ Designer-facing anchors for the promoted pair:
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/main.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg1.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg2.png`
+- `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg3.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/obj.png`
 
 ## Designer Review Follow-Up
@@ -10068,6 +10175,8 @@ Designer-facing anchors for the promoted pair:
 - new practical split inside the bundle:
   - `bg2.png` is the corrected static-state `BG2` render for memory/VRAM
     correlation
+  - `bg3.png` is the closest raw-state sky/horizon helper surface and is now
+    available directly in the tracked bundle
   - `world_visible_support.png` is the exact screenshot-derived road/world
     surface for human labeling
   - `bg_stack_visible_support.png` is the exact screenshot-derived background
@@ -10101,6 +10210,9 @@ Designer-facing anchors for the promoted pair:
   - this is currently the cleanest live-entry proof that a visible gameplay
     event can land primarily on the `OBJ` bucket while the road/cockpit
     backgrounds remain stable
+  - the new raw `BG3` previews stay populated and nearly unchanged across the
+    pair, which reinforces the current read that this transition is
+    background-stable and `OBJ`-driven rather than a fresh road-layer swap
   - for designer review, the new screenshot-derived support surfaces now close
     the earlier road/background visibility gap without pretending the raw
     `BG2` render is fully scanline-accurate
@@ -10121,6 +10233,9 @@ Designer-facing anchors for the promoted pair:
 
 - use the new traffic-emergence pair as the best current target for `OBJ`-side
   gameplay labeling and OAM tracing
+- keep `bg3.png` in the review loop so sky/horizon discussion stays anchored
+  to tracked raw-state output rather than only the screenshot-derived support
+  masks
 - if another bounded live-entry attempt is made, optimize it specifically for
   getting past the `2400`-relative crash boundary toward checkpoint/post-stop,
   not for rediscovering the already-promoted traffic pair again
@@ -10130,7 +10245,7 @@ Designer-facing anchors for the promoted pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Asset-first gameplay taxonomy that maps BG/OBJ buckets to tracing targets.
 
 ---
@@ -10209,7 +10324,7 @@ Designer-facing anchors for the promoted pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Savestate-backed gameplay extraction that now closes native `BG2` road and `BG3` scenery surfaces.
 
 ---
@@ -10353,7 +10468,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
 - Bundle copy: `sources/tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Generated BG1/BG2/OBJ compare for the first late live-entry gameplay pair.
 
 ---
@@ -10405,7 +10520,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md`
 - Bundle copy: `sources/tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Generated compare showing the red traffic car as the current best OBJ-side live-entry event.
 
 ---
@@ -10456,7 +10571,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_race_mid_asset_focus.md`
 - Bundle copy: `sources/tools/out/lane3_live_race_mid_asset_focus.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Generated gameplay inventory with supporting frame/layer artifact references.
 
 ---
@@ -10523,7 +10638,7 @@ native PNGs:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Human note for preserved live-race savestates and controls.
 
 ---
@@ -10737,7 +10852,7 @@ native PNGs:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Video-backed still capture summary for the live-race lane.
 
 ---
@@ -10825,7 +10940,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Named still pack for the checkpoint service/post corridor, partial-results screen, and restart back into driving.
 
 ---
@@ -10897,7 +11012,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Longplay-backed visual anchors for night, bridge, mountain-wall, tunnel, and rain.
 
 ---
@@ -10970,7 +11085,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Longplay-backed snow-driving anchors starting at the one-hour mark.
 
 ---
@@ -11035,7 +11150,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Boundary note showing why phase-4 snow is now a savestate-first capture target.
 
 ---
@@ -11122,7 +11237,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Longplay-backed arrest/prison ending pack and high-score handoff.
 
 ---
@@ -11186,7 +11301,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Layer composition read for a real gameplay seed.
 
 ---
@@ -11318,7 +11433,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Producer-side narrowing for the gameplay road/world path.
 
 ---
@@ -11467,7 +11582,7 @@ Optional but useful:
 
 - Source: `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
 - Bundle copy: `sources/rom_analysis/docs/gameplay_scanline_contracts.jsonc`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Versioned scanline-overlay selection for promoted gameplay bundles in the SDL runtime.
 
 ---
@@ -11504,7 +11619,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Static role split for the narrowed gameplay cluster.
 
 ---
@@ -11632,7 +11747,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Semantic ownership pass for post-handoff gameplay fields.
 
 ---
@@ -11757,7 +11872,7 @@ Optional but useful:
 
 - Source: `rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md`
 - Bundle copy: `sources/rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Bounded regression read for current intro/front-end parity in the C/SDL runtime.
 
 ---
@@ -11827,7 +11942,7 @@ Regression summary:
 
 - Source: `rom_analysis/docs/mesen_instrumented_backend_architecture.md`
 - Bundle copy: `sources/rom_analysis/docs/mesen_instrumented_backend_architecture.md`
-- Last updated: `2026-04-01 16:51`
+- Last updated: `2026-04-01 17:10`
 - Note: Architecture note for the experimental Mesen backend path.
 
 ---

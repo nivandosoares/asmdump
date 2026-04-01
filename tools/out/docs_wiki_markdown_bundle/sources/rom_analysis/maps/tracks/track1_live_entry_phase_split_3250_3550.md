@@ -58,15 +58,18 @@ Each bundle keeps the same top-level review surface:
 - `main.png`
 - `bg1.png`
 - `bg2.png`
+- `bg3.png`
 - `obj.png`
 - `bg_stack_visible_support.png`
 - `world_visible_support.png`
 - `bg1.ppm`
 - `bg2.ppm`
+- `bg3.ppm`
 - `obj.ppm`
 - `main_render.json`
 - `bg1_render.json`
 - `bg2_render.json`
+- `bg3_render.json`
 - `obj_render.json`
 - `raw/`
 - `design_pack/`
@@ -80,12 +83,14 @@ Primary wiki/gallery image refs for this pair:
 - `tools/out/lane3_live_entry_frame03250_bundle/world_visible_support.png`
 - `tools/out/lane3_live_entry_frame03250_bundle/bg1.png`
 - `tools/out/lane3_live_entry_frame03250_bundle/bg2.png`
+- `tools/out/lane3_live_entry_frame03250_bundle/bg3.png`
 - `tools/out/lane3_live_entry_frame03250_bundle/obj.png`
 - `tools/out/lane3_live_entry_frame03550_bundle/frame.png`
 - `tools/out/lane3_live_entry_frame03550_bundle/bg_stack_visible_support.png`
 - `tools/out/lane3_live_entry_frame03550_bundle/world_visible_support.png`
 - `tools/out/lane3_live_entry_frame03550_bundle/bg1.png`
 - `tools/out/lane3_live_entry_frame03550_bundle/bg2.png`
+- `tools/out/lane3_live_entry_frame03550_bundle/bg3.png`
 - `tools/out/lane3_live_entry_frame03550_bundle/obj.png`
 
 ## Raster Boundary
@@ -100,6 +105,8 @@ Primary wiki/gallery image refs for this pair:
 - practical rule:
   - use `world_visible_support.png` for human road/background labeling
   - use `bg2.png` for VRAM/PPU-state correlation only
+  - use `bg3.png` as the closest raw-state sky/horizon strip when designers
+    want the gameplay background without the screenshot-derived support mask
 
 ## Current Reading
 
@@ -123,6 +130,10 @@ Primary wiki/gallery image refs for this pair:
   - the road/world plane stays live through the transition
   - the later collision/overlay phase loads primarily onto the
     cockpit/HUD/overlay side (`BG1`) plus `OBJ`
+  - the newly promoted raw `BG3` previews are populated on both anchors and
+    keep the expected sky-to-horizon gradient, which narrows the old question
+    from “is BG3 missing?” to “how is that helper strip gated/composited
+    through the frame?”
   - the screenshot-derived support surfaces are now the correct human-facing
     answer for the road/world side of this pair; the raw `BG2` render remains
     a state-only approximation
@@ -147,5 +158,8 @@ Primary wiki/gallery image refs for this pair:
 
 - repeat the same bundle/compare workflow on a checkpoint-oriented or
   police/radar-oriented pair, not only on this collision transition
+- use the new `bg3.png` surfaces to keep late-gameplay sky/horizon review on
+  tracked raw-state artifacts instead of only the screenshot-derived support
+  layers
 - compare those future pairs against the preserved manual video stills so the
   route-live lane and the manual-seed lane share one bucket vocabulary
