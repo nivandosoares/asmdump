@@ -164,12 +164,14 @@ int main(int argc, char** argv) {
         if (runtime->compare.enabled &&
             (config.headless || td2_compare_has_drift(&runtime->compare))) {
             fprintf(stdout,
-                "Compare frame %u: pixel_mismatch=%u (%.6f%%) state_failures=%u/%u max=%u mean_abs=%.6f rmse=%.6f\n",
+                "Compare frame %u: pixel_mismatch=%u (%.6f%%) ppu_state_failures=%u/%u callback_failures=%u/%u max=%u mean_abs=%.6f rmse=%.6f\n",
                 runtime->frame_counter,
                 runtime->compare.metrics.mismatch_pixels,
                 runtime->compare.metrics.mismatch_ratio * 100.0,
                 runtime->compare.state_contract.failed_checks,
                 runtime->compare.state_contract.total_checks,
+                runtime->compare.callback_contract.failed_checks,
+                runtime->compare.callback_contract.total_checks,
                 runtime->compare.metrics.max_channel_diff,
                 runtime->compare.metrics.mean_abs_channel_diff,
                 runtime->compare.metrics.rmse
@@ -204,9 +206,10 @@ int main(int argc, char** argv) {
             runtime->compare.enabled &&
             td2_compare_has_drift(&runtime->compare)) {
             fprintf(stderr,
-                "compare failed: pixel_mismatch=%u state_failures=%u\n",
+                "compare failed: pixel_mismatch=%u ppu_state_failures=%u callback_failures=%u\n",
                 runtime->compare.metrics.mismatch_pixels,
-                runtime->compare.state_contract.failed_checks
+                runtime->compare.state_contract.failed_checks,
+                runtime->compare.callback_contract.failed_checks
             );
             platform_sdl_shutdown(&platform);
             td2_runtime_free(runtime);

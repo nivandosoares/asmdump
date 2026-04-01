@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "td2_contracts.h"
 #include "td2_compare.h"
 #include "td2_io.h"
 #include "td2_ppu.h"
@@ -23,6 +24,8 @@ typedef struct {
     Td2RuntimeConfig config;
     Td2DesignPack design_pack;
     Td2PpuState ppu;
+    Td2RuntimeState state;
+    Td2CallbackTraceContract callback_contract;
     Td2CompareLane compare;
     uint8_t wram[TD2_WRAM_BYTES];
     uint32_t* framebuffer;

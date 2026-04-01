@@ -72,7 +72,32 @@ This is intentionally bootstrap-scoped: it protects the static seeded-state
 path now, and becomes the cheap semantic guardrail underneath later
 callback/state execution work.
 
-## 4) Practical Gate Policy
+## 4) Bootstrap Callback-State Contract
+
+Runner:
+
+```sh
+./port/build/td2_port \
+  --scene-dir port/assets/test_dump_range_1086_1093/design_pack_range/frame_01093 \
+  --headless \
+  --frames 1 \
+  --compare \
+  --fail-on-compare-diff \
+  --dump-prefix port/build/frame1093_compare
+```
+
+For frames covered by `rom_analysis/docs/callback_state_contracts.jsonc`, the
+runtime now seeds a bootstrap callback/state shadow and emits
+`callback_contract` in the compare JSON. Current promoted callback-backed
+fixture:
+
+- frame `1093`: `01:9FE5` continuity checkpoint with `8` validated fields
+
+This is also bootstrap-scoped: it proves the runtime can carry validated
+callback/state checkpoints in-band with compare output, but it does not yet
+prove that the runtime executed those callbacks to reach the state on its own.
+
+## 5) Practical Gate Policy
 
 For each archaeology lane:
 

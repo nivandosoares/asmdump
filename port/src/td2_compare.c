@@ -88,6 +88,14 @@ static void write_json_value(FILE* file, Td2CompareValueKind value_kind, int val
         fputs(value != 0 ? "true" : "false", file);
         return;
     }
+    if (value_kind == TD2_COMPARE_VALUE_POINTER) {
+        char text[16];
+        unsigned bank = (unsigned)((value >> 16) & 0xffU);
+        unsigned addr = (unsigned)(value & 0xffffU);
+        snprintf(text, sizeof(text), "%02X:%04X", bank, addr);
+        write_json_string(file, text);
+        return;
+    }
     fprintf(file, "%d", value);
 }
 
@@ -95,8 +103,38 @@ static void td2_compare_state_reset(Td2CompareStateContract* contract) {
     memset(contract, 0, sizeof(*contract));
 }
 
+static void td2_compare_callback_reset(Td2CompareCallbackContract* contract) {
+    memset(contract, 0, sizeof(*contract));
+}
+
 static void td2_compare_state_record(
     Td2CompareStateContract* contract,
+    const char* key,
+    Td2CompareValueKind value_kind,
+    int expected,
+    int actual
+) {
+    bool matched = expected == actual;
+
+    contract->total_checks++;
+    if (matched) {
+        contract->passed_checks++;
+    } else {
+        contract->failed_checks++;
+    }
+
+    if (contract->check_count < TD2_COMPARE_STATE_CHECKS_MAX) {
+        Td2CompareStateCheck* check = &contract->checks[contract->check_count++];
+        snprintf(check->key, sizeof(check->key), "%s", key);
+        check->value_kind = value_kind;
+        check->expected = expected;
+        check->actual = actual;
+        check->matched = matched;
+    }
+}
+
+static void td2_compare_callback_record(
+    Td2CompareCallbackContract* contract,
     const char* key,
     Td2CompareValueKind value_kind,
     int expected,
@@ -246,6 +284,87 @@ static void td2_compare_capture_state_contract(
     td2_compare_state_record(contract, "raw.oam.mismatchBytes", TD2_COMPARE_VALUE_INT, 0, (int)contract->oam_mismatch_bytes);
 }
 
+static int td2_pack_pointer(uint8_t bank, uint16_t addr) {
+    return ((int)bank << 16) | (int)addr;
+}
+
+static void td2_compare_capture_callback_contract(
+    Td2CompareLane* compare,
+    const Td2RuntimeState* runtime_state,
+    const Td2CallbackTraceContract* callback_contract
+) {
+    Td2CompareCallbackContract* report = &compare->callback_contract;
+
+    td2_compare_callback_reset(report);
+    if (runtime_state == NULL || callback_contract == NULL || !callback_contract->available) {
+        return;
+    }
+
+    report->available = true;
+    report->frame = callback_contract->frame;
+    snprintf(report->contract_id, sizeof(report->contract_id), "%s", callback_contract->contract_id);
+    snprintf(report->phase, sizeof(report->phase), "%s", callback_contract->phase);
+    snprintf(report->note, sizeof(report->note), "%s", callback_contract->note);
+
+    if (callback_contract->expected_state.has_active_main_callback) {
+        td2_compare_callback_record(
+            report,
+            "active_main_callback",
+            TD2_COMPARE_VALUE_POINTER,
+            td2_pack_pointer(
+                callback_contract->expected_state.active_main_callback_bank,
+                callback_contract->expected_state.active_main_callback_addr),
+            td2_pack_pointer(
+                runtime_state->active_main_callback_bank,
+                runtime_state->active_main_callback_addr));
+    }
+    if (callback_contract->expected_state.has_active_irq_callback) {
+        td2_compare_callback_record(
+            report,
+            "active_irq_callback",
+            TD2_COMPARE_VALUE_POINTER,
+            td2_pack_pointer(
+                callback_contract->expected_state.active_irq_callback_bank,
+                callback_contract->expected_state.active_irq_callback_addr),
+            td2_pack_pointer(
+                runtime_state->active_irq_callback_bank,
+                runtime_state->active_irq_callback_addr));
+    }
+    if (callback_contract->expected_state.has_active_nmi_callback) {
+        td2_compare_callback_record(
+            report,
+            "active_nmi_callback",
+            TD2_COMPARE_VALUE_POINTER,
+            td2_pack_pointer(
+                callback_contract->expected_state.active_nmi_callback_bank,
+                callback_contract->expected_state.active_nmi_callback_addr),
+            td2_pack_pointer(
+                runtime_state->active_nmi_callback_bank,
+                runtime_state->active_nmi_callback_addr));
+    }
+    if (callback_contract->expected_state.has_state_0202) {
+        td2_compare_callback_record(report, "state_0202", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_0202, runtime_state->state_0202);
+    }
+    if (callback_contract->expected_state.has_state_0204) {
+        td2_compare_callback_record(report, "state_0204", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_0204, runtime_state->state_0204);
+    }
+    if (callback_contract->expected_state.has_state_0206) {
+        td2_compare_callback_record(report, "state_0206", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_0206, runtime_state->state_0206);
+    }
+    if (callback_contract->expected_state.has_state_0208) {
+        td2_compare_callback_record(report, "state_0208", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_0208, runtime_state->state_0208);
+    }
+    if (callback_contract->expected_state.has_state_020a) {
+        td2_compare_callback_record(report, "state_020a", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_020a, runtime_state->state_020a);
+    }
+    if (callback_contract->expected_state.has_state_040a) {
+        td2_compare_callback_record(report, "state_040a", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_040a, runtime_state->state_040a);
+    }
+    if (callback_contract->expected_state.has_dp_0054) {
+        td2_compare_callback_record(report, "dp_0054", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.dp_0054, runtime_state->dp_0054);
+    }
+}
+
 bool td2_compare_init(
     Td2CompareLane* compare,
     const Td2DesignPack* pack,
@@ -293,6 +412,7 @@ bool td2_compare_init(
     compare->enabled = true;
     compare->metrics.pixel_count = TD2_FRAME_PIXELS;
     td2_compare_state_reset(&compare->state_contract);
+    td2_compare_callback_reset(&compare->callback_contract);
     if (error_size > 0U) {
         error[0] = '\0';
     }
@@ -310,6 +430,8 @@ void td2_compare_run(
     Td2CompareLane* compare,
     const Td2DesignPack* pack,
     const Td2PpuState* ppu,
+    const Td2RuntimeState* runtime_state,
+    const Td2CallbackTraceContract* callback_contract,
     const uint32_t* actual_framebuffer
 ) {
     uint64_t total_abs_diff = 0;
@@ -394,12 +516,15 @@ void td2_compare_run(
             : sqrt((double)total_sq_diff / (double)(compare->metrics.pixel_count * 3U));
 
     td2_compare_capture_state_contract(compare, pack, ppu);
+    td2_compare_capture_callback_contract(compare, runtime_state, callback_contract);
 }
 
 bool td2_compare_dump_bundle(
     const Td2CompareLane* compare,
     const Td2DesignPack* pack,
     const Td2PpuState* ppu,
+    const Td2RuntimeState* runtime_state,
+    const Td2CallbackTraceContract* callback_contract,
     const uint32_t* actual_framebuffer,
     const char* prefix,
     unsigned frame_index,
@@ -493,6 +618,8 @@ bool td2_compare_dump_bundle(
             compare->metrics.max_channel_diff,
             compare->metrics.mean_abs_channel_diff,
             compare->metrics.rmse);
+    (void)runtime_state;
+    (void)callback_contract;
     fprintf(file,
             "  \"state_contract\": {\n"
             "    \"total_checks\": %u,\n"
@@ -517,7 +644,11 @@ bool td2_compare_dump_bundle(
         fputs("        \"key\": ", file);
         write_json_string(file, check->key);
         fputs(",\n        \"type\": ", file);
-        write_json_string(file, check->value_kind == TD2_COMPARE_VALUE_BOOL ? "bool" : "int");
+        write_json_string(
+            file,
+            check->value_kind == TD2_COMPARE_VALUE_BOOL
+                ? "bool"
+                : (check->value_kind == TD2_COMPARE_VALUE_POINTER ? "pointer" : "int"));
         fputs(",\n        \"expected\": ", file);
         write_json_value(file, check->value_kind, check->expected);
         fputs(",\n        \"actual\": ", file);
@@ -528,6 +659,57 @@ bool td2_compare_dump_bundle(
     }
 
     fputs("    ]\n", file);
+    fputs("  },\n", file);
+    fputs("  \"callback_contract\": {\n", file);
+    fputs("    \"available\": ", file);
+    fputs(compare->callback_contract.available ? "true,\n" : "false,\n", file);
+    if (compare->callback_contract.available) {
+        fprintf(file, "    \"frame\": %u,\n", compare->callback_contract.frame);
+        fputs("    \"contract_id\": ", file);
+        write_json_string(file, compare->callback_contract.contract_id);
+        fputs(",\n    \"phase\": ", file);
+        write_json_string(file, compare->callback_contract.phase);
+        fputs(",\n    \"note\": ", file);
+        write_json_string(file, compare->callback_contract.note);
+        fprintf(file,
+                ",\n    \"total_checks\": %u,\n"
+                "    \"passed_checks\": %u,\n"
+                "    \"failed_checks\": %u,\n"
+                "    \"checks\": [\n",
+                compare->callback_contract.total_checks,
+                compare->callback_contract.passed_checks,
+                compare->callback_contract.failed_checks);
+
+        for (check_index = 0U; check_index < compare->callback_contract.check_count; check_index++) {
+            const Td2CompareStateCheck* check = &compare->callback_contract.checks[check_index];
+            fputs("      {\n", file);
+            fputs("        \"key\": ", file);
+            write_json_string(file, check->key);
+            fputs(",\n        \"type\": ", file);
+            write_json_string(
+                file,
+                check->value_kind == TD2_COMPARE_VALUE_BOOL
+                    ? "bool"
+                    : (check->value_kind == TD2_COMPARE_VALUE_POINTER ? "pointer" : "int"));
+            fputs(",\n        \"expected\": ", file);
+            write_json_value(file, check->value_kind, check->expected);
+            fputs(",\n        \"actual\": ", file);
+            write_json_value(file, check->value_kind, check->actual);
+            fputs(",\n        \"matched\": ", file);
+            fputs(check->matched ? "true" : "false", file);
+            fputs(check_index + 1U == compare->callback_contract.check_count ? "\n      }\n" : "\n      },\n", file);
+        }
+        fputs("    ]\n", file);
+    } else {
+        fputs("    \"frame\": null,\n", file);
+        fputs("    \"contract_id\": null,\n", file);
+        fputs("    \"phase\": null,\n", file);
+        fputs("    \"note\": null,\n", file);
+        fputs("    \"total_checks\": 0,\n", file);
+        fputs("    \"passed_checks\": 0,\n", file);
+        fputs("    \"failed_checks\": 0,\n", file);
+        fputs("    \"checks\": []\n", file);
+    }
     fputs("  }\n", file);
     fputs("}\n", file);
     fclose(file);
@@ -543,5 +725,6 @@ bool td2_compare_has_drift(const Td2CompareLane* compare) {
         return false;
     }
     return compare->metrics.mismatch_pixels > 0U ||
-           compare->state_contract.failed_checks > 0U;
+           compare->state_contract.failed_checks > 0U ||
+           compare->callback_contract.failed_checks > 0U;
 }

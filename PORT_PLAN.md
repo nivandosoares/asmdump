@@ -96,6 +96,9 @@ New useful state beyond the original plan:
   - side-by-side strip plus JSON drift metrics
   - seeded PPU-state contract report over visible registers, layer metadata,
     and raw `VRAM/CGRAM/OAM` parity
+  - seeded callback/state contract report for frames covered by validated
+    intro checkpoints, with the first promoted callback-backed fixture at
+    frame `1093`
 
 - the frame-`300` copyright/credits scene is an exact solved target from both live Mesen dumps and a ROM-side builder
 - the `Ballistic presents` splash now has a deterministic entry anchor at frame `654`
@@ -216,11 +219,13 @@ New useful state beyond the original plan:
 
 Immediate next focus:
 
-1. Add a callback/state execution spine driven by validated bank ownership,
-   starting with front-end callback families.
-2. Promote trusted callback/state traces into the compare lane after the
-   runtime can advance those families instead of only seeding static scenes.
-3. Extend the compare lane from PPU-state parity into callback/state drift
+1. Replace the seeded callback-state bootstrap with real callback/state
+   execution driven by validated bank ownership, starting with front-end
+   families.
+2. Promote more trusted intro callback/state traces into the compare lane so
+   callback-backed fixtures cover more than the current `1093` checkpoint.
+3. Extend the compare lane from seeded callback-state parity into real
+   callback/state drift
    reporting against trusted traces.
 4. Keep the intro archaeology lanes moving, but use them to ratify callback
    families and renderer contracts rather than to justify sampled playback as

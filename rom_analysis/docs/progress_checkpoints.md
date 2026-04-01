@@ -1,6 +1,82 @@
 Date: 2026-04-01
 
 Summary
+- Promoted the first callback-backed compare-lane checkpoint on top of the
+  seeded PPU-state lane.
+- Added `td2_contracts.*`, which resolves
+  `rom_analysis/docs/callback_state_contracts.jsonc` from the scene path,
+  loads the matching frame checkpoint when one exists, and seeds a bootstrap
+  runtime-state shadow from it.
+- The compare JSON now also emits `callback_contract`, alongside the existing
+  `state_contract`.
+- Promoted `frame_01093` as the first callback-backed fixture in the default
+  compare smoke because it has both exact pixel parity and a validated
+  `01:9FE5` callback/state checkpoint.
+
+What I ran
+- `make -C port test`
+
+Findings / Interpretation
+- The compare lane now spans three layers:
+  pixels, seeded PPU-visible state, and seeded callback/state for covered
+  frames.
+- Current promoted fixtures stay exact:
+  - `frame300_compare`: `0` mismatched pixels, `0` failed PPU-state checks
+    out of `58`, `0` failed callback checks out of `0`
+  - `frame1086_compare`: `0` mismatched pixels, `0` failed PPU-state checks
+    out of `59`, `0` failed callback checks out of `0`
+  - `frame1093_compare`: `0` mismatched pixels, `0` failed PPU-state checks
+    out of `59`, `0` failed callback checks out of `8`
+- This is still a bootstrap checkpoint:
+  the runtime seeds the callback/state shadow from trusted contracts; it does
+  not yet execute those callback families on its own.
+
+What I learned (actionable)
+- The next technical gap is no longer how to represent callback/state
+  checkpoints; that representation now exists in the runtime and compare JSON.
+- The next gate should replace seeded callback/state shadowing with real
+  callback/state stepping for covered front-end frames.
+
+Next steps / Checkpoints
+1) Start replacing seeded callback-state shadowing with real callback/state
+   execution for the front-end intro family.
+2) Promote more compare fixtures that land on known contract rows, not just
+   `1093`.
+3) Keep `frame1093_compare` in the default smoke as the first cheap callback
+   contract falsifier.
+
+Immediate recommendation
+- Treat `callback_contract.failed_checks` as a first-class compare gate next
+  to `state_contract.failed_checks`.
+- Use `frame_01093` when a code change needs one promoted fixture with both
+  visual parity and validated callback/state coverage.
+
+Files updated in this turn
+- `port/Makefile`
+- `port/include/td2_compare.h`
+- `port/include/td2_contracts.h`
+- `port/include/td2_runtime.h`
+- `port/main.c`
+- `port/src/td2_compare.c`
+- `port/src/td2_contracts.c`
+- `port/src/td2_runtime.c`
+- `port/test_compare_lane.sh`
+- `validation/README.md`
+- `PORT_PLAN.md`
+- `port/README.md`
+- `port/docs/ARCHITECTURE.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/validation_gates.md`
+
+Next reading
+- `PORT_PLAN.md`
+- `rom_analysis/docs/callback_state_contracts.jsonc`
+- `port/docs/ARCHITECTURE.md`
+
+Date: 2026-04-01
+
+Summary
 - Promoted the compare lane from pixel-only review into a first semantic
   state-contract surface.
 - The compare JSON now includes `state_contract`, which validates seeded

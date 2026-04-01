@@ -17,6 +17,9 @@ decoded tilemaps and sprite visibility metadata.
 - That compare bundle now also reports seeded PPU-state drift:
   visible registers, layer metadata, and raw `VRAM/CGRAM/OAM` parity against
   the loaded design pack.
+- For frames covered by validated intro checkpoints, the compare bundle now
+  also reports seeded callback/state drift against
+  `callback_state_contracts.jsonc`.
 - `zelda3/`, `sentrysearch/`, and `the_duel_longplay.mp4` are local-only
   references and must stay ignored in Git.
 - Lane order is unchanged, but every active lane now feeds the new runtime /

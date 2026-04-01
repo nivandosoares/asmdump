@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "td2_contracts.h"
 #include "td2_io.h"
 #include "td2_ppu.h"
 
@@ -25,6 +26,7 @@ typedef struct {
 typedef enum {
     TD2_COMPARE_VALUE_INT = 0,
     TD2_COMPARE_VALUE_BOOL = 1,
+    TD2_COMPARE_VALUE_POINTER = 2,
 } Td2CompareValueKind;
 
 typedef struct {
@@ -47,12 +49,26 @@ typedef struct {
 } Td2CompareStateContract;
 
 typedef struct {
+    bool available;
+    unsigned frame;
+    char contract_id[TD2_CONTRACT_ID_BYTES];
+    char phase[TD2_CONTRACT_PHASE_BYTES];
+    char note[TD2_CONTRACT_NOTE_BYTES];
+    unsigned total_checks;
+    unsigned passed_checks;
+    unsigned failed_checks;
+    unsigned check_count;
+    Td2CompareStateCheck checks[TD2_COMPARE_STATE_CHECKS_MAX];
+} Td2CompareCallbackContract;
+
+typedef struct {
     bool enabled;
     uint32_t* reference_framebuffer;
     uint32_t* diff_framebuffer;
     uint32_t* strip_framebuffer;
     Td2CompareMetrics metrics;
     Td2CompareStateContract state_contract;
+    Td2CompareCallbackContract callback_contract;
 } Td2CompareLane;
 
 bool td2_compare_init(
@@ -67,12 +83,16 @@ void td2_compare_run(
     Td2CompareLane* compare,
     const Td2DesignPack* pack,
     const Td2PpuState* ppu,
+    const Td2RuntimeState* runtime_state,
+    const Td2CallbackTraceContract* callback_contract,
     const uint32_t* actual_framebuffer
 );
 bool td2_compare_dump_bundle(
     const Td2CompareLane* compare,
     const Td2DesignPack* pack,
     const Td2PpuState* ppu,
+    const Td2RuntimeState* runtime_state,
+    const Td2CallbackTraceContract* callback_contract,
     const uint32_t* actual_framebuffer,
     const char* prefix,
     unsigned frame_index,

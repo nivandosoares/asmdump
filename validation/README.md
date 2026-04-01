@@ -70,12 +70,18 @@ That emits:
 - `..._00000_diff.ppm`: absolute RGB error map
 - `..._00000_compare.ppm`: `runtime | golden | diff` strip
 - `..._00000_compare.json`: machine-readable pixel metrics plus
-  `state_contract` over seeded PPU/layer/raw-memory state
+  `state_contract` over seeded PPU/layer/raw-memory state and
+  `callback_contract` for frames covered by validated intro checkpoints
 
 With `--fail-on-compare-diff`, the runtime now exits non-zero on either:
 
 - pixel drift vs the trusted golden
 - semantic drift in the seeded `state_contract`
+- semantic drift in the seeded `callback_contract`
+
+Current callback-backed promoted fixture:
+
+- `port/assets/test_dump_range_1086_1093/design_pack_range/frame_01093`
 
 Post-push wiki refresh wrapper:
 

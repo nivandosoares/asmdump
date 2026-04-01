@@ -11,6 +11,7 @@ SRC := \
 	main.c \
 	platform_sdl.c \
 	src/td2_compare.c \
+	src/td2_contracts.c \
 	src/td2_io.c \
 	src/td2_ppu.c \
 	src/td2_runtime.c

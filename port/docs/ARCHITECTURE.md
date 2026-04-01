@@ -28,22 +28,29 @@ The current code intentionally does only the minimum clean work:
   Holds the SNES PPU shadow state and rasterizes BG/OBJ/Mode7 directly from
   raw state.
 - `td2_runtime.*`
-  Fixed-frame orchestration, compare-lane metrics, and PPM dumping for smoke
-  tests.
+  Fixed-frame orchestration, seeded runtime-state shadow, compare-lane
+  metrics, and PPM dumping for smoke tests.
 - `td2_compare.*`
   Trusted-frame compare bundle generation (`runtime | golden | diff`) plus
-  machine-readable drift metrics and a seeded PPU-state contract.
+  machine-readable drift metrics plus seeded PPU-state and callback-state
+  contracts.
+- `td2_contracts.*`
+  Loads validated intro callback/state checkpoints by frame and seeds the
+  bootstrap runtime-state shadow for covered fixtures.
 
 The promoted smoke fixtures are now exact through the native compositor itself.
 `main_visible.ppm` stays in the loop only as the regression golden surface,
 and the compare lane now makes that relationship explicit in the runtime while
 also asserting that the seeded scene state matches the live `Td2PpuState`.
+For frames covered by validated intro checkpoints, the same bootstrap path now
+also seeds a runtime callback/state shadow and reports it as
+`callback_contract`.
 
 ## Next replacement steps
 
-1. Add a callback/state execution spine driven by validated bank ownership,
-   starting with front-end callback families.
-2. Extend the compare lane from seeded PPU-state drift into callback/state
-   drift against trusted traces.
+1. Replace the seeded callback/state bootstrap with real execution driven by
+   validated bank ownership, starting with front-end callback families.
+2. Extend the compare lane from seeded PPU-state and callback-state drift into
+   runtime callback/state drift against trusted traces.
 3. Feed gameplay windows from the archaeology docs and SentrySearch chunk
    workflow into the same runtime/validation loop.

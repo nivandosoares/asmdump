@@ -24,6 +24,19 @@ bool td2_runtime_init(
         return false;
     }
 
+    td2_runtime_state_reset(&runtime->state);
+    if (!td2_callback_contract_load_for_frame(
+            &runtime->callback_contract,
+            config->scene_dir,
+            runtime->design_pack.frame_number,
+            runtime->design_pack.has_frame_number,
+            error,
+            error_size)) {
+        td2_runtime_free(runtime);
+        return false;
+    }
+    td2_runtime_state_seed_from_contract(&runtime->state, &runtime->callback_contract);
+
     runtime->framebuffer = (uint32_t*)calloc(TD2_FRAME_PIXELS, sizeof(uint32_t));
     if (runtime->framebuffer == NULL) {
         set_error(error, error_size, "failed to allocate framebuffer");
@@ -61,7 +74,13 @@ bool td2_runtime_render_frame(
     size_t error_size
 ) {
     td2_ppu_render_frame(&runtime->ppu, runtime->framebuffer);
-    td2_compare_run(&runtime->compare, &runtime->design_pack, &runtime->ppu, runtime->framebuffer);
+    td2_compare_run(
+        &runtime->compare,
+        &runtime->design_pack,
+        &runtime->ppu,
+        &runtime->state,
+        &runtime->callback_contract,
+        runtime->framebuffer);
     if (error_size > 0U) {
         error[0] = '\0';
     }
@@ -104,6 +123,8 @@ bool td2_runtime_dump_frame(
             &runtime->compare,
             &runtime->design_pack,
             &runtime->ppu,
+            &runtime->state,
+            &runtime->callback_contract,
             runtime->framebuffer,
             prefix,
             frame_index,
