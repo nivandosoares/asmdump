@@ -58,27 +58,40 @@ decoded tilemaps and sprite visibility metadata.
 
 - The promoted `gameplay_live_race_mid` rail no longer renders from one flat
   frame-end gameplay `ppu_state`.
-- The runtime now attaches the measured visible-scanline profile from:
-  - `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
+- The runtime now selects gameplay scanline overlays from:
+  - `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
 - Current promoted fields:
   - `main_layers`
   - `bg1_hscroll/bg1_vscroll`
   - `bg2_hscroll/bg2_vscroll`
   - `bg3_hscroll/bg3_vscroll`
+- Current tracked source traces behind that contract:
+  - `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
+  - `tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json`
 - Practical result:
   - the horizon and roadside separation on the live-race seed is restored in
     the native SDL output
   - the old “road swallows horizon/shoulders” failure is no longer the
     current promoted output for that rail
+- Second-phase follow-up:
+  - `lane3_live_entry_frame03250_bundle/design_pack` now also loads through
+    the same contract surface
+  - direct flat-vs-contract compare on that bundle is still `0` mismatched
+    pixels, so this later gameplay phase is now narrowed to a stronger
+    renderer boundary: more than `main_layers/bg1/bg2/bg3` scrolls are still
+    missing there
 - New cheap falsifier:
-  - `./port/test_scheduler.sh` now also checks that the scanline profile is
-    loaded for `gameplay_live_race_mid` and that selected framebuffer pixels
-    stay on the expected sky/mountain/grass values
+  - `./port/test_scanline_contract.sh` now proves:
+    - bundles with no matching contract stay flat
+    - `gameplay_live_race_mid` keeps the restored render
+    - `lane3_live_entry_frame03250` now loads the versioned contract surface
 - Next gate:
-  - move this scanline attachment into versioned contract data instead of a
-    sibling raw artifact path
-  - promote a second gameplay phase with the same scanline-aware surface so
-    later lane-3 bundles stop falling back to flat presentation
+  - extend the scanline contract beyond `main_layers/bg1/bg2/bg3` scrolls on
+    `lane3_live_entry_frame03250`, since those fields alone are now proven
+    insufficient there
+  - choose whether the next cheapest promotion target is a stronger `3250`
+    follow-up or another later gameplay bundle such as the traffic-emergence
+    `3400` pair
 
 ## Current Status Snapshot (2026-03-27)
 
@@ -113,6 +126,9 @@ Validation contract baseline:
     pure SDL mapping, live no-opponent menu route, gameplay live `JOY1`
     sampling, and scripted-history plus live-`A` merge on the measured menu
     corridor
+  - scanline contract smoke `19/19` checks pass across:
+    one no-contract bundle, the solved `live_race_mid` consumer, and the new
+    `lane3_live_entry_frame03250` contract consumer
   - runtime `--dump-prefix` now emits PNG siblings for the same frame and
     compare artifacts already used by the port smoke path
 

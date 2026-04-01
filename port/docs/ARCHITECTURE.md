@@ -29,15 +29,17 @@ The current code intentionally does only the minimum clean work:
   Holds the SNES PPU shadow state and rasterizes BG/OBJ/Mode7 directly from
   raw state. For the promoted `gameplay_live_race_mid` rail, it now also
   accepts a measured visible-scanline overlay so gameplay is not forced
-  through one flat frame-end `ppu_state`.
+  through one flat frame-end `ppu_state`. That overlay is now selected from a
+  versioned contract file instead of one ad hoc sibling-path lookup.
 - `td2_runtime.*`
   Fixed-frame orchestration, scheduler-backed runtime-state shadow,
   compare-lane metrics, and PPM+PNG dumping for smoke tests and design review.
   It also resolves the current optional gameplay scanline profile
-  attachment. The first promoted consumer is the sibling artifact
-  `../tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`,
-  which feeds per-scanline `main_layers` and `bg1/bg2/bg3` scroll values into
-  the live-race renderer.
+  attachment from `../rom_analysis/docs/gameplay_scanline_contracts.jsonc`.
+  The current tracked sources behind that contract feed per-scanline
+  `main_layers` and `bg1/bg2/bg3` scroll values into:
+  - `../tools/out/design_lane3_live_race_mid_frame0_native`
+  - `../tools/out/lane3_live_entry_frame03250_bundle/design_pack`
 - `td2_input.*`
   Shared parser/query layer for scripted input windows and recorded live input
   history, using the same `frame:buttons` / `start-end:buttons` syntax used by
@@ -75,8 +77,10 @@ bundles that only carry local `raw/` dumps and no golden frame.
 
 ## Next replacement steps
 
-1. Move the promoted live-race scanline overlay from a sibling raw artifact
-   into the same versioned contract flow already used by scheduler rails.
+1. Expand the scanline contract beyond `main_layers/bg1/bg2/bg3` scrolls for
+   later gameplay phases like `lane3_live_entry_frame03250`, where the
+   current attachment still produces `0` pixel change against a no-contract
+   clone.
 2. Promote compare-backed menu/gameplay fixtures so the same
    runtime-or-golden workflow used on intro can gate later rails too.
 3. Replace pre-bundle scripted route history with earlier scene bases or

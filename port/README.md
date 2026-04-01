@@ -27,8 +27,8 @@ Current checkpoint:
 - scripted input windows via `--input-script`
 - shared scripted/live input mutator surface on top of scheduler rails
 - measured visible-scanline gameplay overlay for
-  `gameplay_live_race_mid`, loaded from
-  `../tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
+  promoted gameplay bundles, selected from
+  `../rom_analysis/docs/gameplay_scanline_contracts.jsonc`
 - first input-driven mutations on top of that shared surface:
   current `JOY1` sample mirrored into runtime state as `state_0960`, plus the
   traced no-opponent menu handoff on `menu_gameplay_entry`
@@ -136,6 +136,12 @@ Notes:
   - live-input history can drive the traced no-opponent menu handoff
   - live current input and scripted prehistory merge on the same mutator
     surface for the default-rival `A` corridor
+- `make -C port test` now also runs `test_scanline_contract.sh`, which proves:
+  - bundles without a matching gameplay scanline contract stay flat
+  - `gameplay_live_race_mid` loads its versioned scanline overlay and keeps
+    the restored sky/mountain/grass split
+  - `lane3_live_entry_frame03250_bundle/design_pack` now also loads through
+    the same contract surface even without a scheduler rail
 - `--dump-prefix` now emits `PATH_00000.ppm` and `PATH_00000.png`; compare
   dumps also emit PNG siblings for `_reference`, `_diff`, and `_compare`.
 - interactive keyboard mapping:
@@ -155,9 +161,11 @@ Notes:
   now shares the same mutator surface, but it does not fabricate missing
   history before the loaded bundle.
 - current gameplay-specific boundary: only the promoted
-  `gameplay_live_race_mid` seed is scanline-aware. Later gameplay phases still
-  need their own promoted scanline contracts instead of falling back to one
-  flat frame-end `ppu_state`.
+  `gameplay_live_race_mid` seed is visually closed by the current scanline
+  contract fields. The promoted `lane3_live_entry_frame03250` bundle now also
+  loads a scanline contract, but its current render is still `0` pixels
+  different from a no-contract clone, which means later gameplay phases still
+  need more fields than `main_layers/bg1/bg2/bg3` scrolls alone.
 - `tools/push_checkpoint.sh` is the repo-local wrapper for the post-push step:
   it pushes the current checkpoint, refreshes the curated wiki in an isolated
   temporary `git worktree`, and issues a follow-up wiki refresh commit/push

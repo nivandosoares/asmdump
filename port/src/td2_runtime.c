@@ -123,48 +123,51 @@ static const char* find_matching_delimiter(
     return NULL;
 }
 
-static bool td2_build_lane3_scanline_profile_path(
-    const char* scene_dir,
-    char* path,
-    size_t path_size
+static bool parse_string_in_range(
+    const char* start,
+    const char* end,
+    const char* key,
+    char* out,
+    size_t out_size
 ) {
-    const char* slash;
-    size_t parent_length;
+    const char* pos = find_in_range(start, end, key);
+    const char* value_start;
+    const char* value_end;
+    size_t value_length;
 
-    if (scene_dir == NULL || path == NULL || path_size == 0U) {
+    if (pos == NULL || out == NULL || out_size == 0U) {
+        return false;
+    }
+    pos += strlen(key);
+    while (pos < end && (*pos == ' ' || *pos == '\t')) {
+        pos++;
+    }
+    if (pos >= end || *pos != '"') {
         return false;
     }
 
-    slash = strrchr(scene_dir, '/');
-    if (slash == NULL) {
-        return false;
+    value_start = pos + 1;
+    value_end = value_start;
+    while (value_end < end && *value_end != '"') {
+        value_end++;
     }
-    parent_length = (size_t)(slash - scene_dir);
-    if (parent_length + strlen("/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json") + 1U > path_size) {
+    if (value_end >= end) {
         return false;
     }
 
-    snprintf(
-        path,
-        path_size,
-        "%.*s/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json",
-        (int)parent_length,
-        scene_dir);
+    value_length = (size_t)(value_end - value_start);
+    if (value_length + 1U > out_size) {
+        return false;
+    }
+
+    memcpy(out, value_start, value_length);
+    out[value_length] = '\0';
     return true;
 }
 
-static bool td2_runtime_should_load_lane3_scanline_profile(
-    const Td2RuntimeConfig* config,
-    Td2SchedulerProfile active_profile
-) {
-    return active_profile == TD2_SCHEDULER_PROFILE_GAMEPLAY_LIVE_RACE_MID &&
-           config->scene_dir != NULL &&
-           strstr(config->scene_dir, "design_lane3_live_race_mid_frame0_native") != NULL;
-}
-
-static bool td2_runtime_load_lane3_scanline_profile(
+static bool td2_runtime_load_scanline_profile_json(
     Td2PpuState* ppu,
-    const char* scene_dir,
+    const char* json_path,
     char* error,
     size_t error_size
 ) {
@@ -176,7 +179,6 @@ static bool td2_runtime_load_lane3_scanline_profile(
     static const char* k_bg2_vscroll_key = "\"bg2_vscroll\":";
     static const char* k_bg3_hscroll_key = "\"bg3_hscroll\":";
     static const char* k_bg3_vscroll_key = "\"bg3_vscroll\":";
-    char path[1200];
     char* json = NULL;
     const char* samples = NULL;
     const char* cursor;
@@ -185,14 +187,9 @@ static bool td2_runtime_load_lane3_scanline_profile(
     unsigned sample_count = 0U;
     unsigned scanline;
 
-    if (!td2_build_lane3_scanline_profile_path(scene_dir, path, sizeof(path))) {
-        set_error(error, error_size, "failed to resolve lane3 scanline profile path");
-        return false;
-    }
-
-    json = read_text_file(path, NULL);
+    json = read_text_file(json_path, NULL);
     if (json == NULL) {
-        snprintf(error, error_size, "failed to read scanline profile: %s", path);
+        snprintf(error, error_size, "failed to read scanline profile: %s", json_path);
         return false;
     }
 
@@ -230,7 +227,7 @@ static bool td2_runtime_load_lane3_scanline_profile(
 
     cursor = samples;
     while ((cursor = strchr(cursor, '{')) != NULL && cursor < samples_end) {
-        const char* object_end = strchr(cursor, '}');
+        const char* object_end = find_matching_delimiter(cursor, '{', '}');
         int parsed_scanline;
         int value;
 
@@ -326,6 +323,103 @@ static bool td2_runtime_load_lane3_scanline_profile(
     return true;
 }
 
+static bool td2_runtime_load_scanline_contract_profile(
+    Td2PpuState* ppu,
+    const char* scene_dir,
+    char* error,
+    size_t error_size
+) {
+    char contracts_path[1400];
+    char* json = NULL;
+    const char* cursor = NULL;
+    bool matched = false;
+
+    if (scene_dir == NULL) {
+        if (error_size > 0U) {
+            error[0] = '\0';
+        }
+        return true;
+    }
+
+    if (!td2_contracts_resolve_repo_relative_path(
+            scene_dir,
+            "rom_analysis/docs/gameplay_scanline_contracts.jsonc",
+            contracts_path,
+            sizeof(contracts_path))) {
+        if (error_size > 0U) {
+            error[0] = '\0';
+        }
+        return true;
+    }
+
+    json = read_text_file(contracts_path, NULL);
+    if (json == NULL) {
+        if (error_size > 0U) {
+            error[0] = '\0';
+        }
+        return true;
+    }
+
+    cursor = json;
+    while ((cursor = strstr(cursor, "\"scene_match\":")) != NULL) {
+        char profile_block[4096];
+        char scene_match[512];
+        char source_json[1024];
+        char source_path[1400];
+
+        if (!td2_contracts_extract_object_block(json, cursor, profile_block, sizeof(profile_block))) {
+            free(json);
+            set_error(error, error_size, "failed to extract gameplay scanline contract block");
+            return false;
+        }
+
+        if (!parse_string_in_range(
+                profile_block,
+                profile_block + strlen(profile_block),
+                "\"scene_match\":",
+                scene_match,
+                sizeof(scene_match)) ||
+            !parse_string_in_range(
+                profile_block,
+                profile_block + strlen(profile_block),
+                "\"source_json\":",
+                source_json,
+                sizeof(source_json))) {
+            free(json);
+            set_error(error, error_size, "gameplay scanline contract missing scene_match/source_json");
+            return false;
+        }
+
+        if (strstr(scene_dir, scene_match) == NULL) {
+            cursor += strlen("\"scene_match\":");
+            continue;
+        }
+
+        if (!td2_contracts_resolve_repo_relative_path(
+                scene_dir,
+                source_json,
+                source_path,
+                sizeof(source_path))) {
+            free(json);
+            set_error(error, error_size, "failed to resolve gameplay scanline source_json");
+            return false;
+        }
+
+        matched = true;
+        if (!td2_runtime_load_scanline_profile_json(ppu, source_path, error, error_size)) {
+            free(json);
+            return false;
+        }
+        break;
+    }
+
+    free(json);
+    if (!matched && error_size > 0U) {
+        error[0] = '\0';
+    }
+    return true;
+}
+
 bool td2_runtime_init(
     Td2Runtime* runtime,
     const Td2RuntimeConfig* config,
@@ -360,8 +454,7 @@ bool td2_runtime_init(
     }
 
     td2_ppu_seed_from_design_pack(&runtime->ppu, &runtime->design_pack);
-    if (td2_runtime_should_load_lane3_scanline_profile(config, runtime->scheduler.active_profile) &&
-        !td2_runtime_load_lane3_scanline_profile(
+    if (!td2_runtime_load_scanline_contract_profile(
             &runtime->ppu,
             config->scene_dir,
             error,

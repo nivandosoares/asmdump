@@ -122,11 +122,15 @@ Current scheduler-backed promoted rails:
 - `menu_gameplay_entry`: `tools/out/design_frame1500_car_select`
 - `gameplay_live_race_mid`: `tools/out/design_lane3_live_race_mid_frame0_native`
 
-Current promoted gameplay scanline overlay:
+Current promoted gameplay scanline contract:
 
-- `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
-- consumed by the runtime only for the promoted
-  `gameplay_live_race_mid` rail
+- `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
+- current tracked scanline sources:
+  - `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
+  - `tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json`
+- current consumers:
+  - `gameplay_live_race_mid`
+  - `tools/out/lane3_live_entry_frame03250_bundle/design_pack`
 - current attached fields:
   - `main_layers`
   - `bg1_hscroll/bg1_vscroll`
@@ -135,6 +139,9 @@ Current promoted gameplay scanline overlay:
 - practical effect:
   - the live-race SDL output no longer flattens the horizon/shoulders into one
     frame-end road presentation
+  - the `3250` late-entry bundle now loads through the same contract path, but
+    current flat-vs-contract compare is still `0` mismatched pixels, which
+    narrows the remaining gap there to fields beyond the current attached set
 
 The non-intro rails now load from:
 
@@ -193,6 +200,20 @@ The scheduler smoke also now proves:
   selected `main_layers/bg2/bg3` samples
 - selected gameplay framebuffer pixels stay on the restored sky/mountain/grass
   colors, so the scanline-aware horizon fix does not silently regress
+
+Current scanline-contract smoke:
+
+```sh
+./port/test_scanline_contract.sh
+```
+
+That proves:
+
+- bundles with no matching gameplay scanline contract stay flat
+- `gameplay_live_race_mid` loads the versioned contract and keeps the solved
+  render anchors
+- `lane3_live_entry_frame03250_bundle/design_pack` now also loads the same
+  versioned contract surface even without a scheduler rail
 
 Current practical boundary:
 

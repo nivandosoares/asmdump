@@ -1,6 +1,91 @@
 Date: 2026-04-01
 
 Summary
+- Moved gameplay scanline-profile selection out of the runtime hardcode and
+  into the versioned contract
+  `rom_analysis/docs/gameplay_scanline_contracts.jsonc`.
+- Promoted a second gameplay consumer on that same surface:
+  `tools/out/lane3_live_entry_frame03250_bundle/design_pack`, backed by the
+  new tracked capture
+  `tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json`.
+- Closed an important negative result for that second phase:
+  current flat-vs-contract compare on `3250` is still `0` mismatched pixels,
+  which means later gameplay phases need more than the current
+  `main_layers/bg1/bg2/bg3` scroll overlay.
+
+What I ran
+- new scanline capture for the late live-entry `3250` bundle:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=420 TD2_SCANLINE_TEST_TARGET_FRAME=3250 TD2_SCANLINE_TEST_MAX_SAMPLES=224 TD2_SCANLINE_TEST_INPUT_WINDOWS='1200:a;1280:a;1505-1510:a;1640-1645:a;1730-1735:a;2050-4800:a' TD2_SCANLINE_TEST_OUTPUT_PREFIX=tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test ./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_scanline_step_test.lua`
+- targeted smoke:
+  - `make -C port`
+  - `./port/test_scanline_contract.sh`
+- targeted flat-vs-contract probe on `3250`:
+  - contract-backed render on
+    `tools/out/lane3_live_entry_frame03250_bundle/design_pack`
+  - no-contract clone render on `/tmp/td2_flat_3250/scene`
+  - `python3 tools/compare_frames.py /tmp/td2_flat_3250/flat_00000.ppm /tmp/td2_scanline_probe_3250/frame3250_00000.ppm`
+
+Findings / Interpretation
+- The scanline overlay path is no longer scene-specific runtime glue. Any
+  bundle can now opt in through `gameplay_scanline_contracts.jsonc`.
+- The new `3250` scanline capture is structurally valid and gameplay-shaped:
+  - `224` samples
+  - `main_layers`: `19 -> 23 -> 19`
+  - `bg3_hscroll`: `0 -> 510` at scanline `23`
+  - `bg3_vscroll`: `1023 -> 12` at scanline `24`
+  - `bg2_hscroll`: lower-window ramp ending at `213`
+- Despite that, the current renderer output for `3250` is still exactly the
+  same with and without the contract (`0` mismatched pixels). That is the
+  key result of this turn.
+
+What I learned (actionable)
+- The versioned contract path is the right abstraction boundary and is now
+  ready for more gameplay bundles.
+- The second gameplay bundle proved a stronger renderer boundary:
+  later gameplay is not blocked on scanline-trace acquisition anymore; it is
+  blocked on missing fields beyond the current `main_layers/bg1/bg2/bg3`
+  scroll surface.
+
+Next steps / Checkpoints
+1) Extend `gameplay_scanline_contracts.jsonc` support to whichever next field
+   is cheapest and most defensible for `3250`, instead of collecting more of
+   the same scroll-only traces first.
+2) Decide whether `3250` stays the best next consumer or whether the
+   traffic-emergence `3400` bundle is the better proving lane for the next
+   scanline-field promotion.
+3) Keep `gameplay_live_race_mid` as the solved reference consumer while later
+   gameplay phases are narrowed one field family at a time.
+
+Immediate recommendation
+- Use the local review pack that now includes the `3250` contract-backed PNG
+  to show design the exact remaining gap: contract attached, but still no
+  visible delta yet.
+- Keep `./port/test_scanline_contract.sh` as the cheapest falsifier when
+  touching scanline contract selection or adding a new gameplay consumer.
+
+Files updated in this turn
+- `port/Makefile`
+- `port/src/td2_runtime.c`
+- `port/test_scanline_contract.c`
+- `port/test_scanline_contract.sh`
+- `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
+- `tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json`
+- `PORT_PLAN.md`
+- `port/README.md`
+- `port/docs/ARCHITECTURE.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+
+Next reading
+- `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
+- `tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json`
+- `rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
+
+Date: 2026-04-01
+
+Summary
 - Promoted the first gameplay scanline-aware presentation path in the SDL
   runtime for the `gameplay_live_race_mid` rail instead of treating that seed
   as one flat frame-end `ppu_state`.
