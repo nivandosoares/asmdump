@@ -120,7 +120,9 @@ callback families and handoffs for the three target rails, even when a given
 design pack has no trusted `main_visible.ppm` golden. It also now proves that
 menu/gameplay are loading `scheduler_contract` state from
 `rom_analysis/docs/scheduler_rail_contracts.jsonc` instead of hardcoded C
-anchors.
+anchors. For `gameplay_live_race_mid`, it now also proves that the measured
+visible-scanline overlay is attached and that key framebuffer pixels stay on
+the restored sky/mountain/roadside split.
 
 ## 6) Input Mutation Smoke
 
@@ -143,7 +145,28 @@ This validates the first runtime input surface on top of the scheduler rails:
 This is intentionally narrow. It proves the runtime is no longer input-blind
 for menu/gameplay rails before the later gameplay-state mutators are promoted.
 
-## 7) Practical Gate Policy
+## 7) Live SDL Input Smoke
+
+Runner:
+
+```sh
+./port/test_live_input.sh
+```
+
+This validates the first real SDL-host input path on top of the same
+mutator/history surface already exercised by `--input-script`:
+
+- keyboard mapping into SNES `JOY1` bits
+- SDL game-controller mapping into the same `JOY1` bits
+- live-input history driving the traced no-opponent menu handoff
+- live current input merging with scripted prehistory on the measured
+  default-rival `2050..2088` corridor
+
+This gate is intentionally scoped to the shared input surface, not to broad
+interactive gameplay claims. It proves the SDL host is no longer bypassing the
+validated route/mutator layer.
+
+## 8) Practical Gate Policy
 
 For each archaeology lane:
 

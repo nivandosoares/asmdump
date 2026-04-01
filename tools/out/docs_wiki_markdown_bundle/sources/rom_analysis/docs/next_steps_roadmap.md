@@ -30,6 +30,56 @@ decoded tilemaps and sprite visibility metadata.
   - `tools/out/sentrysearch_longplay_anchor_chunks.md`
   - `rom_analysis/docs/sentrysearch_gameplay_chunk_workflow.md`
 
+## Port Live Input Checkpoint (`2026-04-01`)
+
+- The SDL host now feeds live keyboard/controller samples into the same
+  scheduler-backed mutator/history surface already exercised by
+  `--input-script`.
+- New smoke:
+  - `./port/test_live_input.sh`
+- Current promoted proofs:
+  - pure keyboard mapping into SNES `JOY1`
+  - pure SDL game-controller mapping into SNES `JOY1`
+  - live-input history driving the traced no-opponent handoff on
+    `menu_gameplay_entry`
+  - scripted prehistory plus live `A` merging on the measured default-rival
+    `2050..2088` corridor
+- Current practical boundary:
+  - branches whose first required route decisions happen before the loaded
+    bundle base frame still need earlier seeds or scripted prehistory; live
+    SDL input now shares the same surface, but it does not fabricate missing
+    pre-bundle history
+- Next gate:
+  - promote compare-backed menu/gameplay fixtures for the live-input rails
+  - move pre-bundle route history into earlier scene bases or compiled route
+    seeds where the current bundle starts too late
+
+## Port Gameplay Scanline Checkpoint (`2026-04-01`)
+
+- The promoted `gameplay_live_race_mid` rail no longer renders from one flat
+  frame-end gameplay `ppu_state`.
+- The runtime now attaches the measured visible-scanline profile from:
+  - `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
+- Current promoted fields:
+  - `main_layers`
+  - `bg1_hscroll/bg1_vscroll`
+  - `bg2_hscroll/bg2_vscroll`
+  - `bg3_hscroll/bg3_vscroll`
+- Practical result:
+  - the horizon and roadside separation on the live-race seed is restored in
+    the native SDL output
+  - the old “road swallows horizon/shoulders” failure is no longer the
+    current promoted output for that rail
+- New cheap falsifier:
+  - `./port/test_scheduler.sh` now also checks that the scanline profile is
+    loaded for `gameplay_live_race_mid` and that selected framebuffer pixels
+    stay on the expected sky/mountain/grass values
+- Next gate:
+  - move this scanline attachment into versioned contract data instead of a
+    sibling raw artifact path
+  - promote a second gameplay phase with the same scanline-aware surface so
+    later lane-3 bundles stop falling back to flat presentation
+
 ## Current Status Snapshot (2026-03-27)
 
 Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
@@ -51,13 +101,18 @@ Validation contract baseline:
   - regression gates `6/6` pass
   - compare lane `3/3` pass
   - intro callback model smoke `183/183` checks pass
-  - scheduler smoke `320/320` checks pass across:
+  - scheduler smoke `335/335` checks pass across:
     intro no-input, menu gameplay-entry, and live-race gameplay seed, with
     menu/gameplay resolved from
-    `rom_analysis/docs/scheduler_rail_contracts.jsonc`
+    `rom_analysis/docs/scheduler_rail_contracts.jsonc`; the live-race rail
+    now also proves its scanline profile attachment and selected render pixels
   - input mutation smoke `200/200` checks pass across:
     menu no-opponent handoff, gameplay `JOY1` samples, and promoted
     post-`2050` default-rival `A` windows driven by scripted input windows
+  - live input smoke `21/21` checks pass across:
+    pure SDL mapping, live no-opponent menu route, gameplay live `JOY1`
+    sampling, and scripted-history plus live-`A` merge on the measured menu
+    corridor
   - runtime `--dump-prefix` now emits PNG siblings for the same frame and
     compare artifacts already used by the port smoke path
 

@@ -1,6 +1,6 @@
 # TD2 Wiki Markdown Bundle
 
-- Generated: `2026-04-01 15:40:21`
+- Generated: `2026-04-01 16:36:20`
 - Manifest: `rom_analysis/docs/wiki_doc_index.json`
 - Total docs: `46`
 
@@ -10,7 +10,7 @@ Use `wiki_bundle_index.md` for the curated file list or `wiki_combined.md` for a
 
 - Source: `PORT_PLAN.md`
 - Bundle copy: `sources/PORT_PLAN.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Primary execution contract and long-range port target.
 
 ---
@@ -136,6 +136,33 @@ New useful state beyond the original plan:
     later anchors `2104` and `2125`, over tracked fields
     `state_09a2/state_09a8/state_137c` and
     `dp_0020/dp_0022/dp_0053/dp_0054`
+- the SDL host now also feeds live keyboard/controller state into that same
+  runtime mutator surface instead of keeping live input separate from replay:
+  - `platform_sdl` maps keyboard and SDL game-controller samples into SNES
+    `JOY1` bits
+  - `td2_scheduler` merges recorded live input history with scripted windows
+    for route tests and downstream mutators
+  - the current promoted live proofs are:
+    - frame-local gameplay `JOY1` sampling on `gameplay_live_race_mid`
+    - traced no-opponent handoff on `menu_gameplay_entry`
+    - scripted-history plus live-`A` merge for the measured
+      default-rival `2050..2088` corridor
+  - practical boundary: branches whose required history starts before the
+    bundle base frame still need earlier seeds or scripted prehistory; live
+    SDL input now uses the same surface, but it does not invent missing
+    pre-bundle route history
+- the promoted `gameplay_live_race_mid` rail now also carries a measured
+  visible-scanline presentation profile from
+  `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`:
+  - the runtime loads per-scanline `main_layers`,
+    `bg1/bg2/bg3` `HOFS/VOFS` for that rail instead of treating gameplay as
+    one flat end-of-frame `ppu_state`
+  - the first practical fix is the live-race horizon/roadside boundary:
+    `BG3` now re-enters only on scanlines `23..120`, while `BG2` scroll uses
+    the measured `224`-scanline staircase rather than one global `VOFS`
+  - scheduler smoke now proves both the loaded scanline profile and a handful
+    of gameplay framebuffer pixels, so the restored horizon does not regress
+    silently
 - runtime frame dumps now emit PNG siblings next to the existing PPM artifacts
   so design review can follow each checkpoint without manual conversion
 - that scheduler now executes validated callback-family handoffs across:
@@ -266,12 +293,13 @@ New useful state beyond the original plan:
 
 Immediate next focus:
 
-1. Feed live SDL keyboard/controller input into the same mutator surface that
-   now accepts scripted windows.
-2. Promote compare-backed fixtures for the new menu/gameplay rails wherever a
+1. Promote compare-backed fixtures for the new menu/gameplay rails wherever a
    trusted `main_visible` golden exists.
-3. Extend the measured menu window beyond `2088` only when fresh probes close
+2. Extend the measured menu window beyond `2088` only when fresh probes close
    another bounded post-`2050` block.
+3. Move pre-bundle route history out of ad hoc scripts by promoting earlier
+   scene bases or trace-compiled route seeds for menu/gameplay branches whose
+   first required decisions happen before the current bundle start.
 4. Keep intro archaeology moving only where it tightens callback ownership or
    renderer behavior, not as a polishing lane by itself.
 5. Use the local SentrySearch chunk workflow plus the longplay anchor packs to
@@ -590,7 +618,7 @@ The work above assumes option 1 first, then selective enhancement after parity.
 
 - Source: `rom_analysis/docs/next_steps_roadmap.md`
 - Bundle copy: `sources/rom_analysis/docs/next_steps_roadmap.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Current lane status, open gates, and practical follow-up targets.
 
 ---
@@ -627,6 +655,56 @@ decoded tilemaps and sprite visibility metadata.
   - `tools/out/sentrysearch_longplay_anchor_chunks.md`
   - `rom_analysis/docs/sentrysearch_gameplay_chunk_workflow.md`
 
+## Port Live Input Checkpoint (`2026-04-01`)
+
+- The SDL host now feeds live keyboard/controller samples into the same
+  scheduler-backed mutator/history surface already exercised by
+  `--input-script`.
+- New smoke:
+  - `./port/test_live_input.sh`
+- Current promoted proofs:
+  - pure keyboard mapping into SNES `JOY1`
+  - pure SDL game-controller mapping into SNES `JOY1`
+  - live-input history driving the traced no-opponent handoff on
+    `menu_gameplay_entry`
+  - scripted prehistory plus live `A` merging on the measured default-rival
+    `2050..2088` corridor
+- Current practical boundary:
+  - branches whose first required route decisions happen before the loaded
+    bundle base frame still need earlier seeds or scripted prehistory; live
+    SDL input now shares the same surface, but it does not fabricate missing
+    pre-bundle history
+- Next gate:
+  - promote compare-backed menu/gameplay fixtures for the live-input rails
+  - move pre-bundle route history into earlier scene bases or compiled route
+    seeds where the current bundle starts too late
+
+## Port Gameplay Scanline Checkpoint (`2026-04-01`)
+
+- The promoted `gameplay_live_race_mid` rail no longer renders from one flat
+  frame-end gameplay `ppu_state`.
+- The runtime now attaches the measured visible-scanline profile from:
+  - `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
+- Current promoted fields:
+  - `main_layers`
+  - `bg1_hscroll/bg1_vscroll`
+  - `bg2_hscroll/bg2_vscroll`
+  - `bg3_hscroll/bg3_vscroll`
+- Practical result:
+  - the horizon and roadside separation on the live-race seed is restored in
+    the native SDL output
+  - the old “road swallows horizon/shoulders” failure is no longer the
+    current promoted output for that rail
+- New cheap falsifier:
+  - `./port/test_scheduler.sh` now also checks that the scanline profile is
+    loaded for `gameplay_live_race_mid` and that selected framebuffer pixels
+    stay on the expected sky/mountain/grass values
+- Next gate:
+  - move this scanline attachment into versioned contract data instead of a
+    sibling raw artifact path
+  - promote a second gameplay phase with the same scanline-aware surface so
+    later lane-3 bundles stop falling back to flat presentation
+
 ## Current Status Snapshot (2026-03-27)
 
 Checkpoint log: `rom_analysis/docs/progress_checkpoints.md`.
@@ -648,13 +726,18 @@ Validation contract baseline:
   - regression gates `6/6` pass
   - compare lane `3/3` pass
   - intro callback model smoke `183/183` checks pass
-  - scheduler smoke `320/320` checks pass across:
+  - scheduler smoke `335/335` checks pass across:
     intro no-input, menu gameplay-entry, and live-race gameplay seed, with
     menu/gameplay resolved from
-    `rom_analysis/docs/scheduler_rail_contracts.jsonc`
+    `rom_analysis/docs/scheduler_rail_contracts.jsonc`; the live-race rail
+    now also proves its scanline profile attachment and selected render pixels
   - input mutation smoke `200/200` checks pass across:
     menu no-opponent handoff, gameplay `JOY1` samples, and promoted
     post-`2050` default-rival `A` windows driven by scripted input windows
+  - live input smoke `21/21` checks pass across:
+    pure SDL mapping, live no-opponent menu route, gameplay live `JOY1`
+    sampling, and scripted-history plus live-`A` merge on the measured menu
+    corridor
   - runtime `--dump-prefix` now emits PNG siblings for the same frame and
     compare artifacts already used by the port smoke path
 
@@ -2225,10 +2308,176 @@ Update findings in:
 
 - Source: `rom_analysis/docs/progress_checkpoints.md`
 - Bundle copy: `sources/rom_analysis/docs/progress_checkpoints.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Checkpoint log with evidence-bearing milestones.
 
 ---
+
+Date: 2026-04-01
+
+Summary
+- Promoted the first gameplay scanline-aware presentation path in the SDL
+  runtime for the `gameplay_live_race_mid` rail instead of treating that seed
+  as one flat frame-end `ppu_state`.
+- The runtime now attaches the measured visible-scanline profile from
+  `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
+  and feeds per-scanline `main_layers` plus `bg1/bg2/bg3` scroll values into
+  `td2_ppu`.
+- Refreshed the local design-review PNG pack under
+  `tools/out/port_live_input_runtime_pngs_20260401/` so the gameplay review
+  frame now shows the restored horizon/roadside split instead of the old flat
+  road/horizon collapse.
+
+What I ran
+- `make -C port clean && make -C port`
+- `make -C port test`
+- headless gameplay export:
+  - `./port/build/td2_port --scene-dir tools/out/design_lane3_live_race_mid_frame0_native --scheduler-profile gameplay_live_race_mid --input-script '3:a' --headless --frames 4 --dump-prefix tools/out/port_live_input_runtime_pngs_20260401/gameplay_live_a_frame`
+- manual visual review against:
+  - `tools/out/port_live_input_runtime_pngs_20260401/gameplay_live_a_frame_00003.png`
+  - `tools/out/port_live_input_runtime_pngs_20260401/gameplay_live_a_bg_stack_support.png`
+  - `tools/out/port_live_input_runtime_pngs_20260401/gameplay_live_a_world_support.png`
+
+Findings / Interpretation
+- The promoted live-race bundle now renders with the horizon and roadside
+  separation restored in the native runtime. The prior failure mode where the
+  road swallowed the shoulders/horizon was caused by flattening gameplay to
+  one global `main_layers/BG2VOFS` state.
+- The measured scanline overlay is enough to correct that first-order visual
+  boundary without changing the scheduler rail or inventing a new gameplay
+  heuristic.
+- The new scheduler smoke now closes two useful guardrails on the same lane:
+  - the scanline profile must load with the expected `224` visible lines and
+    selected `main_layers/bg2/bg3` checkpoints
+  - the rendered framebuffer must preserve a few stable sky/mountain/grass
+    pixels on the first promoted gameplay frame
+
+What I learned (actionable)
+- For gameplay, the renderer can advance one rail at a time with measured
+  per-scanline overlays before the deeper road emitter family is fully
+  reconstructed.
+- The current sibling-artifact attachment is good enough for one promoted
+  rail, but the next clean replacement is to move this into versioned contract
+  data so later gameplay bundles can opt in without path-specific glue.
+
+Next steps / Checkpoints
+1) Move the live-race scanline attachment into versioned contract data instead
+   of the current sibling raw JSON path.
+2) Promote a second gameplay phase on the same scanline-aware surface so
+   checkpoint/post-stop or police/radar bundles stop falling back to flat
+   presentation.
+3) Only after a second gameplay phase closes cleanly, decide whether more of
+   the road emitter family must move from measured overlay to executed logic.
+
+Immediate recommendation
+- Use `tools/out/port_live_input_runtime_pngs_20260401/gameplay_live_a_frame0003.png`
+  as the current designer-facing gameplay PNG for this checkpoint.
+- Keep `./port/test_scheduler.sh` as the cheapest falsifier when touching the
+  live-race gameplay presenter, because it now proves both scanline profile
+  attachment and a small set of render pixels.
+
+Files updated in this turn
+- `port/include/td2_ppu.h`
+- `port/src/td2_ppu.c`
+- `port/src/td2_runtime.c`
+- `port/test_scheduler.c`
+- `PORT_PLAN.md`
+- `port/README.md`
+- `port/docs/ARCHITECTURE.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+
+Next reading
+- `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
+- `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
+- `port/src/td2_ppu.c`
+
+Date: 2026-04-01
+
+Summary
+- Promoted the first real SDL live-input path into the runtime instead of
+  keeping interactive input separate from the scripted mutator lane.
+- `platform_sdl` now maps keyboard and SDL game-controller samples into SNES
+  `JOY1` bits, and `td2_scheduler` records that history on the same surface
+  already used by `--input-script`.
+- Materialized a local PNG review pack under
+  `tools/out/port_live_input_runtime_pngs_20260401/` with baseline, routed
+  menu, and gameplay snapshots generated from the same runtime path.
+
+What I ran
+- `make -C port clean && make -C port`
+- `./port/test_live_input.sh`
+- `./port/test_input_mutation.sh`
+- `make -C port test`
+- local PNG review export with `./port/build/td2_port` on:
+  - `tools/out/design_frame1500_car_select`
+  - `tools/out/design_lane3_live_race_mid_frame0_native`
+
+Findings / Interpretation
+- The SDL host is no longer a side channel for input. Live keyboard/controller
+  state now lands in the exact same scheduler/mutator surface used by replay
+  scripts, so route logic and current-frame `JOY1` sampling are validated once
+  instead of separately.
+- Three useful proofs are now closed cheaply:
+  - live menu history can trigger the traced no-opponent handoff
+  - live current input can drive gameplay `JOY1` sampling on the live-race
+    seed
+  - scripted prehistory and live current input can merge on the same measured
+    default-rival corridor
+- The important remaining boundary is temporal, not architectural: if the
+  bundle starts after the first required route decisions, fully live
+  reproduction still needs earlier scene bases or promoted prehistory.
+
+What I learned (actionable)
+- Feeding SDL input through the shared scheduler surface is the right
+  abstraction boundary: route semantics, current-button mirroring, and later
+  gameplay mutations all stay behind one validation wall.
+- The next leverage point is not more SDL mapping work; it is promoting
+  earlier scene bases or compiled route seeds for branches whose history begins
+  before the current bundle base frame.
+
+Next steps / Checkpoints
+1) Promote compare-backed fixtures for the live-input menu/gameplay rails
+   wherever trusted goldens exist.
+2) Move pre-bundle route history into earlier scene bases or compiled route
+   seeds for menu/gameplay branches that start before the current bundle.
+3) Extend the measured menu corridor past `2088` only when a new bounded
+   probe block closes cleanly.
+
+Immediate recommendation
+- Use the local PNG pack under
+  `tools/out/port_live_input_runtime_pngs_20260401/` as the current
+  designer-facing review surface for this checkpoint.
+- Keep `./port/test_live_input.sh` and `./port/test_input_mutation.sh` as the
+  cheapest falsifiers when touching interactive input on the current runtime.
+
+Files updated in this turn
+- `port/Makefile`
+- `port/main.c`
+- `port/platform_sdl.c`
+- `port/platform_sdl.h`
+- `port/include/td2_input.h`
+- `port/include/td2_runtime.h`
+- `port/include/td2_scheduler.h`
+- `port/src/td2_input.c`
+- `port/src/td2_runtime.c`
+- `port/src/td2_scheduler.c`
+- `port/test_live_input.c`
+- `port/test_live_input.sh`
+- `PORT_PLAN.md`
+- `port/README.md`
+- `port/docs/ARCHITECTURE.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+
+Next reading
+- `port/platform_sdl.c`
+- `port/src/td2_scheduler.c`
+- `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
 
 Date: 2026-04-01
 
@@ -3205,7 +3454,7 @@ Next reading
 
 - Source: `rom_analysis/docs/validation_gates.md`
 - Bundle copy: `sources/rom_analysis/docs/validation_gates.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Bounded pass/fail policy for regression and callback checks.
 
 ---
@@ -3332,7 +3581,9 @@ callback families and handoffs for the three target rails, even when a given
 design pack has no trusted `main_visible.ppm` golden. It also now proves that
 menu/gameplay are loading `scheduler_contract` state from
 `rom_analysis/docs/scheduler_rail_contracts.jsonc` instead of hardcoded C
-anchors.
+anchors. For `gameplay_live_race_mid`, it now also proves that the measured
+visible-scanline overlay is attached and that key framebuffer pixels stay on
+the restored sky/mountain/roadside split.
 
 ## 6) Input Mutation Smoke
 
@@ -3355,7 +3606,28 @@ This validates the first runtime input surface on top of the scheduler rails:
 This is intentionally narrow. It proves the runtime is no longer input-blind
 for menu/gameplay rails before the later gameplay-state mutators are promoted.
 
-## 7) Practical Gate Policy
+## 7) Live SDL Input Smoke
+
+Runner:
+
+```sh
+./port/test_live_input.sh
+```
+
+This validates the first real SDL-host input path on top of the same
+mutator/history surface already exercised by `--input-script`:
+
+- keyboard mapping into SNES `JOY1` bits
+- SDL game-controller mapping into the same `JOY1` bits
+- live-input history driving the traced no-opponent menu handoff
+- live current input merging with scripted prehistory on the measured
+  default-rival `2050..2088` corridor
+
+This gate is intentionally scoped to the shared input surface, not to broad
+interactive gameplay claims. It proves the SDL host is no longer bypassing the
+validated route/mutator layer.
+
+## 8) Practical Gate Policy
 
 For each archaeology lane:
 
@@ -3369,7 +3641,7 @@ For each archaeology lane:
 
 - Source: `validation/README.md`
 - Bundle copy: `sources/validation/README.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Current Mesen capture, probe, and export workflow.
 
 ---
@@ -3421,6 +3693,8 @@ That smoke now validates the first native synthetic PPU checkpoint:
   intro no-input, menu with input, and reproducible gameplay seed
 - validate the promoted runtime input mutations on top of those rails,
   including the measured post-`2050` default-rival `A` window
+- validate the SDL live-input host path against that same mutator/history
+  surface
 
 Current bootstrap fixtures:
 
@@ -3496,6 +3770,20 @@ Current scheduler-backed promoted rails:
 - `menu_gameplay_entry`: `tools/out/design_frame1500_car_select`
 - `gameplay_live_race_mid`: `tools/out/design_lane3_live_race_mid_frame0_native`
 
+Current promoted gameplay scanline overlay:
+
+- `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
+- consumed by the runtime only for the promoted
+  `gameplay_live_race_mid` rail
+- current attached fields:
+  - `main_layers`
+  - `bg1_hscroll/bg1_vscroll`
+  - `bg2_hscroll/bg2_vscroll`
+  - `bg3_hscroll/bg3_vscroll`
+- practical effect:
+  - the live-race SDL output no longer flattens the horizon/shoulders into one
+    frame-end road presentation
+
 The non-intro rails now load from:
 
 - `rom_analysis/docs/scheduler_rail_contracts.jsonc`
@@ -3504,15 +3792,61 @@ Current runtime input surface:
 
 - `--input-script <windows>` uses the same window syntax as the Mesen-side
   wrappers
+- live SDL keyboard/controller input is recorded onto the same scheduler
+  surface and merged with scripted windows instead of bypassing them
 - current buttons mirror into `state_0960`
 - the traced menu no-opponent route mutates the downstream
   `$1C70 / $1C76` handoff on `menu_gameplay_entry`
 - the default-rival `A` lane now also mutates the promoted exact
   `2052..2088` window plus later checkpoints `2104` and `2125`
+- keyboard mapping:
+  - `Z/X/A/S` -> `B/A/Y/X`
+  - `Q/W` -> `L/R`
+  - `Enter` -> `Start`
+  - `Tab` or `Backspace` -> `Select`
+  - arrow keys -> d-pad
+- controller mapping:
+  - south/east/west/north face buttons -> `B/A/Y/X`
+  - shoulders -> `L/R`
+  - start/back -> `Start/Select`
+  - d-pad or left stick -> directions
 - first design-review PNG bundle for the original promoted anchors:
   `tools/out/port_input_mutation_anchor_pngs_20260401/`
 - follow-up design-review PNG bundle for the densified `2054..2088` window:
   `tools/out/port_input_mutation_window2054_2088_pngs_20260401/`
+- current local-only live-input review bundle:
+  `tools/out/port_live_input_runtime_pngs_20260401/`
+  - now includes the scanline-aware gameplay sequence
+    `gameplay_live_a_frame_00000.png` through
+    `gameplay_live_a_frame_00003.png`
+  - `gameplay_live_a_frame0003.png` remains the design-stable alias for the
+    latest promoted gameplay PNG
+
+Current live-input smoke:
+
+```sh
+./port/test_live_input.sh
+```
+
+That proves:
+
+- pure SDL keyboard mapping
+- pure SDL controller mapping
+- live-input history driving the traced no-opponent menu handoff
+- scripted prehistory plus live `A` merging on the default-rival corridor
+
+The scheduler smoke also now proves:
+
+- the live-race scanline profile is loaded with the expected line count and
+  selected `main_layers/bg2/bg3` samples
+- selected gameplay framebuffer pixels stay on the restored sky/mountain/grass
+  colors, so the scanline-aware horizon fix does not silently regress
+
+Current practical boundary:
+
+- if a route depends on decisions that happen before the loaded design-pack
+  base frame, fully live reproduction on that bundle still needs earlier
+  seeds or scripted prehistory
 
 Post-push wiki refresh wrapper:
 
@@ -5700,7 +6034,7 @@ Notes:
 
 - Source: `tools/README.md`
 - Bundle copy: `sources/tools/README.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Promoted extraction and analysis tooling surface.
 
 ---
@@ -6390,7 +6724,7 @@ This should be treated as the scene's static setup, not a guarantee of exact fra
 
 - Source: `port/README.md`
 - Bundle copy: `sources/port/README.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: SDL runtime scope, usage, and current sequence playback path.
 
 ---
@@ -6422,7 +6756,11 @@ Current checkpoint:
 - contract-fed scheduler rails for menu/gameplay playback in
   `../rom_analysis/docs/scheduler_rail_contracts.jsonc`
 - scripted input windows via `--input-script`
-- first input-driven mutations on top of scheduler rails:
+- shared scripted/live input mutator surface on top of scheduler rails
+- measured visible-scanline gameplay overlay for
+  `gameplay_live_race_mid`, loaded from
+  `../tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
+- first input-driven mutations on top of that shared surface:
   current `JOY1` sample mirrored into runtime state as `state_0960`, plus the
   traced no-opponent menu handoff on `menu_gameplay_entry`
 - promoted post-`2050` default-rival `A` anchors on `menu_gameplay_entry`
@@ -6485,6 +6823,14 @@ Direct scheduler playback with scripted input:
   --frames 1
 ```
 
+Interactive SDL playback:
+
+```sh
+./port/build/td2_port \
+  --scene-dir tools/out/design_frame1500_car_select \
+  --scheduler-profile menu_gameplay_entry
+```
+
 Notes:
 
 - `../zelda3/` and `../sentrysearch/` are local investigation aids only and
@@ -6505,7 +6851,9 @@ Notes:
   three promoted scheduler rails:
   intro no-input, menu with input, and the reproducible live-race gameplay
   seed. Menu and gameplay now prove `scheduler_contract` state coming from
-  the shared JSONC contract, not hardcoded C anchors.
+  the shared JSONC contract, not hardcoded C anchors. The gameplay rail also
+  proves that its scanline profile is loaded and that key framebuffer pixels
+  preserve the restored sky/mountain/roadside split.
 - `make -C port test` now also runs `test_input_mutation.sh`, which proves:
   - gameplay `--input-script` buttons mirror into `state_0960`
   - the traced menu no-opponent route mutates the downstream
@@ -6513,8 +6861,34 @@ Notes:
   - the default-rival `A` lane mutates promoted post-`2050` anchors over
     `state_09a2/state_09a8/state_137c` and
     `dp_0020/dp_0022/dp_0053/dp_0054`
+- `make -C port test` now also runs `test_live_input.sh`, which proves:
+  - SDL keyboard mapping into SNES `JOY1` bits
+  - SDL game-controller mapping into the same `JOY1` bits
+  - live-input history can drive the traced no-opponent menu handoff
+  - live current input and scripted prehistory merge on the same mutator
+    surface for the default-rival `A` corridor
 - `--dump-prefix` now emits `PATH_00000.ppm` and `PATH_00000.png`; compare
   dumps also emit PNG siblings for `_reference`, `_diff`, and `_compare`.
+- interactive keyboard mapping:
+  - `Z/X/A/S` -> `B/A/Y/X`
+  - `Q/W` -> `L/R`
+  - `Enter` -> `Start`
+  - `Tab` or `Backspace` -> `Select`
+  - arrow keys -> d-pad
+- interactive controller mapping:
+  - south/east/west/north face buttons -> `B/A/Y/X`
+  - shoulders -> `L/R`
+  - start/back -> `Start/Select`
+  - d-pad or left stick -> directions
+- current practical boundary: if a menu/gameplay branch depends on decisions
+  that happen before the design-pack base frame, fully live reproduction on
+  that bundle still needs earlier seeds or scripted prehistory. Live SDL input
+  now shares the same mutator surface, but it does not fabricate missing
+  history before the loaded bundle.
+- current gameplay-specific boundary: only the promoted
+  `gameplay_live_race_mid` seed is scanline-aware. Later gameplay phases still
+  need their own promoted scanline contracts instead of falling back to one
+  flat frame-end `ppu_state`.
 - `tools/push_checkpoint.sh` is the repo-local wrapper for the post-push step:
   it pushes the current checkpoint, refreshes the curated wiki in an isolated
   temporary `git worktree`, and issues a follow-up wiki refresh commit/push
@@ -6526,7 +6900,7 @@ Notes:
 
 - Source: `rom_analysis/README.md`
 - Bundle copy: `sources/rom_analysis/README.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Top-level archaeology tree orientation.
 
 ---
@@ -6608,7 +6982,7 @@ make -C tools bank30-registry
 
 - Source: `rom_analysis/docs/bank30_decompression_report.md`
 - Bundle copy: `sources/rom_analysis/docs/bank30_decompression_report.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Current registry-backed read of bank30 markers and the active unresolved queue.
 
 ---
@@ -6795,7 +7169,7 @@ Observed decode geometry:
 
 - Source: `rom_analysis/docs/bank30_b1f9_forced_lane_stall.md`
 - Bundle copy: `sources/rom_analysis/docs/bank30_b1f9_forced_lane_stall.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Why the current headless `B1F9` forcing lane is low-yield for `EE7F`.
 
 ---
@@ -6891,7 +7265,7 @@ observe the `EE7F` selector. It is a later worker loop centered on
 
 - Source: `rom_analysis/docs/intro_00_8029_next_agent_handoff.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_00_8029_next_agent_handoff.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Active handoff for the later attract continuation lane.
 
 ---
@@ -6996,7 +7370,7 @@ The open question is no longer "which producer owns this?" It is:
 
 - Source: `rom_analysis/docs/intro_01_9fe5_window_986_1093.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_01_9fe5_window_986_1093.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Consolidated visual-contract note for the bridge-visible intro block.
 
 ---
@@ -7111,7 +7485,7 @@ Reading:
 
 - Source: `rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Producer-side activity narrowing for the post-1093 window.
 
 ---
@@ -7303,7 +7677,7 @@ Use those boundaries explicitly in the Lane 2 follow-up:
 
 - Source: `rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Late 00:8029 blob rotation report and selector narrowing.
 
 ---
@@ -7518,7 +7892,7 @@ Reading:
 
 - Source: `rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md`
 - Bundle copy: `sources/rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: First promoted tilemap-to-ROM provenance window.
 
 ---
@@ -7545,7 +7919,7 @@ Reading:
 
 - Source: `rom_analysis/docs/mesen_debugger_design_workbench.md`
 - Bundle copy: `sources/rom_analysis/docs/mesen_debugger_design_workbench.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Design-pack workflow and extraction surface.
 
 ---
@@ -7746,7 +8120,7 @@ make -C tools l001210-trace-summary
 
 - Source: `rom_analysis/docs/snes_runtime_algorithm_human.md`
 - Bundle copy: `sources/rom_analysis/docs/snes_runtime_algorithm_human.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Human-readable interpretation of the front-end and handoff corridor.
 
 ---
@@ -7922,7 +8296,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md`
 - Bundle copy: `sources/rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Car-presentation BG2 ownership without treating it as gameplay.
 
 ---
@@ -7965,7 +8339,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_frontend_top_menu_labels.md`
 - Bundle copy: `sources/tools/out/snes_frontend_top_menu_labels.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Closed rendered label set for the top signboard menu.
 
 ---
@@ -7997,7 +8371,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_frontend_rival_selection_grid.md`
 - Bundle copy: `sources/tools/out/snes_frontend_rival_selection_grid.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Rendered and structural read of the 2x2 opponent grid.
 
 ---
@@ -8063,7 +8437,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_select_opponent_organic_default_path.md`
 - Bundle copy: `sources/tools/out/snes_select_opponent_organic_default_path.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Recovered no-force path into the default rival corridor.
 
 ---
@@ -8112,7 +8486,7 @@ Inject `right+down` only after `01:C1D2` is already live so `$1C70` can leave
 
 - Source: `tools/out/snes_frontend_select_opponent_mode_split.md`
 - Bundle copy: `sources/tools/out/snes_frontend_select_opponent_mode_split.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Separates rival slots from the no-opponent stopwatch branch.
 
 ---
@@ -8162,7 +8536,7 @@ Inject `right+down` only after `01:C1D2` is already live so `$1C70` can leave
 
 - Source: `rom_analysis/docs/lane3_today_work_brief.md`
 - Bundle copy: `sources/rom_analysis/docs/lane3_today_work_brief.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Current gameplay archaeology state and human-support queue.
 
 ---
@@ -8483,7 +8857,7 @@ without redoing the same work.
 
 - Source: `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
 - Bundle copy: `sources/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Primary gameplay-oriented handoff note.
 
 ---
@@ -9064,7 +9438,7 @@ The question is now narrower:
 
 - Source: `rom_analysis/docs/lane3_attract_demo_boundary.md`
 - Bundle copy: `sources/rom_analysis/docs/lane3_attract_demo_boundary.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Boundary note explaining why some old seeds were misleading.
 
 ---
@@ -9125,7 +9499,7 @@ evidence looked like "menu" in one pass and "gameplay" in another.
 
 - Source: `rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Promoted power-on route for reproducible gameplay entry.
 
 ---
@@ -9283,7 +9657,7 @@ evidence looked like "menu" in one pass and "gameplay" in another.
 
 - Source: `rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: First promoted late gameplay pair from the live-entry route, with stable artifact bundles for both phases.
 
 ---
@@ -9445,7 +9819,7 @@ Primary wiki/gallery image refs for this pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Bounded live-entry follow-up that isolates traffic emergence as a cleaner OBJ-side event.
 
 ---
@@ -9597,7 +9971,7 @@ Designer-facing anchors for the promoted pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Asset-first gameplay taxonomy that maps BG/OBJ buckets to tracing targets.
 
 ---
@@ -9676,7 +10050,7 @@ Designer-facing anchors for the promoted pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Savestate-backed gameplay extraction that now closes native `BG2` road and `BG3` scenery surfaces.
 
 ---
@@ -9820,7 +10194,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
 - Bundle copy: `sources/tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Generated BG1/BG2/OBJ compare for the first late live-entry gameplay pair.
 
 ---
@@ -9872,7 +10246,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md`
 - Bundle copy: `sources/tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Generated compare showing the red traffic car as the current best OBJ-side live-entry event.
 
 ---
@@ -9923,7 +10297,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_race_mid_asset_focus.md`
 - Bundle copy: `sources/tools/out/lane3_live_race_mid_asset_focus.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Generated gameplay inventory with supporting frame/layer artifact references.
 
 ---
@@ -9990,7 +10364,7 @@ native PNGs:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Human note for preserved live-race savestates and controls.
 
 ---
@@ -10204,7 +10578,7 @@ native PNGs:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Video-backed still capture summary for the live-race lane.
 
 ---
@@ -10292,7 +10666,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Named still pack for the checkpoint service/post corridor, partial-results screen, and restart back into driving.
 
 ---
@@ -10364,7 +10738,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Longplay-backed visual anchors for night, bridge, mountain-wall, tunnel, and rain.
 
 ---
@@ -10437,7 +10811,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Longplay-backed snow-driving anchors starting at the one-hour mark.
 
 ---
@@ -10502,7 +10876,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Boundary note showing why phase-4 snow is now a savestate-first capture target.
 
 ---
@@ -10589,7 +10963,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Longplay-backed arrest/prison ending pack and high-score handoff.
 
 ---
@@ -10653,7 +11027,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Layer composition read for a real gameplay seed.
 
 ---
@@ -10785,7 +11159,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Producer-side narrowing for the gameplay road/world path.
 
 ---
@@ -10934,7 +11308,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Static role split for the narrowed gameplay cluster.
 
 ---
@@ -11062,7 +11436,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Semantic ownership pass for post-handoff gameplay fields.
 
 ---
@@ -11187,7 +11561,7 @@ Optional but useful:
 
 - Source: `rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md`
 - Bundle copy: `sources/rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Bounded regression read for current intro/front-end parity in the C/SDL runtime.
 
 ---
@@ -11257,7 +11631,7 @@ Regression summary:
 
 - Source: `rom_analysis/docs/mesen_instrumented_backend_architecture.md`
 - Bundle copy: `sources/rom_analysis/docs/mesen_instrumented_backend_architecture.md`
-- Last updated: `2026-04-01 15:40`
+- Last updated: `2026-04-01 16:36`
 - Note: Architecture note for the experimental Mesen backend path.
 
 ---

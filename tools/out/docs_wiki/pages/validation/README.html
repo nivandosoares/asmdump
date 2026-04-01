@@ -36,7 +36,7 @@
         <p class="doc-note">Current Mesen capture, probe, and export workflow.</p>
         <div class="doc-meta">
           <span>Source: <code>validation/README.md</code></span>
-          <span class="update-pill">Last updated 2026-04-01 15:40</span>
+          <span class="update-pill">Last updated 2026-04-01 16:36</span>
           <a href="../../../../../validation/README.md">Open Raw Markdown</a>
         </div>
       </header>
@@ -54,7 +54,7 @@
 <pre><code class="language-sh">make -C port
 make -C port test</code></pre>
 <p>That smoke now validates the first native synthetic PPU checkpoint:</p>
-<ul><li>load a promoted design pack</li><li>seed <code>VRAM/CGRAM/OAM</code> shadow state</li><li>seed visible layer, Mode 7, and OBJ registers from <code>ppu_state.json</code></li><li>dump a headless frame</li><li>compare it against the extracted <code>layers/main_visible.ppm</code> golden</li><li>generate the side-by-side compare bundle for the same promoted fixtures</li><li>validate the minimal scheduler across the three promoted rails: intro no-input, menu with input, and reproducible gameplay seed</li><li>validate the promoted runtime input mutations on top of those rails, including the measured post-<code>2050</code> default-rival <code>A</code> window</li></ul>
+<ul><li>load a promoted design pack</li><li>seed <code>VRAM/CGRAM/OAM</code> shadow state</li><li>seed visible layer, Mode 7, and OBJ registers from <code>ppu_state.json</code></li><li>dump a headless frame</li><li>compare it against the extracted <code>layers/main_visible.ppm</code> golden</li><li>generate the side-by-side compare bundle for the same promoted fixtures</li><li>validate the minimal scheduler across the three promoted rails: intro no-input, menu with input, and reproducible gameplay seed</li><li>validate the promoted runtime input mutations on top of those rails, including the measured post-<code>2050</code> default-rival <code>A</code> window</li><li>validate the SDL live-input host path against that same mutator/history surface</li></ul>
 <p>Current bootstrap fixtures:</p>
 <ul><li><code>port/assets/test_dump_frame300/design_pack</code></li><li><code>port/assets/test_dump_range_1086_1093/design_pack_range/frame_01086</code></li></ul>
 <p>Current exact-native parity fixtures:</p>
@@ -88,10 +88,20 @@ make -C port test</code></pre>
 <ul><li><code>port/assets/test_dump_range_1086_1093/design_pack_range/frame_01093</code></li></ul>
 <p>Current scheduler-backed promoted rails:</p>
 <ul><li><code>intro_noinput</code>: <code>tools/out/design_frame986</code> through the validated <code>1093 -&gt; 1102 -&gt; 1117</code> callback handoff</li><li><code>menu_gameplay_entry</code>: <code>tools/out/design_frame1500_car_select</code></li><li><code>gameplay_live_race_mid</code>: <code>tools/out/design_lane3_live_race_mid_frame0_native</code></li></ul>
+<p>Current promoted gameplay scanline overlay:</p>
+<ul><li><code>tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json</code></li><li>consumed by the runtime only for the promoted <code>gameplay_live_race_mid</code> rail</li><li>current attached fields:</li><li><code>main_layers</code></li><li><code>bg1_hscroll/bg1_vscroll</code></li><li><code>bg2_hscroll/bg2_vscroll</code></li><li><code>bg3_hscroll/bg3_vscroll</code></li><li>practical effect:</li><li>the live-race SDL output no longer flattens the horizon/shoulders into one frame-end road presentation</li></ul>
 <p>The non-intro rails now load from:</p>
 <ul><li><code>rom_analysis/docs/scheduler_rail_contracts.jsonc</code></li></ul>
 <p>Current runtime input surface:</p>
-<ul><li><code>--input-script &lt;windows&gt;</code> uses the same window syntax as the Mesen-side wrappers</li><li>current buttons mirror into <code>state_0960</code></li><li>the traced menu no-opponent route mutates the downstream <code>$1C70 / $1C76</code> handoff on <code>menu_gameplay_entry</code></li><li>the default-rival <code>A</code> lane now also mutates the promoted exact <code>2052..2088</code> window plus later checkpoints <code>2104</code> and <code>2125</code></li><li>first design-review PNG bundle for the original promoted anchors: <code>tools/out/port_input_mutation_anchor_pngs_20260401/</code></li><li>follow-up design-review PNG bundle for the densified <code>2054..2088</code> window: <code>tools/out/port_input_mutation_window2054_2088_pngs_20260401/</code></li></ul>
+<ul><li><code>--input-script &lt;windows&gt;</code> uses the same window syntax as the Mesen-side wrappers</li><li>live SDL keyboard/controller input is recorded onto the same scheduler surface and merged with scripted windows instead of bypassing them</li><li>current buttons mirror into <code>state_0960</code></li><li>the traced menu no-opponent route mutates the downstream <code>$1C70 / $1C76</code> handoff on <code>menu_gameplay_entry</code></li><li>the default-rival <code>A</code> lane now also mutates the promoted exact <code>2052..2088</code> window plus later checkpoints <code>2104</code> and <code>2125</code></li><li>keyboard mapping:</li><li><code>Z/X/A/S</code> -&gt; <code>B/A/Y/X</code></li><li><code>Q/W</code> -&gt; <code>L/R</code></li><li><code>Enter</code> -&gt; <code>Start</code></li><li><code>Tab</code> or <code>Backspace</code> -&gt; <code>Select</code></li><li>arrow keys -&gt; d-pad</li><li>controller mapping:</li><li>south/east/west/north face buttons -&gt; <code>B/A/Y/X</code></li><li>shoulders -&gt; <code>L/R</code></li><li>start/back -&gt; <code>Start/Select</code></li><li>d-pad or left stick -&gt; directions</li><li>first design-review PNG bundle for the original promoted anchors: <code>tools/out/port_input_mutation_anchor_pngs_20260401/</code></li><li>follow-up design-review PNG bundle for the densified <code>2054..2088</code> window: <code>tools/out/port_input_mutation_window2054_2088_pngs_20260401/</code></li><li>current local-only live-input review bundle: <code>tools/out/port_live_input_runtime_pngs_20260401/</code></li><li>now includes the scanline-aware gameplay sequence <code>gameplay_live_a_frame_00000.png</code> through <code>gameplay_live_a_frame_00003.png</code></li><li><code>gameplay_live_a_frame0003.png</code> remains the design-stable alias for the latest promoted gameplay PNG</li></ul>
+<p>Current live-input smoke:</p>
+<pre><code class="language-sh">./port/test_live_input.sh</code></pre>
+<p>That proves:</p>
+<ul><li>pure SDL keyboard mapping</li><li>pure SDL controller mapping</li><li>live-input history driving the traced no-opponent menu handoff</li><li>scripted prehistory plus live <code>A</code> merging on the default-rival corridor</li></ul>
+<p>The scheduler smoke also now proves:</p>
+<ul><li>the live-race scanline profile is loaded with the expected line count and selected <code>main_layers/bg2/bg3</code> samples</li><li>selected gameplay framebuffer pixels stay on the restored sky/mountain/grass colors, so the scanline-aware horizon fix does not silently regress</li></ul>
+<p>Current practical boundary:</p>
+<ul><li>if a route depends on decisions that happen before the loaded design-pack base frame, fully live reproduction on that bundle still needs earlier seeds or scripted prehistory</li></ul>
 <p>Post-push wiki refresh wrapper:</p>
 <pre><code class="language-sh">./tools/push_checkpoint.sh</code></pre>
 <p>That wrapper pushes the current checkpoint, rebuilds the curated docs wiki in an isolated temporary <code>git worktree</code>, and creates a follow-up wiki refresh commit/push when the generated wiki changes. Because the refresh happens in a clean worktree, unrelated local dirty files no longer block wiki publication.</p>
