@@ -1,26 +1,32 @@
 #ifndef TD2_PPU_H
 #define TD2_PPU_H
 
-#include "td2_types.h"
+#include <stdbool.h>
+#include <stdint.h>
 
-uint32_t snes_cgram_word_to_argb(uint16_t word);
+#include "td2_io.h"
 
-void snes_bg_scene_free(SnesBgScene *scene);
-bool snes_bg_scene_load(
-    const char *vram_path,
-    const char *cgram_path,
-    const char *state_path,
-    const char *oam_path,
-    SnesBgScene *scene
+#define TD2_WRAM_BYTES 0x20000
+
+typedef struct {
+    uint8_t vram[TD2_VRAM_BYTES];
+    uint8_t cgram[TD2_CGRAM_BYTES];
+    uint8_t oam[TD2_OAM_BYTES];
+    uint8_t bg_mode;
+    uint8_t main_screen_layers;
+    uint8_t sub_screen_layers;
+    uint8_t brightness;
+    bool forced_blank;
+    unsigned frame_number;
+    bool has_reference_frame;
+} Td2PpuState;
+
+void td2_ppu_reset(Td2PpuState* ppu);
+void td2_ppu_seed_from_design_pack(Td2PpuState* ppu, const Td2DesignPack* pack);
+void td2_ppu_render_reference(
+    const Td2PpuState* ppu,
+    const Td2DesignPack* pack,
+    uint32_t* framebuffer_argb
 );
 
-/* Load per-scanline Mode 7 parameters from a JSON sidecar.
- * The sidecar is expected next to the ppu_state.json as
- * ppu_state_visible.json, containing an array of per-scanline
- * matrix/scroll overrides. Returns true if loaded, false if
- * the file doesn't exist or parsing fails (non-fatal). */
-bool snes_bg_scene_load_scanline_params(const char *state_path, SnesBgScene *scene);
-
-void render_snes_bg_scene(AppState *app);
-
-#endif /* TD2_PPU_H */
+#endif

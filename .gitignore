@@ -27,3 +27,6 @@ tools/__pycache__/
 port/build/td2_port
 .aider*
 .env
+/sentrysearch/
+/zelda3/
+/the_duel_longplay.mp4

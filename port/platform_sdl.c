@@ -1,81 +1,159 @@
 #include "platform_sdl.h"
-#include <SDL.h>
+
+#include <SDL2/SDL.h>
 #include <stdio.h>
+#include <string.h>
 
-static SDL_Window *window = NULL;
-static SDL_Renderer *renderer = NULL;
-static SDL_Texture *texture = NULL;
-static int win_w = 640, win_h = 560;
+#include "td2_io.h"
 
-bool platform_init(int width, int height) {
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0) {
-        fprintf(stderr, "SDL_Init error: %s\n", SDL_GetError());
+static void set_error(char* error, size_t error_size, const char* message) {
+    if (error_size == 0) {
+        return;
+    }
+    snprintf(error, error_size, "%s", message);
+}
+
+bool platform_sdl_init(
+    PlatformSdl* platform,
+    const char* title,
+    int window_scale,
+    bool headless,
+    char* error,
+    size_t error_size
+) {
+    memset(platform, 0, sizeof(*platform));
+    platform->headless = headless;
+    platform->window_scale = window_scale > 0 ? window_scale : 3;
+
+    if (headless) {
+        return true;
+    }
+
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0) {
+        snprintf(error, error_size, "SDL_Init failed: %s", SDL_GetError());
         return false;
     }
 
-    window = SDL_CreateWindow("TD2 Port", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                              width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    if (!window) {
-        fprintf(stderr, "SDL_CreateWindow error: %s\n", SDL_GetError());
+    platform->window = SDL_CreateWindow(
+        title,
+        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
+        TD2_FRAME_WIDTH * platform->window_scale,
+        TD2_FRAME_HEIGHT * platform->window_scale,
+        SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+    );
+    if (platform->window == NULL) {
+        snprintf(error, error_size, "SDL_CreateWindow failed: %s", SDL_GetError());
+        platform_sdl_shutdown(platform);
         return false;
     }
 
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (!renderer) {
-        fprintf(stderr, "SDL_CreateRenderer error: %s\n", SDL_GetError());
+    platform->renderer = SDL_CreateRenderer(
+        platform->window,
+        -1,
+        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
+    );
+    if (platform->renderer == NULL) {
+        snprintf(error, error_size, "SDL_CreateRenderer failed: %s", SDL_GetError());
+        platform_sdl_shutdown(platform);
         return false;
     }
 
-    // internal framebuffer 256x224
-    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_STREAMING, 256, 224);
-    if (!texture) {
-        fprintf(stderr, "SDL_CreateTexture error: %s\n", SDL_GetError());
+    SDL_RenderSetLogicalSize(platform->renderer, TD2_FRAME_WIDTH, TD2_FRAME_HEIGHT);
+    platform->texture = SDL_CreateTexture(
+        platform->renderer,
+        SDL_PIXELFORMAT_ARGB8888,
+        SDL_TEXTUREACCESS_STREAMING,
+        TD2_FRAME_WIDTH,
+        TD2_FRAME_HEIGHT
+    );
+    if (platform->texture == NULL) {
+        snprintf(error, error_size, "SDL_CreateTexture failed: %s", SDL_GetError());
+        platform_sdl_shutdown(platform);
         return false;
     }
 
-    win_w = width; win_h = height;
+    set_error(error, error_size, "");
     return true;
 }
 
-void platform_shutdown(void) {
-    if (texture) SDL_DestroyTexture(texture);
-    if (renderer) SDL_DestroyRenderer(renderer);
-    if (window) SDL_DestroyWindow(window);
-    SDL_Quit();
+void platform_sdl_shutdown(PlatformSdl* platform) {
+    if (platform->texture != NULL) {
+        SDL_DestroyTexture(platform->texture);
+    }
+    if (platform->renderer != NULL) {
+        SDL_DestroyRenderer(platform->renderer);
+    }
+    if (platform->window != NULL) {
+        SDL_DestroyWindow(platform->window);
+    }
+    if (!platform->headless) {
+        SDL_Quit();
+    }
+    memset(platform, 0, sizeof(*platform));
 }
 
-static bool translate_sdl(SDL_Event *e, PlatformEvent *out) {
-    switch (e->type) {
-    case SDL_QUIT:
-        out->type = PLATFORM_EVENT_QUIT;
-        return true;
-    case SDL_KEYDOWN:
-        if (e->key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
-            out->type = PLATFORM_EVENT_QUIT;
-            return true;
+void platform_sdl_poll_events(PlatformSdl* platform) {
+    SDL_Event event;
+
+    if (platform->headless) {
+        return;
+    }
+
+    while (SDL_PollEvent(&event) != 0) {
+        if (event.type == SDL_QUIT) {
+            platform->quit_requested = true;
         }
-        break;
+        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
+            platform->quit_requested = true;
+        }
     }
-    return false;
 }
 
-bool platform_poll_event(PlatformEvent *ev) {
-    SDL_Event e;
-    while (SDL_PollEvent(&e)) {
-        if (translate_sdl(&e, ev)) return true;
+bool platform_sdl_present(
+    PlatformSdl* platform,
+    const uint32_t* framebuffer_argb,
+    int width,
+    int height,
+    char* error,
+    size_t error_size
+) {
+    if (platform->headless) {
+        return true;
     }
-    return false;
+
+    if (width != TD2_FRAME_WIDTH || height != TD2_FRAME_HEIGHT) {
+        snprintf(error, error_size, "unexpected framebuffer size %dx%d", width, height);
+        return false;
+    }
+
+    if (SDL_UpdateTexture(platform->texture, NULL, framebuffer_argb, width * (int)sizeof(uint32_t)) != 0) {
+        snprintf(error, error_size, "SDL_UpdateTexture failed: %s", SDL_GetError());
+        return false;
+    }
+
+    SDL_RenderClear(platform->renderer);
+    if (SDL_RenderCopy(platform->renderer, platform->texture, NULL, NULL) != 0) {
+        snprintf(error, error_size, "SDL_RenderCopy failed: %s", SDL_GetError());
+        return false;
+    }
+    SDL_RenderPresent(platform->renderer);
+
+    if (error_size > 0) {
+        error[0] = '\0';
+    }
+    return true;
 }
 
-void platform_present_framebuffer(void) {
-    extern uint8_t framebuffer_pixels[256*224*3];
-    SDL_UpdateTexture(texture, NULL, framebuffer_pixels, 256*3);
-    SDL_RenderClear(renderer);
-    SDL_Rect dst = {0,0, win_w, win_h};
-    SDL_RenderCopy(renderer, texture, NULL, &dst);
-    SDL_RenderPresent(renderer);
-}
+void platform_sdl_sleep_for_frame(PlatformSdl* platform, uint32_t frame_start_ticks) {
+    uint32_t elapsed;
 
-double platform_time_seconds(void) {
-    return SDL_GetTicks() / 1000.0;
+    if (platform->headless) {
+        return;
+    }
+
+    elapsed = SDL_GetTicks() - frame_start_ticks;
+    if (elapsed < 16U) {
+        SDL_Delay(16U - elapsed);
+    }
 }

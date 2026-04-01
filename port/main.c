@@ -1,48 +1,159 @@
-#include <SDL.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include "platform_sdl.h"
-#include "framebuffer.h"
+#include <SDL2/SDL.h>
 
-int main(int argc, char **argv) {
-    if (!platform_init(640, 560)) {
-        fprintf(stderr, "Failed to init platform\n");
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "platform_sdl.h"
+#include "td2_runtime.h"
+
+static void print_usage(const char* argv0) {
+    fprintf(stderr,
+        "Usage: %s [options]\n"
+        "\n"
+        "Options:\n"
+        "  --scene-dir PATH    Design-pack directory to load\n"
+        "  --dump-prefix PATH  Write PPM frames to PATH_00000.ppm...\n"
+        "  --frames N          Run a bounded frame count\n"
+        "  --scale N           Window scale for interactive mode\n"
+        "  --headless          Skip SDL window creation\n"
+        "  --help              Show this help\n",
+        argv0
+    );
+}
+
+static bool parse_uint(const char* text, unsigned* value) {
+    char* end = NULL;
+    unsigned long parsed = strtoul(text, &end, 10);
+
+    if (text[0] == '\0' || end == NULL || *end != '\0') {
+        return false;
+    }
+    *value = (unsigned)parsed;
+    return true;
+}
+
+int main(int argc, char** argv) {
+    Td2RuntimeConfig config;
+    Td2Runtime runtime;
+    PlatformSdl platform;
+    char error[256];
+    char frame_label[32];
+    unsigned i;
+
+    memset(&config, 0, sizeof(config));
+    config.scene_dir = "assets/test_dump_frame300/design_pack";
+    config.window_scale = 3;
+
+    for (i = 1; i < (unsigned)argc; i++) {
+        if (strcmp(argv[i], "--scene-dir") == 0 && i + 1 < (unsigned)argc) {
+            config.scene_dir = argv[++i];
+        } else if (strcmp(argv[i], "--dump-prefix") == 0 && i + 1 < (unsigned)argc) {
+            config.dump_prefix = argv[++i];
+        } else if (strcmp(argv[i], "--frames") == 0 && i + 1 < (unsigned)argc) {
+            if (!parse_uint(argv[++i], &config.frame_limit)) {
+                fprintf(stderr, "invalid frame count: %s\n", argv[i]);
+                return 1;
+            }
+        } else if (strcmp(argv[i], "--scale") == 0 && i + 1 < (unsigned)argc) {
+            unsigned scale = 0;
+            if (!parse_uint(argv[++i], &scale) || scale == 0U) {
+                fprintf(stderr, "invalid scale: %s\n", argv[i]);
+                return 1;
+            }
+            config.window_scale = (int)scale;
+        } else if (strcmp(argv[i], "--headless") == 0) {
+            config.headless = true;
+        } else if (strcmp(argv[i], "--help") == 0) {
+            print_usage(argv[0]);
+            return 0;
+        } else {
+            fprintf(stderr, "unknown argument: %s\n", argv[i]);
+            print_usage(argv[0]);
+            return 1;
+        }
+    }
+
+    if (config.headless && config.frame_limit == 0U) {
+        config.frame_limit = 1U;
+    }
+
+    if (!td2_runtime_init(&runtime, &config, error, sizeof(error))) {
+        fprintf(stderr, "runtime init failed: %s\n", error);
         return 1;
     }
 
-    const double target_dt = 1.0 / 60.0;
-    double accumulator = 0.0;
-    double last = platform_time_seconds();
-    bool running = true;
-
-    // simple state for debug
-    int frame_count = 0;
-
-    while (running) {
-        double now = platform_time_seconds();
-        double dt = now - last;
-        last = now;
-        accumulator += dt;
-
-        // poll input/events
-        PlatformEvent ev;
-        while (platform_poll_event(&ev)) {
-            if (ev.type == PLATFORM_EVENT_QUIT) running = false;
-        }
-
-        // fixed-timestep loop
-        while (accumulator >= target_dt) {
-            // update game logic here (empty for now)
-            accumulator -= target_dt;
-        }
-
-        // render placeholder content
-        render_framebuffer_placeholder(frame_count);
-        platform_present_framebuffer();
-
-        frame_count++;
+    if (!platform_sdl_init(
+            &platform,
+            "The Duel: Test Drive II - SNES Bootstrap",
+            config.window_scale,
+            config.headless,
+            error,
+            sizeof(error))) {
+        fprintf(stderr, "platform init failed: %s\n", error);
+        td2_runtime_free(&runtime);
+        return 1;
     }
 
-    platform_shutdown();
+    if (runtime.design_pack.has_frame_number) {
+        snprintf(frame_label, sizeof(frame_label), "%u", runtime.design_pack.frame_number);
+    } else {
+        snprintf(frame_label, sizeof(frame_label), "n/a");
+    }
+
+    fprintf(stdout,
+        "Loaded scene %s (frame=%s, bgMode=%u, main=%u, sub=%u)\n",
+        config.scene_dir,
+        frame_label,
+        runtime.design_pack.bg_mode,
+        runtime.design_pack.main_screen_layers,
+        runtime.design_pack.sub_screen_layers
+    );
+
+    while (!platform.quit_requested) {
+        uint32_t frame_start = 0;
+
+        if (!config.headless) {
+            frame_start = SDL_GetTicks();
+            platform_sdl_poll_events(&platform);
+            if (platform.quit_requested) {
+                break;
+            }
+        }
+
+        if (config.frame_limit != 0U && runtime.frame_counter >= config.frame_limit) {
+            break;
+        }
+
+        if (!td2_runtime_render_frame(&runtime, error, sizeof(error))) {
+            fprintf(stderr, "render failed: %s\n", error);
+            platform_sdl_shutdown(&platform);
+            td2_runtime_free(&runtime);
+            return 1;
+        }
+
+        if (config.dump_prefix != NULL) {
+            if (!td2_runtime_dump_frame(&runtime, config.dump_prefix, runtime.frame_counter, error, sizeof(error))) {
+                fprintf(stderr, "dump failed: %s\n", error);
+                platform_sdl_shutdown(&platform);
+                td2_runtime_free(&runtime);
+                return 1;
+            }
+        }
+
+        if (!platform_sdl_present(&platform, runtime.framebuffer, TD2_FRAME_WIDTH, TD2_FRAME_HEIGHT, error, sizeof(error))) {
+            fprintf(stderr, "present failed: %s\n", error);
+            platform_sdl_shutdown(&platform);
+            td2_runtime_free(&runtime);
+            return 1;
+        }
+
+        runtime.frame_counter++;
+        platform_sdl_sleep_for_frame(&platform, frame_start);
+    }
+
+    platform_sdl_shutdown(&platform);
+    td2_runtime_free(&runtime);
     return 0;
 }

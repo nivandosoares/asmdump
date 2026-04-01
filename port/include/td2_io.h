@@ -1,28 +1,48 @@
 #ifndef TD2_IO_H
 #define TD2_IO_H
 
-#include "td2_types.h"
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
-bool read_entire_file(const char *path, char **out_data, size_t *out_size);
-bool path_exists(const char *path);
-bool path_is_absolute(const char *path);
-char *dup_string(const char *value);
-char *resolve_manifest_path(const char *manifest_path, const char *relative_path);
-char *resolve_sibling_path(const char *path, const char *filename);
+#define TD2_FRAME_WIDTH 256
+#define TD2_FRAME_HEIGHT 224
+#define TD2_FRAME_PIXELS (TD2_FRAME_WIDTH * TD2_FRAME_HEIGHT)
+#define TD2_VRAM_BYTES 0x10000
+#define TD2_CGRAM_BYTES 0x0200
+#define TD2_OAM_BYTES 0x0220
 
-bool write_frame_ppm(const char *path, const uint32_t *framebuffer);
-bool image_data_load_ppm(const char *path, ImageData *out_image);
+typedef struct {
+    int width;
+    int height;
+    uint8_t* pixels;
+} Td2RgbImage;
 
-const char *json_find_value(const char *json, const char *key);
-const char *json_find_value_internal(const char *json, const char *key, bool log_errors);
-bool json_parse_int(const char *json, const char *key, int *out_value);
-bool json_parse_bool(const char *json, const char *key, bool *out_value);
-bool json_try_parse_int(const char *json, const char *key, int *out_value);
-bool json_try_parse_bool(const char *json, const char *key, bool *out_value);
+typedef struct {
+    char root_dir[1024];
+    char raw_dir[1024];
+    unsigned frame_number;
+    bool has_frame_number;
+    uint8_t bg_mode;
+    uint8_t main_screen_layers;
+    uint8_t sub_screen_layers;
+    uint8_t brightness;
+    bool forced_blank;
+    Td2RgbImage main_visible;
+    uint8_t* vram;
+    size_t vram_size;
+    uint8_t* cgram;
+    size_t cgram_size;
+    uint8_t* oam;
+    size_t oam_size;
+} Td2DesignPack;
 
-bool palette_bank_load_json(const char *path, PaletteBank *out_bank);
+bool td2_design_pack_load(
+    Td2DesignPack* pack,
+    const char* scene_dir,
+    char* error,
+    size_t error_size
+);
+void td2_design_pack_free(Td2DesignPack* pack);
 
-void palette_bank_free(PaletteBank *bank);
-void image_data_free(ImageData *image);
-
-#endif /* TD2_IO_H */
+#endif

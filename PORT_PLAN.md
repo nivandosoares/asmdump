@@ -2,9 +2,34 @@
 
 ## Goal
 
-Deliver a faithful PC port in C with SDL by rebuilding the game runtime around extracted ROM assets and verified game behavior.
+Deliver a faithful PC reimplementation in C with SDL by rebuilding the game
+runtime around extracted ROM assets, verified game behavior, and SNES-mimetic
+runtime state.
 
 This should be treated as a reimplementation, not a direct assembly-to-C translation.
+
+## Strategy Reset
+
+Reviewed on `2026-04-01`.
+
+The dev team changed the port target. The runtime must now mimic SNES-visible
+behavior directly while using SDL only as the native host/presentation layer.
+The attached local `zelda3/` repo is the reference architecture pattern for
+this approach, but it is not a vendored dependency and must stay outside our
+Git history.
+
+Reset rules:
+
+- stop carrying forward bespoke PC-side gameplay or physics substitutions
+  unless they are explicitly demoted to temporary debug viewers
+- keep archaeology, extraction, and validation lanes; they now feed a
+  side-by-side runtime/compare spine instead of a translated “new engine”
+- build the runtime around SNES-like `WRAM`, `VRAM`, `OAM`, `CGRAM`, `PPU`,
+  and later `APU/DMA/IRQ/NMI` state ownership
+- treat extracted `design_pack` / `main_visible.ppm` surfaces as bootstrap
+  fixtures and regression goldens, not the final rendering model
+- use the attached local `sentrysearch/` repo and `the_duel_longplay.mp4`
+  only as ignored investigation aids
 
 ## Why This Strategy
 
@@ -27,25 +52,36 @@ That means the fastest path to a shippable port is:
 ### Runtime
 
 - Language: C99 or C11
-- Platform layer: SDL2
+- Host platform: SDL2 window, timing, input, audio
 - Internal framebuffer: 256x224 at 60 Hz
-- Renderer: software rasterizer into an SDL texture
-- Audio: SDL audio callback / queued audio with a mixer layer
-- Simulation: fixed timestep, deterministic updates
-- Asset source: extracted ROM data converted to neutral files or compiled blobs
+- Core state: SNES-like `WRAM`, `VRAM`, `OAM`, `CGRAM`, visible PPU register
+  shadow, and later DMA / IRQ / NMI / APU ownership
+- Frame execution: deterministic callback/state stepping driven by validated
+  bank ownership
+- Renderer bootstrap: exact extracted visible layers for smoke and regression
+- Renderer target: synthetic PPU-style rasterization from raw state
+- Validation: optional side-by-side frame/state compare against ROM traces in
+  the Zelda3 pattern
+- Asset source: extracted ROM data converted to stable neutral files or
+  compiled blobs
 
 ### Code Modules
 
-- `platform/`: window, timing, input, audio, file I/O
-- `core/`: main loop, state machine, memory-like game state
-- `render/`: road rasterizer, sprite composition, HUD, palettes
-- `game/`: physics, AI, track progression, collisions, rules
-- `content/`: loaders for tracks, palettes, sprites, tilemaps, text, audio
+- `platform/`: SDL host shell, window, timing, input, audio
+- `runtime/`: frame step, scheduler, callback families, system state shadow
+- `ppu/`: BG/OBJ/Mode7/color math/HDMA-visible behavior
+- `apu/`: SPC-facing command/mixer path once promoted
+- `content/`: design-pack loaders, raw-state bundles, typed extracted assets
+- `contracts/`: frame/state compare, checkpoints, replay and diff helpers
 - `tools/`: ROM extraction, validation, diff, replay helpers
 
 ## Current Milestone Update
 
-Reviewed on 2026-02-28.
+Reviewed on `2026-04-01`.
+
+The archaeology evidence below still matters, but the old sampled/front-end
+runtime path is now demoted to a bootstrap/reference lane. It should feed the
+new SNES-mimetic runtime, not define the final port architecture.
 
 New useful state beyond the original plan:
 
@@ -168,11 +204,17 @@ New useful state beyond the original plan:
 
 Immediate next focus:
 
-1. Replace the later sampled attract segments with native front-end state machines one callback family at a time.
-2. Push backward into the unstable `958..977` bootstrap using the repeatable `L00A00C` scene builder, the carry-over state model from the end of Ballistic, and the decoded `0600` DMA queue manifest from frame `974`.
-3. Explain the `991..1093` `01:9FE5` presentation path in callback terms, especially the `991..997` visible-buffer rotation and the direct bridge-extracted `998..1093` continuation.
-4. Fix the final-screen composition gap after `982`, because the bridge-visible path is now native through frame `1093` but still not screenshot-accurate there.
-5. Keep building standalone extraction formats so later artist/mod tooling can sit on stable data instead of volatile reverse-engineering experiments.
+1. Replace the old `port/` scaffolds with a clean SNES-mimetic bootstrap:
+   SDL host, state shadow, design-pack loader, and bounded regression smoke.
+2. Replace reference-frame blitting with synthetic PPU rasterization from raw
+   `VRAM/CGRAM/OAM/PPU` state.
+3. Add a Zelda3-style side-by-side compare lane so callback/state drift is
+   reported automatically against trusted traces.
+4. Keep the intro archaeology lanes moving, but use them to ratify callback
+   families and renderer contracts rather than to justify sampled playback as
+   the end architecture.
+5. Use the local SentrySearch chunk workflow plus the longplay anchor packs to
+   keep gameplay investigation keyed to named windows and reusable query terms.
 
 ## Execution Reset
 

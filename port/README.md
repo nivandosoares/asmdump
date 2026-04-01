@@ -1,21 +1,47 @@
-Minimal PC port skeleton for The Duel: Test Drive II.
+TD2 SNES-mimetic runtime bootstrap.
 
-This folder contains a tiny SDL2-based runtime skeleton used as an iterative starting point for the port. It provides:
+This directory now tracks the new port direction: a faithful reimplementation
+that owns SNES-like runtime state and uses SDL only as the host/presentation
+layer. The immediate model is the local `../zelda3/` port:
 
-- a fixed 60Hz main loop
-- 256x224 internal framebuffer presented via an SDL texture and nearest scaling
-- basic input handling (keyboard, ESC quits)
-- a debug overlay via console output (FPS and state)
+- extracted asset packs are separate from the runtime
+- the runtime keeps WRAM/VRAM/OAM/CGRAM shadow state
+- SDL presents a native window and audio/input host
+- frame/state comparison stays a first-class validation path
 
-Build (requires SDL2 development libraries):
+Current checkpoint:
 
-  cd port
-  make
+- fixed 60 Hz SDL host loop
+- `Td2PpuState` shadow seeded from extracted design packs
+- exact-reference bootstrap that presents `main_visible.ppm`
+- headless frame dumping for regression smoke
+
+This is deliberately not the final renderer. It is the clean replacement for
+the old “invented gameplay” scaffolds and the base for real callback/state
+execution.
+
+Build:
+
+```sh
+make -C port
+```
 
 Run:
 
-  ./port
+```sh
+./port/build/td2_port --scene-dir port/assets/test_dump_frame300/design_pack
+```
+
+Headless smoke:
+
+```sh
+./port/test_regression.sh
+```
 
 Notes:
-- This is a minimal scaffold. Replace or expand platform_*.c/h with your production platform layer.
-- The Makefile uses `sdl2-config` if available or pkg-config as a fallback.
+
+- `../zelda3/` and `../sentrysearch/` are local investigation aids only and
+  are intentionally ignored by the repo git.
+- The current renderer prefers exact extracted visible layers so the host,
+  asset loading, and validation spine can stabilize before the synthetic PPU
+  path replaces the bootstrap.

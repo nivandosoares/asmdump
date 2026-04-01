@@ -26,6 +26,26 @@ For automated headless runs with Mesen2's test runner:
 ./validation/run_mesen_capture.sh
 ```
 
+For the current SNES-mimetic port bootstrap, build and run:
+
+```sh
+make -C port
+./port/test_regression.sh
+```
+
+That smoke does **not** claim synthetic PPU parity yet. It validates the new
+host/runtime spine instead:
+
+- load a promoted design pack
+- seed `VRAM/CGRAM/OAM` shadow state
+- dump a headless frame
+- compare it against the extracted `layers/main_visible.ppm` golden
+
+Current bootstrap fixtures:
+
+- `port/assets/test_dump_frame300/design_pack`
+- `port/assets/test_dump_range_1086_1093/design_pack_range/frame_01086`
+
 For short review windows where you want a reproducible bundle of visual
 artifacts instead of a one-off capture, use:
 

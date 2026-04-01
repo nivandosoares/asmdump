@@ -1,3 +1,171 @@
+Date: 2026-04-01
+
+Summary
+- Reset the port lane to the new SNES-mimetic strategy and replaced the old
+  gameplay/physics stand-ins in `port/` with a clean bootstrap runtime.
+- Added repo ignore protection for the local-only reference inputs:
+  - `zelda3/`
+  - `sentrysearch/`
+  - `the_duel_longplay.mp4`
+- Added the new bootstrap runtime pieces:
+  - `port/Makefile`
+  - `port/main.c`
+  - `port/platform_sdl.c`
+  - `port/platform_sdl.h`
+  - `port/include/td2_io.h`
+  - `port/include/td2_ppu.h`
+  - `port/include/td2_runtime.h`
+  - `port/src/td2_io.c`
+  - `port/src/td2_ppu.c`
+  - `port/src/td2_runtime.c`
+  - `port/docs/ARCHITECTURE.md`
+- Removed the old port-facing stubs that encoded invented gameplay / tilemap
+  demos instead of SNES-like runtime ownership.
+- Added the new gameplay chunk helper that reuses the attached SentrySearch
+  chunker without indexing the repo into Git:
+  - `tools/build_sentrysearch_chunk_manifest.py`
+- Produced the first reusable longplay chunk artifacts:
+  - `tools/out/sentrysearch_longplay_anchor_chunks.json`
+  - `tools/out/sentrysearch_longplay_anchor_chunks.md`
+- Added the gameplay lookup note:
+  - `rom_analysis/docs/sentrysearch_gameplay_chunk_workflow.md`
+
+What I ran
+- `make -C port`
+- `./port/test_regression.sh`
+- `cd sentrysearch && uv run sentrysearch stats`
+- `python3 -m py_compile tools/build_sentrysearch_chunk_manifest.py`
+- `python3 tools/build_sentrysearch_chunk_manifest.py sentrysearch/video/the_duel_longplay.mp4 --window 'bridge:1802:90:bridge crossing|purple water|mountain horizon|traffic right lane' --window 'tunnel:2028:90:tunnel driving|dark tunnel walls|mountain wall corridor' --window 'rain:2688:90:rain segment|windshield droplets|traffic ahead' --window 'snow:3570:120:snow onset|snow mountain curve|log truck ahead' --json-out tools/out/sentrysearch_longplay_anchor_chunks.json --markdown-out tools/out/sentrysearch_longplay_anchor_chunks.md`
+
+Findings / Interpretation
+- The new `port/` checkpoint now matches the strategy reset:
+  SDL host shell + SNES-like raw state shadow + extracted design-pack loading,
+  with no fake gameplay loop left in the runtime.
+- The bootstrap smoke is exact on the promoted frame fixtures:
+  - `frame300_bootstrap`: `0` mismatched pixels
+  - `frame1086_bootstrap`: `0` mismatched pixels
+- The current renderer is intentionally still a bootstrap:
+  it presents exact extracted `main_visible` surfaces while seeding the raw
+  `VRAM/CGRAM/OAM` buffers that the future synthetic PPU path must consume.
+- The local SentrySearch install works, but its persistent index is empty by
+  default; there was no hidden prebuilt semantic index to reuse.
+- The new chunk manifest still gives lane 3 a useful immediate surface without
+  paying the indexing cost up front:
+  - `bridge`: `30:02..31:32` (`4` chunks)
+  - `tunnel`: `33:48..35:18` (`4` chunks)
+  - `rain`: `44:48..46:18` (`4` chunks)
+  - `snow`: `59:30..01:01:30` (`5` chunks)
+
+What I learned (actionable)
+- The port lane can now advance on the right architecture without carrying the
+  old speculative PC runtime forward.
+- The next port checkpoint should replace reference-frame blitting with a
+  real compositor over the already-loaded raw state, not rebuild another demo.
+- Lane 3 now has reusable longplay windows plus query vocabulary that can be
+  used before a full semantic SentrySearch index exists.
+
+Next steps / Checkpoints
+1) Replace `main_visible` blitting in `port/src/td2_ppu.c` with synthetic
+   rasterization from raw `VRAM/CGRAM/OAM/PPU` state.
+2) Add a Zelda3-style side-by-side compare lane between the runtime and
+   trusted traces / state contracts.
+3) Use the new SentrySearch chunk manifest to aim the next bounded gameplay
+   capture or semantic indexing pass at one named window, not the whole
+   longplay.
+
+Immediate recommendation
+- Use `rom_analysis/docs/sentrysearch_gameplay_chunk_workflow.md` plus
+  `tools/out/sentrysearch_longplay_anchor_chunks.md` when choosing the next
+  lane-3 capture target.
+- Treat `make -C port test` as the default bounded smoke for the new runtime
+  until the synthetic PPU path lands.
+
+Files added in this turn
+- `port/Makefile`
+- `port/main.c`
+- `port/platform_sdl.c`
+- `port/platform_sdl.h`
+- `port/include/td2_io.h`
+- `port/include/td2_ppu.h`
+- `port/include/td2_runtime.h`
+- `port/src/td2_io.c`
+- `port/src/td2_ppu.c`
+- `port/src/td2_runtime.c`
+- `port/docs/ARCHITECTURE.md`
+- `tools/build_sentrysearch_chunk_manifest.py`
+- `rom_analysis/docs/sentrysearch_gameplay_chunk_workflow.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `PORT_PLAN.md`
+- `rom_analysis/docs/sentrysearch_gameplay_chunk_workflow.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+
+Date: 2026-04-01
+
+Summary
+- Refreshed the stale bank30 generated evidence so lane-1 docs match current tool behavior again.
+- Rebuilt:
+  - `tools/out/bank30_headers.json`
+  - `tools/out/bank30_chunk_validation.json`
+  - `tools/out/bank30_chunk_registry.json`
+  - `tools/out/bank30_chunk_registry.md`
+- Added the new repeatable chunk-shape analyzer:
+  - `tools/analyze_bank30_chunk_shapes.py`
+- Produced the new structural artifacts:
+  - `tools/out/bank30_chunk_shapes.json`
+  - `tools/out/bank30_chunk_shapes.md`
+- Wrote the dev-team handoff:
+  - `rom_analysis/docs/bank30_unresolved_queue_dev_handoff_2026-04-01.md`
+
+What I ran
+- `python3 tools/extract_compression_header_manifest.py game.smc --bank 30 --json-out tools/out/bank30_headers.json`
+- `python3 tools/validate_td2_chunks.py game.smc --bank 30 --headers-json tools/out/bank30_headers.json --json-out tools/out/bank30_chunk_validation.json`
+- `python3 tools/build_bank30_chunk_registry.py tools/out/bank30_headers.json tools/out/bank30_chunk_validation.json tools/out/td2_boot_probe_l001210_summary.json tools/out/bank30_chunk_registry.json --markdown-out tools/out/bank30_chunk_registry.md`
+- `python3 tools/analyze_bank30_chunk_shapes.py --json-out tools/out/bank30_chunk_shapes.json --markdown-out tools/out/bank30_chunk_shapes.md`
+
+Findings / Interpretation
+- The refreshed header manifest again exposes all `8` candidate starts, including the two `67FB` rows:
+  - `1E:DA96`
+  - `1E:E91F`
+- The refreshed validation pass now matches decoder reality:
+  - `DA96` decodes successfully (`28620` output bytes, `6429` source bytes consumed)
+  - `E91F` fails as a standalone `67FB` (`index out of range`)
+- The rebuilt registry is now back in sync:
+  - `runtime-confirmed`: `DF6C/E039/E73F/E800`
+  - `sentinel-control`: `9681`
+  - `nested-invalid-marker`: `E91F`
+  - unresolved queue:
+    - `P0`: `EE7F`
+    - `P1`: `DA96`
+- Static shape analysis materially narrows the two unresolved lanes:
+  - `DA96` carries a repeated `0x7C1F` run block with `33` starts on a fixed `157`-word stride; treating that as a row width yields a `157 x 33` repeated block with `32` identical rows, which is strong evidence for row-major visual/map payload rather than code-like material
+  - `EE7F` keeps the same `899`-word footprint as `DF6C/E73F`, but only `20.356..21.0234%` same-index overlap against them, while `DF6C` vs `E73F` stays `77.5306%`; that makes `EE7F` a real distinct helper payload, not a near-clone of the already-seen pair
+
+What I learned (actionable)
+- `EE7F` should remain the highest-priority runtime proving target because it is both bank1-table-confirmed and structurally distinct from the already-observed `26FB` siblings.
+- `DA96` is still runtime-unseen, but it is now better framed as a visual/map-provenance problem than a hidden-code problem.
+- The immediate doc/tool mismatch is closed; future lane-1 work can rely on the rebuilt bank30 registry again.
+
+Next steps / Checkpoints
+1) Chase an organic `EE7F` reachability path before widening more forced-`B1F9` experiments.
+2) Keep `DA96` on a separate consumer/visual-correlation track instead of trying to route it through the same helper-index funnel as `EE7F`.
+3) Reuse `tools/analyze_bank30_chunk_shapes.py` whenever a new bank30 unresolved candidate needs a quick “clone vs distinct payload” read.
+
+Immediate recommendation
+- Use the new handoff note first:
+  - `rom_analysis/docs/bank30_unresolved_queue_dev_handoff_2026-04-01.md`
+- Then spend the next bounded lane-1 step on an organic `EE7F` path, not another widened forced-callback stall.
+
+Files added in this turn
+- `tools/analyze_bank30_chunk_shapes.py`
+- `rom_analysis/docs/bank30_unresolved_queue_dev_handoff_2026-04-01.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/bank30_unresolved_queue_dev_handoff_2026-04-01.md`
+
 Date: 2026-03-30
 
 Summary
@@ -45,5 +213,3 @@ Files added in this turn
 
 Next reading
 - rom_analysis/docs/next_steps_roadmap.md (follow the lane order in PORT_PLAN.md)
-
-

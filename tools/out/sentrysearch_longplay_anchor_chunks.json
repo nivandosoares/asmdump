@@ -1,0 +1,183 @@
+{
+  "video": "/home/nivando-soares/asmdump/sentrysearch/video/the_duel_longplay.mp4",
+  "chunk_duration_seconds": 30,
+  "overlap_seconds": 5,
+  "windows": [
+    {
+      "label": "bridge",
+      "window_start_seconds": 1802.0,
+      "window_end_seconds": 1892.0,
+      "window_start_label": "30:02",
+      "window_end_label": "31:32",
+      "query_terms": [
+        "bridge crossing",
+        "purple water",
+        "mountain horizon",
+        "traffic right lane"
+      ],
+      "chunks": [
+        {
+          "index": 0,
+          "chunk_start_seconds": 1802.0,
+          "chunk_end_seconds": 1832.0,
+          "chunk_start_label": "30:02",
+          "chunk_end_label": "30:32"
+        },
+        {
+          "index": 1,
+          "chunk_start_seconds": 1827.0,
+          "chunk_end_seconds": 1857.0,
+          "chunk_start_label": "30:27",
+          "chunk_end_label": "30:57"
+        },
+        {
+          "index": 2,
+          "chunk_start_seconds": 1852.0,
+          "chunk_end_seconds": 1882.0,
+          "chunk_start_label": "30:52",
+          "chunk_end_label": "31:22"
+        },
+        {
+          "index": 3,
+          "chunk_start_seconds": 1877.0,
+          "chunk_end_seconds": 1892.001,
+          "chunk_start_label": "31:17",
+          "chunk_end_label": "31:32"
+        }
+      ]
+    },
+    {
+      "label": "tunnel",
+      "window_start_seconds": 2028.0,
+      "window_end_seconds": 2118.0,
+      "window_start_label": "33:48",
+      "window_end_label": "35:18",
+      "query_terms": [
+        "tunnel driving",
+        "dark tunnel walls",
+        "mountain wall corridor"
+      ],
+      "chunks": [
+        {
+          "index": 0,
+          "chunk_start_seconds": 2028.0,
+          "chunk_end_seconds": 2058.0,
+          "chunk_start_label": "33:48",
+          "chunk_end_label": "34:18"
+        },
+        {
+          "index": 1,
+          "chunk_start_seconds": 2053.0,
+          "chunk_end_seconds": 2083.0,
+          "chunk_start_label": "34:13",
+          "chunk_end_label": "34:43"
+        },
+        {
+          "index": 2,
+          "chunk_start_seconds": 2078.0,
+          "chunk_end_seconds": 2108.0,
+          "chunk_start_label": "34:38",
+          "chunk_end_label": "35:08"
+        },
+        {
+          "index": 3,
+          "chunk_start_seconds": 2103.0,
+          "chunk_end_seconds": 2118.001,
+          "chunk_start_label": "35:03",
+          "chunk_end_label": "35:18"
+        }
+      ]
+    },
+    {
+      "label": "rain",
+      "window_start_seconds": 2688.0,
+      "window_end_seconds": 2778.0,
+      "window_start_label": "44:48",
+      "window_end_label": "46:18",
+      "query_terms": [
+        "rain segment",
+        "windshield droplets",
+        "traffic ahead"
+      ],
+      "chunks": [
+        {
+          "index": 0,
+          "chunk_start_seconds": 2688.0,
+          "chunk_end_seconds": 2718.0,
+          "chunk_start_label": "44:48",
+          "chunk_end_label": "45:18"
+        },
+        {
+          "index": 1,
+          "chunk_start_seconds": 2713.0,
+          "chunk_end_seconds": 2743.0,
+          "chunk_start_label": "45:13",
+          "chunk_end_label": "45:43"
+        },
+        {
+          "index": 2,
+          "chunk_start_seconds": 2738.0,
+          "chunk_end_seconds": 2768.0,
+          "chunk_start_label": "45:38",
+          "chunk_end_label": "46:08"
+        },
+        {
+          "index": 3,
+          "chunk_start_seconds": 2763.0,
+          "chunk_end_seconds": 2778.001,
+          "chunk_start_label": "46:03",
+          "chunk_end_label": "46:18"
+        }
+      ]
+    },
+    {
+      "label": "snow",
+      "window_start_seconds": 3570.0,
+      "window_end_seconds": 3690.0,
+      "window_start_label": "59:30",
+      "window_end_label": "01:01:30",
+      "query_terms": [
+        "snow onset",
+        "snow mountain curve",
+        "log truck ahead"
+      ],
+      "chunks": [
+        {
+          "index": 0,
+          "chunk_start_seconds": 3570.0,
+          "chunk_end_seconds": 3600.0,
+          "chunk_start_label": "59:30",
+          "chunk_end_label": "01:00:00"
+        },
+        {
+          "index": 1,
+          "chunk_start_seconds": 3595.0,
+          "chunk_end_seconds": 3625.0,
+          "chunk_start_label": "59:55",
+          "chunk_end_label": "01:00:25"
+        },
+        {
+          "index": 2,
+          "chunk_start_seconds": 3620.0,
+          "chunk_end_seconds": 3650.0,
+          "chunk_start_label": "01:00:20",
+          "chunk_end_label": "01:00:50"
+        },
+        {
+          "index": 3,
+          "chunk_start_seconds": 3645.0,
+          "chunk_end_seconds": 3675.0,
+          "chunk_start_label": "01:00:45",
+          "chunk_end_label": "01:01:15"
+        },
+        {
+          "index": 4,
+          "chunk_start_seconds": 3670.0,
+          "chunk_end_seconds": 3690.001,
+          "chunk_start_label": "01:01:10",
+          "chunk_end_label": "01:01:30"
+        }
+      ]
+    }
+  ]
+}
