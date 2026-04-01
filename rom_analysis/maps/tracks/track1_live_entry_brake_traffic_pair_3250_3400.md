@@ -61,6 +61,8 @@ Designer-facing anchors for the promoted pair:
 - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/bg2.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/bg3.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03250_bundle/obj.png`
+- `tools/out/gameplay_bg3_cutoff_sweep_20260401/lane3_live_entry_frame03250_bundle_bg3_cutoff_candidate.png`
+- `tools/out/gameplay_bg3_cutoff_sweep_20260401/lane3_live_entry_frame03250_bundle_bg3_cutoff_compare.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/frame.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg_stack_visible_support.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/world_visible_support.png`
@@ -69,6 +71,8 @@ Designer-facing anchors for the promoted pair:
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg2.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg3.png`
 - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/obj.png`
+- `tools/out/gameplay_bg3_cutoff_sweep_20260401/lane3_live_entry_brake_traffic_frame03400_bundle_bg3_cutoff_candidate.png`
+- `tools/out/gameplay_bg3_cutoff_sweep_20260401/lane3_live_entry_brake_traffic_frame03400_bundle_bg3_cutoff_compare.png`
 
 ## Designer Review Follow-Up
 
@@ -123,6 +127,11 @@ Designer-facing anchors for the promoted pair:
   - the new raw `BG3` previews stay populated and nearly unchanged across the
     pair, which reinforces the current read that this transition is
     background-stable and `OBJ`-driven rather than a fresh road-layer swap
+  - the new cutoff sweep fits the same interpretation:
+    frame `3400` lands on the same best top-band `BG3 > BG2` cutoff as
+    frame `3250` (`79` lines), which is a strong hint that this late pair
+    shares one stable background composition rule while only the actor/event
+    bucket changes materially
   - for designer review, the new screenshot-derived support surfaces now close
     the earlier road/background visibility gap without pretending the raw
     `BG2` render is fully scanline-accurate
@@ -146,6 +155,9 @@ Designer-facing anchors for the promoted pair:
 - keep `bg3.png` in the review loop so sky/horizon discussion stays anchored
   to tracked raw-state output rather than only the screenshot-derived support
   masks
+- keep the cutoff candidates in the same review loop, because they are the
+  first tracked artifacts that materially narrow the background rule to a
+  top-band precedence shift instead of a missing-layer problem
 - if another bounded live-entry attempt is made, optimize it specifically for
   getting past the `2400`-relative crash boundary toward checkpoint/post-stop,
   not for rediscovering the already-promoted traffic pair again
