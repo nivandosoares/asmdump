@@ -1,6 +1,78 @@
 Date: 2026-04-01
 
 Summary
+- Promoted raw `BG3` bundle previews for late gameplay archaeology by
+  extending `tools/build_gameplay_frame_bundle.py` to emit `bg3.ppm` and
+  `bg3.png` next to the existing `bg1/bg2/obj/main` outputs.
+- Refreshed the tracked late-entry bundles for frames `3250`, `3400`, and
+  `3550` so design review now has direct `BG3` PNGs instead of only
+  screenshot-derived support masks for the sky/horizon side.
+- Closed a useful ambiguity on the late gameplay stack:
+  `BG3` is populated and visually meaningful on these bundles, so the next
+  renderer question is composition/gating, not whether the raw helper layer is
+  missing.
+
+What I ran
+- refreshed late gameplay bundles with the updated builder:
+  - `python3 tools/build_gameplay_frame_bundle.py --label lane3_live_entry_frame03250 --frame 3250 --vram tools/out/lane3_live_entry_frame03250_frame_03250_vram.bin --cgram tools/out/lane3_live_entry_frame03250_frame_03250_cgram.bin --ppu-state tools/out/lane3_live_entry_frame03250_frame_03250_ppu_state.json --oam tools/out/lane3_live_entry_frame03250_frame_03250_oam.bin --screenshot tools/out/lane3_live_entry_frame03250_frame_03250_frame.png --out-dir tools/out/lane3_live_entry_frame03250_bundle`
+  - `python3 tools/build_gameplay_frame_bundle.py --label lane3_live_entry_brake_traffic_frame03400 --frame 3400 --vram tools/out/lane3_live_entry_brake_frame03400_frame_03400_vram.bin --cgram tools/out/lane3_live_entry_brake_frame03400_frame_03400_cgram.bin --ppu-state tools/out/lane3_live_entry_brake_frame03400_frame_03400_ppu_state.json --oam tools/out/lane3_live_entry_brake_frame03400_frame_03400_oam.bin --screenshot tools/out/lane3_live_entry_brake_frame03400_frame_03400_frame.png --out-dir tools/out/lane3_live_entry_brake_traffic_frame03400_bundle`
+  - `python3 tools/build_gameplay_frame_bundle.py --label lane3_live_entry_frame03550 --frame 3550 --vram tools/out/lane3_live_entry_frame03550_frame_03550_vram.bin --cgram tools/out/lane3_live_entry_frame03550_frame_03550_cgram.bin --ppu-state tools/out/lane3_live_entry_frame03550_frame_03550_ppu_state.json --oam tools/out/lane3_live_entry_frame03550_frame_03550_oam.bin --screenshot tools/out/lane3_live_entry_frame03550_frame_03550_frame.png --out-dir tools/out/lane3_live_entry_frame03550_bundle`
+- targeted builder/tooling validation:
+  - `python3 -m py_compile tools/build_gameplay_frame_bundle.py`
+  - manifest + PNG existence check on the refreshed bundles
+
+Findings / Interpretation
+- The new raw `BG3` previews are populated on all three late anchors and keep
+  the expected sky-to-horizon gradient:
+  - `3250`: `tools/out/lane3_live_entry_frame03250_bundle/bg3.png`
+  - `3400`: `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg3.png`
+  - `3550`: `tools/out/lane3_live_entry_frame03550_bundle/bg3.png`
+- This materially improves design review because the sky/horizon discussion no
+  longer depends only on `world_visible_support.png` or `bg_stack_visible_support.png`.
+- It also sharpens the renderer read:
+  the late gameplay boundary is no longer “does this bundle have usable BG3?”
+  but “which composition/gating rule makes that helper layer visible in the
+  final frame?”
+
+What I learned (actionable)
+- Late gameplay archaeology now has a tracked raw-state `BG3` surface that is
+  useful for both design review and renderer debugging.
+- The cheapest next renderer experiments should stay focused on composition
+  rules over existing assets, not on collecting yet another proof that the
+  horizon strip exists in VRAM.
+
+Next steps / Checkpoints
+1) Keep `bg3.png` in the late-gameplay bundle surface whenever new anchor
+   pairs are promoted.
+2) Use the refreshed `3250/3400/3550` raw `BG3` previews to narrow the next
+   late-gameplay renderer rule instead of chasing fresh asset extraction.
+3) Re-open scanline/composition work only where the new `BG3` preview and the
+   screenshot-derived support masks still diverge in a defensible way.
+
+Immediate recommendation
+- Use the new tracked PNGs directly in design review:
+  - `tools/out/lane3_live_entry_frame03250_bundle/bg3.png`
+  - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg3.png`
+  - `tools/out/lane3_live_entry_frame03550_bundle/bg3.png`
+
+Files updated in this turn
+- `tools/build_gameplay_frame_bundle.py`
+- `tools/out/lane3_live_entry_frame03250_bundle/`
+- `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/`
+- `tools/out/lane3_live_entry_frame03550_bundle/`
+- `rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
+- `rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `tools/out/lane3_live_entry_frame03250_bundle/bg3.png`
+- `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg3.png`
+- `tools/out/lane3_live_entry_frame03550_bundle/bg3.png`
+
+Date: 2026-04-01
+
+Summary
 - Moved gameplay scanline-profile selection out of the runtime hardcode and
   into the versioned contract
   `rom_analysis/docs/gameplay_scanline_contracts.jsonc`.

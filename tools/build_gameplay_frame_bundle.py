@@ -448,6 +448,7 @@ def main() -> None:
         "main": 0x13,
         "bg1": 0x01,
         "bg2": 0x02,
+        "bg3": 0x04,
         "obj": 0x10,
     }
 
@@ -464,16 +465,18 @@ def main() -> None:
         "main": render_dir / "main.ppm",
         "bg1": render_dir / "bg1.ppm",
         "bg2": render_dir / "bg2.ppm",
+        "bg3": render_dir / "bg3.ppm",
         "obj": render_dir / "obj.ppm",
     }
     render_jsons = {
         "main": render_dir / "main_render.json",
         "bg1": render_dir / "bg1_render.json",
         "bg2": render_dir / "bg2_render.json",
+        "bg3": render_dir / "bg3_render.json",
         "obj": render_dir / "obj_render.json",
     }
 
-    for name in ("main", "bg1", "bg2"):
+    for name in ("main", "bg1", "bg2", "bg3"):
         render_scene(
             root,
             raw_vram,
@@ -493,7 +496,7 @@ def main() -> None:
         json_out=render_jsons["obj"],
     )
 
-    for name in ("bg1", "bg2"):
+    for name in ("bg1", "bg2", "bg3"):
         copy_file(render_targets[name], frame_dir / f"{name}.ppm")
         copy_file(render_targets[name], out_dir / f"{name}.ppm")
         copy_file(render_jsons[name], out_dir / f"{name}_render.json")
@@ -504,7 +507,7 @@ def main() -> None:
     copy_file(render_jsons["main"], out_dir / "main_render.json")
 
     png_outputs: dict[str, str | None] = {}
-    for name in ("main", "bg1", "bg2", "obj"):
+    for name in ("main", "bg1", "bg2", "bg3", "obj"):
         ppm_path = out_dir / f"{name}.ppm"
         png_path = out_dir / f"{name}.png"
         png_outputs[f"{name}_png"] = repo_rel(png_path) if write_png_preview(ppm_path, png_path) else None
@@ -556,6 +559,7 @@ def main() -> None:
             "frame_png": repo_rel(out_dir / "frame.png") if screenshot_src is not None else None,
             "bg1_ppm": repo_rel(out_dir / "bg1.ppm"),
             "bg2_ppm": repo_rel(out_dir / "bg2.ppm"),
+            "bg3_ppm": repo_rel(out_dir / "bg3.ppm"),
             "obj_ppm": repo_rel(out_dir / "obj.ppm"),
             "design_pack": repo_rel(design_pack_dir / "design_pack.json"),
             **png_outputs,

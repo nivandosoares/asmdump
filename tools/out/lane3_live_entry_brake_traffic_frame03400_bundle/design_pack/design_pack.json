@@ -2,7 +2,7 @@
   "source_frame_dir": "/home/nivando-soares/asmdump/tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/frame_dir",
   "pack_dir": "/home/nivando-soares/asmdump/tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/design_pack",
   "frame_number": null,
-  "created_utc": "2026-03-28T16:40:02.155258+00:00",
+  "created_utc": "2026-04-01T20:05:49.919204+00:00",
   "ppu_summary": {
     "ppu.oamBaseAddress": 24576,
     "ppu.oamAddressOffset": 4096,
@@ -20,7 +20,8 @@
       "full": "layers/bg2.ppm"
     },
     {
-      "name": "bg3"
+      "name": "bg3",
+      "full": "layers/bg3.ppm"
     },
     {
       "name": "bg4"
