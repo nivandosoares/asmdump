@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "description": "Versioned visible-scanline gameplay overlays for promoted SDL runtime bundles.",
+  "profiles": [
+    {
+      "id": "gameplay_live_race_mid",
+      "scene_match": "design_lane3_live_race_mid_frame0_native",
+      "source_json": "tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json",
+      "target_frame": 3,
+      "notes": [
+        "Preserved manual live-race seed promoted for the first scanline-aware gameplay renderer checkpoint.",
+        "Restores BG3 strip timing and BG2 per-scanline depth cues on the horizon/roadside boundary."
+      ]
+    },
+    {
+      "id": "lane3_live_entry_frame03250",
+      "scene_match": "lane3_live_entry_frame03250_bundle/design_pack",
+      "source_json": "tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json",
+      "target_frame": 3250,
+      "notes": [
+        "Promoted open-road late live-entry phase from the reproducible power-on route.",
+        "Uses the same scanline-aware surface as live_race_mid without depending on the preserved manual gameplay seed."
+      ]
+    }
+  ]
+}

@@ -134,18 +134,24 @@ New useful state beyond the original plan:
     bundle base frame still need earlier seeds or scripted prehistory; live
     SDL input now uses the same surface, but it does not invent missing
     pre-bundle route history
-- the promoted `gameplay_live_race_mid` rail now also carries a measured
-  visible-scanline presentation profile from
-  `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`:
-  - the runtime loads per-scanline `main_layers`,
-    `bg1/bg2/bg3` `HOFS/VOFS` for that rail instead of treating gameplay as
-    one flat end-of-frame `ppu_state`
-  - the first practical fix is the live-race horizon/roadside boundary:
-    `BG3` now re-enters only on scanlines `23..120`, while `BG2` scroll uses
-    the measured `224`-scanline staircase rather than one global `VOFS`
-  - scheduler smoke now proves both the loaded scanline profile and a handful
-    of gameplay framebuffer pixels, so the restored horizon does not regress
-    silently
+- gameplay scanline overlays are now selected from the versioned contract:
+  - `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
+  - current tracked source traces:
+    - `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
+    - `tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json`
+  - current attached fields:
+    - `main_layers`
+    - `bg1/bg2/bg3` `HOFS/VOFS`
+  - current promoted consumers:
+    - `gameplay_live_race_mid`
+    - `lane3_live_entry_frame03250_bundle/design_pack`
+  - current practical read:
+    - the live-race seed is the first solved consumer of that surface and now
+      restores the horizon/roadside boundary natively
+    - the `3250` late-entry bundle now loads through the same contract path,
+      but current compare against a no-contract clone is still `0` pixels
+      different, which is strong evidence that this later phase needs more
+      than `main_layers/bg1/bg2/bg3` scrolls to recover the visible stack
 - runtime frame dumps now emit PNG siblings next to the existing PPM artifacts
   so design review can follow each checkpoint without manual conversion
 - that scheduler now executes validated callback-family handoffs across:
