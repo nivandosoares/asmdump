@@ -107,6 +107,18 @@ static void td2_compare_callback_reset(Td2CompareCallbackContract* contract) {
     memset(contract, 0, sizeof(*contract));
 }
 
+static const char* td2_runtime_state_source_name(Td2RuntimeStateSource source) {
+    switch (source) {
+        case TD2_RUNTIME_STATE_SOURCE_CONTRACT_SEED:
+            return "contract_seed";
+        case TD2_RUNTIME_STATE_SOURCE_CALLBACK_MODEL:
+            return "callback_model";
+        case TD2_RUNTIME_STATE_SOURCE_NONE:
+        default:
+            return "none";
+    }
+}
+
 static void td2_compare_state_record(
     Td2CompareStateContract* contract,
     const char* key,
@@ -305,6 +317,7 @@ static void td2_compare_capture_callback_contract(
     snprintf(report->contract_id, sizeof(report->contract_id), "%s", callback_contract->contract_id);
     snprintf(report->phase, sizeof(report->phase), "%s", callback_contract->phase);
     snprintf(report->note, sizeof(report->note), "%s", callback_contract->note);
+    report->actual_source = runtime_state->source;
 
     if (callback_contract->expected_state.has_active_main_callback) {
         td2_compare_callback_record(
@@ -359,6 +372,21 @@ static void td2_compare_capture_callback_contract(
     }
     if (callback_contract->expected_state.has_state_040a) {
         td2_compare_callback_record(report, "state_040a", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_040a, runtime_state->state_040a);
+    }
+    if (callback_contract->expected_state.has_state_1c6a) {
+        td2_compare_callback_record(report, "state_1c6a", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_1c6a, runtime_state->state_1c6a);
+    }
+    if (callback_contract->expected_state.has_state_1c70) {
+        td2_compare_callback_record(report, "state_1c70", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_1c70, runtime_state->state_1c70);
+    }
+    if (callback_contract->expected_state.has_state_1c76) {
+        td2_compare_callback_record(report, "state_1c76", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_1c76, runtime_state->state_1c76);
+    }
+    if (callback_contract->expected_state.has_state_11f3) {
+        td2_compare_callback_record(report, "state_11f3", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_11f3, runtime_state->state_11f3);
+    }
+    if (callback_contract->expected_state.has_dp_0053) {
+        td2_compare_callback_record(report, "dp_0053", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.dp_0053, runtime_state->dp_0053);
     }
     if (callback_contract->expected_state.has_dp_0054) {
         td2_compare_callback_record(report, "dp_0054", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.dp_0054, runtime_state->dp_0054);
@@ -671,6 +699,8 @@ bool td2_compare_dump_bundle(
         write_json_string(file, compare->callback_contract.phase);
         fputs(",\n    \"note\": ", file);
         write_json_string(file, compare->callback_contract.note);
+        fputs(",\n    \"actual_source\": ", file);
+        write_json_string(file, td2_runtime_state_source_name(compare->callback_contract.actual_source));
         fprintf(file,
                 ",\n    \"total_checks\": %u,\n"
                 "    \"passed_checks\": %u,\n"
@@ -705,6 +735,7 @@ bool td2_compare_dump_bundle(
         fputs("    \"contract_id\": null,\n", file);
         fputs("    \"phase\": null,\n", file);
         fputs("    \"note\": null,\n", file);
+        fputs("    \"actual_source\": null,\n", file);
         fputs("    \"total_checks\": 0,\n", file);
         fputs("    \"passed_checks\": 0,\n", file);
         fputs("    \"failed_checks\": 0,\n", file);

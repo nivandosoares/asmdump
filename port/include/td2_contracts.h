@@ -9,7 +9,14 @@
 #define TD2_CONTRACT_PHASE_BYTES 64
 #define TD2_CONTRACT_NOTE_BYTES 160
 
+typedef enum {
+    TD2_RUNTIME_STATE_SOURCE_NONE = 0,
+    TD2_RUNTIME_STATE_SOURCE_CONTRACT_SEED = 1,
+    TD2_RUNTIME_STATE_SOURCE_CALLBACK_MODEL = 2,
+} Td2RuntimeStateSource;
+
 typedef struct {
+    Td2RuntimeStateSource source;
     bool has_active_main_callback;
     uint8_t active_main_callback_bank;
     uint16_t active_main_callback_addr;
@@ -31,6 +38,16 @@ typedef struct {
     uint16_t state_020a;
     bool has_state_040a;
     uint16_t state_040a;
+    bool has_state_1c6a;
+    uint16_t state_1c6a;
+    bool has_state_1c70;
+    uint16_t state_1c70;
+    bool has_state_1c76;
+    uint16_t state_1c76;
+    bool has_state_11f3;
+    uint16_t state_11f3;
+    bool has_dp_0053;
+    uint16_t dp_0053;
     bool has_dp_0054;
     uint16_t dp_0054;
 } Td2RuntimeState;

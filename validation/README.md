@@ -41,6 +41,8 @@ That smoke now validates the first native synthetic PPU checkpoint:
 - dump a headless frame
 - compare it against the extracted `layers/main_visible.ppm` golden
 - generate the side-by-side compare bundle for the same promoted fixtures
+- validate the minimal scheduler across the three promoted rails:
+  intro no-input, menu with input, and reproducible gameplay seed
 
 Current bootstrap fixtures:
 
@@ -63,6 +65,17 @@ Direct runtime compare lane:
   --dump-prefix port/build/frame300_compare
 ```
 
+Direct runtime scheduler playback on a tracked menu/gameplay bundle:
+
+```sh
+./port/build/td2_port \
+  --scene-dir tools/out/design_frame1500_car_select \
+  --scheduler-profile menu_gameplay_entry \
+  --headless \
+  --frames 1 \
+  --dump-prefix port/build/menu1500
+```
+
 That emits:
 
 - `..._00000.ppm`: native runtime frame
@@ -82,6 +95,13 @@ With `--fail-on-compare-diff`, the runtime now exits non-zero on either:
 Current callback-backed promoted fixture:
 
 - `port/assets/test_dump_range_1086_1093/design_pack_range/frame_01093`
+
+Current scheduler-backed promoted rails:
+
+- `intro_noinput`: `tools/out/design_frame986` through the validated
+  `1093 -> 1102 -> 1117` callback handoff
+- `menu_gameplay_entry`: `tools/out/design_frame1500_car_select`
+- `gameplay_live_race_mid`: `tools/out/design_lane3_live_race_mid_frame0_native`
 
 Post-push wiki refresh wrapper:
 

@@ -1,6 +1,92 @@
 Date: 2026-04-01
 
 Summary
+- Replaced the old one-shot callback seed path with a minimal scheduler that
+  executes validated callback families and handoffs on three promoted rails:
+  `intro_noinput`, `menu_gameplay_entry`, and `gameplay_live_race_mid`.
+- The design-pack loader now also tolerates tracked bundles that only carry
+  local `raw/` dumps and no `layers/main_visible.ppm`, which makes the
+  promoted menu/gameplay investigation packs runnable in the SDL runtime when
+  compare is not requested.
+- Added the new scheduler smoke so `make -C port test` now covers:
+  regression parity, compare lane, intro callback model, and the three target
+  scheduler rails.
+
+What I ran
+- `make -C port clean && make -C port`
+- `./port/test_callback_model.sh`
+- `./port/test_scheduler.sh`
+- `./port/test_regression.sh`
+- `./port/test_compare_lane.sh`
+- `make -C port test`
+- direct runtime probes:
+  - `./port/build/td2_port --scene-dir tools/out/design_frame1500_car_select --scheduler-profile menu_gameplay_entry --headless --frames 1 --dump-prefix <tmp>/menu`
+  - `./port/build/td2_port --scene-dir tools/out/design_lane3_live_race_mid_frame0_native --scheduler-profile gameplay_live_race_mid --headless --frames 1 --dump-prefix <tmp>/gameplay`
+
+Findings / Interpretation
+- The stale-build regression was a build artifact, not a scheduler bug:
+  after a clean rebuild, both the old regression smoke and compare lane
+  stayed exact.
+- The new scheduler smoke now proves the three rails the user asked for:
+  - intro no-input: `986`, `1093`, `1102`, `1117`
+  - menu with input: `1500`, `1640`, `1677`, `1857`, `2014`, `2044`, `2050`
+  - gameplay seed: `3`, `11`
+- The promoted menu/gameplay bundles now load directly in the runtime even
+  without `main_visible.ppm`, as long as compare is not requested.
+
+What I learned (actionable)
+- The active port gate is no longer "replace seeded callback state at all";
+  that gate is closed in bootstrap form.
+- The next leverage point is converting the hardcoded scheduler anchors into
+  reusable contract surfaces, then applying real input-driven state mutation
+  on top of those callback families.
+- Intro should stop being the only proving lane now; the same scheduler loop
+  is already viable on menu and gameplay surfaces.
+
+Next steps / Checkpoints
+1) Promote the three scheduler rails from hardcoded anchors into contract-fed
+   rails.
+2) Add input-driven mutation work on top of `menu_gameplay_entry` and
+   `gameplay_live_race_mid`.
+3) Promote compare-backed menu/gameplay fixtures when trusted goldens exist.
+
+Immediate recommendation
+- Use `./port/test_scheduler.sh` as the cheap falsifier for callback-family
+  and handoff work before spending time on full compare bundles.
+- Use `--scheduler-profile menu_gameplay_entry` and
+  `--scheduler-profile gameplay_live_race_mid` when running the main binary on
+  promoted investigation bundles outside `port/assets/`.
+
+Files updated in this turn
+- `port/Makefile`
+- `port/main.c`
+- `port/include/td2_contracts.h`
+- `port/include/td2_runtime.h`
+- `port/include/td2_scheduler.h`
+- `port/src/td2_callback_model.c`
+- `port/src/td2_compare.c`
+- `port/src/td2_contracts.c`
+- `port/src/td2_io.c`
+- `port/src/td2_runtime.c`
+- `port/src/td2_scheduler.c`
+- `port/test_callback_model.c`
+- `port/test_scheduler.c`
+- `port/test_scheduler.sh`
+- `PORT_PLAN.md`
+- `port/README.md`
+- `port/docs/ARCHITECTURE.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+
+Next reading
+- `port/src/td2_scheduler.c`
+- `port/test_scheduler.c`
+- `PORT_PLAN.md`
+
+Date: 2026-04-01
+
+Summary
 - Fixed the curated docs wiki `Last updated` regression.
 - `tools/build_docs_wiki_report.py` no longer trusts filesystem mtime alone;
   it now prefers the latest Git commit timestamp for each source doc and only

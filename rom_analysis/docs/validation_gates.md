@@ -97,7 +97,28 @@ This is also bootstrap-scoped: it proves the runtime can carry validated
 callback/state checkpoints in-band with compare output, but it does not yet
 prove that the runtime executed those callbacks to reach the state on its own.
 
-## 5) Practical Gate Policy
+## 5) Scheduler Rail Smoke
+
+Runner:
+
+```sh
+./port/test_scheduler.sh
+```
+
+This validates the minimal callback scheduler over the three promoted rails:
+
+- `intro_noinput`: validates the `986 -> 1117` family and the `1093 -> 1102`
+  handoff
+- `menu_gameplay_entry`: validates the input-driven menu corridor
+  `1500 -> 2050`
+- `gameplay_live_race_mid`: validates the reproducible gameplay seed over the
+  promoted `3 -> 11` window
+
+This smoke is intentionally state-first. It proves that the runtime now steps
+callback families and handoffs for the three target rails, even when a given
+design pack has no trusted `main_visible.ppm` golden.
+
+## 6) Practical Gate Policy
 
 For each archaeology lane:
 

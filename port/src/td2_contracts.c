@@ -281,6 +281,7 @@ void td2_runtime_state_seed_from_contract(
         return;
     }
     *state = contract->expected_state;
+    state->source = TD2_RUNTIME_STATE_SOURCE_CONTRACT_SEED;
 }
 
 bool td2_callback_contract_load_for_frame(
@@ -371,6 +372,11 @@ bool td2_callback_contract_load_for_frame(
     parse_optional_u16(check_block, "\"state_0208\":", &contract->expected_state.has_state_0208, &contract->expected_state.state_0208);
     parse_optional_u16(check_block, "\"state_020a\":", &contract->expected_state.has_state_020a, &contract->expected_state.state_020a);
     parse_optional_u16(check_block, "\"state_040a\":", &contract->expected_state.has_state_040a, &contract->expected_state.state_040a);
+    parse_optional_u16(check_block, "\"state_1c6a\":", &contract->expected_state.has_state_1c6a, &contract->expected_state.state_1c6a);
+    parse_optional_u16(check_block, "\"state_1c70\":", &contract->expected_state.has_state_1c70, &contract->expected_state.state_1c70);
+    parse_optional_u16(check_block, "\"state_1c76\":", &contract->expected_state.has_state_1c76, &contract->expected_state.state_1c76);
+    parse_optional_u16(check_block, "\"state_11f3\":", &contract->expected_state.has_state_11f3, &contract->expected_state.state_11f3);
+    parse_optional_u16(check_block, "\"dp_0053\":", &contract->expected_state.has_dp_0053, &contract->expected_state.dp_0053);
     parse_optional_u16(check_block, "\"dp_0054\":", &contract->expected_state.has_dp_0054, &contract->expected_state.dp_0054);
 
     free(json);

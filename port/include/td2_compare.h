@@ -54,6 +54,7 @@ typedef struct {
     char contract_id[TD2_CONTRACT_ID_BYTES];
     char phase[TD2_CONTRACT_PHASE_BYTES];
     char note[TD2_CONTRACT_NOTE_BYTES];
+    Td2RuntimeStateSource actual_source;
     unsigned total_checks;
     unsigned passed_checks;
     unsigned failed_checks;

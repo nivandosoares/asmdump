@@ -47,7 +47,12 @@ Validation contract baseline:
 - `rom_analysis/docs/callback_state_contracts.jsonc`
 - `rom_analysis/docs/validation_gates.md`
 - `make -C port test`
-- Latest run status: callback contracts `18/18` pass; regression gates `6/6` pass.
+- Latest run status:
+  - regression gates `6/6` pass
+  - compare lane `3/3` pass
+  - intro callback model smoke `183/183` checks pass
+  - scheduler smoke `156/156` checks pass across:
+    intro no-input, menu gameplay-entry, and live-race gameplay seed
 
 ## Lane 3 Live Entry Update (`2026-03-28`)
 

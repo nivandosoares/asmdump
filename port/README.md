@@ -18,6 +18,10 @@ Current checkpoint:
 - Zelda3-style compare lane:
   runtime | golden | diff bundle plus JSON drift summary
   plus seeded PPU-state and callback-state contract checks
+- minimal callback scheduler profiles for:
+  - `intro_noinput`
+  - `menu_gameplay_entry`
+  - `gameplay_live_race_mid`
 - headless frame dumping for regression smoke
 
 This is deliberately not the final renderer. It is the clean replacement for
@@ -53,6 +57,17 @@ Direct compare lane:
   --dump-prefix port/build/frame300_compare
 ```
 
+Direct scheduler playback on a tracked bundle without a golden:
+
+```sh
+./port/build/td2_port \
+  --scene-dir tools/out/design_frame1500_car_select \
+  --scheduler-profile menu_gameplay_entry \
+  --headless \
+  --frames 1 \
+  --dump-prefix port/build/menu1500
+```
+
 Notes:
 
 - `../zelda3/` and `../sentrysearch/` are local investigation aids only and
@@ -60,12 +75,19 @@ Notes:
 - The promoted smoke fixtures now render exactly from raw state in the native
   runtime; `layers/main_visible.ppm` remains a regression golden, not the
   render source.
+- Design packs that only carry `raw/` dumps and no `layers/main_visible.ppm`
+  now load correctly when compare is not requested. This is what makes the
+  promoted menu/gameplay investigation bundles runnable in the SDL runtime.
 - The compare JSON now carries `state_contract`, so `--fail-on-compare-diff`
   fails on both pixel drift and semantic drift in the seeded scene state.
 - For frames that exist in `rom_analysis/docs/callback_state_contracts.jsonc`,
   the runtime also seeds a callback/state shadow and emits `callback_contract`
   in the compare JSON. The first promoted callback-backed fixture is
   `frame_01093`.
+- `make -C port test` now also runs `test_scheduler.sh`, which validates the
+  three promoted scheduler rails:
+  intro no-input, menu with input, and the reproducible live-race gameplay
+  seed.
 - `tools/push_checkpoint.sh` is the repo-local wrapper for the post-push step:
   it pushes the current checkpoint, refreshes the curated wiki, and issues a
   follow-up wiki refresh commit/push only if the generated wiki changed and

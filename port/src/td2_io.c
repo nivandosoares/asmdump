@@ -11,6 +11,16 @@ static void set_error(char* error, size_t error_size, const char* message) {
     snprintf(error, error_size, "%s", message);
 }
 
+static bool file_exists(const char* path) {
+    FILE* file = fopen(path, "rb");
+
+    if (file == NULL) {
+        return false;
+    }
+    fclose(file);
+    return true;
+}
+
 static char* read_text_file(const char* path, size_t* size_out) {
     FILE* file = fopen(path, "rb");
     char* data;
@@ -204,7 +214,19 @@ static void join_path(char* out, size_t out_size, const char* a, const char* b) 
 static void derive_raw_dir(char* raw_dir, size_t raw_dir_size, const char* scene_dir) {
     const char* range = strstr(scene_dir, "/design_pack_range/");
     const char* single = strstr(scene_dir, "/design_pack");
+    char raw_subdir[1024];
+    char raw_subdir_ppu_state[1200];
     size_t prefix_len;
+
+    join_path(raw_subdir, sizeof(raw_subdir), scene_dir, "raw");
+    join_path(raw_subdir_ppu_state, sizeof(raw_subdir_ppu_state), raw_subdir, "ppu_state.json");
+    if (file_exists(raw_subdir_ppu_state)) {
+        if (raw_dir_size > 0U) {
+            strncpy(raw_dir, raw_subdir, raw_dir_size - 1U);
+            raw_dir[raw_dir_size - 1U] = '\0';
+        }
+        return;
+    }
 
     if (range != NULL) {
         prefix_len = (size_t)(range - scene_dir);
@@ -407,13 +429,20 @@ bool td2_design_pack_load(
     parse_json_bool(manifest_text, "\"forcedBlank\":", &pack->forced_blank);
 
     if (parse_json_string(manifest_text, "\"source_frame_dir\": \"", source_frame_dir, sizeof(source_frame_dir))) {
-        snprintf(pack->raw_dir, sizeof(pack->raw_dir), "%s", source_frame_dir);
+        char source_ppu_state[1200];
+
+        join_path(source_ppu_state, sizeof(source_ppu_state), source_frame_dir, "ppu_state.json");
+        if (file_exists(source_ppu_state)) {
+            snprintf(pack->raw_dir, sizeof(pack->raw_dir), "%s", source_frame_dir);
+        } else {
+            derive_raw_dir(pack->raw_dir, sizeof(pack->raw_dir), scene_dir);
+        }
     } else {
         derive_raw_dir(pack->raw_dir, sizeof(pack->raw_dir), scene_dir);
     }
 
     join_path(main_visible_path, sizeof(main_visible_path), scene_dir, "layers/main_visible.ppm");
-    if (!load_ppm(main_visible_path, &pack->main_visible)) {
+    if (file_exists(main_visible_path) && !load_ppm(main_visible_path, &pack->main_visible)) {
         set_error(error, error_size, "failed to load layers/main_visible.ppm");
         free(manifest_text);
         td2_design_pack_free(pack);

@@ -99,6 +99,19 @@ New useful state beyond the original plan:
   - seeded callback/state contract report for frames covered by validated
     intro checkpoints, with the first promoted callback-backed fixture at
     frame `1093`
+- the runtime now also has a minimal callback scheduler with three promoted
+  rails instead of only seeded state:
+  - `intro_noinput`
+  - `menu_gameplay_entry`
+  - `gameplay_live_race_mid`
+- that scheduler now executes validated callback-family handoffs across:
+  - intro `986 -> 1117`
+  - menu/input corridor `1500 -> 2050`
+  - live gameplay seed `3 -> 11`
+- the design-pack loader now tolerates tracked bundles that only carry local
+  `raw/` memory dumps and no `layers/main_visible.ppm`; this makes promoted
+  menu/gameplay investigation packs directly runnable in the SDL runtime when
+  compare is not requested
 
 - the frame-`300` copyright/credits scene is an exact solved target from both live Mesen dumps and a ROM-side builder
 - the `Ballistic presents` splash now has a deterministic entry anchor at frame `654`
@@ -219,17 +232,15 @@ New useful state beyond the original plan:
 
 Immediate next focus:
 
-1. Replace the seeded callback-state bootstrap with real callback/state
-   execution driven by validated bank ownership, starting with front-end
-   families.
-2. Promote more trusted intro callback/state traces into the compare lane so
-   callback-backed fixtures cover more than the current `1093` checkpoint.
-3. Extend the compare lane from seeded callback-state parity into real
-   callback/state drift
-   reporting against trusted traces.
-4. Keep the intro archaeology lanes moving, but use them to ratify callback
-   families and renderer contracts rather than to justify sampled playback as
-   the end architecture.
+1. Promote the current anchor-driven scheduler profiles into reusable
+   contract-driven rails so menu and gameplay no longer depend on hardcoded
+   checkpoints in the smoke.
+2. Start mutating real front-end and post-`02:9016` gameplay state under
+   input, instead of only replaying callback families and handoffs.
+3. Promote compare-backed fixtures for the new menu/gameplay rails wherever a
+   trusted `main_visible` golden exists.
+4. Keep intro archaeology moving only where it tightens callback ownership or
+   renderer behavior, not as a polishing lane by itself.
 5. Use the local SentrySearch chunk workflow plus the longplay anchor packs to
    keep gameplay investigation keyed to named windows and reusable query terms.
 

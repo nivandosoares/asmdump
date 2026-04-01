@@ -9,6 +9,7 @@
 #include "td2_compare.h"
 #include "td2_io.h"
 #include "td2_ppu.h"
+#include "td2_scheduler.h"
 
 typedef struct {
     const char* scene_dir;
@@ -18,6 +19,7 @@ typedef struct {
     bool headless;
     bool compare_reference;
     bool fail_on_compare_diff;
+    Td2SchedulerProfile scheduler_profile;
 } Td2RuntimeConfig;
 
 typedef struct {
@@ -26,6 +28,7 @@ typedef struct {
     Td2PpuState ppu;
     Td2RuntimeState state;
     Td2CallbackTraceContract callback_contract;
+    Td2Scheduler scheduler;
     Td2CompareLane compare;
     uint8_t wram[TD2_WRAM_BYTES];
     uint32_t* framebuffer;
@@ -39,6 +42,11 @@ bool td2_runtime_init(
     size_t error_size
 );
 void td2_runtime_free(Td2Runtime* runtime);
+bool td2_runtime_sync_frame_state(
+    Td2Runtime* runtime,
+    char* error,
+    size_t error_size
+);
 bool td2_runtime_render_frame(
     Td2Runtime* runtime,
     char* error,

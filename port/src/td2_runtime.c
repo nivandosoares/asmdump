@@ -24,18 +24,17 @@ bool td2_runtime_init(
         return false;
     }
 
-    td2_runtime_state_reset(&runtime->state);
-    if (!td2_callback_contract_load_for_frame(
-            &runtime->callback_contract,
+    if (!td2_scheduler_init(
+            &runtime->scheduler,
+            config->scheduler_profile,
             config->scene_dir,
-            runtime->design_pack.frame_number,
-            runtime->design_pack.has_frame_number,
+            &runtime->design_pack,
             error,
             error_size)) {
         td2_runtime_free(runtime);
         return false;
     }
-    td2_runtime_state_seed_from_contract(&runtime->state, &runtime->callback_contract);
+    td2_runtime_state_reset(&runtime->state);
 
     runtime->framebuffer = (uint32_t*)calloc(TD2_FRAME_PIXELS, sizeof(uint32_t));
     if (runtime->framebuffer == NULL) {
@@ -55,6 +54,11 @@ bool td2_runtime_init(
         return false;
     }
 
+    runtime->frame_counter = 0U;
+    if (!td2_runtime_sync_frame_state(runtime, error, error_size)) {
+        td2_runtime_free(runtime);
+        return false;
+    }
     if (error_size > 0U) {
         error[0] = '\0';
     }
@@ -68,11 +72,53 @@ void td2_runtime_free(Td2Runtime* runtime) {
     td2_design_pack_free(&runtime->design_pack);
 }
 
+bool td2_runtime_sync_frame_state(
+    Td2Runtime* runtime,
+    char* error,
+    size_t error_size
+) {
+    unsigned frame_number = runtime->frame_counter;
+    bool built_state = false;
+
+    if (runtime->design_pack.has_frame_number) {
+        frame_number += runtime->design_pack.frame_number;
+    }
+
+    if (!td2_callback_contract_load_for_frame(
+            &runtime->callback_contract,
+            runtime->config.scene_dir,
+            frame_number,
+            runtime->design_pack.has_frame_number,
+            error,
+            error_size)) {
+        return false;
+    }
+
+    built_state = td2_scheduler_build_state(
+        &runtime->scheduler,
+        frame_number,
+        &runtime->state);
+    if (!built_state) {
+        td2_runtime_state_seed_from_contract(&runtime->state, &runtime->callback_contract);
+    }
+
+    runtime->ppu.frame_number = frame_number;
+    runtime->ppu.ppu_frame_count = runtime->design_pack.ppu_frame_count + runtime->frame_counter;
+    runtime->ppu.has_reference_frame = runtime->design_pack.main_visible.pixels != NULL;
+    if (error_size > 0U) {
+        error[0] = '\0';
+    }
+    return true;
+}
+
 bool td2_runtime_render_frame(
     Td2Runtime* runtime,
     char* error,
     size_t error_size
 ) {
+    if (!td2_runtime_sync_frame_state(runtime, error, error_size)) {
+        return false;
+    }
     td2_ppu_render_frame(&runtime->ppu, runtime->framebuffer);
     td2_compare_run(
         &runtime->compare,

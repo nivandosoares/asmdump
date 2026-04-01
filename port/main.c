@@ -7,6 +7,7 @@
 
 #include "platform_sdl.h"
 #include "td2_runtime.h"
+#include "td2_scheduler.h"
 
 static void print_usage(const char* argv0) {
     fprintf(stderr,
@@ -20,6 +21,8 @@ static void print_usage(const char* argv0) {
         "  --compare           Present and dump runtime|golden|diff side-by-side\n"
         "  --fail-on-compare-diff\n"
         "                      Exit non-zero when compare finds pixel or state drift\n"
+        "  --scheduler-profile NAME\n"
+        "                      auto | none | intro_noinput | menu_gameplay_entry | gameplay_live_race_mid\n"
         "  --scale N           Window scale for interactive mode\n"
         "  --headless          Skip SDL window creation\n"
         "  --help              Show this help\n",
@@ -51,6 +54,7 @@ int main(int argc, char** argv) {
     memset(&config, 0, sizeof(config));
     config.scene_dir = "assets/test_dump_frame300/design_pack";
     config.window_scale = 3;
+    config.scheduler_profile = TD2_SCHEDULER_PROFILE_AUTO;
 
     for (i = 1; i < (unsigned)argc; i++) {
         if (strcmp(argv[i], "--scene-dir") == 0 && i + 1 < (unsigned)argc) {
@@ -67,6 +71,11 @@ int main(int argc, char** argv) {
         } else if (strcmp(argv[i], "--fail-on-compare-diff") == 0) {
             config.compare_reference = true;
             config.fail_on_compare_diff = true;
+        } else if (strcmp(argv[i], "--scheduler-profile") == 0 && i + 1 < (unsigned)argc) {
+            if (!td2_scheduler_parse_profile(argv[++i], &config.scheduler_profile)) {
+                fprintf(stderr, "invalid scheduler profile: %s\n", argv[i]);
+                return 1;
+            }
         } else if (strcmp(argv[i], "--scale") == 0 && i + 1 < (unsigned)argc) {
             unsigned scale = 0;
             if (!parse_uint(argv[++i], &scale) || scale == 0U) {
@@ -127,17 +136,19 @@ int main(int argc, char** argv) {
     }
 
     fprintf(stdout,
-        "Loaded scene %s (frame=%s, bgMode=%u, main=%u, sub=%u)\n",
+        "Loaded scene %s (frame=%s, bgMode=%u, main=%u, sub=%u, scheduler=%s)\n",
         config.scene_dir,
         frame_label,
         runtime->design_pack.bg_mode,
         runtime->design_pack.main_screen_layers,
-        runtime->design_pack.sub_screen_layers
+        runtime->design_pack.sub_screen_layers,
+        td2_scheduler_profile_name(runtime->scheduler.active_profile)
     );
     if (runtime->compare.enabled) {
         fprintf(stdout, "Compare lane enabled: runtime | golden | diff\n");
     }
 
+    runtime->frame_counter = 0U;
     while (!platform.quit_requested) {
         uint32_t frame_start = 0;
 
