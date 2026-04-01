@@ -95,6 +95,11 @@ static const char* td2_profile_id_text(Td2SchedulerProfile profile) {
     }
 }
 
+static void td2_scheduler_set_u16(bool* has_value, uint16_t* value, uint16_t next_value) {
+    *has_value = true;
+    *value = next_value;
+}
+
 static void td2_scheduler_apply_current_input(
     const Td2Scheduler* scheduler,
     unsigned frame_number,
@@ -136,6 +141,91 @@ static bool td2_scheduler_has_menu_no_opponent_route(
     return has_diagonal && has_confirm;
 }
 
+static bool td2_scheduler_has_menu_default_rival_route(
+    const Td2Scheduler* scheduler
+) {
+    return td2_input_script_has_mask_in_range(
+               &scheduler->input_script,
+               TD2_INPUT_MASK_START,
+               1200U,
+               1200U) &&
+           td2_input_script_has_mask_in_range(
+               &scheduler->input_script,
+               TD2_INPUT_MASK_START,
+               1280U,
+               1280U) &&
+           td2_input_script_has_mask_in_range(
+               &scheduler->input_script,
+               TD2_INPUT_MASK_START,
+               1505U,
+               1510U) &&
+           td2_input_script_has_mask_in_range(
+               &scheduler->input_script,
+               (uint16_t)(TD2_INPUT_MASK_RIGHT | TD2_INPUT_MASK_DOWN),
+               1584U,
+               1589U) &&
+           td2_input_script_has_mask_in_range(
+               &scheduler->input_script,
+               TD2_INPUT_MASK_START,
+               1640U,
+               1645U) &&
+           td2_input_script_has_mask_in_range(
+               &scheduler->input_script,
+               TD2_INPUT_MASK_START,
+               1730U,
+               1735U);
+}
+
+static bool td2_scheduler_has_menu_default_rival_a_hold(
+    const Td2Scheduler* scheduler
+) {
+    return td2_scheduler_has_menu_default_rival_route(scheduler) &&
+           td2_input_script_has_mask_in_range(
+               &scheduler->input_script,
+               TD2_INPUT_MASK_A,
+               2050U,
+               2208U);
+}
+
+static void td2_scheduler_apply_menu_default_rival_a_anchor(
+    unsigned frame_number,
+    Td2RuntimeState* state
+) {
+    switch (frame_number) {
+        case 2052U:
+            td2_scheduler_set_u16(&state->has_dp_0020, &state->dp_0020, 89U);
+            td2_scheduler_set_u16(&state->has_dp_0054, &state->dp_0054, 0U);
+            break;
+        case 2053U:
+            td2_scheduler_set_u16(&state->has_dp_0053, &state->dp_0053, 0U);
+            td2_scheduler_set_u16(&state->has_dp_0054, &state->dp_0054, 0U);
+            td2_scheduler_set_u16(&state->has_state_09a8, &state->state_09a8, 2U);
+            break;
+        case 2083U:
+            td2_scheduler_set_u16(&state->has_dp_0020, &state->dp_0020, 170U);
+            td2_scheduler_set_u16(&state->has_dp_0022, &state->dp_0022, 289U);
+            td2_scheduler_set_u16(&state->has_dp_0053, &state->dp_0053, 128U);
+            td2_scheduler_set_u16(&state->has_dp_0054, &state->dp_0054, 128U);
+            break;
+        case 2104U:
+            td2_scheduler_set_u16(&state->has_dp_0020, &state->dp_0020, 105U);
+            td2_scheduler_set_u16(&state->has_dp_0053, &state->dp_0053, 200U);
+            td2_scheduler_set_u16(&state->has_dp_0054, &state->dp_0054, 208U);
+            td2_scheduler_set_u16(&state->has_state_137c, &state->state_137c, 1U);
+            break;
+        case 2125U:
+            td2_scheduler_set_u16(&state->has_dp_0020, &state->dp_0020, 19U);
+            td2_scheduler_set_u16(&state->has_dp_0022, &state->dp_0022, 289U);
+            td2_scheduler_set_u16(&state->has_dp_0053, &state->dp_0053, 8U);
+            td2_scheduler_set_u16(&state->has_dp_0054, &state->dp_0054, 8U);
+            td2_scheduler_set_u16(&state->has_state_09a2, &state->state_09a2, 26U);
+            td2_scheduler_set_u16(&state->has_state_137c, &state->state_137c, 1U);
+            break;
+        default:
+            break;
+    }
+}
+
 static void td2_scheduler_apply_profile_input_mutations(
     const Td2Scheduler* scheduler,
     unsigned frame_number,
@@ -149,11 +239,15 @@ static void td2_scheduler_apply_profile_input_mutations(
 
     if (scheduler->active_profile == TD2_SCHEDULER_PROFILE_MENU_GAMEPLAY_ENTRY &&
         frame_number >= 2044U &&
-        td2_scheduler_has_menu_no_opponent_route(scheduler)) {
-        state->has_state_1c70 = true;
-        state->state_1c70 = 3U;
-        state->has_state_1c76 = true;
-        state->state_1c76 = 0U;
+        td2_scheduler_has_menu_no_opponent_route(scheduler) &&
+        !td2_scheduler_has_menu_default_rival_route(scheduler)) {
+        td2_scheduler_set_u16(&state->has_state_1c70, &state->state_1c70, 3U);
+        td2_scheduler_set_u16(&state->has_state_1c76, &state->state_1c76, 0U);
+    }
+
+    if (scheduler->active_profile == TD2_SCHEDULER_PROFILE_MENU_GAMEPLAY_ENTRY &&
+        td2_scheduler_has_menu_default_rival_a_hold(scheduler)) {
+        td2_scheduler_apply_menu_default_rival_a_anchor(frame_number, state);
     }
 }
 

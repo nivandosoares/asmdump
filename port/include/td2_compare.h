@@ -72,6 +72,22 @@ typedef struct {
     Td2CompareCallbackContract callback_contract;
 } Td2CompareLane;
 
+bool td2_compare_write_argb_ppm(
+    const char* path,
+    const uint32_t* framebuffer,
+    int width,
+    int height,
+    char* error,
+    size_t error_size
+);
+bool td2_compare_write_argb_png(
+    const char* path,
+    const uint32_t* framebuffer,
+    int width,
+    int height,
+    char* error,
+    size_t error_size
+);
 bool td2_compare_init(
     Td2CompareLane* compare,
     const Td2DesignPack* pack,

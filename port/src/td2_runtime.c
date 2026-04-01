@@ -142,30 +142,26 @@ bool td2_runtime_dump_frame(
     size_t error_size
 ) {
     char path[1200];
-    FILE* file;
-    unsigned y;
+    char png_path[1200];
 
     snprintf(path, sizeof(path), "%s_%05u.ppm", prefix, frame_index);
-    file = fopen(path, "wb");
-    if (file == NULL) {
-        set_error(error, error_size, "failed to open dump file");
+    snprintf(png_path, sizeof(png_path), "%s_%05u.png", prefix, frame_index);
+    if (!td2_compare_write_argb_ppm(
+            path,
+            runtime->framebuffer,
+            TD2_FRAME_WIDTH,
+            TD2_FRAME_HEIGHT,
+            error,
+            error_size) ||
+        !td2_compare_write_argb_png(
+            png_path,
+            runtime->framebuffer,
+            TD2_FRAME_WIDTH,
+            TD2_FRAME_HEIGHT,
+            error,
+            error_size)) {
         return false;
     }
-
-    fprintf(file, "P6\n%d %d\n255\n", TD2_FRAME_WIDTH, TD2_FRAME_HEIGHT);
-    for (y = 0; y < TD2_FRAME_HEIGHT; y++) {
-        unsigned x;
-        for (x = 0; x < TD2_FRAME_WIDTH; x++) {
-            uint32_t pixel = runtime->framebuffer[y * TD2_FRAME_WIDTH + x];
-            uint8_t rgb[3];
-            rgb[0] = (uint8_t)((pixel >> 16) & 0xffU);
-            rgb[1] = (uint8_t)((pixel >> 8) & 0xffU);
-            rgb[2] = (uint8_t)(pixel & 0xffU);
-            fwrite(rgb, sizeof(rgb), 1, file);
-        }
-    }
-
-    fclose(file);
     if (!td2_compare_dump_bundle(
             &runtime->compare,
             &runtime->design_pack,

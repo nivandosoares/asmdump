@@ -21,9 +21,13 @@ run_compare() {
     local expected_callback_checks="${3:-0}"
     local prefix="$TMP_DIR/$label"
     local summary="${prefix}_00000_compare.json"
+    local actual_png="${prefix}_00000.png"
     local compare_ppm="${prefix}_00000_compare.ppm"
+    local compare_png="${prefix}_00000_compare.png"
     local diff_ppm="${prefix}_00000_diff.ppm"
+    local diff_png="${prefix}_00000_diff.png"
     local reference_ppm="${prefix}_00000_reference.ppm"
+    local reference_png="${prefix}_00000_reference.png"
     local compare_status
     local mismatch
     local state_failures
@@ -44,7 +48,14 @@ run_compare() {
         return
     fi
 
-    if [ ! -f "$summary" ] || [ ! -f "$compare_ppm" ] || [ ! -f "$diff_ppm" ] || [ ! -f "$reference_ppm" ]; then
+    if [ ! -f "$summary" ] ||
+       [ ! -f "$actual_png" ] ||
+       [ ! -f "$compare_ppm" ] ||
+       [ ! -f "$compare_png" ] ||
+       [ ! -f "$diff_ppm" ] ||
+       [ ! -f "$diff_png" ] ||
+       [ ! -f "$reference_ppm" ] ||
+       [ ! -f "$reference_png" ]; then
         echo "FAIL: missing compare artifacts for $label" >&2
         FAIL=$((FAIL + 1))
         return

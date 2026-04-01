@@ -316,10 +316,15 @@ void td2_runtime_state_parse_json_fields(
     parse_optional_u16(block, "\"state_020a\":", &state->has_state_020a, &state->state_020a);
     parse_optional_u16(block, "\"state_040a\":", &state->has_state_040a, &state->state_040a);
     parse_optional_u16(block, "\"state_0960\":", &state->has_state_0960, &state->state_0960);
+    parse_optional_u16(block, "\"state_09a2\":", &state->has_state_09a2, &state->state_09a2);
+    parse_optional_u16(block, "\"state_09a8\":", &state->has_state_09a8, &state->state_09a8);
     parse_optional_u16(block, "\"state_1c6a\":", &state->has_state_1c6a, &state->state_1c6a);
     parse_optional_u16(block, "\"state_1c70\":", &state->has_state_1c70, &state->state_1c70);
     parse_optional_u16(block, "\"state_1c76\":", &state->has_state_1c76, &state->state_1c76);
+    parse_optional_u16(block, "\"state_137c\":", &state->has_state_137c, &state->state_137c);
     parse_optional_u16(block, "\"state_11f3\":", &state->has_state_11f3, &state->state_11f3);
+    parse_optional_u16(block, "\"dp_0020\":", &state->has_dp_0020, &state->dp_0020);
+    parse_optional_u16(block, "\"dp_0022\":", &state->has_dp_0022, &state->dp_0022);
     parse_optional_u16(block, "\"dp_0053\":", &state->has_dp_0053, &state->dp_0053);
     parse_optional_u16(block, "\"dp_0054\":", &state->has_dp_0054, &state->dp_0054);
 }

@@ -12,7 +12,7 @@ typedef struct {
     Td2RuntimeStateSource expected_source;
     bool expected_contract_loaded;
     unsigned expected_segment_count;
-    unsigned checkpoints[8];
+    unsigned checkpoints[12];
     unsigned checkpoint_count;
 } Td2RailCase;
 
@@ -33,9 +33,9 @@ static const Td2RailCase k_rails[] = {
         TD2_SCHEDULER_PROFILE_MENU_GAMEPLAY_ENTRY,
         TD2_RUNTIME_STATE_SOURCE_SCHEDULER_CONTRACT,
         true,
-        7U,
-        {1500U, 1640U, 1677U, 1857U, 2014U, 2044U, 2050U},
-        7U,
+        12U,
+        {1500U, 1640U, 1677U, 1857U, 2014U, 2044U, 2050U, 2053U, 2083U, 2104U, 2125U},
+        11U,
     },
     {
         "gameplay_live_race_mid",
@@ -337,6 +337,39 @@ static void verify_menu_frame(
             expect_u16("menu_gameplay_entry", frame, "state_11f3", state->has_state_11f3, state->state_11f3, 44U, total_checks, failed_checks);
             expect_u16("menu_gameplay_entry", frame, "dp_0053", state->has_dp_0053, state->dp_0053, 96U, total_checks, failed_checks);
             expect_u16("menu_gameplay_entry", frame, "dp_0054", state->has_dp_0054, state->dp_0054, 112U, total_checks, failed_checks);
+            break;
+        case 2053U:
+            expect_u16("menu_gameplay_entry", frame, "state_09a2", state->has_state_09a2, state->state_09a2, 27U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "state_09a8", state->has_state_09a8, state->state_09a8, 10U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "dp_0020", state->has_dp_0020, state->dp_0020, 18U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "dp_0022", state->has_dp_0022, state->dp_0022, 4U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "dp_0053", state->has_dp_0053, state->dp_0053, 248U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "dp_0054", state->has_dp_0054, state->dp_0054, 248U, total_checks, failed_checks);
+            break;
+        case 2083U:
+            expect_u16("menu_gameplay_entry", frame, "state_09a2", state->has_state_09a2, state->state_09a2, 27U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "state_09a8", state->has_state_09a8, state->state_09a8, 2U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "dp_0020", state->has_dp_0020, state->dp_0020, 18U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "dp_0022", state->has_dp_0022, state->dp_0022, 4U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "dp_0053", state->has_dp_0053, state->dp_0053, 8U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "dp_0054", state->has_dp_0054, state->dp_0054, 8U, total_checks, failed_checks);
+            break;
+        case 2104U:
+            expect_u16("menu_gameplay_entry", frame, "state_09a2", state->has_state_09a2, state->state_09a2, 38U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "state_137c", state->has_state_137c, state->state_137c, 0U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "dp_0020", state->has_dp_0020, state->dp_0020, 192U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "dp_0022", state->has_dp_0022, state->dp_0022, 9U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "dp_0053", state->has_dp_0053, state->dp_0053, 8U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "dp_0054", state->has_dp_0054, state->dp_0054, 8U, total_checks, failed_checks);
+            break;
+        case 2125U:
+            expect_u16("menu_gameplay_entry", frame, "state_09a2", state->has_state_09a2, state->state_09a2, 27U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "state_09a8", state->has_state_09a8, state->state_09a8, 10U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "state_137c", state->has_state_137c, state->state_137c, 0U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "dp_0020", state->has_dp_0020, state->dp_0020, 18U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "dp_0022", state->has_dp_0022, state->dp_0022, 4U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "dp_0053", state->has_dp_0053, state->dp_0053, 24U, total_checks, failed_checks);
+            expect_u16("menu_gameplay_entry", frame, "dp_0054", state->has_dp_0054, state->dp_0054, 24U, total_checks, failed_checks);
             break;
         default:
             break;

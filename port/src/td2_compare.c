@@ -25,7 +25,65 @@ static void unpack_argb(uint32_t pixel, uint8_t* red, uint8_t* green, uint8_t* b
     *blue = (uint8_t)(pixel & 0xffU);
 }
 
-static bool write_argb_ppm(
+static void write_be32(FILE* file, uint32_t value) {
+    fputc((int)((value >> 24) & 0xffU), file);
+    fputc((int)((value >> 16) & 0xffU), file);
+    fputc((int)((value >> 8) & 0xffU), file);
+    fputc((int)(value & 0xffU), file);
+}
+
+static uint32_t td2_crc32_accumulate(uint32_t crc, const uint8_t* data, size_t size) {
+    size_t i;
+
+    for (i = 0U; i < size; i++) {
+        unsigned bit_index;
+        crc ^= data[i];
+        for (bit_index = 0U; bit_index < 8U; bit_index++) {
+            crc = (crc & 1U) != 0U
+                ? (crc >> 1) ^ 0xedb88320U
+                : (crc >> 1);
+        }
+    }
+    return crc;
+}
+
+static uint32_t td2_adler32(const uint8_t* data, size_t size) {
+    uint32_t a = 1U;
+    uint32_t b = 0U;
+    size_t i;
+
+    for (i = 0U; i < size; i++) {
+        a = (a + data[i]) % 65521U;
+        b = (b + a) % 65521U;
+    }
+    return (b << 16) | a;
+}
+
+static bool write_png_chunk(
+    FILE* file,
+    const char chunk_type[4],
+    const uint8_t* data,
+    size_t data_size
+) {
+    uint32_t crc;
+
+    write_be32(file, (uint32_t)data_size);
+    if (fwrite(chunk_type, 1U, 4U, file) != 4U) {
+        return false;
+    }
+    if (data_size != 0U && fwrite(data, 1U, data_size, file) != data_size) {
+        return false;
+    }
+
+    crc = td2_crc32_accumulate(0xffffffffU, (const uint8_t*)chunk_type, 4U);
+    if (data_size != 0U) {
+        crc = td2_crc32_accumulate(crc, data, data_size);
+    }
+    write_be32(file, crc ^ 0xffffffffU);
+    return true;
+}
+
+bool td2_compare_write_argb_ppm(
     const char* path,
     const uint32_t* framebuffer,
     int width,
@@ -55,6 +113,142 @@ static bool write_argb_ppm(
     }
 
     fclose(file);
+    if (error_size > 0U) {
+        error[0] = '\0';
+    }
+    return true;
+}
+
+bool td2_compare_write_argb_png(
+    const char* path,
+    const uint32_t* framebuffer,
+    int width,
+    int height,
+    char* error,
+    size_t error_size
+) {
+    static const uint8_t k_png_signature[8] = {
+        0x89U, 0x50U, 0x4eU, 0x47U, 0x0dU, 0x0aU, 0x1aU, 0x0aU
+    };
+    FILE* file = NULL;
+    uint8_t ihdr[13];
+    uint8_t* raw = NULL;
+    uint8_t* zlib = NULL;
+    size_t row_bytes;
+    size_t raw_size;
+    size_t block_count;
+    size_t zlib_capacity;
+    size_t raw_offset = 0U;
+    size_t zlib_offset = 0U;
+    int y;
+
+    if (width <= 0 || height <= 0) {
+        set_error(error, error_size, "invalid PNG dimensions");
+        return false;
+    }
+
+    row_bytes = 1U + ((size_t)width * 3U);
+    raw_size = row_bytes * (size_t)height;
+    block_count = (raw_size + 65534U) / 65535U;
+    zlib_capacity = 2U + raw_size + (block_count * 5U) + 4U;
+
+    raw = (uint8_t*)malloc(raw_size);
+    zlib = (uint8_t*)malloc(zlib_capacity);
+    if (raw == NULL || zlib == NULL) {
+        free(raw);
+        free(zlib);
+        set_error(error, error_size, "failed to allocate PNG buffers");
+        return false;
+    }
+
+    for (y = 0; y < height; y++) {
+        int x;
+
+        raw[raw_offset++] = 0U;
+        for (x = 0; x < width; x++) {
+            uint8_t red;
+            uint8_t green;
+            uint8_t blue;
+            unpack_argb(framebuffer[(y * width) + x], &red, &green, &blue);
+            raw[raw_offset++] = red;
+            raw[raw_offset++] = green;
+            raw[raw_offset++] = blue;
+        }
+    }
+
+    zlib[zlib_offset++] = 0x78U;
+    zlib[zlib_offset++] = 0x01U;
+    raw_offset = 0U;
+    while (raw_offset < raw_size) {
+        size_t block_size = raw_size - raw_offset;
+        uint16_t len;
+        uint16_t nlen;
+
+        if (block_size > 65535U) {
+            block_size = 65535U;
+        }
+        len = (uint16_t)block_size;
+        nlen = (uint16_t)~len;
+        zlib[zlib_offset++] = (raw_offset + block_size) >= raw_size ? 0x01U : 0x00U;
+        zlib[zlib_offset++] = (uint8_t)(len & 0xffU);
+        zlib[zlib_offset++] = (uint8_t)((len >> 8) & 0xffU);
+        zlib[zlib_offset++] = (uint8_t)(nlen & 0xffU);
+        zlib[zlib_offset++] = (uint8_t)((nlen >> 8) & 0xffU);
+        memcpy(zlib + zlib_offset, raw + raw_offset, block_size);
+        zlib_offset += block_size;
+        raw_offset += block_size;
+    }
+
+    {
+        uint32_t adler = td2_adler32(raw, raw_size);
+        zlib[zlib_offset++] = (uint8_t)((adler >> 24) & 0xffU);
+        zlib[zlib_offset++] = (uint8_t)((adler >> 16) & 0xffU);
+        zlib[zlib_offset++] = (uint8_t)((adler >> 8) & 0xffU);
+        zlib[zlib_offset++] = (uint8_t)(adler & 0xffU);
+    }
+
+    file = fopen(path, "wb");
+    if (file == NULL) {
+        free(raw);
+        free(zlib);
+        set_error(error, error_size, "failed to open PNG dump file");
+        return false;
+    }
+
+    if (fwrite(k_png_signature, 1U, sizeof(k_png_signature), file) != sizeof(k_png_signature)) {
+        fclose(file);
+        free(raw);
+        free(zlib);
+        set_error(error, error_size, "failed to write PNG signature");
+        return false;
+    }
+    ihdr[0] = (uint8_t)(((uint32_t)width >> 24) & 0xffU);
+    ihdr[1] = (uint8_t)(((uint32_t)width >> 16) & 0xffU);
+    ihdr[2] = (uint8_t)(((uint32_t)width >> 8) & 0xffU);
+    ihdr[3] = (uint8_t)((uint32_t)width & 0xffU);
+    ihdr[4] = (uint8_t)(((uint32_t)height >> 24) & 0xffU);
+    ihdr[5] = (uint8_t)(((uint32_t)height >> 16) & 0xffU);
+    ihdr[6] = (uint8_t)(((uint32_t)height >> 8) & 0xffU);
+    ihdr[7] = (uint8_t)((uint32_t)height & 0xffU);
+    ihdr[8] = 8U;
+    ihdr[9] = 2U;
+    ihdr[10] = 0U;
+    ihdr[11] = 0U;
+    ihdr[12] = 0U;
+
+    if (!write_png_chunk(file, "IHDR", ihdr, sizeof(ihdr)) ||
+        !write_png_chunk(file, "IDAT", zlib, zlib_offset) ||
+        !write_png_chunk(file, "IEND", NULL, 0U)) {
+        fclose(file);
+        free(raw);
+        free(zlib);
+        set_error(error, error_size, "failed to write PNG dump file");
+        return false;
+    }
+
+    fclose(file);
+    free(raw);
+    free(zlib);
     if (error_size > 0U) {
         error[0] = '\0';
     }
@@ -378,6 +572,12 @@ static void td2_compare_capture_callback_contract(
     if (callback_contract->expected_state.has_state_0960) {
         td2_compare_callback_record(report, "state_0960", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_0960, runtime_state->state_0960);
     }
+    if (callback_contract->expected_state.has_state_09a2) {
+        td2_compare_callback_record(report, "state_09a2", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_09a2, runtime_state->state_09a2);
+    }
+    if (callback_contract->expected_state.has_state_09a8) {
+        td2_compare_callback_record(report, "state_09a8", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_09a8, runtime_state->state_09a8);
+    }
     if (callback_contract->expected_state.has_state_1c6a) {
         td2_compare_callback_record(report, "state_1c6a", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_1c6a, runtime_state->state_1c6a);
     }
@@ -387,8 +587,17 @@ static void td2_compare_capture_callback_contract(
     if (callback_contract->expected_state.has_state_1c76) {
         td2_compare_callback_record(report, "state_1c76", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_1c76, runtime_state->state_1c76);
     }
+    if (callback_contract->expected_state.has_state_137c) {
+        td2_compare_callback_record(report, "state_137c", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_137c, runtime_state->state_137c);
+    }
     if (callback_contract->expected_state.has_state_11f3) {
         td2_compare_callback_record(report, "state_11f3", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_11f3, runtime_state->state_11f3);
+    }
+    if (callback_contract->expected_state.has_dp_0020) {
+        td2_compare_callback_record(report, "dp_0020", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.dp_0020, runtime_state->dp_0020);
+    }
+    if (callback_contract->expected_state.has_dp_0022) {
+        td2_compare_callback_record(report, "dp_0022", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.dp_0022, runtime_state->dp_0022);
     }
     if (callback_contract->expected_state.has_dp_0053) {
         td2_compare_callback_record(report, "dp_0053", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.dp_0053, runtime_state->dp_0053);
@@ -568,9 +777,13 @@ bool td2_compare_dump_bundle(
     size_t error_size
 ) {
     char actual_path[1200];
+    char actual_png_path[1200];
     char reference_path[1200];
+    char reference_png_path[1200];
     char diff_path[1200];
+    char diff_png_path[1200];
     char strip_path[1200];
+    char strip_png_path[1200];
     char summary_path[1200];
     FILE* file;
     unsigned check_index;
@@ -583,15 +796,23 @@ bool td2_compare_dump_bundle(
     }
 
     snprintf(actual_path, sizeof(actual_path), "%s_%05u.ppm", prefix, frame_index);
+    snprintf(actual_png_path, sizeof(actual_png_path), "%s_%05u.png", prefix, frame_index);
     snprintf(reference_path, sizeof(reference_path), "%s_%05u_reference.ppm", prefix, frame_index);
+    snprintf(reference_png_path, sizeof(reference_png_path), "%s_%05u_reference.png", prefix, frame_index);
     snprintf(diff_path, sizeof(diff_path), "%s_%05u_diff.ppm", prefix, frame_index);
+    snprintf(diff_png_path, sizeof(diff_png_path), "%s_%05u_diff.png", prefix, frame_index);
     snprintf(strip_path, sizeof(strip_path), "%s_%05u_compare.ppm", prefix, frame_index);
+    snprintf(strip_png_path, sizeof(strip_png_path), "%s_%05u_compare.png", prefix, frame_index);
     snprintf(summary_path, sizeof(summary_path), "%s_%05u_compare.json", prefix, frame_index);
 
-    if (!write_argb_ppm(actual_path, actual_framebuffer, TD2_FRAME_WIDTH, TD2_FRAME_HEIGHT, error, error_size) ||
-        !write_argb_ppm(reference_path, compare->reference_framebuffer, TD2_FRAME_WIDTH, TD2_FRAME_HEIGHT, error, error_size) ||
-        !write_argb_ppm(diff_path, compare->diff_framebuffer, TD2_FRAME_WIDTH, TD2_FRAME_HEIGHT, error, error_size) ||
-        !write_argb_ppm(strip_path, compare->strip_framebuffer, TD2_COMPARE_WIDTH, TD2_FRAME_HEIGHT, error, error_size)) {
+    if (!td2_compare_write_argb_ppm(actual_path, actual_framebuffer, TD2_FRAME_WIDTH, TD2_FRAME_HEIGHT, error, error_size) ||
+        !td2_compare_write_argb_png(actual_png_path, actual_framebuffer, TD2_FRAME_WIDTH, TD2_FRAME_HEIGHT, error, error_size) ||
+        !td2_compare_write_argb_ppm(reference_path, compare->reference_framebuffer, TD2_FRAME_WIDTH, TD2_FRAME_HEIGHT, error, error_size) ||
+        !td2_compare_write_argb_png(reference_png_path, compare->reference_framebuffer, TD2_FRAME_WIDTH, TD2_FRAME_HEIGHT, error, error_size) ||
+        !td2_compare_write_argb_ppm(diff_path, compare->diff_framebuffer, TD2_FRAME_WIDTH, TD2_FRAME_HEIGHT, error, error_size) ||
+        !td2_compare_write_argb_png(diff_png_path, compare->diff_framebuffer, TD2_FRAME_WIDTH, TD2_FRAME_HEIGHT, error, error_size) ||
+        !td2_compare_write_argb_ppm(strip_path, compare->strip_framebuffer, TD2_COMPARE_WIDTH, TD2_FRAME_HEIGHT, error, error_size) ||
+        !td2_compare_write_argb_png(strip_png_path, compare->strip_framebuffer, TD2_COMPARE_WIDTH, TD2_FRAME_HEIGHT, error, error_size)) {
         return false;
     }
 
@@ -629,12 +850,20 @@ bool td2_compare_dump_bundle(
     fputs("  \"outputs\": {\n", file);
     fputs("    \"actual\": ", file);
     write_json_string(file, actual_path);
+    fputs(",\n    \"actual_png\": ", file);
+    write_json_string(file, actual_png_path);
     fputs(",\n    \"reference\": ", file);
     write_json_string(file, reference_path);
+    fputs(",\n    \"reference_png\": ", file);
+    write_json_string(file, reference_png_path);
     fputs(",\n    \"diff\": ", file);
     write_json_string(file, diff_path);
+    fputs(",\n    \"diff_png\": ", file);
+    write_json_string(file, diff_png_path);
     fputs(",\n    \"compare\": ", file);
     write_json_string(file, strip_path);
+    fputs(",\n    \"compare_png\": ", file);
+    write_json_string(file, strip_png_path);
     fputs("\n  },\n", file);
     fprintf(file,
             "  \"metrics\": {\n"

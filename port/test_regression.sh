@@ -28,13 +28,14 @@ render_and_compare() {
     local golden="$3"
     local prefix="$TMP_DIR/$label"
     local rendered="${prefix}_00000.ppm"
+    local rendered_png="${prefix}_00000.png"
     local result mismatch ratio
 
     echo "--- $label ---"
     "$PORT_BIN" --scene-dir "$scene_dir" --headless --frames 1 --dump-prefix "$prefix"
 
-    if [ ! -f "$rendered" ]; then
-        echo "FAIL: missing rendered frame $rendered" >&2
+    if [ ! -f "$rendered" ] || [ ! -f "$rendered_png" ]; then
+        echo "FAIL: missing rendered frame artifacts $rendered / $rendered_png" >&2
         FAIL=$((FAIL + 1))
         return
     fi
