@@ -1,6 +1,56 @@
 Date: 2026-04-01
 
 Summary
+- Fixed the curated docs wiki `Last updated` regression.
+- `tools/build_docs_wiki_report.py` no longer trusts filesystem mtime alone;
+  it now prefers the latest Git commit timestamp for each source doc and only
+  falls back to local mtime when Git history is unavailable.
+
+What I ran
+- `python3 tools/build_docs_wiki_report.py --manifest rom_analysis/docs/wiki_doc_index.json --output-dir tools/out/docs_wiki --markdown-bundle-dir tools/out/docs_wiki_markdown_bundle`
+
+Findings / Interpretation
+- The wiki was previously showing stale timestamps for recently committed docs
+  because file mtimes in this repo were lagging behind the actual push/commit
+  chronology.
+- After the fix, the Source Of Truth docs now show the latest pushed commit
+  time again:
+  - `PORT_PLAN.md`: `2026-04-01 10:37`
+  - `next_steps_roadmap.md`: `2026-04-01 10:37`
+  - `progress_checkpoints.md`: `2026-04-01 10:37`
+  - `validation_gates.md`: `2026-04-01 10:37`
+  - `validation/README.md`: `2026-04-01 10:37`
+  - `port/README.md`: `2026-04-01 10:37`
+
+What I learned (actionable)
+- Git commit time is the right primary signal for this wiki surface because it
+  tracks what was actually published, while local mtimes in this repo are not
+  stable enough to sort/update the index reliably.
+- The post-push wiki rebuild remains correct locally even when the follow-up
+  wiki auto-commit must be skipped due unrelated dirty tracked docs.
+
+Next steps / Checkpoints
+1) Keep using Git-backed timestamps in the wiki generator.
+2) Return to the active port gate:
+   replace the seeded callback bootstrap with real front-end callback/state
+   execution.
+
+Immediate recommendation
+- Treat the local rebuilt wiki under `tools/out/docs_wiki/` as the source of
+  truth for `Last updated` until the worktree is clean enough for the wrapper
+  to auto-commit the regenerated HTML again.
+
+Files updated in this turn
+- `tools/build_docs_wiki_report.py`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `tools/build_docs_wiki_report.py`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Date: 2026-04-01
+
+Summary
 - Promoted the first callback-backed compare-lane checkpoint on top of the
   seeded PPU-state lane.
 - Added `td2_contracts.*`, which resolves

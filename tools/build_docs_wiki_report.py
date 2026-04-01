@@ -2,12 +2,14 @@
 from __future__ import annotations
 
 import argparse
+import functools
 import html
 import json
 import os
 import re
 import shutil
 import struct
+import subprocess
 import zlib
 from dataclasses import dataclass
 from datetime import datetime
@@ -18,6 +20,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = REPO_ROOT / "rom_analysis" / "docs" / "wiki_doc_index.json"
 DEFAULT_OUTPUT = REPO_ROOT / "tools" / "out" / "docs_wiki"
 DEFAULT_MARKDOWN_BUNDLE_OUTPUT = REPO_ROOT / "tools" / "out" / "docs_wiki_markdown_bundle"
+LOCAL_TZ = datetime.now().astimezone().tzinfo
 
 
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
@@ -608,15 +611,35 @@ def render_artifact_gallery(page_path: Path, images: list[ArtifactImage]) -> str
     )
 
 
-def source_last_updated(source_rel: Path) -> str:
+def source_filesystem_updated_dt(source_rel: Path) -> datetime:
     source_abs = REPO_ROOT / source_rel
-    timestamp = datetime.fromtimestamp(source_abs.stat().st_mtime)
-    return timestamp.strftime("%Y-%m-%d %H:%M")
+    return datetime.fromtimestamp(source_abs.stat().st_mtime, tz=LOCAL_TZ)
+
+
+@functools.lru_cache(maxsize=None)
+def source_git_updated_dt(source_rel_text: str) -> datetime | None:
+    result = subprocess.run(
+        ["git", "-C", str(REPO_ROOT), "log", "-1", "--format=%cI", "--", source_rel_text],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    timestamp_text = result.stdout.strip()
+    if result.returncode != 0 or not timestamp_text:
+        return None
+    return datetime.fromisoformat(timestamp_text).astimezone(LOCAL_TZ)
 
 
 def source_last_updated_dt(source_rel: Path) -> datetime:
-    source_abs = REPO_ROOT / source_rel
-    return datetime.fromtimestamp(source_abs.stat().st_mtime)
+    filesystem_dt = source_filesystem_updated_dt(source_rel)
+    git_dt = source_git_updated_dt(source_rel.as_posix())
+    if git_dt is None:
+        return filesystem_dt
+    return git_dt if git_dt >= filesystem_dt else filesystem_dt
+
+
+def source_last_updated(source_rel: Path) -> str:
+    return source_last_updated_dt(source_rel).strftime("%Y-%m-%d %H:%M")
 
 
 def build_sidebar(manifest: dict, page_map: dict[Path, Path], current_page: Path) -> str:
