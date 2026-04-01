@@ -23,7 +23,9 @@ run_compare() {
     local compare_ppm="${prefix}_00000_compare.ppm"
     local diff_ppm="${prefix}_00000_diff.ppm"
     local reference_ppm="${prefix}_00000_reference.ppm"
+    local compare_status
     local mismatch
+    local state_failures
 
     echo "--- $label ---"
     if ! "$PORT_BIN" \
@@ -44,21 +46,24 @@ run_compare() {
         return
     fi
 
-    mismatch="$(python3 - <<'PY' "$summary"
+    compare_status="$(python3 - <<'PY' "$summary"
 import json
 import sys
 path = sys.argv[1]
 with open(path, "r", encoding="utf-8") as file:
     payload = json.load(file)
 print(payload["metrics"]["mismatch_pixels"])
+print(payload["state_contract"]["failed_checks"])
 PY
 )"
+    mismatch="$(printf '%s\n' "$compare_status" | sed -n '1p')"
+    state_failures="$(printf '%s\n' "$compare_status" | sed -n '2p')"
 
-    if [ "$mismatch" = "0" ]; then
-        echo "PASS: compare bundle generated with exact parity"
+    if [ "$mismatch" = "0" ] && [ "$state_failures" = "0" ]; then
+        echo "PASS: compare bundle generated with exact pixel and state parity"
         PASS=$((PASS + 1))
     else
-        echo "FAIL: compare summary reports $mismatch mismatched pixels" >&2
+        echo "FAIL: compare summary reports $mismatch mismatched pixels and $state_failures state failures" >&2
         FAIL=$((FAIL + 1))
     fi
 }

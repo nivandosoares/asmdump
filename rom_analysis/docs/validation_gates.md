@@ -46,7 +46,33 @@ Use a probe capture that matches the contract's expected profile in
 `expected_probe_profile`, for example a run with
 `TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/td2_boot_probe`.
 
-## 3) Practical Gate Policy
+## 3) Bootstrap Compare-State Contract
+
+Runner:
+
+```sh
+./port/build/td2_port \
+  --scene-dir port/assets/test_dump_frame300/design_pack \
+  --headless \
+  --frames 1 \
+  --compare \
+  --fail-on-compare-diff \
+  --dump-prefix port/build/frame300_compare
+```
+
+Current compare JSON now also carries `state_contract`, which validates the
+loaded design pack against live runtime state for:
+
+- visible PPU/OAM registers
+- Mode 7 fields
+- per-layer tilemap/CHR/scroll metadata
+- raw `VRAM/CGRAM/OAM` byte parity
+
+This is intentionally bootstrap-scoped: it protects the static seeded-state
+path now, and becomes the cheap semantic guardrail underneath later
+callback/state execution work.
+
+## 4) Practical Gate Policy
 
 For each archaeology lane:
 

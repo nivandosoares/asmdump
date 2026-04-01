@@ -1,6 +1,74 @@
 Date: 2026-04-01
 
 Summary
+- Promoted the compare lane from pixel-only review into a first semantic
+  state-contract surface.
+- The compare JSON now includes `state_contract`, which validates seeded
+  PPU-visible fields against the runtime state:
+  - visible PPU/OAM registers
+  - Mode 7 fields
+  - per-layer tilemap/CHR/scroll metadata
+  - raw `VRAM/CGRAM/OAM` byte parity
+- `--fail-on-compare-diff` now fails on either pixel drift or state-contract
+  drift.
+- Extended `port/test_compare_lane.sh` so the compare smoke enforces both
+  exact pixels and zero semantic failures.
+
+What I ran
+- `make -C port test`
+
+Findings / Interpretation
+- The compare lane now carries the right shape for the next callback/state
+  phase instead of only reporting image deltas.
+- Current promoted fixtures stay exact in both dimensions:
+  - `frame300_compare`: `0` mismatched pixels, `0/58` state failures
+  - `frame1086_compare`: `0` mismatched pixels, `0/59` state failures
+- The new semantic contract is still bootstrap-scoped:
+  it proves that the runtime preserves the loaded SNES-visible scene state,
+  not yet that it advances real callback families over time.
+
+What I learned (actionable)
+- The next compare extension should target trusted multi-frame callback/state
+  traces, not more static-scene bookkeeping.
+- The current seeded PPU contract is still worth keeping in the default smoke,
+  because it will catch silent raw-state drift when the runtime starts mutating
+  `VRAM/CGRAM/OAM` or layer registers dynamically.
+
+Next steps / Checkpoints
+1) Start feeding trusted intro callback/state traces into the compare lane
+   shape, beginning with front-end families once the runtime can step them.
+2) Keep the seeded PPU contract active as the cheap guardrail for static
+   bootstrap fixtures.
+3) Continue using `make -C port test` as the default bounded falsifier.
+
+Immediate recommendation
+- Treat `state_contract.failed_checks` in the compare JSON as a first-class
+  gate alongside `metrics.mismatch_pixels`.
+- Use `--fail-on-compare-diff` whenever generating review bundles so both
+  pixel drift and semantic drift fail fast.
+
+Files updated in this turn
+- `port/include/td2_compare.h`
+- `port/main.c`
+- `port/src/td2_compare.c`
+- `port/src/td2_runtime.c`
+- `port/test_compare_lane.sh`
+- `validation/README.md`
+- `PORT_PLAN.md`
+- `port/README.md`
+- `port/docs/ARCHITECTURE.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/validation_gates.md`
+
+Next reading
+- `PORT_PLAN.md`
+- `port/docs/ARCHITECTURE.md`
+- `rom_analysis/docs/validation_gates.md`
+
+Date: 2026-04-01
+
+Summary
 - Added the first Zelda3-style compare lane to the new `port/` runtime.
 - The native binary now supports `--compare`, which emits:
   - native runtime frame

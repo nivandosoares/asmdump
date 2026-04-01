@@ -14,6 +14,9 @@ decoded tilemaps and sprite visibility metadata.
 - The native runtime now also emits a first compare bundle for promoted
   fixtures:
   runtime frame, trusted golden, diff map, and side-by-side strip.
+- That compare bundle now also reports seeded PPU-state drift:
+  visible registers, layer metadata, and raw `VRAM/CGRAM/OAM` parity against
+  the loaded design pack.
 - `zelda3/`, `sentrysearch/`, and `the_duel_longplay.mp4` are local-only
   references and must stay ignored in Git.
 - Lane order is unchanged, but every active lane now feeds the new runtime /

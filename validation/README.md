@@ -69,7 +69,13 @@ That emits:
 - `..._00000_reference.ppm`: trusted `main_visible` golden
 - `..._00000_diff.ppm`: absolute RGB error map
 - `..._00000_compare.ppm`: `runtime | golden | diff` strip
-- `..._00000_compare.json`: machine-readable drift metrics
+- `..._00000_compare.json`: machine-readable pixel metrics plus
+  `state_contract` over seeded PPU/layer/raw-memory state
+
+With `--fail-on-compare-diff`, the runtime now exits non-zero on either:
+
+- pixel drift vs the trusted golden
+- semantic drift in the seeded `state_contract`
 
 Post-push wiki refresh wrapper:
 

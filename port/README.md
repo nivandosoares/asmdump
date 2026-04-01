@@ -17,6 +17,7 @@ Current checkpoint:
   state
 - Zelda3-style compare lane:
   runtime | golden | diff bundle plus JSON drift summary
+  and seeded PPU-state contract checks
 - headless frame dumping for regression smoke
 
 This is deliberately not the final renderer. It is the clean replacement for
@@ -59,6 +60,8 @@ Notes:
 - The promoted smoke fixtures now render exactly from raw state in the native
   runtime; `layers/main_visible.ppm` remains a regression golden, not the
   render source.
+- The compare JSON now carries `state_contract`, so `--fail-on-compare-diff`
+  fails on both pixel drift and semantic drift in the seeded scene state.
 - `tools/push_checkpoint.sh` is the repo-local wrapper for the post-push step:
   it pushes the current checkpoint, refreshes the curated wiki, and issues a
   follow-up wiki refresh commit/push only if the generated wiki changed and

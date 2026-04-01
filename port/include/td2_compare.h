@@ -6,9 +6,12 @@
 #include <stdint.h>
 
 #include "td2_io.h"
+#include "td2_ppu.h"
 
 #define TD2_COMPARE_COLUMNS 3
 #define TD2_COMPARE_WIDTH (TD2_FRAME_WIDTH * TD2_COMPARE_COLUMNS)
+#define TD2_COMPARE_STATE_CHECKS_MAX 96
+#define TD2_COMPARE_STATE_KEY_BYTES 96
 
 typedef struct {
     unsigned pixel_count;
@@ -19,12 +22,37 @@ typedef struct {
     double rmse;
 } Td2CompareMetrics;
 
+typedef enum {
+    TD2_COMPARE_VALUE_INT = 0,
+    TD2_COMPARE_VALUE_BOOL = 1,
+} Td2CompareValueKind;
+
+typedef struct {
+    char key[TD2_COMPARE_STATE_KEY_BYTES];
+    Td2CompareValueKind value_kind;
+    int expected;
+    int actual;
+    bool matched;
+} Td2CompareStateCheck;
+
+typedef struct {
+    unsigned total_checks;
+    unsigned passed_checks;
+    unsigned failed_checks;
+    unsigned check_count;
+    unsigned vram_mismatch_bytes;
+    unsigned cgram_mismatch_bytes;
+    unsigned oam_mismatch_bytes;
+    Td2CompareStateCheck checks[TD2_COMPARE_STATE_CHECKS_MAX];
+} Td2CompareStateContract;
+
 typedef struct {
     bool enabled;
     uint32_t* reference_framebuffer;
     uint32_t* diff_framebuffer;
     uint32_t* strip_framebuffer;
     Td2CompareMetrics metrics;
+    Td2CompareStateContract state_contract;
 } Td2CompareLane;
 
 bool td2_compare_init(
@@ -35,9 +63,16 @@ bool td2_compare_init(
     size_t error_size
 );
 void td2_compare_free(Td2CompareLane* compare);
-void td2_compare_run(Td2CompareLane* compare, const uint32_t* actual_framebuffer);
+void td2_compare_run(
+    Td2CompareLane* compare,
+    const Td2DesignPack* pack,
+    const Td2PpuState* ppu,
+    const uint32_t* actual_framebuffer
+);
 bool td2_compare_dump_bundle(
     const Td2CompareLane* compare,
+    const Td2DesignPack* pack,
+    const Td2PpuState* ppu,
     const uint32_t* actual_framebuffer,
     const char* prefix,
     unsigned frame_index,
@@ -47,5 +82,6 @@ bool td2_compare_dump_bundle(
     char* error,
     size_t error_size
 );
+bool td2_compare_has_drift(const Td2CompareLane* compare);
 
 #endif

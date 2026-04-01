@@ -94,6 +94,8 @@ New useful state beyond the original plan:
   - trusted `main_visible` golden
   - absolute RGB diff map
   - side-by-side strip plus JSON drift metrics
+  - seeded PPU-state contract report over visible registers, layer metadata,
+    and raw `VRAM/CGRAM/OAM` parity
 
 - the frame-`300` copyright/credits scene is an exact solved target from both live Mesen dumps and a ROM-side builder
 - the `Ballistic presents` splash now has a deterministic entry anchor at frame `654`
@@ -214,11 +216,11 @@ New useful state beyond the original plan:
 
 Immediate next focus:
 
-1. Replace the old `port/` scaffolds with a clean SNES-mimetic bootstrap:
-   SDL host, state shadow, design-pack loader, and bounded regression smoke.
-2. Add a callback/state execution spine driven by validated bank ownership,
+1. Add a callback/state execution spine driven by validated bank ownership,
    starting with front-end callback families.
-3. Extend the compare lane from frame-only parity into callback/state drift
+2. Promote trusted callback/state traces into the compare lane after the
+   runtime can advance those families instead of only seeding static scenes.
+3. Extend the compare lane from PPU-state parity into callback/state drift
    reporting against trusted traces.
 4. Keep the intro archaeology lanes moving, but use them to ratify callback
    families and renderer contracts rather than to justify sampled playback as

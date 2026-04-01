@@ -19,7 +19,7 @@ static void print_usage(const char* argv0) {
         "  --frames N          Run a bounded frame count\n"
         "  --compare           Present and dump runtime|golden|diff side-by-side\n"
         "  --fail-on-compare-diff\n"
-        "                      Exit non-zero when compare finds drift\n"
+        "                      Exit non-zero when compare finds pixel or state drift\n"
         "  --scale N           Window scale for interactive mode\n"
         "  --headless          Skip SDL window creation\n"
         "  --help              Show this help\n",
@@ -162,12 +162,14 @@ int main(int argc, char** argv) {
         }
 
         if (runtime->compare.enabled &&
-            (config.headless || runtime->compare.metrics.mismatch_pixels > 0U)) {
+            (config.headless || td2_compare_has_drift(&runtime->compare))) {
             fprintf(stdout,
-                "Compare frame %u: mismatch=%u (%.6f%%) max=%u mean_abs=%.6f rmse=%.6f\n",
+                "Compare frame %u: pixel_mismatch=%u (%.6f%%) state_failures=%u/%u max=%u mean_abs=%.6f rmse=%.6f\n",
                 runtime->frame_counter,
                 runtime->compare.metrics.mismatch_pixels,
                 runtime->compare.metrics.mismatch_ratio * 100.0,
+                runtime->compare.state_contract.failed_checks,
+                runtime->compare.state_contract.total_checks,
                 runtime->compare.metrics.max_channel_diff,
                 runtime->compare.metrics.mean_abs_channel_diff,
                 runtime->compare.metrics.rmse
@@ -200,8 +202,12 @@ int main(int argc, char** argv) {
 
         if (config.fail_on_compare_diff &&
             runtime->compare.enabled &&
-            runtime->compare.metrics.mismatch_pixels > 0U) {
-            fprintf(stderr, "compare failed: runtime drift detected\n");
+            td2_compare_has_drift(&runtime->compare)) {
+            fprintf(stderr,
+                "compare failed: pixel_mismatch=%u state_failures=%u\n",
+                runtime->compare.metrics.mismatch_pixels,
+                runtime->compare.state_contract.failed_checks
+            );
             platform_sdl_shutdown(&platform);
             td2_runtime_free(runtime);
             free(runtime);
