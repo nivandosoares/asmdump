@@ -36,12 +36,28 @@
         <p class="doc-note">Checkpoint log with evidence-bearing milestones.</p>
         <div class="doc-meta">
           <span>Source: <code>rom_analysis/docs/progress_checkpoints.md</code></span>
-          <span class="update-pill">Last updated 2026-04-01 14:52</span>
+          <span class="update-pill">Last updated 2026-04-01 15:40</span>
           <a href="../../../../../../rom_analysis/docs/progress_checkpoints.md">Open Raw Markdown</a>
         </div>
       </header>
       <article class="doc-body">
         <p>Date: 2026-04-01</p>
+<p>Summary</p>
+<ul><li>Promoted the <code>menu_gameplay_entry</code> baseline from sparse post-<code>2050</code> anchors to an exact sampled scheduler-contract window across frames <code>2052..2088</code>.</li><li>Expanded the default-rival <code>A</code> mutator in the runtime from isolated anchors into the measured <code>2052..2088</code> window, while preserving the later promoted checkpoints at <code>2104</code> and <code>2125</code>.</li><li>Materialized a second local PNG review pack under <code>tools/out/port_input_mutation_window2054_2088_pngs_20260401/</code> with paired <code>A/B</code> outputs for frames <code>2054</code>, <code>2066</code>, <code>2083</code>, and <code>2088</code>.</li></ul>
+<p>What I ran</p>
+<ul><li><code>make -C port clean &amp;&amp; make -C port</code></li><li><code>./port/test_scheduler.sh</code></li><li><code>./port/test_input_mutation.sh</code></li><li><code>./port/test_compare_lane.sh</code></li><li><code>./port/test_regression.sh</code></li><li><code>make -C port test</code></li><li>local PNG review export with <code>./port/build/td2_port</code> on <code>tools/out/design_frame1500_car_select</code> for frames <code>2054/2066/2083/2088</code> under both scripted <code>A</code> and scripted <code>B</code></li></ul>
+<p>Findings / Interpretation</p>
+<ul><li>The <code>2054..2088</code> corridor is deterministic enough to promote verbatim. The no-input rail is no longer inferred from a handful of checkpoints; it now has exact sampled baseline state for every frame in that bounded window.</li><li>The default-rival <code>A</code> lane also has a real measured shape rather than a guessed extrapolation: <code>dp_0053/dp_0054</code> advance as a staircase, <code>dp_0020</code> changes only on selected even frames, and <code>state_09a8</code> flips only on a subset of odd frames.</li><li>The new scheduler and mutator coverage stayed compatible with the existing compare lane and native renderer: no regression gate loosened to land this window.</li></ul>
+<p>What I learned (actionable)</p>
+<ul><li>When probe data already exposes a bounded staircase window, exact promotion is cheaper and safer than inventing a generalized heuristic early.</li><li>The next useful port step is no longer more manual densification inside <code>2054..2088</code>; it is feeding SDL live input into the same mutator surface that now already matches scripted replay on this corridor.</li></ul>
+<p>Next steps / Checkpoints 1) Feed live SDL keyboard/controller input into the same runtime mutator surface that currently accepts <code>--input-script</code>. 2) Promote compare-backed menu/gameplay fixtures wherever trusted goldens exist for this corridor. 3) Extend the measured menu corridor past <code>2088</code> only when a new bounded probe block closes cleanly.</p>
+<p>Immediate recommendation</p>
+<ul><li>Use the PNG pack under <code>tools/out/port_input_mutation_window2054_2088_pngs_20260401/</code> as the current designer-facing review surface for this checkpoint.</li><li>Keep <code>./port/test_scheduler.sh</code> and <code>./port/test_input_mutation.sh</code> as the cheapest falsifiers when promoting the next measured menu window.</li></ul>
+<p>Files updated in this turn</p>
+<ul><li><code>port/include/td2_scheduler.h</code></li><li><code>port/src/td2_scheduler.c</code></li><li><code>port/test_scheduler.c</code></li><li><code>port/test_input_mutation.c</code></li><li><code>rom_analysis/docs/scheduler_rail_contracts.jsonc</code></li><li><code>PORT_PLAN.md</code></li><li><code>port/docs/ARCHITECTURE.md</code></li><li><code>rom_analysis/docs/next_steps_roadmap.md</code></li><li><code>rom_analysis/docs/progress_checkpoints.md</code></li><li><code>rom_analysis/docs/validation_gates.md</code></li><li><code>validation/README.md</code></li><li><code>tools/out/port_input_mutation_window2054_2088_pngs_20260401/</code></li></ul>
+<p>Next reading</p>
+<ul><li><code>tools/out/post9016_default_rival_probe_none_vs_a_compare.md</code></li><li><code>rom_analysis/docs/scheduler_rail_contracts.jsonc</code></li><li><code>port/src/td2_scheduler.c</code></li></ul>
+<p>Date: 2026-04-01</p>
 <p>Summary</p>
 <ul><li>Extended the runtime input mutator beyond <code>state_0960</code> and the first no-opponent handoff into the first measured post-<code>2050</code> default-rival <code>A</code> anchors on <code>menu_gameplay_entry</code>.</li><li>Promoted exact scheduler-contract baseline checkpoints for sampled no-input frames <code>2052</code>, <code>2053</code>, <code>2083</code>, <code>2104</code>, and <code>2125</code>, then overlaid the traced <code>A</code> route deltas on top of them.</li><li>Runtime dumps and compare bundles now emit PNG siblings next to the existing PPM artifacts, and this turn also materialized a design-review anchor pack under <code>tools/out/port_input_mutation_anchor_pngs_20260401/</code>.</li></ul>
 <p>What I ran</p>

@@ -110,7 +110,8 @@ This validates the minimal callback scheduler over the three promoted rails:
 - `intro_noinput`: validates the `986 -> 1117` family and the `1093 -> 1102`
   handoff
 - `menu_gameplay_entry`: validates the input-driven menu corridor
-  `1500 -> 2050` plus promoted sampled post-`2050` baseline anchors
+  `1500 -> 2050` plus the promoted exact sampled post-`2050`
+  `2052..2088` baseline window and later checkpoints
 - `gameplay_live_race_mid`: validates the reproducible gameplay seed over the
   promoted `3 -> 11` window
 
@@ -133,7 +134,8 @@ This validates the first runtime input surface on top of the scheduler rails:
 
 - current-button mirroring into `state_0960` (`JOY1`)
 - traced menu no-opponent handoff on `menu_gameplay_entry`
-- default-rival `A` anchor mutations on `menu_gameplay_entry` for
+- default-rival `A` measured-window mutations on `menu_gameplay_entry` for
+  the exact `2052..2088` window plus later checkpoints, over
   `state_09a2/state_09a8/state_137c` and
   `dp_0020/dp_0022/dp_0053/dp_0054`
 - PNG artifact generation next to runtime and compare PPM dumps

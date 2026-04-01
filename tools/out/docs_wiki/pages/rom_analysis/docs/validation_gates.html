@@ -36,7 +36,7 @@
         <p class="doc-note">Bounded pass/fail policy for regression and callback checks.</p>
         <div class="doc-meta">
           <span>Source: <code>rom_analysis/docs/validation_gates.md</code></span>
-          <span class="update-pill">Last updated 2026-04-01 14:52</span>
+          <span class="update-pill">Last updated 2026-04-01 15:40</span>
           <a href="../../../../../../rom_analysis/docs/validation_gates.md">Open Raw Markdown</a>
         </div>
       </header>
@@ -91,13 +91,13 @@
 <p>Runner:</p>
 <pre><code class="language-sh">./port/test_scheduler.sh</code></pre>
 <p>This validates the minimal callback scheduler over the three promoted rails:</p>
-<ul><li><code>intro_noinput</code>: validates the <code>986 -&gt; 1117</code> family and the <code>1093 -&gt; 1102</code> handoff</li><li><code>menu_gameplay_entry</code>: validates the input-driven menu corridor <code>1500 -&gt; 2050</code> plus promoted sampled post-<code>2050</code> baseline anchors</li><li><code>gameplay_live_race_mid</code>: validates the reproducible gameplay seed over the promoted <code>3 -&gt; 11</code> window</li></ul>
+<ul><li><code>intro_noinput</code>: validates the <code>986 -&gt; 1117</code> family and the <code>1093 -&gt; 1102</code> handoff</li><li><code>menu_gameplay_entry</code>: validates the input-driven menu corridor <code>1500 -&gt; 2050</code> plus the promoted exact sampled post-<code>2050</code> <code>2052..2088</code> baseline window and later checkpoints</li><li><code>gameplay_live_race_mid</code>: validates the reproducible gameplay seed over the promoted <code>3 -&gt; 11</code> window</li></ul>
 <p>This smoke is intentionally state-first. It proves that the runtime now steps callback families and handoffs for the three target rails, even when a given design pack has no trusted <code>main_visible.ppm</code> golden. It also now proves that menu/gameplay are loading <code>scheduler_contract</code> state from <code>rom_analysis/docs/scheduler_rail_contracts.jsonc</code> instead of hardcoded C anchors.</p>
 <h2 id="6-input-mutation-smoke">6) Input Mutation Smoke</h2>
 <p>Runner:</p>
 <pre><code class="language-sh">./port/test_input_mutation.sh</code></pre>
 <p>This validates the first runtime input surface on top of the scheduler rails:</p>
-<ul><li>current-button mirroring into <code>state_0960</code> (<code>JOY1</code>)</li><li>traced menu no-opponent handoff on <code>menu_gameplay_entry</code></li><li>default-rival <code>A</code> anchor mutations on <code>menu_gameplay_entry</code> for <code>state_09a2/state_09a8/state_137c</code> and <code>dp_0020/dp_0022/dp_0053/dp_0054</code></li><li>PNG artifact generation next to runtime and compare PPM dumps</li></ul>
+<ul><li>current-button mirroring into <code>state_0960</code> (<code>JOY1</code>)</li><li>traced menu no-opponent handoff on <code>menu_gameplay_entry</code></li><li>default-rival <code>A</code> measured-window mutations on <code>menu_gameplay_entry</code> for the exact <code>2052..2088</code> window plus later checkpoints, over <code>state_09a2/state_09a8/state_137c</code> and <code>dp_0020/dp_0022/dp_0053/dp_0054</code></li><li>PNG artifact generation next to runtime and compare PPM dumps</li></ul>
 <p>This is intentionally narrow. It proves the runtime is no longer input-blind for menu/gameplay rails before the later gameplay-state mutators are promoted.</p>
 <h2 id="7-practical-gate-policy">7) Practical Gate Policy</h2>
 <p>For each archaeology lane:</p>
