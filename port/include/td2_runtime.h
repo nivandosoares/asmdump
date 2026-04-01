@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "td2_compare.h"
 #include "td2_io.h"
 #include "td2_ppu.h"
 
@@ -14,12 +15,15 @@ typedef struct {
     unsigned frame_limit;
     int window_scale;
     bool headless;
+    bool compare_reference;
+    bool fail_on_compare_diff;
 } Td2RuntimeConfig;
 
 typedef struct {
     Td2RuntimeConfig config;
     Td2DesignPack design_pack;
     Td2PpuState ppu;
+    Td2CompareLane compare;
     uint8_t wram[TD2_WRAM_BYTES];
     uint32_t* framebuffer;
     unsigned frame_counter;

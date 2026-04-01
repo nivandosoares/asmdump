@@ -15,7 +15,11 @@ static void print_usage(const char* argv0) {
         "Options:\n"
         "  --scene-dir PATH    Design-pack directory to load\n"
         "  --dump-prefix PATH  Write PPM frames to PATH_00000.ppm...\n"
+        "                      With --compare also writes _reference/_diff/_compare artifacts\n"
         "  --frames N          Run a bounded frame count\n"
+        "  --compare           Present and dump runtime|golden|diff side-by-side\n"
+        "  --fail-on-compare-diff\n"
+        "                      Exit non-zero when compare finds drift\n"
         "  --scale N           Window scale for interactive mode\n"
         "  --headless          Skip SDL window creation\n"
         "  --help              Show this help\n",
@@ -40,6 +44,8 @@ int main(int argc, char** argv) {
     PlatformSdl platform;
     char error[256];
     char frame_label[32];
+    int present_width = TD2_FRAME_WIDTH;
+    int present_height = TD2_FRAME_HEIGHT;
     unsigned i;
 
     memset(&config, 0, sizeof(config));
@@ -56,6 +62,11 @@ int main(int argc, char** argv) {
                 fprintf(stderr, "invalid frame count: %s\n", argv[i]);
                 return 1;
             }
+        } else if (strcmp(argv[i], "--compare") == 0) {
+            config.compare_reference = true;
+        } else if (strcmp(argv[i], "--fail-on-compare-diff") == 0) {
+            config.compare_reference = true;
+            config.fail_on_compare_diff = true;
         } else if (strcmp(argv[i], "--scale") == 0 && i + 1 < (unsigned)argc) {
             unsigned scale = 0;
             if (!parse_uint(argv[++i], &scale) || scale == 0U) {
@@ -78,6 +89,9 @@ int main(int argc, char** argv) {
     if (config.headless && config.frame_limit == 0U) {
         config.frame_limit = 1U;
     }
+    if (config.compare_reference) {
+        present_width = TD2_COMPARE_WIDTH;
+    }
 
     runtime = (Td2Runtime*)calloc(1U, sizeof(*runtime));
     if (runtime == NULL) {
@@ -94,6 +108,8 @@ int main(int argc, char** argv) {
     if (!platform_sdl_init(
             &platform,
             "The Duel: Test Drive II - SNES Bootstrap",
+            present_width,
+            present_height,
             config.window_scale,
             config.headless,
             error,
@@ -118,6 +134,9 @@ int main(int argc, char** argv) {
         runtime->design_pack.main_screen_layers,
         runtime->design_pack.sub_screen_layers
     );
+    if (runtime->compare.enabled) {
+        fprintf(stdout, "Compare lane enabled: runtime | golden | diff\n");
+    }
 
     while (!platform.quit_requested) {
         uint32_t frame_start = 0;
@@ -142,6 +161,19 @@ int main(int argc, char** argv) {
             return 1;
         }
 
+        if (runtime->compare.enabled &&
+            (config.headless || runtime->compare.metrics.mismatch_pixels > 0U)) {
+            fprintf(stdout,
+                "Compare frame %u: mismatch=%u (%.6f%%) max=%u mean_abs=%.6f rmse=%.6f\n",
+                runtime->frame_counter,
+                runtime->compare.metrics.mismatch_pixels,
+                runtime->compare.metrics.mismatch_ratio * 100.0,
+                runtime->compare.metrics.max_channel_diff,
+                runtime->compare.metrics.mean_abs_channel_diff,
+                runtime->compare.metrics.rmse
+            );
+        }
+
         if (config.dump_prefix != NULL) {
             if (!td2_runtime_dump_frame(runtime, config.dump_prefix, runtime->frame_counter, error, sizeof(error))) {
                 fprintf(stderr, "dump failed: %s\n", error);
@@ -152,8 +184,24 @@ int main(int argc, char** argv) {
             }
         }
 
-        if (!platform_sdl_present(&platform, runtime->framebuffer, TD2_FRAME_WIDTH, TD2_FRAME_HEIGHT, error, sizeof(error))) {
+        if (!platform_sdl_present(
+                &platform,
+                runtime->compare.enabled ? runtime->compare.strip_framebuffer : runtime->framebuffer,
+                present_width,
+                present_height,
+                error,
+                sizeof(error))) {
             fprintf(stderr, "present failed: %s\n", error);
+            platform_sdl_shutdown(&platform);
+            td2_runtime_free(runtime);
+            free(runtime);
+            return 1;
+        }
+
+        if (config.fail_on_compare_diff &&
+            runtime->compare.enabled &&
+            runtime->compare.metrics.mismatch_pixels > 0U) {
+            fprintf(stderr, "compare failed: runtime drift detected\n");
             platform_sdl_shutdown(&platform);
             td2_runtime_free(runtime);
             free(runtime);

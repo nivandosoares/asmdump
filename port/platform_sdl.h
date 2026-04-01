@@ -13,6 +13,8 @@ typedef struct {
     bool headless;
     bool quit_requested;
     int window_scale;
+    int framebuffer_width;
+    int framebuffer_height;
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Texture* texture;
@@ -21,6 +23,8 @@ typedef struct {
 bool platform_sdl_init(
     PlatformSdl* platform,
     const char* title,
+    int framebuffer_width,
+    int framebuffer_height,
     int window_scale,
     bool headless,
     char* error,

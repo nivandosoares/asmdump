@@ -11,6 +11,9 @@ decoded tilemaps and sprite visibility metadata.
 - Old `port/` gameplay/physics stand-ins are retired; the new `port/`
   bootstrap now loads design packs, seeds raw state, and renders exact
   promoted fixtures synthetically from that state.
+- The native runtime now also emits a first compare bundle for promoted
+  fixtures:
+  runtime frame, trusted golden, diff map, and side-by-side strip.
 - `zelda3/`, `sentrysearch/`, and `the_duel_longplay.mp4` are local-only
   references and must stay ignored in Git.
 - Lane order is unchanged, but every active lane now feeds the new runtime /

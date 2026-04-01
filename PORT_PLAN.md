@@ -88,6 +88,12 @@ New useful state beyond the original plan:
 - the new `port/` bootstrap now renders promoted design-pack fixtures
   synthetically from raw `VRAM/CGRAM/OAM/PPU` state, with exact parity on
   frame `300` and frame `1086`
+- the runtime now also has a first Zelda3-style compare lane for promoted
+  design-pack fixtures:
+  - native runtime frame
+  - trusted `main_visible` golden
+  - absolute RGB diff map
+  - side-by-side strip plus JSON drift metrics
 
 - the frame-`300` copyright/credits scene is an exact solved target from both live Mesen dumps and a ROM-side builder
 - the `Ballistic presents` splash now has a deterministic entry anchor at frame `654`
@@ -210,12 +216,14 @@ Immediate next focus:
 
 1. Replace the old `port/` scaffolds with a clean SNES-mimetic bootstrap:
    SDL host, state shadow, design-pack loader, and bounded regression smoke.
-2. Add a Zelda3-style side-by-side compare lane so callback/state drift is
-   reported automatically against trusted traces.
-3. Keep the intro archaeology lanes moving, but use them to ratify callback
+2. Add a callback/state execution spine driven by validated bank ownership,
+   starting with front-end callback families.
+3. Extend the compare lane from frame-only parity into callback/state drift
+   reporting against trusted traces.
+4. Keep the intro archaeology lanes moving, but use them to ratify callback
    families and renderer contracts rather than to justify sampled playback as
    the end architecture.
-4. Use the local SentrySearch chunk workflow plus the longplay anchor packs to
+5. Use the local SentrySearch chunk workflow plus the longplay anchor packs to
    keep gameplay investigation keyed to named windows and reusable query terms.
 
 ## Execution Reset

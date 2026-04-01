@@ -16,6 +16,8 @@ static void set_error(char* error, size_t error_size, const char* message) {
 bool platform_sdl_init(
     PlatformSdl* platform,
     const char* title,
+    int framebuffer_width,
+    int framebuffer_height,
     int window_scale,
     bool headless,
     char* error,
@@ -24,6 +26,8 @@ bool platform_sdl_init(
     memset(platform, 0, sizeof(*platform));
     platform->headless = headless;
     platform->window_scale = window_scale > 0 ? window_scale : 3;
+    platform->framebuffer_width = framebuffer_width > 0 ? framebuffer_width : TD2_FRAME_WIDTH;
+    platform->framebuffer_height = framebuffer_height > 0 ? framebuffer_height : TD2_FRAME_HEIGHT;
 
     if (headless) {
         return true;
@@ -38,8 +42,8 @@ bool platform_sdl_init(
         title,
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        TD2_FRAME_WIDTH * platform->window_scale,
-        TD2_FRAME_HEIGHT * platform->window_scale,
+        platform->framebuffer_width * platform->window_scale,
+        platform->framebuffer_height * platform->window_scale,
         SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
     );
     if (platform->window == NULL) {
@@ -59,13 +63,13 @@ bool platform_sdl_init(
         return false;
     }
 
-    SDL_RenderSetLogicalSize(platform->renderer, TD2_FRAME_WIDTH, TD2_FRAME_HEIGHT);
+    SDL_RenderSetLogicalSize(platform->renderer, platform->framebuffer_width, platform->framebuffer_height);
     platform->texture = SDL_CreateTexture(
         platform->renderer,
         SDL_PIXELFORMAT_ARGB8888,
         SDL_TEXTUREACCESS_STREAMING,
-        TD2_FRAME_WIDTH,
-        TD2_FRAME_HEIGHT
+        platform->framebuffer_width,
+        platform->framebuffer_height
     );
     if (platform->texture == NULL) {
         snprintf(error, error_size, "SDL_CreateTexture failed: %s", SDL_GetError());
@@ -122,7 +126,7 @@ bool platform_sdl_present(
         return true;
     }
 
-    if (width != TD2_FRAME_WIDTH || height != TD2_FRAME_HEIGHT) {
+    if (width != platform->framebuffer_width || height != platform->framebuffer_height) {
         snprintf(error, error_size, "unexpected framebuffer size %dx%d", width, height);
         return false;
     }

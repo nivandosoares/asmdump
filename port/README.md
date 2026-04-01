@@ -15,6 +15,8 @@ Current checkpoint:
 - `Td2PpuState` shadow seeded from extracted design packs plus `ppu_state.json`
 - synthetic SNES BG/OBJ/Mode7 rasterization from raw `VRAM/CGRAM/OAM/PPU`
   state
+- Zelda3-style compare lane:
+  runtime | golden | diff bundle plus JSON drift summary
 - headless frame dumping for regression smoke
 
 This is deliberately not the final renderer. It is the clean replacement for
@@ -36,7 +38,18 @@ Run:
 Headless smoke:
 
 ```sh
-./port/test_regression.sh
+make -C port test
+```
+
+Direct compare lane:
+
+```sh
+./port/build/td2_port \
+  --scene-dir port/assets/test_dump_frame300/design_pack \
+  --headless \
+  --frames 1 \
+  --compare \
+  --dump-prefix port/build/frame300_compare
 ```
 
 Notes:
@@ -46,3 +59,7 @@ Notes:
 - The promoted smoke fixtures now render exactly from raw state in the native
   runtime; `layers/main_visible.ppm` remains a regression golden, not the
   render source.
+- `tools/push_checkpoint.sh` is the repo-local wrapper for the post-push step:
+  it pushes the current checkpoint, refreshes the curated wiki, and issues a
+  follow-up wiki refresh commit/push only if the generated wiki changed and
+  the worktree is otherwise clean enough to avoid mixing unrelated changes.

@@ -30,7 +30,7 @@ For the current SNES-mimetic port bootstrap, build and run:
 
 ```sh
 make -C port
-./port/test_regression.sh
+make -C port test
 ```
 
 That smoke now validates the first native synthetic PPU checkpoint:
@@ -40,6 +40,7 @@ That smoke now validates the first native synthetic PPU checkpoint:
 - seed visible layer, Mode 7, and OBJ registers from `ppu_state.json`
 - dump a headless frame
 - compare it against the extracted `layers/main_visible.ppm` golden
+- generate the side-by-side compare bundle for the same promoted fixtures
 
 Current bootstrap fixtures:
 
@@ -50,6 +51,35 @@ Current exact-native parity fixtures:
 
 - frame `300`: BG-only credits scene
 - frame `1086`: Mode 7 plus OBJ gameplay scene
+
+Direct runtime compare lane:
+
+```sh
+./port/build/td2_port \
+  --scene-dir port/assets/test_dump_frame300/design_pack \
+  --headless \
+  --frames 1 \
+  --compare \
+  --dump-prefix port/build/frame300_compare
+```
+
+That emits:
+
+- `..._00000.ppm`: native runtime frame
+- `..._00000_reference.ppm`: trusted `main_visible` golden
+- `..._00000_diff.ppm`: absolute RGB error map
+- `..._00000_compare.ppm`: `runtime | golden | diff` strip
+- `..._00000_compare.json`: machine-readable drift metrics
+
+Post-push wiki refresh wrapper:
+
+```sh
+./tools/push_checkpoint.sh
+```
+
+That wrapper pushes the current checkpoint, rebuilds the curated docs wiki,
+and only creates a follow-up wiki refresh commit/push if the generated wiki
+actually changed and no unrelated dirty files would be swept into that commit.
 
 For short review windows where you want a reproducible bundle of visual
 artifacts instead of a one-off capture, use:

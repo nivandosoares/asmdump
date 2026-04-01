@@ -1,6 +1,86 @@
 Date: 2026-04-01
 
 Summary
+- Added the first Zelda3-style compare lane to the new `port/` runtime.
+- The native binary now supports `--compare`, which emits:
+  - native runtime frame
+  - trusted `main_visible` golden
+  - absolute RGB diff map
+  - `runtime | golden | diff` strip
+  - machine-readable JSON drift metrics
+- Added the dedicated compare smoke:
+  - `port/test_compare_lane.sh`
+- Promoted `make -C port test` so it now covers both exact-frame parity and
+  compare-bundle generation.
+- Verified the curated docs wiki is still valid by rebuilding it with
+  `tools/build_docs_wiki_report.py`.
+- Added the repo-local push wrapper:
+  - `tools/push_checkpoint.sh`
+  This pushes the current checkpoint, rebuilds the curated wiki, and creates a
+  follow-up wiki refresh commit/push only when the generated wiki changes and
+  the worktree is otherwise clean enough to avoid mixing unrelated edits.
+
+What I ran
+- `make -C port`
+- `./port/test_regression.sh`
+- `./port/test_compare_lane.sh`
+- `python3 tools/build_docs_wiki_report.py --manifest rom_analysis/docs/wiki_doc_index.json --output-dir tools/out/docs_wiki --markdown-bundle-dir tools/out/docs_wiki_markdown_bundle`
+
+Findings / Interpretation
+- The runtime now has the first compare/reporting spine that matches the new
+  port direction instead of relying on ad hoc external diffs only.
+- The compare lane is exact on the current promoted fixtures:
+  - `frame300_compare`: `0` mismatched pixels
+  - `frame1086_compare`: `0` mismatched pixels
+- The curated wiki regenerated cleanly from current docs.
+- The generated wiki output is not safe to auto-commit in the current mixed
+  dirty worktree, which is why the new push wrapper now guards against that
+  case instead of sweeping unrelated edits into the wiki follow-up commit.
+
+What I learned (actionable)
+- The cheapest high-signal next step is no longer visual parity on isolated
+  fixtures; it is feeding callback/state contracts into this compare spine.
+- The wiki step is cheap enough to keep in the routine checkpoint pipeline,
+  but it does not need a second commit when the generated output is unchanged.
+
+Next steps / Checkpoints
+1) Start promoting callback/state expectations into the compare lane outputs.
+2) Tie the compare lane to trusted intro traces beyond the two static
+   design-pack fixtures.
+3) Keep using `tools/push_checkpoint.sh` at the end of future pushed
+   checkpoints so the wiki refresh stays routine.
+
+Immediate recommendation
+- Use `make -C port test` as the default bounded port smoke.
+- Use `./port/build/td2_port --compare ...` whenever a new fixture needs a
+  reviewable runtime-vs-golden bundle.
+
+Files updated in this turn
+- `port/Makefile`
+- `port/README.md`
+- `port/docs/ARCHITECTURE.md`
+- `port/include/td2_compare.h`
+- `port/include/td2_runtime.h`
+- `port/main.c`
+- `port/platform_sdl.c`
+- `port/platform_sdl.h`
+- `port/src/td2_compare.c`
+- `port/src/td2_runtime.c`
+- `port/test_compare_lane.sh`
+- `validation/README.md`
+- `PORT_PLAN.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `tools/push_checkpoint.sh`
+
+Next reading
+- `PORT_PLAN.md`
+- `port/docs/ARCHITECTURE.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+
+Date: 2026-04-01
+
+Summary
 - Promoted the new `port/` bootstrap from reference-frame blitting to a real
   synthetic PPU path over raw `VRAM/CGRAM/OAM/PPU` state.
 - Extended the design-pack loader so `td2_io.*` now also consumes

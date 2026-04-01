@@ -32,6 +32,15 @@ bool td2_runtime_init(
     }
 
     td2_ppu_seed_from_design_pack(&runtime->ppu, &runtime->design_pack);
+    if (!td2_compare_init(
+            &runtime->compare,
+            &runtime->design_pack,
+            config->compare_reference || config->fail_on_compare_diff,
+            error,
+            error_size)) {
+        td2_runtime_free(runtime);
+        return false;
+    }
 
     if (error_size > 0U) {
         error[0] = '\0';
@@ -42,6 +51,7 @@ bool td2_runtime_init(
 void td2_runtime_free(Td2Runtime* runtime) {
     free(runtime->framebuffer);
     runtime->framebuffer = NULL;
+    td2_compare_free(&runtime->compare);
     td2_design_pack_free(&runtime->design_pack);
 }
 
@@ -51,6 +61,7 @@ bool td2_runtime_render_frame(
     size_t error_size
 ) {
     td2_ppu_render_frame(&runtime->ppu, runtime->framebuffer);
+    td2_compare_run(&runtime->compare, runtime->framebuffer);
     if (error_size > 0U) {
         error[0] = '\0';
     }
@@ -89,6 +100,18 @@ bool td2_runtime_dump_frame(
     }
 
     fclose(file);
+    if (!td2_compare_dump_bundle(
+            &runtime->compare,
+            runtime->framebuffer,
+            prefix,
+            frame_index,
+            runtime->config.scene_dir,
+            runtime->design_pack.frame_number,
+            runtime->design_pack.has_frame_number,
+            error,
+            error_size)) {
+        return false;
+    }
     if (error_size > 0U) {
         error[0] = '\0';
     }
