@@ -315,6 +315,7 @@ void td2_runtime_state_parse_json_fields(
     parse_optional_u16(block, "\"state_0208\":", &state->has_state_0208, &state->state_0208);
     parse_optional_u16(block, "\"state_020a\":", &state->has_state_020a, &state->state_020a);
     parse_optional_u16(block, "\"state_040a\":", &state->has_state_040a, &state->state_040a);
+    parse_optional_u16(block, "\"state_0960\":", &state->has_state_0960, &state->state_0960);
     parse_optional_u16(block, "\"state_1c6a\":", &state->has_state_1c6a, &state->state_1c6a);
     parse_optional_u16(block, "\"state_1c70\":", &state->has_state_1c70, &state->state_1c70);
     parse_optional_u16(block, "\"state_1c76\":", &state->has_state_1c76, &state->state_1c76);

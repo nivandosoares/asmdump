@@ -121,7 +121,23 @@ menu/gameplay are loading `scheduler_contract` state from
 `rom_analysis/docs/scheduler_rail_contracts.jsonc` instead of hardcoded C
 anchors.
 
-## 6) Practical Gate Policy
+## 6) Input Mutation Smoke
+
+Runner:
+
+```sh
+./port/test_input_mutation.sh
+```
+
+This validates the first runtime input surface on top of the scheduler rails:
+
+- current-button mirroring into `state_0960` (`JOY1`)
+- traced menu no-opponent handoff on `menu_gameplay_entry`
+
+This is intentionally narrow. It proves the runtime is no longer input-blind
+for menu/gameplay rails before the later gameplay-state mutators are promoted.
+
+## 7) Practical Gate Policy
 
 For each archaeology lane:
 

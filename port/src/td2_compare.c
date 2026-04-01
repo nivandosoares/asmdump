@@ -375,6 +375,9 @@ static void td2_compare_capture_callback_contract(
     if (callback_contract->expected_state.has_state_040a) {
         td2_compare_callback_record(report, "state_040a", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_040a, runtime_state->state_040a);
     }
+    if (callback_contract->expected_state.has_state_0960) {
+        td2_compare_callback_record(report, "state_0960", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_0960, runtime_state->state_0960);
+    }
     if (callback_contract->expected_state.has_state_1c6a) {
         td2_compare_callback_record(report, "state_1c6a", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_1c6a, runtime_state->state_1c6a);
     }

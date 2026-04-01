@@ -28,6 +28,7 @@ bool td2_runtime_init(
             &runtime->scheduler,
             config->scheduler_profile,
             config->scene_dir,
+            config->input_script,
             &runtime->design_pack,
             error,
             error_size)) {

@@ -39,6 +39,8 @@ typedef struct {
     uint16_t state_020a;
     bool has_state_040a;
     uint16_t state_040a;
+    bool has_state_0960;
+    uint16_t state_0960;
     bool has_state_1c6a;
     uint16_t state_1c6a;
     bool has_state_1c70;

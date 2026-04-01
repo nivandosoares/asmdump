@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 #include "td2_contracts.h"
+#include "td2_input.h"
 #include "td2_io.h"
 
 #define TD2_SCHEDULER_SEGMENTS_MAX 32
@@ -28,6 +29,7 @@ typedef struct {
     Td2SchedulerProfile requested_profile;
     Td2SchedulerProfile active_profile;
     bool contract_loaded;
+    Td2InputScript input_script;
     unsigned segment_count;
     Td2SchedulerSegment segments[TD2_SCHEDULER_SEGMENTS_MAX];
 } Td2Scheduler;
@@ -41,6 +43,7 @@ bool td2_scheduler_init(
     Td2Scheduler* scheduler,
     Td2SchedulerProfile requested_profile,
     const char* scene_dir,
+    const char* input_script,
     const Td2DesignPack* pack,
     char* error,
     size_t error_size

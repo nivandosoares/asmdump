@@ -107,6 +107,13 @@ New useful state beyond the original plan:
 - the non-intro scheduler rails now load from
   `rom_analysis/docs/scheduler_rail_contracts.jsonc` instead of hardcoded C
   anchors, so menu/gameplay playback is driven by versioned contract data
+- the runtime now also accepts scripted input windows and applies the first
+  real input-driven mutations on top of those rails:
+  - `state_0960` now reflects the current `JOY1` sample from active
+    `--input-script` buttons
+  - the menu rail now recognizes the traced no-opponent route
+    (`right+down`, then confirm) and carries the downstream
+    `$1C70 = 3 / $1C76 = 0` handoff instead of the default rival baseline
 - that scheduler now executes validated callback-family handoffs across:
   - intro `986 -> 1117`
   - menu/input corridor `1500 -> 2050`
@@ -235,13 +242,16 @@ New useful state beyond the original plan:
 
 Immediate next focus:
 
-1. Start mutating real front-end and post-`02:9016` gameplay state under
-   input, instead of only replaying callback families and handoffs.
-2. Promote compare-backed fixtures for the new menu/gameplay rails wherever a
+1. Extend the new input mutation layer beyond `state_0960` and the first
+   no-opponent menu handoff into post-`2050` gameplay deltas like
+   `state_09a2/state_09a8/dp_0053/dp_0054`.
+2. Feed live SDL keyboard/controller input into the same mutator surface that
+   now accepts scripted windows.
+3. Promote compare-backed fixtures for the new menu/gameplay rails wherever a
    trusted `main_visible` golden exists.
-3. Keep intro archaeology moving only where it tightens callback ownership or
+4. Keep intro archaeology moving only where it tightens callback ownership or
    renderer behavior, not as a polishing lane by itself.
-4. Use the local SentrySearch chunk workflow plus the longplay anchor packs to
+5. Use the local SentrySearch chunk workflow plus the longplay anchor packs to
    keep gameplay investigation keyed to named windows and reusable query terms.
 
 ## Execution Reset

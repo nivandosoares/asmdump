@@ -30,6 +30,9 @@ The current code intentionally does only the minimum clean work:
 - `td2_runtime.*`
   Fixed-frame orchestration, scheduler-backed runtime-state shadow,
   compare-lane metrics, and PPM dumping for smoke tests.
+- `td2_input.*`
+  Shared parser/query layer for scripted input windows using the same
+  `frame:buttons` / `start-end:buttons` syntax used by the Mesen-side tools.
 - `td2_compare.*`
   Trusted-frame compare bundle generation (`runtime | golden | diff`) plus
   machine-readable drift metrics plus seeded PPU-state and callback-state
@@ -42,7 +45,9 @@ The current code intentionally does only the minimum clean work:
   intro no-input, menu gameplay-entry, and reproducible live-race gameplay.
   The menu/gameplay rails are now loaded from
   `rom_analysis/docs/scheduler_rail_contracts.jsonc`, while intro remains on
-  the callback model path.
+  the callback model path. The first input overlay now also lives here:
+  current `JOY1` sample into `state_0960`, plus the traced no-opponent route
+  mutator for the menu corridor.
 
 The promoted smoke fixtures are now exact through the native compositor itself.
 `main_visible.ppm` stays in the loop only as the regression golden surface,
@@ -56,7 +61,8 @@ bundles that only carry local `raw/` dumps and no golden frame.
 
 ## Next replacement steps
 
-1. Start applying real input-driven state mutation on top of the
-   `menu_gameplay_entry` and `gameplay_live_race_mid` families.
-2. Promote compare-backed menu/gameplay fixtures so the same
+1. Extend the new input layer beyond `state_0960` and the first no-opponent
+   menu handoff into post-`2050` gameplay deltas.
+2. Feed live SDL input through the same input-script/mutator surface.
+3. Promote compare-backed menu/gameplay fixtures so the same
    runtime-or-golden workflow used on intro can gate later rails too.

@@ -220,6 +220,16 @@ int main(int argc, char** argv) {
                 &total_checks,
                 &failed_checks);
         }
+        if (contract.expected_state.has_state_0960) {
+            frame_failed |= !expect_u16(
+                frame,
+                "state_0960",
+                state.has_state_0960,
+                state.state_0960,
+                contract.expected_state.state_0960,
+                &total_checks,
+                &failed_checks);
+        }
         if (contract.expected_state.has_state_1c6a) {
             frame_failed |= !expect_u16(
                 frame,

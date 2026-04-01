@@ -23,6 +23,8 @@ static void print_usage(const char* argv0) {
         "                      Exit non-zero when compare finds pixel or state drift\n"
         "  --scheduler-profile NAME\n"
         "                      auto | none | intro_noinput | menu_gameplay_entry | gameplay_live_race_mid\n"
+        "  --input-script WINDOWS\n"
+        "                      frame:buttons or start-end:buttons using a,b,start,up,down,left,right...\n"
         "  --scale N           Window scale for interactive mode\n"
         "  --headless          Skip SDL window creation\n"
         "  --help              Show this help\n",
@@ -76,6 +78,8 @@ int main(int argc, char** argv) {
                 fprintf(stderr, "invalid scheduler profile: %s\n", argv[i]);
                 return 1;
             }
+        } else if (strcmp(argv[i], "--input-script") == 0 && i + 1 < (unsigned)argc) {
+            config.input_script = argv[++i];
         } else if (strcmp(argv[i], "--scale") == 0 && i + 1 < (unsigned)argc) {
             unsigned scale = 0;
             if (!parse_uint(argv[++i], &scale) || scale == 0U) {

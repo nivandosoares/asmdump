@@ -43,6 +43,7 @@ That smoke now validates the first native synthetic PPU checkpoint:
 - generate the side-by-side compare bundle for the same promoted fixtures
 - validate the minimal scheduler across the three promoted rails:
   intro no-input, menu with input, and reproducible gameplay seed
+- validate the first runtime input mutations on top of those rails
 
 Current bootstrap fixtures:
 
@@ -76,6 +77,17 @@ Direct runtime scheduler playback on a tracked menu/gameplay bundle:
   --dump-prefix port/build/menu1500
 ```
 
+Direct runtime scheduler playback with scripted input:
+
+```sh
+./port/build/td2_port \
+  --scene-dir tools/out/design_lane3_live_race_mid_frame0_native \
+  --scheduler-profile gameplay_live_race_mid \
+  --input-script '3:a' \
+  --headless \
+  --frames 1
+```
+
 That emits:
 
 - `..._00000.ppm`: native runtime frame
@@ -106,6 +118,14 @@ Current scheduler-backed promoted rails:
 The non-intro rails now load from:
 
 - `rom_analysis/docs/scheduler_rail_contracts.jsonc`
+
+Current runtime input surface:
+
+- `--input-script <windows>` uses the same window syntax as the Mesen-side
+  wrappers
+- current buttons mirror into `state_0960`
+- the traced menu no-opponent route mutates the downstream
+  `$1C70 / $1C76` handoff on `menu_gameplay_entry`
 
 Post-push wiki refresh wrapper:
 

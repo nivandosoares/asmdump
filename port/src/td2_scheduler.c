@@ -95,6 +95,68 @@ static const char* td2_profile_id_text(Td2SchedulerProfile profile) {
     }
 }
 
+static void td2_scheduler_apply_current_input(
+    const Td2Scheduler* scheduler,
+    unsigned frame_number,
+    Td2RuntimeState* state
+) {
+    uint16_t input_mask;
+
+    if (scheduler == NULL || state == NULL) {
+        return;
+    }
+
+    input_mask = td2_input_script_mask_for_frame(&scheduler->input_script, frame_number);
+    if (input_mask == TD2_INPUT_MASK_NONE) {
+        return;
+    }
+    state->has_state_0960 = true;
+    state->state_0960 = input_mask;
+}
+
+static bool td2_scheduler_has_menu_no_opponent_route(
+    const Td2Scheduler* scheduler
+) {
+    bool has_diagonal = td2_input_script_has_mask_in_range(
+        &scheduler->input_script,
+        (uint16_t)(TD2_INPUT_MASK_RIGHT | TD2_INPUT_MASK_DOWN),
+        1584U,
+        1589U);
+    bool has_confirm = td2_input_script_has_mask_in_range(
+        &scheduler->input_script,
+        TD2_INPUT_MASK_START,
+        1730U,
+        1735U) ||
+        td2_input_script_has_mask_in_range(
+            &scheduler->input_script,
+            TD2_INPUT_MASK_A,
+            1730U,
+            1735U);
+
+    return has_diagonal && has_confirm;
+}
+
+static void td2_scheduler_apply_profile_input_mutations(
+    const Td2Scheduler* scheduler,
+    unsigned frame_number,
+    Td2RuntimeState* state
+) {
+    if (scheduler == NULL || state == NULL) {
+        return;
+    }
+
+    td2_scheduler_apply_current_input(scheduler, frame_number, state);
+
+    if (scheduler->active_profile == TD2_SCHEDULER_PROFILE_MENU_GAMEPLAY_ENTRY &&
+        frame_number >= 2044U &&
+        td2_scheduler_has_menu_no_opponent_route(scheduler)) {
+        state->has_state_1c70 = true;
+        state->state_1c70 = 3U;
+        state->has_state_1c76 = true;
+        state->state_1c76 = 0U;
+    }
+}
+
 static Td2SchedulerProfile td2_scheduler_resolve_auto_profile(
     const char* scene_dir,
     const Td2DesignPack* pack
@@ -294,11 +356,15 @@ bool td2_scheduler_init(
     Td2Scheduler* scheduler,
     Td2SchedulerProfile requested_profile,
     const char* scene_dir,
+    const char* input_script,
     const Td2DesignPack* pack,
     char* error,
     size_t error_size
 ) {
     memset(scheduler, 0, sizeof(*scheduler));
+    if (!td2_input_script_parse(&scheduler->input_script, input_script, error, error_size)) {
+        return false;
+    }
     scheduler->requested_profile = requested_profile;
     scheduler->active_profile = requested_profile == TD2_SCHEDULER_PROFILE_AUTO
         ? td2_scheduler_resolve_auto_profile(scene_dir, pack)
@@ -331,10 +397,18 @@ bool td2_scheduler_build_state(
 
     switch (scheduler->active_profile) {
         case TD2_SCHEDULER_PROFILE_INTRO_NOINPUT:
-            return td2_callback_model_build_state_for_frame(state, frame_number);
+            if (!td2_callback_model_build_state_for_frame(state, frame_number)) {
+                return false;
+            }
+            td2_scheduler_apply_profile_input_mutations(scheduler, frame_number, state);
+            return true;
         case TD2_SCHEDULER_PROFILE_MENU_GAMEPLAY_ENTRY:
         case TD2_SCHEDULER_PROFILE_GAMEPLAY_LIVE_RACE_MID:
-            return td2_scheduler_build_contract_state(scheduler, frame_number, state);
+            if (!td2_scheduler_build_contract_state(scheduler, frame_number, state)) {
+                return false;
+            }
+            td2_scheduler_apply_profile_input_mutations(scheduler, frame_number, state);
+            return true;
         case TD2_SCHEDULER_PROFILE_NONE:
         case TD2_SCHEDULER_PROFILE_AUTO:
         default:
