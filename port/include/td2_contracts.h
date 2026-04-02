@@ -39,6 +39,8 @@ typedef struct {
     uint16_t state_020a;
     bool has_state_040a;
     uint16_t state_040a;
+    bool has_state_0440;
+    uint16_t state_0440;
     bool has_state_0960;
     uint16_t state_0960;
     bool has_state_09a2;
@@ -55,6 +57,10 @@ typedef struct {
     uint16_t state_137c;
     bool has_state_11f3;
     uint16_t state_11f3;
+    bool has_state_129e;
+    uint16_t state_129e;
+    bool has_state_18ee;
+    uint16_t state_18ee;
     bool has_dp_0020;
     uint16_t dp_0020;
     bool has_dp_0022;
@@ -63,6 +69,10 @@ typedef struct {
     uint16_t dp_0053;
     bool has_dp_0054;
     uint16_t dp_0054;
+    bool has_dp_0055;
+    uint16_t dp_0055;
+    bool has_dp_0056;
+    uint16_t dp_0056;
 } Td2RuntimeState;
 
 typedef struct {

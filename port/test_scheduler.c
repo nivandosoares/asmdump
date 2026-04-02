@@ -43,9 +43,9 @@ static const Td2RailCase k_rails[] = {
         TD2_SCHEDULER_PROFILE_GAMEPLAY_LIVE_RACE_MID,
         TD2_RUNTIME_STATE_SOURCE_SCHEDULER_CONTRACT,
         true,
-        12U,
-        {3U, 11U},
-        2U,
+        17U,
+        {3U, 11U, 16U, 30U, 60U, 90U, 95U},
+        7U,
     },
 };
 
@@ -479,18 +479,113 @@ static void verify_gameplay_frame(
                    total_checks,
                    failed_checks);
     expect_u16("gameplay_live_race_mid", frame, "state_0202", state->has_state_0202, state->state_0202, 0xFFFFU, total_checks, failed_checks);
+    expect_u16("gameplay_live_race_mid", frame, "state_0204", state->has_state_0204, state->state_0204, 0U, total_checks, failed_checks);
+    expect_u16("gameplay_live_race_mid", frame, "state_0206", state->has_state_0206, state->state_0206, 0xFFFEU, total_checks, failed_checks);
+    expect_u16("gameplay_live_race_mid", frame, "state_0208", state->has_state_0208, state->state_0208, 0U, total_checks, failed_checks);
+    expect_u16("gameplay_live_race_mid", frame, "state_020a", state->has_state_020a, state->state_020a, 0xFFFDU, total_checks, failed_checks);
+    expect_u16("gameplay_live_race_mid", frame, "state_040a", state->has_state_040a, state->state_040a, 0xFFFDU, total_checks, failed_checks);
     expect_u16("gameplay_live_race_mid", frame, "state_1c6a", state->has_state_1c6a, state->state_1c6a, 1U, total_checks, failed_checks);
     expect_u16("gameplay_live_race_mid", frame, "state_1c70", state->has_state_1c70, state->state_1c70, 0U, total_checks, failed_checks);
     expect_u16("gameplay_live_race_mid", frame, "state_1c76", state->has_state_1c76, state->state_1c76, 1U, total_checks, failed_checks);
-    if (frame == 3U) {
-        expect_u16("gameplay_live_race_mid", frame, "state_11f3", state->has_state_11f3, state->state_11f3, 477U, total_checks, failed_checks);
-        expect_u16("gameplay_live_race_mid", frame, "dp_0053", state->has_dp_0053, state->dp_0053, 136U, total_checks, failed_checks);
-        expect_u16("gameplay_live_race_mid", frame, "dp_0054", state->has_dp_0054, state->dp_0054, 152U, total_checks, failed_checks);
-        return;
+
+    switch (frame) {
+        case 0U:
+            expect_u16("gameplay_live_race_mid", frame, "state_0440", state->has_state_0440, state->state_0440, 65459U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_09a2", state->has_state_09a2, state->state_09a2, 41U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_09a8", state->has_state_09a8, state->state_09a8, 2U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_11f3", state->has_state_11f3, state->state_11f3, 477U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_129e", state->has_state_129e, state->state_129e, 256U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_18ee", state->has_state_18ee, state->state_18ee, 2468U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0020", state->has_dp_0020, state->dp_0020, 0U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0022", state->has_dp_0022, state->dp_0022, 2U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0053", state->has_dp_0053, state->dp_0053, 120U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0054", state->has_dp_0054, state->dp_0054, 120U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0055", state->has_dp_0055, state->dp_0055, 4672U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0056", state->has_dp_0056, state->dp_0056, 18U, total_checks, failed_checks);
+            return;
+        case 3U:
+            expect_u16("gameplay_live_race_mid", frame, "state_11f3", state->has_state_11f3, state->state_11f3, 477U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0053", state->has_dp_0053, state->dp_0053, 136U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0054", state->has_dp_0054, state->dp_0054, 152U, total_checks, failed_checks);
+            return;
+        case 11U:
+            expect_u16("gameplay_live_race_mid", frame, "state_11f3", state->has_state_11f3, state->state_11f3, 479U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0053", state->has_dp_0053, state->dp_0053, 200U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0054", state->has_dp_0054, state->dp_0054, 200U, total_checks, failed_checks);
+            return;
+        case 16U:
+            expect_u16("gameplay_live_race_mid", frame, "state_0440", state->has_state_0440, state->state_0440, 65457U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_09a2", state->has_state_09a2, state->state_09a2, 32U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_09a8", state->has_state_09a8, state->state_09a8, 2U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_11f3", state->has_state_11f3, state->state_11f3, 480U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_129e", state->has_state_129e, state->state_129e, 256U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_18ee", state->has_state_18ee, state->state_18ee, 2468U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0020", state->has_dp_0020, state->dp_0020, 0U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0022", state->has_dp_0022, state->dp_0022, 0U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0053", state->has_dp_0053, state->dp_0053, 240U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0054", state->has_dp_0054, state->dp_0054, 240U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0055", state->has_dp_0055, state->dp_0055, 5520U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0056", state->has_dp_0056, state->dp_0056, 21U, total_checks, failed_checks);
+            return;
+        case 30U:
+            expect_u16("gameplay_live_race_mid", frame, "state_0440", state->has_state_0440, state->state_0440, 65456U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_09a2", state->has_state_09a2, state->state_09a2, 37U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_09a8", state->has_state_09a8, state->state_09a8, 2U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_11f3", state->has_state_11f3, state->state_11f3, 482U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_129e", state->has_state_129e, state->state_129e, 256U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_18ee", state->has_state_18ee, state->state_18ee, 2468U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0020", state->has_dp_0020, state->dp_0020, 0U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0022", state->has_dp_0022, state->dp_0022, 0U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0053", state->has_dp_0053, state->dp_0053, 96U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0054", state->has_dp_0054, state->dp_0054, 96U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0055", state->has_dp_0055, state->dp_0055, 5320U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0056", state->has_dp_0056, state->dp_0056, 20U, total_checks, failed_checks);
+            return;
+        case 60U:
+            expect_u16("gameplay_live_race_mid", frame, "state_0440", state->has_state_0440, state->state_0440, 65454U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_09a2", state->has_state_09a2, state->state_09a2, 43U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_09a8", state->has_state_09a8, state->state_09a8, 2U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_11f3", state->has_state_11f3, state->state_11f3, 488U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_129e", state->has_state_129e, state->state_129e, 256U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_18ee", state->has_state_18ee, state->state_18ee, 2468U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0020", state->has_dp_0020, state->dp_0020, 137U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0022", state->has_dp_0022, state->dp_0022, 0U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0053", state->has_dp_0053, state->dp_0053, 248U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0054", state->has_dp_0054, state->dp_0054, 8U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0055", state->has_dp_0055, state->dp_0055, 5352U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0056", state->has_dp_0056, state->dp_0056, 20U, total_checks, failed_checks);
+            return;
+        case 90U:
+            expect_u16("gameplay_live_race_mid", frame, "state_0440", state->has_state_0440, state->state_0440, 65451U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_09a2", state->has_state_09a2, state->state_09a2, 40U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_09a8", state->has_state_09a8, state->state_09a8, 2U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_11f3", state->has_state_11f3, state->state_11f3, 494U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_129e", state->has_state_129e, state->state_129e, 256U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_18ee", state->has_state_18ee, state->state_18ee, 2468U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0020", state->has_dp_0020, state->dp_0020, 129U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0022", state->has_dp_0022, state->dp_0022, 0U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0053", state->has_dp_0053, state->dp_0053, 216U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0054", state->has_dp_0054, state->dp_0054, 224U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0055", state->has_dp_0055, state->dp_0055, 5352U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0056", state->has_dp_0056, state->dp_0056, 20U, total_checks, failed_checks);
+            return;
+        case 95U:
+            expect_u16("gameplay_live_race_mid", frame, "state_0440", state->has_state_0440, state->state_0440, 65451U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_09a2", state->has_state_09a2, state->state_09a2, 27U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_09a8", state->has_state_09a8, state->state_09a8, 10U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_11f3", state->has_state_11f3, state->state_11f3, 495U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_129e", state->has_state_129e, state->state_129e, 256U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "state_18ee", state->has_state_18ee, state->state_18ee, 2468U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0020", state->has_dp_0020, state->dp_0020, 21U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0022", state->has_dp_0022, state->dp_0022, 4U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0053", state->has_dp_0053, state->dp_0053, 224U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0054", state->has_dp_0054, state->dp_0054, 224U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0055", state->has_dp_0055, state->dp_0055, 5520U, total_checks, failed_checks);
+            expect_u16("gameplay_live_race_mid", frame, "dp_0056", state->has_dp_0056, state->dp_0056, 21U, total_checks, failed_checks);
+            return;
+        default:
+            break;
     }
-    expect_u16("gameplay_live_race_mid", frame, "state_11f3", state->has_state_11f3, state->state_11f3, 479U, total_checks, failed_checks);
-    expect_u16("gameplay_live_race_mid", frame, "dp_0053", state->has_dp_0053, state->dp_0053, 200U, total_checks, failed_checks);
-    expect_u16("gameplay_live_race_mid", frame, "dp_0054", state->has_dp_0054, state->dp_0054, 200U, total_checks, failed_checks);
 }
 
 static void verify_gameplay_scanline_profile(

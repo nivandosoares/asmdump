@@ -315,6 +315,7 @@ void td2_runtime_state_parse_json_fields(
     parse_optional_u16(block, "\"state_0208\":", &state->has_state_0208, &state->state_0208);
     parse_optional_u16(block, "\"state_020a\":", &state->has_state_020a, &state->state_020a);
     parse_optional_u16(block, "\"state_040a\":", &state->has_state_040a, &state->state_040a);
+    parse_optional_u16(block, "\"state_0440\":", &state->has_state_0440, &state->state_0440);
     parse_optional_u16(block, "\"state_0960\":", &state->has_state_0960, &state->state_0960);
     parse_optional_u16(block, "\"state_09a2\":", &state->has_state_09a2, &state->state_09a2);
     parse_optional_u16(block, "\"state_09a8\":", &state->has_state_09a8, &state->state_09a8);
@@ -323,10 +324,14 @@ void td2_runtime_state_parse_json_fields(
     parse_optional_u16(block, "\"state_1c76\":", &state->has_state_1c76, &state->state_1c76);
     parse_optional_u16(block, "\"state_137c\":", &state->has_state_137c, &state->state_137c);
     parse_optional_u16(block, "\"state_11f3\":", &state->has_state_11f3, &state->state_11f3);
+    parse_optional_u16(block, "\"state_129e\":", &state->has_state_129e, &state->state_129e);
+    parse_optional_u16(block, "\"state_18ee\":", &state->has_state_18ee, &state->state_18ee);
     parse_optional_u16(block, "\"dp_0020\":", &state->has_dp_0020, &state->dp_0020);
     parse_optional_u16(block, "\"dp_0022\":", &state->has_dp_0022, &state->dp_0022);
     parse_optional_u16(block, "\"dp_0053\":", &state->has_dp_0053, &state->dp_0053);
     parse_optional_u16(block, "\"dp_0054\":", &state->has_dp_0054, &state->dp_0054);
+    parse_optional_u16(block, "\"dp_0055\":", &state->has_dp_0055, &state->dp_0055);
+    parse_optional_u16(block, "\"dp_0056\":", &state->has_dp_0056, &state->dp_0056);
 }
 
 bool td2_callback_contract_load_for_frame(

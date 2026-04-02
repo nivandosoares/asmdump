@@ -213,6 +213,7 @@ Current scheduler-backed promoted rails:
   `1093 -> 1102 -> 1117` callback handoff
 - `menu_gameplay_entry`: `tools/out/design_frame1500_car_select`
 - `gameplay_live_race_mid`: `tools/out/design_lane3_live_race_mid_frame0_native`
+  with promoted exact gameplay anchors through frame `95`
 
 Current promoted gameplay scanline contract:
 

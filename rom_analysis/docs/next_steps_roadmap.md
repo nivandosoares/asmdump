@@ -255,14 +255,16 @@ Validation contract baseline:
   - regression gates `6/6` pass
   - compare lane `3/3` pass
   - intro callback model smoke `183/183` checks pass
-  - scheduler smoke `335/335` checks pass across:
+  - scheduler smoke `480/480` checks pass across:
     intro no-input, menu gameplay-entry, and live-race gameplay seed, with
     menu/gameplay resolved from
     `rom_analysis/docs/scheduler_rail_contracts.jsonc`; the live-race rail
-    now also proves its scanline profile attachment and selected render pixels
-  - input mutation smoke `200/200` checks pass across:
+    now also proves its scanline profile attachment, selected render pixels,
+    and richer queue-state anchors through frame `95`
+  - input mutation smoke `220/220` checks pass across:
     menu no-opponent handoff, gameplay `JOY1` samples, and promoted
-    post-`2050` default-rival `A` windows driven by scripted input windows
+    post-`2050` default-rival `A` windows driven by scripted input windows,
+    plus gameplay late-anchor `JOY1` merges at `60` and `95`
   - live input smoke `21/21` checks pass across:
     pure SDL mapping, live no-opponent menu route, gameplay live `JOY1`
     sampling, and scripted-history plus live-`A` merge on the measured menu

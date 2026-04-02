@@ -1,6 +1,95 @@
 Date: 2026-04-02
 
 Summary
+- Promoted richer gameplay-state fields into the port runtime contract/state
+  surface so scheduler-backed gameplay rails are no longer limited to the old
+  `state_11f3/dp_0053/dp_0054` subset.
+- Extended the `gameplay_live_race_mid` scheduler rail with measured gameplay
+  anchors out to frame `95` using the gameplay-first Mesen smoke.
+- Hardened the port smokes so they now validate those later gameplay anchors
+  directly, including two late `JOY1` mutation cases.
+
+What I ran
+- rebuild affected port binaries:
+  - `make -C port`
+- scheduler rail validation:
+  - `./port/test_scheduler.sh`
+- input mutation validation:
+  - `./port/test_input_mutation.sh`
+
+Artifacts
+- promoted contract/state surface:
+  - `port/include/td2_contracts.h`
+  - `port/src/td2_contracts.c`
+  - `port/src/td2_compare.c`
+- promoted gameplay scheduler anchors:
+  - `rom_analysis/docs/scheduler_rail_contracts.jsonc`
+- strengthened port smokes:
+  - `port/test_scheduler.c`
+  - `port/test_input_mutation.c`
+
+Findings / Interpretation
+- The port runtime can now ingest and carry this richer gameplay slice from
+  scheduler contracts:
+  - `state_0440`
+  - `state_09a2/state_09a8`
+  - `state_129e/state_18ee`
+  - `dp_0020/dp_0022`
+  - `dp_0053/dp_0054/dp_0055/dp_0056`
+- The promoted `gameplay_live_race_mid` rail is now materially less front-end
+  shaped: it carries real queue/route anchors at frames
+  `16`, `30`, `60`, `90`, and `95`, all tied to the gameplay-first smoke
+  under `tools/out/gameplay_seed_probe_smoke`.
+- The input surface is now checked against those later anchors too:
+  `JOY1` mutation at frame `60` keeps the measured
+  `state_09a2/state_09a8/dp_0020/dp_0022/dp_0053/dp_0054` gameplay state,
+  and the same is now true again at frame `95`.
+- Validation stayed bounded and closed cleanly:
+  - scheduler smoke: `480/480`
+  - input mutation smoke: `220/220`
+
+What I learned (actionable)
+- The port no longer needs to treat the live-race seed as only an early
+  `3 -> 11` proof; it now has a scheduler-backed gameplay checkpoint set
+  through frame `95`.
+- The next meaningful port-side promotion for this rail is not “more generic
+  input plumbing”; it is either:
+  - densifying the gameplay rail between these anchors, or
+  - promoting the next late-gameplay selector/queue fields once the lane-3
+    archaeology proves them.
+
+Next steps / Checkpoints
+1) Keep using `tools/out/gameplay_seed_probe_smoke/td2_boot_probe.json` as the
+   current source for gameplay-rail promotions until a denser gameplay probe is
+   justified.
+2) If the next port step needs continuous playback beyond the anchor set,
+   capture a denser gameplay-only probe rather than inventing interpolation
+   ranges between these exact samples.
+3) Feed the still-open lane-3 selector work back into the same contract once
+   the upstream path behind `02:B0B1 / 02:B0BD -> L012BE2` is narrowed far
+   enough to promote new state safely.
+
+Files updated in this turn
+- `port/include/td2_contracts.h`
+- `port/src/td2_contracts.c`
+- `port/src/td2_compare.c`
+- `port/test_scheduler.c`
+- `port/test_input_mutation.c`
+- `rom_analysis/docs/scheduler_rail_contracts.jsonc`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+- `PORT_PLAN.md`
+
+Next reading
+- `rom_analysis/docs/scheduler_rail_contracts.jsonc`
+- `tools/out/gameplay_seed_probe_smoke/td2_boot_probe_corridor_0_96.md`
+- `port/test_scheduler.c`
+
+Date: 2026-04-02
+
+Summary
 - Added a gameplay-first Mesen probe wrapper so lane-3 runs can start from the
   preserved live-race savestate instead of replaying boot, intro, and menus.
 - Validated that wrapper against `manual_artifacts/lane3/lane3_live_race_mid.mss`

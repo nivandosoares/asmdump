@@ -569,6 +569,9 @@ static void td2_compare_capture_callback_contract(
     if (callback_contract->expected_state.has_state_040a) {
         td2_compare_callback_record(report, "state_040a", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_040a, runtime_state->state_040a);
     }
+    if (callback_contract->expected_state.has_state_0440) {
+        td2_compare_callback_record(report, "state_0440", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_0440, runtime_state->state_0440);
+    }
     if (callback_contract->expected_state.has_state_0960) {
         td2_compare_callback_record(report, "state_0960", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_0960, runtime_state->state_0960);
     }
@@ -593,6 +596,12 @@ static void td2_compare_capture_callback_contract(
     if (callback_contract->expected_state.has_state_11f3) {
         td2_compare_callback_record(report, "state_11f3", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_11f3, runtime_state->state_11f3);
     }
+    if (callback_contract->expected_state.has_state_129e) {
+        td2_compare_callback_record(report, "state_129e", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_129e, runtime_state->state_129e);
+    }
+    if (callback_contract->expected_state.has_state_18ee) {
+        td2_compare_callback_record(report, "state_18ee", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.state_18ee, runtime_state->state_18ee);
+    }
     if (callback_contract->expected_state.has_dp_0020) {
         td2_compare_callback_record(report, "dp_0020", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.dp_0020, runtime_state->dp_0020);
     }
@@ -604,6 +613,12 @@ static void td2_compare_capture_callback_contract(
     }
     if (callback_contract->expected_state.has_dp_0054) {
         td2_compare_callback_record(report, "dp_0054", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.dp_0054, runtime_state->dp_0054);
+    }
+    if (callback_contract->expected_state.has_dp_0055) {
+        td2_compare_callback_record(report, "dp_0055", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.dp_0055, runtime_state->dp_0055);
+    }
+    if (callback_contract->expected_state.has_dp_0056) {
+        td2_compare_callback_record(report, "dp_0056", TD2_COMPARE_VALUE_INT, callback_contract->expected_state.dp_0056, runtime_state->dp_0056);
     }
 }
 
