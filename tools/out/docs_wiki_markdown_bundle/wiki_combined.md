@@ -1,6 +1,6 @@
 # TD2 Wiki Markdown Bundle
 
-- Generated: `2026-04-01 21:48:04`
+- Generated: `2026-04-02 09:35:55`
 - Manifest: `rom_analysis/docs/wiki_doc_index.json`
 - Total docs: `48`
 
@@ -10,7 +10,7 @@ Use `wiki_bundle_index.md` for the curated file list or `wiki_combined.md` for a
 
 - Source: `PORT_PLAN.md`
 - Bundle copy: `sources/PORT_PLAN.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Primary execution contract and long-range port target.
 
 ---
@@ -652,7 +652,7 @@ The work above assumes option 1 first, then selective enhancement after parity.
 
 - Source: `rom_analysis/docs/next_steps_roadmap.md`
 - Bundle copy: `sources/rom_analysis/docs/next_steps_roadmap.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Current lane status, open gates, and practical follow-up targets.
 
 ---
@@ -741,6 +741,26 @@ decoded tilemaps and sprite visibility metadata.
     pixels, so this later gameplay phase is now narrowed to a stronger
     renderer boundary: more than `main_layers/bg1/bg2/bg3` scrolls are still
     missing there
+  - a new queue-boundary follow-up now closes one tempting false lead on that
+    same `3250` counterexample:
+    - `sub_layers`, sampled window coordinates, and sampled
+      `window_mask_main_*` fields stay flat across `3250/3400/3550`
+    - `3250` alone keeps `1` active visible queue descriptor on scanlines
+      `46..223`, while `3400/3550` keep the visible queue empty on all
+      `224` sampled lines
+    - `3250` also keeps the divergent queue-cursor family
+      `dp_0053/0054/0055/0056 = 0x70/(0x70->0x78)/0x18/0x12`, while the two
+      positive consumers keep `0xE0/0xE0/0x90/0x15` and
+      `0xF8/0xF8/0x90/0x15`
+    - ownership is now tied one step further:
+      `VRAM 0x6180` resolves to visible `BG1` tile `396` at cell `(4, 24)`,
+      around screen `(32, 193)`, while the end-frame raw `VRAM`
+      `0x6180..0x61FF` bytes still match on `3250/3400/3550`
+    - practical consequence:
+      the missing `3250` surface is now narrowed to transient visible-phase
+      `BG1` CHR state, not to a missing end-frame tilemap/CHR difference
+    - promoted artifact:
+      `tools/out/lane3_live_entry_scanline_queue_boundary_3250_3400_3550.md`
   - `lane3_live_entry_brake_traffic_frame03400_bundle/design_pack` now also
     loads through that same contract surface
   - unlike `3250`, the `3400` traffic-emergence phase is no longer a no-op
@@ -768,8 +788,10 @@ decoded tilemaps and sprite visibility metadata.
 - Next gate:
   - use `3400/3550` together as the positive proof set that this late-entry
     family now benefits from stronger measured scanline fields
-  - treat `3250` as the remaining counterexample and narrow what extra fields
-    or state ownership distinguish it from the two positive consumers
+  - treat `3250` as a queue-backed counterexample, not a window/sub-screen
+    counterexample
+  - chase the producer path behind the transient visible `BG1` tile `396`
+    upload (`slot 14 -> VRAM 0x6180`) before promoting any new runtime surface
 
 ## Lane 3 BG3 Bundle Surface (`2026-04-01`)
 
@@ -2463,10 +2485,105 @@ Update findings in:
 
 - Source: `rom_analysis/docs/progress_checkpoints.md`
 - Bundle copy: `sources/rom_analysis/docs/progress_checkpoints.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Checkpoint log with evidence-bearing milestones.
 
 ---
+
+Date: 2026-04-02
+
+Summary
+- Narrowed the remaining late-entry `3250` counterexample past the old
+  “maybe another window/layer field” read and into a visible queue/DMA
+  boundary.
+- Refreshed `tools/summarize_scanline_dma_queue.py` so it now works on the
+  current root-level scanline-capture schema and emits reusable Markdown
+  beside JSON summaries.
+- Closed a new late-gameplay boundary note:
+  `3250` is the only promoted late-entry frame that keeps an active visible
+  queue descriptor, while the positive scanline consumers `3400` and `3550`
+  keep that surface empty across all `224` sampled scanlines.
+
+What I ran
+- tool validation:
+  - `python3 -m py_compile tools/summarize_scanline_dma_queue.py`
+- reusable late-entry queue summary:
+  - `python3 tools/summarize_scanline_dma_queue.py tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json tools/out/lane3_live_entry_brake_frame03400_scanline_full/td2_scanline_step_test.json tools/out/lane3_live_entry_frame03550_scanline_full/td2_scanline_step_test.json --output tools/out/lane3_live_entry_scanline_queue_boundary_3250_3400_3550.json --markdown-out tools/out/lane3_live_entry_scanline_queue_boundary_3250_3400_3550.md`
+- direct three-way trace compare over the same captures:
+  - current negative fields checked:
+    - `sub_layers`
+    - `window0_left/right`
+    - `window1_left/right`
+    - `window_mask_main_bg1/bg2/bg3/obj`
+  - current positive outlier fields checked:
+    - `queue_dma_active_descriptor_count`
+    - `queue_dma_active_entries`
+    - `dp_0053/0054/0055/0056`
+    - `wram_0053/0054/0055/0056`
+
+Findings / Interpretation
+- `3250` is the only promoted late-entry trace with visible queue work:
+  - `1` active descriptor across scanlines `46..223` (`178` sampled lines)
+  - stable descriptor payload:
+    - slot `14`
+    - offset `112`
+    - words `[0xB801, 0x15B4, 0x0020, 0x6180]`
+    - source `0x15B4B8`
+    - transfer size `0x20`
+    - VRAM destination `0x6180`
+- `3400` and `3550` both keep
+  `queue_dma_active_descriptor_count = 0` on all `224` visible scanlines.
+- The old “maybe this is a window/sub-screen surface” branch is now a bounded
+  negative result for this late-entry trio:
+  - `sub_layers = 0` on all three traces
+  - all sampled window coordinates stay `0`
+  - all sampled `window_mask_main_*` fields stay `false`
+- The DP/WRAM queue family splits in the same direction:
+  - `3250`: representative `dp_0053/0054 = 0x70/0x70`,
+    `wram_0055/0056 = 0x18/0x12`, with `dp_0054` advancing to `0x78` once
+    the visible descriptor becomes active
+  - `3400`: representative `0xE0/0xE0`, `0x90/0x15`
+  - `3550`: representative `0xF8/0xF8`, `0x90/0x15`
+- The queue target is now tied to concrete visible ownership:
+  - `VRAM 0x6180` resolves to `BG1` tile `396`
+  - that tile is referenced at `BG1` cell `(4, 24)` on all three promoted
+    bundles and lands near screen `(32, 193)` under the current `BG1` scroll
+  - the end-frame raw `VRAM` bytes at `0x6180..0x61FF` are still identical on
+    `3250/3400/3550`, so the `3250` queue-backed visible state is transient
+    and not preserved in the seeded bundle dump
+
+What I learned (actionable)
+- The next useful question is no longer “which extra window or screen-mask
+  field should `3250` load?”
+- The stronger next question is:
+  which producer path feeds the visible `BG1` tile `396` upload at
+  `slot 14 -> VRAM 0x6180`, and does that require a queue-backed runtime
+  surface distinct from the `3400/3550` scroll-only positive set?
+
+Next steps / Checkpoints
+1) Treat `3400/3550` as the scroll-only positive set for the current measured
+   scanline family.
+2) Treat `3250` as a queue-backed counterexample, not a window/sub-screen
+   counterexample.
+3) Chase the producer path behind the `3250` visible `BG1` tile `396` upload
+   before promoting any new runtime rule.
+
+Immediate recommendation
+- Read these together before the next `3250` runtime experiment:
+  - `rom_analysis/maps/tracks/track1_live_entry_scanline_queue_boundary_3250_3400_3550.md`
+  - `tools/out/lane3_live_entry_scanline_queue_boundary_3250_3400_3550.md`
+
+Files updated in this turn
+- `tools/summarize_scanline_dma_queue.py`
+- `rom_analysis/maps/tracks/track1_live_entry_scanline_queue_boundary_3250_3400_3550.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `NEXT_AGENT.md`
+
+Next reading
+- `tools/out/lane3_live_entry_scanline_queue_boundary_3250_3400_3550.md`
+- `tools/out/lane3_live_entry_scanline_queue_boundary_3250_3400_3550.json`
+- `rom_analysis/maps/tracks/track1_live_entry_scanline_queue_boundary_3250_3400_3550.md`
 
 Date: 2026-04-01
 
@@ -4091,7 +4208,7 @@ Next reading
 
 - Source: `rom_analysis/docs/validation_gates.md`
 - Bundle copy: `sources/rom_analysis/docs/validation_gates.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Bounded pass/fail policy for regression and callback checks.
 
 ---
@@ -4317,7 +4434,7 @@ For each archaeology lane:
 
 - Source: `validation/README.md`
 - Bundle copy: `sources/validation/README.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Current Mesen capture, probe, and export workflow.
 
 ---
@@ -6773,7 +6890,7 @@ Notes:
 
 - Source: `tools/README.md`
 - Bundle copy: `sources/tools/README.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Promoted extraction and analysis tooling surface.
 
 ---
@@ -7463,7 +7580,7 @@ This should be treated as the scene's static setup, not a guarantee of exact fra
 
 - Source: `port/README.md`
 - Bundle copy: `sources/port/README.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: SDL runtime scope, usage, and current sequence playback path.
 
 ---
@@ -7654,7 +7771,7 @@ Notes:
 
 - Source: `rom_analysis/README.md`
 - Bundle copy: `sources/rom_analysis/README.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Top-level archaeology tree orientation.
 
 ---
@@ -7736,7 +7853,7 @@ make -C tools bank30-registry
 
 - Source: `rom_analysis/docs/bank30_decompression_report.md`
 - Bundle copy: `sources/rom_analysis/docs/bank30_decompression_report.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Current registry-backed read of bank30 markers and the active unresolved queue.
 
 ---
@@ -7923,7 +8040,7 @@ Observed decode geometry:
 
 - Source: `rom_analysis/docs/bank30_b1f9_forced_lane_stall.md`
 - Bundle copy: `sources/rom_analysis/docs/bank30_b1f9_forced_lane_stall.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Why the current headless `B1F9` forcing lane is low-yield for `EE7F`.
 
 ---
@@ -8019,7 +8136,7 @@ observe the `EE7F` selector. It is a later worker loop centered on
 
 - Source: `rom_analysis/docs/intro_00_8029_next_agent_handoff.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_00_8029_next_agent_handoff.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Active handoff for the later attract continuation lane.
 
 ---
@@ -8124,7 +8241,7 @@ The open question is no longer "which producer owns this?" It is:
 
 - Source: `rom_analysis/docs/intro_01_9fe5_window_986_1093.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_01_9fe5_window_986_1093.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Consolidated visual-contract note for the bridge-visible intro block.
 
 ---
@@ -8239,7 +8356,7 @@ Reading:
 
 - Source: `rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Producer-side activity narrowing for the post-1093 window.
 
 ---
@@ -8431,7 +8548,7 @@ Use those boundaries explicitly in the Lane 2 follow-up:
 
 - Source: `rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Late 00:8029 blob rotation report and selector narrowing.
 
 ---
@@ -8646,7 +8763,7 @@ Reading:
 
 - Source: `rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md`
 - Bundle copy: `sources/rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: First promoted tilemap-to-ROM provenance window.
 
 ---
@@ -8673,7 +8790,7 @@ Reading:
 
 - Source: `rom_analysis/docs/mesen_debugger_design_workbench.md`
 - Bundle copy: `sources/rom_analysis/docs/mesen_debugger_design_workbench.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Design-pack workflow and extraction surface.
 
 ---
@@ -8874,7 +8991,7 @@ make -C tools l001210-trace-summary
 
 - Source: `rom_analysis/docs/snes_runtime_algorithm_human.md`
 - Bundle copy: `sources/rom_analysis/docs/snes_runtime_algorithm_human.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Human-readable interpretation of the front-end and handoff corridor.
 
 ---
@@ -9050,7 +9167,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md`
 - Bundle copy: `sources/rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Car-presentation BG2 ownership without treating it as gameplay.
 
 ---
@@ -9093,7 +9210,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_frontend_top_menu_labels.md`
 - Bundle copy: `sources/tools/out/snes_frontend_top_menu_labels.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Closed rendered label set for the top signboard menu.
 
 ---
@@ -9125,7 +9242,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_frontend_rival_selection_grid.md`
 - Bundle copy: `sources/tools/out/snes_frontend_rival_selection_grid.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Rendered and structural read of the 2x2 opponent grid.
 
 ---
@@ -9191,7 +9308,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_select_opponent_organic_default_path.md`
 - Bundle copy: `sources/tools/out/snes_select_opponent_organic_default_path.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Recovered no-force path into the default rival corridor.
 
 ---
@@ -9240,7 +9357,7 @@ Inject `right+down` only after `01:C1D2` is already live so `$1C70` can leave
 
 - Source: `tools/out/snes_frontend_select_opponent_mode_split.md`
 - Bundle copy: `sources/tools/out/snes_frontend_select_opponent_mode_split.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Separates rival slots from the no-opponent stopwatch branch.
 
 ---
@@ -9290,7 +9407,7 @@ Inject `right+down` only after `01:C1D2` is already live so `$1C70` can leave
 
 - Source: `rom_analysis/docs/lane3_today_work_brief.md`
 - Bundle copy: `sources/rom_analysis/docs/lane3_today_work_brief.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Current gameplay archaeology state and human-support queue.
 
 ---
@@ -9611,7 +9728,7 @@ without redoing the same work.
 
 - Source: `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
 - Bundle copy: `sources/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Primary gameplay-oriented handoff note.
 
 ---
@@ -10192,7 +10309,7 @@ The question is now narrower:
 
 - Source: `rom_analysis/docs/lane3_attract_demo_boundary.md`
 - Bundle copy: `sources/rom_analysis/docs/lane3_attract_demo_boundary.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Boundary note explaining why some old seeds were misleading.
 
 ---
@@ -10253,7 +10370,7 @@ evidence looked like "menu" in one pass and "gameplay" in another.
 
 - Source: `rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Promoted power-on route for reproducible gameplay entry.
 
 ---
@@ -10411,7 +10528,7 @@ evidence looked like "menu" in one pass and "gameplay" in another.
 
 - Source: `rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: First promoted late gameplay pair from the live-entry route, with stable artifact bundles for both phases.
 
 ---
@@ -10599,7 +10716,7 @@ Primary wiki/gallery image refs for this pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Bounded live-entry follow-up that isolates traffic emergence as a cleaner OBJ-side event.
 
 ---
@@ -10773,7 +10890,7 @@ Designer-facing anchors for the promoted pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Asset-first gameplay taxonomy that maps BG/OBJ buckets to tracing targets.
 
 ---
@@ -10852,7 +10969,7 @@ Designer-facing anchors for the promoted pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Savestate-backed gameplay extraction that now closes native `BG2` road and `BG3` scenery surfaces.
 
 ---
@@ -10996,7 +11113,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
 - Bundle copy: `sources/tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Generated BG1/BG2/OBJ compare for the first late live-entry gameplay pair.
 
 ---
@@ -11048,7 +11165,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md`
 - Bundle copy: `sources/tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Generated compare showing the red traffic car as the current best OBJ-side live-entry event.
 
 ---
@@ -11099,7 +11216,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_race_mid_asset_focus.md`
 - Bundle copy: `sources/tools/out/lane3_live_race_mid_asset_focus.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Generated gameplay inventory with supporting frame/layer artifact references.
 
 ---
@@ -11166,7 +11283,7 @@ native PNGs:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Human note for preserved live-race savestates and controls.
 
 ---
@@ -11380,7 +11497,7 @@ native PNGs:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Video-backed still capture summary for the live-race lane.
 
 ---
@@ -11468,7 +11585,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Named still pack for the checkpoint service/post corridor, partial-results screen, and restart back into driving.
 
 ---
@@ -11540,7 +11657,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Longplay-backed visual anchors for night, bridge, mountain-wall, tunnel, and rain.
 
 ---
@@ -11613,7 +11730,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Longplay-backed snow-driving anchors starting at the one-hour mark.
 
 ---
@@ -11678,7 +11795,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Boundary note showing why phase-4 snow is now a savestate-first capture target.
 
 ---
@@ -11765,7 +11882,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Longplay-backed arrest/prison ending pack and high-score handoff.
 
 ---
@@ -11829,7 +11946,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Layer composition read for a real gameplay seed.
 
 ---
@@ -11961,7 +12078,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Producer-side narrowing for the gameplay road/world path.
 
 ---
@@ -12110,7 +12227,7 @@ Optional but useful:
 
 - Source: `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
 - Bundle copy: `sources/rom_analysis/docs/gameplay_scanline_contracts.jsonc`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Versioned scanline-overlay selection for promoted gameplay bundles in the SDL runtime.
 
 ---
@@ -12167,7 +12284,7 @@ Optional but useful:
 
 - Source: `rom_analysis/docs/gameplay_composition_contracts.jsonc`
 - Bundle copy: `sources/rom_analysis/docs/gameplay_composition_contracts.jsonc`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Versioned late-gameplay top-band BG3 composition rules for promoted SDL runtime bundles.
 
 ---
@@ -12217,7 +12334,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Static role split for the narrowed gameplay cluster.
 
 ---
@@ -12345,7 +12462,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Semantic ownership pass for post-handoff gameplay fields.
 
 ---
@@ -12470,7 +12587,7 @@ Optional but useful:
 
 - Source: `rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md`
 - Bundle copy: `sources/rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Bounded regression read for current intro/front-end parity in the C/SDL runtime.
 
 ---
@@ -12540,7 +12657,7 @@ Regression summary:
 
 - Source: `rom_analysis/docs/mesen_instrumented_backend_architecture.md`
 - Bundle copy: `sources/rom_analysis/docs/mesen_instrumented_backend_architecture.md`
-- Last updated: `2026-04-01 21:48`
+- Last updated: `2026-04-02 09:35`
 - Note: Architecture note for the experimental Mesen backend path.
 
 ---
