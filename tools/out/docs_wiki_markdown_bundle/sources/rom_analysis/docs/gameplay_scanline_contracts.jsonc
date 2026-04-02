@@ -31,6 +31,16 @@
         "Promoted traffic-emergence follow-up from the bounded braking variant of the reproducible live-entry route.",
         "Used as the cheapest falsifier for whether the late-entry family now needs more than the static BG3 top-band composition rule."
       ]
+    },
+    {
+      "id": "lane3_live_entry_frame03550",
+      "scene_match": "lane3_live_entry_frame03550_bundle/design_pack",
+      "source_json": "tools/out/lane3_live_entry_frame03550_scanline_full/td2_scanline_step_test.json",
+      "target_frame": 3550,
+      "notes": [
+        "Promoted later collision-heavy late-entry phase from the reproducible power-on route.",
+        "Used as the immediate follow-up after the positive 3400 scanline result to test whether the same measured field family survives a later overlay-heavy frame."
+      ]
     }
   ]
 }

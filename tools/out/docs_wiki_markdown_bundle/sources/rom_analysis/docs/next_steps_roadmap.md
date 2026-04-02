@@ -69,6 +69,7 @@ decoded tilemaps and sprite visibility metadata.
   - `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
   - `tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json`
   - `tools/out/lane3_live_entry_brake_frame03400_scanline_full/td2_scanline_step_test.json`
+  - `tools/out/lane3_live_entry_frame03550_scanline_full/td2_scanline_step_test.json`
 - Practical result:
   - the horizon and roadside separation on the live-race seed is restored in
     the native SDL output
@@ -88,6 +89,13 @@ decoded tilemaps and sprite visibility metadata.
     compared to the earlier composition-only runtime PNG, the scanline-backed
     `3400` render changes `9309` pixels and lowers the
     `bg_stack_visible_support.png` mismatch from `15497` to `7649`
+  - `lane3_live_entry_frame03550_bundle/design_pack` now also loads through
+    that same contract surface
+  - the later `3550` collision-heavy phase confirms the same direction of
+    travel:
+    compared to the earlier composition-only runtime PNG, the scanline-backed
+    `3550` render changes `9367` pixels and lowers the
+    `bg_stack_visible_support.png` mismatch from `17848` to `9741`
 - New cheap falsifier:
   - `./port/test_scanline_contract.sh` now proves:
     - bundles with no matching contract stay flat
@@ -96,12 +104,13 @@ decoded tilemaps and sprite visibility metadata.
     - `lane3_live_entry_brake_traffic_frame03400` now also loads that
       versioned contract surface and preserves selected scanline values plus
       top-band sky pixels
+    - `lane3_live_entry_frame03550` now also loads that versioned contract
+      surface and preserves selected scanline values plus top-band sky pixels
 - Next gate:
-  - keep using `3400` as the first late-entry proof that stronger measured
-    scanline fields can beat composition-only rendering on this family
-  - decide whether the next cheapest promotion target is a later follow-up
-    such as `3550`, or a tighter field expansion for the still-no-op `3250`
-    counterexample
+  - use `3400/3550` together as the positive proof set that this late-entry
+    family now benefits from stronger measured scanline fields
+  - treat `3250` as the remaining counterexample and narrow what extra fields
+    or state ownership distinguish it from the two positive consumers
 
 ## Lane 3 BG3 Bundle Surface (`2026-04-01`)
 
@@ -221,10 +230,10 @@ Validation contract baseline:
     pure SDL mapping, live no-opponent menu route, gameplay live `JOY1`
     sampling, and scripted-history plus live-`A` merge on the measured menu
     corridor
-  - scanline / composition contract smoke `46/46` checks pass across:
+  - scanline / composition contract smoke `53/53` checks pass across:
     one no-contract bundle, the solved `live_race_mid` consumer, the late
     `3250` no-op scanline consumer, the promoted `3400` scanline+composition
-    consumer, and the remaining `3550` composition-contract consumer
+    consumer, and the promoted `3550` scanline+composition consumer
   - runtime `--dump-prefix` now emits PNG siblings for the same frame and
     compare artifacts already used by the port smoke path
 

@@ -129,10 +129,12 @@ Current promoted gameplay scanline contract:
   - `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
   - `tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json`
   - `tools/out/lane3_live_entry_brake_frame03400_scanline_full/td2_scanline_step_test.json`
+  - `tools/out/lane3_live_entry_frame03550_scanline_full/td2_scanline_step_test.json`
 - current consumers:
   - `gameplay_live_race_mid`
   - `tools/out/lane3_live_entry_frame03250_bundle/design_pack`
   - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/design_pack`
+  - `tools/out/lane3_live_entry_frame03550_bundle/design_pack`
 - current attached fields:
   - `main_layers`
   - `bg1_hscroll/bg1_vscroll`
@@ -149,6 +151,11 @@ Current promoted gameplay scanline contract:
     no-op: compared to the earlier composition-only runtime PNG, the promoted
     scanline-backed render changes `9309` pixels and lowers the
     `bg_stack_visible_support.png` mismatch from `15497` to `7649`
+  - the later `3550` collision-heavy bundle now also loads through that same
+    contract path, and it confirms the same direction of travel:
+    compared to the earlier composition-only runtime PNG, the promoted
+    scanline-backed render changes `9367` pixels and lowers the
+    `bg_stack_visible_support.png` mismatch from `17848` to `9741`
 
 Current promoted gameplay composition contract:
 
@@ -243,6 +250,9 @@ That proves:
 - `lane3_live_entry_brake_traffic_frame03400_bundle/design_pack` now also
   loads the promoted scanline surface and preserves selected scanline values
   plus top-band sky pixels
+- `lane3_live_entry_frame03550_bundle/design_pack` now also loads the
+  promoted scanline surface and preserves selected scanline values plus
+  top-band sky pixels
 - the late-entry bundles `3250`, `3400`, and `3550` also load the versioned
   gameplay composition contract and keep promoted top-band render anchors
   without a scheduler rail
