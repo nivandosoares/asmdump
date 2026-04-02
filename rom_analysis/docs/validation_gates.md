@@ -190,6 +190,11 @@ rails:
   `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
 - that `3400` consumer preserves selected scanline fields and top-band sky
   pixels after loading both scanline and composition contracts
+- `lane3_live_entry_frame03550_bundle/design_pack` now also loads a promoted
+  scanline profile from
+  `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
+- that `3550` consumer also preserves selected scanline fields and top-band
+  sky pixels after loading both scanline and composition contracts
 - the late-entry bundles `3250`, `3400`, and `3550` now load promoted
   composition profiles from
   `rom_analysis/docs/gameplay_composition_contracts.jsonc`

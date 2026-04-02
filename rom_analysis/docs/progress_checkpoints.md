@@ -1,6 +1,89 @@
 Date: 2026-04-01
 
 Summary
+- Promoted the later collision-heavy `3550` bundle onto the same versioned
+  gameplay scanline-contract surface that had just been proven on `3400`.
+- Extended the port smoke again so `3550` is no longer treated as a
+  composition-only consumer; it now proves loaded scanline values plus
+  top-band sky pixels in `port/test_scanline_contract.c`.
+- Closed a stronger family-wide read on late gameplay:
+  the current measured `main_layers/bg1/bg2/bg3` scanline fields now have two
+  positive promoted consumers (`3400`, `3550`) against one explicit
+  counterexample (`3250`).
+
+What I ran
+- late-entry `3550` scanline capture on the promoted no-brake route:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=420 TD2_SCANLINE_TEST_TARGET_FRAME=3550 TD2_SCANLINE_TEST_MAX_SAMPLES=224 TD2_SCANLINE_TEST_INPUT_WINDOWS='1200:a;1280:a;1505-1510:a;1640-1645:a;1730-1735:a;2050-4800:a' TD2_SCANLINE_TEST_OUTPUT_PREFIX=tools/out/lane3_live_entry_frame03550_scanline_full/td2_scanline_step_test ./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_scanline_step_test.lua`
+- stable runtime PNG for the promoted `3550` scanline-backed consumer:
+  - `./port/build/td2_port --scene-dir tools/out/lane3_live_entry_frame03550_bundle/design_pack --headless --frames 1 --dump-prefix tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3550`
+- bounded compare probes:
+  - `python3 tools/compare_frames.py tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3550_00000.png tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3550_00000.png`
+  - `python3 tools/compare_frames.py tools/out/lane3_live_entry_frame03550_bundle/bg_stack_visible_support.png tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3550_00000.png`
+- targeted port validation:
+  - `make -C port`
+  - `./port/test_scanline_contract.sh`
+
+Findings / Interpretation
+- The new `3550` trace is structurally valid on the same late-entry family:
+  - `224` visible scanline samples
+  - the same `23/24` top-band `BG3` handoff seen on `3250/3400`
+  - the same `120/121` main-layer split
+  - a different later-phase scroll envelope than `3400`
+    (`BG3 HOFS = 192`, `BG2 HOFS 254/256` at `120/121`)
+- This later collision-heavy phase also benefits materially from the current
+  measured scanline field family:
+  - the new scanline-backed runtime render changes `9367` pixels versus the
+    earlier composition-only `3550` runtime PNG
+  - against `bg_stack_visible_support.png`, mismatch drops
+    `17848 -> 9741`
+- Practical read:
+  - `3400` was not an isolated win
+  - the current late-entry scanline family now has two positive consumers
+    (`3400`, `3550`)
+  - `3250` is now the useful remaining counterexample, not the representative
+    default for the whole family
+
+What I learned (actionable)
+- The next useful port-side question is no longer “does this scanline family
+  help late gameplay at all?”
+- The better next question is:
+  what extra fields or state ownership make `3250` stay flat while `3400`
+  and `3550` both improve?
+
+Next steps / Checkpoints
+1) Use `3400/3550` together as the positive proof set for late-entry
+   scanline-backed rendering.
+2) Treat `3250` as the explicit narrowing target for the next field/state
+   promotion instead of extending static composition blindly.
+3) Keep the new `3550` runtime PNG beside the earlier composition-only output
+   in design review so the later-family gain stays visible.
+
+Immediate recommendation
+- Use these `3550` runtime PNGs side-by-side for the next late-gameplay
+  review:
+  - `tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3550_00000.png`
+  - `tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3550_00000.png`
+
+Files updated in this turn
+- `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
+- `port/test_scanline_contract.c`
+- `PORT_PLAN.md`
+- `port/README.md`
+- `port/docs/ARCHITECTURE.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+- `NEXT_AGENT.md`
+
+Next reading
+- `tools/out/lane3_live_entry_frame03550_scanline_full/td2_scanline_step_test.json`
+- `tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3550_00000.png`
+- `tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3550_00000.png`
+
+Date: 2026-04-01
+
+Summary
 - Promoted the late-entry `3400` traffic-emergence bundle onto the versioned
   gameplay scanline-contract surface in
   `rom_analysis/docs/gameplay_scanline_contracts.jsonc`.

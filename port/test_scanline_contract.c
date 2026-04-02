@@ -267,6 +267,7 @@ static void verify_live_entry_3550(
     unsigned* failed_checks
 ) {
     Td2Runtime runtime;
+    const Td2PpuScanlineProfile* profile;
     char error[256];
 
     if (!init_runtime(
@@ -286,7 +287,9 @@ static void verify_live_entry_3550(
         return;
     }
 
-    expect_bool("live_entry_3550", "scanline_profile.enabled", runtime.ppu.scanline_profile.enabled, false, total_checks, failed_checks);
+    profile = &runtime.ppu.scanline_profile;
+    expect_bool("live_entry_3550", "scanline_profile.enabled", profile->enabled, true, total_checks, failed_checks);
+    expect_u16("live_entry_3550", "scanline_profile.line_count", (uint16_t)profile->line_count, (uint16_t)TD2_FRAME_HEIGHT, total_checks, failed_checks);
     expect_bool("live_entry_3550", "composition_profile.enabled", runtime.ppu.composition_profile.enabled, true, total_checks, failed_checks);
     expect_u16(
         "live_entry_3550",
@@ -302,9 +305,15 @@ static void verify_live_entry_3550(
         95U,
         total_checks,
         failed_checks);
-    expect_pixel("live_entry_3550", 23, 44, runtime.framebuffer[(44 * TD2_FRAME_WIDTH) + 23], 0xFF103942U, total_checks, failed_checks);
-    expect_pixel("live_entry_3550", 24, 45, runtime.framebuffer[(45 * TD2_FRAME_WIDTH) + 24], 0xFF103942U, total_checks, failed_checks);
-    expect_pixel("live_entry_3550", 59, 44, runtime.framebuffer[(44 * TD2_FRAME_WIDTH) + 59], 0xFF103942U, total_checks, failed_checks);
+    expect_u16("live_entry_3550", "scanline[23].main_layers", profile->main_screen_layers[23], 23U, total_checks, failed_checks);
+    expect_u16("live_entry_3550", "scanline[23].bg3_hscroll", (uint16_t)profile->layer_hscroll[2][23], 192U, total_checks, failed_checks);
+    expect_u16("live_entry_3550", "scanline[24].bg3_vscroll", (uint16_t)profile->layer_vscroll[2][24], 12U, total_checks, failed_checks);
+    expect_u16("live_entry_3550", "scanline[120].bg2_hscroll", (uint16_t)profile->layer_hscroll[1][120], 254U, total_checks, failed_checks);
+    expect_u16("live_entry_3550", "scanline[121].bg2_hscroll", (uint16_t)profile->layer_hscroll[1][121], 256U, total_checks, failed_checks);
+    expect_u16("live_entry_3550", "scanline[223].bg2_vscroll", (uint16_t)profile->layer_vscroll[1][223], 283U, total_checks, failed_checks);
+    expect_pixel("live_entry_3550", 180, 5, runtime.framebuffer[(5 * TD2_FRAME_WIDTH) + 180], 0xFF529CF7U, total_checks, failed_checks);
+    expect_pixel("live_entry_3550", 180, 10, runtime.framebuffer[(10 * TD2_FRAME_WIDTH) + 180], 0xFF529CF7U, total_checks, failed_checks);
+    expect_pixel("live_entry_3550", 186, 10, runtime.framebuffer[(10 * TD2_FRAME_WIDTH) + 186], 0xFF529CF7U, total_checks, failed_checks);
 
     td2_runtime_free(&runtime);
 }

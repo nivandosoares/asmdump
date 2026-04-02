@@ -43,6 +43,7 @@ The current code intentionally does only the minimum clean work:
   - `../tools/out/design_lane3_live_race_mid_frame0_native`
   - `../tools/out/lane3_live_entry_frame03250_bundle/design_pack`
   - `../tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/design_pack`
+  - `../tools/out/lane3_live_entry_frame03550_bundle/design_pack`
   The same runtime layer now also resolves optional gameplay composition
   profiles from `../rom_analysis/docs/gameplay_composition_contracts.jsonc`
   for:
@@ -88,9 +89,9 @@ bundles that only carry local `raw/` dumps and no golden frame.
 
 1. Keep promoting stronger measured late-gameplay scanline consumers where the
    current `main_layers/bg1/bg2/bg3` field family already pays off:
-   `3400` now proves that path materially improves the traffic-emergence
-   bundle over composition-only rendering, while `3250` remains the useful
-   counterexample where the same fields are still a no-op.
+   `3400` and now `3550` both materially improve over composition-only
+   rendering, while `3250` remains the useful counterexample where the same
+   fields are still a no-op.
 2. Promote compare-backed menu/gameplay fixtures so the same
    runtime-or-golden workflow used on intro can gate later rails too.
 3. Replace pre-bundle scripted route history with earlier scene bases or

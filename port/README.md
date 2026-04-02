@@ -146,8 +146,8 @@ Notes:
     even though the current attached fields remain a no-op there
   - the late-entry `3400` traffic-emergence bundle now loads both a versioned
     scanline surface and the versioned gameplay composition contract
-  - the late-entry `3550` bundle still loads the composition contract even
-    without a scheduler rail
+  - the late-entry `3550` collision-heavy bundle now also loads both a
+    versioned scanline surface and the versioned gameplay composition contract
   - those late-entry bundles now enable `BG3` on the top band and keep
     `BG3 > BG2` there with the promoted cutoffs `79/79/95`
 - `--dump-prefix` now emits `PATH_00000.ppm` and `PATH_00000.png`; compare
@@ -169,11 +169,10 @@ Notes:
   now shares the same mutator surface, but it does not fabricate missing
   history before the loaded bundle.
 - current gameplay-specific boundary: the promoted `gameplay_live_race_mid`
-  seed is still the solved scanline consumer, `3400` now proves the current
-  measured late-entry scanline field family can materially improve a promoted
-  gameplay bundle, `3250` remains the useful counterexample where those same
-  fields are still a no-op, and `3550` is still only covered by the static
-  composition rule.
+  seed is still the solved scanline consumer, `3400` and now `3550` both
+  prove the current measured late-entry scanline field family can materially
+  improve promoted gameplay bundles, and `3250` remains the useful
+  counterexample where those same fields are still a no-op.
 - `tools/push_checkpoint.sh` is the repo-local wrapper for the post-push step:
   it pushes the current checkpoint, refreshes the curated wiki in an isolated
   temporary `git worktree`, and issues a follow-up wiki refresh commit/push
