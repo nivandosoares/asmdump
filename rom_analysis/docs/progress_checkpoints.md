@@ -1,6 +1,101 @@
 Date: 2026-04-02
 
 Summary
+- Added a reusable front-end car-helper ASCII auditor so the current car-panel
+  load path can be checked without repeating ad hoc LoROM math.
+- Closed the exact panel-helper source set behind `L00BC0F`:
+  `$0202 + 0x0009` maps to helper indices `9/10/11`, which load:
+  - `L00A9A0`: `00:B0AB`, `00:B6B2`, `00:BCBA`
+  - `L00A9CB`: `0E:8000`, `0E:91FE`, `0E:A428`
+- Kept the main negative result instead of overfitting the new `.sol` string
+  suspicion:
+  those helper sources do not carry `CARBMP`, `CARBMP.sol`, `Porsche`,
+  `Lamborghini`, `Diablo`, `Ferrari`, `F40`, `959`, or `P959_8K` as direct or
+  fixed-stride ASCII in either the source bytes or the decoded payloads.
+- Added a stronger read on the familiar `.sol` names:
+  `GAMEOVER.sol`, `WHOA.sol`, `YEAH.sol`, and `P959_8K.sol` all sit inside the
+  same nearby `YUKO` container family, which raises the prior that
+  `P959_8K.sol` is another AV/effect asset label rather than the front-end
+  car-name surface.
+
+What I ran
+- helper audit tool validation:
+  - `python3 -m py_compile tools/audit_frontend_car_helper_ascii.py`
+- helper audit artifact:
+  - `python3 tools/audit_frontend_car_helper_ascii.py game.smc --json-out tools/out/frontend_car_helper_ascii_audit_20260402.json --markdown-out tools/out/frontend_car_helper_ascii_audit_20260402.md`
+- ROM-wide `.sol` and car-name string pass:
+  - `strings -a -t x game.smc | rg "CARBMP|\\.sol$|Porsche|Lamborghini|Ferrari|959|Diablo|F40|CAR"`
+- direct LoROM-mapped YUKO block comparison over the familiar `.sol` names:
+  - ad hoc Python inspection around `00:DEE3`, `0A:C65A`, `0B:B557`, and
+    `0A:EDEA`
+
+Findings / Interpretation
+- The current panel-helper load path is now explicit in one reusable artifact:
+  - helper `9` (`$0202 = 0`):
+    - `L00A9A0 00:B0AB` -> file `0x0030AB`
+    - `L00A9CB 0E:8000` -> file `0x070000`
+  - helper `10` (`$0202 = 1`):
+    - `L00A9A0 00:B6B2` -> file `0x0036B2`
+    - `L00A9CB 0E:91FE` -> file `0x0711FE`
+  - helper `11` (`$0202 = 2`):
+    - `L00A9A0 00:BCBA` -> file `0x003CBA`
+    - `L00A9CB 0E:A428` -> file `0x072428`
+- All three `L00A9A0` sources are `42FB`; all three `L00A9CB` sources are
+  `26FB`.
+- The new audit closes the main question defensibly:
+  - no `CARBMP`/car-name needle hits land in the compressed source bytes
+  - no such hits land in the decoded `L0005AC` tilemap blobs either
+  - no such hits land in the decoded `L0006C9` CHR blobs either
+  - there are also no positive fixed-stride (`1/2/3`) hits for those needles
+- That means the still-missing name-bearing surface is not usefully explained
+  by “the helper bundle already embeds ASCII car names”.
+- The `.sol` comparison is now more concrete:
+  - `GAMEOVER.sol` at `00:DEE3`, `WHOA.sol` at `0A:C65A`,
+    `YEAH.sol` at `0B:B557`, and `P959_8K.sol` at `0A:EDEA` are each preceded
+    by the same nearby `YUKO` signature block
+  - the three familiar examples match known spoken/FX cues from gameplay
+  - practical read: `P959_8K.sol` currently fits the same container family
+    better than it fits the front-end title/info-box path
+- Practical consequence for the active front-end lane:
+  - the strongest remaining explanation is still the old exact-frame one:
+    shared panel/glyph CHR plus a small top-row `BG2` tilemap delta
+  - the next useful target is therefore tilemap/tile provenance on that top
+    row, not deeper blind `.sol` scanning inside helpers `9/10/11`
+
+What I learned (actionable)
+- The `L00BC0F` panel reload path is no longer “helper bundle 10 in general”;
+  it is the exact `9/10/11` source sextet above, with validated LoROM file
+  offsets and compression modes.
+- The new `.sol` suspicion did produce a real architecture-facing gain even
+  though it did not reveal the car-name text:
+  it cleanly separates the front-end helper path from the nearby `YUKO` asset
+  family.
+- For this front-end lane, blind ASCII scans inside the helper payloads should
+  now be demoted behind the stronger exact-frame tilemap-delta path.
+
+Next steps / Checkpoints
+1) Trace the top-row `BG2` tilemap delta across the `1500/1640/1780` front-end
+   anchors back to the producing row/tile selector.
+2) Keep the current helper sextet as the closed negative result when the
+   “embedded ASCII car-name” hypothesis comes up again.
+3) If the `.sol`/`YUKO` family becomes active as its own lane later, treat it
+   as a separate AV/effect-asset cataloguing problem rather than as car-panel
+   text provenance.
+
+Files updated in this turn
+- `tools/audit_frontend_car_helper_ascii.py`
+- `tools/out/frontend_car_helper_ascii_audit_20260402.json`
+- `tools/out/frontend_car_helper_ascii_audit_20260402.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `tools/out/frontend_car_helper_ascii_audit_20260402.md`
+- `docs/snes_unknowns.md`
+- `rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.json`
+
+Date: 2026-04-02
+
+Summary
 - Switched the text-validation detour away from phrase needles and onto a
   raw `0x41` anchor pass:
   extracting printable runs that contain byte `0x41` now closes real

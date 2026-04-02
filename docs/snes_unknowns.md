@@ -149,6 +149,11 @@ DOS-driven SNES correlation pass.
   - `L00BC0F` statically proves the per-car panel reload uses
     `$0202 + 0x0009` through `L00A9A0/L00A9CB`, without a paired per-car
     `L00A9F2`.
+  - [tools/out/frontend_car_helper_ascii_audit_20260402.json](/home/nivando-soares/asmdump/tools/out/frontend_car_helper_ascii_audit_20260402.json)
+    now closes the exact helper-source audit for indices `9/10/11`:
+    `00:B0AB/00:B6B2/00:BCBA` plus `0E:8000/0E:91FE/0E:A428`, with no
+    `CARBMP`, car-name needles, or fixed-stride ASCII hits in either the
+    source bytes or the decoded payloads.
   - The second-right probe reaches a third live selector anchor by changing
     `state_0202` from `2` to `0` at frame `1677`; the exact-frame raw dump at
     frame `1780` keeps the same `BG1/BG2` state fields as frames `1500/1640`.
@@ -195,6 +200,10 @@ DOS-driven SNES correlation pass.
     by elimination against the calibrated `01:9C77` catalogs, so it is the
     strongest current `Ferrari F40` candidate even though the name-bearing
     text proof is not yet promoted directly.
+  - The nearby `.sol` family should currently be treated as a separate lead:
+    the familiar `GAMEOVER.sol`, `WHOA.sol`, `YEAH.sol`, and `P959_8K.sol`
+    examples all sit inside nearby `YUKO` containers, so the current prior is
+    AV/effect asset labelling, not the front-end name-bearing `BG2` surface.
   - `mesen_ppu_extract` diverged from the exact-frame raw dump at `1780`, so
     the raw runner dump is now the source of truth for exact front-end frame
     comparisons until that extractor timing mismatch is explained.
