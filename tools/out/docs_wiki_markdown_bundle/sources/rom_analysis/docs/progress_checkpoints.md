@@ -1,6 +1,89 @@
 Date: 2026-04-02
 
 Summary
+- Reclassified the late-entry `3250` visible descriptor from a generic raw
+  VRAM copy into the bank-0 table-driven queue-builder family rooted at
+  `L001895 / L001A70`.
+- Closed the object-side provenance one step further:
+  the active descriptor `01 b8 b4 15 20 00 80 61` matches a one-tile bank-15
+  object at `15:B4A8` whose payload begins at `15:B4B8`.
+- Kept a bounded negative trace result instead of overfitting:
+  two targeted Mesen trace variants did not hit the guessed producer sites,
+  but both still pinned the frame-start callback pair to `02:9016` main and
+  `01:96A0` IRQ.
+
+What I ran
+- ROM-side descriptor/object decode over `game.smc`:
+  - ad hoc Python inspection around `15:B4A8..15:B4C6`
+  - literal-word search for `B4A8/B4B8/34A8/34B8` inside bank `15`
+- targeted Mesen trace variant 1:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=480 TD2_SCANLINE_TEST_TARGET_FRAME=3250 TD2_SCANLINE_TEST_MAX_SAMPLES=224 TD2_SCANLINE_TEST_INPUT_WINDOWS='1200:a;1280:a;1505-1510:a;1640-1645:a;1730-1735:a;2050-4800:a' TD2_SCANLINE_TEST_TRACE_EXEC_POINTS='builder=00:1895,emit=00:1A70,wrap=00:98FF,bank1_983d=01:983D,bank1_988b=01:988B,bank1_9185=01:9185,bank2_1165=02:1165' TD2_SCANLINE_TEST_EXEC_POINT_MAX_HITS=256 TD2_SCANLINE_TEST_TRACE_WRITE_POINTS='q0600=7E:0600,q0601=7E:0601,q0602=7E:0602,q0603=7E:0603,q0604=7E:0604,q0605=7E:0605,q0606=7E:0606,q0607=7E:0607' TD2_SCANLINE_TEST_WRITE_POINT_MAX_HITS=256 TD2_SCANLINE_TEST_OUTPUT_PREFIX=tools/out/lane3_live_entry_frame03250_producer_trace/td2_scanline_step_test ./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_scanline_step_test.lua`
+- targeted Mesen trace variant 2:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=480 TD2_SCANLINE_TEST_TARGET_FRAME=3250 TD2_SCANLINE_TEST_MAX_SAMPLES=224 TD2_SCANLINE_TEST_INPUT_WINDOWS='1200:a;1280:a;1505-1510:a;1640-1645:a;1730-1735:a;2050-4800:a' TD2_SCANLINE_TEST_TRACE_EXEC_POINTS='builder=80:1895,emit=80:1A70,wrap=80:98FF,bank1_983d=81:983D,bank1_988b=81:988B,bank1_9185=81:9185,bank2_1165=82:1165' TD2_SCANLINE_TEST_EXEC_POINT_MAX_HITS=256 TD2_SCANLINE_TEST_TRACE_WRITE_POINTS='q0600=7E:0600,q0601=7E:0601,q0602=7E:0602,q0603=7E:0603,q0604=7E:0604,q0605=7E:0605,q0606=7E:0606,q0607=7E:0607' TD2_SCANLINE_TEST_WRITE_POINT_MAX_HITS=256 TD2_SCANLINE_TEST_OUTPUT_PREFIX=tools/out/lane3_live_entry_frame03250_producer_trace_mirror/td2_scanline_step_test ./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_scanline_step_test.lua`
+
+Findings / Interpretation
+- The observed `3250` descriptor now matches the table-driven builder family,
+  not the earlier simple-copy guess:
+  - `$04/$05 = 0xB801`
+  - `$06/$07 = 0x15B4`
+  - `$08/$09 = 0x0020`
+  - `$0606 = ($0A << 4) + $099A = 0x6180`
+- The only bank-15 object layout that fits `source = 15:B4B8` and
+  `transfer_size = 0x20` under that family is:
+  - table start `15:B4A8`
+  - word `0 = 0x0001` (`1` chunk)
+  - word `1 = 0x0001` (`1` tile)
+  - payload start `15:B4B8`
+- Direct literal search did not find raw `B4A8/B4B8` words in bank `1`, bank
+  `2`, or elsewhere in bank `15`, so the current read is “table-resolved
+  gameplay object family”, not “simple hardcoded pointer pair”.
+- The two targeted trace variants are still informative negative results:
+  - both kept `0` exec hits on the guessed builder sites
+  - both kept `0` write hits on traced `7E:0600..0607`
+  - both still preserved the same frame-start callback anchor:
+    `active_main = 02:9016`, `active_irq = 01:96A0`
+  - frame-start queue cursors remain `0x70/0x70`, while the visible
+    descriptor still becomes active by scanline `46`
+
+What I learned (actionable)
+- The remaining question is no longer “is `3250` some arbitrary queued copy?”
+- The stronger question is:
+  which table-resolved gameplay object selector inside the active
+  `02:9016 / 01:96A0` family chooses the one-tile bank-15 payload
+  `15:B4A8 -> 15:B4B8` and sends it to `VRAM 0x6180`?
+
+Next steps / Checkpoints
+1) Treat `15:B4A8` as the current best object-side provenance for the
+   transient `3250` BG1 upload.
+2) Resolve the unlabeled `02:9016..02:90B2` region against nearby bank-2
+   labels/callers before another broad trace retry.
+3) Use `01:96A0` as the paired IRQ-side anchor for the same frame.
+4) Only after that, run another targeted probe that records actual live
+   `K:PC` through scanlines `0..46` instead of only guessed builder sites.
+
+Immediate recommendation
+- Read these together before the next `3250` producer pass:
+  - `rom_analysis/maps/tracks/track1_live_entry_bg1_queue_object_3250.md`
+  - `tools/out/lane3_live_entry_frame03250_producer_trace/td2_scanline_step_test.json`
+  - `tools/out/lane3_live_entry_frame03250_producer_trace_mirror/td2_scanline_step_test.json`
+
+Files updated in this turn
+- `rom_analysis/maps/tracks/track1_live_entry_bg1_queue_object_3250.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/snes_runtime_algorithm_human.md`
+- `docs/engine_datagram.md`
+- `docs/engine_pseudocode.md`
+- `NEXT_AGENT.md`
+
+Next reading
+- `rom_analysis/maps/tracks/track1_live_entry_bg1_queue_object_3250.md`
+- `rom_analysis/docs/snes_runtime_algorithm_human.md`
+- `docs/engine_datagram.md`
+
+Date: 2026-04-02
+
+Summary
 - Narrowed the remaining late-entry `3250` counterexample past the old
   “maybe another window/layer field” read and into a visible queue/DMA
   boundary.
