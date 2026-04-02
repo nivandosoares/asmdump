@@ -1,6 +1,113 @@
 Date: 2026-04-02
 
 Summary
+- Added a reusable deep-probe corridor summarizer so late gameplay windows can
+  be reduced into one readable artifact instead of hand-reading the full probe
+  JSON.
+- Ran a bounded light-profile late probe through frame `3600`, then generated
+  a focused corridor report for `3200..3555`.
+- Closed the strongest new late-lane narrowing:
+  inside the stable `02:9016 / 01:96A0 / 02:8F3C` family, the late corridor
+  is now tied specifically to the high-index default `L01318D` branch
+  `02:B0B1 / 02:B0BD -> L012BE2`, not to the alternate
+  `02:B101 -> L012D5A` path.
+
+What I ran
+- attempted heavy late deep-probe profile:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=300 TD2_BOOT_PROBE_TOTAL_FRAMES=3600 TD2_BOOT_PROBE_SAMPLE_EVERY=16 TD2_BOOT_PROBE_CAPTURE_FRAMES='2088,3250,3400,3550' TD2_BOOT_PROBE_COMPARE_FRAMES='2088,3250,3400,3550' TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/deep_probe_late/td2_boot_probe ./validation/run_mesen_deep_probe.sh ./game.smc`
+- bounded light late deep-probe profile:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=300 TD2_BOOT_PROBE_TOTAL_FRAMES=3600 TD2_BOOT_PROBE_SAMPLE_EVERY=16 TD2_BOOT_PROBE_CAPTURE_FRAMES='2088,3250,3400,3550' TD2_BOOT_PROBE_COMPARE_FRAMES='2088,3250,3400,3550' TD2_BOOT_PROBE_CAPTURE_SCREENSHOTS=0 TD2_BOOT_PROBE_CAPTURE_PPU_MEMORY=0 TD2_BOOT_PROBE_CAPTURE_WRAM_MEMORY=0 TD2_BOOT_PROBE_TRACE_MODE7=0 TD2_BOOT_PROBE_TRACE_DMA=0 TD2_BOOT_PROBE_TRACE_VRAM=0 TD2_BOOT_PROBE_TRACE_L001210=0 TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/deep_probe_late_light/td2_boot_probe ./validation/run_mesen_deep_probe.sh ./game.smc`
+- corridor-summary validation:
+  - `python3 -m py_compile tools/summarize_deep_probe_corridor.py`
+- corridor-summary artifact:
+  - `python3 tools/summarize_deep_probe_corridor.py tools/out/deep_probe_late_light/td2_boot_probe.json --frame-start 3200 --frame-end 3555 --output tools/out/deep_probe_late_light/td2_boot_probe_corridor_3200_3555.json --markdown-out tools/out/deep_probe_late_light/td2_boot_probe_corridor_3200_3555.md`
+
+Artifacts
+- stalled heavy-profile negative result:
+  - `tools/out/deep_probe_late/td2_boot_probe_frame_00300.png`
+- successful light-profile late probe:
+  - `tools/out/deep_probe_late_light/td2_boot_probe.json`
+  - `tools/out/deep_probe_late_light/td2_boot_probe_summary.md`
+- focused corridor summary:
+  - `tools/out/deep_probe_late_light/td2_boot_probe_corridor_3200_3555.json`
+  - `tools/out/deep_probe_late_light/td2_boot_probe_corridor_3200_3555.md`
+- lane note:
+  - `rom_analysis/maps/tracks/track1_late_deep_probe_corridor_3200_3555.md`
+
+Findings / Interpretation
+- The heavy late profile was low-yield in this lane:
+  it only emitted the frame-`300` screenshot before stalling, so the bounded
+  pivot to the light profile was the correct retry.
+- The late gameplay corridor now has a stronger code-side read than before:
+  - callbacks stay fixed on `02:9016 / 01:96A0 / 02:8F3C`
+  - `02:B0B1` and `02:B0BD` appear only on odd frames `3201..3327`
+  - `02:B042`, `02:B05D`, `02:B101`, and `02:B134` have `0` hits in
+    `3200..3555`
+- Because `02:B0B1` and `02:B0BD` are the high-index default-branch setup
+  inside `L01318D`, the corridor is now narrowed past the old vague
+  “emitter cluster” wording:
+  late gameplay is using the default `L012BE2` submit path here, not the
+  alternate `L012D5A` submit path.
+- The sampled timeline and compare pairs keep the earlier late-lane reading
+  intact while sharpening its target:
+  - `3250`, `3400`, and `3550` all stay in the same family
+  - `state_11f3` rises `169 -> 237`
+  - `dp_0022` decays `26 -> 0`
+  - `dp_0053/0054` keep the queue-ring cursor motion as the dominant moving
+    surface
+  - `state_129E` first becomes nonzero in this late family
+  - `CGRAM` changes stay `0` on `2088 -> 3250`, `3250 -> 3400`, and
+    `3400 -> 3550`
+- The front-end carry false lead also stays closed under this new pass:
+  - `wram_0200_020f` stays unchanged across the two late compare pairs
+  - `wram_1c60_1cef` and `wram_1d00_1d3f` stay unchanged on `3250 -> 3400`
+  - practical read:
+    the `3250` counterexample is still queue/builder-side late gameplay work,
+    not revived front-end selector ownership
+- The watched write points stayed silent again in `3200..3555`, which means
+  the next bounded trace should move deeper into the data path feeding the
+  high-index branch rather than reusing the same exact watch cells.
+
+What I learned (actionable)
+- The lane-3 target is no longer “which site inside
+  `02:B042 / 02:B05D / 02:B0B1 / 02:B0BD / 02:B101 / 02:B134` matters?”
+- The late corridor now points to one narrower question:
+  what feeds the high-index default `L01318D` path
+  `02:B0B1 / 02:B0BD -> L012BE2`
+  starting at frame `3201`?
+- The next static/dynamic proving surface should therefore chase:
+  - `$22`
+  - `$24`
+  - `$26`
+  - the `12F2/12F4`-indexed selector family
+- The next trace should *not* spend its budget on:
+  - callback-family handoff hunting
+  - the alternate `02:B101 -> L012D5A` branch
+
+Next steps / Checkpoints
+1) Resolve which upstream selector/data path first activates the
+   `02:B0B1 / 02:B0BD -> L012BE2` branch at frame `3201`.
+2) Keep using the light deep-probe profile plus the corridor summarizer as the
+   cheap falsifier before any new heavy capture rerun.
+3) If another dynamic pass is needed, trace the operands feeding
+   `$22/$24/$26` and the `12F2/12F4` family rather than replaying the same
+   watched write-point set.
+
+Files updated in this turn
+- `tools/summarize_deep_probe_corridor.py`
+- `tools/out/deep_probe_late_light/td2_boot_probe_corridor_3200_3555.json`
+- `tools/out/deep_probe_late_light/td2_boot_probe_corridor_3200_3555.md`
+- `rom_analysis/maps/tracks/track1_late_deep_probe_corridor_3200_3555.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `rom_analysis/maps/tracks/track1_late_deep_probe_corridor_3200_3555.md`
+- `tools/out/deep_probe_late_light/td2_boot_probe_corridor_3200_3555.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+
+Date: 2026-04-02
+
+Summary
 - Promoted the old boot probe into a deep Mesen pipeline probe that can cover
   intro, front-end, gameplay entry, and later gameplay anchors in one run
   without drowning the output in unbounded trace spam.
