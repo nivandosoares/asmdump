@@ -11,6 +11,63 @@ Use this order before trusting any older note:
 
 ## Current Checkpoint
 
+Fresh addendum on top of the older late-gameplay note:
+
+- do not treat the recent ASCII/text detour as a lane switch
+- active lane order is still the same one in `PORT_PLAN.md` /
+  `rom_analysis/docs/next_steps_roadmap.md`, with lane 1
+  (`bank30` compression provenance / unresolved queue closure) still first
+- the text detour produced real storage/runtime evidence worth keeping for
+  later content extraction, but it does not close the current bank-30 gate
+
+Recent text/runtime checkpoint:
+
+- new scanner:
+  - `tools/find_ascii_candidates.py`
+- bounded validation already run:
+  - `python3 -m py_compile tools/find_ascii_candidates.py`
+- strongest verified ROM-side text corridors:
+  - `01:880D..01:88A0`
+    - contiguous NUL-terminated ASCII
+    - includes `CUSTOMIZE CAR`, `Autoshift`, `Car Height`,
+      `Accel Coeff`, `Brake Coeff`, `Top Speed`, `Lives`
+  - `01:AB30..01:AC8F+`
+    - contiguous NUL-terminated ASCII judgement/advice corridor
+    - includes `ACME driving school?`, `The gas pedal is on the`,
+      `Go faster.  This is only a`, `Autobahns were made for`
+- strongest verified interleaved proof:
+  - `0D:C364`
+  - raw bytes alternate `ASCII,0x28`
+  - `stride=2` resolves the hidden prompt `Press any button.`
+- stronger team-debug architectural read:
+  - `1 byte = 1 character` now appears on:
+    - dynamic `High Score`
+    - service-corridor attendant dialog
+    - splash/copyright sentence
+  - precise reading:
+    - this suggests a shared game-side byte-to-glyph routine
+    - it is not a “native SNES font” concept
+- stronger negative result:
+  - blind `0x41`-anchored scans still do not close `bank 04` as a clean text
+    bank; current hits there remain noisy/repetitive blobs
+
+Recent gameplay-state addendum from team debug:
+
+- `$00129E`
+  - current best read: crash-count / times-the-car-crashed counter
+- `$0018EE`
+  - current best read: `cars left` reserve
+- current status:
+  - useful watchpoints for later gameplay/HUD/service/results probes
+  - not yet promoted to a named owner in checked-in asm/docs
+
+Primary files for the recent text/watchlist addendum:
+
+- `tools/find_ascii_candidates.py`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `docs/snes_dos_correlation.md`
+- `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
+
 This turn narrowed the remaining late-entry `3250` counterexample one step
 past the earlier queue-boundary note:
 `3400/3550` still stand as the positive scanline-backed proof set, and the
@@ -112,24 +169,24 @@ Fresh queue-boundary artifacts for review:
 
 ## Next Gate
 
-Resume from lane 3 late gameplay.
+Resume from the repo lane order, not from the older local note.
 
 Best next target:
 
-1. Treat `3400` and `3550` together as the new late-entry proof set that the
-   current measured scanline family can beat composition-only rendering.
-2. Treat `3250` as a queue-backed counterexample, not a window/sub-screen
-   counterexample.
-3. Resume from the new ownership proof and chase the selector path behind the
+1. Keep lane 1 first:
+   `bank30` compression provenance / unresolved queue closure.
+2. Treat the recent ASCII/text work as a parked detour with reusable assets,
+   not as a priority inversion.
+3. Keep the late-gameplay `3250/3400/3550` queue-backed note as a ready
+   follow-up once lane 1 yields or explicitly hands off to lane 3 again.
+4. When lane 3 resumes, start from the selector/producer path behind the
    one-tile bank-15 object `15:B4A8 -> 15:B4B8`, anchored on the active
    `02:9016` main / `01:96A0` IRQ family.
-4. Only after that producer proof, decide whether `3250` needs a queue-backed
-   runtime surface, a broader visible-phase VRAM upload model, or a different
-   late-entry contract split from `3400/3550`.
 
 ## Git Hygiene
 
-- Do not sweep unrelated dirty files into the checkpoint commit.
+- This checkpoint was closed from a broader dirty worktree snapshot at the
+  user's request; do not assume every touched file belongs to one narrow lane.
 - `tools/out` is ignored; force-add only if a generated artifact truly belongs
   in Git.
 - After a substantive push, run `./tools/push_checkpoint.sh`.

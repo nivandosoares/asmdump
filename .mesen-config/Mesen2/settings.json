@@ -38,8 +38,8 @@
     "ScreenRotation": "None"
   },
   "Audio": {
-    "AudioDevice": "",
-    "EnableAudio": true,
+    "AudioDevice": "Built-in Audio Analog Stereo",
+    "EnableAudio": false,
     "DisableDynamicSampleRate": false,
     "MasterVolume": 100,
     "SampleRate": "_48000",
@@ -113,18 +113,18 @@
       "Mapping1": {
         "MouseButtons": null,
         "SuperScopeButtons": null,
-        "A": 54,
-        "B": 53,
-        "X": 140,
-        "Y": 56,
-        "L": 64,
-        "R": 52,
-        "Up": 66,
-        "Down": 62,
-        "Left": 44,
-        "Right": 47,
-        "Start": 55,
-        "Select": 58,
+        "A": 44,
+        "B": 62,
+        "X": 69,
+        "Y": 47,
+        "L": 67,
+        "R": 46,
+        "Up": 24,
+        "Down": 26,
+        "Left": 23,
+        "Right": 25,
+        "Start": 6,
+        "Select": 18,
         "U": 0,
         "D": 0,
         "TurboA": 0,
@@ -8646,12 +8646,12 @@
       "HighlightBreakpoints": false,
       "MemoryType": "SnesMemory",
       "WindowSize": {
-        "Width": 0,
-        "Height": 0
+        "Width": 760,
+        "Height": 550
       },
       "WindowLocation": {
-        "X": 0,
-        "Y": 0
+        "X": 934,
+        "Y": 124
       },
       "WindowIsMaximized": false
     },
@@ -9471,7 +9471,10 @@
       "LabelListColumnWidths": [],
       "FunctionListColumnWidths": [],
       "BreakpointListColumnWidths": [],
-      "WatchListColumnWidths": [],
+      "WatchListColumnWidths": [
+        200,
+        100
+      ],
       "CallStackColumnWidths": [],
       "FindResultColumnWidths": [],
       "WindowSize": {
@@ -9650,7 +9653,7 @@
     "ScriptWindow": {
       "RecentScripts": [],
       "Zoom": 100,
-      "LogWindowHeight": 100,
+      "LogWindowHeight": 348,
       "ScriptStartupBehavior": "ShowTutorial",
       "SaveScriptBeforeRun": true,
       "AutoStartScriptOnLoad": true,
@@ -9658,15 +9661,15 @@
       "AutoRestartScriptAfterPowerCycle": true,
       "AllowIoOsAccess": true,
       "AllowNetworkAccess": false,
-      "ShowLineNumbers": false,
+      "ShowLineNumbers": true,
       "ScriptTimeout": 30,
       "WindowSize": {
-        "Width": 0,
-        "Height": 0
+        "Width": 600,
+        "Height": 500
       },
       "WindowLocation": {
-        "X": 0,
-        "Y": 0
+        "X": 1195,
+        "Y": 294
       },
       "WindowIsMaximized": false
     },
@@ -9685,25 +9688,36 @@
       "WindowIsMaximized": false
     },
     "MemorySearch": {
-      "ColumnWidths": [],
+      "ColumnWidths": [
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        22
+      ],
       "WindowSize": {
-        "Width": 0,
-        "Height": 0
+        "Width": 700,
+        "Height": 500
       },
       "WindowLocation": {
-        "X": 0,
-        "Y": 0
+        "X": 149,
+        "Y": 181
       },
       "WindowIsMaximized": false
     },
     "WatchWindow": {
       "WindowSize": {
-        "Width": 0,
-        "Height": 0
+        "Width": 400,
+        "Height": 400
       },
       "WindowLocation": {
-        "X": 0,
-        "Y": 0
+        "X": 100,
+        "Y": 132
       },
       "WindowIsMaximized": false
     },
@@ -9786,14 +9800,18 @@
   },
   "Cheats": {
     "DisableAllCheats": false,
-    "ColumnWidths": [],
+    "ColumnWidths": [
+      22,
+      150,
+      150
+    ],
     "WindowSize": {
-      "Width": 0,
-      "Height": 0
+      "Width": 400,
+      "Height": 400
     },
     "WindowLocation": {
-      "X": 0,
-      "Y": 0
+      "X": 1210,
+      "Y": 593
     },
     "WindowIsMaximized": false
   },
@@ -9822,8 +9840,8 @@
       "Height": 473
     },
     "WindowLocation": {
-      "X": 944,
-      "Y": 284
+      "X": 97,
+      "Y": 318
     },
     "WindowIsMaximized": false
   },

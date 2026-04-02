@@ -1,6 +1,222 @@
 Date: 2026-04-02
 
 Summary
+- Switched the text-validation detour away from phrase needles and onto a
+  raw `0x41` anchor pass:
+  extracting printable runs that contain byte `0x41` now closes real
+  start/end text corridors in `bank 01`, not just isolated string hits.
+- Added a quick bank-wide ASCII detour with a reusable scanner:
+  contiguous `stride=1` hits now show real runtime/user-facing phrases in
+  `bank 01`, and a targeted interleaved pass closes one real hidden-string
+  proof at `0D:C364` -> `Press any button.` under `stride=2`.
+- Documented a new low-risk text-storage fact for the front-end lane:
+  the known string block at `01:880D` is stored in the ROM as literal
+  NUL-terminated ASCII, not a custom packed charset.
+- Added a stronger cross-surface reading from team debug:
+  Mesen-side inspection also reports ASCII codepoints on dynamic
+  `High Score` text, on the gameplay service-corridor attendant dialog, and
+  on the long splash/copyright sentence.
+- Added a stronger architectural read from the same team debug:
+  the repeated `1 byte = 1 character` behavior now looks more like a shared
+  game-wide text routine than an isolated menu-only storage quirk.
+- Added a small gameplay-state watchlist note from team debug:
+  `$00129E` now reads as the "times the car crashed" counter, and `$0018EE`
+  reads as the current `cars left` reserve.
+
+What I ran
+- anchor-byte bank-`01` artifact:
+  - `python3 tools/find_ascii_candidates.py game.smc --banks 0x01 --strides 1 --min-length 6 --per-bank-limit 20 --anchor-byte 0x41 --markdown-out tools/out/ascii_anchor41_bank01_20260402.md --json-out tools/out/ascii_anchor41_bank01_20260402.json`
+- anchor-byte global summary:
+  - `python3 tools/find_ascii_candidates.py game.smc --banks 0-31 --strides 1,2,3 --min-length 6 --per-bank-limit 8 --anchor-byte 0x41 --json-out tools/out/ascii_anchor41_global_20260402.json --markdown-out tools/out/ascii_anchor41_global_20260402.md`
+- direct hex expansion around the two strongest bank-`01` anchor clusters:
+  - `xxd -g1 -s 0x8800 -l 176 game.smc`
+  - `xxd -g1 -s 0xab30 -l 352 game.smc`
+- scanner validation:
+  - `python3 -m py_compile tools/find_ascii_candidates.py`
+- contiguous bank-wide scan:
+  - `python3 tools/find_ascii_candidates.py game.smc --banks 0-31 --strides 1 --min-length 6 --per-bank-limit 8 --json-out tools/out/ascii_candidate_scan_stride1_20260402.json --markdown-out tools/out/ascii_candidate_scan_stride1_20260402.md`
+- bank-wide needle scan over contiguous plus interleaved lanes:
+  - `python3 tools/find_ascii_candidates.py game.smc --banks 0-31 --strides 1,2,3 --min-length 6 --per-bank-limit 3 --needles 'HIGH SCORE,GAME OPTIONS,PLAY TDII,AUTOSHIFT,BRAKE,THROTTLE,STEERING,LIVES,LICENSE,SCORE,SPEED,GAS,DRIVING,JAIL,POLICE' --json-out tools/out/ascii_candidate_scan_needles_20260402.json`
+- targeted interleaved follow-up on the one positive bank:
+  - `python3 tools/find_ascii_candidates.py game.smc --banks 0x0D --strides 2 --min-length 6 --per-bank-limit 20`
+- direct ROM byte check over the verified customize-menu anchor:
+  - `xxd -g1 -s 0x880d -l 96 game.smc`
+
+Findings / Interpretation
+- The `0x41`-anchored pass is already more useful than phrase needles for
+  “where does the text block really begin/end?”:
+  - front-end/config corridor:
+    - anchor hits land on `01:880D..01:8845`
+    - direct hex shows this is one contiguous NUL-terminated ASCII block
+      running at least `01:880D..01:88A0`
+    - current visible members include:
+      `CUSTOMIZE CAR`, `Autoshift`, `Car Height`, `Accel Coeff`,
+      `Brake Coeff`, `Max G Force`, `Scrub Rate`, `0-60`, `0-100`,
+      `1/4 Mile`, `1/4 Speed`, `Top Speed`, `Top Time`, `Lives`
+  - judgement/advice corridor:
+    - anchor hits land on `01:AB3F..01:AC53`
+    - direct hex expansion shows one larger contiguous ASCII corridor already
+      visible from at least `01:AB30` through `01:AC8F+`
+    - that corridor carries chained NUL-terminated advice/judgement lines such
+      as `ACME driving school?`, `The gas pedal is on the`, `Go faster.  This
+      is only a`, `Sports cars can go much`, `Don\`t give up your day job,`,
+      `Autobahns were made for`, and `find the brak...`
+- The same anchor pass is also clarifying what is *not* text:
+  - `bank 04` still returns mostly synthetic/repetitive `A`-heavy blobs
+    (`I999999AAAAAAAAAAAAA`, `ADDDDJ`) rather than clean English corridors
+  - practical read: `bank 04` remains open, but the current `0x41` anchor
+    evidence is much stronger in `bank 01` than there
+- The quick detour already closes two useful text-storage behaviors:
+  - `bank 01` contains real contiguous ASCII phrases, not just one static menu
+    block; current scanner hits include:
+    - `01:AD07` -> `Great driving!  You deserve`
+    - `01:AEBD` -> `License revoked and a 30`
+    - `01:ADEC` -> `You ran out of gas.`
+    - `01:AEB6` -> `You got the best score!`
+  - `bank 0D` contains at least one real interleaved hidden string:
+    - raw `stride=1` view at `0D:C364` looks noisy
+    - `stride=2 phase=0` cleanly resolves the same bytes as
+      `Press any button.`
+    - direct hex now closes the concrete layout there as alternating
+      `ASCII,0x28` bytes:
+      `50 28 72 28 65 28 73 28 ...`
+- Negative-but-useful result from the same pass:
+  - the current blind ASCII scan did not produce comparably clean hits in
+    `bank 04`, despite the standing text/string suspicion there
+  - practical read: some text is plainly stored in ASCII across banks, but
+    `bank 04` likely still needs stronger format-aware extraction than this
+    first blind pass
+- The raw bytes at `01:880D` decode directly as:
+  - `CUSTOMIZE CAR`
+  - `Autoshift`
+  - `Car Height`
+  - `Drag Coeff`
+  - `Accel Coeff`
+  - `Brake Coeff`
+  - `Max G Force`
+  - `Scrub Rate`
+- Team-reported Mesen debug also sees plain ASCII semantics on two dynamic
+  text families plus the opening splash sentence:
+  - the `High Score` surface reached through `L00A3CC`
+  - the service-corridor attendant dialog noted in the live-race post-stop
+    screen pack
+  - the long splash/copyright sentence (`original ... designed and developed
+    by distinctive software`) also follows the same ASCII codepoint semantics
+- Team-reported Mesen debug also now reinforces a structural rule:
+  the text path appears to be `1 byte per character` broadly, not just on one
+  isolated block.
+- Team-reported Mesen debug also surfaced two concrete gameplay-facing WRAM
+  cells that are likely worth promoting into later contracts:
+  - `$00129E`: crash-count / collision-tally state
+  - `$0018EE`: `cars left` reserve
+- Practical read on those two fields:
+  - they do not directly advance the active `bank30` provenance gate
+  - they are still high-value watchpoints for later gameplay archaeology
+    because they should cut across:
+    - HUD/reserve-life presentation
+    - post-crash/service or checkpoint recovery paths
+    - partial-results / failure-state transitions
+  - current repo-side status is still "team-reported Mesen fact":
+    there is no matching named consumer or direct asm reference for either
+    address in the checked-in docs/disassembly yet
+- Practical read:
+  - at least this front-end string family is source-stored as plain ASCII plus
+    `0x00` terminators
+  - the prior is now stronger than “one static menu block happens to be ASCII”:
+    the same codepoint semantics now appear across:
+    - static splash/copyright text
+    - front-end/menu text
+    - dynamic runtime text paths
+  - that pushes the best current hypothesis from “several ASCII pockets” toward
+    “one shared game text representation with a common renderer/stager”
+  - important precision: this should not be described as a “native SNES font”.
+    The SNES does not provide a built-in text font/printing system; the likely
+    shared routine is still game code that maps bytes to glyph tiles / OAM / BG
+    output
+  - the remaining reverse-engineering problem for this surface is now more
+    clearly glyph staging/render ownership, not byte-to-character decoding
+  - this does not yet prove that every text surface in the ROM uses ASCII, and
+    it does not close the old unsupported claim that bank `04` is already a
+    proven global font/string bank
+  - the dynamic-surface extension is currently a team-reported debug fact, not
+    yet a repo-side trace artifact
+
+What I learned (actionable)
+- For current validation, phrase search should be demoted behind the stronger
+  method:
+  - anchor on byte `0x41`
+  - expand to the full printable run in that lane
+  - then confirm the real corridor bounds in raw hex
+- The current best text corridors to trace forward/backward are now explicit:
+  - `01:880D..01:88A0` front-end/config block
+  - `01:AB30..01:AC8F+` judgement/advice block
+- The quick scanner is now a reusable cheap falsifier for both:
+  - direct ASCII text banks (`stride=1`)
+  - hidden fixed-stride text pockets (`stride=2/3`)
+- The current strongest quick-scan text owners are no longer hypothetical:
+  - `bank 01` for menu/results/dialog/judgement phrases
+  - `bank 0D` for at least one hidden interleaved prompt string
+- `bank 04` stays open after this detour; that is now a stronger signal that
+  its suspected text surfaces may be descriptor- or table-mediated rather than
+  trivially raw-ASCII contiguous/interleaved blobs
+- Raw ASCII scans are now a cheap falsifier for adjacent front-end text
+  families and for the still-open text-extraction lane.
+- Current documentation should treat this as an encoding/storage proof for a
+  verified bank-`01` block, not as a global text-system proof.
+- The next useful instrumentation target is now clearer:
+  hunt the WRAM/runtime buffer that feeds `High Score` and attendant-dialog
+  text before chasing any custom character-decoder theory.
+- The strongest architecture-facing question is now:
+  where is the shared byte-to-glyph routine, and which text surfaces bypass it
+  versus reuse it directly?
+- The new gameplay-state addendum should be kept as a narrow future watchlist,
+  not inflated into a proof:
+  - `$00129E` and `$0018EE` are already good fields to add to later bounded
+    gameplay probes
+  - the next useful promotion is to catch one concrete consumer/producer edge
+    for each field before naming a full subsystem owner
+
+Next steps / Checkpoints
+1) Reuse the ASCII-plus-NUL assumption as the first pass when probing other
+   menu/control-label families.
+2) Keep separating source-string ownership from glyph/OBJ composition
+   ownership in the docs and extractor tooling.
+3) When the text/content lane is active, trace the dynamic `L00A3CC`
+   high-score path and the service-corridor attendant dialog for live ASCII
+   buffer writes and their downstream glyph-staging consumer.
+4) Revisit `bank 04` with format-aware extraction rather than another blind
+   raw-byte scan if the text lane becomes active.
+5) Use the explicit bank-`01` corridors `01:880D..01:88A0` and
+   `01:AB30..01:AC8F+` as the next backward/forward ownership targets for the
+   shared byte-to-glyph routine.
+6) When the gameplay-state lane is active again, add `$00129E` and `$0018EE`
+   to the bounded watchlist for crash/recovery/results captures.
+
+Immediate recommendation
+- When the content-extraction lane is active again, start with raw ASCII scans
+  around already verified front-end callsites before inventing a custom text
+  table.
+
+Files updated in this turn
+- `tools/find_ascii_candidates.py`
+- `tools/out/ascii_anchor41_bank01_20260402.json`
+- `tools/out/ascii_anchor41_bank01_20260402.md`
+- `tools/out/ascii_anchor41_global_20260402.json`
+- `tools/out/ascii_anchor41_global_20260402.md`
+- `tools/out/ascii_candidate_scan_stride1_20260402.json`
+- `tools/out/ascii_candidate_scan_stride1_20260402.md`
+- `tools/out/ascii_candidate_scan_needles_20260402.json`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `tools/out/ascii_candidate_scan_stride1_20260402.md`
+- `tools/out/ascii_candidate_scan_needles_20260402.json`
+- `docs/snes_dos_correlation.md`
+- `rom_analysis/docs/external_decompiler_markdown_audit.md`
+
+Date: 2026-04-02
+
+Summary
 - Reclassified the late-entry `3250` visible descriptor from a generic raw
   VRAM copy into the bank-0 table-driven queue-builder family rooted at
   `L001895 / L001A70`.

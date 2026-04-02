@@ -104,6 +104,7 @@ internal static class Program
             File.WriteAllBytes(Path.Combine(options.OutDir, "vram.bin"), vram);
             File.WriteAllBytes(Path.Combine(options.OutDir, "cgram.bin"), cgram);
             File.WriteAllBytes(Path.Combine(options.OutDir, "oam.bin"), oam);
+            File.WriteAllBytes(Path.Combine(options.OutDir, "wram.bin"), MesenCore.GetMemoryState(MemoryType.SnesWorkRam));
 
             SavePaletteJson(Path.Combine(options.OutDir, "palette.json"), paletteInfo, rgbPalette);
             SavePalettePreview(Path.Combine(options.OutDir, "palette.ppm"), paletteInfo, rgbPalette);

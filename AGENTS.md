@@ -34,6 +34,9 @@ If they disagree, use this priority order:
 3. `rom_analysis/docs/progress_checkpoints.md`
 4. local code/tool reality
 
+Documentation is not considered ground truth unless validated against runtime
+or tool-generated artifacts.
+
 When work changes the real state of the project, update the relevant docs in
 the same turn.
 
@@ -49,7 +52,9 @@ For each turn:
 6. If the work creates a clean checkpoint, commit it and push it.
 7. If the checkpoint is substantive, write a relevant article update and
    publish it with the existing dev.to automation.
-8. Continue to the next target unless blocked.
+8. If targeted complementary documentation could accelerate the current gate,
+   explicitly request it at the end of the turn without blocking ongoing work.
+9. Continue to the next target unless blocked.
 
 ## Target Selection Rules
 
@@ -144,6 +149,9 @@ Do not ask for routine confirmation to continue.
 Do not ask the user for the next action unless the problem is urgent or
 extreme enough that an autonomous choice would create material risk.
 Otherwise, choose the next best defensible action and keep moving.
+Targeted requests for complementary documentation are allowed when they can
+accelerate the active gate, but they should be framed as optional accelerants,
+not blockers.
 
 ## Git Workflow
 

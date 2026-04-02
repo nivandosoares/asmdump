@@ -2,7 +2,7 @@
   "packId": "lane3_service_status_phase_pack",
   "title": "Lane 3 Service and Partial-Results Phase Pack",
   "description": "Promote the previously unseen service/post corridor from the preserved live-race AVI: checkpoint stop, gas-station exterior, attendant dialog, partial-results screen, and the next checkpoint restart.",
-  "generatedAtUtc": "2026-03-28T18:27:32.224199+00:00",
+  "generatedAtUtc": "2026-03-28T18:52:01.056849+00:00",
   "sourceVideo": "manual_artifacts/lane3/lane3_live_race_video.avi",
   "videoMetadata": {
     "programs": [],

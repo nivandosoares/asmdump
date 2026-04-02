@@ -21,5 +21,12 @@
   "ppu.layers[2].doubleHeight": false,
   "ppu.layers[2].largeTiles": false,
   "ppu.layers[2].hscroll": 0,
-  "ppu.layers[2].vscroll": 1023
+  "ppu.layers[2].vscroll": 1023,
+  "ppu.layers[3].tilemapAddress": 0,
+  "ppu.layers[3].chrAddress": 0,
+  "ppu.layers[3].doubleWidth": false,
+  "ppu.layers[3].doubleHeight": false,
+  "ppu.layers[3].largeTiles": false,
+  "ppu.layers[3].hscroll": 0,
+  "ppu.layers[3].vscroll": 0
 }

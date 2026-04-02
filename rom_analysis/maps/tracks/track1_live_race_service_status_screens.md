@@ -44,6 +44,9 @@
     frentista dialog plus parciais
   - these are human-facing phase anchors, not replacements for the trusted
     `BG1/BG2/BG3/OBJ` gameplay surfaces
+  - team-reported Mesen debug also says the attendant-dialog text uses plain
+    ASCII codepoints at runtime, which makes this corridor a likely live text
+    buffer / glyph-staging target rather than only a visual checkpoint
 
 ## Why This Matters
 
@@ -59,3 +62,5 @@
   - service/post presentation to the trusted `BG` surfaces
   - any dynamic actor or message-strip changes to `OBJ` and the existing
     gameplay-side watchlist
+  - the attendant-dialog text path to the runtime ASCII buffer and its
+    downstream renderer consumer

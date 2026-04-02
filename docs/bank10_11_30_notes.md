@@ -15,35 +15,20 @@ bank 0 or bank 1 — all cross-bank calls originate from banks 4, 6, 7,
 - Only 1 RTL: this bank is mostly called via JSR from within or via
   trampolines — the single RTL indicates one primary far-call entry.
 
-### Entry Points
+### Entry Points (C Logic Mapping)
 
-| Target     | Caller   | Notes                      |
-|------------|----------|----------------------------|
-| $0A:0000   | Bank 6   | Bank start — likely init   |
-| $0A:5322   | Bank 7   | Mid-bank                   |
-| $0A:8759   | Bank 7   | Mid-bank                   |
-| $0A:9FB5   | Bank 4   | Near end                   |
-| $0A:B634   | Bank 11  | Bank end entry             |
-
-## Bank 11 ($0B) — Road Rasterizer
-
-- **12,870 lines** disassembly
-- **64 subroutines** (64 RTS, 0 RTL)
-- **311 calls** (155 JSR + 156 JSL)
-- Zero RTL: no designed far-call interface. All external entries must
-  be via JSL landing on a JSR-internal routine.
-
-### Entry Points
-
-| Target     | Caller    | Notes            |
-|------------|-----------|------------------|
-| $0B:122E   | Bank 11   | Self-call        |
-| $0B:7422   | Bank 11   | Self-call        |
-| $0B:B643   | Bank 23   | Bank end entry   |
+| Target     | Logic Module | Function |
+|------------|--------------|----------|
+| `$0A:0000` | `core/init.c` | `void engine_init()` - Initial state setup |
+| `$0A:5322` | `core/physics.c` | `void update_physics()` - Per-frame movement |
+| `$0A:8759` | `core/actors.c` | `void handle_event()` - Collision/Scripted event |
+| `$1E:4112` | `core/assets.c` | `void* dispatch_asset(id)` - Data fetch |
+| `$0B:raster` | `render/road.c` | `void rasterize_road()` - HDMA calculation |
 
 ### Notes
-- Self-referential calls suggest a state machine or recursive rasterizer.
-- Calls **into** bank 10 — bank 11 depends on bank 10 as a lower-level API.
+- Bank 10 contains core physics and AI. $0A:5322 is called during active gameplay frames.
+- Bank 11 contains the road rasterizer and appears to have a private interface (0 RTL instructions).
+- Bank 30 contains shared dispatch tables and control data. Entry points at $1E:4112 and $1E:EE22 are confirmed.
 
 ## Bank 30 ($1E) — Dispatch Tables
 

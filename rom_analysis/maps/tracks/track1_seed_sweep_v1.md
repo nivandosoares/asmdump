@@ -54,6 +54,22 @@
   - raw `VRAM`, `CGRAM`, `OAM`, and filtered `PPU` state stay unchanged
     between frames `61` and `65`
 
+## Screenshot-Backed Follow-Up
+
+- Built the first moving `b_hold` gameplay artifact directly from the capture
+  screenshots:
+  - `rom_analysis/maps/tracks/track1_b_hold_cycle_0076_0156.md`
+  - `tools/out/track1_b_hold_cycle_0076_0156_sequence.txt`
+  - `tools/out/track1_b_hold_cycle_0076_0156_sequence.json`
+- That artifact collapses the `76..155` window into:
+  - `5` image entries
+  - `4` distinct states
+  - one repeated state at frame `140`, giving a screenshot-backed `64`-frame
+    cycle
+- The first entry still covers the known screenshot-validated frame `86` from
+  the raw/probe-characterized seed lane, even though the screenshot transition
+  at `92` remains the next unbound raw edge.
+
 ## Practical Reading
 
 - `game_11.mss` does leave the static seed under at least two bounded scripted
@@ -64,6 +80,7 @@
 - Per the blocker policy, the early `start_then_a_hold` raw bridge is now
   documented and parked after three narrowing attempts.
 - The next defensible follow-up is either:
-  - a screenshot-backed moving gameplay manifest from the sweep outputs, or
+  - bind one later moving state from the new `b_hold` screenshot cycle back to
+    raw/probe context, or
   - a later gameplay savestate whose raw dump aligns cleanly with the capture
     harness.

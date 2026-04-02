@@ -119,6 +119,15 @@ def build_ppu_state() -> dict[str, int | bool]:
             "hscroll": 0,
             "vscroll": DEFAULT_SCROLL,
         },
+        {
+            "tilemapAddress": 0,
+            "chrAddress": 0,
+            "doubleWidth": False,
+            "doubleHeight": False,
+            "largeTiles": False,
+            "hscroll": 0,
+            "vscroll": 0,
+        },
     ]
 
     state: dict[str, int | bool] = {

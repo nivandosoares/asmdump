@@ -217,7 +217,7 @@
       "runtime_hit_count": 0,
       "runtime_first_frame": null,
       "runtime_last_frame": null,
-      "notes": "nested-in-successful-window@1E:DA96/1E:E800, 67FB stream ended early while reading byte",
+      "notes": "nested-in-successful-window@1E:DA96/1E:E800, index out of range",
       "contained_in_successful_window": true,
       "container_indices": [
         1,

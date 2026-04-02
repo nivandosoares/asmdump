@@ -26,4 +26,4 @@
 | Status | SNES | Marker | Notes |
 |---|---|---|---|
 | `sentinel-control` | `1E:9681` | `42FB` | zero-output-control-record |
-| `nested-invalid-marker` | `1E:E91F` | `67FB` | nested-in-successful-window@1E:DA96/1E:E800, 67FB stream ended early while reading byte |
+| `nested-invalid-marker` | `1E:E91F` | `67FB` | nested-in-successful-window@1E:DA96/1E:E800, index out of range |

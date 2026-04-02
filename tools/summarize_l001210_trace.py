@@ -37,7 +37,13 @@ def summarize(payload: dict[str, Any]) -> dict[str, Any]:
 
     by_bank: Counter[int] = Counter()
     by_marker: Counter[str] = Counter()
+    by_caller: Counter[str] = Counter()
+    by_bank30_caller: Counter[str] = Counter()
+    by_l00a9_index: Counter[str] = Counter()
+    by_l00a9_bank30_index: Counter[str] = Counter()
     by_source: dict[int, dict[str, Any]] = {}
+    l00a9_source_match_true = 0
+    l00a9_source_match_false = 0
 
     known_by_linear: dict[int, dict[str, Any]] = {}
     for item in known_sources:
@@ -55,10 +61,29 @@ def summarize(payload: dict[str, Any]) -> dict[str, Any]:
         dest_addr = as_int(entry.get("destination_addr"), -1)
         callback_bank = as_int(entry.get("active_main_callback_bank"), -1)
         callback_addr = as_int(entry.get("active_main_callback_addr"), -1)
+        caller_snes = str(entry.get("caller_pc_snes", "unknown"))
         provenance = str(entry.get("source_provenance", "unclassified"))
 
         by_bank[source_bank] += 1
         by_marker[marker] += 1
+        by_caller[caller_snes] += 1
+        is_bank30 = source_bank == 0x1E
+        if is_bank30:
+            by_bank30_caller[caller_snes] += 1
+
+        l00a9_table = entry.get("caller_l00a9_table")
+        l00a9_table_index = entry.get("caller_l00a9_table_index")
+        if l00a9_table not in (None, "") and l00a9_table_index not in (None, ""):
+            label = f"{l00a9_table}:{as_int(l00a9_table_index)}"
+            by_l00a9_index[label] += 1
+            if is_bank30:
+                by_l00a9_bank30_index[label] += 1
+
+            source_matches = entry.get("caller_l00a9_source_matches")
+            if source_matches is True:
+                l00a9_source_match_true += 1
+            elif source_matches is False:
+                l00a9_source_match_false += 1
 
         source_record = by_source.setdefault(
             source_linear,
@@ -150,6 +175,14 @@ def summarize(payload: dict[str, Any]) -> dict[str, Any]:
         "unique_sources": len(source_rows),
         "bank_counts": {f"{bank:02X}": count for bank, count in sorted(by_bank.items())},
         "marker_counts": dict(sorted(by_marker.items())),
+        "caller_counts": dict(sorted(by_caller.items())),
+        "bank30_caller_counts": dict(sorted(by_bank30_caller.items())),
+        "l00a9_index_counts": dict(sorted(by_l00a9_index.items())),
+        "l00a9_bank30_index_counts": dict(sorted(by_l00a9_bank30_index.items())),
+        "l00a9_source_match_counts": {
+            "true": l00a9_source_match_true,
+            "false": l00a9_source_match_false,
+        },
         "sources": source_rows,
         "bank30": {
             "known_candidates": known_candidate_rows,
@@ -191,6 +224,30 @@ def main() -> int:
             f"  {row['source_snes']} ({row['id']}): hits={row['hit_count']} "
             f"frames={row['first_frame']}..{row['last_frame']}"
         )
+
+    if summary["caller_counts"]:
+        print("caller counts:")
+        for caller, count in sorted(
+            summary["caller_counts"].items(),
+            key=lambda item: (-as_int(item[1]), item[0]),
+        ):
+            print(f"  {caller}: {count}")
+
+    if summary["bank30_caller_counts"]:
+        print("bank30 caller counts:")
+        for caller, count in sorted(
+            summary["bank30_caller_counts"].items(),
+            key=lambda item: (-as_int(item[1]), item[0]),
+        ):
+            print(f"  {caller}: {count}")
+
+    if summary["l00a9_index_counts"]:
+        print("L00A9 index counts:")
+        for label, count in sorted(
+            summary["l00a9_index_counts"].items(),
+            key=lambda item: (as_int(item[0].split(":")[-1], -1), item[0]),
+        ):
+            print(f"  {label}: {count}")
 
     return 0
 

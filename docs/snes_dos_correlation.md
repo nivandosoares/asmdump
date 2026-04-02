@@ -147,11 +147,17 @@ Relevant DOS contracts:
     `Car Height`, `Drag Coeff`, `Accel Coeff`, `Brake Coeff`, `Max G Force`,
     `Scrub Rate`, `0-60`, `0-100`, `1/4 Mile`, `1/4 Speed`, `Top Speed`,
     `Top Time`, and `Lives`.
+  - A direct ROM-byte check at `01:880D` now shows the block is stored as
+    literal NUL-terminated ASCII
+    (`43 55 53 54 4F 4D 49 5A 45 20 43 41 52 00 ...` ->
+    `CUSTOMIZE CAR\0...`).
   - `L008784` enters that editor loop and later copies
     `$1406/$1444/$1446/$1408/$1442/$1416` into
     `$1470/$1472/$1474/$1476/$1478/$147A`.
 - Notes:
   - This proves a car-specific working parameter surface.
+  - It also closes the storage encoding for this string family as plain ASCII
+    plus `0x00` terminators.
   - It does not yet prove a full named car catalog or DOS-style shared stem
     table.
 
@@ -288,6 +294,10 @@ Relevant DOS contracts:
     rendered labels.
   - It also gives the settings-menu path a direct static anchor from the
     initial top-level menu.
+  - Team-reported Mesen debug now also suggests the downstream `High Score`
+    text path carries plain ASCII codepoints at runtime (`0x41 = 'A'` style),
+    which raises the prior that ASCII is not limited to one static ROM text
+    block; this is still awaiting a repo-side trace artifact.
 
 ### CLAIM AUDIT
 
