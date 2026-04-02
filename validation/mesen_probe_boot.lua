@@ -180,9 +180,90 @@ local function parse_exec_point_env(name)
     return points
 end
 
+local function parse_frame_list_env(name)
+    local raw = os.getenv(name)
+    if raw == nil or raw == "" then
+        return {}
+    end
+
+    local frames = {}
+    local seen = {}
+    for token in raw:gmatch("[^,;]+") do
+        local value = tonumber(trim(token))
+        if value ~= nil then
+            local frame = math.floor(value)
+            if not seen[frame] then
+                seen[frame] = true
+                frames[#frames + 1] = frame
+            end
+        end
+    end
+
+    table.sort(frames)
+    return frames
+end
+
+local function parse_frame_ranges_env(name)
+    local raw = os.getenv(name)
+    if raw == nil or raw == "" then
+        return {}
+    end
+
+    local ranges = {}
+    for segment in raw:gmatch("[^;]+") do
+        local item = trim(segment)
+        if item ~= "" then
+            local start_raw, end_raw = item:match("^(%-?%d+)%s*%-%s*(%-?%d+)$")
+            if start_raw == nil then
+                local point_raw = item:match("^(%-?%d+)$")
+                if point_raw ~= nil then
+                    start_raw = point_raw
+                    end_raw = point_raw
+                end
+            end
+
+            local start_frame = tonumber(start_raw)
+            local end_frame = tonumber(end_raw)
+            if start_frame ~= nil and end_frame ~= nil then
+                if end_frame < start_frame then
+                    start_frame, end_frame = end_frame, start_frame
+                end
+
+                ranges[#ranges + 1] = {
+                    start_frame = math.floor(start_frame),
+                    end_frame = math.floor(end_frame)
+                }
+            end
+        end
+    end
+
+    table.sort(ranges, function(a, b)
+        if a.start_frame == b.start_frame then
+            return a.end_frame < b.end_frame
+        end
+        return a.start_frame < b.start_frame
+    end)
+
+    return ranges
+end
+
+local function make_frame_lookup(frames)
+    local lookup = {}
+    for _, frame in ipairs(frames) do
+        lookup[frame] = true
+    end
+    return lookup
+end
+
 local config = {
     total_frames = env_number("TD2_BOOT_PROBE_TOTAL_FRAMES", 180),
     screenshot_frame = env_number("TD2_BOOT_PROBE_SCREENSHOT_FRAME", -1),
+    sample_every = env_number("TD2_BOOT_PROBE_SAMPLE_EVERY", 1),
+    capture_frames = parse_frame_list_env("TD2_BOOT_PROBE_CAPTURE_FRAMES"),
+    compare_frames = parse_frame_list_env("TD2_BOOT_PROBE_COMPARE_FRAMES"),
+    capture_screenshots = env_number("TD2_BOOT_PROBE_CAPTURE_SCREENSHOTS", 0) ~= 0,
+    capture_ppu_memory = env_number("TD2_BOOT_PROBE_CAPTURE_PPU_MEMORY", 0) ~= 0,
+    capture_wram_memory = env_number("TD2_BOOT_PROBE_CAPTURE_WRAM_MEMORY", 0) ~= 0,
     trace_start_frame = env_number("TD2_BOOT_PROBE_TRACE_START_FRAME", -1),
     trace_end_frame = env_number("TD2_BOOT_PROBE_TRACE_END_FRAME", -1),
     save_savestate_frame = env_number("TD2_BOOT_PROBE_SAVE_SAVESTATE_FRAME", -1),
@@ -195,8 +276,11 @@ local config = {
     dump_ppu_memory = env_number("TD2_BOOT_PROBE_DUMP_PPU_MEMORY", 0) ~= 0,
     dump_wram_memory = env_number("TD2_BOOT_PROBE_DUMP_WRAM_MEMORY", 0) ~= 0,
     trace_mode7_writes = env_number("TD2_BOOT_PROBE_TRACE_MODE7", 0) ~= 0,
+    mode7_max_hits = env_number("TD2_BOOT_PROBE_MODE7_MAX_HITS", 0),
     trace_dma_writes = env_number("TD2_BOOT_PROBE_TRACE_DMA", 0) ~= 0,
+    dma_max_hits = env_number("TD2_BOOT_PROBE_DMA_MAX_HITS", 0),
     trace_vram_writes = env_number("TD2_BOOT_PROBE_TRACE_VRAM", 0) ~= 0,
+    vram_max_hits = env_number("TD2_BOOT_PROBE_VRAM_MAX_HITS", 0),
     trace_l001210_exec = env_number("TD2_BOOT_PROBE_TRACE_L001210", 0) ~= 0,
     l001210_max_hits = env_number("TD2_BOOT_PROBE_L001210_MAX_HITS", 0),
     trace_exec_points = parse_exec_point_env("TD2_BOOT_PROBE_TRACE_EXEC_POINTS"),
@@ -204,6 +288,7 @@ local config = {
     exec_point_max_hits_per_point = env_number("TD2_BOOT_PROBE_EXEC_POINT_MAX_HITS_PER_POINT", 0),
     trace_write_points = parse_exec_point_env("TD2_BOOT_PROBE_TRACE_WRITE_POINTS"),
     write_point_max_hits = env_number("TD2_BOOT_PROBE_WRITE_POINT_MAX_HITS", 256),
+    trace_windows = parse_frame_ranges_env("TD2_BOOT_PROBE_TRACE_WINDOWS"),
     force_main_callback_start_frame = env_number("TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_START_FRAME", -1),
     force_main_callback_end_frame = env_number("TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_END_FRAME", -1),
     force_main_callback_addr = env_number("TD2_BOOT_PROBE_FORCE_MAIN_CALLBACK_ADDR", -1),
@@ -225,6 +310,17 @@ local config = {
 if config.screenshot_frame < 0 then
     config.screenshot_frame = config.total_frames - 1
 end
+
+if config.sample_every <= 0 then
+    config.sample_every = 1
+end
+
+if #config.compare_frames == 0 and #config.capture_frames > 0 then
+    config.compare_frames = config.capture_frames
+end
+
+config.capture_frame_lookup = make_frame_lookup(config.capture_frames)
+config.compare_frame_lookup = make_frame_lookup(config.compare_frames)
 
 if config.trace_start_frame < 0 then
     config.trace_start_frame = config.screenshot_frame
@@ -259,8 +355,11 @@ local state = {
     finished = false,
     entries = {},
     mode7_writes = {},
+    mode7_dropped_hits = 0,
     dma_writes = {},
+    dma_dropped_hits = 0,
     vram_writes = {},
+    vram_dropped_hits = 0,
     l001210_hits = {},
     l001210_dropped_hits = 0,
     exec_point_hits = {},
@@ -275,7 +374,13 @@ local state = {
     saved_savestate_path = nil,
     saved_savestate_error = nil,
     savestate_attempted = false,
-    exec_callback_ref = nil
+    exec_callback_ref = nil,
+    last_snapshot = nil,
+    transition_events = {},
+    capture_artifacts = {},
+    capture_compare_pairs = {},
+    capture_lookup = {},
+    capture_internal = {}
 }
 
 local function new_b1f9_stage_counts()
@@ -571,6 +676,216 @@ local function read_u8(address)
     return emu.read(address, emu.memType.snesDebug)
 end
 
+local function bytes_to_hex(bytes)
+    local parts = {}
+    for index = 1, #bytes do
+        parts[#parts + 1] = string.format("%02x", bytes[index] % 0x100)
+    end
+    return table.concat(parts)
+end
+
+local function read_memory_bytes(start_address, memory_type, size)
+    local bytes = {}
+    for offset = 0, size - 1 do
+        bytes[#bytes + 1] = emu.read(start_address + offset, memory_type)
+    end
+    return bytes
+end
+
+local function rolling_checksum_bytes(bytes)
+    local checksum = 0
+    for index = 1, #bytes do
+        checksum = ((checksum * 131) + (bytes[index] % 0x100)) % 4294967296
+    end
+    return checksum
+end
+
+local function summarize_byte_region(bytes)
+    local nonzero_count = 0
+    local first_nonzero = nil
+    local last_nonzero = nil
+
+    for index = 1, #bytes do
+        if bytes[index] ~= 0 then
+            nonzero_count = nonzero_count + 1
+            if first_nonzero == nil then
+                first_nonzero = index - 1
+            end
+            last_nonzero = index - 1
+        end
+    end
+
+    return {
+        size = #bytes,
+        checksum = rolling_checksum_bytes(bytes),
+        nonzero_count = nonzero_count,
+        first_nonzero = first_nonzero,
+        last_nonzero = last_nonzero,
+        hex = bytes_to_hex(bytes)
+    }
+end
+
+local function compare_byte_regions(before_bytes, after_bytes, max_diffs)
+    local changed_count = 0
+    local first_changed_offset = nil
+    local diffs = {}
+    local length = math.max(#before_bytes, #after_bytes)
+    local limit = max_diffs or 8
+
+    for index = 1, length do
+        local before_value = before_bytes[index] or 0
+        local after_value = after_bytes[index] or 0
+        if before_value ~= after_value then
+            changed_count = changed_count + 1
+            if first_changed_offset == nil then
+                first_changed_offset = index - 1
+            end
+            if #diffs < limit then
+                diffs[#diffs + 1] = {
+                    offset = index - 1,
+                    before = before_value,
+                    after = after_value
+                }
+            end
+        end
+    end
+
+    return {
+        changed_bytes = changed_count,
+        first_changed_offset = first_changed_offset,
+        first_diffs = diffs,
+        before_checksum = rolling_checksum_bytes(before_bytes),
+        after_checksum = rolling_checksum_bytes(after_bytes)
+    }
+end
+
+local capture_region_specs = {
+    {
+        id = "dp_0000_005f",
+        label = "Direct page core",
+        memory_type = emu.memType.snesDebug,
+        start_address = 0x000000,
+        size = 0x60
+    },
+    {
+        id = "wram_0200_020f",
+        label = "Front-end selector tuple",
+        memory_type = emu.memType.snesDebug,
+        start_address = 0x7E0200,
+        size = 0x10
+    },
+    {
+        id = "wram_0400_044f",
+        label = "Front-end phase loop window",
+        memory_type = emu.memType.snesDebug,
+        start_address = 0x7E0400,
+        size = 0x50
+    },
+    {
+        id = "wram_0600_06ff",
+        label = "DMA descriptor ring",
+        memory_type = emu.memType.snesDebug,
+        start_address = 0x7E0600,
+        size = 0x100
+    },
+    {
+        id = "wram_0700_07ff",
+        label = "OAM staging head",
+        memory_type = emu.memType.snesDebug,
+        start_address = 0x7E0700,
+        size = 0x100
+    },
+    {
+        id = "wram_0960_0973",
+        label = "Input/NMI queue control",
+        memory_type = emu.memType.snesDebug,
+        start_address = 0x7E0960,
+        size = 0x14
+    },
+    {
+        id = "wram_11e0_11ff",
+        label = "Gameplay actor/watch slice",
+        memory_type = emu.memType.snesDebug,
+        start_address = 0x7E11E0,
+        size = 0x20
+    },
+    {
+        id = "wram_1290_12af",
+        label = "Crash counter neighborhood",
+        memory_type = emu.memType.snesDebug,
+        start_address = 0x7E1290,
+        size = 0x20
+    },
+    {
+        id = "wram_18e0_18ff",
+        label = "Cars-left neighborhood",
+        memory_type = emu.memType.snesDebug,
+        start_address = 0x7E18E0,
+        size = 0x20
+    },
+    {
+        id = "wram_1c60_1cef",
+        label = "Front-end selector bank",
+        memory_type = emu.memType.snesDebug,
+        start_address = 0x7E1C60,
+        size = 0x90
+    },
+    {
+        id = "wram_1d00_1d3f",
+        label = "Front-end scratch / tile row state",
+        memory_type = emu.memType.snesDebug,
+        start_address = 0x7E1D00,
+        size = 0x40
+    },
+    {
+        id = "wram_1e00_1e5f",
+        label = "Visible split / HDMA helper slice",
+        memory_type = emu.memType.snesDebug,
+        start_address = 0x7E1E00,
+        size = 0x60
+    }
+}
+
+local transition_watch_fields = {
+    "main_callback_snes",
+    "nmi_callback_snes",
+    "irq_callback_snes",
+    "pending_main_callback_snes",
+    "pending_nmi_callback_snes",
+    "selector_1c78",
+    "selector_1c7a",
+    "selector_1c7c",
+    "selector_1c80",
+    "selector_1ca8",
+    "selector_1cac",
+    "selector_1cae",
+    "selector_1cca",
+    "selector_1ccc",
+    "selector_1cce",
+    "selector_1cd0",
+    "state_1c6a",
+    "state_1c70",
+    "state_1c76",
+    "state_0202",
+    "state_0204",
+    "state_0206",
+    "state_0208",
+    "state_020a",
+    "state_0440",
+    "state_0442",
+    "state_09a2",
+    "state_09a8",
+    "state_11f3",
+    "state_129e",
+    "state_18ee",
+    "dp_0020",
+    "dp_0022",
+    "dp_0053",
+    "dp_0054",
+    "dp_0055",
+    "dp_0056"
+}
+
 local function mask_u16(value)
     if type(value) ~= "number" then
         return nil
@@ -604,6 +919,17 @@ local function format_snes_ptr(bank, addr)
 end
 
 local function snapshot_boot_state()
+    local active_main_callback_addr = read_u16(0x000038)
+    local active_main_callback_bank = read_u8(0x00003A)
+    local active_nmi_callback_addr = read_u16(0x00003B)
+    local active_nmi_callback_bank = read_u8(0x00003D)
+    local active_irq_callback_addr = read_u16(0x00003E)
+    local active_irq_callback_bank = read_u8(0x000040)
+    local pending_main_callback_addr = read_u16(0x7E096C)
+    local pending_main_callback_bank = read_u8(0x7E096E)
+    local pending_nmi_callback_addr = read_u16(0x7E096F)
+    local pending_nmi_callback_bank = read_u8(0x7E0971)
+
     return {
         frame = state.frame,
         selector_1c78 = read_u16(0x7E1C78),
@@ -622,16 +948,33 @@ local function snapshot_boot_state()
         selector_1ce6 = read_u16(0x7E1CE6),
         selector_1cea = read_u16(0x7E1CEA),
         state_0996 = read_u16(0x7E0996),
-        active_main_callback_addr = read_u16(0x000038),
-        active_main_callback_bank = read_u8(0x00003A),
-        active_nmi_callback_addr = read_u16(0x00003B),
-        active_nmi_callback_bank = read_u8(0x00003D),
-        active_irq_callback_addr = read_u16(0x00003E),
-        active_irq_callback_bank = read_u8(0x000040),
+        active_main_callback_addr = active_main_callback_addr,
+        active_main_callback_bank = active_main_callback_bank,
+        active_main_callback_snes = format_snes_ptr(active_main_callback_bank, active_main_callback_addr),
+        active_nmi_callback_addr = active_nmi_callback_addr,
+        active_nmi_callback_bank = active_nmi_callback_bank,
+        active_nmi_callback_snes = format_snes_ptr(active_nmi_callback_bank, active_nmi_callback_addr),
+        active_irq_callback_addr = active_irq_callback_addr,
+        active_irq_callback_bank = active_irq_callback_bank,
+        active_irq_callback_snes = format_snes_ptr(active_irq_callback_bank, active_irq_callback_addr),
+        main_callback_snes = format_snes_ptr(active_main_callback_bank, active_main_callback_addr),
+        nmi_callback_snes = format_snes_ptr(active_nmi_callback_bank, active_nmi_callback_addr),
+        irq_callback_snes = format_snes_ptr(active_irq_callback_bank, active_irq_callback_addr),
+        pending_main_callback_addr = pending_main_callback_addr,
+        pending_main_callback_bank = pending_main_callback_bank,
+        pending_main_callback_snes = format_snes_ptr(pending_main_callback_bank, pending_main_callback_addr),
+        pending_nmi_callback_addr = pending_nmi_callback_addr,
+        pending_nmi_callback_bank = pending_nmi_callback_bank,
+        pending_nmi_callback_snes = format_snes_ptr(pending_nmi_callback_bank, pending_nmi_callback_addr),
         dp_0020 = read_u16(0x000020),
         state_0f70 = read_u8(0x000F70),
         state_0960 = read_u16(0x7E0960),
         state_0962 = read_u16(0x7E0962),
+        state_0964 = read_u16(0x7E0964),
+        state_0966 = read_u8(0x7E0966),
+        state_0968 = read_u8(0x7E0968),
+        state_096a = read_u8(0x7E096A),
+        state_0972 = read_u16(0x7E0972),
         state_0990 = read_u16(0x7E0990),
         state_09a2 = read_u16(0x7E09A2),
         state_09a4 = read_u16(0x7E09A4),
@@ -642,7 +985,9 @@ local function snapshot_boot_state()
         state_11f1 = read_u16(0x7E11F1),
         state_11f3 = read_u16(0x7E11F3),
         state_11f5 = read_u16(0x7E11F5),
+        state_129e = read_u16(0x7E129E),
         state_137c = read_u16(0x7E137C),
+        state_18ee = read_u16(0x7E18EE),
         state_1c6a = read_u16(0x7E1C6A),
         state_1c70 = read_u16(0x7E1C70),
         state_1c74 = read_u16(0x7E1C74),
@@ -700,6 +1045,375 @@ local function dump_memory_region(path, memory_type, size)
     write_binary_file(path, table.concat(bytes))
 end
 
+local function read_dma_queue_summary(read_ptr, write_ptr)
+    local nonzero_entries = {}
+    local active_entries = {}
+    local entries_by_slot = {}
+
+    for slot = 0, 31 do
+        local offset = slot * 8
+        local raw = {}
+        local any_nonzero = false
+        for byte_offset = 0, 7 do
+            local value = read_u8(0x7E0600 + offset + byte_offset)
+            raw[#raw + 1] = value
+            if value ~= 0 then
+                any_nonzero = true
+            end
+        end
+
+        if any_nonzero then
+            local entry = {
+                slot = slot,
+                offset = offset,
+                command = raw[1],
+                source_addr = raw[2] + (raw[3] * 0x100) + (raw[4] * 0x10000),
+                transfer_size = raw[5] + (raw[6] * 0x100),
+                vram_dest = raw[7] + (raw[8] * 0x100),
+                words = {
+                    raw[1] + (raw[2] * 0x100),
+                    raw[3] + (raw[4] * 0x100),
+                    raw[5] + (raw[6] * 0x100),
+                    raw[7] + (raw[8] * 0x100)
+                },
+                bytes_hex = bytes_to_hex(raw)
+            }
+            nonzero_entries[#nonzero_entries + 1] = entry
+            entries_by_slot[slot] = entry
+        end
+    end
+
+    local descriptor_count = 0
+    if type(read_ptr) == "number" and type(write_ptr) == "number" then
+        local offset = read_ptr % 0x100
+        local target = write_ptr % 0x100
+        local guard = 0
+        while offset ~= target and guard < 32 do
+            local slot = math.floor(offset / 8) % 32
+            local entry = entries_by_slot[slot]
+            if entry ~= nil then
+                active_entries[#active_entries + 1] = entry
+            else
+                active_entries[#active_entries + 1] = {
+                    slot = slot,
+                    offset = slot * 8,
+                    command = 0,
+                    source_addr = 0,
+                    transfer_size = 0,
+                    vram_dest = 0,
+                    words = {0, 0, 0, 0},
+                    bytes_hex = "0000000000000000",
+                    empty = true
+                }
+            end
+            descriptor_count = descriptor_count + 1
+            offset = (offset + 8) % 0x100
+            guard = guard + 1
+        end
+    end
+
+    return {
+        nonzero_entries = nonzero_entries,
+        nonzero_entry_count = #nonzero_entries,
+        active_entries = active_entries,
+        active_descriptor_count = descriptor_count
+    }
+end
+
+local function capture_ppu_summary(full_state)
+    local snapshot = full_state or emu.getState()
+    return {
+        scanline = snapshot["ppu.scanline"],
+        bg_mode = snapshot["ppu.bgMode"],
+        main_screen_layers = snapshot["ppu.mainScreenLayers"],
+        sub_screen_layers = snapshot["ppu.subScreenLayers"],
+        screen_brightness = snapshot["ppu.screenBrightness"],
+        vram_address = snapshot["ppu.vramAddress"],
+        cgram_address = snapshot["ppu.cgramAddress"],
+        oam_base_address = snapshot["ppu.oamBaseAddress"],
+        oam_address_offset = snapshot["ppu.oamAddressOffset"],
+        mode7 = {
+            hscroll = snapshot["ppu.mode7.hscroll"],
+            vscroll = snapshot["ppu.mode7.vscroll"],
+            center_x = snapshot["ppu.mode7.centerX"],
+            center_y = snapshot["ppu.mode7.centerY"],
+            large_map = snapshot["ppu.mode7.largeMap"],
+            fill_with_tile0 = snapshot["ppu.mode7.fillWithTile0"],
+            matrix = {
+                snapshot["ppu.mode7.matrix[0]"],
+                snapshot["ppu.mode7.matrix[1]"],
+                snapshot["ppu.mode7.matrix[2]"],
+                snapshot["ppu.mode7.matrix[3]"]
+            }
+        },
+        window_mask_main = {
+            snapshot["ppu.windowMaskMain[0]"],
+            snapshot["ppu.windowMaskMain[1]"],
+            snapshot["ppu.windowMaskMain[2]"],
+            snapshot["ppu.windowMaskMain[3]"],
+            snapshot["ppu.windowMaskMain[4]"]
+        },
+        window_mask_sub = {
+            snapshot["ppu.windowMaskSub[0]"],
+            snapshot["ppu.windowMaskSub[1]"],
+            snapshot["ppu.windowMaskSub[2]"],
+            snapshot["ppu.windowMaskSub[3]"],
+            snapshot["ppu.windowMaskSub[4]"]
+        }
+    }
+end
+
+local function capture_region_payloads()
+    local regions = {}
+    local internal = {}
+
+    for _, spec in ipairs(capture_region_specs) do
+        local bytes = read_memory_bytes(spec.start_address, spec.memory_type, spec.size)
+        internal[spec.id] = bytes
+        local summary = summarize_byte_region(bytes)
+        summary.label = spec.label
+        summary.start_snes = format_snes_ptr(math.floor(spec.start_address / 0x10000), spec.start_address % 0x10000)
+        regions[spec.id] = summary
+    end
+
+    return regions, internal
+end
+
+local function capture_ppu_memory_payloads()
+    local vram_bytes = read_memory_bytes(0, emu.memType.snesVideoRam, emu.getMemorySize(emu.memType.snesVideoRam))
+    local cgram_bytes = read_memory_bytes(0, emu.memType.snesCgRam, emu.getMemorySize(emu.memType.snesCgRam))
+    local oam_bytes = read_memory_bytes(0, emu.memType.snesSpriteRam, emu.getMemorySize(emu.memType.snesSpriteRam))
+
+    return {
+        vram = vram_bytes,
+        cgram = cgram_bytes,
+        oam = oam_bytes
+    }, {
+        vram = {
+            size = #vram_bytes,
+            checksum = rolling_checksum_bytes(vram_bytes)
+        },
+        cgram = {
+            size = #cgram_bytes,
+            checksum = rolling_checksum_bytes(cgram_bytes)
+        },
+        oam = {
+            size = #oam_bytes,
+            checksum = rolling_checksum_bytes(oam_bytes)
+        }
+    }
+end
+
+local function should_capture_frame(frame)
+    return config.capture_frame_lookup[frame] or config.compare_frame_lookup[frame]
+end
+
+local function should_record_frame_snapshot(frame)
+    if config.sample_every <= 1 then
+        return true
+    end
+
+    if frame == 0 or frame == config.screenshot_frame or frame == (config.total_frames - 1) then
+        return true
+    end
+
+    if should_capture_frame(frame) then
+        return true
+    end
+
+    return (frame % config.sample_every) == 0
+end
+
+local function record_transition_event(snapshot)
+    local previous = state.last_snapshot
+    if previous == nil then
+        state.transition_events[#state.transition_events + 1] = {
+            frame = snapshot.frame,
+            type = "initial",
+            main_callback_snes = snapshot.main_callback_snes,
+            irq_callback_snes = snapshot.irq_callback_snes,
+            selector_1c78 = snapshot.selector_1c78,
+            selector_1c80 = snapshot.selector_1c80,
+            state_0202 = snapshot.state_0202,
+            state_1c70 = snapshot.state_1c70,
+            state_1c76 = snapshot.state_1c76,
+            dp_0053 = snapshot.dp_0053,
+            dp_0054 = snapshot.dp_0054
+        }
+        return
+    end
+
+    local changes = {}
+    local callback_changed = false
+    for _, field in ipairs(transition_watch_fields) do
+        local before_value = previous[field]
+        local after_value = snapshot[field]
+        if before_value ~= after_value then
+            if field == "main_callback_snes"
+                or field == "nmi_callback_snes"
+                or field == "irq_callback_snes"
+                or field == "pending_main_callback_snes"
+                or field == "pending_nmi_callback_snes" then
+                callback_changed = true
+            end
+
+            changes[#changes + 1] = {
+                field = field,
+                before = before_value,
+                after = after_value
+            }
+        end
+    end
+
+    if #changes == 0 then
+        return
+    end
+
+    state.transition_events[#state.transition_events + 1] = {
+        frame = snapshot.frame,
+        type = callback_changed and "callback+state" or "state",
+        callback_changed = callback_changed,
+        change_count = #changes,
+        changes = changes,
+        main_callback_snes = snapshot.main_callback_snes,
+        irq_callback_snes = snapshot.irq_callback_snes,
+        pending_main_callback_snes = snapshot.pending_main_callback_snes,
+        pending_nmi_callback_snes = snapshot.pending_nmi_callback_snes,
+        state_0202 = snapshot.state_0202,
+        state_1c70 = snapshot.state_1c70,
+        state_1c76 = snapshot.state_1c76,
+        dp_0053 = snapshot.dp_0053,
+        dp_0054 = snapshot.dp_0054
+    }
+end
+
+local function capture_frame_artifact(snapshot)
+    local full_state = emu.getState()
+    local regions, internal_regions = capture_region_payloads()
+    local queue_summary = read_dma_queue_summary(snapshot.dp_0053, snapshot.dp_0054)
+    local internal_ppu, summarized_ppu_memory = capture_ppu_memory_payloads()
+
+    local artifact = {
+        frame = snapshot.frame,
+        state = snapshot,
+        ppu = capture_ppu_summary(full_state),
+        queue = queue_summary,
+        regions = regions,
+        ppu_memory = summarized_ppu_memory
+    }
+
+    local internal = {
+        regions = internal_regions,
+        ppu_memory = internal_ppu
+    }
+
+    local capture_prefix = string.format("%s_frame_%05d", output_prefix, snapshot.frame)
+    if config.capture_screenshots then
+        local screenshot_path = capture_prefix .. ".png"
+        write_binary_file(screenshot_path, emu.takeScreenshot())
+        artifact.screenshot_path = screenshot_path
+    end
+    if config.capture_ppu_memory then
+        dump_ppu_snapshot(capture_prefix)
+        artifact.ppu_dump_prefix = capture_prefix
+    end
+    if config.capture_wram_memory then
+        dump_wram_snapshot(capture_prefix)
+        artifact.wram_dump_prefix = capture_prefix
+    end
+
+    state.capture_artifacts[#state.capture_artifacts + 1] = artifact
+    state.capture_lookup[snapshot.frame] = artifact
+    state.capture_internal[snapshot.frame] = internal
+end
+
+local function compare_capture_state_fields(before_snapshot, after_snapshot)
+    local changes = {}
+    for _, field in ipairs(transition_watch_fields) do
+        local before_value = before_snapshot[field]
+        local after_value = after_snapshot[field]
+        if before_value ~= after_value then
+            changes[#changes + 1] = {
+                field = field,
+                before = before_value,
+                after = after_value
+            }
+        end
+    end
+    return changes
+end
+
+local function build_capture_compare_pair(before_artifact, after_artifact)
+    local before_internal = state.capture_internal[before_artifact.frame]
+    local after_internal = state.capture_internal[after_artifact.frame]
+    if before_internal == nil or after_internal == nil then
+        return nil
+    end
+
+    local region_diffs = {}
+    local changed_region_count = 0
+    for _, spec in ipairs(capture_region_specs) do
+        local diff = compare_byte_regions(before_internal.regions[spec.id], after_internal.regions[spec.id], 8)
+        diff.label = spec.label
+        region_diffs[spec.id] = diff
+        if diff.changed_bytes > 0 then
+            changed_region_count = changed_region_count + 1
+        end
+    end
+
+    local ppu_memory_diffs = {
+        vram = compare_byte_regions(before_internal.ppu_memory.vram, after_internal.ppu_memory.vram, 8),
+        cgram = compare_byte_regions(before_internal.ppu_memory.cgram, after_internal.ppu_memory.cgram, 8),
+        oam = compare_byte_regions(before_internal.ppu_memory.oam, after_internal.ppu_memory.oam, 8)
+    }
+
+    return {
+        before_frame = before_artifact.frame,
+        after_frame = after_artifact.frame,
+        frame_delta = after_artifact.frame - before_artifact.frame,
+        before_callbacks = {
+            main = before_artifact.state.main_callback_snes,
+            irq = before_artifact.state.irq_callback_snes,
+            nmi = before_artifact.state.nmi_callback_snes
+        },
+        after_callbacks = {
+            main = after_artifact.state.main_callback_snes,
+            irq = after_artifact.state.irq_callback_snes,
+            nmi = after_artifact.state.nmi_callback_snes
+        },
+        queue_transition = {
+            before_read = before_artifact.state.dp_0053,
+            before_write = before_artifact.state.dp_0054,
+            after_read = after_artifact.state.dp_0053,
+            after_write = after_artifact.state.dp_0054,
+            before_active_descriptors = before_artifact.queue.active_descriptor_count,
+            after_active_descriptors = after_artifact.queue.active_descriptor_count
+        },
+        state_changes = compare_capture_state_fields(before_artifact.state, after_artifact.state),
+        changed_region_count = changed_region_count,
+        region_diffs = region_diffs,
+        ppu_memory_diffs = ppu_memory_diffs
+    }
+end
+
+local function build_capture_compares()
+    state.capture_compare_pairs = {}
+
+    local previous_artifact = nil
+    for _, frame in ipairs(config.compare_frames) do
+        local artifact = state.capture_lookup[frame]
+        if artifact ~= nil then
+            if previous_artifact ~= nil then
+                local pair = build_capture_compare_pair(previous_artifact, artifact)
+                if pair ~= nil then
+                    state.capture_compare_pairs[#state.capture_compare_pairs + 1] = pair
+                end
+            end
+            previous_artifact = artifact
+        end
+    end
+end
+
 local function filter_state_snapshot(snapshot)
     local filtered = {}
     for key, value in pairs(snapshot) do
@@ -744,6 +1458,15 @@ local function dump_wram_snapshot(prefix)
 end
 
 local function is_trace_frame()
+    if #config.trace_windows > 0 then
+        for _, window in ipairs(config.trace_windows) do
+            if state.frame >= window.start_frame and state.frame <= window.end_frame then
+                return true
+            end
+        end
+        return false
+    end
+
     return state.frame >= config.trace_start_frame and state.frame <= config.trace_end_frame
 end
 
@@ -751,9 +1474,22 @@ local function save_probe_log()
     local output = {
         total_frames = config.total_frames,
         screenshot_frame = config.screenshot_frame,
+        sample_every = config.sample_every,
+        capture_frames = config.capture_frames,
+        compare_frames = config.compare_frames,
+        capture_screenshots = config.capture_screenshots,
+        capture_ppu_memory = config.capture_ppu_memory,
+        capture_wram_memory = config.capture_wram_memory,
         save_savestate_frame = config.save_savestate_frame,
         trace_start_frame = config.trace_start_frame,
         trace_end_frame = config.trace_end_frame,
+        trace_windows = config.trace_windows,
+        trace_mode7_writes = config.trace_mode7_writes,
+        trace_dma_writes = config.trace_dma_writes,
+        trace_vram_writes = config.trace_vram_writes,
+        mode7_max_hits = config.mode7_max_hits,
+        dma_max_hits = config.dma_max_hits,
+        vram_max_hits = config.vram_max_hits,
         trace_exec_points = config.trace_exec_points,
         trigger_input_windows = config.trigger_input_windows,
         exec_point_max_hits = config.exec_point_max_hits,
@@ -778,6 +1514,18 @@ local function save_probe_log()
         b1f9_exec_frames = state.b1f9_exec_frames,
         b1f9_stage_counts = state.b1f9_stage_counts,
         b1f9_stage_frames = state.b1f9_stage_frames,
+        mode7_trace = {
+            hit_count = #state.mode7_writes,
+            dropped_hits = state.mode7_dropped_hits
+        },
+        dma_trace = {
+            hit_count = #state.dma_writes,
+            dropped_hits = state.dma_dropped_hits
+        },
+        vram_trace = {
+            hit_count = #state.vram_writes,
+            dropped_hits = state.vram_dropped_hits
+        },
         exec_point_trace = {
             hit_count = #state.exec_point_hits,
             dropped_hits = state.exec_point_dropped_hits,
@@ -791,9 +1539,97 @@ local function save_probe_log()
         },
         saved_savestate_path = state.saved_savestate_path,
         saved_savestate_error = state.saved_savestate_error,
+        transition_events = state.transition_events,
+        capture_artifacts = state.capture_artifacts,
+        capture_compare_pairs = state.capture_compare_pairs,
         frames = state.entries,
     }
     write_text_file(output_prefix .. ".json", encode_json_value(output, ""))
+end
+
+local function save_probe_summary()
+    local lines = {
+        "# TD2 Deep Probe Summary",
+        "",
+        string.format("- total frames: `%d`", config.total_frames),
+        string.format("- sampled frame entries: `%d`", #state.entries),
+        string.format("- transition events: `%d`", #state.transition_events),
+        string.format("- capture artifacts: `%d`", #state.capture_artifacts),
+        string.format("- capture compare pairs: `%d`", #state.capture_compare_pairs),
+        string.format("- exec hits: `%d`", #state.exec_point_hits),
+        string.format("- write hits: `%d`", #state.write_point_hits),
+        string.format("- `L001210` hits: `%d`", #state.l001210_hits),
+        string.format("- mode7/dma/vram trace hits: `%d / %d / %d`", #state.mode7_writes, #state.dma_writes, #state.vram_writes),
+        ""
+    }
+
+    if #state.capture_artifacts > 0 then
+        lines[#lines + 1] = "## Capture Frames"
+        lines[#lines + 1] = ""
+        for _, artifact in ipairs(state.capture_artifacts) do
+            lines[#lines + 1] = string.format(
+                "- frame `%d`: callbacks `%s / %s / %s`, queue `%02X -> %02X`, active DMA descriptors `%d`",
+                artifact.frame,
+                artifact.state.main_callback_snes,
+                artifact.state.irq_callback_snes,
+                artifact.state.nmi_callback_snes,
+                artifact.state.dp_0053 % 0x100,
+                artifact.state.dp_0054 % 0x100,
+                artifact.queue.active_descriptor_count
+            )
+        end
+        lines[#lines + 1] = ""
+    end
+
+    if #state.capture_compare_pairs > 0 then
+        lines[#lines + 1] = "## Compare Pairs"
+        lines[#lines + 1] = ""
+        for _, pair in ipairs(state.capture_compare_pairs) do
+            lines[#lines + 1] = string.format(
+                "- `%d -> %d`: state changes `%d`, changed regions `%d`, VRAM/CGRAM/OAM diffs `%d / %d / %d`",
+                pair.before_frame,
+                pair.after_frame,
+                #pair.state_changes,
+                pair.changed_region_count,
+                pair.ppu_memory_diffs.vram.changed_bytes,
+                pair.ppu_memory_diffs.cgram.changed_bytes,
+                pair.ppu_memory_diffs.oam.changed_bytes
+            )
+        end
+        lines[#lines + 1] = ""
+    end
+
+    if #state.transition_events > 0 then
+        lines[#lines + 1] = "## Early Transition Highlights"
+        lines[#lines + 1] = ""
+        local shown = math.min(#state.transition_events, 16)
+        for index = 1, shown do
+            local event = state.transition_events[index]
+            if event.type == "initial" then
+                lines[#lines + 1] = string.format(
+                    "- frame `%d`: initial `%s / %s`, `$0202=%s`, `$1C70=%s`, `$1C76=%s`",
+                    event.frame,
+                    tostring(event.main_callback_snes),
+                    tostring(event.irq_callback_snes),
+                    tostring(event.state_0202),
+                    tostring(event.state_1c70),
+                    tostring(event.state_1c76)
+                )
+            else
+                lines[#lines + 1] = string.format(
+                    "- frame `%d`: `%s`, `%d` watched fields changed, main `%s`, irq `%s`",
+                    event.frame,
+                    event.type,
+                    event.change_count,
+                    tostring(event.main_callback_snes),
+                    tostring(event.irq_callback_snes)
+                )
+            end
+        end
+        lines[#lines + 1] = ""
+    end
+
+    write_text_file(output_prefix .. "_summary.md", table.concat(lines, "\n"))
 end
 
 local function apply_forced_main_callback(frame)
@@ -855,6 +1691,10 @@ local function save_mode7_trace()
         total_frames = config.total_frames,
         trace_start_frame = config.trace_start_frame,
         trace_end_frame = config.trace_end_frame,
+        trace_windows = config.trace_windows,
+        max_hits = config.mode7_max_hits,
+        hit_count = #state.mode7_writes,
+        dropped_hits = state.mode7_dropped_hits,
         writes = state.mode7_writes
     }
     write_text_file(output_prefix .. "_mode7_writes.json", encode_json_value(output, ""))
@@ -870,6 +1710,10 @@ local function save_dma_trace()
         total_frames = config.total_frames,
         trace_start_frame = config.trace_start_frame,
         trace_end_frame = config.trace_end_frame,
+        trace_windows = config.trace_windows,
+        max_hits = config.dma_max_hits,
+        hit_count = #state.dma_writes,
+        dropped_hits = state.dma_dropped_hits,
         writes = state.dma_writes
     }
     write_text_file(output_prefix .. "_dma_writes.json", encode_json_value(output, ""))
@@ -885,6 +1729,10 @@ local function save_vram_trace()
         total_frames = config.total_frames,
         trace_start_frame = config.trace_start_frame,
         trace_end_frame = config.trace_end_frame,
+        trace_windows = config.trace_windows,
+        max_hits = config.vram_max_hits,
+        hit_count = #state.vram_writes,
+        dropped_hits = state.vram_dropped_hits,
         writes = state.vram_writes
     }
     write_text_file(output_prefix .. "_vram_writes.json", encode_json_value(output, ""))
@@ -913,8 +1761,11 @@ local function reset_probe_state()
     state.finished = false
     state.entries = {}
     state.mode7_writes = {}
+    state.mode7_dropped_hits = 0
     state.dma_writes = {}
+    state.dma_dropped_hits = 0
     state.vram_writes = {}
+    state.vram_dropped_hits = 0
     state.l001210_hits = {}
     state.l001210_dropped_hits = 0
     state.exec_point_hits = {}
@@ -930,6 +1781,12 @@ local function reset_probe_state()
     state.b1f9_stage_frames = new_b1f9_stage_frames()
     state.saved_savestate_path = nil
     state.saved_savestate_error = nil
+    state.last_snapshot = nil
+    state.transition_events = {}
+    state.capture_artifacts = {}
+    state.capture_compare_pairs = {}
+    state.capture_lookup = {}
+    state.capture_internal = {}
 end
 
 local function on_first_exec()
@@ -965,7 +1822,16 @@ local function on_end_frame()
         return
     end
 
-    state.entries[#state.entries + 1] = snapshot_boot_state()
+    local snapshot = snapshot_boot_state()
+    record_transition_event(snapshot)
+
+    if should_record_frame_snapshot(state.frame) then
+        state.entries[#state.entries + 1] = snapshot
+    end
+
+    if should_capture_frame(state.frame) then
+        capture_frame_artifact(snapshot)
+    end
 
     if state.frame == config.screenshot_frame then
         write_binary_file(output_prefix .. "_frame.png", emu.takeScreenshot())
@@ -977,10 +1843,14 @@ local function on_end_frame()
         end
     end
 
+    state.last_snapshot = snapshot
+
     state.frame = state.frame + 1
 
     if state.frame >= config.total_frames then
+        build_capture_compares()
         save_probe_log()
+        save_probe_summary()
         save_mode7_trace()
         save_dma_trace()
         save_vram_trace()
@@ -1044,6 +1914,11 @@ local function on_tracked_register_write(address, value)
         return
     end
 
+    if config.mode7_max_hits > 0 and #state.mode7_writes >= config.mode7_max_hits then
+        state.mode7_dropped_hits = state.mode7_dropped_hits + 1
+        return
+    end
+
     local snapshot = emu.getState()
     state.mode7_writes[#state.mode7_writes + 1] = {
         frame = state.frame,
@@ -1063,6 +1938,11 @@ local function on_dma_register_write(address, value)
         return
     end
 
+    if config.dma_max_hits > 0 and #state.dma_writes >= config.dma_max_hits then
+        state.dma_dropped_hits = state.dma_dropped_hits + 1
+        return
+    end
+
     local snapshot = emu.getState()
     state.dma_writes[#state.dma_writes + 1] = {
         frame = state.frame,
@@ -1079,6 +1959,11 @@ end
 
 local function on_vram_register_write(address, value)
     if state.finished or not config.trace_vram_writes or not is_trace_frame() then
+        return
+    end
+
+    if config.vram_max_hits > 0 and #state.vram_writes >= config.vram_max_hits then
+        state.vram_dropped_hits = state.vram_dropped_hits + 1
         return
     end
 

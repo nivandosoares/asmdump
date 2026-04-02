@@ -1,6 +1,128 @@
 Date: 2026-04-02
 
 Summary
+- Promoted the old boot probe into a deep Mesen pipeline probe that can cover
+  intro, front-end, gameplay entry, and later gameplay anchors in one run
+  without drowning the output in unbounded trace spam.
+- Added a dedicated wrapper:
+  `validation/run_mesen_deep_probe.sh`
+  with a default route that drives:
+  `intro -> menu -> gameplay entry -> brake corridor -> traffic/collision-era anchors`.
+- Extended `validation/mesen_probe_boot.lua` so one run now emits:
+  - sparse sampled frame entries (`sample_every`)
+  - multi-window trace gating (`trace_windows`)
+  - capped `Mode7` / `DMA` / `VRAM` write traces
+  - callback/state transition events
+  - anchor-frame capture artifacts with queue summaries plus selected WRAM
+    region fingerprints
+  - consecutive compare pairs over those anchor captures
+  - a scan-friendly markdown summary next to the JSON output
+- Added a second, interactive Mesen-side collector:
+  `validation/mesen_live_play_probe.lua`
+  so the dev can keep the probe resident while playing and trigger:
+  bookmarks, quick captures, deep captures, and session flushes with
+  `Select + L + R + <button>` command chords.
+- Updated `validation/run_mesen_capture.sh` so the generic launcher now also
+  recognizes `TD2_LIVE_PROBE_OUTPUT_PREFIX`, which makes the live probe
+  smoke-testable in headless mode with `TD2_LIVE_PROBE_AUTO_STOP_FRAMES`.
+
+What I ran
+- shell syntax check:
+  - `bash -n validation/run_mesen_deep_probe.sh`
+- deep-probe smoke:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=45 TD2_BOOT_PROBE_TOTAL_FRAMES=24 TD2_BOOT_PROBE_SAMPLE_EVERY=4 TD2_BOOT_PROBE_CAPTURE_FRAMES='0,8,16,23' TD2_BOOT_PROBE_COMPARE_FRAMES='0,8,16,23' TD2_BOOT_PROBE_TRACE_WINDOWS='0-23' TD2_BOOT_PROBE_CAPTURE_SCREENSHOTS=0 TD2_BOOT_PROBE_CAPTURE_PPU_MEMORY=0 TD2_BOOT_PROBE_CAPTURE_WRAM_MEMORY=0 TD2_BOOT_PROBE_TRACE_MODE7=0 TD2_BOOT_PROBE_TRACE_DMA=0 TD2_BOOT_PROBE_TRACE_VRAM=0 TD2_BOOT_PROBE_TRACE_L001210=0 TD2_BOOT_PROBE_TRACE_EXEC_POINTS='front_8b31=00:8B31' TD2_BOOT_PROBE_TRACE_WRITE_POINTS='dp_0053=00:0053' TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/deep_probe_smoke/td2_boot_probe ./validation/run_mesen_deep_probe.sh ./game.smc`
+- route-bearing deep-probe validation:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=180 TD2_BOOT_PROBE_TOTAL_FRAMES=2200 TD2_BOOT_PROBE_SAMPLE_EVERY=16 TD2_BOOT_PROBE_CAPTURE_FRAMES='300,654,986,1093,1500,1640,1780,2050,2088' TD2_BOOT_PROBE_COMPARE_FRAMES='300,654,986,1093,1500,1640,1780,2050,2088' TD2_BOOT_PROBE_CAPTURE_SCREENSHOTS=0 TD2_BOOT_PROBE_CAPTURE_PPU_MEMORY=0 TD2_BOOT_PROBE_CAPTURE_WRAM_MEMORY=0 TD2_BOOT_PROBE_TRACE_MODE7=0 TD2_BOOT_PROBE_TRACE_DMA=0 TD2_BOOT_PROBE_TRACE_VRAM=0 TD2_BOOT_PROBE_TRACE_L001210=0 TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/deep_probe_mid/td2_boot_probe ./validation/run_mesen_deep_probe.sh ./game.smc`
+- live-probe smoke:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=60 TD2_LIVE_PROBE_AUTO_STOP_FRAMES=32 TD2_LIVE_PROBE_AUTOSAVE_EVERY=16 TD2_LIVE_PROBE_OUTPUT_PREFIX=tools/out/live_play_probe_smoke/session ./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_live_play_probe.lua`
+
+Artifacts
+- smoke output:
+  - `tools/out/deep_probe_smoke/td2_boot_probe.json`
+  - `tools/out/deep_probe_smoke/td2_boot_probe_summary.md`
+- route-bearing deep-probe output:
+  - `tools/out/deep_probe_mid/td2_boot_probe.json`
+  - `tools/out/deep_probe_mid/td2_boot_probe_summary.md`
+- live-probe smoke output:
+  - `tools/out/live_play_probe_smoke/session.json`
+  - `tools/out/live_play_probe_smoke/session_summary.md`
+
+Findings / Interpretation
+- The new probe path is now structurally ready for the still-open pipeline
+  work because it captures the three layers that were previously split across
+  ad hoc runs:
+  - callback family handoffs
+  - queue / WRAM control-state deltas
+  - exact anchor-frame `VRAM/CGRAM/OAM` and selected WRAM region comparisons
+- The new default wrapper is intentionally biased toward the obscure open
+  surfaces rather than the already-solved intro-only lane:
+  - front-end helper/callback corridor around `1500/1640/1780`
+  - gameplay-entry handoff around `2050/2088`
+  - late gameplay anchor set `3250/3400/3550`
+  - emitter cluster `02:B042 / 02:B05D / 02:B0B1 / 02:B0BD / 02:B101 / 02:B134`
+- The short smoke also confirms the new outputs are internally coherent:
+  - sampled entries, transition events, capture artifacts, and compare pairs
+    all materialize in one JSON
+  - the markdown summary is useful as a first-pass scan before opening the
+    heavier JSON or memory dumps
+- The route-bearing validation already proves the deep probe is not just a
+  boot-only tool:
+  - it reaches the expected callback anchors
+    `00:8029 -> 01:A39C -> 01:9FE5 -> 01:C1D2 -> 01:BE43 -> 02:9016`
+  - it records the gameplay entry handoff into
+    `02:9016 / 01:96A0 / 02:8F3C`
+  - it keeps the queue/state oscillation visible inside the post-`2050`
+    corridor instead of collapsing that window to one end-frame state
+- The live-probe smoke closes the manual-tooling part defensibly:
+  - it records sampled frames and transition events in resident mode
+  - it writes the rolling session files without `testRunner`-specific
+    assumptions
+  - command-triggered captures remain untested in headless mode, but the
+    command surface is now documented and the auto-stop path is validated
+
+What I learned (actionable)
+- The repo now has one reusable Mesen-side collector for “what actually
+  changed in the hidden pipeline?” instead of stitching together:
+  - one boot probe
+  - one dump-range run
+  - one gameplay-only trace
+- For the active obscure lanes, the best next use is no longer another narrow
+  ad hoc probe:
+  run the deep wrapper once, then branch analysis from:
+  - `transition_events`
+  - `capture_compare_pairs`
+  - the per-anchor queue summaries and memory-region diffs
+- The new `trace_windows` surface should be preferred over one giant
+  contiguous trace window whenever the target spans intro/menu/gameplay in the
+  same pass.
+
+Next steps / Checkpoints
+1) Run `validation/run_mesen_deep_probe.sh` with the full default profile and
+   inspect the first real output around `1500/1640/1780` and
+   `3250/3400/3550`.
+2) Use the emitted compare pairs to decide whether the next archaeology turn
+   should prioritize:
+   - front-end top-row `BG2` producer provenance
+   - gameplay emitter semantics inside the `02:B042..02:B134` cluster
+3) If the full run is too noisy on one lane, keep the wrapper and narrow only
+   `TD2_BOOT_PROBE_TRACE_WINDOWS`, not the whole instrumentation surface.
+
+Files updated in this turn
+- `validation/mesen_probe_boot.lua`
+- `validation/run_mesen_deep_probe.sh`
+- `validation/mesen_live_play_probe.lua`
+- `validation/run_mesen_capture.sh`
+- `validation/README.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `validation/README.md`
+- `tools/out/deep_probe_smoke/td2_boot_probe_summary.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+
+Date: 2026-04-02
+
+Summary
 - Added a reusable front-end car-helper ASCII auditor so the current car-panel
   load path can be checked without repeating ad hoc LoROM math.
 - Closed the exact panel-helper source set behind `L00BC0F`:
