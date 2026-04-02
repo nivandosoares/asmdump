@@ -128,9 +128,11 @@ Current promoted gameplay scanline contract:
 - current tracked scanline sources:
   - `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
   - `tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json`
+  - `tools/out/lane3_live_entry_brake_frame03400_scanline_full/td2_scanline_step_test.json`
 - current consumers:
   - `gameplay_live_race_mid`
   - `tools/out/lane3_live_entry_frame03250_bundle/design_pack`
+  - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/design_pack`
 - current attached fields:
   - `main_layers`
   - `bg1_hscroll/bg1_vscroll`
@@ -142,6 +144,11 @@ Current promoted gameplay scanline contract:
   - the `3250` late-entry bundle still loads through the same contract path,
     but its flat-vs-contract compare remains `0` mismatched pixels, which is
     why later gameplay now also uses a separate composition contract
+  - the `3400` late-entry traffic-emergence bundle now also loads through the
+    same contract path, and there the same measured fields are no longer a
+    no-op: compared to the earlier composition-only runtime PNG, the promoted
+    scanline-backed render changes `9309` pixels and lowers the
+    `bg_stack_visible_support.png` mismatch from `15497` to `7649`
 
 Current promoted gameplay composition contract:
 
@@ -231,9 +238,14 @@ That proves:
 - bundles with no matching gameplay scanline contract stay flat
 - `gameplay_live_race_mid` loads the versioned contract and keeps the solved
   render anchors
-- the late-entry bundles `3250`, `3400`, and `3550` now also load the
-  versioned gameplay composition contract and keep promoted top-band render
-  anchors without a scheduler rail
+- `lane3_live_entry_frame03250_bundle/design_pack` still loads the promoted
+  scanline surface as the known late-entry no-op consumer
+- `lane3_live_entry_brake_traffic_frame03400_bundle/design_pack` now also
+  loads the promoted scanline surface and preserves selected scanline values
+  plus top-band sky pixels
+- the late-entry bundles `3250`, `3400`, and `3550` also load the versioned
+  gameplay composition contract and keep promoted top-band render anchors
+  without a scheduler rail
 
 Current practical boundary:
 

@@ -68,6 +68,7 @@ decoded tilemaps and sprite visibility metadata.
 - Current tracked source traces behind that contract:
   - `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
   - `tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json`
+  - `tools/out/lane3_live_entry_brake_frame03400_scanline_full/td2_scanline_step_test.json`
 - Practical result:
   - the horizon and roadside separation on the live-race seed is restored in
     the native SDL output
@@ -80,18 +81,27 @@ decoded tilemaps and sprite visibility metadata.
     pixels, so this later gameplay phase is now narrowed to a stronger
     renderer boundary: more than `main_layers/bg1/bg2/bg3` scrolls are still
     missing there
+  - `lane3_live_entry_brake_traffic_frame03400_bundle/design_pack` now also
+    loads through that same contract surface
+  - unlike `3250`, the `3400` traffic-emergence phase is no longer a no-op
+    consumer:
+    compared to the earlier composition-only runtime PNG, the scanline-backed
+    `3400` render changes `9309` pixels and lowers the
+    `bg_stack_visible_support.png` mismatch from `15497` to `7649`
 - New cheap falsifier:
   - `./port/test_scanline_contract.sh` now proves:
     - bundles with no matching contract stay flat
     - `gameplay_live_race_mid` keeps the restored render
     - `lane3_live_entry_frame03250` now loads the versioned contract surface
+    - `lane3_live_entry_brake_traffic_frame03400` now also loads that
+      versioned contract surface and preserves selected scanline values plus
+      top-band sky pixels
 - Next gate:
-  - extend the scanline contract beyond `main_layers/bg1/bg2/bg3` scrolls on
-    `lane3_live_entry_frame03250`, since those fields alone are now proven
-    insufficient there
-  - choose whether the next cheapest promotion target is a stronger `3250`
-    follow-up or another later gameplay bundle such as the traffic-emergence
-    `3400` pair
+  - keep using `3400` as the first late-entry proof that stronger measured
+    scanline fields can beat composition-only rendering on this family
+  - decide whether the next cheapest promotion target is a later follow-up
+    such as `3550`, or a tighter field expansion for the still-no-op `3250`
+    counterexample
 
 ## Lane 3 BG3 Bundle Surface (`2026-04-01`)
 
@@ -174,9 +184,9 @@ decoded tilemaps and sprite visibility metadata.
     - selected top-band framebuffer anchors stay on the promoted horizon-strip
       colors for `3250`, `3400`, and `3550`
 - Next gate:
-  - decide whether the next promotion should keep extending this static
-    top-band rule or replace it with stronger measured scanline/state fields
-    on the same late-gameplay family
+  - keep the static top-band rule for the anchors that still need it, but
+    continue promoting stronger measured scanline/state fields where they
+    already pay off, starting from the new `3400` late-entry proof
 
 ## Current Status Snapshot (2026-03-27)
 
@@ -211,9 +221,10 @@ Validation contract baseline:
     pure SDL mapping, live no-opponent menu route, gameplay live `JOY1`
     sampling, and scripted-history plus live-`A` merge on the measured menu
     corridor
-  - scanline / composition contract smoke `39/39` checks pass across:
-    one no-contract bundle, the solved `live_race_mid` consumer, and the late
-    `3250/3400/3550` composition-contract consumers
+  - scanline / composition contract smoke `46/46` checks pass across:
+    one no-contract bundle, the solved `live_race_mid` consumer, the late
+    `3250` no-op scanline consumer, the promoted `3400` scanline+composition
+    consumer, and the remaining `3550` composition-contract consumer
   - runtime `--dump-prefix` now emits PNG siblings for the same frame and
     compare artifacts already used by the port smoke path
 

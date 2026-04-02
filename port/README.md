@@ -142,8 +142,12 @@ Notes:
   - bundles without a matching gameplay scanline contract stay flat
   - `gameplay_live_race_mid` loads its versioned scanline overlay and keeps
     the restored sky/mountain/grass split
-  - the late-entry bundles `3250`, `3400`, and `3550` now also load a
-    versioned gameplay composition contract even without a scheduler rail
+  - the late-entry `3250` bundle still loads its versioned scanline surface
+    even though the current attached fields remain a no-op there
+  - the late-entry `3400` traffic-emergence bundle now loads both a versioned
+    scanline surface and the versioned gameplay composition contract
+  - the late-entry `3550` bundle still loads the composition contract even
+    without a scheduler rail
   - those late-entry bundles now enable `BG3` on the top band and keep
     `BG3 > BG2` there with the promoted cutoffs `79/79/95`
 - `--dump-prefix` now emits `PATH_00000.ppm` and `PATH_00000.png`; compare
@@ -164,12 +168,12 @@ Notes:
   that bundle still needs earlier seeds or scripted prehistory. Live SDL input
   now shares the same mutator surface, but it does not fabricate missing
   history before the loaded bundle.
-- current gameplay-specific boundary: only the promoted
-  `gameplay_live_race_mid` seed is fully closed by the current scanline
-  contract fields. The promoted late-entry bundles `3250`, `3400`, and
-  `3550` now also load composition contracts that restore the top-band
-  horizon strip, but later gameplay still needs more than this static
-  `BG3` top-band rule to explain the full frame family.
+- current gameplay-specific boundary: the promoted `gameplay_live_race_mid`
+  seed is still the solved scanline consumer, `3400` now proves the current
+  measured late-entry scanline field family can materially improve a promoted
+  gameplay bundle, `3250` remains the useful counterexample where those same
+  fields are still a no-op, and `3550` is still only covered by the static
+  composition rule.
 - `tools/push_checkpoint.sh` is the repo-local wrapper for the post-push step:
   it pushes the current checkpoint, refreshes the curated wiki in an isolated
   temporary `git worktree`, and issues a follow-up wiki refresh commit/push

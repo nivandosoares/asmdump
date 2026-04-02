@@ -183,6 +183,13 @@ rails:
   `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
 - the solved live-race consumer still preserves selected sky/mountain/grass
   framebuffer pixels after loading that contract
+- `lane3_live_entry_frame03250_bundle/design_pack` still loads the promoted
+  scanline surface as a known late-entry no-op consumer
+- `lane3_live_entry_brake_traffic_frame03400_bundle/design_pack` now also
+  loads a promoted scanline profile from
+  `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
+- that `3400` consumer preserves selected scanline fields and top-band sky
+  pixels after loading both scanline and composition contracts
 - the late-entry bundles `3250`, `3400`, and `3550` now load promoted
   composition profiles from
   `rom_analysis/docs/gameplay_composition_contracts.jsonc`

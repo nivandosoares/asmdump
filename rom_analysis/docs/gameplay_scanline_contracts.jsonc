@@ -21,6 +21,16 @@
         "Promoted open-road late live-entry phase from the reproducible power-on route.",
         "Uses the same scanline-aware surface as live_race_mid without depending on the preserved manual gameplay seed."
       ]
+    },
+    {
+      "id": "lane3_live_entry_brake_traffic_frame03400",
+      "scene_match": "lane3_live_entry_brake_traffic_frame03400_bundle/design_pack",
+      "source_json": "tools/out/lane3_live_entry_brake_frame03400_scanline_full/td2_scanline_step_test.json",
+      "target_frame": 3400,
+      "notes": [
+        "Promoted traffic-emergence follow-up from the bounded braking variant of the reproducible live-entry route.",
+        "Used as the cheapest falsifier for whether the late-entry family now needs more than the static BG3 top-band composition rule."
+      ]
     }
   ]
 }
