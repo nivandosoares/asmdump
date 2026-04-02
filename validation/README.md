@@ -9,6 +9,7 @@ Current asset:
 - `mesen_probe_boot.lua`: a lightweight state probe that records boot/title selectors like `$1C78/$1C7A/$1CCA/...` once per frame
 - `run_mesen_probe_boot.sh`: convenience wrapper around the generic launcher for the boot probe
 - `run_mesen_deep_probe.sh`: high-context wrapper around `mesen_probe_boot.lua` that drives a traced intro -> menu -> gameplay route, captures anchor-frame screenshots and memory dumps, and emits frame-to-frame compare pairs over the obscurer callback/queue/pipeline surfaces
+- `run_mesen_gameplay_probe.sh`: gameplay-first wrapper around `mesen_probe_boot.lua` that loads a preserved lane-3 savestate by default and starts tracing directly inside the live-race callback family instead of replaying intro/menu first
 - `mesen_live_play_probe.lua`: interactive Mesen-side probe that stays resident while the dev plays, keeps a rolling transition/sample log, and responds to SNES-button command chords for bookmarks and ad hoc captures
 - `mesen_dump_bg_range.lua`: single-run range dumper for `VRAM + CGRAM + PPU state` and optional screenshots on selected frames
 - `run_mesen_dump_bg_range.sh`: convenience wrapper around the generic launcher for that range dumper
@@ -63,6 +64,38 @@ Key outputs:
 - `<prefix>_frame_<frame>.png`: per-anchor screenshots when enabled
 - `<prefix>_frame_<frame>_ppu_state.json`, `_vram.bin`, `_cgram.bin`, `_oam.bin`
 - `<prefix>_frame_<frame>_wram.bin`
+
+For a gameplay-only pass that starts from the preserved live-race lane-3 seed
+instead of power-on, run:
+
+```sh
+./validation/run_mesen_gameplay_probe.sh
+```
+
+That wrapper defaults to:
+
+- savestate:
+  `manual_artifacts/lane3/lane3_live_race_mid.mss`
+- sampled gameplay-only corridor out to frame `360` relative to the savestate
+- capture anchors at `0,30,60,90,120,180,240,300,359`
+- no intro/menu route replay and no default input windows
+- execution coverage focused on the active lane-3 family:
+  - `02:9016`
+  - `02:9165`
+  - `01:9185`
+  - `01:960D`
+  - `01:96A0`
+  - `02:B18D`
+  - `02:B042 / 02:B05D / 02:B0B1 / 02:B0BD / 02:B101 / 02:B134`
+- write coverage focused on queue cursors, late-gameplay watch cells, and
+  visible split helpers
+
+Override the default gameplay seed by passing a second positional argument, for
+example:
+
+```sh
+./validation/run_mesen_gameplay_probe.sh ./game.smc manual_artifacts/lane3/lane3_live_race_plus30f.mss
+```
 
 For direct interactive use inside Mesen while playing:
 

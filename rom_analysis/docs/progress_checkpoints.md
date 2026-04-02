@@ -1,6 +1,94 @@
 Date: 2026-04-02
 
 Summary
+- Added a gameplay-first Mesen probe wrapper so lane-3 runs can start from the
+  preserved live-race savestate instead of replaying boot, intro, and menus.
+- Validated that wrapper against `manual_artifacts/lane3/lane3_live_race_mid.mss`
+  and generated a first gameplay-only smoke artifact over frames `0..96`
+  relative to the savestate.
+- Closed the immediate request behind the earlier `probe_0300` confusion:
+  the new gameplay wrapper starts directly on the live-race surface at frame
+  `0`, not on the track-select/front-end corridor.
+
+What I ran
+- wrapper syntax/permission check:
+  - `chmod +x validation/run_mesen_gameplay_probe.sh`
+  - `bash -n validation/run_mesen_gameplay_probe.sh`
+- gameplay-seed smoke:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=120 TD2_BOOT_PROBE_TOTAL_FRAMES=96 TD2_BOOT_PROBE_SAMPLE_EVERY=8 TD2_BOOT_PROBE_CAPTURE_FRAMES='0,30,60,90' TD2_BOOT_PROBE_COMPARE_FRAMES='0,30,60,90' TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/gameplay_seed_probe_smoke/td2_boot_probe ./validation/run_mesen_gameplay_probe.sh ./game.smc`
+- gameplay corridor summary:
+  - `python3 tools/summarize_deep_probe_corridor.py tools/out/gameplay_seed_probe_smoke/td2_boot_probe.json --frame-start 0 --frame-end 96 --output tools/out/gameplay_seed_probe_smoke/td2_boot_probe_corridor_0_96.json --markdown-out tools/out/gameplay_seed_probe_smoke/td2_boot_probe_corridor_0_96.md`
+
+Artifacts
+- new wrapper:
+  - `validation/run_mesen_gameplay_probe.sh`
+- gameplay-seed smoke output:
+  - `tools/out/gameplay_seed_probe_smoke/td2_boot_probe.json`
+  - `tools/out/gameplay_seed_probe_smoke/td2_boot_probe_summary.md`
+  - `tools/out/gameplay_seed_probe_smoke/td2_boot_probe_frame.png`
+  - `tools/out/gameplay_seed_probe_smoke/td2_boot_probe_corridor_0_96.json`
+  - `tools/out/gameplay_seed_probe_smoke/td2_boot_probe_corridor_0_96.md`
+
+Findings / Interpretation
+- The gameplay wrapper now does exactly what the lane needed:
+  it loads `manual_artifacts/lane3/lane3_live_race_mid.mss` by default and
+  begins directly inside the live-race family.
+- Frame `0` of the new smoke already shows:
+  - `main_callback_snes = 02:9016`
+  - `irq_callback_snes = 01:96A0`
+  - `nmi_callback_snes = 02:8F3C`
+  - `state_0202 = FFFF`
+  - `state_1C70 = 0`
+  - `state_1C76 = 1`
+  - `state_11F3 = 477`
+  - `dp_0053/0054 = 0x78 / 0x78`
+- That closes the practical ambiguity from the stalled boot-based late run:
+  the new artifact does not begin on track select or any earlier front-end
+  surface.
+- The first `96` gameplay-relative frames keep the expected lane-3 shape:
+  - callback family stays fixed on `02:9016 / 01:96A0 / 02:8F3C`
+  - `state_11f3` rises `477 -> 495`
+  - `state_129e` stays `0x0100`
+  - `dp_0053/0054` cycle actively through the DMA ring
+  - capture frames `60` and `90` show nonzero active queue descriptors
+- The run did print many Mesen `Uninitialized memory read` warnings while
+  loading the manual savestate, but the probe JSON and derived corridor
+  summary still completed and were internally coherent.
+
+What I learned (actionable)
+- For lane 3, the default archaeology entry point should now be the new
+  gameplay wrapper unless the question explicitly needs the boot/menu path.
+- The boot-based deep wrapper remains the right tool for cross-pipeline
+  intro/front-end/gameplay handoffs.
+- The new gameplay wrapper is the cheaper falsifier for:
+  - live-race callback/state checks
+  - queue cursor movement
+  - `L01318D` branch/activity questions from a real gameplay seed
+
+Next steps / Checkpoints
+1) Use `validation/run_mesen_gameplay_probe.sh` for the next bounded trace
+   that chases the selector/data path feeding
+   `02:B0B1 / 02:B0BD -> L012BE2`.
+2) Keep the boot-based deep wrapper for whole-pipeline questions only.
+3) If needed, add a second gameplay preset around
+   `manual_artifacts/lane3/lane3_live_race_plus30f.mss` rather than
+   stretching the boot-based route longer again.
+
+Files updated in this turn
+- `validation/run_mesen_gameplay_probe.sh`
+- `validation/README.md`
+- `tools/out/gameplay_seed_probe_smoke/td2_boot_probe_corridor_0_96.json`
+- `tools/out/gameplay_seed_probe_smoke/td2_boot_probe_corridor_0_96.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `validation/README.md`
+- `tools/out/gameplay_seed_probe_smoke/td2_boot_probe_corridor_0_96.md`
+- `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
+
+Date: 2026-04-02
+
+Summary
 - Added a reusable deep-probe corridor summarizer so late gameplay windows can
   be reduced into one readable artifact instead of hand-reading the full probe
   JSON.
