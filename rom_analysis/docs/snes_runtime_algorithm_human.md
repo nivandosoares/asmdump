@@ -124,6 +124,22 @@ already grounded in code reads, probes, or generated artifacts.
     Direct headless forcing of `01:9568/01:95AD` still does not promote into
     that same corridor: short-force probes keep `active_main` pinned on
     `01:9568/01:95AD` through frame `2199` with no staged callback writes.
+13. The current late-gameplay `3250` counterexample now adds an important
+    constraint on top of that callback family:
+    - the visible BG1 surface there is not fully determined by end-frame
+      `VRAM`
+    - frame `3250` keeps one active visible descriptor in the `0600` queue
+      with bytes `01 b8 b4 15 20 00 80 61`
+    - that descriptor now matches the bank-0 table-driven queue-builder family
+      rooted at `L001895 / L001A70`
+    - the queued source payload closes one step further to a one-tile
+      bank-15 object:
+      table start `15:B4A8`, payload `15:B4B8`, destination `VRAM 0x6180`
+    - in human terms:
+      this late gameplay family can still stream small BG1 tile objects during
+      the visible gameplay callback corridor, so a flat
+      “seed final VRAM and render once” model is not strong enough for every
+      promoted lane-3 anchor
 
 ## Short Version
 
@@ -140,6 +156,8 @@ If you strip away the assembly details, the proven logic is:
 6. Stage OAM in WRAM and let NMI upload it to the PPU.
 7. Continue running the current callback family until the later callback
    promotion rules take over.
+8. In late gameplay, allow for small queue-backed BG1 tile streams that are
+   selected by gameplay callback state and only later uploaded by NMI.
 
 ## Open Edges
 
@@ -161,5 +179,9 @@ If you strip away the assembly details, the proven logic is:
   deltas, especially `state_09a2/state_09a8` and the paired DP scratch fields,
   after both paths have already converged to the shared `02:9016/02:8F3C`
   corridor
+- the `3250` late-entry producer path is no longer opaque at the object side:
+  the transient upload now closes to `15:B4A8 -> 15:B4B8 -> VRAM 0x6180`,
+  but the gameplay-side selector path inside the active
+  `02:9016 / 01:96A0` pair is still not fully resolved
 - late attract producer scheduling after `1133` is materially narrowed, but the
   native replacement schedule is still a live archaeology target

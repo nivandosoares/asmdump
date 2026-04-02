@@ -97,6 +97,19 @@ decoded tilemaps and sprite visibility metadata.
       `VRAM 0x6180` resolves to visible `BG1` tile `396` at cell `(4, 24)`,
       around screen `(32, 193)`, while the end-frame raw `VRAM`
       `0x6180..0x61FF` bytes still match on `3250/3400/3550`
+    - object-side provenance is now also narrowed:
+      the active descriptor bytes `01 b8 b4 15 20 00 80 61` match the bank-0
+      table-driven queue-builder family rooted at `L001895 / L001A70`, and
+      the source payload closes to a one-tile bank-15 object at `15:B4A8`
+      whose data begins at `15:B4B8`
+    - direct literal search did not find raw `B4A8/B4B8` words in bank `1`,
+      bank `2`, or elsewhere in bank `15`, so the current read is
+      table-resolved gameplay object selection, not a trivial hardcoded
+      pointer pair
+    - two bounded trace variants against frame `3250` kept `0` exec hits and
+      `0` queue-write hits on the first guessed builder sites, but both still
+      preserved the same frame-start callback anchor:
+      `active_main = 02:9016`, `active_irq = 01:96A0`
     - practical consequence:
       the missing `3250` surface is now narrowed to transient visible-phase
       `BG1` CHR state, not to a missing end-frame tilemap/CHR difference
@@ -131,8 +144,10 @@ decoded tilemaps and sprite visibility metadata.
     family now benefits from stronger measured scanline fields
   - treat `3250` as a queue-backed counterexample, not a window/sub-screen
     counterexample
-  - chase the producer path behind the transient visible `BG1` tile `396`
-    upload (`slot 14 -> VRAM 0x6180`) before promoting any new runtime surface
+  - chase the selector path behind the one-tile bank-15 object
+    `15:B4A8 -> 15:B4B8`, anchored on the active
+    `02:9016` main / `01:96A0` IRQ family, before promoting any new runtime
+    surface
 
 ## Lane 3 BG3 Bundle Surface (`2026-04-01`)
 
