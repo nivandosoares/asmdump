@@ -1,6 +1,6 @@
 # TD2 Wiki Markdown Bundle
 
-- Generated: `2026-04-01 17:45:24`
+- Generated: `2026-04-01 21:40:59`
 - Manifest: `rom_analysis/docs/wiki_doc_index.json`
 - Total docs: `48`
 
@@ -10,7 +10,7 @@ Use `wiki_bundle_index.md` for the curated file list or `wiki_combined.md` for a
 
 - Source: `PORT_PLAN.md`
 - Bundle copy: `sources/PORT_PLAN.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Primary execution contract and long-range port target.
 
 ---
@@ -156,18 +156,26 @@ New useful state beyond the original plan:
   - current tracked source traces:
     - `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
     - `tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json`
+    - `tools/out/lane3_live_entry_brake_frame03400_scanline_full/td2_scanline_step_test.json`
   - current attached fields:
     - `main_layers`
     - `bg1/bg2/bg3` `HOFS/VOFS`
   - current promoted consumers:
     - `gameplay_live_race_mid`
     - `lane3_live_entry_frame03250_bundle/design_pack`
+    - `lane3_live_entry_brake_traffic_frame03400_bundle/design_pack`
   - current practical read:
     - the live-race seed is the first solved consumer of that surface and now
       restores the horizon/roadside boundary natively
     - the `3250` late-entry bundle still needs more than
-      `main_layers/bg1/bg2/bg3` scrolls alone, but the runtime now also loads
-      a separate gameplay composition contract:
+      `main_layers/bg1/bg2/bg3` scrolls alone
+    - the `3400` late-entry traffic-emergence bundle now proves the same
+      measured scanline fields can materially improve this family when paired
+      with the promoted composition rule:
+      compared to the earlier composition-only runtime PNG, the scanline-backed
+      `3400` render changes `9309` pixels and lowers the
+      `bg_stack_visible_support.png` mismatch from `15497` to `7649`
+    - the runtime now also loads a separate gameplay composition contract:
       - `rom_analysis/docs/gameplay_composition_contracts.jsonc`
       - current promoted consumers:
         - `lane3_live_entry_frame03250_bundle/design_pack`
@@ -637,7 +645,7 @@ The work above assumes option 1 first, then selective enhancement after parity.
 
 - Source: `rom_analysis/docs/next_steps_roadmap.md`
 - Bundle copy: `sources/rom_analysis/docs/next_steps_roadmap.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Current lane status, open gates, and practical follow-up targets.
 
 ---
@@ -712,6 +720,7 @@ decoded tilemaps and sprite visibility metadata.
 - Current tracked source traces behind that contract:
   - `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
   - `tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json`
+  - `tools/out/lane3_live_entry_brake_frame03400_scanline_full/td2_scanline_step_test.json`
 - Practical result:
   - the horizon and roadside separation on the live-race seed is restored in
     the native SDL output
@@ -724,18 +733,27 @@ decoded tilemaps and sprite visibility metadata.
     pixels, so this later gameplay phase is now narrowed to a stronger
     renderer boundary: more than `main_layers/bg1/bg2/bg3` scrolls are still
     missing there
+  - `lane3_live_entry_brake_traffic_frame03400_bundle/design_pack` now also
+    loads through that same contract surface
+  - unlike `3250`, the `3400` traffic-emergence phase is no longer a no-op
+    consumer:
+    compared to the earlier composition-only runtime PNG, the scanline-backed
+    `3400` render changes `9309` pixels and lowers the
+    `bg_stack_visible_support.png` mismatch from `15497` to `7649`
 - New cheap falsifier:
   - `./port/test_scanline_contract.sh` now proves:
     - bundles with no matching contract stay flat
     - `gameplay_live_race_mid` keeps the restored render
     - `lane3_live_entry_frame03250` now loads the versioned contract surface
+    - `lane3_live_entry_brake_traffic_frame03400` now also loads that
+      versioned contract surface and preserves selected scanline values plus
+      top-band sky pixels
 - Next gate:
-  - extend the scanline contract beyond `main_layers/bg1/bg2/bg3` scrolls on
-    `lane3_live_entry_frame03250`, since those fields alone are now proven
-    insufficient there
-  - choose whether the next cheapest promotion target is a stronger `3250`
-    follow-up or another later gameplay bundle such as the traffic-emergence
-    `3400` pair
+  - keep using `3400` as the first late-entry proof that stronger measured
+    scanline fields can beat composition-only rendering on this family
+  - decide whether the next cheapest promotion target is a later follow-up
+    such as `3550`, or a tighter field expansion for the still-no-op `3250`
+    counterexample
 
 ## Lane 3 BG3 Bundle Surface (`2026-04-01`)
 
@@ -818,9 +836,9 @@ decoded tilemaps and sprite visibility metadata.
     - selected top-band framebuffer anchors stay on the promoted horizon-strip
       colors for `3250`, `3400`, and `3550`
 - Next gate:
-  - decide whether the next promotion should keep extending this static
-    top-band rule or replace it with stronger measured scanline/state fields
-    on the same late-gameplay family
+  - keep the static top-band rule for the anchors that still need it, but
+    continue promoting stronger measured scanline/state fields where they
+    already pay off, starting from the new `3400` late-entry proof
 
 ## Current Status Snapshot (2026-03-27)
 
@@ -855,9 +873,10 @@ Validation contract baseline:
     pure SDL mapping, live no-opponent menu route, gameplay live `JOY1`
     sampling, and scripted-history plus live-`A` merge on the measured menu
     corridor
-  - scanline / composition contract smoke `39/39` checks pass across:
-    one no-contract bundle, the solved `live_race_mid` consumer, and the late
-    `3250/3400/3550` composition-contract consumers
+  - scanline / composition contract smoke `46/46` checks pass across:
+    one no-contract bundle, the solved `live_race_mid` consumer, the late
+    `3250` no-op scanline consumer, the promoted `3400` scanline+composition
+    consumer, and the remaining `3550` composition-contract consumer
   - runtime `--dump-prefix` now emits PNG siblings for the same frame and
     compare artifacts already used by the port smoke path
 
@@ -2428,10 +2447,96 @@ Update findings in:
 
 - Source: `rom_analysis/docs/progress_checkpoints.md`
 - Bundle copy: `sources/rom_analysis/docs/progress_checkpoints.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Checkpoint log with evidence-bearing milestones.
 
 ---
+
+Date: 2026-04-01
+
+Summary
+- Promoted the late-entry `3400` traffic-emergence bundle onto the versioned
+  gameplay scanline-contract surface in
+  `rom_analysis/docs/gameplay_scanline_contracts.jsonc`.
+- Extended the port smoke so `3400` no longer validates as a
+  composition-only consumer; it now proves loaded scanline values plus
+  top-band sky pixels in `port/test_scanline_contract.c`.
+- Closed the immediate “static composition or stronger scanline/state?”
+  decision for late gameplay with one bounded probe:
+  the measured `3400` scanline fields materially improve the promoted SDL
+  output over the earlier composition-only checkpoint.
+
+What I ran
+- late-entry `3400` scanline capture on the bounded braking route:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=420 TD2_SCANLINE_TEST_TARGET_FRAME=3400 TD2_SCANLINE_TEST_MAX_SAMPLES=224 TD2_SCANLINE_TEST_INPUT_WINDOWS='1200:a;1280:a;1505-1510:a;1640-1645:a;1730-1735:a;2050-2949:a;2950-3400:b;3401-5649:a' TD2_SCANLINE_TEST_OUTPUT_PREFIX=tools/out/lane3_live_entry_brake_frame03400_scanline_full/td2_scanline_step_test ./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_scanline_step_test.lua`
+- targeted port validation:
+  - `make -C port`
+  - `./port/test_scanline_contract.sh`
+- stable runtime PNG for the promoted `3400` scanline-backed consumer:
+  - `./port/build/td2_port --scene-dir tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/design_pack --headless --frames 1 --dump-prefix tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3400`
+- bounded compare probes:
+  - `python3 tools/compare_frames.py tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3400_00000.png tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3400_00000.png`
+  - `python3 tools/compare_frames.py tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg_stack_visible_support.png tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3400_00000.png`
+
+Findings / Interpretation
+- The new `3400` trace is structurally valid on the late-entry family:
+  - `224` visible scanline samples
+  - the same `23/24` top-band `BG3` handoff seen on `3250`
+  - the same `120/121` main-layer split, but with later-phase
+    `BG2` scroll values (`235/239` at `120/121`, `283` by `223`)
+- Unlike `3250`, this late-entry phase is not a no-op consumer of the current
+  measured scanline fields:
+  - the new scanline-backed runtime render changes `9309` pixels versus the
+    earlier composition-only `3400` runtime PNG
+  - against `bg_stack_visible_support.png`, mismatch drops
+    `15497 -> 7649`
+- Practical read:
+  - the late-entry family should no longer be treated as a uniform
+    composition-only lane
+  - `3400` is now the first promoted proof that the current measured
+    `main_layers/bg1/bg2/bg3` field set can materially improve later gameplay
+    when paired with the existing top-band `BG3` composition rule
+  - `3250` remains the useful counterexample where those same fields are
+    still a no-op
+
+What I learned (actionable)
+- The active gate is now resolved in favor of stronger measured
+  scanline/state promotion, not “extend the static composition contract first”
+  as the default next move.
+- The cheapest next proving target is another late-entry consumer on the same
+  family, likely `3550`, unless a tighter `3250` field expansion becomes more
+  defensible than another later-anchor promotion.
+
+Next steps / Checkpoints
+1) Use `3400` as the new late-entry proof point when deciding whether another
+   promoted bundle belongs on scanline+composition or composition-only.
+2) Prefer `3550` as the next bounded follow-up unless a concrete field family
+   for the still-no-op `3250` case is already in hand.
+3) Keep the new `3400` scanline runtime PNG in design review next to the old
+   composition-only checkpoint so the improvement stays visible.
+
+Immediate recommendation
+- Use these two `3400` runtime PNGs side-by-side for the next late-gameplay
+  review:
+  - `tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3400_00000.png`
+  - `tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3400_00000.png`
+
+Files updated in this turn
+- `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
+- `port/test_scanline_contract.c`
+- `PORT_PLAN.md`
+- `port/README.md`
+- `port/docs/ARCHITECTURE.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+- `NEXT_AGENT.md`
+
+Next reading
+- `tools/out/lane3_live_entry_brake_frame03400_scanline_full/td2_scanline_step_test.json`
+- `tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3400_00000.png`
+- `tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3400_00000.png`
 
 Date: 2026-04-01
 
@@ -3887,7 +3992,7 @@ Next reading
 
 - Source: `rom_analysis/docs/validation_gates.md`
 - Bundle copy: `sources/rom_analysis/docs/validation_gates.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Bounded pass/fail policy for regression and callback checks.
 
 ---
@@ -4077,6 +4182,13 @@ rails:
   `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
 - the solved live-race consumer still preserves selected sky/mountain/grass
   framebuffer pixels after loading that contract
+- `lane3_live_entry_frame03250_bundle/design_pack` still loads the promoted
+  scanline surface as a known late-entry no-op consumer
+- `lane3_live_entry_brake_traffic_frame03400_bundle/design_pack` now also
+  loads a promoted scanline profile from
+  `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
+- that `3400` consumer preserves selected scanline fields and top-band sky
+  pixels after loading both scanline and composition contracts
 - the late-entry bundles `3250`, `3400`, and `3550` now load promoted
   composition profiles from
   `rom_analysis/docs/gameplay_composition_contracts.jsonc`
@@ -4101,7 +4213,7 @@ For each archaeology lane:
 
 - Source: `validation/README.md`
 - Bundle copy: `sources/validation/README.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Current Mesen capture, probe, and export workflow.
 
 ---
@@ -4236,9 +4348,11 @@ Current promoted gameplay scanline contract:
 - current tracked scanline sources:
   - `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
   - `tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json`
+  - `tools/out/lane3_live_entry_brake_frame03400_scanline_full/td2_scanline_step_test.json`
 - current consumers:
   - `gameplay_live_race_mid`
   - `tools/out/lane3_live_entry_frame03250_bundle/design_pack`
+  - `tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/design_pack`
 - current attached fields:
   - `main_layers`
   - `bg1_hscroll/bg1_vscroll`
@@ -4250,6 +4364,11 @@ Current promoted gameplay scanline contract:
   - the `3250` late-entry bundle still loads through the same contract path,
     but its flat-vs-contract compare remains `0` mismatched pixels, which is
     why later gameplay now also uses a separate composition contract
+  - the `3400` late-entry traffic-emergence bundle now also loads through the
+    same contract path, and there the same measured fields are no longer a
+    no-op: compared to the earlier composition-only runtime PNG, the promoted
+    scanline-backed render changes `9309` pixels and lowers the
+    `bg_stack_visible_support.png` mismatch from `15497` to `7649`
 
 Current promoted gameplay composition contract:
 
@@ -4339,9 +4458,14 @@ That proves:
 - bundles with no matching gameplay scanline contract stay flat
 - `gameplay_live_race_mid` loads the versioned contract and keeps the solved
   render anchors
-- the late-entry bundles `3250`, `3400`, and `3550` now also load the
-  versioned gameplay composition contract and keep promoted top-band render
-  anchors without a scheduler rail
+- `lane3_live_entry_frame03250_bundle/design_pack` still loads the promoted
+  scanline surface as the known late-entry no-op consumer
+- `lane3_live_entry_brake_traffic_frame03400_bundle/design_pack` now also
+  loads the promoted scanline surface and preserves selected scanline values
+  plus top-band sky pixels
+- the late-entry bundles `3250`, `3400`, and `3550` also load the versioned
+  gameplay composition contract and keep promoted top-band render anchors
+  without a scheduler rail
 
 Current practical boundary:
 
@@ -6535,7 +6659,7 @@ Notes:
 
 - Source: `tools/README.md`
 - Bundle copy: `sources/tools/README.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Promoted extraction and analysis tooling surface.
 
 ---
@@ -7225,7 +7349,7 @@ This should be treated as the scene's static setup, not a guarantee of exact fra
 
 - Source: `port/README.md`
 - Bundle copy: `sources/port/README.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: SDL runtime scope, usage, and current sequence playback path.
 
 ---
@@ -7374,8 +7498,12 @@ Notes:
   - bundles without a matching gameplay scanline contract stay flat
   - `gameplay_live_race_mid` loads its versioned scanline overlay and keeps
     the restored sky/mountain/grass split
-  - the late-entry bundles `3250`, `3400`, and `3550` now also load a
-    versioned gameplay composition contract even without a scheduler rail
+  - the late-entry `3250` bundle still loads its versioned scanline surface
+    even though the current attached fields remain a no-op there
+  - the late-entry `3400` traffic-emergence bundle now loads both a versioned
+    scanline surface and the versioned gameplay composition contract
+  - the late-entry `3550` bundle still loads the composition contract even
+    without a scheduler rail
   - those late-entry bundles now enable `BG3` on the top band and keep
     `BG3 > BG2` there with the promoted cutoffs `79/79/95`
 - `--dump-prefix` now emits `PATH_00000.ppm` and `PATH_00000.png`; compare
@@ -7396,12 +7524,12 @@ Notes:
   that bundle still needs earlier seeds or scripted prehistory. Live SDL input
   now shares the same mutator surface, but it does not fabricate missing
   history before the loaded bundle.
-- current gameplay-specific boundary: only the promoted
-  `gameplay_live_race_mid` seed is fully closed by the current scanline
-  contract fields. The promoted late-entry bundles `3250`, `3400`, and
-  `3550` now also load composition contracts that restore the top-band
-  horizon strip, but later gameplay still needs more than this static
-  `BG3` top-band rule to explain the full frame family.
+- current gameplay-specific boundary: the promoted `gameplay_live_race_mid`
+  seed is still the solved scanline consumer, `3400` now proves the current
+  measured late-entry scanline field family can materially improve a promoted
+  gameplay bundle, `3250` remains the useful counterexample where those same
+  fields are still a no-op, and `3550` is still only covered by the static
+  composition rule.
 - `tools/push_checkpoint.sh` is the repo-local wrapper for the post-push step:
   it pushes the current checkpoint, refreshes the curated wiki in an isolated
   temporary `git worktree`, and issues a follow-up wiki refresh commit/push
@@ -7413,7 +7541,7 @@ Notes:
 
 - Source: `rom_analysis/README.md`
 - Bundle copy: `sources/rom_analysis/README.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Top-level archaeology tree orientation.
 
 ---
@@ -7495,7 +7623,7 @@ make -C tools bank30-registry
 
 - Source: `rom_analysis/docs/bank30_decompression_report.md`
 - Bundle copy: `sources/rom_analysis/docs/bank30_decompression_report.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Current registry-backed read of bank30 markers and the active unresolved queue.
 
 ---
@@ -7682,7 +7810,7 @@ Observed decode geometry:
 
 - Source: `rom_analysis/docs/bank30_b1f9_forced_lane_stall.md`
 - Bundle copy: `sources/rom_analysis/docs/bank30_b1f9_forced_lane_stall.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Why the current headless `B1F9` forcing lane is low-yield for `EE7F`.
 
 ---
@@ -7778,7 +7906,7 @@ observe the `EE7F` selector. It is a later worker loop centered on
 
 - Source: `rom_analysis/docs/intro_00_8029_next_agent_handoff.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_00_8029_next_agent_handoff.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Active handoff for the later attract continuation lane.
 
 ---
@@ -7883,7 +8011,7 @@ The open question is no longer "which producer owns this?" It is:
 
 - Source: `rom_analysis/docs/intro_01_9fe5_window_986_1093.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_01_9fe5_window_986_1093.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Consolidated visual-contract note for the bridge-visible intro block.
 
 ---
@@ -7998,7 +8126,7 @@ Reading:
 
 - Source: `rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Producer-side activity narrowing for the post-1093 window.
 
 ---
@@ -8190,7 +8318,7 @@ Use those boundaries explicitly in the Lane 2 follow-up:
 
 - Source: `rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Late 00:8029 blob rotation report and selector narrowing.
 
 ---
@@ -8405,7 +8533,7 @@ Reading:
 
 - Source: `rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md`
 - Bundle copy: `sources/rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: First promoted tilemap-to-ROM provenance window.
 
 ---
@@ -8432,7 +8560,7 @@ Reading:
 
 - Source: `rom_analysis/docs/mesen_debugger_design_workbench.md`
 - Bundle copy: `sources/rom_analysis/docs/mesen_debugger_design_workbench.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Design-pack workflow and extraction surface.
 
 ---
@@ -8633,7 +8761,7 @@ make -C tools l001210-trace-summary
 
 - Source: `rom_analysis/docs/snes_runtime_algorithm_human.md`
 - Bundle copy: `sources/rom_analysis/docs/snes_runtime_algorithm_human.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Human-readable interpretation of the front-end and handoff corridor.
 
 ---
@@ -8809,7 +8937,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md`
 - Bundle copy: `sources/rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Car-presentation BG2 ownership without treating it as gameplay.
 
 ---
@@ -8852,7 +8980,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_frontend_top_menu_labels.md`
 - Bundle copy: `sources/tools/out/snes_frontend_top_menu_labels.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Closed rendered label set for the top signboard menu.
 
 ---
@@ -8884,7 +9012,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_frontend_rival_selection_grid.md`
 - Bundle copy: `sources/tools/out/snes_frontend_rival_selection_grid.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Rendered and structural read of the 2x2 opponent grid.
 
 ---
@@ -8950,7 +9078,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_select_opponent_organic_default_path.md`
 - Bundle copy: `sources/tools/out/snes_select_opponent_organic_default_path.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Recovered no-force path into the default rival corridor.
 
 ---
@@ -8999,7 +9127,7 @@ Inject `right+down` only after `01:C1D2` is already live so `$1C70` can leave
 
 - Source: `tools/out/snes_frontend_select_opponent_mode_split.md`
 - Bundle copy: `sources/tools/out/snes_frontend_select_opponent_mode_split.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Separates rival slots from the no-opponent stopwatch branch.
 
 ---
@@ -9049,7 +9177,7 @@ Inject `right+down` only after `01:C1D2` is already live so `$1C70` can leave
 
 - Source: `rom_analysis/docs/lane3_today_work_brief.md`
 - Bundle copy: `sources/rom_analysis/docs/lane3_today_work_brief.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Current gameplay archaeology state and human-support queue.
 
 ---
@@ -9370,7 +9498,7 @@ without redoing the same work.
 
 - Source: `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
 - Bundle copy: `sources/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Primary gameplay-oriented handoff note.
 
 ---
@@ -9951,7 +10079,7 @@ The question is now narrower:
 
 - Source: `rom_analysis/docs/lane3_attract_demo_boundary.md`
 - Bundle copy: `sources/rom_analysis/docs/lane3_attract_demo_boundary.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Boundary note explaining why some old seeds were misleading.
 
 ---
@@ -10012,7 +10140,7 @@ evidence looked like "menu" in one pass and "gameplay" in another.
 
 - Source: `rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Promoted power-on route for reproducible gameplay entry.
 
 ---
@@ -10170,7 +10298,7 @@ evidence looked like "menu" in one pass and "gameplay" in another.
 
 - Source: `rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: First promoted late gameplay pair from the live-entry route, with stable artifact bundles for both phases.
 
 ---
@@ -10358,7 +10486,7 @@ Primary wiki/gallery image refs for this pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Bounded live-entry follow-up that isolates traffic emergence as a cleaner OBJ-side event.
 
 ---
@@ -10532,7 +10660,7 @@ Designer-facing anchors for the promoted pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Asset-first gameplay taxonomy that maps BG/OBJ buckets to tracing targets.
 
 ---
@@ -10611,7 +10739,7 @@ Designer-facing anchors for the promoted pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Savestate-backed gameplay extraction that now closes native `BG2` road and `BG3` scenery surfaces.
 
 ---
@@ -10755,7 +10883,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
 - Bundle copy: `sources/tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Generated BG1/BG2/OBJ compare for the first late live-entry gameplay pair.
 
 ---
@@ -10807,7 +10935,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md`
 - Bundle copy: `sources/tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Generated compare showing the red traffic car as the current best OBJ-side live-entry event.
 
 ---
@@ -10858,7 +10986,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_race_mid_asset_focus.md`
 - Bundle copy: `sources/tools/out/lane3_live_race_mid_asset_focus.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Generated gameplay inventory with supporting frame/layer artifact references.
 
 ---
@@ -10925,7 +11053,7 @@ native PNGs:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Human note for preserved live-race savestates and controls.
 
 ---
@@ -11139,7 +11267,7 @@ native PNGs:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Video-backed still capture summary for the live-race lane.
 
 ---
@@ -11227,7 +11355,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Named still pack for the checkpoint service/post corridor, partial-results screen, and restart back into driving.
 
 ---
@@ -11299,7 +11427,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Longplay-backed visual anchors for night, bridge, mountain-wall, tunnel, and rain.
 
 ---
@@ -11372,7 +11500,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Longplay-backed snow-driving anchors starting at the one-hour mark.
 
 ---
@@ -11437,7 +11565,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Boundary note showing why phase-4 snow is now a savestate-first capture target.
 
 ---
@@ -11524,7 +11652,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Longplay-backed arrest/prison ending pack and high-score handoff.
 
 ---
@@ -11588,7 +11716,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Layer composition read for a real gameplay seed.
 
 ---
@@ -11720,7 +11848,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Producer-side narrowing for the gameplay road/world path.
 
 ---
@@ -11869,7 +11997,7 @@ Optional but useful:
 
 - Source: `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
 - Bundle copy: `sources/rom_analysis/docs/gameplay_scanline_contracts.jsonc`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Versioned scanline-overlay selection for promoted gameplay bundles in the SDL runtime.
 
 ---
@@ -11897,6 +12025,16 @@ Optional but useful:
         "Promoted open-road late live-entry phase from the reproducible power-on route.",
         "Uses the same scanline-aware surface as live_race_mid without depending on the preserved manual gameplay seed."
       ]
+    },
+    {
+      "id": "lane3_live_entry_brake_traffic_frame03400",
+      "scene_match": "lane3_live_entry_brake_traffic_frame03400_bundle/design_pack",
+      "source_json": "tools/out/lane3_live_entry_brake_frame03400_scanline_full/td2_scanline_step_test.json",
+      "target_frame": 3400,
+      "notes": [
+        "Promoted traffic-emergence follow-up from the bounded braking variant of the reproducible live-entry route.",
+        "Used as the cheapest falsifier for whether the late-entry family now needs more than the static BG3 top-band composition rule."
+      ]
     }
   ]
 }
@@ -11906,7 +12044,7 @@ Optional but useful:
 
 - Source: `rom_analysis/docs/gameplay_composition_contracts.jsonc`
 - Bundle copy: `sources/rom_analysis/docs/gameplay_composition_contracts.jsonc`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Versioned late-gameplay top-band BG3 composition rules for promoted SDL runtime bundles.
 
 ---
@@ -11956,7 +12094,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Static role split for the narrowed gameplay cluster.
 
 ---
@@ -12084,7 +12222,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Semantic ownership pass for post-handoff gameplay fields.
 
 ---
@@ -12209,7 +12347,7 @@ Optional but useful:
 
 - Source: `rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md`
 - Bundle copy: `sources/rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Bounded regression read for current intro/front-end parity in the C/SDL runtime.
 
 ---
@@ -12279,7 +12417,7 @@ Regression summary:
 
 - Source: `rom_analysis/docs/mesen_instrumented_backend_architecture.md`
 - Bundle copy: `sources/rom_analysis/docs/mesen_instrumented_backend_architecture.md`
-- Last updated: `2026-04-01 17:45`
+- Last updated: `2026-04-01 21:40`
 - Note: Architecture note for the experimental Mesen backend path.
 
 ---

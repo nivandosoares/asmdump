@@ -1,6 +1,92 @@
 Date: 2026-04-01
 
 Summary
+- Promoted the late-entry `3400` traffic-emergence bundle onto the versioned
+  gameplay scanline-contract surface in
+  `rom_analysis/docs/gameplay_scanline_contracts.jsonc`.
+- Extended the port smoke so `3400` no longer validates as a
+  composition-only consumer; it now proves loaded scanline values plus
+  top-band sky pixels in `port/test_scanline_contract.c`.
+- Closed the immediate “static composition or stronger scanline/state?”
+  decision for late gameplay with one bounded probe:
+  the measured `3400` scanline fields materially improve the promoted SDL
+  output over the earlier composition-only checkpoint.
+
+What I ran
+- late-entry `3400` scanline capture on the bounded braking route:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=420 TD2_SCANLINE_TEST_TARGET_FRAME=3400 TD2_SCANLINE_TEST_MAX_SAMPLES=224 TD2_SCANLINE_TEST_INPUT_WINDOWS='1200:a;1280:a;1505-1510:a;1640-1645:a;1730-1735:a;2050-2949:a;2950-3400:b;3401-5649:a' TD2_SCANLINE_TEST_OUTPUT_PREFIX=tools/out/lane3_live_entry_brake_frame03400_scanline_full/td2_scanline_step_test ./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_scanline_step_test.lua`
+- targeted port validation:
+  - `make -C port`
+  - `./port/test_scanline_contract.sh`
+- stable runtime PNG for the promoted `3400` scanline-backed consumer:
+  - `./port/build/td2_port --scene-dir tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/design_pack --headless --frames 1 --dump-prefix tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3400`
+- bounded compare probes:
+  - `python3 tools/compare_frames.py tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3400_00000.png tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3400_00000.png`
+  - `python3 tools/compare_frames.py tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg_stack_visible_support.png tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3400_00000.png`
+
+Findings / Interpretation
+- The new `3400` trace is structurally valid on the late-entry family:
+  - `224` visible scanline samples
+  - the same `23/24` top-band `BG3` handoff seen on `3250`
+  - the same `120/121` main-layer split, but with later-phase
+    `BG2` scroll values (`235/239` at `120/121`, `283` by `223`)
+- Unlike `3250`, this late-entry phase is not a no-op consumer of the current
+  measured scanline fields:
+  - the new scanline-backed runtime render changes `9309` pixels versus the
+    earlier composition-only `3400` runtime PNG
+  - against `bg_stack_visible_support.png`, mismatch drops
+    `15497 -> 7649`
+- Practical read:
+  - the late-entry family should no longer be treated as a uniform
+    composition-only lane
+  - `3400` is now the first promoted proof that the current measured
+    `main_layers/bg1/bg2/bg3` field set can materially improve later gameplay
+    when paired with the existing top-band `BG3` composition rule
+  - `3250` remains the useful counterexample where those same fields are
+    still a no-op
+
+What I learned (actionable)
+- The active gate is now resolved in favor of stronger measured
+  scanline/state promotion, not “extend the static composition contract first”
+  as the default next move.
+- The cheapest next proving target is another late-entry consumer on the same
+  family, likely `3550`, unless a tighter `3250` field expansion becomes more
+  defensible than another later-anchor promotion.
+
+Next steps / Checkpoints
+1) Use `3400` as the new late-entry proof point when deciding whether another
+   promoted bundle belongs on scanline+composition or composition-only.
+2) Prefer `3550` as the next bounded follow-up unless a concrete field family
+   for the still-no-op `3250` case is already in hand.
+3) Keep the new `3400` scanline runtime PNG in design review next to the old
+   composition-only checkpoint so the improvement stays visible.
+
+Immediate recommendation
+- Use these two `3400` runtime PNGs side-by-side for the next late-gameplay
+  review:
+  - `tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3400_00000.png`
+  - `tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3400_00000.png`
+
+Files updated in this turn
+- `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
+- `port/test_scanline_contract.c`
+- `PORT_PLAN.md`
+- `port/README.md`
+- `port/docs/ARCHITECTURE.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+- `NEXT_AGENT.md`
+
+Next reading
+- `tools/out/lane3_live_entry_brake_frame03400_scanline_full/td2_scanline_step_test.json`
+- `tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3400_00000.png`
+- `tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3400_00000.png`
+
+Date: 2026-04-01
+
+Summary
 - Promoted the late-gameplay `BG3` top-band hypothesis from a sweep artifact
   into a versioned runtime contract in
   `rom_analysis/docs/gameplay_composition_contracts.jsonc`.

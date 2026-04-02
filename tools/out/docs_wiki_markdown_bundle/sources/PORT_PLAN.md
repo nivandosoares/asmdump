@@ -139,18 +139,26 @@ New useful state beyond the original plan:
   - current tracked source traces:
     - `tools/out/lane3_live_race_mid_scanline_full/td2_scanline_step_test.json`
     - `tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json`
+    - `tools/out/lane3_live_entry_brake_frame03400_scanline_full/td2_scanline_step_test.json`
   - current attached fields:
     - `main_layers`
     - `bg1/bg2/bg3` `HOFS/VOFS`
   - current promoted consumers:
     - `gameplay_live_race_mid`
     - `lane3_live_entry_frame03250_bundle/design_pack`
+    - `lane3_live_entry_brake_traffic_frame03400_bundle/design_pack`
   - current practical read:
     - the live-race seed is the first solved consumer of that surface and now
       restores the horizon/roadside boundary natively
     - the `3250` late-entry bundle still needs more than
-      `main_layers/bg1/bg2/bg3` scrolls alone, but the runtime now also loads
-      a separate gameplay composition contract:
+      `main_layers/bg1/bg2/bg3` scrolls alone
+    - the `3400` late-entry traffic-emergence bundle now proves the same
+      measured scanline fields can materially improve this family when paired
+      with the promoted composition rule:
+      compared to the earlier composition-only runtime PNG, the scanline-backed
+      `3400` render changes `9309` pixels and lowers the
+      `bg_stack_visible_support.png` mismatch from `15497` to `7649`
+    - the runtime now also loads a separate gameplay composition contract:
       - `rom_analysis/docs/gameplay_composition_contracts.jsonc`
       - current promoted consumers:
         - `lane3_live_entry_frame03250_bundle/design_pack`

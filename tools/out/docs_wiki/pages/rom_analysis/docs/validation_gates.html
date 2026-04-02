@@ -36,7 +36,7 @@
         <p class="doc-note">Bounded pass/fail policy for regression and callback checks.</p>
         <div class="doc-meta">
           <span>Source: <code>rom_analysis/docs/validation_gates.md</code></span>
-          <span class="update-pill">Last updated 2026-04-01 17:45</span>
+          <span class="update-pill">Last updated 2026-04-01 21:40</span>
           <a href="../../../../../../rom_analysis/docs/validation_gates.md">Open Raw Markdown</a>
         </div>
       </header>
@@ -109,7 +109,7 @@
 <p>Runner:</p>
 <pre><code class="language-sh">./port/test_scanline_contract.sh</code></pre>
 <p>This validates the versioned gameplay scanline-contract surface, plus the new late-gameplay composition-contract surface, independently of the scheduler rails:</p>
-<ul><li>a bootstrap bundle with no matching contract stays flat</li><li><code>gameplay_live_race_mid</code> loads its contract from <code>rom_analysis/docs/gameplay_scanline_contracts.jsonc</code></li><li>the solved live-race consumer still preserves selected sky/mountain/grass framebuffer pixels after loading that contract</li><li>the late-entry bundles <code>3250</code>, <code>3400</code>, and <code>3550</code> now load promoted composition profiles from <code>rom_analysis/docs/gameplay_composition_contracts.jsonc</code></li><li>those late-entry bundles preserve promoted top-band framebuffer anchors after enabling <code>BG3</code> and keeping <code>BG3 &gt; BG2</code> in the measured upper window</li></ul>
+<ul><li>a bootstrap bundle with no matching contract stays flat</li><li><code>gameplay_live_race_mid</code> loads its contract from <code>rom_analysis/docs/gameplay_scanline_contracts.jsonc</code></li><li>the solved live-race consumer still preserves selected sky/mountain/grass framebuffer pixels after loading that contract</li><li><code>lane3_live_entry_frame03250_bundle/design_pack</code> still loads the promoted scanline surface as a known late-entry no-op consumer</li><li><code>lane3_live_entry_brake_traffic_frame03400_bundle/design_pack</code> now also loads a promoted scanline profile from <code>rom_analysis/docs/gameplay_scanline_contracts.jsonc</code></li><li>that <code>3400</code> consumer preserves selected scanline fields and top-band sky pixels after loading both scanline and composition contracts</li><li>the late-entry bundles <code>3250</code>, <code>3400</code>, and <code>3550</code> now load promoted composition profiles from <code>rom_analysis/docs/gameplay_composition_contracts.jsonc</code></li><li>those late-entry bundles preserve promoted top-band framebuffer anchors after enabling <code>BG3</code> and keeping <code>BG3 &gt; BG2</code> in the measured upper window</li></ul>
 <p>This gate is intentionally narrow. It protects the new contract-selection path and keeps later gameplay bundles from silently falling back to ad hoc runtime lookups.</p>
 <h2 id="9-practical-gate-policy">9) Practical Gate Policy</h2>
 <p>For each archaeology lane:</p>
