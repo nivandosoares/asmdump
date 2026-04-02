@@ -11,20 +11,19 @@ Use this order before trusting any older note:
 
 ## Current Checkpoint
 
-This turn extended the late-entry scanline-contract promotion one step
-further: `3550` now joins `3400` as a positive late-gameplay consumer of the
-current measured scanline field family, while `3250` remains the explicit
-counterexample.
+This turn narrowed the remaining late-entry `3250` counterexample:
+`3400/3550` still stand as the positive scanline-backed proof set, and the
+strongest current split is no longer windows or sub-screen masks but visible
+queue/DMA state on `3250`.
 
 Primary files:
 
-- `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
+- `tools/summarize_scanline_dma_queue.py`
+- `rom_analysis/maps/tracks/track1_live_entry_scanline_queue_boundary_3250_3400_3550.md`
 - `tools/out/lane3_live_entry_brake_frame03400_scanline_full/td2_scanline_step_test.json`
+- `tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json`
 - `tools/out/lane3_live_entry_frame03550_scanline_full/td2_scanline_step_test.json`
-- `tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3400_00000.png`
-- `tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3550_00000.png`
-- `port/test_scanline_contract.c`
-- `rom_analysis/docs/gameplay_composition_contracts.jsonc`
+- `tools/out/lane3_live_entry_scanline_queue_boundary_3250_3400_3550.md`
 
 Current promoted late-gameplay consumers:
 
@@ -47,37 +46,46 @@ Current measured late-gameplay rules:
   - `3550`
     - `9367` changed pixels versus the earlier composition-only runtime PNG
     - `bg_stack_visible_support.png` mismatch `17848 -> 9741`
+- current `3250` counterexample boundary:
+  - `sub_layers`, sampled window coordinates, and sampled
+    `window_mask_main_*` fields stay flat across `3250/3400/3550`
+  - `3250` alone keeps `1` active visible queue descriptor on scanlines
+    `46..223`
+  - promoted descriptor payload:
+    - slot `14`
+    - offset `112`
+    - words `[0xB801, 0x15B4, 0x0020, 0x6180]`
+    - source `0x15B4B8`
+    - transfer size `0x20`
+    - VRAM destination `0x6180`
+  - ownership is now tied further:
+    - `VRAM 0x6180` resolves to `BG1` tile `396`
+    - that tile is referenced at cell `(4, 24)` and lands near screen
+      `(32, 193)` under the promoted `BG1` scroll
+    - end-frame raw `VRAM 0x6180..0x61FF` bytes are still identical on
+      `3250/3400/3550`
+  - `3400` and `3550` keep the visible queue empty on all `224` sampled
+    scanlines
 
 ## Validation State
 
 Validated in this turn:
 
-- `make -C port`
-- `./port/test_scanline_contract.sh`
-- `./port/build/td2_port --scene-dir tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/design_pack --headless --frames 1 --dump-prefix tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3400`
-- `./port/build/td2_port --scene-dir tools/out/lane3_live_entry_frame03550_bundle/design_pack --headless --frames 1 --dump-prefix tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3550`
-- `python3 tools/compare_frames.py tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3400_00000.png tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3400_00000.png`
-- `python3 tools/compare_frames.py tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/bg_stack_visible_support.png tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3400_00000.png`
-- `python3 tools/compare_frames.py tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3550_00000.png tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3550_00000.png`
-- `python3 tools/compare_frames.py tools/out/lane3_live_entry_frame03550_bundle/bg_stack_visible_support.png tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3550_00000.png`
+- `python3 -m py_compile tools/summarize_scanline_dma_queue.py`
+- `python3 tools/summarize_scanline_dma_queue.py tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json tools/out/lane3_live_entry_brake_frame03400_scanline_full/td2_scanline_step_test.json tools/out/lane3_live_entry_frame03550_scanline_full/td2_scanline_step_test.json --output tools/out/lane3_live_entry_scanline_queue_boundary_3250_3400_3550.json --markdown-out tools/out/lane3_live_entry_scanline_queue_boundary_3250_3400_3550.md`
 
 Current relevant pass state:
 
-- scanline / composition contract smoke: `53` checks
+- queue summary tool compiles and emits reusable JSON + Markdown on the
+  current root-level scanline-capture schema
 
 ## Design Artifacts
 
-Fresh runtime PNGs for review:
+Fresh queue-boundary artifacts for review:
 
-- `tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3400_00000.png`
-- `tools/out/port_gameplay_scanline_runtime_pngs_20260401/live_entry_3550_00000.png`
-- `tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3250_00000.png`
-- `tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3400_00000.png`
-- `tools/out/port_gameplay_composition_runtime_pngs_20260401/live_entry_3550_00000.png`
-
-Earlier supporting sweep pack:
-
-- `tools/out/gameplay_bg3_cutoff_sweep_20260401/summary.md`
+- `tools/out/lane3_live_entry_scanline_queue_boundary_3250_3400_3550.md`
+- `tools/out/lane3_live_entry_scanline_queue_boundary_3250_3400_3550.json`
+- `rom_analysis/maps/tracks/track1_live_entry_scanline_queue_boundary_3250_3400_3550.md`
 
 ## Next Gate
 
@@ -87,12 +95,13 @@ Best next target:
 
 1. Treat `3400` and `3550` together as the new late-entry proof set that the
    current measured scanline family can beat composition-only rendering.
-2. Use `3250` as the explicit remaining counterexample and narrow what extra
-   fields or state ownership distinguish it from the two positive consumers.
-3. Only after that `3250` narrowing, decide whether this late-entry family
-   needs more scanline fields, another state surface, or a different contract
-   split.
-4. Keep the design-review PNGs current whenever the promoted rule changes.
+2. Treat `3250` as a queue-backed counterexample, not a window/sub-screen
+   counterexample.
+3. Resume from the new ownership proof and chase the producer path behind the
+   transient visible `BG1` tile `396` upload (`slot 14 -> VRAM 0x6180`).
+4. Only after that producer proof, decide whether `3250` needs a queue-backed
+   runtime surface, a broader visible-phase VRAM upload model, or a different
+   late-entry contract split from `3400/3550`.
 
 ## Git Hygiene
 

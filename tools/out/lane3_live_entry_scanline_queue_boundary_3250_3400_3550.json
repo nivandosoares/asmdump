@@ -1,0 +1,363 @@
+{
+  "frames": {
+    "3250": {
+      "capture": "tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json",
+      "target_frame": 3250,
+      "sample_count": 224,
+      "scanline_min": 0,
+      "scanline_max": 223,
+      "stable_across_samples": {
+        "dp_0053": true,
+        "dp_0054": false,
+        "wram_0053": true,
+        "wram_0054": false,
+        "wram_0055": true,
+        "wram_0056": true,
+        "queue_dma_nonzero_entry_count": true,
+        "queue_dma_active_descriptor_count": false,
+        "queue_dma_active_entries": false
+      },
+      "unique_values": {
+        "dp_0053": [
+          112
+        ],
+        "dp_0054": [
+          112,
+          120
+        ],
+        "wram_0053": [
+          112
+        ],
+        "wram_0054": [
+          112,
+          120
+        ],
+        "wram_0055": [
+          24
+        ],
+        "wram_0056": [
+          18
+        ],
+        "queue_dma_nonzero_entry_count": [
+          32
+        ],
+        "queue_dma_active_descriptor_count": [
+          0,
+          1
+        ],
+        "queue_dma_active_entries": [
+          [],
+          [
+            {
+              "bytes_hex": "01b8b41520008061",
+              "command": 1,
+              "offset": 112,
+              "slot": 14,
+              "source_addr": 1422520,
+              "transfer_size": 32,
+              "vram_dest": 24960,
+              "words": [
+                47105,
+                5556,
+                32,
+                24960
+              ]
+            }
+          ]
+        ]
+      },
+      "representative": {
+        "dp_0053": 112,
+        "dp_0054": 112,
+        "wram_0053": 112,
+        "wram_0054": 112,
+        "wram_0055": 24,
+        "wram_0056": 18,
+        "queue_dma_nonzero_entry_count": 32,
+        "queue_dma_active_descriptor_count": 0,
+        "queue_dma_active_entries": []
+      },
+      "activity": {
+        "active_scanline_count": 178,
+        "active_descriptor_count_max": 1,
+        "active_scanline_spans": [
+          {
+            "start_scanline": 46,
+            "end_scanline": 223,
+            "scanline_count": 178,
+            "active_descriptor_count": 1,
+            "active_entries": [
+              {
+                "bytes_hex": "01b8b41520008061",
+                "command": 1,
+                "offset": 112,
+                "slot": 14,
+                "source_addr": 1422520,
+                "transfer_size": 32,
+                "vram_dest": 24960,
+                "words": [
+                  47105,
+                  5556,
+                  32,
+                  24960
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "3400": {
+      "capture": "tools/out/lane3_live_entry_brake_frame03400_scanline_full/td2_scanline_step_test.json",
+      "target_frame": 3400,
+      "sample_count": 224,
+      "scanline_min": 0,
+      "scanline_max": 223,
+      "stable_across_samples": {
+        "dp_0053": true,
+        "dp_0054": true,
+        "wram_0053": true,
+        "wram_0054": true,
+        "wram_0055": true,
+        "wram_0056": true,
+        "queue_dma_nonzero_entry_count": true,
+        "queue_dma_active_descriptor_count": true,
+        "queue_dma_active_entries": true
+      },
+      "unique_values": {
+        "dp_0053": [
+          224
+        ],
+        "dp_0054": [
+          224
+        ],
+        "wram_0053": [
+          224
+        ],
+        "wram_0054": [
+          224
+        ],
+        "wram_0055": [
+          144
+        ],
+        "wram_0056": [
+          21
+        ],
+        "queue_dma_nonzero_entry_count": [
+          32
+        ],
+        "queue_dma_active_descriptor_count": [
+          0
+        ],
+        "queue_dma_active_entries": [
+          []
+        ]
+      },
+      "representative": {
+        "dp_0053": 224,
+        "dp_0054": 224,
+        "wram_0053": 224,
+        "wram_0054": 224,
+        "wram_0055": 144,
+        "wram_0056": 21,
+        "queue_dma_nonzero_entry_count": 32,
+        "queue_dma_active_descriptor_count": 0,
+        "queue_dma_active_entries": []
+      },
+      "activity": {
+        "active_scanline_count": 0,
+        "active_descriptor_count_max": 0,
+        "active_scanline_spans": []
+      }
+    },
+    "3550": {
+      "capture": "tools/out/lane3_live_entry_frame03550_scanline_full/td2_scanline_step_test.json",
+      "target_frame": 3550,
+      "sample_count": 224,
+      "scanline_min": 0,
+      "scanline_max": 223,
+      "stable_across_samples": {
+        "dp_0053": true,
+        "dp_0054": true,
+        "wram_0053": true,
+        "wram_0054": true,
+        "wram_0055": true,
+        "wram_0056": true,
+        "queue_dma_nonzero_entry_count": true,
+        "queue_dma_active_descriptor_count": true,
+        "queue_dma_active_entries": true
+      },
+      "unique_values": {
+        "dp_0053": [
+          248
+        ],
+        "dp_0054": [
+          248
+        ],
+        "wram_0053": [
+          248
+        ],
+        "wram_0054": [
+          248
+        ],
+        "wram_0055": [
+          144
+        ],
+        "wram_0056": [
+          21
+        ],
+        "queue_dma_nonzero_entry_count": [
+          32
+        ],
+        "queue_dma_active_descriptor_count": [
+          0
+        ],
+        "queue_dma_active_entries": [
+          []
+        ]
+      },
+      "representative": {
+        "dp_0053": 248,
+        "dp_0054": 248,
+        "wram_0053": 248,
+        "wram_0054": 248,
+        "wram_0055": 144,
+        "wram_0056": 21,
+        "queue_dma_nonzero_entry_count": 32,
+        "queue_dma_active_descriptor_count": 0,
+        "queue_dma_active_entries": []
+      },
+      "activity": {
+        "active_scanline_count": 0,
+        "active_descriptor_count_max": 0,
+        "active_scanline_spans": []
+      }
+    }
+  },
+  "comparisons_vs_first": {
+    "3400": {
+      "dp_0053": {
+        "frame_3250": 112,
+        "frame_3400": 224
+      },
+      "dp_0054": {
+        "frame_3250": 112,
+        "frame_3400": 224
+      },
+      "wram_0053": {
+        "frame_3250": 112,
+        "frame_3400": 224
+      },
+      "wram_0054": {
+        "frame_3250": 112,
+        "frame_3400": 224
+      },
+      "wram_0055": {
+        "frame_3250": 24,
+        "frame_3400": 144
+      },
+      "wram_0056": {
+        "frame_3250": 18,
+        "frame_3400": 21
+      },
+      "activity": {
+        "frame_3250": {
+          "active_scanline_count": 178,
+          "active_descriptor_count_max": 1,
+          "active_scanline_spans": [
+            {
+              "start_scanline": 46,
+              "end_scanline": 223,
+              "scanline_count": 178,
+              "active_descriptor_count": 1,
+              "active_entries": [
+                {
+                  "bytes_hex": "01b8b41520008061",
+                  "command": 1,
+                  "offset": 112,
+                  "slot": 14,
+                  "source_addr": 1422520,
+                  "transfer_size": 32,
+                  "vram_dest": 24960,
+                  "words": [
+                    47105,
+                    5556,
+                    32,
+                    24960
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "frame_3400": {
+          "active_scanline_count": 0,
+          "active_descriptor_count_max": 0,
+          "active_scanline_spans": []
+        }
+      }
+    },
+    "3550": {
+      "dp_0053": {
+        "frame_3250": 112,
+        "frame_3550": 248
+      },
+      "dp_0054": {
+        "frame_3250": 112,
+        "frame_3550": 248
+      },
+      "wram_0053": {
+        "frame_3250": 112,
+        "frame_3550": 248
+      },
+      "wram_0054": {
+        "frame_3250": 112,
+        "frame_3550": 248
+      },
+      "wram_0055": {
+        "frame_3250": 24,
+        "frame_3550": 144
+      },
+      "wram_0056": {
+        "frame_3250": 18,
+        "frame_3550": 21
+      },
+      "activity": {
+        "frame_3250": {
+          "active_scanline_count": 178,
+          "active_descriptor_count_max": 1,
+          "active_scanline_spans": [
+            {
+              "start_scanline": 46,
+              "end_scanline": 223,
+              "scanline_count": 178,
+              "active_descriptor_count": 1,
+              "active_entries": [
+                {
+                  "bytes_hex": "01b8b41520008061",
+                  "command": 1,
+                  "offset": 112,
+                  "slot": 14,
+                  "source_addr": 1422520,
+                  "transfer_size": 32,
+                  "vram_dest": 24960,
+                  "words": [
+                    47105,
+                    5556,
+                    32,
+                    24960
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "frame_3550": {
+          "active_scanline_count": 0,
+          "active_descriptor_count_max": 0,
+          "active_scanline_spans": []
+        }
+      }
+    }
+  }
+}

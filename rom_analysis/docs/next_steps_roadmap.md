@@ -82,6 +82,26 @@ decoded tilemaps and sprite visibility metadata.
     pixels, so this later gameplay phase is now narrowed to a stronger
     renderer boundary: more than `main_layers/bg1/bg2/bg3` scrolls are still
     missing there
+  - a new queue-boundary follow-up now closes one tempting false lead on that
+    same `3250` counterexample:
+    - `sub_layers`, sampled window coordinates, and sampled
+      `window_mask_main_*` fields stay flat across `3250/3400/3550`
+    - `3250` alone keeps `1` active visible queue descriptor on scanlines
+      `46..223`, while `3400/3550` keep the visible queue empty on all
+      `224` sampled lines
+    - `3250` also keeps the divergent queue-cursor family
+      `dp_0053/0054/0055/0056 = 0x70/(0x70->0x78)/0x18/0x12`, while the two
+      positive consumers keep `0xE0/0xE0/0x90/0x15` and
+      `0xF8/0xF8/0x90/0x15`
+    - ownership is now tied one step further:
+      `VRAM 0x6180` resolves to visible `BG1` tile `396` at cell `(4, 24)`,
+      around screen `(32, 193)`, while the end-frame raw `VRAM`
+      `0x6180..0x61FF` bytes still match on `3250/3400/3550`
+    - practical consequence:
+      the missing `3250` surface is now narrowed to transient visible-phase
+      `BG1` CHR state, not to a missing end-frame tilemap/CHR difference
+    - promoted artifact:
+      `tools/out/lane3_live_entry_scanline_queue_boundary_3250_3400_3550.md`
   - `lane3_live_entry_brake_traffic_frame03400_bundle/design_pack` now also
     loads through that same contract surface
   - unlike `3250`, the `3400` traffic-emergence phase is no longer a no-op
@@ -109,8 +129,10 @@ decoded tilemaps and sprite visibility metadata.
 - Next gate:
   - use `3400/3550` together as the positive proof set that this late-entry
     family now benefits from stronger measured scanline fields
-  - treat `3250` as the remaining counterexample and narrow what extra fields
-    or state ownership distinguish it from the two positive consumers
+  - treat `3250` as a queue-backed counterexample, not a window/sub-screen
+    counterexample
+  - chase the producer path behind the transient visible `BG1` tile `396`
+    upload (`slot 14 -> VRAM 0x6180`) before promoting any new runtime surface
 
 ## Lane 3 BG3 Bundle Surface (`2026-04-01`)
 

@@ -1,3 +1,98 @@
+Date: 2026-04-02
+
+Summary
+- Narrowed the remaining late-entry `3250` counterexample past the old
+  “maybe another window/layer field” read and into a visible queue/DMA
+  boundary.
+- Refreshed `tools/summarize_scanline_dma_queue.py` so it now works on the
+  current root-level scanline-capture schema and emits reusable Markdown
+  beside JSON summaries.
+- Closed a new late-gameplay boundary note:
+  `3250` is the only promoted late-entry frame that keeps an active visible
+  queue descriptor, while the positive scanline consumers `3400` and `3550`
+  keep that surface empty across all `224` sampled scanlines.
+
+What I ran
+- tool validation:
+  - `python3 -m py_compile tools/summarize_scanline_dma_queue.py`
+- reusable late-entry queue summary:
+  - `python3 tools/summarize_scanline_dma_queue.py tools/out/lane3_live_entry_frame03250_scanline_full/td2_scanline_step_test.json tools/out/lane3_live_entry_brake_frame03400_scanline_full/td2_scanline_step_test.json tools/out/lane3_live_entry_frame03550_scanline_full/td2_scanline_step_test.json --output tools/out/lane3_live_entry_scanline_queue_boundary_3250_3400_3550.json --markdown-out tools/out/lane3_live_entry_scanline_queue_boundary_3250_3400_3550.md`
+- direct three-way trace compare over the same captures:
+  - current negative fields checked:
+    - `sub_layers`
+    - `window0_left/right`
+    - `window1_left/right`
+    - `window_mask_main_bg1/bg2/bg3/obj`
+  - current positive outlier fields checked:
+    - `queue_dma_active_descriptor_count`
+    - `queue_dma_active_entries`
+    - `dp_0053/0054/0055/0056`
+    - `wram_0053/0054/0055/0056`
+
+Findings / Interpretation
+- `3250` is the only promoted late-entry trace with visible queue work:
+  - `1` active descriptor across scanlines `46..223` (`178` sampled lines)
+  - stable descriptor payload:
+    - slot `14`
+    - offset `112`
+    - words `[0xB801, 0x15B4, 0x0020, 0x6180]`
+    - source `0x15B4B8`
+    - transfer size `0x20`
+    - VRAM destination `0x6180`
+- `3400` and `3550` both keep
+  `queue_dma_active_descriptor_count = 0` on all `224` visible scanlines.
+- The old “maybe this is a window/sub-screen surface” branch is now a bounded
+  negative result for this late-entry trio:
+  - `sub_layers = 0` on all three traces
+  - all sampled window coordinates stay `0`
+  - all sampled `window_mask_main_*` fields stay `false`
+- The DP/WRAM queue family splits in the same direction:
+  - `3250`: representative `dp_0053/0054 = 0x70/0x70`,
+    `wram_0055/0056 = 0x18/0x12`, with `dp_0054` advancing to `0x78` once
+    the visible descriptor becomes active
+  - `3400`: representative `0xE0/0xE0`, `0x90/0x15`
+  - `3550`: representative `0xF8/0xF8`, `0x90/0x15`
+- The queue target is now tied to concrete visible ownership:
+  - `VRAM 0x6180` resolves to `BG1` tile `396`
+  - that tile is referenced at `BG1` cell `(4, 24)` on all three promoted
+    bundles and lands near screen `(32, 193)` under the current `BG1` scroll
+  - the end-frame raw `VRAM` bytes at `0x6180..0x61FF` are still identical on
+    `3250/3400/3550`, so the `3250` queue-backed visible state is transient
+    and not preserved in the seeded bundle dump
+
+What I learned (actionable)
+- The next useful question is no longer “which extra window or screen-mask
+  field should `3250` load?”
+- The stronger next question is:
+  which producer path feeds the visible `BG1` tile `396` upload at
+  `slot 14 -> VRAM 0x6180`, and does that require a queue-backed runtime
+  surface distinct from the `3400/3550` scroll-only positive set?
+
+Next steps / Checkpoints
+1) Treat `3400/3550` as the scroll-only positive set for the current measured
+   scanline family.
+2) Treat `3250` as a queue-backed counterexample, not a window/sub-screen
+   counterexample.
+3) Chase the producer path behind the `3250` visible `BG1` tile `396` upload
+   before promoting any new runtime rule.
+
+Immediate recommendation
+- Read these together before the next `3250` runtime experiment:
+  - `rom_analysis/maps/tracks/track1_live_entry_scanline_queue_boundary_3250_3400_3550.md`
+  - `tools/out/lane3_live_entry_scanline_queue_boundary_3250_3400_3550.md`
+
+Files updated in this turn
+- `tools/summarize_scanline_dma_queue.py`
+- `rom_analysis/maps/tracks/track1_live_entry_scanline_queue_boundary_3250_3400_3550.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `NEXT_AGENT.md`
+
+Next reading
+- `tools/out/lane3_live_entry_scanline_queue_boundary_3250_3400_3550.md`
+- `tools/out/lane3_live_entry_scanline_queue_boundary_3250_3400_3550.json`
+- `rom_analysis/maps/tracks/track1_live_entry_scanline_queue_boundary_3250_3400_3550.md`
+
 Date: 2026-04-01
 
 Summary
