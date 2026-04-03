@@ -1,6 +1,85 @@
 Date: 2026-04-03
 
 Summary
+- Fixed the second wiki `404` boundary: the NotebookLM bundle is now mirrored
+  inside the published wiki root instead of living only as a sibling output
+  directory.
+- Added `vercel.json` so the repository declares the wiki build command and
+  `tools/out/docs_wiki` as the Vercel output root, which matches the actual
+  generated static payload.
+- Kept the standalone bundle under `tools/out/docs_wiki_markdown_bundle/` for
+  offline/local use, but switched published wiki links to the in-tree copy at
+  `tools/out/docs_wiki/notebooklm_bundle/`.
+
+What I ran
+- wiki regeneration:
+  - `python3 tools/build_docs_wiki_report.py --manifest rom_analysis/docs/wiki_doc_index.json --output-dir tools/out/docs_wiki --markdown-bundle-dir tools/out/docs_wiki_markdown_bundle`
+- root-only static-host validation:
+  - `python3 -m http.server 8123` from `tools/out/docs_wiki/`
+  - bounded HTTP checks for:
+    - `/`
+    - `/pages/PORT_PLAN.html`
+    - `/notebooklm_bundle/wiki_bundle_index.md`
+    - `/notebooklm_bundle/wiki_combined.md`
+    - `/notebooklm_bundle/sources/PORT_PLAN.md`
+- live-host spot check before the fix:
+  - `curl -I -L -s https://asmdump.vercel.app/`
+  - observed `HTTP/2 404` with `x-vercel-error: NOT_FOUND`
+
+Artifacts
+- publish-root fix:
+  - `tools/build_docs_wiki_report.py`
+- explicit Vercel publish config:
+  - `vercel.json`
+- refreshed published wiki outputs:
+  - `tools/out/docs_wiki/index.html`
+  - `tools/out/docs_wiki/notebooklm_bundle/`
+  - `tools/out/docs_wiki/pages/**/*.html`
+  - `tools/out/docs_wiki/site_index.json`
+
+Findings / Interpretation
+- The prior fix closed repo-root escape links, but it still assumed the host
+  published both `docs_wiki/` and the sibling
+  `docs_wiki_markdown_bundle/` directory together.
+- The stronger deploy-safe model is to keep the NotebookLM bundle inside the
+  wiki root itself, because static hosts commonly publish just one configured
+  output directory.
+- The current public domain was also failing at `/`, which is consistent with
+  a missing or stale host output-root configuration rather than one bad file
+  link.
+
+What I learned (actionable)
+- For this repo, the published wiki must be self-contained under
+  `tools/out/docs_wiki/`.
+- The local `docs_wiki_markdown_bundle/` output is still useful, but it should
+  be treated as an export artifact, not the only published raw-doc surface.
+- A root-only static server probe is the right cheap falsifier for this
+  deployment class.
+
+Next steps / Checkpoints
+1) Keep the published NotebookLM links anchored on
+   `tools/out/docs_wiki/notebooklm_bundle/`.
+2) After pushing a wiki/deploy fix, verify the live host root and one raw-doc
+   URL instead of validating only local HTML structure.
+
+Files updated in this turn
+- `tools/build_docs_wiki_report.py`
+- `tools/README.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `vercel.json`
+- `tools/out/docs_wiki/index.html`
+- `tools/out/docs_wiki/notebooklm_bundle/**`
+- `tools/out/docs_wiki/pages/**/*.html`
+- `tools/out/docs_wiki/site_index.json`
+
+Next reading
+- `vercel.json`
+- `tools/build_docs_wiki_report.py`
+- `tools/out/docs_wiki/notebooklm_bundle/wiki_bundle_index.md`
+
+Date: 2026-04-03
+
+Summary
 - Fixed the curated docs wiki so published per-doc Markdown links no longer
   escape the generated site tree and 404 under static hosting.
 - `tools/build_docs_wiki_report.py` now points each wiki `Raw Markdown` action

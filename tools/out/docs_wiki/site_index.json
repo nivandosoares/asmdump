@@ -7,7 +7,7 @@
       "section": "Source Of Truth",
       "last_updated": "2026-04-02 17:17",
       "page": "pages/PORT_PLAN.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/PORT_PLAN.md"
+      "bundle_copy": "notebooklm_bundle/sources/PORT_PLAN.md"
     },
     {
       "source": "rom_analysis/docs/next_steps_roadmap.md",
@@ -15,15 +15,15 @@
       "section": "Source Of Truth",
       "last_updated": "2026-04-02 23:37",
       "page": "pages/rom_analysis/docs/next_steps_roadmap.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/docs/next_steps_roadmap.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/docs/next_steps_roadmap.md"
     },
     {
       "source": "rom_analysis/docs/progress_checkpoints.md",
       "label": "Progress Checkpoints",
       "section": "Source Of Truth",
-      "last_updated": "2026-04-03 01:15",
+      "last_updated": "2026-04-03 01:39",
       "page": "pages/rom_analysis/docs/progress_checkpoints.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/docs/progress_checkpoints.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/docs/progress_checkpoints.md"
     },
     {
       "source": "rom_analysis/docs/validation_gates.md",
@@ -31,7 +31,7 @@
       "section": "Source Of Truth",
       "last_updated": "2026-04-02 23:37",
       "page": "pages/rom_analysis/docs/validation_gates.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/docs/validation_gates.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/docs/validation_gates.md"
     },
     {
       "source": "validation/README.md",
@@ -39,15 +39,15 @@
       "section": "Source Of Truth",
       "last_updated": "2026-04-02 23:37",
       "page": "pages/validation/README.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/validation/README.md"
+      "bundle_copy": "notebooklm_bundle/sources/validation/README.md"
     },
     {
       "source": "tools/README.md",
       "label": "Tools README",
       "section": "Source Of Truth",
-      "last_updated": "2026-04-03 01:15",
+      "last_updated": "2026-04-03 01:39",
       "page": "pages/tools/README.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/tools/README.md"
+      "bundle_copy": "notebooklm_bundle/sources/tools/README.md"
     },
     {
       "source": "port/README.md",
@@ -55,7 +55,7 @@
       "section": "Source Of Truth",
       "last_updated": "2026-04-02 23:37",
       "page": "pages/port/README.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/port/README.md"
+      "bundle_copy": "notebooklm_bundle/sources/port/README.md"
     },
     {
       "source": "rom_analysis/README.md",
@@ -63,7 +63,7 @@
       "section": "Source Of Truth",
       "last_updated": "2026-03-06 20:11",
       "page": "pages/rom_analysis/README.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/README.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/README.md"
     },
     {
       "source": "rom_analysis/docs/bank30_decompression_report.md",
@@ -71,7 +71,7 @@
       "section": "Compression And Bank30",
       "last_updated": "2026-04-02 11:34",
       "page": "pages/rom_analysis/docs/bank30_decompression_report.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/docs/bank30_decompression_report.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/docs/bank30_decompression_report.md"
     },
     {
       "source": "rom_analysis/docs/bank30_b1f9_forced_lane_stall.md",
@@ -79,7 +79,7 @@
       "section": "Compression And Bank30",
       "last_updated": "2026-03-28 11:20",
       "page": "pages/rom_analysis/docs/bank30_b1f9_forced_lane_stall.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/docs/bank30_b1f9_forced_lane_stall.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/docs/bank30_b1f9_forced_lane_stall.md"
     },
     {
       "source": "rom_analysis/docs/intro_00_8029_next_agent_handoff.md",
@@ -87,7 +87,7 @@
       "section": "Attract And Intro",
       "last_updated": "2026-03-28 08:58",
       "page": "pages/rom_analysis/docs/intro_00_8029_next_agent_handoff.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/docs/intro_00_8029_next_agent_handoff.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/docs/intro_00_8029_next_agent_handoff.md"
     },
     {
       "source": "rom_analysis/docs/intro_01_9fe5_window_986_1093.md",
@@ -95,7 +95,7 @@
       "section": "Attract And Intro",
       "last_updated": "2026-03-22 10:27",
       "page": "pages/rom_analysis/docs/intro_01_9fe5_window_986_1093.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/docs/intro_01_9fe5_window_986_1093.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/docs/intro_01_9fe5_window_986_1093.md"
     },
     {
       "source": "rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md",
@@ -103,7 +103,7 @@
       "section": "Attract And Intro",
       "last_updated": "2026-03-22 11:50",
       "page": "pages/rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md"
     },
     {
       "source": "rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md",
@@ -111,7 +111,7 @@
       "section": "Attract And Intro",
       "last_updated": "2026-03-28 08:58",
       "page": "pages/rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md"
     },
     {
       "source": "rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md",
@@ -119,7 +119,7 @@
       "section": "Attract And Intro",
       "last_updated": "2026-03-13 08:03",
       "page": "pages/rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md"
     },
     {
       "source": "rom_analysis/docs/mesen_debugger_design_workbench.md",
@@ -127,7 +127,7 @@
       "section": "Attract And Intro",
       "last_updated": "2026-03-21 21:22",
       "page": "pages/rom_analysis/docs/mesen_debugger_design_workbench.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/docs/mesen_debugger_design_workbench.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/docs/mesen_debugger_design_workbench.md"
     },
     {
       "source": "rom_analysis/docs/snes_runtime_algorithm_human.md",
@@ -135,7 +135,7 @@
       "section": "Front-End And Menu",
       "last_updated": "2026-04-02 10:04",
       "page": "pages/rom_analysis/docs/snes_runtime_algorithm_human.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/docs/snes_runtime_algorithm_human.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/docs/snes_runtime_algorithm_human.md"
     },
     {
       "source": "rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md",
@@ -143,7 +143,7 @@
       "section": "Front-End And Menu",
       "last_updated": "2026-03-26 22:10",
       "page": "pages/rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md"
     },
     {
       "source": "tools/out/snes_frontend_top_menu_labels.md",
@@ -151,7 +151,7 @@
       "section": "Front-End And Menu",
       "last_updated": "2026-03-27 10:15",
       "page": "pages/tools/out/snes_frontend_top_menu_labels.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/tools/out/snes_frontend_top_menu_labels.md"
+      "bundle_copy": "notebooklm_bundle/sources/tools/out/snes_frontend_top_menu_labels.md"
     },
     {
       "source": "tools/out/snes_frontend_rival_selection_grid.md",
@@ -159,7 +159,7 @@
       "section": "Front-End And Menu",
       "last_updated": "2026-03-27 11:59",
       "page": "pages/tools/out/snes_frontend_rival_selection_grid.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/tools/out/snes_frontend_rival_selection_grid.md"
+      "bundle_copy": "notebooklm_bundle/sources/tools/out/snes_frontend_rival_selection_grid.md"
     },
     {
       "source": "tools/out/snes_select_opponent_organic_default_path.md",
@@ -167,7 +167,7 @@
       "section": "Front-End And Menu",
       "last_updated": "2026-03-27 12:25",
       "page": "pages/tools/out/snes_select_opponent_organic_default_path.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/tools/out/snes_select_opponent_organic_default_path.md"
+      "bundle_copy": "notebooklm_bundle/sources/tools/out/snes_select_opponent_organic_default_path.md"
     },
     {
       "source": "tools/out/snes_frontend_select_opponent_mode_split.md",
@@ -175,7 +175,7 @@
       "section": "Front-End And Menu",
       "last_updated": "2026-03-27 11:59",
       "page": "pages/tools/out/snes_frontend_select_opponent_mode_split.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/tools/out/snes_frontend_select_opponent_mode_split.md"
+      "bundle_copy": "notebooklm_bundle/sources/tools/out/snes_frontend_select_opponent_mode_split.md"
     },
     {
       "source": "rom_analysis/docs/lane3_today_work_brief.md",
@@ -183,7 +183,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-03-28 08:44",
       "page": "pages/rom_analysis/docs/lane3_today_work_brief.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/docs/lane3_today_work_brief.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/docs/lane3_today_work_brief.md"
     },
     {
       "source": "rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md",
@@ -191,7 +191,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-03-28 16:08",
       "page": "pages/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md"
     },
     {
       "source": "rom_analysis/docs/lane3_attract_demo_boundary.md",
@@ -199,7 +199,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-03-27 22:03",
       "page": "pages/rom_analysis/docs/lane3_attract_demo_boundary.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/docs/lane3_attract_demo_boundary.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/docs/lane3_attract_demo_boundary.md"
     },
     {
       "source": "rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md",
@@ -207,7 +207,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-03-28 09:51",
       "page": "pages/rom_analysis/maps/tracks/track1_live_gameplay_entry_route.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md"
     },
     {
       "source": "rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md",
@@ -215,7 +215,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-04-01 17:24",
       "page": "pages/rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md"
     },
     {
       "source": "rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md",
@@ -223,7 +223,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-04-01 17:24",
       "page": "pages/rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md"
     },
     {
       "source": "rom_analysis/maps/tracks/track1_live_race_asset_focus.md",
@@ -231,7 +231,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-03-28 11:44",
       "page": "pages/rom_analysis/maps/tracks/track1_live_race_asset_focus.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/maps/tracks/track1_live_race_asset_focus.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/maps/tracks/track1_live_race_asset_focus.md"
     },
     {
       "source": "rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md",
@@ -239,7 +239,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-03-28 14:48",
       "page": "pages/rom_analysis/maps/tracks/track1_live_race_native_visible_layers.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md"
     },
     {
       "source": "tools/out/lane3_live_entry_frame03250_vs_03550_compare.md",
@@ -247,7 +247,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-03-28 13:44",
       "page": "pages/tools/out/lane3_live_entry_frame03250_vs_03550_compare.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/tools/out/lane3_live_entry_frame03250_vs_03550_compare.md"
+      "bundle_copy": "notebooklm_bundle/sources/tools/out/lane3_live_entry_frame03250_vs_03550_compare.md"
     },
     {
       "source": "tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md",
@@ -255,7 +255,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-03-28 13:44",
       "page": "pages/tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md"
+      "bundle_copy": "notebooklm_bundle/sources/tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md"
     },
     {
       "source": "tools/out/lane3_live_race_mid_asset_focus.md",
@@ -263,7 +263,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-03-28 11:44",
       "page": "pages/tools/out/lane3_live_race_mid_asset_focus.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/tools/out/lane3_live_race_mid_asset_focus.md"
+      "bundle_copy": "notebooklm_bundle/sources/tools/out/lane3_live_race_mid_asset_focus.md"
     },
     {
       "source": "rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md",
@@ -271,7 +271,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-03-28 09:07",
       "page": "pages/rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md"
     },
     {
       "source": "rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md",
@@ -279,7 +279,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-03-28 09:07",
       "page": "pages/rom_analysis/maps/tracks/track1_live_race_manual_video_intake.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md"
     },
     {
       "source": "rom_analysis/maps/tracks/track1_live_race_service_status_screens.md",
@@ -287,7 +287,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-04-02 11:34",
       "page": "pages/rom_analysis/maps/tracks/track1_live_race_service_status_screens.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/maps/tracks/track1_live_race_service_status_screens.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/maps/tracks/track1_live_race_service_status_screens.md"
     },
     {
       "source": "rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md",
@@ -295,7 +295,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-03-28 15:31",
       "page": "pages/rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md"
     },
     {
       "source": "rom_analysis/maps/tracks/track1_longplay_snow_anchors.md",
@@ -303,7 +303,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-03-28 15:55",
       "page": "pages/rom_analysis/maps/tracks/track1_longplay_snow_anchors.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/maps/tracks/track1_longplay_snow_anchors.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/maps/tracks/track1_longplay_snow_anchors.md"
     },
     {
       "source": "rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md",
@@ -311,7 +311,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-03-28 16:08",
       "page": "pages/rom_analysis/maps/tracks/track1_phase4_snow_seed_request.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md"
     },
     {
       "source": "rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md",
@@ -319,7 +319,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-03-28 15:31",
       "page": "pages/rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md"
     },
     {
       "source": "rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md",
@@ -327,7 +327,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-03-27 23:02",
       "page": "pages/rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md"
     },
     {
       "source": "rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md",
@@ -335,7 +335,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-03-27 23:02",
       "page": "pages/rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md"
     },
     {
       "source": "rom_analysis/docs/gameplay_scanline_contracts.jsonc",
@@ -343,7 +343,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-04-01 21:47",
       "page": "pages/rom_analysis/docs/gameplay_scanline_contracts.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/docs/gameplay_scanline_contracts.jsonc"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/docs/gameplay_scanline_contracts.jsonc"
     },
     {
       "source": "rom_analysis/docs/gameplay_composition_contracts.jsonc",
@@ -351,7 +351,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-04-01 17:44",
       "page": "pages/rom_analysis/docs/gameplay_composition_contracts.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/docs/gameplay_composition_contracts.jsonc"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/docs/gameplay_composition_contracts.jsonc"
     },
     {
       "source": "rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md",
@@ -359,7 +359,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-03-28 09:15",
       "page": "pages/rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md"
     },
     {
       "source": "rom_analysis/maps/tracks/track1_02_9016_state_ownership.md",
@@ -367,7 +367,7 @@
       "section": "Gameplay And Lane 3",
       "last_updated": "2026-03-27 23:02",
       "page": "pages/rom_analysis/maps/tracks/track1_02_9016_state_ownership.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/maps/tracks/track1_02_9016_state_ownership.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/maps/tracks/track1_02_9016_state_ownership.md"
     },
     {
       "source": "rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md",
@@ -375,7 +375,7 @@
       "section": "Runtime And Port Validation",
       "last_updated": "2026-03-28 10:28",
       "page": "pages/rom_analysis/docs/port_sdl_runtime_mimetization_smoke.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md"
     },
     {
       "source": "rom_analysis/docs/mesen_instrumented_backend_architecture.md",
@@ -383,15 +383,16 @@
       "section": "Runtime And Port Validation",
       "last_updated": "2026-03-22 22:04",
       "page": "pages/rom_analysis/docs/mesen_instrumented_backend_architecture.html",
-      "bundle_copy": "../docs_wiki_markdown_bundle/sources/rom_analysis/docs/mesen_instrumented_backend_architecture.md"
+      "bundle_copy": "notebooklm_bundle/sources/rom_analysis/docs/mesen_instrumented_backend_architecture.md"
     }
   ],
   "markdown_bundle": {
     "directory": "tools/out/docs_wiki_markdown_bundle",
-    "readme": "../docs_wiki_markdown_bundle/README.md",
-    "index_markdown": "../docs_wiki_markdown_bundle/wiki_bundle_index.md",
-    "combined_markdown": "../docs_wiki_markdown_bundle/wiki_combined.md",
-    "index_json": "../docs_wiki_markdown_bundle/wiki_bundle_index.json",
+    "published_directory": "notebooklm_bundle",
+    "readme": "notebooklm_bundle/README.md",
+    "index_markdown": "notebooklm_bundle/wiki_bundle_index.md",
+    "combined_markdown": "notebooklm_bundle/wiki_combined.md",
+    "index_json": "notebooklm_bundle/wiki_bundle_index.json",
     "doc_count": 48
   }
 }

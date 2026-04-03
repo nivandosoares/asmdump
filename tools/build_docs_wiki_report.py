@@ -20,6 +20,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = REPO_ROOT / "rom_analysis" / "docs" / "wiki_doc_index.json"
 DEFAULT_OUTPUT = REPO_ROOT / "tools" / "out" / "docs_wiki"
 DEFAULT_MARKDOWN_BUNDLE_OUTPUT = REPO_ROOT / "tools" / "out" / "docs_wiki_markdown_bundle"
+PUBLISHED_BUNDLE_DIRNAME = "notebooklm_bundle"
 LOCAL_TZ = datetime.now().astimezone().tzinfo
 
 
@@ -326,12 +327,18 @@ def relative_file_href(from_file: Path, to_file: Path) -> str:
     return Path(os.path.relpath(to_file, start=from_file.parent)).as_posix()
 
 
-def bundle_source_copy_path(markdown_bundle_dir: Path, source_rel: Path) -> Path:
-    return markdown_bundle_dir / "sources" / source_rel
+def bundle_source_copy_path(bundle_root_dir: Path, source_rel: Path) -> Path:
+    return bundle_root_dir / "sources" / source_rel
 
 
-def bundle_source_copy_href(from_file: Path, markdown_bundle_dir: Path, source_rel: Path) -> str:
-    return relative_file_href(from_file, bundle_source_copy_path(markdown_bundle_dir, source_rel))
+def bundle_source_copy_href(from_file: Path, bundle_root_dir: Path, source_rel: Path) -> str:
+    return relative_file_href(from_file, bundle_source_copy_path(bundle_root_dir, source_rel))
+
+
+def sync_published_bundle(bundle_dir: Path, published_bundle_dir: Path) -> None:
+    if published_bundle_dir.exists():
+        shutil.rmtree(published_bundle_dir)
+    shutil.copytree(bundle_dir, published_bundle_dir)
 
 
 def repo_rel(path: Path) -> str:
@@ -677,7 +684,7 @@ def render_doc_page(
     page_map: dict[Path, Path],
     site_title: str,
     output_dir: Path,
-    markdown_bundle_dir: Path,
+    published_bundle_dir: Path,
     images: list[ArtifactImage],
 ) -> str:
     title = first_heading(source_text, entry.label)
@@ -687,7 +694,7 @@ def render_doc_page(
     gallery_block = f"{gallery_html}\n" if gallery_html else ""
     sidebar_html = build_sidebar(manifest, page_map, page_path)
     index_href = relative_file_href(page_path, output_dir / "index.html")
-    raw_href = bundle_source_copy_href(page_path, markdown_bundle_dir, entry.path)
+    raw_href = bundle_source_copy_href(page_path, published_bundle_dir, entry.path)
     section_href = f"{index_href}#{entry.section_id}"
     css_href = relative_file_href(page_path, output_dir / "assets" / "wiki.css")
 
@@ -748,7 +755,7 @@ def render_index_page(
     entries: list[DocEntry],
     page_map: dict[Path, Path],
     output_dir: Path,
-    markdown_bundle_dir: Path,
+    published_bundle_dir: Path,
     source_cache: dict[Path, str],
     artifact_map: dict[Path, list[ArtifactImage]],
     markdown_bundle: dict[str, object] | None,
@@ -769,7 +776,7 @@ def render_index_page(
             last_updated_dt = source_last_updated_dt(entry.path)
             last_updated = last_updated_dt.strftime("%Y-%m-%d %H:%M")
             href = relative_file_href(output_dir / "index.html", page_map[rel])
-            raw_href = bundle_source_copy_href(output_dir / "index.html", markdown_bundle_dir, rel)
+            raw_href = bundle_source_copy_href(output_dir / "index.html", published_bundle_dir, rel)
             visuals = artifact_map.get(entry.path, [])
             visual_badge = (
                 f"<p class=\"artifact-count\">{len(visuals)} visual artifact(s)</p>"
@@ -872,15 +879,15 @@ def render_index_page(
     if markdown_bundle is not None:
         bundle_readme_href = relative_file_href(
             output_dir / "index.html",
-            Path(str(markdown_bundle["readme_md"])),
+            published_bundle_dir / "README.md",
         )
         bundle_index_href = relative_file_href(
             output_dir / "index.html",
-            Path(str(markdown_bundle["index_md"])),
+            published_bundle_dir / "wiki_bundle_index.md",
         )
         bundle_combined_href = relative_file_href(
             output_dir / "index.html",
-            Path(str(markdown_bundle["combined_md"])),
+            published_bundle_dir / "wiki_combined.md",
         )
         markdown_bundle_html = (
             "<section class=\"bundle-panel\">"
@@ -1806,6 +1813,7 @@ def build_site(
     source_cache: dict[Path, str] = {}
     artifact_map: dict[Path, list[ArtifactImage]] = {}
     artifact_cache: dict[Path, ArtifactImage] = {}
+    published_bundle_dir = output_dir / PUBLISHED_BUNDLE_DIRNAME
     write_assets(output_dir)
 
     for entry in entries:
@@ -1818,18 +1826,6 @@ def build_site(
         ]
         page_path = page_map[entry.path]
         page_path.parent.mkdir(parents=True, exist_ok=True)
-        page_html = render_doc_page(
-            manifest=manifest,
-            entry=entry,
-            source_text=source_text,
-            page_path=page_path,
-            page_map=page_map,
-            site_title=manifest["site_title"],
-            output_dir=output_dir,
-            markdown_bundle_dir=markdown_bundle_dir,
-            images=artifact_map[entry.path],
-        )
-        page_path.write_text(page_html, encoding="utf-8")
 
     markdown_bundle = build_markdown_bundle(
         manifest,
@@ -1838,12 +1834,29 @@ def build_site(
         source_cache,
         manifest_path,
     )
+    sync_published_bundle(markdown_bundle_dir, published_bundle_dir)
+
+    for entry in entries:
+        page_path = page_map[entry.path]
+        page_html = render_doc_page(
+            manifest=manifest,
+            entry=entry,
+            source_text=source_cache[entry.path],
+            page_path=page_path,
+            page_map=page_map,
+            site_title=manifest["site_title"],
+            output_dir=output_dir,
+            published_bundle_dir=published_bundle_dir,
+            images=artifact_map[entry.path],
+        )
+        page_path.write_text(page_html, encoding="utf-8")
+
     index_html = render_index_page(
         manifest,
         entries,
         page_map,
         output_dir,
-        markdown_bundle_dir,
+        published_bundle_dir,
         source_cache,
         artifact_map,
         markdown_bundle,
@@ -1861,7 +1874,7 @@ def build_site(
                 "page": relative_file_href(output_dir / "index.html", page_map[entry.path]),
                 "bundle_copy": bundle_source_copy_href(
                     output_dir / "index.html",
-                    markdown_bundle_dir,
+                    published_bundle_dir,
                     entry.path,
                 ),
             }
@@ -1869,10 +1882,11 @@ def build_site(
         ],
         "markdown_bundle": {
             "directory": repo_rel(markdown_bundle_dir),
-            "readme": relative_file_href(output_dir / "index.html", Path(str(markdown_bundle["readme_md"]))),
-            "index_markdown": relative_file_href(output_dir / "index.html", Path(str(markdown_bundle["index_md"]))),
-            "combined_markdown": relative_file_href(output_dir / "index.html", Path(str(markdown_bundle["combined_md"]))),
-            "index_json": relative_file_href(output_dir / "index.html", Path(str(markdown_bundle["index_json"]))),
+            "published_directory": relative_file_href(output_dir / "index.html", published_bundle_dir),
+            "readme": relative_file_href(output_dir / "index.html", published_bundle_dir / "README.md"),
+            "index_markdown": relative_file_href(output_dir / "index.html", published_bundle_dir / "wiki_bundle_index.md"),
+            "combined_markdown": relative_file_href(output_dir / "index.html", published_bundle_dir / "wiki_combined.md"),
+            "index_json": relative_file_href(output_dir / "index.html", published_bundle_dir / "wiki_bundle_index.json"),
             "doc_count": int(markdown_bundle["doc_count"]),
         },
     }
