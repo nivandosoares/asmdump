@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-03 01:39:47",
+  "generated_at": "2026-04-03 01:42:39",
   "doc_count": 48,
   "manifest": "rom_analysis/docs/wiki_doc_index.json",
   "docs": [
@@ -28,7 +28,7 @@
       "note": "Checkpoint log with evidence-bearing milestones.",
       "source": "rom_analysis/docs/progress_checkpoints.md",
       "bundle_copy": "sources/rom_analysis/docs/progress_checkpoints.md",
-      "last_updated": "2026-04-03 01:39"
+      "last_updated": "2026-04-03 01:42"
     },
     {
       "section_id": "source-of-truth",
@@ -55,7 +55,7 @@
       "note": "Promoted extraction and analysis tooling surface.",
       "source": "tools/README.md",
       "bundle_copy": "sources/tools/README.md",
-      "last_updated": "2026-04-03 01:39"
+      "last_updated": "2026-04-03 01:40"
     },
     {
       "section_id": "source-of-truth",

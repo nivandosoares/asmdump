@@ -10,6 +10,9 @@ Summary
 - Kept the standalone bundle under `tools/out/docs_wiki_markdown_bundle/` for
   offline/local use, but switched published wiki links to the in-tree copy at
   `tools/out/docs_wiki/notebooklm_bundle/`.
+- After pushing the repo-side fix, the live Vercel domain still returned
+  `404` on six bounded polls, so the remaining failure is now external to the
+  repo content itself.
 
 What I ran
 - wiki regeneration:
@@ -25,6 +28,10 @@ What I ran
 - live-host spot check before the fix:
   - `curl -I -L -s https://asmdump.vercel.app/`
   - observed `HTTP/2 404` with `x-vercel-error: NOT_FOUND`
+- live-host bounded poll after pushing the fix:
+  - `curl` checks over `https://asmdump.vercel.app/` and
+    `https://asmdump.vercel.app/notebooklm_bundle/wiki_bundle_index.md`
+  - `6` attempts, `10s` spacing, all still `404`
 
 Artifacts
 - publish-root fix:
@@ -47,6 +54,9 @@ Findings / Interpretation
 - The current public domain was also failing at `/`, which is consistent with
   a missing or stale host output-root configuration rather than one bad file
   link.
+- Because the host stayed `404` even after the repo-side deploy fix was pushed,
+  the remaining blocker is likely Vercel project wiring or a stale external
+  deployment, not another bad internal wiki href.
 
 What I learned (actionable)
 - For this repo, the published wiki must be self-contained under
@@ -61,6 +71,9 @@ Next steps / Checkpoints
    `tools/out/docs_wiki/notebooklm_bundle/`.
 2) After pushing a wiki/deploy fix, verify the live host root and one raw-doc
    URL instead of validating only local HTML structure.
+3) Check the external Vercel project state: the repo now contains a valid
+   `vercel.json`, but the public domain still needs an actual deploy that
+   serves this repository output.
 
 Files updated in this turn
 - `tools/build_docs_wiki_report.py`

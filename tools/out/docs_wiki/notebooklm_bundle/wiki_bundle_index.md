@@ -1,6 +1,6 @@
 # TD2 Wiki Markdown Bundle
 
-Generated: `2026-04-03 01:39:47`
+Generated: `2026-04-03 01:42:39`
 
 This folder mirrors the markdown files curated by the HTML wiki so they can be reviewed or ingested outside the browser surface.
 
@@ -12,13 +12,13 @@ This folder mirrors the markdown files curated by the HTML wiki so they can be r
   note: Primary execution contract and long-range port target.
 - `sources/rom_analysis/docs/next_steps_roadmap.md` | source `rom_analysis/docs/next_steps_roadmap.md` | updated `2026-04-02 23:37`
   note: Current lane status, open gates, and practical follow-up targets.
-- `sources/rom_analysis/docs/progress_checkpoints.md` | source `rom_analysis/docs/progress_checkpoints.md` | updated `2026-04-03 01:39`
+- `sources/rom_analysis/docs/progress_checkpoints.md` | source `rom_analysis/docs/progress_checkpoints.md` | updated `2026-04-03 01:42`
   note: Checkpoint log with evidence-bearing milestones.
 - `sources/rom_analysis/docs/validation_gates.md` | source `rom_analysis/docs/validation_gates.md` | updated `2026-04-02 23:37`
   note: Bounded pass/fail policy for regression and callback checks.
 - `sources/validation/README.md` | source `validation/README.md` | updated `2026-04-02 23:37`
   note: Current Mesen capture, probe, and export workflow.
-- `sources/tools/README.md` | source `tools/README.md` | updated `2026-04-03 01:39`
+- `sources/tools/README.md` | source `tools/README.md` | updated `2026-04-03 01:40`
   note: Promoted extraction and analysis tooling surface.
 - `sources/port/README.md` | source `port/README.md` | updated `2026-04-02 23:37`
   note: SDL runtime scope, usage, and current sequence playback path.
