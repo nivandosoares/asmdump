@@ -211,7 +211,32 @@ This gate is intentionally narrow. It protects the new contract-selection path
 and keeps later gameplay bundles from silently falling back to ad hoc runtime
 lookups.
 
-## 9) Practical Gate Policy
+## 9) Demo Launcher Timeline Smoke
+
+Runner:
+
+```sh
+./port/test_demo_launcher.sh
+```
+
+This validates the user-facing SDL archaeology launcher under
+`SDL_VIDEODRIVER=dummy`:
+
+- default demo path enters `mode=timeline`
+- the launcher advertises `native_sdl=on`, `mesen=off`,
+  `rom_cpu_emu=off`, `compare=off`, `dump=off`
+- the demo path also now advertises `reference_ppm=off`, proving the launcher
+  skipped optional `layers/main_visible.ppm` loading entirely
+- the default archaeology manifest loads and reports its promoted clip count
+- the launcher advances beyond the first clip, which falsifies the earlier
+  “single static frame” failure mode for the default demo path
+
+This gate is intentionally presentation-scoped. It does not prove continuous
+runtime-owned gameplay yet; it proves that the current demo launcher plays a
+moving SDL-native sequence from raw-state bundles instead of compare/dump
+artifacts.
+
+## 10) Practical Gate Policy
 
 For each archaeology lane:
 

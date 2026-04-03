@@ -191,15 +191,26 @@ User-facing native demo launcher:
 
 That path is intentionally not a compare/dump workflow:
 
-- it starts directly on the promoted `gameplay_live_race_mid` rail
+- it now boots into the default archaeology timeline manifest:
+  - `port/assets/native_demo_archaeology_timeline.txt`
+- that default tour remounts the best-promoted native raw-state screens
+  currently in-repo:
+  - credits
+  - attract / Mode 7 windows
+  - menu anchors
+  - gameplay anchors
+- it keeps presentation on SDL-native raw-state rendering instead of
+  screenshot playback or compare strips
 - it keeps `compare` disabled
 - it keeps `PPM/PNG` dump generation disabled
+- it now also keeps optional `layers/main_visible.ppm` reference loading
+  disabled in the demo path
 - it draws an on-screen SDL overlay proving the current path is:
   - `MESEN OFF`
   - `ROM CPU EMU OFF`
+  - `REFERENCE PPM OFF`
   - `PPM PNG DUMP OFF`
-  - `COMPARE OFF`
-  - plus the active scheduler/source/callback metadata for the current frame
+  - plus the active mode/source/callback metadata for the current frame
 - it accepts startup window sizing via:
   - `--window-width <n>`
   - `--window-height <n>`
@@ -209,6 +220,15 @@ That path is intentionally not a compare/dump workflow:
   - `3`: `1920x1080`
   - `F1`: toggle overlay
 
+To force the earlier single-scene launcher behavior for a specific pack, pass
+an explicit scene/profile:
+
+```sh
+./port/build/td2_demo \
+  --scene-dir tools/out/design_lane3_live_race_mid_frame0_native \
+  --scheduler-profile gameplay_live_race_mid
+```
+
 The dedicated smoke for that launcher is:
 
 ```sh
@@ -217,7 +237,8 @@ The dedicated smoke for that launcher is:
 
 That smoke runs the SDL launcher once under `SDL_VIDEODRIVER=dummy`, which now
 works because `platform_sdl` falls back to a software renderer when an
-accelerated renderer is unavailable.
+accelerated renderer is unavailable. The smoke also proves the default demo
+enters timeline mode and advances beyond the first archaeology clip.
 
 That emits:
 

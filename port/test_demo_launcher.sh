@@ -14,15 +14,24 @@ echo "=== TD2 Demo Launcher Smoke ==="
 cd "$SCRIPT_DIR"
 
 OUTPUT="$(SDL_VIDEODRIVER=dummy "$DEMO_BIN" \
-    --scene-dir ../tools/out/design_lane3_live_race_mid_frame0_native \
-    --scheduler-profile gameplay_live_race_mid \
+    --timeline "$SCRIPT_DIR/assets/native_demo_archaeology_timeline.txt" \
     --window-width 960 \
     --window-height 540 \
-    --frames 2)"
+    --frames 70)"
 
 printf '%s\n' "$OUTPUT"
 
 if ! printf '%s\n' "$OUTPUT" | grep -q "native_sdl=on"; then
     echo "FAIL: demo launcher did not report native SDL startup" >&2
+    exit 1
+fi
+
+if ! printf '%s\n' "$OUTPUT" | grep -q "mode=timeline"; then
+    echo "FAIL: demo launcher did not enter timeline mode" >&2
+    exit 1
+fi
+
+if ! printf '%s\n' "$OUTPUT" | grep -q "Timeline clip 2/"; then
+    echo "FAIL: demo launcher did not advance beyond the first clip" >&2
     exit 1
 fi

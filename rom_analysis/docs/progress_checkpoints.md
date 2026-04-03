@@ -1,6 +1,98 @@
 Date: 2026-04-02
 
 Summary
+- Promoted the SDL demo launcher from a single near-static gameplay seed into
+  a native archaeology timeline built from raw-state `design_pack` and
+  `design_pack_range` artifacts already validated in the port/docs.
+- Added a default timeline manifest that remounts investigated credits,
+  attract/Mode7, menu, and gameplay screens in sequence, using exact packs
+  where present and explicit `infer_hold` stretches only where the current
+  archaeology still has gaps.
+- Tightened the launcher proof surface by disabling optional
+  `layers/main_visible.ppm` reference loading in demo mode, so the launcher
+  now runs purely from `raw/vram.bin`, `raw/cgram.bin`, `raw/oam.bin`, and
+  `raw/ppu_state.json`.
+
+What I ran
+- rebuild affected port binaries:
+  - `make -C port`
+- targeted demo validation:
+  - `./port/test_demo_launcher.sh`
+  - `SDL_VIDEODRIVER=dummy ./port/build/td2_demo --scene-dir ./tools/out/design_lane3_live_race_mid_frame0_native --scheduler-profile gameplay_live_race_mid --window-width 960 --window-height 540 --frames 1`
+- full port validation closure:
+  - `make -C port test`
+
+Artifacts
+- default archaeology timeline manifest:
+  - `port/assets/native_demo_archaeology_timeline.txt`
+- upgraded launcher/player:
+  - `port/demo_main.c`
+  - `port/run_demo.sh`
+- demo-path raw-only design-pack loading:
+  - `port/include/td2_io.h`
+  - `port/include/td2_runtime.h`
+  - `port/src/td2_io.c`
+  - `port/src/td2_runtime.c`
+- strengthened launcher smoke:
+  - `port/test_demo_launcher.sh`
+
+Findings / Interpretation
+- The default SDL demo is no longer effectively a single-frame proof:
+  it now advances across `81` native clips (`504` display frames total) and
+  visibly traverses the best-promoted archaeology path currently in-repo:
+  credits -> attract bridge/Mode7 -> menu -> gameplay.
+- The launcher path now closes a subtle but important proof gap:
+  even when a design pack carries `layers/main_visible.ppm`, the demo no
+  longer loads that surface into memory for presentation. In demo mode, those
+  files are absent from the runtime path instead of merely being ignored at
+  compare time.
+- The current montage is intentionally honest about open archaeology:
+  contiguous ranges stay exact, sparse intro anchors use `exact_hold` timing,
+  and the overlay calls out when a displayed stretch is an inferred hold
+  instead of a newly solved native frame.
+
+What I learned (actionable)
+- The raw-state artifact set is already strong enough to give design a moving,
+  SDL-native capability demo without falling back to screenshot playback.
+- `design_pack_range.json` is now useful beyond archaeology bookkeeping:
+  it can directly drive native presentation timelines as long as the launcher
+  expands the per-frame `packDir` entries.
+- The next upgrade for this lane is content density, not launcher plumbing:
+  replace inferred holds and gameplay snapshots with denser raw-state captures
+  or true runtime-owned frame progression.
+
+Next steps / Checkpoints
+1) Replace the remaining intro/gameplay `infer_hold` stretches with more
+   exact raw-state ranges where archaeology already has nearby coverage.
+2) Promote a denser gameplay-native sequence than the current
+   `frame0/3250/3400/3550` snapshot set before claiming a continuous gameplay
+   demo lane.
+3) If design needs faster navigation, add section-skip hotkeys/presets on top
+   of the current timeline instead of adding another screenshot-based launcher.
+
+Files updated in this turn
+- `port/assets/native_demo_archaeology_timeline.txt`
+- `port/demo_main.c`
+- `port/include/td2_io.h`
+- `port/include/td2_runtime.h`
+- `port/run_demo.sh`
+- `port/src/td2_io.c`
+- `port/src/td2_runtime.c`
+- `port/test_demo_launcher.sh`
+- `port/README.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+
+Next reading
+- `port/assets/native_demo_archaeology_timeline.txt`
+- `port/README.md`
+- `rom_analysis/docs/validation_gates.md`
+
+Date: 2026-04-02
+
+Summary
 - Added a dedicated native SDL demo launcher for the promoted live-race port
   rail instead of relying on headless compare/dump commands for demos.
 - Added an on-screen proof overlay that states the demo is running through the

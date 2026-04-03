@@ -528,7 +528,12 @@ bool td2_runtime_init(
     memset(runtime, 0, sizeof(*runtime));
     runtime->config = *config;
 
-    if (!td2_design_pack_load(&runtime->design_pack, config->scene_dir, error, error_size)) {
+    if (!td2_design_pack_load_ex(
+            &runtime->design_pack,
+            config->scene_dir,
+            !config->skip_reference_surface,
+            error,
+            error_size)) {
         return false;
     }
 

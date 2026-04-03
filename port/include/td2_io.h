@@ -77,6 +77,13 @@ bool td2_design_pack_load(
     char* error,
     size_t error_size
 );
+bool td2_design_pack_load_ex(
+    Td2DesignPack* pack,
+    const char* scene_dir,
+    bool load_reference_surface,
+    char* error,
+    size_t error_size
+);
 void td2_design_pack_free(Td2DesignPack* pack);
 
 #endif

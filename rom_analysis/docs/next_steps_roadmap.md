@@ -30,6 +30,29 @@ decoded tilemaps and sprite visibility metadata.
   - `tools/out/sentrysearch_longplay_anchor_chunks.md`
   - `rom_analysis/docs/sentrysearch_gameplay_chunk_workflow.md`
 
+## Port Native Archaeology Demo Checkpoint (`2026-04-02`)
+
+- The default SDL launcher is no longer pinned to one near-static live-race
+  seed.
+- `port/run_demo.sh` now boots a native archaeology timeline from:
+  - `port/assets/native_demo_archaeology_timeline.txt`
+- That timeline remounts the current best-promoted raw-state clips in order:
+  - credits
+  - sampled-to-contiguous attract / Mode 7 windows
+  - menu anchors
+  - gameplay anchors
+- Exact frame/range packs stay exact; sparse gaps are carried explicitly as
+  `infer_hold` stretches rather than hidden screenshot playback.
+- The launcher path now also disables optional `layers/main_visible.ppm`
+  loading, so demo presentation is fully tied to raw-state bundles plus the
+  native SDL renderer, not just to compare/dump flags being off.
+- New smoke still runs under `SDL_VIDEODRIVER=dummy`:
+  - `./port/test_demo_launcher.sh`
+- Next gate:
+  - replace inferred holds and sparse gameplay snapshots with denser
+    raw-state coverage or true runtime-owned frame progression before making
+    any “continuous native demo” claim
+
 ## Port Live Input Checkpoint (`2026-04-01`)
 
 - The SDL host now feeds live keyboard/controller samples into the same

@@ -1,0 +1,38 @@
+# kind|path|frames|profile|source|label
+# range|path|profile|source|label
+
+scene|port/assets/test_dump_frame300/design_pack|60|none|exact_hold|COPYRIGHT CREDITS
+
+scene|tools/out/design_frame986|4|none|exact_hold|ATTRACT BRIDGE 986
+scene|tools/out/design_frame990|4|none|exact_hold|ATTRACT BRIDGE 990
+scene|tools/out/design_frame994|4|none|exact_hold|ATTRACT BRIDGE 994
+scene|tools/out/design_frame998|7|none|exact_hold|MODE7 ENTRY 998
+scene|tools/out/design_frame1005|8|none|exact_hold|MODE7 ENTRY 1005
+scene|tools/out/design_frame1013|8|none|exact_hold|MODE7 ENTRY 1013
+scene|tools/out/design_frame1021|8|none|exact_hold|MODE7 ENTRY 1021
+scene|tools/out/design_frame1029|8|none|exact_hold|MODE7 ENTRY 1029
+scene|tools/out/design_frame1037|8|none|exact_hold|MODE7 ENTRY 1037
+scene|tools/out/design_frame1045|8|none|exact_hold|MODE7 ENTRY 1045
+scene|tools/out/design_frame1053|8|none|exact_hold|MODE7 ENTRY 1053
+scene|tools/out/design_frame1061|8|none|exact_hold|MODE7 ENTRY 1061
+scene|tools/out/design_frame1069|8|none|exact_hold|MODE7 ENTRY 1069
+scene|tools/out/design_frame1077|8|none|exact_hold|MODE7 ENTRY 1077
+scene|tools/out/design_frame1085|1|none|exact|MODE7 ENTRY 1085
+
+range|tools/out/design_mesen_range_1086_1093_v1/design_pack_range.json|none|exact|MODE7 WINDOW 1086 1093
+range|tools/out/design_mesen_range_1094_1101_v1/design_pack_range.json|none|exact|MODE7 WINDOW 1094 1101
+range|tools/out/design_mesen_range_1102_1109_v1/design_pack_range.json|none|exact|MODE7 WINDOW 1102 1109
+range|tools/out/design_mesen_range_1110_1117_v1/design_pack_range.json|none|exact|MODE7 WINDOW 1110 1117
+range|tools/out/design_mesen_range_1118_1125_v1/design_pack_range.json|none|exact|MODE7 WINDOW 1118 1125
+range|tools/out/design_mesen_range_1126_1133_v1/design_pack_range.json|none|exact|MODE7 WINDOW 1126 1133
+scene|tools/out/design_mesen_range_1126_1133_v1/frame_01133|31|none|exact_hold|INFER HOLD TO 1164
+range|tools/out/design_mesen_range_1164_1172_v1/design_pack_range.json|none|exact|MODE7 REACT 1164 1172
+
+scene|tools/out/design_frame1500_car_select|40|none|exact_hold|MENU ENTRY 1500
+scene|tools/out/design_frame1640_car_select_right|40|none|exact_hold|MENU ENTRY 1640
+scene|tools/out/design_frame1780_car_select_right2|40|none|exact_hold|MENU ENTRY 1780
+
+scene|tools/out/design_lane3_live_race_mid_frame0_native|40|none|exact_hold|GAMEPLAY SEED LIVE RACE
+scene|tools/out/lane3_live_entry_frame03250_bundle/design_pack|32|none|exact_hold|GAMEPLAY LATE 3250
+scene|tools/out/lane3_live_entry_brake_traffic_frame03400_bundle/design_pack|32|none|exact_hold|GAMEPLAY LATE 3400
+scene|tools/out/lane3_live_entry_frame03550_bundle/design_pack|32|none|exact_hold|GAMEPLAY LATE 3550

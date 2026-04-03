@@ -383,9 +383,10 @@ static bool load_ppu_state(const char* raw_dir, Td2DesignPack* pack) {
     return true;
 }
 
-bool td2_design_pack_load(
+bool td2_design_pack_load_ex(
     Td2DesignPack* pack,
     const char* scene_dir,
+    bool load_reference_surface,
     char* error,
     size_t error_size
 ) {
@@ -441,12 +442,14 @@ bool td2_design_pack_load(
         derive_raw_dir(pack->raw_dir, sizeof(pack->raw_dir), scene_dir);
     }
 
-    join_path(main_visible_path, sizeof(main_visible_path), scene_dir, "layers/main_visible.ppm");
-    if (file_exists(main_visible_path) && !load_ppm(main_visible_path, &pack->main_visible)) {
-        set_error(error, error_size, "failed to load layers/main_visible.ppm");
-        free(manifest_text);
-        td2_design_pack_free(pack);
-        return false;
+    if (load_reference_surface) {
+        join_path(main_visible_path, sizeof(main_visible_path), scene_dir, "layers/main_visible.ppm");
+        if (file_exists(main_visible_path) && !load_ppm(main_visible_path, &pack->main_visible)) {
+            set_error(error, error_size, "failed to load layers/main_visible.ppm");
+            free(manifest_text);
+            td2_design_pack_free(pack);
+            return false;
+        }
     }
 
     join_path(raw_path, sizeof(raw_path), pack->raw_dir, "vram.bin");
@@ -468,6 +471,15 @@ bool td2_design_pack_load(
         error[0] = '\0';
     }
     return true;
+}
+
+bool td2_design_pack_load(
+    Td2DesignPack* pack,
+    const char* scene_dir,
+    char* error,
+    size_t error_size
+) {
+    return td2_design_pack_load_ex(pack, scene_dir, true, error, error_size);
 }
 
 void td2_design_pack_free(Td2DesignPack* pack) {

@@ -21,6 +21,7 @@ typedef struct {
     bool fail_on_compare_diff;
     Td2SchedulerProfile scheduler_profile;
     const char* input_script;
+    bool skip_reference_surface;
 } Td2RuntimeConfig;
 
 typedef struct {
