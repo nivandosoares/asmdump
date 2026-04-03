@@ -1,37 +1,10 @@
-# Bank Investigation Datagram
+# SNES Bank Flow Datagram
 
-This root-level note is a high-level map of how the repo currently investigates
-ROM banks and which bank roles/callback links are already promoted.
+This root-level note is intentionally narrow: it only shows the current
+promoted flow between ROM banks in the original SNES codebase we are
+disassembling.
 
-## Investigation Loop
-
-```mermaid
-flowchart LR
-    ROM[game.smc]
-    SYM[game.sym]
-    ASM[bank*.asm static read]
-    PROBE[Mesen probes / scanline traces / design packs]
-    DECODE[chunk decoders / extractors]
-    XREF[static + runtime cross-check]
-    CLAIM[promoted claim]
-    OUT1[bank typing]
-    OUT2[callback contracts]
-    OUT3[asset provenance]
-
-    ROM --> ASM
-    SYM --> ASM
-    ROM --> PROBE
-    ROM --> DECODE
-    ASM --> XREF
-    PROBE --> XREF
-    DECODE --> XREF
-    XREF --> CLAIM
-    CLAIM --> OUT1
-    CLAIM --> OUT2
-    CLAIM --> OUT3
-```
-
-## Current Validated Spine
+## Current Promoted Bank Flow
 
 ```mermaid
 flowchart LR
@@ -40,73 +13,42 @@ flowchart LR
     classDef mixed fill:#ffe5b4,stroke:#946200,color:#111;
     classDef note fill:#f5f5f5,stroke:#777,color:#111;
 
-    ROM[game.smc]
+    B00["bank0 / SNES $00<br/>kernel<br/>RESET + NMI + IRQ + callback staging"]
+    B01["bank1 / SNES $01<br/>front-end corridor<br/>gameplay handoff + gameplay IRQ"]
+    B02["bank2 / SNES $02<br/>gameplay main family<br/>02:9016 main / 02:8F3C nmi"]
+    B0A["bank10 / SNES $0A<br/>physics + AI core"]
+    B0B["bank11 / SNES $0B<br/>road raster + scanline/HDMA prep"]
+    B0F["bank15 / SNES $0F<br/>object payload catalogs"]
+    B1E["bank30 / SNES $1E<br/>compressed dispatch/data"]
 
-    subgraph Control[Validated control / callback spine]
-        B00[bank0.asm / SNES $00<br/>RESET + NMI + IRQ + scheduler]
-        STAGE[$0038/$003B/$003E active<br/>$096C/$096F pending]
-        B01[bank1.asm / SNES $01<br/>front-end + gameplay handoff]
-        MAIN[bank2.asm / SNES $02 main<br/>02:9016]
-        IRQ[bank1.asm / SNES $01 IRQ<br/>01:96A0 / 01:960D]
-        NMI[bank2.asm / SNES $02 NMI<br/>02:8F3C]
-    end
+    B00 -->|"dispatches active_main / active_irq / active_nmi"| B01
+    B00 -->|"dispatches active_main / active_nmi"| B02
+    B01 -->|"01:902D stages 02:9016 main and 02:8F3C nmi"| B02
+    B02 -->|"calls/feeds gameplay support work"| B0A
+    B02 -->|"feeds road-visible state and raster data"| B0B
+    B0B -->|"visible split is materialized by 01:96A0 / 01:960D IRQ pair"| B01
+    B01 -->|"pointer tables feed L001210 bank30 entries"| B1E
+    B02 -->|"late gameplay selects object payloads"| B0F
+    B0F -->|"payloads are queued through bank0 DMA helpers"| B00
+    B02 -->|"queue/OAM state is consumed by bank0 NMI body"| B00
 
-    subgraph Support[Typed support banks]
-        B0A[bank10.asm / SNES $0A<br/>physics + AI core]
-        B0B[bank11.asm / SNES $0B<br/>road raster + scanline HDMA]
-        B0F[bank15.asm / SNES $0F<br/>object payload source<br/>local proof: 15:B4A8 to 15:B4B8]
-        B1E[bank30.asm / SNES $1E<br/>compressed dispatch/data<br/>DA96 map-like, EE7F still open]
-    end
-
-    subgraph Handoff[Visible handoff]
-        Q[0600 DMA queue]
-        OAM[0700 OAM staging]
-        PPU[bank0 NMI body to VRAM/OAM/PPU]
-    end
-
-    ROM --> B00
-    ROM --> B01
-    ROM --> B0A
-    ROM --> B0B
-    ROM --> B0F
-    ROM --> B1E
-
-    B00 --> STAGE
-    B01 -- 01:902D stages main --> MAIN
-    B01 -- 01:902D stages nmi --> NMI
-    STAGE -- active main --> MAIN
-    STAGE -- active irq --> IRQ
-    STAGE -- active nmi --> NMI
-
-    MAIN --> B0A
-    MAIN --> B0B
-    MAIN --> Q
-    MAIN --> OAM
-    B0B --> IRQ
-    B0F --> Q
-    B01 -- pointer tables / L001210 --> B1E
-    Q --> PPU
-    OAM --> PPU
-    IRQ --> PPU
-    NMI --> PPU
-
-    P00["pseudo<br/>promote pending main<br/>promote pending nmi<br/>jump active_main"]:::note
-    P01["pseudo<br/>stage main 02:9016<br/>stage nmi 02:8F3C<br/>enter 01:9111"]:::note
-    P02["pseudo<br/>update gameplay state<br/>build HUD and OAM<br/>advance queue cursors"]:::note
-    P03["pseudo<br/>write TMAIN and HOFS/VOFS<br/>next_irq = 960D or 96A0"]:::note
-    P04["pseudo<br/>dma queue 0600<br/>dma oam 0700<br/>sample JOY1"]:::note
-    P05["pseudo<br/>ptr = table[idx]<br/>chunk = decompress(ptr)<br/>classify consumer"]:::note
-    P06["pseudo<br/>obj = 15:B4A8<br/>payload = 15:B4B8<br/>queue vram 0x6180"]:::note
+    P00["pseudo<br/>promote pending callbacks<br/>jmp active_main irq nmi"]:::note
+    P01["pseudo<br/>if menu path closes<br/>stage 02:9016 and 02:8F3C"]:::note
+    P02["pseudo<br/>update gameplay state<br/>build queue and OAM"]:::note
+    P03["pseudo<br/>step physics AI<br/>car and traffic logic"]:::note
+    P04["pseudo<br/>build road scanline operands<br/>prepare HDMA shape"]:::note
+    P05["pseudo<br/>obj = table[idx]<br/>payload = bank15 bytes"]:::note
+    P06["pseudo<br/>ptr = table[idx]<br/>chunk = L001210(ptr)"]:::note
 
     B00 -.-> P00
     B01 -.-> P01
-    MAIN -.-> P02
-    IRQ -.-> P03
-    PPU -.-> P04
-    B1E -.-> P05
-    B0F -.-> P06
+    B02 -.-> P02
+    B0A -.-> P03
+    B0B -.-> P04
+    B0F -.-> P05
+    B1E -.-> P06
 
-    class B00,B01,MAIN,IRQ,NMI validated;
+    class B00,B01,B02 validated;
     class B0A active;
     class B0B validated;
     class B0F,B1E mixed;
@@ -114,15 +56,14 @@ flowchart LR
 
 ## Reading Notes
 
-- `bank0` is the control kernel. It owns RESET, the NMI wrapper/body, the IRQ
-  wrapper, and callback staging/promotion.
-- `bank1` is the validated handoff bank for the front-end to gameplay
-  corridor. `01:902D` explicitly stages `02:9016` and `02:8F3C`.
-- `bank2` is the promoted gameplay callback family currently seen as main
-  `02:9016` and NMI `02:8F3C`.
-- `bank1` also owns the validated gameplay IRQ pair `01:96A0 / 01:960D`.
-- `bank10` and `bank11` are the active gameplay-support banks for physics/AI
-  and road/split raster work.
-- `bank15` and `bank30` are typed as content/support banks, but their role is
-  still consumer/provenance-driven rather than fully closed as one-line
-  labels.
+- `bank0` is the control kernel. It owns the callback slots/staging cells and
+  wraps the actual `NMI` and `IRQ` dispatch.
+- `bank1` is the strongest validated bridge bank:
+  it closes the front-end path and explicitly stages the gameplay family at
+  `01:902D`, while also owning the validated gameplay IRQ pair
+  `01:96A0 / 01:960D`.
+- `bank2` is the current promoted gameplay bank:
+  main callback `02:9016`, NMI callback `02:8F3C`.
+- `bank10` and `bank11` are gameplay-support banks, not top-level schedulers.
+- `bank15` and `bank30` are content/support banks whose consumers are known,
+  but whose full provenance map is still being closed.

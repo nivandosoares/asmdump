@@ -1,6 +1,53 @@
 Date: 2026-04-03
 
 Summary
+- Narrowed the new root Mermaid datagram from a mixed archaeology/process view
+  into a bank-only SNES disassembly map.
+- The root artifact now shows only promoted bank-to-bank flow in the original
+  ROM code: `bank0`, `bank1`, `bank2`, `bank10`, `bank11`, `bank15`, and
+  `bank30`.
+- Kept the short pseudocode tips, but attached them directly to bank nodes so
+  the diagram stays focused on original-bank roles and handoffs.
+
+What I ran
+- bounded Mermaid render validation:
+  - `npx -y @mermaid-js/mermaid-cli -p <temp puppeteer no-sandbox json> -i BANK_INVESTIGATION_DATAGRAM.md -o <temp>/out.md -e svg -a <temp>/artifacts`
+
+Artifacts
+- revised root bank-only datagram:
+  - `BANK_INVESTIGATION_DATAGRAM.md`
+
+Findings / Interpretation
+- The previous version was accurate, but it mixed archaeology process with the
+  bank map and diluted the main question.
+- The tighter version reads much better as a disassembly orientation sheet:
+  which bank hands off to which bank, and where the currently promoted
+  callback family actually lives.
+
+What I learned (actionable)
+- For this repo, the best root-level Mermaid is not “tooling plus runtime” but
+  “banks plus validated handoff edges”.
+- `bank0 -> bank1/bank2` and `bank1 -> bank2` are the most important promoted
+  control edges to keep visible at summary level.
+
+Next steps / Checkpoints
+1) Keep the root datagram bank-only unless a second artifact is explicitly
+   needed for the archaeology workflow itself.
+2) If lane-1 closes more of `bank30`, add consumer-specific edges instead of
+   broadening the diagram back into a process map.
+
+Files updated in this turn
+- `BANK_INVESTIGATION_DATAGRAM.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `BANK_INVESTIGATION_DATAGRAM.md`
+- `docs/bank0_flow.md`
+- `docs/snes_dos_correlation.md`
+
+Date: 2026-04-03
+
+Summary
 - Added a root-level Mermaid bank investigation datagram so the current
   archaeology process and promoted bank/callback ownership can be read from
   one file instead of being scattered across multiple notes.
