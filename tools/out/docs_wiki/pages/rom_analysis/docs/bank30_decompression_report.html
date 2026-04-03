@@ -36,7 +36,7 @@
         <p class="doc-note">Current registry-backed read of bank30 markers and the active unresolved queue.</p>
         <div class="doc-meta">
           <span>Source: <code>rom_analysis/docs/bank30_decompression_report.md</code></span>
-          <span class="update-pill">Last updated 2026-04-02 10:04</span>
+          <span class="update-pill">Last updated 2026-04-02 23:11</span>
           <a href="../../../../../../rom_analysis/docs/bank30_decompression_report.md">Open Raw Markdown</a>
         </div>
       </header>
@@ -44,7 +44,7 @@
         <h1 id="bank-30-decompression-report">Bank 30 Decompression Report</h1>
 <p>This report records the decompression/classification pass over marker hits discovered in bank <code>30</code> (<code>0x1E</code>), including the new <code>67FB</code> decoder pass.</p>
 <h2 id="inputs">Inputs</h2>
-<ul><li><code>tools/out/bank30_chunks.json</code></li><li><code>tools/out/bank30_headers.json</code></li><li><code>tools/out/bank30_chunk_validation.json</code></li><li><code>.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json</code></li><li><code>tools/out/td2_boot_probe_l001210_summary.json</code></li><li><code>tools/out/bank30_chunk_registry.json</code></li></ul>
+<ul><li><code>tools/out/bank30_chunks.json</code></li><li><code>tools/out/bank30_headers.json</code></li><li><code>tools/out/bank30_chunk_validation.json</code></li><li><code>tools/out/td2_boot_probe_l001210_exec.json</code></li><li><code>tools/out/td2_boot_probe_l001210_summary.json</code></li><li><code>tools/out/bank30_chunk_registry.json</code></li><li><code>tools/out/bank30_chunk_shapes.json</code></li><li><code>tools/out/bank30_chunk_shapes.md</code></li></ul>
 <p>Detected markers:</p>
 <ul><li><code>42FB</code> at <code>1E:9681</code> (<code>offset 0x1681</code>)</li><li><code>67FB</code> at <code>1E:DA96</code> (<code>offset 0x5A96</code>)</li><li><code>26FB</code> at:</li><li><code>1E:DF6C</code></li><li><code>1E:E039</code></li><li><code>1E:E73F</code></li><li><code>1E:E800</code></li><li><code>1E:EE7F</code></li><li><code>67FB</code> at <code>1E:E91F</code> (<code>offset 0x691F</code>)</li></ul>
 <h2 id="decompression-run">Decompression Run</h2>
@@ -89,6 +89,11 @@ make -C tools l001210-trace-summary</code></pre>
 <ul><li>standalone <code>67FB</code> decode fails with source exhaustion</li><li>the marker lies inside the successful <code>1E:DA96</code> decode window</li><li>it also lies inside the successful nested <code>1E:E800</code> decode window</li></ul>
 <ol><li><code>1E:9681</code> is now best treated as a zero-output control/sentinel record, not as a content-bearing unresolved chunk.</li><li><code>1E:DA96</code> and <code>1E:EE7F</code> remain unobserved in this no-input runtime window and are now the active unresolved queue.</li><li>Consolidated registry (<code>make -C tools bank30-registry</code>) now classifies all candidates into:</li></ol>
 <ul><li><code>runtime-confirmed</code>: <code>4</code></li><li><code>table-confirmed-unseen</code>: <code>1</code> (<code>P0</code>: <code>EE7F</code>)</li><li><code>67fb-unseen</code>: <code>1</code> (<code>P1</code>: <code>DA96</code>)</li><li><code>nested-invalid-marker</code>: <code>1</code> (<code>E91F</code>)</li><li><code>sentinel-control</code>: <code>1</code> (<code>9681</code>)</li></ul>
+<h2 id="2026-04-01-static-shape-refresh">2026-04-01 Static Shape Refresh</h2>
+<p>Repeatable shape-analysis tool:</p>
+<pre><code class="language-sh">python3 tools/analyze_bank30_chunk_shapes.py --json-out tools/out/bank30_chunk_shapes.json --markdown-out tools/out/bank30_chunk_shapes.md</code></pre>
+<p>Current practical read:</p>
+<ul><li><code>DA96</code> now looks structurally like a visual/map payload rather than code:</li><li><code>14310</code> decompressed words</li><li>repeated <code>0x7C1F</code> runs: <code>33</code></li><li>dominant repeated-run stride: <code>157</code> words</li><li>treating that stride as a row width yields a <code>157 x 33</code> block with <code>32</code> identical rows</li><li><code>EE7F</code> remains the stronger runtime-provenance target:</li><li>same decompressed size as <code>DF6C/E73F</code> (<code>899</code> words)</li><li>but only <code>20.356..21.0234%</code> same-index overlap against them</li><li><code>DF6C</code> vs <code>E73F</code> remains the true near-clone pair at <code>77.5306%</code></li><li>practical implication:</li><li>chase <code>EE7F</code> through reachability / organic caller paths</li><li>chase <code>DA96</code> through consumer-side visual/tilemap correlation</li></ul>
 <h2 id="next-actions">Next Actions</h2>
 <ol><li>Probe deterministic savestate-targeted paths to confirm reachability for <code>1E:DA96</code> and <code>1E:EE7F</code>.</li></ol>
 <ul><li>current <code>start,b</code> scripted-input probe does not reach bank30 candidates.</li></ul>

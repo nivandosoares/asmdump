@@ -113,7 +113,7 @@ This validates the minimal callback scheduler over the three promoted rails:
   `1500 -> 2050` plus the promoted exact sampled post-`2050`
   `2052..2088` baseline window and later checkpoints
 - `gameplay_live_race_mid`: validates the reproducible gameplay seed over the
-  promoted `3 -> 11` window
+  promoted exact anchors `3, 11, 16, 30, 60, 90, 95`
 
 This smoke is intentionally state-first. It proves that the runtime now steps
 callback families and handoffs for the three target rails, even when a given
@@ -121,8 +121,11 @@ design pack has no trusted `main_visible.ppm` golden. It also now proves that
 menu/gameplay are loading `scheduler_contract` state from
 `rom_analysis/docs/scheduler_rail_contracts.jsonc` instead of hardcoded C
 anchors. For `gameplay_live_race_mid`, it now also proves that the measured
-visible-scanline overlay is attached and that key framebuffer pixels stay on
-the restored sky/mountain/roadside split.
+visible-scanline overlay is attached, that key framebuffer pixels stay on the
+restored sky/mountain/roadside split, and that the scheduler/runtime can carry
+the richer gameplay queue-state slice
+`state_0440/state_09a2/state_09a8/state_129e/state_18ee/dp_0020/dp_0022/dp_0053/dp_0054/dp_0055/dp_0056`
+at those later anchors.
 
 ## 6) Input Mutation Smoke
 
@@ -140,6 +143,9 @@ This validates the first runtime input surface on top of the scheduler rails:
   the exact `2052..2088` window plus later checkpoints, over
   `state_09a2/state_09a8/state_137c` and
   `dp_0020/dp_0022/dp_0053/dp_0054`
+- gameplay late-anchor `JOY1` merges on `gameplay_live_race_mid` at
+  frames `60` and `95`, proving the promoted gameplay queue/state anchors
+  survive current-input mutation
 - PNG artifact generation next to runtime and compare PPM dumps
 
 This is intentionally narrow. It proves the runtime is no longer input-blind
@@ -213,3 +219,27 @@ For each archaeology lane:
 2. Keep temporary tolerances only for known unstable windows.
 3. Reduce tolerances as renderer/state fidelity improves.
 4. Promote checkpoint to strict (`0`) once solved.
+
+## 10) Native SDL Demo Launcher Smoke
+
+Runner:
+
+```sh
+./port/test_demo_launcher.sh
+```
+
+This validates the user-facing demo launcher path for the promoted live-race
+rail:
+
+- starts the dedicated `td2_demo` SDL launcher successfully
+- keeps `compare` disabled
+- keeps `PPM/PNG` dump output disabled
+- reports the intended proof surface on startup:
+  native SDL on, Mesen off, ROM/CPU emulation off
+- remains runnable under `SDL_VIDEODRIVER=dummy`, which proves the SDL host can
+  fall back to a software renderer when no accelerated driver is available
+
+This gate is intentionally narrow. It does not prove broader gameplay
+correctness beyond the existing scheduler/input/scanline gates; it proves the
+project now has a presentable native SDL demo entry point that is not
+fronting compare artifacts or dump playback.

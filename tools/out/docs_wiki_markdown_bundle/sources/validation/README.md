@@ -8,6 +8,9 @@ Current asset:
 - `run_mesen_capture.sh`: a launcher that creates an isolated Mesen config inside the repo, enables Lua file I/O, and runs the script in `--testRunner` mode
 - `mesen_probe_boot.lua`: a lightweight state probe that records boot/title selectors like `$1C78/$1C7A/$1CCA/...` once per frame
 - `run_mesen_probe_boot.sh`: convenience wrapper around the generic launcher for the boot probe
+- `run_mesen_deep_probe.sh`: high-context wrapper around `mesen_probe_boot.lua` that drives a traced intro -> menu -> gameplay route, captures anchor-frame screenshots and memory dumps, and emits frame-to-frame compare pairs over the obscurer callback/queue/pipeline surfaces
+- `run_mesen_gameplay_probe.sh`: gameplay-first wrapper around `mesen_probe_boot.lua` that loads a preserved lane-3 savestate by default and starts tracing directly inside the live-race callback family instead of replaying intro/menu first
+- `mesen_live_play_probe.lua`: interactive Mesen-side probe that stays resident while the dev plays, keeps a rolling transition/sample log, and responds to SNES-button command chords for bookmarks and ad hoc captures
 - `mesen_dump_bg_range.lua`: single-run range dumper for `VRAM + CGRAM + PPU state` and optional screenshots on selected frames
 - `run_mesen_dump_bg_range.sh`: convenience wrapper around the generic launcher for that range dumper
 - `mesen_scanline_step_test.lua`: an experimental scanline-step probe that uses `emu.step(..., ppuScanline)` plus `codeBreak` to sample `emu.getState()` once per visible scanline on a target frame; it now also accepts the same seeded savestate/input-window pattern used by the gameplay harnesses, records gameplay-facing layer scroll/callback fields alongside the old `ppu.mode7.*` values, and emits `frame_events` snapshots for traced `start`/`end` frame boundaries
@@ -25,6 +28,95 @@ For automated headless runs with Mesen2's test runner:
 ```sh
 ./validation/run_mesen_capture.sh
 ```
+
+For a full-pipeline Mesen archaeology pass focused on the still-obscure handoff
+surfaces, run:
+
+```sh
+./validation/run_mesen_deep_probe.sh
+```
+
+That wrapper now defaults to:
+
+- sampled intro/menu/gameplay run out to frame `4200`
+- anchor captures at `300,654,986,1093,1500,1640,1780,2050,2088,3250,3400,3550`
+- screenshot + `VRAM/CGRAM/OAM` + low-`WRAM` dumps on those capture frames
+- compare pairs between consecutive anchor frames
+- multi-window tracing over the densest archaeology zones:
+  `250-320`, `640-700`, `960-1120`, `1450-2100`, `3200-3600`
+- a default gameplay-entry route:
+  `1200:a;1280:a;1505-1510:a;1640-1645:a;1730-1735:a;2050-2949:a;2950-3400:b;3401-4199:a`
+- exec-point coverage across:
+  - intro bootstrap / front-end callbacks
+  - front-end helper loaders and opponent-grid handoffs
+  - gameplay family `01:902D -> 01:9111 -> 02:9016`
+  - narrowed emitter cluster `02:B042 / 02:B05D / 02:B0B1 / 02:B0BD / 02:B101 / 02:B134`
+- write-point coverage across:
+  - callback pointers / pending callback pointers
+  - queue cursors `dp_0020/0022/0053/0054/0055/0056`
+  - front-end/gameplay watch cells
+  - visible split helpers around `7E:1E14..1E2A`
+
+Key outputs:
+
+- `<prefix>.json`: sampled frames, transition events, capture artifacts, compare pairs
+- `<prefix>_summary.md`: scan-friendly summary of captures and transition highlights
+- `<prefix>_frame_<frame>.png`: per-anchor screenshots when enabled
+- `<prefix>_frame_<frame>_ppu_state.json`, `_vram.bin`, `_cgram.bin`, `_oam.bin`
+- `<prefix>_frame_<frame>_wram.bin`
+
+For a gameplay-only pass that starts from the preserved live-race lane-3 seed
+instead of power-on, run:
+
+```sh
+./validation/run_mesen_gameplay_probe.sh
+```
+
+That wrapper defaults to:
+
+- savestate:
+  `manual_artifacts/lane3/lane3_live_race_mid.mss`
+- sampled gameplay-only corridor out to frame `360` relative to the savestate
+- capture anchors at `0,30,60,90,120,180,240,300,359`
+- no intro/menu route replay and no default input windows
+- execution coverage focused on the active lane-3 family:
+  - `02:9016`
+  - `02:9165`
+  - `01:9185`
+  - `01:960D`
+  - `01:96A0`
+  - `02:B18D`
+  - `02:B042 / 02:B05D / 02:B0B1 / 02:B0BD / 02:B101 / 02:B134`
+- write coverage focused on queue cursors, late-gameplay watch cells, and
+  visible split helpers
+
+Override the default gameplay seed by passing a second positional argument, for
+example:
+
+```sh
+./validation/run_mesen_gameplay_probe.sh ./game.smc manual_artifacts/lane3/lane3_live_race_plus30f.mss
+```
+
+For direct interactive use inside Mesen while playing:
+
+1. Open the ROM normally in Mesen.
+2. Load `validation/mesen_live_play_probe.lua` from the script window.
+3. Play normally and use these command chords on the SNES pad state:
+   - `Select + L + R + A`: bookmark current state as the compare reference
+   - `Select + L + R + X`: quick capture with screenshot + JSON compare
+   - `Select + L + R + Y`: deep capture with screenshot + `VRAM/CGRAM/OAM/WRAM` dumps
+   - `Select + L + R + Start`: flush the rolling session JSON/summary to disk
+
+Default live outputs:
+
+- `td2_live_play_probe_<timestamp>.json`
+- `td2_live_play_probe_<timestamp>_summary.md`
+- per-capture siblings `..._capture_<n>_frame_<frame>.png/.json`
+- deep-capture memory dumps `..._capture_<n>_frame_<frame>_{vram,cgram,oam,wram}.bin`
+
+The generic launcher `run_mesen_capture.sh` now also normalizes
+`TD2_LIVE_PROBE_OUTPUT_PREFIX`, which makes the live script testable in
+headless mode with `TD2_LIVE_PROBE_AUTO_STOP_FRAMES=<n>` for smoke runs.
 
 For the current SNES-mimetic port bootstrap, build and run:
 
@@ -91,6 +183,42 @@ Direct runtime scheduler playback with scripted input:
   --frames 1
 ```
 
+User-facing native demo launcher:
+
+```sh
+./port/run_demo.sh
+```
+
+That path is intentionally not a compare/dump workflow:
+
+- it starts directly on the promoted `gameplay_live_race_mid` rail
+- it keeps `compare` disabled
+- it keeps `PPM/PNG` dump generation disabled
+- it draws an on-screen SDL overlay proving the current path is:
+  - `MESEN OFF`
+  - `ROM CPU EMU OFF`
+  - `PPM PNG DUMP OFF`
+  - `COMPARE OFF`
+  - plus the active scheduler/source/callback metadata for the current frame
+- it accepts startup window sizing via:
+  - `--window-width <n>`
+  - `--window-height <n>`
+- it also supports live resolution shortcuts:
+  - `1`: `1280x896`
+  - `2`: `1600x900`
+  - `3`: `1920x1080`
+  - `F1`: toggle overlay
+
+The dedicated smoke for that launcher is:
+
+```sh
+./port/test_demo_launcher.sh
+```
+
+That smoke runs the SDL launcher once under `SDL_VIDEODRIVER=dummy`, which now
+works because `platform_sdl` falls back to a software renderer when an
+accelerated renderer is unavailable.
+
 That emits:
 
 - `..._00000.ppm`: native runtime frame
@@ -121,6 +249,7 @@ Current scheduler-backed promoted rails:
   `1093 -> 1102 -> 1117` callback handoff
 - `menu_gameplay_entry`: `tools/out/design_frame1500_car_select`
 - `gameplay_live_race_mid`: `tools/out/design_lane3_live_race_mid_frame0_native`
+  with promoted exact gameplay anchors through frame `95`
 
 Current promoted gameplay scanline contract:
 

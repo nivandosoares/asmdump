@@ -185,7 +185,7 @@ New useful state beyond the original plan:
 - that scheduler now executes validated callback-family handoffs across:
   - intro `986 -> 1117`
   - menu/input corridor `1500 -> 2050`
-  - live gameplay seed `3 -> 11`
+  - live gameplay seed anchors `3 -> 95`
 - the design-pack loader now tolerates tracked bundles that only carry local
   `raw/` memory dumps and no `layers/main_visible.ppm`; this makes promoted
   menu/gameplay investigation packs directly runnable in the SDL runtime when

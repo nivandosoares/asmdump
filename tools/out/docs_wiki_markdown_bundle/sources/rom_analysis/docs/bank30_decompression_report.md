@@ -8,9 +8,11 @@ discovered in bank `30` (`0x1E`), including the new `67FB` decoder pass.
 - `tools/out/bank30_chunks.json`
 - `tools/out/bank30_headers.json`
 - `tools/out/bank30_chunk_validation.json`
-- `.mesen-config/Mesen2/LuaScriptData/mesen_probe_boot/td2_boot_probe_l001210_exec.json`
+- `tools/out/td2_boot_probe_l001210_exec.json`
 - `tools/out/td2_boot_probe_l001210_summary.json`
 - `tools/out/bank30_chunk_registry.json`
+- `tools/out/bank30_chunk_shapes.json`
+- `tools/out/bank30_chunk_shapes.md`
 
 Detected markers:
 
@@ -162,6 +164,30 @@ Observed decode geometry:
    - `67fb-unseen`: `1` (`P1`: `DA96`)
    - `nested-invalid-marker`: `1` (`E91F`)
    - `sentinel-control`: `1` (`9681`)
+
+## 2026-04-01 Static Shape Refresh
+
+Repeatable shape-analysis tool:
+
+```sh
+python3 tools/analyze_bank30_chunk_shapes.py --json-out tools/out/bank30_chunk_shapes.json --markdown-out tools/out/bank30_chunk_shapes.md
+```
+
+Current practical read:
+
+- `DA96` now looks structurally like a visual/map payload rather than code:
+  - `14310` decompressed words
+  - repeated `0x7C1F` runs: `33`
+  - dominant repeated-run stride: `157` words
+  - treating that stride as a row width yields a `157 x 33` block with `32`
+    identical rows
+- `EE7F` remains the stronger runtime-provenance target:
+  - same decompressed size as `DF6C/E73F` (`899` words)
+  - but only `20.356..21.0234%` same-index overlap against them
+  - `DF6C` vs `E73F` remains the true near-clone pair at `77.5306%`
+- practical implication:
+  - chase `EE7F` through reachability / organic caller paths
+  - chase `DA96` through consumer-side visual/tilemap correlation
 
 ## Next Actions
 

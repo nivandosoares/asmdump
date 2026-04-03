@@ -1,6 +1,804 @@
 Date: 2026-04-02
 
 Summary
+- Added a dedicated native SDL demo launcher for the promoted live-race port
+  rail instead of relying on headless compare/dump commands for demos.
+- Added an on-screen proof overlay that states the demo is running through the
+  native SDL path with `compare` off, `PPM/PNG` dumps off, and no
+  ROM/CPU-emulation path.
+- Hardened `platform_sdl` with a software-renderer fallback so the launcher and
+  the main runtime stay runnable under `SDL_VIDEODRIVER=dummy`.
+
+What I ran
+- rebuild affected port binaries:
+  - `make -C port`
+- targeted launcher/live-input validation:
+  - `./port/test_demo_launcher.sh`
+  - `./port/test_live_input.sh`
+  - `SDL_VIDEODRIVER=dummy ./port/build/td2_port --scene-dir tools/out/design_lane3_live_race_mid_frame0_native --scheduler-profile gameplay_live_race_mid --frames 1`
+- full port validation closure:
+  - `make -C port test`
+
+Artifacts
+- new demo launcher binary and wrapper:
+  - `port/demo_main.c`
+  - `port/run_demo.sh`
+- new demo smoke:
+  - `port/test_demo_launcher.sh`
+- SDL fallback change:
+  - `port/platform_sdl.c`
+
+Findings / Interpretation
+- The project now has a presentation-grade SDL entry point for the current
+  strongest native gameplay proof, with the overlay carrying the exact claims
+  design asked to see on-screen:
+  - native SDL path
+  - Mesen off
+  - ROM/CPU emulation off
+  - `PPM/PNG` dump path off
+  - compare lane off
+- The live-race rail is still the correct rail for this kind of demo:
+  it is native/runtime-rendered and contract-backed, while the broader
+  attract/no-input loop is still documented elsewhere as hybrid/sample-backed.
+- The software-renderer fallback closed a practical packaging gap:
+  SDL launcher smoke now runs in dummy environments without requiring an
+  accelerated render driver.
+
+What I learned (actionable)
+- For design/demo check-ins, the preferred entry point should now be
+  `./port/run_demo.sh`, not a compare/dump command line.
+- Resolution changes do not need a separate renderer path:
+  SDL logical-size presentation plus window resizing is enough for the current
+  demo lane.
+- The next stronger demo upgrade is still content-side, not launcher-side:
+  promote a fuller native attract/demo path before claiming a native no-input
+  demo loop.
+
+Next steps / Checkpoints
+1) Keep the demo launcher pinned to `gameplay_live_race_mid` until a fuller
+   attract or later-gameplay rail is promoted natively.
+2) If design wants another presentation preset, add scene/profile wrappers on
+   top of `td2_demo` instead of forking another SDL shell.
+3) When the attract lane stops being hybrid/sample-backed, promote a second
+   launcher preset for that path rather than weakening the current “native
+   demo” wording.
+
+Files updated in this turn
+- `port/demo_main.c`
+- `port/platform_sdl.c`
+- `port/Makefile`
+- `port/run_demo.sh`
+- `port/test_demo_launcher.sh`
+- `port/README.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+
+Next reading
+- `port/README.md`
+- `validation/README.md`
+- `rom_analysis/docs/validation_gates.md`
+
+Date: 2026-04-02
+
+Summary
+- Promoted richer gameplay-state fields into the port runtime contract/state
+  surface so scheduler-backed gameplay rails are no longer limited to the old
+  `state_11f3/dp_0053/dp_0054` subset.
+- Extended the `gameplay_live_race_mid` scheduler rail with measured gameplay
+  anchors out to frame `95` using the gameplay-first Mesen smoke.
+- Hardened the port smokes so they now validate those later gameplay anchors
+  directly, including two late `JOY1` mutation cases.
+
+What I ran
+- rebuild affected port binaries:
+  - `make -C port`
+- scheduler rail validation:
+  - `./port/test_scheduler.sh`
+- input mutation validation:
+  - `./port/test_input_mutation.sh`
+
+Artifacts
+- promoted contract/state surface:
+  - `port/include/td2_contracts.h`
+  - `port/src/td2_contracts.c`
+  - `port/src/td2_compare.c`
+- promoted gameplay scheduler anchors:
+  - `rom_analysis/docs/scheduler_rail_contracts.jsonc`
+- strengthened port smokes:
+  - `port/test_scheduler.c`
+  - `port/test_input_mutation.c`
+
+Findings / Interpretation
+- The port runtime can now ingest and carry this richer gameplay slice from
+  scheduler contracts:
+  - `state_0440`
+  - `state_09a2/state_09a8`
+  - `state_129e/state_18ee`
+  - `dp_0020/dp_0022`
+  - `dp_0053/dp_0054/dp_0055/dp_0056`
+- The promoted `gameplay_live_race_mid` rail is now materially less front-end
+  shaped: it carries real queue/route anchors at frames
+  `16`, `30`, `60`, `90`, and `95`, all tied to the gameplay-first smoke
+  under `tools/out/gameplay_seed_probe_smoke`.
+- The input surface is now checked against those later anchors too:
+  `JOY1` mutation at frame `60` keeps the measured
+  `state_09a2/state_09a8/dp_0020/dp_0022/dp_0053/dp_0054` gameplay state,
+  and the same is now true again at frame `95`.
+- Validation stayed bounded and closed cleanly:
+  - scheduler smoke: `480/480`
+  - input mutation smoke: `220/220`
+
+What I learned (actionable)
+- The port no longer needs to treat the live-race seed as only an early
+  `3 -> 11` proof; it now has a scheduler-backed gameplay checkpoint set
+  through frame `95`.
+- The next meaningful port-side promotion for this rail is not “more generic
+  input plumbing”; it is either:
+  - densifying the gameplay rail between these anchors, or
+  - promoting the next late-gameplay selector/queue fields once the lane-3
+    archaeology proves them.
+
+Next steps / Checkpoints
+1) Keep using `tools/out/gameplay_seed_probe_smoke/td2_boot_probe.json` as the
+   current source for gameplay-rail promotions until a denser gameplay probe is
+   justified.
+2) If the next port step needs continuous playback beyond the anchor set,
+   capture a denser gameplay-only probe rather than inventing interpolation
+   ranges between these exact samples.
+3) Feed the still-open lane-3 selector work back into the same contract once
+   the upstream path behind `02:B0B1 / 02:B0BD -> L012BE2` is narrowed far
+   enough to promote new state safely.
+
+Files updated in this turn
+- `port/include/td2_contracts.h`
+- `port/src/td2_contracts.c`
+- `port/src/td2_compare.c`
+- `port/test_scheduler.c`
+- `port/test_input_mutation.c`
+- `rom_analysis/docs/scheduler_rail_contracts.jsonc`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+- `PORT_PLAN.md`
+
+Next reading
+- `rom_analysis/docs/scheduler_rail_contracts.jsonc`
+- `tools/out/gameplay_seed_probe_smoke/td2_boot_probe_corridor_0_96.md`
+- `port/test_scheduler.c`
+
+Date: 2026-04-02
+
+Summary
+- Added a gameplay-first Mesen probe wrapper so lane-3 runs can start from the
+  preserved live-race savestate instead of replaying boot, intro, and menus.
+- Validated that wrapper against `manual_artifacts/lane3/lane3_live_race_mid.mss`
+  and generated a first gameplay-only smoke artifact over frames `0..96`
+  relative to the savestate.
+- Closed the immediate request behind the earlier `probe_0300` confusion:
+  the new gameplay wrapper starts directly on the live-race surface at frame
+  `0`, not on the track-select/front-end corridor.
+
+What I ran
+- wrapper syntax/permission check:
+  - `chmod +x validation/run_mesen_gameplay_probe.sh`
+  - `bash -n validation/run_mesen_gameplay_probe.sh`
+- gameplay-seed smoke:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=120 TD2_BOOT_PROBE_TOTAL_FRAMES=96 TD2_BOOT_PROBE_SAMPLE_EVERY=8 TD2_BOOT_PROBE_CAPTURE_FRAMES='0,30,60,90' TD2_BOOT_PROBE_COMPARE_FRAMES='0,30,60,90' TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/gameplay_seed_probe_smoke/td2_boot_probe ./validation/run_mesen_gameplay_probe.sh ./game.smc`
+- gameplay corridor summary:
+  - `python3 tools/summarize_deep_probe_corridor.py tools/out/gameplay_seed_probe_smoke/td2_boot_probe.json --frame-start 0 --frame-end 96 --output tools/out/gameplay_seed_probe_smoke/td2_boot_probe_corridor_0_96.json --markdown-out tools/out/gameplay_seed_probe_smoke/td2_boot_probe_corridor_0_96.md`
+
+Artifacts
+- new wrapper:
+  - `validation/run_mesen_gameplay_probe.sh`
+- gameplay-seed smoke output:
+  - `tools/out/gameplay_seed_probe_smoke/td2_boot_probe.json`
+  - `tools/out/gameplay_seed_probe_smoke/td2_boot_probe_summary.md`
+  - `tools/out/gameplay_seed_probe_smoke/td2_boot_probe_frame.png`
+  - `tools/out/gameplay_seed_probe_smoke/td2_boot_probe_corridor_0_96.json`
+  - `tools/out/gameplay_seed_probe_smoke/td2_boot_probe_corridor_0_96.md`
+
+Findings / Interpretation
+- The gameplay wrapper now does exactly what the lane needed:
+  it loads `manual_artifacts/lane3/lane3_live_race_mid.mss` by default and
+  begins directly inside the live-race family.
+- Frame `0` of the new smoke already shows:
+  - `main_callback_snes = 02:9016`
+  - `irq_callback_snes = 01:96A0`
+  - `nmi_callback_snes = 02:8F3C`
+  - `state_0202 = FFFF`
+  - `state_1C70 = 0`
+  - `state_1C76 = 1`
+  - `state_11F3 = 477`
+  - `dp_0053/0054 = 0x78 / 0x78`
+- That closes the practical ambiguity from the stalled boot-based late run:
+  the new artifact does not begin on track select or any earlier front-end
+  surface.
+- The first `96` gameplay-relative frames keep the expected lane-3 shape:
+  - callback family stays fixed on `02:9016 / 01:96A0 / 02:8F3C`
+  - `state_11f3` rises `477 -> 495`
+  - `state_129e` stays `0x0100`
+  - `dp_0053/0054` cycle actively through the DMA ring
+  - capture frames `60` and `90` show nonzero active queue descriptors
+- The run did print many Mesen `Uninitialized memory read` warnings while
+  loading the manual savestate, but the probe JSON and derived corridor
+  summary still completed and were internally coherent.
+
+What I learned (actionable)
+- For lane 3, the default archaeology entry point should now be the new
+  gameplay wrapper unless the question explicitly needs the boot/menu path.
+- The boot-based deep wrapper remains the right tool for cross-pipeline
+  intro/front-end/gameplay handoffs.
+- The new gameplay wrapper is the cheaper falsifier for:
+  - live-race callback/state checks
+  - queue cursor movement
+  - `L01318D` branch/activity questions from a real gameplay seed
+
+Next steps / Checkpoints
+1) Use `validation/run_mesen_gameplay_probe.sh` for the next bounded trace
+   that chases the selector/data path feeding
+   `02:B0B1 / 02:B0BD -> L012BE2`.
+2) Keep the boot-based deep wrapper for whole-pipeline questions only.
+3) If needed, add a second gameplay preset around
+   `manual_artifacts/lane3/lane3_live_race_plus30f.mss` rather than
+   stretching the boot-based route longer again.
+
+Files updated in this turn
+- `validation/run_mesen_gameplay_probe.sh`
+- `validation/README.md`
+- `tools/out/gameplay_seed_probe_smoke/td2_boot_probe_corridor_0_96.json`
+- `tools/out/gameplay_seed_probe_smoke/td2_boot_probe_corridor_0_96.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `validation/README.md`
+- `tools/out/gameplay_seed_probe_smoke/td2_boot_probe_corridor_0_96.md`
+- `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
+
+Date: 2026-04-02
+
+Summary
+- Added a reusable deep-probe corridor summarizer so late gameplay windows can
+  be reduced into one readable artifact instead of hand-reading the full probe
+  JSON.
+- Ran a bounded light-profile late probe through frame `3600`, then generated
+  a focused corridor report for `3200..3555`.
+- Closed the strongest new late-lane narrowing:
+  inside the stable `02:9016 / 01:96A0 / 02:8F3C` family, the late corridor
+  is now tied specifically to the high-index default `L01318D` branch
+  `02:B0B1 / 02:B0BD -> L012BE2`, not to the alternate
+  `02:B101 -> L012D5A` path.
+
+What I ran
+- attempted heavy late deep-probe profile:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=300 TD2_BOOT_PROBE_TOTAL_FRAMES=3600 TD2_BOOT_PROBE_SAMPLE_EVERY=16 TD2_BOOT_PROBE_CAPTURE_FRAMES='2088,3250,3400,3550' TD2_BOOT_PROBE_COMPARE_FRAMES='2088,3250,3400,3550' TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/deep_probe_late/td2_boot_probe ./validation/run_mesen_deep_probe.sh ./game.smc`
+- bounded light late deep-probe profile:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=300 TD2_BOOT_PROBE_TOTAL_FRAMES=3600 TD2_BOOT_PROBE_SAMPLE_EVERY=16 TD2_BOOT_PROBE_CAPTURE_FRAMES='2088,3250,3400,3550' TD2_BOOT_PROBE_COMPARE_FRAMES='2088,3250,3400,3550' TD2_BOOT_PROBE_CAPTURE_SCREENSHOTS=0 TD2_BOOT_PROBE_CAPTURE_PPU_MEMORY=0 TD2_BOOT_PROBE_CAPTURE_WRAM_MEMORY=0 TD2_BOOT_PROBE_TRACE_MODE7=0 TD2_BOOT_PROBE_TRACE_DMA=0 TD2_BOOT_PROBE_TRACE_VRAM=0 TD2_BOOT_PROBE_TRACE_L001210=0 TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/deep_probe_late_light/td2_boot_probe ./validation/run_mesen_deep_probe.sh ./game.smc`
+- corridor-summary validation:
+  - `python3 -m py_compile tools/summarize_deep_probe_corridor.py`
+- corridor-summary artifact:
+  - `python3 tools/summarize_deep_probe_corridor.py tools/out/deep_probe_late_light/td2_boot_probe.json --frame-start 3200 --frame-end 3555 --output tools/out/deep_probe_late_light/td2_boot_probe_corridor_3200_3555.json --markdown-out tools/out/deep_probe_late_light/td2_boot_probe_corridor_3200_3555.md`
+
+Artifacts
+- stalled heavy-profile negative result:
+  - `tools/out/deep_probe_late/td2_boot_probe_frame_00300.png`
+- successful light-profile late probe:
+  - `tools/out/deep_probe_late_light/td2_boot_probe.json`
+  - `tools/out/deep_probe_late_light/td2_boot_probe_summary.md`
+- focused corridor summary:
+  - `tools/out/deep_probe_late_light/td2_boot_probe_corridor_3200_3555.json`
+  - `tools/out/deep_probe_late_light/td2_boot_probe_corridor_3200_3555.md`
+- lane note:
+  - `rom_analysis/maps/tracks/track1_late_deep_probe_corridor_3200_3555.md`
+
+Findings / Interpretation
+- The heavy late profile was low-yield in this lane:
+  it only emitted the frame-`300` screenshot before stalling, so the bounded
+  pivot to the light profile was the correct retry.
+- The late gameplay corridor now has a stronger code-side read than before:
+  - callbacks stay fixed on `02:9016 / 01:96A0 / 02:8F3C`
+  - `02:B0B1` and `02:B0BD` appear only on odd frames `3201..3327`
+  - `02:B042`, `02:B05D`, `02:B101`, and `02:B134` have `0` hits in
+    `3200..3555`
+- Because `02:B0B1` and `02:B0BD` are the high-index default-branch setup
+  inside `L01318D`, the corridor is now narrowed past the old vague
+  “emitter cluster” wording:
+  late gameplay is using the default `L012BE2` submit path here, not the
+  alternate `L012D5A` submit path.
+- The sampled timeline and compare pairs keep the earlier late-lane reading
+  intact while sharpening its target:
+  - `3250`, `3400`, and `3550` all stay in the same family
+  - `state_11f3` rises `169 -> 237`
+  - `dp_0022` decays `26 -> 0`
+  - `dp_0053/0054` keep the queue-ring cursor motion as the dominant moving
+    surface
+  - `state_129E` first becomes nonzero in this late family
+  - `CGRAM` changes stay `0` on `2088 -> 3250`, `3250 -> 3400`, and
+    `3400 -> 3550`
+- The front-end carry false lead also stays closed under this new pass:
+  - `wram_0200_020f` stays unchanged across the two late compare pairs
+  - `wram_1c60_1cef` and `wram_1d00_1d3f` stay unchanged on `3250 -> 3400`
+  - practical read:
+    the `3250` counterexample is still queue/builder-side late gameplay work,
+    not revived front-end selector ownership
+- The watched write points stayed silent again in `3200..3555`, which means
+  the next bounded trace should move deeper into the data path feeding the
+  high-index branch rather than reusing the same exact watch cells.
+
+What I learned (actionable)
+- The lane-3 target is no longer “which site inside
+  `02:B042 / 02:B05D / 02:B0B1 / 02:B0BD / 02:B101 / 02:B134` matters?”
+- The late corridor now points to one narrower question:
+  what feeds the high-index default `L01318D` path
+  `02:B0B1 / 02:B0BD -> L012BE2`
+  starting at frame `3201`?
+- The next static/dynamic proving surface should therefore chase:
+  - `$22`
+  - `$24`
+  - `$26`
+  - the `12F2/12F4`-indexed selector family
+- The next trace should *not* spend its budget on:
+  - callback-family handoff hunting
+  - the alternate `02:B101 -> L012D5A` branch
+
+Next steps / Checkpoints
+1) Resolve which upstream selector/data path first activates the
+   `02:B0B1 / 02:B0BD -> L012BE2` branch at frame `3201`.
+2) Keep using the light deep-probe profile plus the corridor summarizer as the
+   cheap falsifier before any new heavy capture rerun.
+3) If another dynamic pass is needed, trace the operands feeding
+   `$22/$24/$26` and the `12F2/12F4` family rather than replaying the same
+   watched write-point set.
+
+Files updated in this turn
+- `tools/summarize_deep_probe_corridor.py`
+- `tools/out/deep_probe_late_light/td2_boot_probe_corridor_3200_3555.json`
+- `tools/out/deep_probe_late_light/td2_boot_probe_corridor_3200_3555.md`
+- `rom_analysis/maps/tracks/track1_late_deep_probe_corridor_3200_3555.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `rom_analysis/maps/tracks/track1_late_deep_probe_corridor_3200_3555.md`
+- `tools/out/deep_probe_late_light/td2_boot_probe_corridor_3200_3555.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+
+Date: 2026-04-02
+
+Summary
+- Promoted the old boot probe into a deep Mesen pipeline probe that can cover
+  intro, front-end, gameplay entry, and later gameplay anchors in one run
+  without drowning the output in unbounded trace spam.
+- Added a dedicated wrapper:
+  `validation/run_mesen_deep_probe.sh`
+  with a default route that drives:
+  `intro -> menu -> gameplay entry -> brake corridor -> traffic/collision-era anchors`.
+- Extended `validation/mesen_probe_boot.lua` so one run now emits:
+  - sparse sampled frame entries (`sample_every`)
+  - multi-window trace gating (`trace_windows`)
+  - capped `Mode7` / `DMA` / `VRAM` write traces
+  - callback/state transition events
+  - anchor-frame capture artifacts with queue summaries plus selected WRAM
+    region fingerprints
+  - consecutive compare pairs over those anchor captures
+  - a scan-friendly markdown summary next to the JSON output
+- Added a second, interactive Mesen-side collector:
+  `validation/mesen_live_play_probe.lua`
+  so the dev can keep the probe resident while playing and trigger:
+  bookmarks, quick captures, deep captures, and session flushes with
+  `Select + L + R + <button>` command chords.
+- Updated `validation/run_mesen_capture.sh` so the generic launcher now also
+  recognizes `TD2_LIVE_PROBE_OUTPUT_PREFIX`, which makes the live probe
+  smoke-testable in headless mode with `TD2_LIVE_PROBE_AUTO_STOP_FRAMES`.
+
+What I ran
+- shell syntax check:
+  - `bash -n validation/run_mesen_deep_probe.sh`
+- deep-probe smoke:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=45 TD2_BOOT_PROBE_TOTAL_FRAMES=24 TD2_BOOT_PROBE_SAMPLE_EVERY=4 TD2_BOOT_PROBE_CAPTURE_FRAMES='0,8,16,23' TD2_BOOT_PROBE_COMPARE_FRAMES='0,8,16,23' TD2_BOOT_PROBE_TRACE_WINDOWS='0-23' TD2_BOOT_PROBE_CAPTURE_SCREENSHOTS=0 TD2_BOOT_PROBE_CAPTURE_PPU_MEMORY=0 TD2_BOOT_PROBE_CAPTURE_WRAM_MEMORY=0 TD2_BOOT_PROBE_TRACE_MODE7=0 TD2_BOOT_PROBE_TRACE_DMA=0 TD2_BOOT_PROBE_TRACE_VRAM=0 TD2_BOOT_PROBE_TRACE_L001210=0 TD2_BOOT_PROBE_TRACE_EXEC_POINTS='front_8b31=00:8B31' TD2_BOOT_PROBE_TRACE_WRITE_POINTS='dp_0053=00:0053' TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/deep_probe_smoke/td2_boot_probe ./validation/run_mesen_deep_probe.sh ./game.smc`
+- route-bearing deep-probe validation:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=180 TD2_BOOT_PROBE_TOTAL_FRAMES=2200 TD2_BOOT_PROBE_SAMPLE_EVERY=16 TD2_BOOT_PROBE_CAPTURE_FRAMES='300,654,986,1093,1500,1640,1780,2050,2088' TD2_BOOT_PROBE_COMPARE_FRAMES='300,654,986,1093,1500,1640,1780,2050,2088' TD2_BOOT_PROBE_CAPTURE_SCREENSHOTS=0 TD2_BOOT_PROBE_CAPTURE_PPU_MEMORY=0 TD2_BOOT_PROBE_CAPTURE_WRAM_MEMORY=0 TD2_BOOT_PROBE_TRACE_MODE7=0 TD2_BOOT_PROBE_TRACE_DMA=0 TD2_BOOT_PROBE_TRACE_VRAM=0 TD2_BOOT_PROBE_TRACE_L001210=0 TD2_BOOT_PROBE_OUTPUT_PREFIX=tools/out/deep_probe_mid/td2_boot_probe ./validation/run_mesen_deep_probe.sh ./game.smc`
+- live-probe smoke:
+  - `MESEN_RELEASE_DIR=/home/nivando-soares/Mesen2/bin/linux-x64/Release MESEN_TIMEOUT_SECONDS=60 TD2_LIVE_PROBE_AUTO_STOP_FRAMES=32 TD2_LIVE_PROBE_AUTOSAVE_EVERY=16 TD2_LIVE_PROBE_OUTPUT_PREFIX=tools/out/live_play_probe_smoke/session ./validation/run_mesen_capture.sh ./game.smc ./validation/mesen_live_play_probe.lua`
+
+Artifacts
+- smoke output:
+  - `tools/out/deep_probe_smoke/td2_boot_probe.json`
+  - `tools/out/deep_probe_smoke/td2_boot_probe_summary.md`
+- route-bearing deep-probe output:
+  - `tools/out/deep_probe_mid/td2_boot_probe.json`
+  - `tools/out/deep_probe_mid/td2_boot_probe_summary.md`
+- live-probe smoke output:
+  - `tools/out/live_play_probe_smoke/session.json`
+  - `tools/out/live_play_probe_smoke/session_summary.md`
+
+Findings / Interpretation
+- The new probe path is now structurally ready for the still-open pipeline
+  work because it captures the three layers that were previously split across
+  ad hoc runs:
+  - callback family handoffs
+  - queue / WRAM control-state deltas
+  - exact anchor-frame `VRAM/CGRAM/OAM` and selected WRAM region comparisons
+- The new default wrapper is intentionally biased toward the obscure open
+  surfaces rather than the already-solved intro-only lane:
+  - front-end helper/callback corridor around `1500/1640/1780`
+  - gameplay-entry handoff around `2050/2088`
+  - late gameplay anchor set `3250/3400/3550`
+  - emitter cluster `02:B042 / 02:B05D / 02:B0B1 / 02:B0BD / 02:B101 / 02:B134`
+- The short smoke also confirms the new outputs are internally coherent:
+  - sampled entries, transition events, capture artifacts, and compare pairs
+    all materialize in one JSON
+  - the markdown summary is useful as a first-pass scan before opening the
+    heavier JSON or memory dumps
+- The route-bearing validation already proves the deep probe is not just a
+  boot-only tool:
+  - it reaches the expected callback anchors
+    `00:8029 -> 01:A39C -> 01:9FE5 -> 01:C1D2 -> 01:BE43 -> 02:9016`
+  - it records the gameplay entry handoff into
+    `02:9016 / 01:96A0 / 02:8F3C`
+  - it keeps the queue/state oscillation visible inside the post-`2050`
+    corridor instead of collapsing that window to one end-frame state
+- The live-probe smoke closes the manual-tooling part defensibly:
+  - it records sampled frames and transition events in resident mode
+  - it writes the rolling session files without `testRunner`-specific
+    assumptions
+  - command-triggered captures remain untested in headless mode, but the
+    command surface is now documented and the auto-stop path is validated
+
+What I learned (actionable)
+- The repo now has one reusable Mesen-side collector for “what actually
+  changed in the hidden pipeline?” instead of stitching together:
+  - one boot probe
+  - one dump-range run
+  - one gameplay-only trace
+- For the active obscure lanes, the best next use is no longer another narrow
+  ad hoc probe:
+  run the deep wrapper once, then branch analysis from:
+  - `transition_events`
+  - `capture_compare_pairs`
+  - the per-anchor queue summaries and memory-region diffs
+- The new `trace_windows` surface should be preferred over one giant
+  contiguous trace window whenever the target spans intro/menu/gameplay in the
+  same pass.
+
+Next steps / Checkpoints
+1) Run `validation/run_mesen_deep_probe.sh` with the full default profile and
+   inspect the first real output around `1500/1640/1780` and
+   `3250/3400/3550`.
+2) Use the emitted compare pairs to decide whether the next archaeology turn
+   should prioritize:
+   - front-end top-row `BG2` producer provenance
+   - gameplay emitter semantics inside the `02:B042..02:B134` cluster
+3) If the full run is too noisy on one lane, keep the wrapper and narrow only
+   `TD2_BOOT_PROBE_TRACE_WINDOWS`, not the whole instrumentation surface.
+
+Files updated in this turn
+- `validation/mesen_probe_boot.lua`
+- `validation/run_mesen_deep_probe.sh`
+- `validation/mesen_live_play_probe.lua`
+- `validation/run_mesen_capture.sh`
+- `validation/README.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `validation/README.md`
+- `tools/out/deep_probe_smoke/td2_boot_probe_summary.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+
+Date: 2026-04-02
+
+Summary
+- Added a reusable front-end car-helper ASCII auditor so the current car-panel
+  load path can be checked without repeating ad hoc LoROM math.
+- Closed the exact panel-helper source set behind `L00BC0F`:
+  `$0202 + 0x0009` maps to helper indices `9/10/11`, which load:
+  - `L00A9A0`: `00:B0AB`, `00:B6B2`, `00:BCBA`
+  - `L00A9CB`: `0E:8000`, `0E:91FE`, `0E:A428`
+- Kept the main negative result instead of overfitting the new `.sol` string
+  suspicion:
+  those helper sources do not carry `CARBMP`, `CARBMP.sol`, `Porsche`,
+  `Lamborghini`, `Diablo`, `Ferrari`, `F40`, `959`, or `P959_8K` as direct or
+  fixed-stride ASCII in either the source bytes or the decoded payloads.
+- Added a stronger read on the familiar `.sol` names:
+  `GAMEOVER.sol`, `WHOA.sol`, `YEAH.sol`, and `P959_8K.sol` all sit inside the
+  same nearby `YUKO` container family, which raises the prior that
+  `P959_8K.sol` is another AV/effect asset label rather than the front-end
+  car-name surface.
+
+What I ran
+- helper audit tool validation:
+  - `python3 -m py_compile tools/audit_frontend_car_helper_ascii.py`
+- helper audit artifact:
+  - `python3 tools/audit_frontend_car_helper_ascii.py game.smc --json-out tools/out/frontend_car_helper_ascii_audit_20260402.json --markdown-out tools/out/frontend_car_helper_ascii_audit_20260402.md`
+- ROM-wide `.sol` and car-name string pass:
+  - `strings -a -t x game.smc | rg "CARBMP|\\.sol$|Porsche|Lamborghini|Ferrari|959|Diablo|F40|CAR"`
+- direct LoROM-mapped YUKO block comparison over the familiar `.sol` names:
+  - ad hoc Python inspection around `00:DEE3`, `0A:C65A`, `0B:B557`, and
+    `0A:EDEA`
+
+Findings / Interpretation
+- The current panel-helper load path is now explicit in one reusable artifact:
+  - helper `9` (`$0202 = 0`):
+    - `L00A9A0 00:B0AB` -> file `0x0030AB`
+    - `L00A9CB 0E:8000` -> file `0x070000`
+  - helper `10` (`$0202 = 1`):
+    - `L00A9A0 00:B6B2` -> file `0x0036B2`
+    - `L00A9CB 0E:91FE` -> file `0x0711FE`
+  - helper `11` (`$0202 = 2`):
+    - `L00A9A0 00:BCBA` -> file `0x003CBA`
+    - `L00A9CB 0E:A428` -> file `0x072428`
+- All three `L00A9A0` sources are `42FB`; all three `L00A9CB` sources are
+  `26FB`.
+- The new audit closes the main question defensibly:
+  - no `CARBMP`/car-name needle hits land in the compressed source bytes
+  - no such hits land in the decoded `L0005AC` tilemap blobs either
+  - no such hits land in the decoded `L0006C9` CHR blobs either
+  - there are also no positive fixed-stride (`1/2/3`) hits for those needles
+- That means the still-missing name-bearing surface is not usefully explained
+  by “the helper bundle already embeds ASCII car names”.
+- The `.sol` comparison is now more concrete:
+  - `GAMEOVER.sol` at `00:DEE3`, `WHOA.sol` at `0A:C65A`,
+    `YEAH.sol` at `0B:B557`, and `P959_8K.sol` at `0A:EDEA` are each preceded
+    by the same nearby `YUKO` signature block
+  - the three familiar examples match known spoken/FX cues from gameplay
+  - practical read: `P959_8K.sol` currently fits the same container family
+    better than it fits the front-end title/info-box path
+- Practical consequence for the active front-end lane:
+  - the strongest remaining explanation is still the old exact-frame one:
+    shared panel/glyph CHR plus a small top-row `BG2` tilemap delta
+  - the next useful target is therefore tilemap/tile provenance on that top
+    row, not deeper blind `.sol` scanning inside helpers `9/10/11`
+
+What I learned (actionable)
+- The `L00BC0F` panel reload path is no longer “helper bundle 10 in general”;
+  it is the exact `9/10/11` source sextet above, with validated LoROM file
+  offsets and compression modes.
+- The new `.sol` suspicion did produce a real architecture-facing gain even
+  though it did not reveal the car-name text:
+  it cleanly separates the front-end helper path from the nearby `YUKO` asset
+  family.
+- For this front-end lane, blind ASCII scans inside the helper payloads should
+  now be demoted behind the stronger exact-frame tilemap-delta path.
+
+Next steps / Checkpoints
+1) Trace the top-row `BG2` tilemap delta across the `1500/1640/1780` front-end
+   anchors back to the producing row/tile selector.
+2) Keep the current helper sextet as the closed negative result when the
+   “embedded ASCII car-name” hypothesis comes up again.
+3) If the `.sol`/`YUKO` family becomes active as its own lane later, treat it
+   as a separate AV/effect-asset cataloguing problem rather than as car-panel
+   text provenance.
+
+Files updated in this turn
+- `tools/audit_frontend_car_helper_ascii.py`
+- `tools/out/frontend_car_helper_ascii_audit_20260402.json`
+- `tools/out/frontend_car_helper_ascii_audit_20260402.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `tools/out/frontend_car_helper_ascii_audit_20260402.md`
+- `docs/snes_unknowns.md`
+- `rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.json`
+
+Date: 2026-04-02
+
+Summary
+- Switched the text-validation detour away from phrase needles and onto a
+  raw `0x41` anchor pass:
+  extracting printable runs that contain byte `0x41` now closes real
+  start/end text corridors in `bank 01`, not just isolated string hits.
+- Added a quick bank-wide ASCII detour with a reusable scanner:
+  contiguous `stride=1` hits now show real runtime/user-facing phrases in
+  `bank 01`, and a targeted interleaved pass closes one real hidden-string
+  proof at `0D:C364` -> `Press any button.` under `stride=2`.
+- Documented a new low-risk text-storage fact for the front-end lane:
+  the known string block at `01:880D` is stored in the ROM as literal
+  NUL-terminated ASCII, not a custom packed charset.
+- Added a stronger cross-surface reading from team debug:
+  Mesen-side inspection also reports ASCII codepoints on dynamic
+  `High Score` text, on the gameplay service-corridor attendant dialog, and
+  on the long splash/copyright sentence.
+- Added a stronger architectural read from the same team debug:
+  the repeated `1 byte = 1 character` behavior now looks more like a shared
+  game-wide text routine than an isolated menu-only storage quirk.
+- Added a small gameplay-state watchlist note from team debug:
+  `$00129E` now reads as the "times the car crashed" counter, and `$0018EE`
+  reads as the current `cars left` reserve.
+
+What I ran
+- anchor-byte bank-`01` artifact:
+  - `python3 tools/find_ascii_candidates.py game.smc --banks 0x01 --strides 1 --min-length 6 --per-bank-limit 20 --anchor-byte 0x41 --markdown-out tools/out/ascii_anchor41_bank01_20260402.md --json-out tools/out/ascii_anchor41_bank01_20260402.json`
+- anchor-byte global summary:
+  - `python3 tools/find_ascii_candidates.py game.smc --banks 0-31 --strides 1,2,3 --min-length 6 --per-bank-limit 8 --anchor-byte 0x41 --json-out tools/out/ascii_anchor41_global_20260402.json --markdown-out tools/out/ascii_anchor41_global_20260402.md`
+- direct hex expansion around the two strongest bank-`01` anchor clusters:
+  - `xxd -g1 -s 0x8800 -l 176 game.smc`
+  - `xxd -g1 -s 0xab30 -l 352 game.smc`
+- scanner validation:
+  - `python3 -m py_compile tools/find_ascii_candidates.py`
+- contiguous bank-wide scan:
+  - `python3 tools/find_ascii_candidates.py game.smc --banks 0-31 --strides 1 --min-length 6 --per-bank-limit 8 --json-out tools/out/ascii_candidate_scan_stride1_20260402.json --markdown-out tools/out/ascii_candidate_scan_stride1_20260402.md`
+- bank-wide needle scan over contiguous plus interleaved lanes:
+  - `python3 tools/find_ascii_candidates.py game.smc --banks 0-31 --strides 1,2,3 --min-length 6 --per-bank-limit 3 --needles 'HIGH SCORE,GAME OPTIONS,PLAY TDII,AUTOSHIFT,BRAKE,THROTTLE,STEERING,LIVES,LICENSE,SCORE,SPEED,GAS,DRIVING,JAIL,POLICE' --json-out tools/out/ascii_candidate_scan_needles_20260402.json`
+- targeted interleaved follow-up on the one positive bank:
+  - `python3 tools/find_ascii_candidates.py game.smc --banks 0x0D --strides 2 --min-length 6 --per-bank-limit 20`
+- direct ROM byte check over the verified customize-menu anchor:
+  - `xxd -g1 -s 0x880d -l 96 game.smc`
+
+Findings / Interpretation
+- The `0x41`-anchored pass is already more useful than phrase needles for
+  “where does the text block really begin/end?”:
+  - front-end/config corridor:
+    - anchor hits land on `01:880D..01:8845`
+    - direct hex shows this is one contiguous NUL-terminated ASCII block
+      running at least `01:880D..01:88A0`
+    - current visible members include:
+      `CUSTOMIZE CAR`, `Autoshift`, `Car Height`, `Accel Coeff`,
+      `Brake Coeff`, `Max G Force`, `Scrub Rate`, `0-60`, `0-100`,
+      `1/4 Mile`, `1/4 Speed`, `Top Speed`, `Top Time`, `Lives`
+  - judgement/advice corridor:
+    - anchor hits land on `01:AB3F..01:AC53`
+    - direct hex expansion shows one larger contiguous ASCII corridor already
+      visible from at least `01:AB30` through `01:AC8F+`
+    - that corridor carries chained NUL-terminated advice/judgement lines such
+      as `ACME driving school?`, `The gas pedal is on the`, `Go faster.  This
+      is only a`, `Sports cars can go much`, `Don\`t give up your day job,`,
+      `Autobahns were made for`, and `find the brak...`
+- The same anchor pass is also clarifying what is *not* text:
+  - `bank 04` still returns mostly synthetic/repetitive `A`-heavy blobs
+    (`I999999AAAAAAAAAAAAA`, `ADDDDJ`) rather than clean English corridors
+  - practical read: `bank 04` remains open, but the current `0x41` anchor
+    evidence is much stronger in `bank 01` than there
+- The quick detour already closes two useful text-storage behaviors:
+  - `bank 01` contains real contiguous ASCII phrases, not just one static menu
+    block; current scanner hits include:
+    - `01:AD07` -> `Great driving!  You deserve`
+    - `01:AEBD` -> `License revoked and a 30`
+    - `01:ADEC` -> `You ran out of gas.`
+    - `01:AEB6` -> `You got the best score!`
+  - `bank 0D` contains at least one real interleaved hidden string:
+    - raw `stride=1` view at `0D:C364` looks noisy
+    - `stride=2 phase=0` cleanly resolves the same bytes as
+      `Press any button.`
+    - direct hex now closes the concrete layout there as alternating
+      `ASCII,0x28` bytes:
+      `50 28 72 28 65 28 73 28 ...`
+- Negative-but-useful result from the same pass:
+  - the current blind ASCII scan did not produce comparably clean hits in
+    `bank 04`, despite the standing text/string suspicion there
+  - practical read: some text is plainly stored in ASCII across banks, but
+    `bank 04` likely still needs stronger format-aware extraction than this
+    first blind pass
+- The raw bytes at `01:880D` decode directly as:
+  - `CUSTOMIZE CAR`
+  - `Autoshift`
+  - `Car Height`
+  - `Drag Coeff`
+  - `Accel Coeff`
+  - `Brake Coeff`
+  - `Max G Force`
+  - `Scrub Rate`
+- Team-reported Mesen debug also sees plain ASCII semantics on two dynamic
+  text families plus the opening splash sentence:
+  - the `High Score` surface reached through `L00A3CC`
+  - the service-corridor attendant dialog noted in the live-race post-stop
+    screen pack
+  - the long splash/copyright sentence (`original ... designed and developed
+    by distinctive software`) also follows the same ASCII codepoint semantics
+- Team-reported Mesen debug also now reinforces a structural rule:
+  the text path appears to be `1 byte per character` broadly, not just on one
+  isolated block.
+- Team-reported Mesen debug also surfaced two concrete gameplay-facing WRAM
+  cells that are likely worth promoting into later contracts:
+  - `$00129E`: crash-count / collision-tally state
+  - `$0018EE`: `cars left` reserve
+- Practical read on those two fields:
+  - they do not directly advance the active `bank30` provenance gate
+  - they are still high-value watchpoints for later gameplay archaeology
+    because they should cut across:
+    - HUD/reserve-life presentation
+    - post-crash/service or checkpoint recovery paths
+    - partial-results / failure-state transitions
+  - current repo-side status is still "team-reported Mesen fact":
+    there is no matching named consumer or direct asm reference for either
+    address in the checked-in docs/disassembly yet
+- Practical read:
+  - at least this front-end string family is source-stored as plain ASCII plus
+    `0x00` terminators
+  - the prior is now stronger than “one static menu block happens to be ASCII”:
+    the same codepoint semantics now appear across:
+    - static splash/copyright text
+    - front-end/menu text
+    - dynamic runtime text paths
+  - that pushes the best current hypothesis from “several ASCII pockets” toward
+    “one shared game text representation with a common renderer/stager”
+  - important precision: this should not be described as a “native SNES font”.
+    The SNES does not provide a built-in text font/printing system; the likely
+    shared routine is still game code that maps bytes to glyph tiles / OAM / BG
+    output
+  - the remaining reverse-engineering problem for this surface is now more
+    clearly glyph staging/render ownership, not byte-to-character decoding
+  - this does not yet prove that every text surface in the ROM uses ASCII, and
+    it does not close the old unsupported claim that bank `04` is already a
+    proven global font/string bank
+  - the dynamic-surface extension is currently a team-reported debug fact, not
+    yet a repo-side trace artifact
+
+What I learned (actionable)
+- For current validation, phrase search should be demoted behind the stronger
+  method:
+  - anchor on byte `0x41`
+  - expand to the full printable run in that lane
+  - then confirm the real corridor bounds in raw hex
+- The current best text corridors to trace forward/backward are now explicit:
+  - `01:880D..01:88A0` front-end/config block
+  - `01:AB30..01:AC8F+` judgement/advice block
+- The quick scanner is now a reusable cheap falsifier for both:
+  - direct ASCII text banks (`stride=1`)
+  - hidden fixed-stride text pockets (`stride=2/3`)
+- The current strongest quick-scan text owners are no longer hypothetical:
+  - `bank 01` for menu/results/dialog/judgement phrases
+  - `bank 0D` for at least one hidden interleaved prompt string
+- `bank 04` stays open after this detour; that is now a stronger signal that
+  its suspected text surfaces may be descriptor- or table-mediated rather than
+  trivially raw-ASCII contiguous/interleaved blobs
+- Raw ASCII scans are now a cheap falsifier for adjacent front-end text
+  families and for the still-open text-extraction lane.
+- Current documentation should treat this as an encoding/storage proof for a
+  verified bank-`01` block, not as a global text-system proof.
+- The next useful instrumentation target is now clearer:
+  hunt the WRAM/runtime buffer that feeds `High Score` and attendant-dialog
+  text before chasing any custom character-decoder theory.
+- The strongest architecture-facing question is now:
+  where is the shared byte-to-glyph routine, and which text surfaces bypass it
+  versus reuse it directly?
+- The new gameplay-state addendum should be kept as a narrow future watchlist,
+  not inflated into a proof:
+  - `$00129E` and `$0018EE` are already good fields to add to later bounded
+    gameplay probes
+  - the next useful promotion is to catch one concrete consumer/producer edge
+    for each field before naming a full subsystem owner
+
+Next steps / Checkpoints
+1) Reuse the ASCII-plus-NUL assumption as the first pass when probing other
+   menu/control-label families.
+2) Keep separating source-string ownership from glyph/OBJ composition
+   ownership in the docs and extractor tooling.
+3) When the text/content lane is active, trace the dynamic `L00A3CC`
+   high-score path and the service-corridor attendant dialog for live ASCII
+   buffer writes and their downstream glyph-staging consumer.
+4) Revisit `bank 04` with format-aware extraction rather than another blind
+   raw-byte scan if the text lane becomes active.
+5) Use the explicit bank-`01` corridors `01:880D..01:88A0` and
+   `01:AB30..01:AC8F+` as the next backward/forward ownership targets for the
+   shared byte-to-glyph routine.
+6) When the gameplay-state lane is active again, add `$00129E` and `$0018EE`
+   to the bounded watchlist for crash/recovery/results captures.
+
+Immediate recommendation
+- When the content-extraction lane is active again, start with raw ASCII scans
+  around already verified front-end callsites before inventing a custom text
+  table.
+
+Files updated in this turn
+- `tools/find_ascii_candidates.py`
+- `tools/out/ascii_anchor41_bank01_20260402.json`
+- `tools/out/ascii_anchor41_bank01_20260402.md`
+- `tools/out/ascii_anchor41_global_20260402.json`
+- `tools/out/ascii_anchor41_global_20260402.md`
+- `tools/out/ascii_candidate_scan_stride1_20260402.json`
+- `tools/out/ascii_candidate_scan_stride1_20260402.md`
+- `tools/out/ascii_candidate_scan_needles_20260402.json`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `tools/out/ascii_candidate_scan_stride1_20260402.md`
+- `tools/out/ascii_candidate_scan_needles_20260402.json`
+- `docs/snes_dos_correlation.md`
+- `rom_analysis/docs/external_decompiler_markdown_audit.md`
+
+Date: 2026-04-02
+
+Summary
 - Reclassified the late-entry `3250` visible descriptor from a generic raw
   VRAM copy into the bank-0 table-driven queue-builder family rooted at
   `L001895 / L001A70`.
