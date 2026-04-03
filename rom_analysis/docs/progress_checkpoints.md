@@ -1,6 +1,61 @@
 Date: 2026-04-03
 
 Summary
+- Added a root-level Mermaid bank investigation datagram so the current
+  archaeology process and promoted bank/callback ownership can be read from
+  one file instead of being scattered across multiple notes.
+- The new diagram explicitly maps the promoted control spine
+  `bank0 -> staged callbacks -> bank1 handoff -> bank2 main/NMI -> bank1 IRQ`,
+  plus the currently typed support/content banks `bank10`, `bank11`,
+  `bank15`, and `bank30`.
+- Added short pseudocode placeholders at the diagram tips so the artifact can
+  double as a quick orientation sheet instead of only a static picture.
+
+What I ran
+- Mermaid tooling availability probe:
+  - `command -v npx`
+- bounded Mermaid render validation:
+  - `npx -y @mermaid-js/mermaid-cli -p <temp puppeteer no-sandbox json> -i BANK_INVESTIGATION_DATAGRAM.md -o <temp>/out.md -e svg -a <temp>/artifacts`
+
+Artifacts
+- new root orientation note:
+  - `BANK_INVESTIGATION_DATAGRAM.md`
+
+Findings / Interpretation
+- The repo already had the underlying evidence, but it was spread across bank
+  flow notes, lane notes, and status docs.
+- Putting the investigation loop and the promoted callback spine into one
+  Mermaid artifact makes the bank relationships easier to scan without
+  flattening unresolved lanes like `bank30`.
+- In this environment, Mermaid CLI needed a temporary Puppeteer config with
+  `--no-sandbox` before Chromium would launch cleanly for the render check.
+
+What I learned (actionable)
+- The shortest faithful high-level explanation is two-layered:
+  one graph for the archaeology loop and one graph for the promoted bank
+  ownership/callback spine.
+- `bank30` should stay labeled as a mixed content/support bank in summary
+  visuals: it is clearly typed as dispatch/data, but `DA96` and `EE7F` still
+  need different proving lanes.
+
+Next steps / Checkpoints
+1) Keep the new root datagram aligned with the promoted callback family and
+   bank-status docs as lane evidence changes.
+2) If the bank30 queue closes later, tighten the `bank30` node from mixed
+   provenance wording into a more specific consumer map.
+
+Files updated in this turn
+- `BANK_INVESTIGATION_DATAGRAM.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `BANK_INVESTIGATION_DATAGRAM.md`
+- `docs/bank0_flow.md`
+- `docs/bank_disassembly_status.md`
+
+Date: 2026-04-03
+
+Summary
 - Fixed the second wiki `404` boundary: the NotebookLM bundle is now mirrored
   inside the published wiki root instead of living only as a sibling output
   directory.
