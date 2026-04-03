@@ -1,6 +1,6 @@
 # TD2 Wiki Markdown Bundle
 
-- Generated: `2026-04-02 23:11:22`
+- Generated: `2026-04-03 01:15:57`
 - Manifest: `rom_analysis/docs/wiki_doc_index.json`
 - Total docs: `48`
 
@@ -10,7 +10,7 @@ Use `wiki_bundle_index.md` for the curated file list or `wiki_combined.md` for a
 
 - Source: `PORT_PLAN.md`
 - Bundle copy: `sources/PORT_PLAN.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-04-02 17:17`
 - Note: Primary execution contract and long-range port target.
 
 ---
@@ -652,7 +652,7 @@ The work above assumes option 1 first, then selective enhancement after parity.
 
 - Source: `rom_analysis/docs/next_steps_roadmap.md`
 - Bundle copy: `sources/rom_analysis/docs/next_steps_roadmap.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-04-02 23:37`
 - Note: Current lane status, open gates, and practical follow-up targets.
 
 ---
@@ -688,6 +688,29 @@ decoded tilemaps and sprite visibility metadata.
   - `tools/out/sentrysearch_longplay_anchor_chunks.json`
   - `tools/out/sentrysearch_longplay_anchor_chunks.md`
   - `rom_analysis/docs/sentrysearch_gameplay_chunk_workflow.md`
+
+## Port Native Archaeology Demo Checkpoint (`2026-04-02`)
+
+- The default SDL launcher is no longer pinned to one near-static live-race
+  seed.
+- `port/run_demo.sh` now boots a native archaeology timeline from:
+  - `port/assets/native_demo_archaeology_timeline.txt`
+- That timeline remounts the current best-promoted raw-state clips in order:
+  - credits
+  - sampled-to-contiguous attract / Mode 7 windows
+  - menu anchors
+  - gameplay anchors
+- Exact frame/range packs stay exact; sparse gaps are carried explicitly as
+  `infer_hold` stretches rather than hidden screenshot playback.
+- The launcher path now also disables optional `layers/main_visible.ppm`
+  loading, so demo presentation is fully tied to raw-state bundles plus the
+  native SDL renderer, not just to compare/dump flags being off.
+- New smoke still runs under `SDL_VIDEODRIVER=dummy`:
+  - `./port/test_demo_launcher.sh`
+- Next gate:
+  - replace inferred holds and sparse gameplay snapshots with denser
+    raw-state coverage or true runtime-owned frame progression before making
+    any “continuous native demo” claim
 
 ## Port Live Input Checkpoint (`2026-04-01`)
 
@@ -2502,10 +2525,171 @@ Update findings in:
 
 - Source: `rom_analysis/docs/progress_checkpoints.md`
 - Bundle copy: `sources/rom_analysis/docs/progress_checkpoints.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-04-03 01:15`
 - Note: Checkpoint log with evidence-bearing milestones.
 
 ---
+
+Date: 2026-04-03
+
+Summary
+- Fixed the curated docs wiki so published per-doc Markdown links no longer
+  escape the generated site tree and 404 under static hosting.
+- `tools/build_docs_wiki_report.py` now points each wiki `Raw Markdown` action
+  at the mirrored NotebookLM bundle copy under
+  `tools/out/docs_wiki_markdown_bundle/sources/...` instead of the repository
+  source path outside the published wiki payload.
+- Regenerated the HTML wiki and bundle outputs so the deployed/static copy is
+  immediately consistent with the new link target policy.
+
+What I ran
+- wiki regeneration:
+  - `python3 tools/build_docs_wiki_report.py --manifest rom_analysis/docs/wiki_doc_index.json --output-dir tools/out/docs_wiki --markdown-bundle-dir tools/out/docs_wiki_markdown_bundle`
+- bounded publish-surface validation:
+  - `python3 - <<'PY' ...` scan over `tools/out/docs_wiki/**/*.html` asserting
+    that local `.md/.jsonc` links resolve through `docs_wiki_markdown_bundle/`
+    rather than out to the repo root
+
+Artifacts
+- link-target fix:
+  - `tools/build_docs_wiki_report.py`
+- refreshed published wiki outputs:
+  - `tools/out/docs_wiki/index.html`
+  - `tools/out/docs_wiki/pages/**/*.html`
+  - `tools/out/docs_wiki/site_index.json`
+- refreshed NotebookLM bundle outputs:
+  - `tools/out/docs_wiki_markdown_bundle/wiki_bundle_index.md`
+  - `tools/out/docs_wiki_markdown_bundle/wiki_bundle_index.json`
+  - `tools/out/docs_wiki_markdown_bundle/wiki_combined.md`
+
+Findings / Interpretation
+- The bug was structural, not doc-specific:
+  the wiki chrome was generating `Raw Markdown` links relative to the repo
+  tree, which works locally but breaks once only `docs_wiki/` and the bundle
+  are published together as a static payload.
+- The mirrored NotebookLM bundle is the correct published raw-doc target
+  because it preserves repo-relative paths while staying inside the generated
+  site artifact set.
+
+What I learned (actionable)
+- The wiki generator should treat the NotebookLM bundle as the canonical
+  published raw-doc surface.
+- A cheap HTML href scan is enough to catch this class of regression without
+  needing a browser pass.
+
+Next steps / Checkpoints
+1) Keep future wiki publish checks anchored on the generated bundle paths
+   instead of repo-root raw links.
+2) If any non-curated raw-doc links need to be exposed later, mirror them into
+   the published payload first rather than linking out of tree.
+
+Files updated in this turn
+- `tools/build_docs_wiki_report.py`
+- `tools/README.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `tools/out/docs_wiki/index.html`
+- `tools/out/docs_wiki/pages/**/*.html`
+- `tools/out/docs_wiki/site_index.json`
+- `tools/out/docs_wiki_markdown_bundle/wiki_bundle_index.md`
+- `tools/out/docs_wiki_markdown_bundle/wiki_bundle_index.json`
+- `tools/out/docs_wiki_markdown_bundle/wiki_combined.md`
+
+Next reading
+- `tools/build_docs_wiki_report.py`
+- `tools/out/docs_wiki/index.html`
+- `tools/out/docs_wiki_markdown_bundle/wiki_bundle_index.md`
+
+Date: 2026-04-02
+
+Summary
+- Promoted the SDL demo launcher from a single near-static gameplay seed into
+  a native archaeology timeline built from raw-state `design_pack` and
+  `design_pack_range` artifacts already validated in the port/docs.
+- Added a default timeline manifest that remounts investigated credits,
+  attract/Mode7, menu, and gameplay screens in sequence, using exact packs
+  where present and explicit `infer_hold` stretches only where the current
+  archaeology still has gaps.
+- Tightened the launcher proof surface by disabling optional
+  `layers/main_visible.ppm` reference loading in demo mode, so the launcher
+  now runs purely from `raw/vram.bin`, `raw/cgram.bin`, `raw/oam.bin`, and
+  `raw/ppu_state.json`.
+
+What I ran
+- rebuild affected port binaries:
+  - `make -C port`
+- targeted demo validation:
+  - `./port/test_demo_launcher.sh`
+  - `SDL_VIDEODRIVER=dummy ./port/build/td2_demo --scene-dir ./tools/out/design_lane3_live_race_mid_frame0_native --scheduler-profile gameplay_live_race_mid --window-width 960 --window-height 540 --frames 1`
+- full port validation closure:
+  - `make -C port test`
+
+Artifacts
+- default archaeology timeline manifest:
+  - `port/assets/native_demo_archaeology_timeline.txt`
+- upgraded launcher/player:
+  - `port/demo_main.c`
+  - `port/run_demo.sh`
+- demo-path raw-only design-pack loading:
+  - `port/include/td2_io.h`
+  - `port/include/td2_runtime.h`
+  - `port/src/td2_io.c`
+  - `port/src/td2_runtime.c`
+- strengthened launcher smoke:
+  - `port/test_demo_launcher.sh`
+
+Findings / Interpretation
+- The default SDL demo is no longer effectively a single-frame proof:
+  it now advances across `81` native clips (`504` display frames total) and
+  visibly traverses the best-promoted archaeology path currently in-repo:
+  credits -> attract bridge/Mode7 -> menu -> gameplay.
+- The launcher path now closes a subtle but important proof gap:
+  even when a design pack carries `layers/main_visible.ppm`, the demo no
+  longer loads that surface into memory for presentation. In demo mode, those
+  files are absent from the runtime path instead of merely being ignored at
+  compare time.
+- The current montage is intentionally honest about open archaeology:
+  contiguous ranges stay exact, sparse intro anchors use `exact_hold` timing,
+  and the overlay calls out when a displayed stretch is an inferred hold
+  instead of a newly solved native frame.
+
+What I learned (actionable)
+- The raw-state artifact set is already strong enough to give design a moving,
+  SDL-native capability demo without falling back to screenshot playback.
+- `design_pack_range.json` is now useful beyond archaeology bookkeeping:
+  it can directly drive native presentation timelines as long as the launcher
+  expands the per-frame `packDir` entries.
+- The next upgrade for this lane is content density, not launcher plumbing:
+  replace inferred holds and gameplay snapshots with denser raw-state captures
+  or true runtime-owned frame progression.
+
+Next steps / Checkpoints
+1) Replace the remaining intro/gameplay `infer_hold` stretches with more
+   exact raw-state ranges where archaeology already has nearby coverage.
+2) Promote a denser gameplay-native sequence than the current
+   `frame0/3250/3400/3550` snapshot set before claiming a continuous gameplay
+   demo lane.
+3) If design needs faster navigation, add section-skip hotkeys/presets on top
+   of the current timeline instead of adding another screenshot-based launcher.
+
+Files updated in this turn
+- `port/assets/native_demo_archaeology_timeline.txt`
+- `port/demo_main.c`
+- `port/include/td2_io.h`
+- `port/include/td2_runtime.h`
+- `port/run_demo.sh`
+- `port/src/td2_io.c`
+- `port/src/td2_runtime.c`
+- `port/test_demo_launcher.sh`
+- `port/README.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+
+Next reading
+- `port/assets/native_demo_archaeology_timeline.txt`
+- `port/README.md`
+- `rom_analysis/docs/validation_gates.md`
 
 Date: 2026-04-02
 
@@ -5106,7 +5290,7 @@ Next reading
 
 - Source: `rom_analysis/docs/validation_gates.md`
 - Bundle copy: `sources/rom_analysis/docs/validation_gates.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-04-02 23:37`
 - Note: Bounded pass/fail policy for regression and callback checks.
 
 ---
@@ -5324,7 +5508,32 @@ This gate is intentionally narrow. It protects the new contract-selection path
 and keeps later gameplay bundles from silently falling back to ad hoc runtime
 lookups.
 
-## 9) Practical Gate Policy
+## 9) Demo Launcher Timeline Smoke
+
+Runner:
+
+```sh
+./port/test_demo_launcher.sh
+```
+
+This validates the user-facing SDL archaeology launcher under
+`SDL_VIDEODRIVER=dummy`:
+
+- default demo path enters `mode=timeline`
+- the launcher advertises `native_sdl=on`, `mesen=off`,
+  `rom_cpu_emu=off`, `compare=off`, `dump=off`
+- the demo path also now advertises `reference_ppm=off`, proving the launcher
+  skipped optional `layers/main_visible.ppm` loading entirely
+- the default archaeology manifest loads and reports its promoted clip count
+- the launcher advances beyond the first clip, which falsifies the earlier
+  “single static frame” failure mode for the default demo path
+
+This gate is intentionally presentation-scoped. It does not prove continuous
+runtime-owned gameplay yet; it proves that the current demo launcher plays a
+moving SDL-native sequence from raw-state bundles instead of compare/dump
+artifacts.
+
+## 10) Practical Gate Policy
 
 For each archaeology lane:
 
@@ -5362,7 +5571,7 @@ fronting compare artifacts or dump playback.
 
 - Source: `validation/README.md`
 - Bundle copy: `sources/validation/README.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-04-02 23:37`
 - Note: Current Mesen capture, probe, and export workflow.
 
 ---
@@ -5560,15 +5769,26 @@ User-facing native demo launcher:
 
 That path is intentionally not a compare/dump workflow:
 
-- it starts directly on the promoted `gameplay_live_race_mid` rail
+- it now boots into the default archaeology timeline manifest:
+  - `port/assets/native_demo_archaeology_timeline.txt`
+- that default tour remounts the best-promoted native raw-state screens
+  currently in-repo:
+  - credits
+  - attract / Mode 7 windows
+  - menu anchors
+  - gameplay anchors
+- it keeps presentation on SDL-native raw-state rendering instead of
+  screenshot playback or compare strips
 - it keeps `compare` disabled
 - it keeps `PPM/PNG` dump generation disabled
+- it now also keeps optional `layers/main_visible.ppm` reference loading
+  disabled in the demo path
 - it draws an on-screen SDL overlay proving the current path is:
   - `MESEN OFF`
   - `ROM CPU EMU OFF`
+  - `REFERENCE PPM OFF`
   - `PPM PNG DUMP OFF`
-  - `COMPARE OFF`
-  - plus the active scheduler/source/callback metadata for the current frame
+  - plus the active mode/source/callback metadata for the current frame
 - it accepts startup window sizing via:
   - `--window-width <n>`
   - `--window-height <n>`
@@ -5578,6 +5798,15 @@ That path is intentionally not a compare/dump workflow:
   - `3`: `1920x1080`
   - `F1`: toggle overlay
 
+To force the earlier single-scene launcher behavior for a specific pack, pass
+an explicit scene/profile:
+
+```sh
+./port/build/td2_demo \
+  --scene-dir tools/out/design_lane3_live_race_mid_frame0_native \
+  --scheduler-profile gameplay_live_race_mid
+```
+
 The dedicated smoke for that launcher is:
 
 ```sh
@@ -5586,7 +5815,8 @@ The dedicated smoke for that launcher is:
 
 That smoke runs the SDL launcher once under `SDL_VIDEODRIVER=dummy`, which now
 works because `platform_sdl` falls back to a software renderer when an
-accelerated renderer is unavailable.
+accelerated renderer is unavailable. The smoke also proves the default demo
+enters timeline mode and advances beyond the first archaeology clip.
 
 That emits:
 
@@ -7947,7 +8177,7 @@ Notes:
 
 - Source: `tools/README.md`
 - Bundle copy: `sources/tools/README.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-04-03 01:15`
 - Note: Promoted extraction and analysis tooling surface.
 
 ---
@@ -7979,7 +8209,7 @@ Current Sprint 0 tooling:
 - `build_mesen_visual_contract.py`: promotes one design-pack frame into a translation-facing visual contract that separates BG vs OBJ usage, summarizes producer-side write traces, and now also captures the matching probe frame's callback/state snapshot when `--probe-json` is supplied
 - `build_mesen_visual_contract_range.py`: batches those visual contracts across `frame_*` or `design_frame*` directories, emits a compact range index, and can now map per-frame probes via `--probe-pattern` so the range summary includes callback-family/state progression rather than only per-frame files
 - `build_b1f9_stage_report.py`: consolidates one `l001210_probe_matrix_v14_b1f9_stagetrace` directory into a compact JSON/Markdown report so the current `B1F9` forced-lane stall can be reviewed without hand-reading multiple probe files
-- `build_docs_wiki_report.py`: builds a simple wiki-style HTML index for a curated set of repo markdown docs, with explicit section splits such as attract vs front-end/menu vs gameplay so human review does not mix surfaces accidentally; it now also emits a synced markdown bundle for NotebookLM/offline LLM review
+- `build_docs_wiki_report.py`: builds a simple wiki-style HTML index for a curated set of repo markdown docs, with explicit section splits such as attract vs front-end/menu vs gameplay so human review does not mix surfaces accidentally; it now also emits a synced markdown bundle for NotebookLM/offline LLM review, and the published wiki's per-doc markdown links now resolve against that mirrored bundle so static-hosted raw links do not 404
 - `extract_mesen_scene_range.py`: batches `mesen_ppu_extract` across a frame range, writes per-frame scene folders, and emits a collapsed `sequence.txt` manifest for the SDL runtime
 - `build_scene_sequence_manifest.py`: converts flat Mesen range dumps into runtime-ready `sequence.txt` manifests, either as `snes_bg` entries or exact sampled `image` entries from screenshots; when `oam.bin` exists, it now carries it through as an optional fourth `snes_bg` path
 - `build_indexed_palette_animation.py`: collapses a screenshot-backed frame range into one indexed image plus a palette timeline and can emit a one-entry `indexed_anim` sequence manifest
@@ -8638,7 +8868,7 @@ This should be treated as the scene's static setup, not a guarantee of exact fra
 
 - Source: `port/README.md`
 - Bundle copy: `sources/port/README.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-04-02 23:37`
 - Note: SDL runtime scope, usage, and current sequence playback path.
 
 ---
@@ -8683,9 +8913,10 @@ Current checkpoint:
   across `2052`, `2053`, `2083`, `2104`, and `2125`
 - headless frame dumping for regression smoke and design review in both PPM
   and PNG
-- dedicated SDL demo launcher for the promoted live-race rail, with on-screen
-  proof text showing native SDL presentation, no dump artifacts, and no
-  ROM/CPU emulation path
+- dedicated SDL demo launcher for a native archaeology timeline, with
+  on-screen proof text showing SDL-native presentation, no dump artifacts, no
+  ROM/CPU emulation path, and no optional reference-PPM loading in the demo
+  path
 
 This is deliberately not the final renderer. It is the clean replacement for
 the old “invented gameplay” scaffolds and the base for real callback/state
@@ -8750,7 +8981,7 @@ Interactive SDL playback:
   --scheduler-profile menu_gameplay_entry
 ```
 
-Dedicated gameplay demo launcher:
+Dedicated native demo launcher:
 
 ```sh
 ./port/run_demo.sh
@@ -8758,22 +8989,39 @@ Dedicated gameplay demo launcher:
 
 Default demo behavior:
 
-- boots straight into the promoted `gameplay_live_race_mid` rail
+- boots into the default archaeology timeline manifest:
+  - `assets/native_demo_archaeology_timeline.txt`
+- remounts the strongest currently-promoted raw-state scenes in sequence:
+  - credits
+  - attract / Mode 7 windows
+  - menu anchors
+  - gameplay anchors
 - opens an SDL window at `1280x896` by default
 - presents the native runtime framebuffer directly, with no `--compare` and
   no `--dump-prefix`
+- skips optional `layers/main_visible.ppm` loading in the launcher path, so
+  demo presentation comes only from `raw/vram.bin`, `raw/cgram.bin`,
+  `raw/oam.bin`, and `raw/ppu_state.json`
 - draws on-screen proof text over the SDL frame:
   - `MESEN OFF`
   - `ROM CPU EMU OFF`
+  - `REFERENCE PPM OFF`
   - `PPM PNG DUMP OFF`
-  - `COMPARE OFF`
-  - active scheduler/source/callback state
+  - active demo mode/source/callback state
 - supports runtime window resize shortcuts:
   - `1`: `1280x896`
   - `2`: `1600x900`
   - `3`: `1920x1080`
   - `F1`: toggle overlay
   - `Esc`: quit
+
+Single-scene override remains available:
+
+```sh
+./port/build/td2_demo \
+  --scene-dir tools/out/design_lane3_live_race_mid_frame0_native \
+  --scheduler-profile gameplay_live_race_mid
+```
 
 Notes:
 
@@ -8828,6 +9076,9 @@ Notes:
 - `platform_sdl` now falls back to a software renderer when accelerated SDL
   renderers are unavailable, which keeps the runtime and demo launcher
   runnable under `SDL_VIDEODRIVER=dummy` for smoke validation.
+- `test_demo_launcher.sh` now proves the default launcher enters archaeology
+  timeline mode and advances beyond the first clip, which closes the old
+  “single static frame” presentation gap in the default demo path.
 - interactive keyboard mapping:
   - `Z/X/A/S` -> `B/A/Y/X`
   - `Q/W` -> `L/R`
@@ -8860,7 +9111,7 @@ Notes:
 
 - Source: `rom_analysis/README.md`
 - Bundle copy: `sources/rom_analysis/README.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-06 20:11`
 - Note: Top-level archaeology tree orientation.
 
 ---
@@ -8942,7 +9193,7 @@ make -C tools bank30-registry
 
 - Source: `rom_analysis/docs/bank30_decompression_report.md`
 - Bundle copy: `sources/rom_analysis/docs/bank30_decompression_report.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-04-02 11:34`
 - Note: Current registry-backed read of bank30 markers and the active unresolved queue.
 
 ---
@@ -9155,7 +9406,7 @@ Current practical read:
 
 - Source: `rom_analysis/docs/bank30_b1f9_forced_lane_stall.md`
 - Bundle copy: `sources/rom_analysis/docs/bank30_b1f9_forced_lane_stall.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-28 11:20`
 - Note: Why the current headless `B1F9` forcing lane is low-yield for `EE7F`.
 
 ---
@@ -9251,7 +9502,7 @@ observe the `EE7F` selector. It is a later worker loop centered on
 
 - Source: `rom_analysis/docs/intro_00_8029_next_agent_handoff.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_00_8029_next_agent_handoff.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-28 08:58`
 - Note: Active handoff for the later attract continuation lane.
 
 ---
@@ -9356,7 +9607,7 @@ The open question is no longer "which producer owns this?" It is:
 
 - Source: `rom_analysis/docs/intro_01_9fe5_window_986_1093.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_01_9fe5_window_986_1093.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-22 10:27`
 - Note: Consolidated visual-contract note for the bridge-visible intro block.
 
 ---
@@ -9471,7 +9722,7 @@ Reading:
 
 - Source: `rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-22 11:50`
 - Note: Producer-side activity narrowing for the post-1093 window.
 
 ---
@@ -9663,7 +9914,7 @@ Use those boundaries explicitly in the Lane 2 follow-up:
 
 - Source: `rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-28 08:58`
 - Note: Late 00:8029 blob rotation report and selector narrowing.
 
 ---
@@ -9878,7 +10129,7 @@ Reading:
 
 - Source: `rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md`
 - Bundle copy: `sources/rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-13 08:03`
 - Note: First promoted tilemap-to-ROM provenance window.
 
 ---
@@ -9905,7 +10156,7 @@ Reading:
 
 - Source: `rom_analysis/docs/mesen_debugger_design_workbench.md`
 - Bundle copy: `sources/rom_analysis/docs/mesen_debugger_design_workbench.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-21 21:22`
 - Note: Design-pack workflow and extraction surface.
 
 ---
@@ -10106,7 +10357,7 @@ make -C tools l001210-trace-summary
 
 - Source: `rom_analysis/docs/snes_runtime_algorithm_human.md`
 - Bundle copy: `sources/rom_analysis/docs/snes_runtime_algorithm_human.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-04-02 10:04`
 - Note: Human-readable interpretation of the front-end and handoff corridor.
 
 ---
@@ -10304,7 +10555,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md`
 - Bundle copy: `sources/rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-26 22:10`
 - Note: Car-presentation BG2 ownership without treating it as gameplay.
 
 ---
@@ -10347,7 +10598,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_frontend_top_menu_labels.md`
 - Bundle copy: `sources/tools/out/snes_frontend_top_menu_labels.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-27 10:15`
 - Note: Closed rendered label set for the top signboard menu.
 
 ---
@@ -10379,7 +10630,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_frontend_rival_selection_grid.md`
 - Bundle copy: `sources/tools/out/snes_frontend_rival_selection_grid.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-27 11:59`
 - Note: Rendered and structural read of the 2x2 opponent grid.
 
 ---
@@ -10445,7 +10696,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_select_opponent_organic_default_path.md`
 - Bundle copy: `sources/tools/out/snes_select_opponent_organic_default_path.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-27 12:25`
 - Note: Recovered no-force path into the default rival corridor.
 
 ---
@@ -10494,7 +10745,7 @@ Inject `right+down` only after `01:C1D2` is already live so `$1C70` can leave
 
 - Source: `tools/out/snes_frontend_select_opponent_mode_split.md`
 - Bundle copy: `sources/tools/out/snes_frontend_select_opponent_mode_split.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-27 11:59`
 - Note: Separates rival slots from the no-opponent stopwatch branch.
 
 ---
@@ -10544,7 +10795,7 @@ Inject `right+down` only after `01:C1D2` is already live so `$1C70` can leave
 
 - Source: `rom_analysis/docs/lane3_today_work_brief.md`
 - Bundle copy: `sources/rom_analysis/docs/lane3_today_work_brief.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-28 08:44`
 - Note: Current gameplay archaeology state and human-support queue.
 
 ---
@@ -10865,7 +11116,7 @@ without redoing the same work.
 
 - Source: `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
 - Bundle copy: `sources/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-28 16:08`
 - Note: Primary gameplay-oriented handoff note.
 
 ---
@@ -11446,7 +11697,7 @@ The question is now narrower:
 
 - Source: `rom_analysis/docs/lane3_attract_demo_boundary.md`
 - Bundle copy: `sources/rom_analysis/docs/lane3_attract_demo_boundary.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-27 22:03`
 - Note: Boundary note explaining why some old seeds were misleading.
 
 ---
@@ -11507,7 +11758,7 @@ evidence looked like "menu" in one pass and "gameplay" in another.
 
 - Source: `rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-28 09:51`
 - Note: Promoted power-on route for reproducible gameplay entry.
 
 ---
@@ -11665,7 +11916,7 @@ evidence looked like "menu" in one pass and "gameplay" in another.
 
 - Source: `rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-04-01 17:24`
 - Note: First promoted late gameplay pair from the live-entry route, with stable artifact bundles for both phases.
 
 ---
@@ -11853,7 +12104,7 @@ Primary wiki/gallery image refs for this pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-04-01 17:24`
 - Note: Bounded live-entry follow-up that isolates traffic emergence as a cleaner OBJ-side event.
 
 ---
@@ -12027,7 +12278,7 @@ Designer-facing anchors for the promoted pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-28 11:44`
 - Note: Asset-first gameplay taxonomy that maps BG/OBJ buckets to tracing targets.
 
 ---
@@ -12106,7 +12357,7 @@ Designer-facing anchors for the promoted pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-28 14:48`
 - Note: Savestate-backed gameplay extraction that now closes native `BG2` road and `BG3` scenery surfaces.
 
 ---
@@ -12250,7 +12501,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
 - Bundle copy: `sources/tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-28 13:44`
 - Note: Generated BG1/BG2/OBJ compare for the first late live-entry gameplay pair.
 
 ---
@@ -12302,7 +12553,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md`
 - Bundle copy: `sources/tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-28 13:44`
 - Note: Generated compare showing the red traffic car as the current best OBJ-side live-entry event.
 
 ---
@@ -12353,7 +12604,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_race_mid_asset_focus.md`
 - Bundle copy: `sources/tools/out/lane3_live_race_mid_asset_focus.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-28 11:44`
 - Note: Generated gameplay inventory with supporting frame/layer artifact references.
 
 ---
@@ -12420,7 +12671,7 @@ native PNGs:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-28 09:07`
 - Note: Human note for preserved live-race savestates and controls.
 
 ---
@@ -12634,7 +12885,7 @@ native PNGs:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-28 09:07`
 - Note: Video-backed still capture summary for the live-race lane.
 
 ---
@@ -12722,7 +12973,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-04-02 11:34`
 - Note: Named still pack for the checkpoint service/post corridor, partial-results screen, and restart back into driving.
 
 ---
@@ -12799,7 +13050,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-28 15:31`
 - Note: Longplay-backed visual anchors for night, bridge, mountain-wall, tunnel, and rain.
 
 ---
@@ -12872,7 +13123,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-28 15:55`
 - Note: Longplay-backed snow-driving anchors starting at the one-hour mark.
 
 ---
@@ -12937,7 +13188,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-28 16:08`
 - Note: Boundary note showing why phase-4 snow is now a savestate-first capture target.
 
 ---
@@ -13024,7 +13275,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-28 15:31`
 - Note: Longplay-backed arrest/prison ending pack and high-score handoff.
 
 ---
@@ -13088,7 +13339,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-27 23:02`
 - Note: Layer composition read for a real gameplay seed.
 
 ---
@@ -13220,7 +13471,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-27 23:02`
 - Note: Producer-side narrowing for the gameplay road/world path.
 
 ---
@@ -13369,7 +13620,7 @@ Optional but useful:
 
 - Source: `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
 - Bundle copy: `sources/rom_analysis/docs/gameplay_scanline_contracts.jsonc`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-04-01 21:47`
 - Note: Versioned scanline-overlay selection for promoted gameplay bundles in the SDL runtime.
 
 ---
@@ -13426,7 +13677,7 @@ Optional but useful:
 
 - Source: `rom_analysis/docs/gameplay_composition_contracts.jsonc`
 - Bundle copy: `sources/rom_analysis/docs/gameplay_composition_contracts.jsonc`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-04-01 17:44`
 - Note: Versioned late-gameplay top-band BG3 composition rules for promoted SDL runtime bundles.
 
 ---
@@ -13476,7 +13727,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-28 09:15`
 - Note: Static role split for the narrowed gameplay cluster.
 
 ---
@@ -13604,7 +13855,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-27 23:02`
 - Note: Semantic ownership pass for post-handoff gameplay fields.
 
 ---
@@ -13729,7 +13980,7 @@ Optional but useful:
 
 - Source: `rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md`
 - Bundle copy: `sources/rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-28 10:28`
 - Note: Bounded regression read for current intro/front-end parity in the C/SDL runtime.
 
 ---
@@ -13799,7 +14050,7 @@ Regression summary:
 
 - Source: `rom_analysis/docs/mesen_instrumented_backend_architecture.md`
 - Bundle copy: `sources/rom_analysis/docs/mesen_instrumented_backend_architecture.md`
-- Last updated: `2026-04-02 23:11`
+- Last updated: `2026-03-22 22:04`
 - Note: Architecture note for the experimental Mesen backend path.
 
 ---

@@ -326,6 +326,14 @@ def relative_file_href(from_file: Path, to_file: Path) -> str:
     return Path(os.path.relpath(to_file, start=from_file.parent)).as_posix()
 
 
+def bundle_source_copy_path(markdown_bundle_dir: Path, source_rel: Path) -> Path:
+    return markdown_bundle_dir / "sources" / source_rel
+
+
+def bundle_source_copy_href(from_file: Path, markdown_bundle_dir: Path, source_rel: Path) -> str:
+    return relative_file_href(from_file, bundle_source_copy_path(markdown_bundle_dir, source_rel))
+
+
 def repo_rel(path: Path) -> str:
     resolved = path.resolve()
     try:
@@ -669,6 +677,7 @@ def render_doc_page(
     page_map: dict[Path, Path],
     site_title: str,
     output_dir: Path,
+    markdown_bundle_dir: Path,
     images: list[ArtifactImage],
 ) -> str:
     title = first_heading(source_text, entry.label)
@@ -678,7 +687,7 @@ def render_doc_page(
     gallery_block = f"{gallery_html}\n" if gallery_html else ""
     sidebar_html = build_sidebar(manifest, page_map, page_path)
     index_href = relative_file_href(page_path, output_dir / "index.html")
-    raw_href = relative_file_href(page_path, REPO_ROOT / entry.path)
+    raw_href = bundle_source_copy_href(page_path, markdown_bundle_dir, entry.path)
     section_href = f"{index_href}#{entry.section_id}"
     css_href = relative_file_href(page_path, output_dir / "assets" / "wiki.css")
 
@@ -739,6 +748,7 @@ def render_index_page(
     entries: list[DocEntry],
     page_map: dict[Path, Path],
     output_dir: Path,
+    markdown_bundle_dir: Path,
     source_cache: dict[Path, str],
     artifact_map: dict[Path, list[ArtifactImage]],
     markdown_bundle: dict[str, object] | None,
@@ -759,7 +769,7 @@ def render_index_page(
             last_updated_dt = source_last_updated_dt(entry.path)
             last_updated = last_updated_dt.strftime("%Y-%m-%d %H:%M")
             href = relative_file_href(output_dir / "index.html", page_map[rel])
-            raw_href = relative_file_href(output_dir / "index.html", REPO_ROOT / rel)
+            raw_href = bundle_source_copy_href(output_dir / "index.html", markdown_bundle_dir, rel)
             visuals = artifact_map.get(entry.path, [])
             visual_badge = (
                 f"<p class=\"artifact-count\">{len(visuals)} visual artifact(s)</p>"
@@ -1816,6 +1826,7 @@ def build_site(
             page_map=page_map,
             site_title=manifest["site_title"],
             output_dir=output_dir,
+            markdown_bundle_dir=markdown_bundle_dir,
             images=artifact_map[entry.path],
         )
         page_path.write_text(page_html, encoding="utf-8")
@@ -1832,6 +1843,7 @@ def build_site(
         entries,
         page_map,
         output_dir,
+        markdown_bundle_dir,
         source_cache,
         artifact_map,
         markdown_bundle,
@@ -1847,6 +1859,11 @@ def build_site(
                 "section": entry.section_title,
                 "last_updated": source_last_updated(entry.path),
                 "page": relative_file_href(output_dir / "index.html", page_map[entry.path]),
+                "bundle_copy": bundle_source_copy_href(
+                    output_dir / "index.html",
+                    markdown_bundle_dir,
+                    entry.path,
+                ),
             }
             for entry in entries
         ],

@@ -38,9 +38,10 @@ Current checkpoint:
   across `2052`, `2053`, `2083`, `2104`, and `2125`
 - headless frame dumping for regression smoke and design review in both PPM
   and PNG
-- dedicated SDL demo launcher for the promoted live-race rail, with on-screen
-  proof text showing native SDL presentation, no dump artifacts, and no
-  ROM/CPU emulation path
+- dedicated SDL demo launcher for a native archaeology timeline, with
+  on-screen proof text showing SDL-native presentation, no dump artifacts, no
+  ROM/CPU emulation path, and no optional reference-PPM loading in the demo
+  path
 
 This is deliberately not the final renderer. It is the clean replacement for
 the old “invented gameplay” scaffolds and the base for real callback/state
@@ -105,7 +106,7 @@ Interactive SDL playback:
   --scheduler-profile menu_gameplay_entry
 ```
 
-Dedicated gameplay demo launcher:
+Dedicated native demo launcher:
 
 ```sh
 ./port/run_demo.sh
@@ -113,22 +114,39 @@ Dedicated gameplay demo launcher:
 
 Default demo behavior:
 
-- boots straight into the promoted `gameplay_live_race_mid` rail
+- boots into the default archaeology timeline manifest:
+  - `assets/native_demo_archaeology_timeline.txt`
+- remounts the strongest currently-promoted raw-state scenes in sequence:
+  - credits
+  - attract / Mode 7 windows
+  - menu anchors
+  - gameplay anchors
 - opens an SDL window at `1280x896` by default
 - presents the native runtime framebuffer directly, with no `--compare` and
   no `--dump-prefix`
+- skips optional `layers/main_visible.ppm` loading in the launcher path, so
+  demo presentation comes only from `raw/vram.bin`, `raw/cgram.bin`,
+  `raw/oam.bin`, and `raw/ppu_state.json`
 - draws on-screen proof text over the SDL frame:
   - `MESEN OFF`
   - `ROM CPU EMU OFF`
+  - `REFERENCE PPM OFF`
   - `PPM PNG DUMP OFF`
-  - `COMPARE OFF`
-  - active scheduler/source/callback state
+  - active demo mode/source/callback state
 - supports runtime window resize shortcuts:
   - `1`: `1280x896`
   - `2`: `1600x900`
   - `3`: `1920x1080`
   - `F1`: toggle overlay
   - `Esc`: quit
+
+Single-scene override remains available:
+
+```sh
+./port/build/td2_demo \
+  --scene-dir tools/out/design_lane3_live_race_mid_frame0_native \
+  --scheduler-profile gameplay_live_race_mid
+```
 
 Notes:
 
@@ -183,6 +201,9 @@ Notes:
 - `platform_sdl` now falls back to a software renderer when accelerated SDL
   renderers are unavailable, which keeps the runtime and demo launcher
   runnable under `SDL_VIDEODRIVER=dummy` for smoke validation.
+- `test_demo_launcher.sh` now proves the default launcher enters archaeology
+  timeline mode and advances beyond the first clip, which closes the old
+  “single static frame” presentation gap in the default demo path.
 - interactive keyboard mapping:
   - `Z/X/A/S` -> `B/A/Y/X`
   - `Q/W` -> `L/R`

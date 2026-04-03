@@ -1,3 +1,72 @@
+Date: 2026-04-03
+
+Summary
+- Fixed the curated docs wiki so published per-doc Markdown links no longer
+  escape the generated site tree and 404 under static hosting.
+- `tools/build_docs_wiki_report.py` now points each wiki `Raw Markdown` action
+  at the mirrored NotebookLM bundle copy under
+  `tools/out/docs_wiki_markdown_bundle/sources/...` instead of the repository
+  source path outside the published wiki payload.
+- Regenerated the HTML wiki and bundle outputs so the deployed/static copy is
+  immediately consistent with the new link target policy.
+
+What I ran
+- wiki regeneration:
+  - `python3 tools/build_docs_wiki_report.py --manifest rom_analysis/docs/wiki_doc_index.json --output-dir tools/out/docs_wiki --markdown-bundle-dir tools/out/docs_wiki_markdown_bundle`
+- bounded publish-surface validation:
+  - `python3 - <<'PY' ...` scan over `tools/out/docs_wiki/**/*.html` asserting
+    that local `.md/.jsonc` links resolve through `docs_wiki_markdown_bundle/`
+    rather than out to the repo root
+
+Artifacts
+- link-target fix:
+  - `tools/build_docs_wiki_report.py`
+- refreshed published wiki outputs:
+  - `tools/out/docs_wiki/index.html`
+  - `tools/out/docs_wiki/pages/**/*.html`
+  - `tools/out/docs_wiki/site_index.json`
+- refreshed NotebookLM bundle outputs:
+  - `tools/out/docs_wiki_markdown_bundle/wiki_bundle_index.md`
+  - `tools/out/docs_wiki_markdown_bundle/wiki_bundle_index.json`
+  - `tools/out/docs_wiki_markdown_bundle/wiki_combined.md`
+
+Findings / Interpretation
+- The bug was structural, not doc-specific:
+  the wiki chrome was generating `Raw Markdown` links relative to the repo
+  tree, which works locally but breaks once only `docs_wiki/` and the bundle
+  are published together as a static payload.
+- The mirrored NotebookLM bundle is the correct published raw-doc target
+  because it preserves repo-relative paths while staying inside the generated
+  site artifact set.
+
+What I learned (actionable)
+- The wiki generator should treat the NotebookLM bundle as the canonical
+  published raw-doc surface.
+- A cheap HTML href scan is enough to catch this class of regression without
+  needing a browser pass.
+
+Next steps / Checkpoints
+1) Keep future wiki publish checks anchored on the generated bundle paths
+   instead of repo-root raw links.
+2) If any non-curated raw-doc links need to be exposed later, mirror them into
+   the published payload first rather than linking out of tree.
+
+Files updated in this turn
+- `tools/build_docs_wiki_report.py`
+- `tools/README.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `tools/out/docs_wiki/index.html`
+- `tools/out/docs_wiki/pages/**/*.html`
+- `tools/out/docs_wiki/site_index.json`
+- `tools/out/docs_wiki_markdown_bundle/wiki_bundle_index.md`
+- `tools/out/docs_wiki_markdown_bundle/wiki_bundle_index.json`
+- `tools/out/docs_wiki_markdown_bundle/wiki_combined.md`
+
+Next reading
+- `tools/build_docs_wiki_report.py`
+- `tools/out/docs_wiki/index.html`
+- `tools/out/docs_wiki_markdown_bundle/wiki_bundle_index.md`
+
 Date: 2026-04-02
 
 Summary
