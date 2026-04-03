@@ -1,6 +1,6 @@
 # TD2 Wiki Markdown Bundle
 
-- Generated: `2026-04-03 01:42:39`
+- Generated: `2026-04-03 01:43:49`
 - Manifest: `rom_analysis/docs/wiki_doc_index.json`
 - Total docs: `48`
 
@@ -10,7 +10,7 @@ Use `wiki_bundle_index.md` for the curated file list or `wiki_combined.md` for a
 
 - Source: `PORT_PLAN.md`
 - Bundle copy: `sources/PORT_PLAN.md`
-- Last updated: `2026-04-02 17:17`
+- Last updated: `2026-04-03 01:43`
 - Note: Primary execution contract and long-range port target.
 
 ---
@@ -652,7 +652,7 @@ The work above assumes option 1 first, then selective enhancement after parity.
 
 - Source: `rom_analysis/docs/next_steps_roadmap.md`
 - Bundle copy: `sources/rom_analysis/docs/next_steps_roadmap.md`
-- Last updated: `2026-04-02 23:37`
+- Last updated: `2026-04-03 01:43`
 - Note: Current lane status, open gates, and practical follow-up targets.
 
 ---
@@ -2525,7 +2525,7 @@ Update findings in:
 
 - Source: `rom_analysis/docs/progress_checkpoints.md`
 - Bundle copy: `sources/rom_analysis/docs/progress_checkpoints.md`
-- Last updated: `2026-04-03 01:42`
+- Last updated: `2026-04-03 01:43`
 - Note: Checkpoint log with evidence-bearing milestones.
 
 ---
@@ -5382,7 +5382,7 @@ Next reading
 
 - Source: `rom_analysis/docs/validation_gates.md`
 - Bundle copy: `sources/rom_analysis/docs/validation_gates.md`
-- Last updated: `2026-04-02 23:37`
+- Last updated: `2026-04-03 01:43`
 - Note: Bounded pass/fail policy for regression and callback checks.
 
 ---
@@ -5663,7 +5663,7 @@ fronting compare artifacts or dump playback.
 
 - Source: `validation/README.md`
 - Bundle copy: `sources/validation/README.md`
-- Last updated: `2026-04-02 23:37`
+- Last updated: `2026-04-03 01:43`
 - Note: Current Mesen capture, probe, and export workflow.
 
 ---
@@ -8269,7 +8269,7 @@ Notes:
 
 - Source: `tools/README.md`
 - Bundle copy: `sources/tools/README.md`
-- Last updated: `2026-04-03 01:40`
+- Last updated: `2026-04-03 01:43`
 - Note: Promoted extraction and analysis tooling surface.
 
 ---
@@ -8961,7 +8961,7 @@ This should be treated as the scene's static setup, not a guarantee of exact fra
 
 - Source: `port/README.md`
 - Bundle copy: `sources/port/README.md`
-- Last updated: `2026-04-02 23:37`
+- Last updated: `2026-04-03 01:43`
 - Note: SDL runtime scope, usage, and current sequence playback path.
 
 ---
@@ -9204,7 +9204,7 @@ Notes:
 
 - Source: `rom_analysis/README.md`
 - Bundle copy: `sources/rom_analysis/README.md`
-- Last updated: `2026-03-06 20:11`
+- Last updated: `2026-04-03 01:43`
 - Note: Top-level archaeology tree orientation.
 
 ---
@@ -9286,7 +9286,7 @@ make -C tools bank30-registry
 
 - Source: `rom_analysis/docs/bank30_decompression_report.md`
 - Bundle copy: `sources/rom_analysis/docs/bank30_decompression_report.md`
-- Last updated: `2026-04-02 11:34`
+- Last updated: `2026-04-03 01:43`
 - Note: Current registry-backed read of bank30 markers and the active unresolved queue.
 
 ---
@@ -9499,7 +9499,7 @@ Current practical read:
 
 - Source: `rom_analysis/docs/bank30_b1f9_forced_lane_stall.md`
 - Bundle copy: `sources/rom_analysis/docs/bank30_b1f9_forced_lane_stall.md`
-- Last updated: `2026-03-28 11:20`
+- Last updated: `2026-04-03 01:43`
 - Note: Why the current headless `B1F9` forcing lane is low-yield for `EE7F`.
 
 ---
@@ -9595,7 +9595,7 @@ observe the `EE7F` selector. It is a later worker loop centered on
 
 - Source: `rom_analysis/docs/intro_00_8029_next_agent_handoff.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_00_8029_next_agent_handoff.md`
-- Last updated: `2026-03-28 08:58`
+- Last updated: `2026-04-03 01:43`
 - Note: Active handoff for the later attract continuation lane.
 
 ---
@@ -9700,7 +9700,7 @@ The open question is no longer "which producer owns this?" It is:
 
 - Source: `rom_analysis/docs/intro_01_9fe5_window_986_1093.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_01_9fe5_window_986_1093.md`
-- Last updated: `2026-03-22 10:27`
+- Last updated: `2026-04-03 01:43`
 - Note: Consolidated visual-contract note for the bridge-visible intro block.
 
 ---
@@ -9815,7 +9815,7 @@ Reading:
 
 - Source: `rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_01_9fe5_activity_trace_1094_1117.md`
-- Last updated: `2026-03-22 11:50`
+- Last updated: `2026-04-03 01:43`
 - Note: Producer-side activity narrowing for the post-1093 window.
 
 ---
@@ -10007,7 +10007,7 @@ Use those boundaries explicitly in the Lane 2 follow-up:
 
 - Source: `rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md`
 - Bundle copy: `sources/rom_analysis/docs/intro_00_8029_mode7_blob_cycle_1134_1200.md`
-- Last updated: `2026-03-28 08:58`
+- Last updated: `2026-04-03 01:43`
 - Note: Late 00:8029 blob rotation report and selector narrowing.
 
 ---
@@ -10222,7 +10222,7 @@ Reading:
 
 - Source: `rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md`
 - Bundle copy: `sources/rom_analysis/maps/tilemaps/mesen_range_1086_1093_provenance.md`
-- Last updated: `2026-03-13 08:03`
+- Last updated: `2026-04-03 01:43`
 - Note: First promoted tilemap-to-ROM provenance window.
 
 ---
@@ -10249,7 +10249,7 @@ Reading:
 
 - Source: `rom_analysis/docs/mesen_debugger_design_workbench.md`
 - Bundle copy: `sources/rom_analysis/docs/mesen_debugger_design_workbench.md`
-- Last updated: `2026-03-21 21:22`
+- Last updated: `2026-04-03 01:43`
 - Note: Design-pack workflow and extraction surface.
 
 ---
@@ -10450,7 +10450,7 @@ make -C tools l001210-trace-summary
 
 - Source: `rom_analysis/docs/snes_runtime_algorithm_human.md`
 - Bundle copy: `sources/rom_analysis/docs/snes_runtime_algorithm_human.md`
-- Last updated: `2026-04-02 10:04`
+- Last updated: `2026-04-03 01:43`
 - Note: Human-readable interpretation of the front-end and handoff corridor.
 
 ---
@@ -10648,7 +10648,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md`
 - Bundle copy: `sources/rom_analysis/maps/tilemaps/car_select_frame_1500_bg2_provenance.md`
-- Last updated: `2026-03-26 22:10`
+- Last updated: `2026-04-03 01:43`
 - Note: Car-presentation BG2 ownership without treating it as gameplay.
 
 ---
@@ -10691,7 +10691,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_frontend_top_menu_labels.md`
 - Bundle copy: `sources/tools/out/snes_frontend_top_menu_labels.md`
-- Last updated: `2026-03-27 10:15`
+- Last updated: `2026-04-03 01:43`
 - Note: Closed rendered label set for the top signboard menu.
 
 ---
@@ -10723,7 +10723,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_frontend_rival_selection_grid.md`
 - Bundle copy: `sources/tools/out/snes_frontend_rival_selection_grid.md`
-- Last updated: `2026-03-27 11:59`
+- Last updated: `2026-04-03 01:43`
 - Note: Rendered and structural read of the 2x2 opponent grid.
 
 ---
@@ -10789,7 +10789,7 @@ If you strip away the assembly details, the proven logic is:
 
 - Source: `tools/out/snes_select_opponent_organic_default_path.md`
 - Bundle copy: `sources/tools/out/snes_select_opponent_organic_default_path.md`
-- Last updated: `2026-03-27 12:25`
+- Last updated: `2026-04-03 01:43`
 - Note: Recovered no-force path into the default rival corridor.
 
 ---
@@ -10838,7 +10838,7 @@ Inject `right+down` only after `01:C1D2` is already live so `$1C70` can leave
 
 - Source: `tools/out/snes_frontend_select_opponent_mode_split.md`
 - Bundle copy: `sources/tools/out/snes_frontend_select_opponent_mode_split.md`
-- Last updated: `2026-03-27 11:59`
+- Last updated: `2026-04-03 01:43`
 - Note: Separates rival slots from the no-opponent stopwatch branch.
 
 ---
@@ -10888,7 +10888,7 @@ Inject `right+down` only after `01:C1D2` is already live so `$1C70` can leave
 
 - Source: `rom_analysis/docs/lane3_today_work_brief.md`
 - Bundle copy: `sources/rom_analysis/docs/lane3_today_work_brief.md`
-- Last updated: `2026-03-28 08:44`
+- Last updated: `2026-04-03 01:43`
 - Note: Current gameplay archaeology state and human-support queue.
 
 ---
@@ -11209,7 +11209,7 @@ without redoing the same work.
 
 - Source: `rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
 - Bundle copy: `sources/rom_analysis/docs/gameplay_default_rival_next_agent_handoff.md`
-- Last updated: `2026-03-28 16:08`
+- Last updated: `2026-04-03 01:43`
 - Note: Primary gameplay-oriented handoff note.
 
 ---
@@ -11790,7 +11790,7 @@ The question is now narrower:
 
 - Source: `rom_analysis/docs/lane3_attract_demo_boundary.md`
 - Bundle copy: `sources/rom_analysis/docs/lane3_attract_demo_boundary.md`
-- Last updated: `2026-03-27 22:03`
+- Last updated: `2026-04-03 01:43`
 - Note: Boundary note explaining why some old seeds were misleading.
 
 ---
@@ -11851,7 +11851,7 @@ evidence looked like "menu" in one pass and "gameplay" in another.
 
 - Source: `rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_gameplay_entry_route.md`
-- Last updated: `2026-03-28 09:51`
+- Last updated: `2026-04-03 01:43`
 - Note: Promoted power-on route for reproducible gameplay entry.
 
 ---
@@ -12009,7 +12009,7 @@ evidence looked like "menu" in one pass and "gameplay" in another.
 
 - Source: `rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_entry_phase_split_3250_3550.md`
-- Last updated: `2026-04-01 17:24`
+- Last updated: `2026-04-03 01:43`
 - Note: First promoted late gameplay pair from the live-entry route, with stable artifact bundles for both phases.
 
 ---
@@ -12197,7 +12197,7 @@ Primary wiki/gallery image refs for this pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_entry_brake_traffic_pair_3250_3400.md`
-- Last updated: `2026-04-01 17:24`
+- Last updated: `2026-04-03 01:43`
 - Note: Bounded live-entry follow-up that isolates traffic emergence as a cleaner OBJ-side event.
 
 ---
@@ -12371,7 +12371,7 @@ Designer-facing anchors for the promoted pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_asset_focus.md`
-- Last updated: `2026-03-28 11:44`
+- Last updated: `2026-04-03 01:43`
 - Note: Asset-first gameplay taxonomy that maps BG/OBJ buckets to tracing targets.
 
 ---
@@ -12450,7 +12450,7 @@ Designer-facing anchors for the promoted pair:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_native_visible_layers.md`
-- Last updated: `2026-03-28 14:48`
+- Last updated: `2026-04-03 01:43`
 - Note: Savestate-backed gameplay extraction that now closes native `BG2` road and `BG3` scenery surfaces.
 
 ---
@@ -12594,7 +12594,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
 - Bundle copy: `sources/tools/out/lane3_live_entry_frame03250_vs_03550_compare.md`
-- Last updated: `2026-03-28 13:44`
+- Last updated: `2026-04-03 01:43`
 - Note: Generated BG1/BG2/OBJ compare for the first late live-entry gameplay pair.
 
 ---
@@ -12646,7 +12646,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md`
 - Bundle copy: `sources/tools/out/lane3_live_entry_brake_traffic_3250_vs_3400_compare.md`
-- Last updated: `2026-03-28 13:44`
+- Last updated: `2026-04-03 01:43`
 - Note: Generated compare showing the red traffic car as the current best OBJ-side live-entry event.
 
 ---
@@ -12697,7 +12697,7 @@ native PNGs:
 
 - Source: `tools/out/lane3_live_race_mid_asset_focus.md`
 - Bundle copy: `sources/tools/out/lane3_live_race_mid_asset_focus.md`
-- Last updated: `2026-03-28 11:44`
+- Last updated: `2026-04-03 01:43`
 - Note: Generated gameplay inventory with supporting frame/layer artifact references.
 
 ---
@@ -12764,7 +12764,7 @@ native PNGs:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_manual_seed_intake.md`
-- Last updated: `2026-03-28 09:07`
+- Last updated: `2026-04-03 01:43`
 - Note: Human note for preserved live-race savestates and controls.
 
 ---
@@ -12978,7 +12978,7 @@ native PNGs:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_manual_video_intake.md`
-- Last updated: `2026-03-28 09:07`
+- Last updated: `2026-04-03 01:43`
 - Note: Video-backed still capture summary for the live-race lane.
 
 ---
@@ -13066,7 +13066,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_service_status_screens.md`
-- Last updated: `2026-04-02 11:34`
+- Last updated: `2026-04-03 01:43`
 - Note: Named still pack for the checkpoint service/post corridor, partial-results screen, and restart back into driving.
 
 ---
@@ -13143,7 +13143,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_hard_phase_anchors.md`
-- Last updated: `2026-03-28 15:31`
+- Last updated: `2026-04-03 01:43`
 - Note: Longplay-backed visual anchors for night, bridge, mountain-wall, tunnel, and rain.
 
 ---
@@ -13216,7 +13216,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_snow_anchors.md`
-- Last updated: `2026-03-28 15:55`
+- Last updated: `2026-04-03 01:43`
 - Note: Longplay-backed snow-driving anchors starting at the one-hour mark.
 
 ---
@@ -13281,7 +13281,7 @@ intake time.
 
 - Source: `rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_phase4_snow_seed_request.md`
-- Last updated: `2026-03-28 16:08`
+- Last updated: `2026-04-03 01:43`
 - Note: Boundary note showing why phase-4 snow is now a savestate-first capture target.
 
 ---
@@ -13368,7 +13368,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_longplay_prison_finale_anchor.md`
-- Last updated: `2026-03-28 15:31`
+- Last updated: `2026-04-03 01:43`
 - Note: Longplay-backed arrest/prison ending pack and high-score handoff.
 
 ---
@@ -13432,7 +13432,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_visible_layer_stack.md`
-- Last updated: `2026-03-27 23:02`
+- Last updated: `2026-04-03 01:43`
 - Note: Layer composition read for a real gameplay seed.
 
 ---
@@ -13564,7 +13564,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
-- Last updated: `2026-03-27 23:02`
+- Last updated: `2026-04-03 01:43`
 - Note: Producer-side narrowing for the gameplay road/world path.
 
 ---
@@ -13713,7 +13713,7 @@ Optional but useful:
 
 - Source: `rom_analysis/docs/gameplay_scanline_contracts.jsonc`
 - Bundle copy: `sources/rom_analysis/docs/gameplay_scanline_contracts.jsonc`
-- Last updated: `2026-04-01 21:47`
+- Last updated: `2026-04-03 01:43`
 - Note: Versioned scanline-overlay selection for promoted gameplay bundles in the SDL runtime.
 
 ---
@@ -13770,7 +13770,7 @@ Optional but useful:
 
 - Source: `rom_analysis/docs/gameplay_composition_contracts.jsonc`
 - Bundle copy: `sources/rom_analysis/docs/gameplay_composition_contracts.jsonc`
-- Last updated: `2026-04-01 17:44`
+- Last updated: `2026-04-03 01:43`
 - Note: Versioned late-gameplay top-band BG3 composition rules for promoted SDL runtime bundles.
 
 ---
@@ -13820,7 +13820,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md`
-- Last updated: `2026-03-28 09:15`
+- Last updated: `2026-04-03 01:43`
 - Note: Static role split for the narrowed gameplay cluster.
 
 ---
@@ -13948,7 +13948,7 @@ Optional but useful:
 
 - Source: `rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
 - Bundle copy: `sources/rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
-- Last updated: `2026-03-27 23:02`
+- Last updated: `2026-04-03 01:43`
 - Note: Semantic ownership pass for post-handoff gameplay fields.
 
 ---
@@ -14073,7 +14073,7 @@ Optional but useful:
 
 - Source: `rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md`
 - Bundle copy: `sources/rom_analysis/docs/port_sdl_runtime_mimetization_smoke.md`
-- Last updated: `2026-03-28 10:28`
+- Last updated: `2026-04-03 01:43`
 - Note: Bounded regression read for current intro/front-end parity in the C/SDL runtime.
 
 ---
@@ -14143,7 +14143,7 @@ Regression summary:
 
 - Source: `rom_analysis/docs/mesen_instrumented_backend_architecture.md`
 - Bundle copy: `sources/rom_analysis/docs/mesen_instrumented_backend_architecture.md`
-- Last updated: `2026-03-22 22:04`
+- Last updated: `2026-04-03 01:43`
 - Note: Architecture note for the experimental Mesen backend path.
 
 ---
