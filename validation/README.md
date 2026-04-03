@@ -183,6 +183,42 @@ Direct runtime scheduler playback with scripted input:
   --frames 1
 ```
 
+User-facing native demo launcher:
+
+```sh
+./port/run_demo.sh
+```
+
+That path is intentionally not a compare/dump workflow:
+
+- it starts directly on the promoted `gameplay_live_race_mid` rail
+- it keeps `compare` disabled
+- it keeps `PPM/PNG` dump generation disabled
+- it draws an on-screen SDL overlay proving the current path is:
+  - `MESEN OFF`
+  - `ROM CPU EMU OFF`
+  - `PPM PNG DUMP OFF`
+  - `COMPARE OFF`
+  - plus the active scheduler/source/callback metadata for the current frame
+- it accepts startup window sizing via:
+  - `--window-width <n>`
+  - `--window-height <n>`
+- it also supports live resolution shortcuts:
+  - `1`: `1280x896`
+  - `2`: `1600x900`
+  - `3`: `1920x1080`
+  - `F1`: toggle overlay
+
+The dedicated smoke for that launcher is:
+
+```sh
+./port/test_demo_launcher.sh
+```
+
+That smoke runs the SDL launcher once under `SDL_VIDEODRIVER=dummy`, which now
+works because `platform_sdl` falls back to a software renderer when an
+accelerated renderer is unavailable.
+
 That emits:
 
 - `..._00000.ppm`: native runtime frame

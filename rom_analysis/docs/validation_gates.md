@@ -219,3 +219,27 @@ For each archaeology lane:
 2. Keep temporary tolerances only for known unstable windows.
 3. Reduce tolerances as renderer/state fidelity improves.
 4. Promote checkpoint to strict (`0`) once solved.
+
+## 10) Native SDL Demo Launcher Smoke
+
+Runner:
+
+```sh
+./port/test_demo_launcher.sh
+```
+
+This validates the user-facing demo launcher path for the promoted live-race
+rail:
+
+- starts the dedicated `td2_demo` SDL launcher successfully
+- keeps `compare` disabled
+- keeps `PPM/PNG` dump output disabled
+- reports the intended proof surface on startup:
+  native SDL on, Mesen off, ROM/CPU emulation off
+- remains runnable under `SDL_VIDEODRIVER=dummy`, which proves the SDL host can
+  fall back to a software renderer when no accelerated driver is available
+
+This gate is intentionally narrow. It does not prove broader gameplay
+correctness beyond the existing scheduler/input/scanline gates; it proves the
+project now has a presentable native SDL demo entry point that is not
+fronting compare artifacts or dump playback.

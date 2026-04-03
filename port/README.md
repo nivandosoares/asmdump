@@ -38,6 +38,9 @@ Current checkpoint:
   across `2052`, `2053`, `2083`, `2104`, and `2125`
 - headless frame dumping for regression smoke and design review in both PPM
   and PNG
+- dedicated SDL demo launcher for the promoted live-race rail, with on-screen
+  proof text showing native SDL presentation, no dump artifacts, and no
+  ROM/CPU emulation path
 
 This is deliberately not the final renderer. It is the clean replacement for
 the old “invented gameplay” scaffolds and the base for real callback/state
@@ -102,6 +105,31 @@ Interactive SDL playback:
   --scheduler-profile menu_gameplay_entry
 ```
 
+Dedicated gameplay demo launcher:
+
+```sh
+./port/run_demo.sh
+```
+
+Default demo behavior:
+
+- boots straight into the promoted `gameplay_live_race_mid` rail
+- opens an SDL window at `1280x896` by default
+- presents the native runtime framebuffer directly, with no `--compare` and
+  no `--dump-prefix`
+- draws on-screen proof text over the SDL frame:
+  - `MESEN OFF`
+  - `ROM CPU EMU OFF`
+  - `PPM PNG DUMP OFF`
+  - `COMPARE OFF`
+  - active scheduler/source/callback state
+- supports runtime window resize shortcuts:
+  - `1`: `1280x896`
+  - `2`: `1600x900`
+  - `3`: `1920x1080`
+  - `F1`: toggle overlay
+  - `Esc`: quit
+
 Notes:
 
 - `../zelda3/` and `../sentrysearch/` are local investigation aids only and
@@ -152,6 +180,9 @@ Notes:
     `BG3 > BG2` there with the promoted cutoffs `79/79/95`
 - `--dump-prefix` now emits `PATH_00000.ppm` and `PATH_00000.png`; compare
   dumps also emit PNG siblings for `_reference`, `_diff`, and `_compare`.
+- `platform_sdl` now falls back to a software renderer when accelerated SDL
+  renderers are unavailable, which keeps the runtime and demo launcher
+  runnable under `SDL_VIDEODRIVER=dummy` for smoke validation.
 - interactive keyboard mapping:
   - `Z/X/A/S` -> `B/A/Y/X`
   - `Q/W` -> `L/R`

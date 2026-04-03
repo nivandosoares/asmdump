@@ -3,6 +3,7 @@ CFLAGS ?= -O2 -g -std=c11
 WARNINGS := -Wall -Wextra -Wpedantic
 BUILD_DIR := build
 TARGET := $(BUILD_DIR)/td2_port
+DEMO_TARGET := $(BUILD_DIR)/td2_demo
 CALLBACK_MODEL_SMOKE := $(BUILD_DIR)/td2_callback_model_smoke
 SCHEDULER_SMOKE := $(BUILD_DIR)/td2_scheduler_smoke
 INPUT_MUTATION_SMOKE := $(BUILD_DIR)/td2_input_mutation_smoke
@@ -25,6 +26,18 @@ SRC := \
 	src/td2_scheduler.c \
 	src/td2_runtime.c
 OBJ := $(SRC:%.c=$(BUILD_DIR)/%.o)
+DEMO_SRC := \
+	demo_main.c \
+	platform_sdl.c \
+	src/td2_callback_model.c \
+	src/td2_compare.c \
+	src/td2_contracts.c \
+	src/td2_input.c \
+	src/td2_io.c \
+	src/td2_ppu.c \
+	src/td2_scheduler.c \
+	src/td2_runtime.c
+DEMO_OBJ := $(DEMO_SRC:%.c=$(BUILD_DIR)/%.o)
 CALLBACK_MODEL_SMOKE_SRC := \
 	test_callback_model.c \
 	src/td2_callback_model.c \
@@ -75,15 +88,18 @@ SCANLINE_CONTRACT_SMOKE_SRC := \
 	src/td2_scheduler.c \
 	src/td2_runtime.c
 SCANLINE_CONTRACT_SMOKE_OBJ := $(SCANLINE_CONTRACT_SMOKE_SRC:%.c=$(BUILD_DIR)/%.o)
-ALL_OBJ := $(sort $(OBJ) $(CALLBACK_MODEL_SMOKE_OBJ) $(SCHEDULER_SMOKE_OBJ) $(INPUT_MUTATION_SMOKE_OBJ) $(LIVE_INPUT_SMOKE_OBJ) $(SCANLINE_CONTRACT_SMOKE_OBJ))
+ALL_OBJ := $(sort $(OBJ) $(DEMO_OBJ) $(CALLBACK_MODEL_SMOKE_OBJ) $(SCHEDULER_SMOKE_OBJ) $(INPUT_MUTATION_SMOKE_OBJ) $(LIVE_INPUT_SMOKE_OBJ) $(SCANLINE_CONTRACT_SMOKE_OBJ))
 DEPS := $(ALL_OBJ:.o=.d)
 
 .PHONY: all clean test
 
-all: $(TARGET) $(CALLBACK_MODEL_SMOKE) $(SCHEDULER_SMOKE) $(INPUT_MUTATION_SMOKE) $(LIVE_INPUT_SMOKE) $(SCANLINE_CONTRACT_SMOKE)
+all: $(TARGET) $(DEMO_TARGET) $(CALLBACK_MODEL_SMOKE) $(SCHEDULER_SMOKE) $(INPUT_MUTATION_SMOKE) $(LIVE_INPUT_SMOKE) $(SCANLINE_CONTRACT_SMOKE)
 
 $(TARGET): $(OBJ)
 	$(CC) $(OBJ) -o $@ $(LDLIBS)
+
+$(DEMO_TARGET): $(DEMO_OBJ)
+	$(CC) $(DEMO_OBJ) -o $@ $(LDLIBS)
 
 $(CALLBACK_MODEL_SMOKE): $(CALLBACK_MODEL_SMOKE_OBJ)
 	$(CC) $(CALLBACK_MODEL_SMOKE_OBJ) -o $@ $(LDLIBS)
@@ -107,7 +123,7 @@ $(BUILD_DIR)/%.o: %.c
 clean:
 	rm -rf $(BUILD_DIR)
 
-test: $(TARGET) $(CALLBACK_MODEL_SMOKE) $(SCHEDULER_SMOKE) $(INPUT_MUTATION_SMOKE) $(LIVE_INPUT_SMOKE) $(SCANLINE_CONTRACT_SMOKE)
+test: $(TARGET) $(DEMO_TARGET) $(CALLBACK_MODEL_SMOKE) $(SCHEDULER_SMOKE) $(INPUT_MUTATION_SMOKE) $(LIVE_INPUT_SMOKE) $(SCANLINE_CONTRACT_SMOKE)
 	./test_regression.sh
 	./test_compare_lane.sh
 	./test_callback_model.sh
@@ -115,5 +131,6 @@ test: $(TARGET) $(CALLBACK_MODEL_SMOKE) $(SCHEDULER_SMOKE) $(INPUT_MUTATION_SMOK
 	./test_input_mutation.sh
 	./test_live_input.sh
 	./test_scanline_contract.sh
+	./test_demo_launcher.sh
 
 -include $(DEPS)

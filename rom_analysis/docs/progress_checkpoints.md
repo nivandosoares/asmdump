@@ -1,6 +1,87 @@
 Date: 2026-04-02
 
 Summary
+- Added a dedicated native SDL demo launcher for the promoted live-race port
+  rail instead of relying on headless compare/dump commands for demos.
+- Added an on-screen proof overlay that states the demo is running through the
+  native SDL path with `compare` off, `PPM/PNG` dumps off, and no
+  ROM/CPU-emulation path.
+- Hardened `platform_sdl` with a software-renderer fallback so the launcher and
+  the main runtime stay runnable under `SDL_VIDEODRIVER=dummy`.
+
+What I ran
+- rebuild affected port binaries:
+  - `make -C port`
+- targeted launcher/live-input validation:
+  - `./port/test_demo_launcher.sh`
+  - `./port/test_live_input.sh`
+  - `SDL_VIDEODRIVER=dummy ./port/build/td2_port --scene-dir tools/out/design_lane3_live_race_mid_frame0_native --scheduler-profile gameplay_live_race_mid --frames 1`
+- full port validation closure:
+  - `make -C port test`
+
+Artifacts
+- new demo launcher binary and wrapper:
+  - `port/demo_main.c`
+  - `port/run_demo.sh`
+- new demo smoke:
+  - `port/test_demo_launcher.sh`
+- SDL fallback change:
+  - `port/platform_sdl.c`
+
+Findings / Interpretation
+- The project now has a presentation-grade SDL entry point for the current
+  strongest native gameplay proof, with the overlay carrying the exact claims
+  design asked to see on-screen:
+  - native SDL path
+  - Mesen off
+  - ROM/CPU emulation off
+  - `PPM/PNG` dump path off
+  - compare lane off
+- The live-race rail is still the correct rail for this kind of demo:
+  it is native/runtime-rendered and contract-backed, while the broader
+  attract/no-input loop is still documented elsewhere as hybrid/sample-backed.
+- The software-renderer fallback closed a practical packaging gap:
+  SDL launcher smoke now runs in dummy environments without requiring an
+  accelerated render driver.
+
+What I learned (actionable)
+- For design/demo check-ins, the preferred entry point should now be
+  `./port/run_demo.sh`, not a compare/dump command line.
+- Resolution changes do not need a separate renderer path:
+  SDL logical-size presentation plus window resizing is enough for the current
+  demo lane.
+- The next stronger demo upgrade is still content-side, not launcher-side:
+  promote a fuller native attract/demo path before claiming a native no-input
+  demo loop.
+
+Next steps / Checkpoints
+1) Keep the demo launcher pinned to `gameplay_live_race_mid` until a fuller
+   attract or later-gameplay rail is promoted natively.
+2) If design wants another presentation preset, add scene/profile wrappers on
+   top of `td2_demo` instead of forking another SDL shell.
+3) When the attract lane stops being hybrid/sample-backed, promote a second
+   launcher preset for that path rather than weakening the current “native
+   demo” wording.
+
+Files updated in this turn
+- `port/demo_main.c`
+- `port/platform_sdl.c`
+- `port/Makefile`
+- `port/run_demo.sh`
+- `port/test_demo_launcher.sh`
+- `port/README.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/validation_gates.md`
+- `validation/README.md`
+
+Next reading
+- `port/README.md`
+- `validation/README.md`
+- `rom_analysis/docs/validation_gates.md`
+
+Date: 2026-04-02
+
+Summary
 - Promoted richer gameplay-state fields into the port runtime contract/state
   surface so scheduler-backed gameplay rails are no longer limited to the old
   `state_11f3/dp_0053/dp_0054` subset.

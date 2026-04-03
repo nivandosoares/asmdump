@@ -157,6 +157,24 @@ static void platform_sdl_open_first_controller(PlatformSdl* platform) {
     }
 }
 
+static SDL_Renderer* platform_sdl_create_renderer(SDL_Window* window) {
+    SDL_Renderer* renderer = SDL_CreateRenderer(
+        window,
+        -1,
+        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
+    );
+
+    if (renderer != NULL) {
+        return renderer;
+    }
+
+    return SDL_CreateRenderer(
+        window,
+        -1,
+        SDL_RENDERER_SOFTWARE
+    );
+}
+
 static uint16_t platform_sdl_read_input_mask(PlatformSdl* platform) {
     const uint8_t* keyboard_state = NULL;
     int keyboard_size = 0;
@@ -237,11 +255,7 @@ bool platform_sdl_init(
         return false;
     }
 
-    platform->renderer = SDL_CreateRenderer(
-        platform->window,
-        -1,
-        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
-    );
+    platform->renderer = platform_sdl_create_renderer(platform->window);
     if (platform->renderer == NULL) {
         snprintf(error, error_size, "SDL_CreateRenderer failed: %s", SDL_GetError());
         platform_sdl_shutdown(platform);
