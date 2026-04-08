@@ -120,7 +120,14 @@ already grounded in code reads, probes, or generated artifacts.
     passes and still hold user-verified live Desert Blast gameplay imagery in
     the preserved manual seeds. The callback family is therefore broader than a
     menu-only label; the real separation sits in internal HUD/OAM/substate
-    fields.
+    fields. The bank-1 IRQ half of that bundle is also no longer opaque:
+    `01:960D -> 01:96A0 -> 01:97B1/97E1/9809` now reads as a staged
+    BG1/BG3/window/color-math visible-split family, while `02:9016` remains
+    the bank-2 gameplay-side control gate. The next heavy bank-2 block after
+    that gate is also no longer opaque in shape: `L0110B2 -> L011551` reads
+    as a generated selector-to-runtime builder that consumes the earlier
+    `$1C78/$1C7A/$1C76` collapse and produces deeper gameplay working tables
+    like `$14DC/$13FC/$1A28`.
     Direct headless forcing of `01:9568/01:95AD` still does not promote into
     that same corridor: short-force probes keep `active_main` pinned on
     `01:9568/01:95AD` through frame `2199` with no staged callback writes.
@@ -133,7 +140,7 @@ already grounded in code reads, probes, or generated artifacts.
     - that descriptor now matches the bank-0 table-driven queue-builder family
       rooted at `L001895 / L001A70`
     - the queued source payload closes one step further to a one-tile
-      bank-15 object:
+      SNES-bank-`$15` object:
       table start `15:B4A8`, payload `15:B4B8`, destination `VRAM 0x6180`
     - in human terms:
       this late gameplay family can still stream small BG1 tile objects during
@@ -179,9 +186,14 @@ If you strip away the assembly details, the proven logic is:
   deltas, especially `state_09a2/state_09a8` and the paired DP scratch fields,
   after both paths have already converged to the shared `02:9016/02:8F3C`
   corridor
+- the generated runtime surfaces coming out of `L011551`
+  (`$14DC/$13FC/$1A28`) now have a strong control read but still need
+  semantic naming
 - the `3250` late-entry producer path is no longer opaque at the object side:
-  the transient upload now closes to `15:B4A8 -> 15:B4B8 -> VRAM 0x6180`,
-  but the gameplay-side selector path inside the active
-  `02:9016 / 01:96A0` pair is still not fully resolved
+  the transient upload now closes to the SNES-bank-`$15` object
+  `15:B4A8 -> 15:B4B8 -> VRAM 0x6180`,
+  and the bank-1 IRQ half now reads as the visible split lane,
+  but the gameplay-side selector path that arms that pair and chooses the
+  transient object inside `02:9016` is still not fully resolved
 - late attract producer scheduling after `1133` is materially narrowed, but the
   native replacement schedule is still a live archaeology target

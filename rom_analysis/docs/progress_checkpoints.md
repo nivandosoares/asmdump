@@ -1,3 +1,244 @@
+Date: 2026-04-08
+
+Summary
+- Typed the next heavy bank-2 builder block after the anonymous `02:9016`
+  gate: `L0110B2 -> L011551`.
+- Closed the first strong human read for that block as a selector-to-runtime
+  builder rather than a menu or HUD helper.
+- The current best interpretation is:
+  - build one generated profile from `$1C7A`
+  - post-process its `$1A28` span map through a tiny local transform table
+  - rebuild the active profile from `$1C78`
+  - seed one-lane vs rival-present runtime state from `$1C76`
+
+What I ran
+- bounded bank-2 reads around the builder and its siblings:
+  - `sed -n '2050,2145p' bank2.asm`
+  - `sed -n '2445,3065p' bank2.asm`
+- bounded selector provenance reads in bank 1:
+  - `sed -n '1468,1558p' bank1.asm`
+  - `sed -n '1940,2005p' bank1.asm`
+- bounded search for selector fields:
+  - `rg -n "1C78|1C7A|1C76|1CCA" bank1.asm bank2.asm docs rom_analysis/docs`
+
+Artifacts
+- new builder note:
+  - `rom_analysis/docs/bank2_gameplay_builder_110b2_11551_human.md`
+- refreshed team-facing callback/runtime docs:
+  - `rom_analysis/docs/bank2_gameplay_entry_human.md`
+  - `docs/bank_disassembly_status.md`
+  - `docs/dev_team_handoff.md`
+  - `rom_analysis/docs/snes_runtime_algorithm_human.md`
+  - `rom_analysis/docs/progress_checkpoints.md`
+
+Findings / Interpretation
+- `L0110B2` is just a wrapper; the real work is `L011551`.
+- `L011551` is only called from bank 1 after the derived gameplay bundle is
+  already materialized, which makes it a good boundary between
+  front-end-selected state and deeper gameplay runtime state.
+- The routine has a clear two-profile structure:
+  first keyed by `$1C7A`, then keyed by `$1C78`.
+- Because bank-1 archaeology already closes `$1C7A` as the
+  rival/no-opponent-derived selector and `$1C78` as the earlier player-facing
+  car selector, the strongest current read is that this routine builds a
+  secondary profile first and then rebuilds the active primary profile.
+- The generated surfaces are now materially narrowed:
+  `$14DC`, `$13FC`, and especially `$1A28` are runtime-generated maps/tables,
+  not presentation lists.
+- A useful low-level detail also closed here:
+  the post-process profile table at `02:9549/02:954D` is embedded directly in
+  the routine's own byte stream and indexed by `$1C6C`, with `$0996` forcing
+  the fallback profile `3`.
+
+What I learned (actionable)
+- The architecture now reads more cleanly:
+  bank 1 collapses selectors, then bank 2 `L011551` turns them into generated
+  gameplay working state before the later gameplay frame loop keeps stepping.
+- The next high-value bank-2 questions are less about "where is gameplay?" and
+  more about naming the generated surfaces and linking them back to specific
+  visible late-gameplay behaviors.
+
+Next steps / Checkpoints
+1) Keep tracing the anonymous `02:9016 .. 02:90B2` control block and identify
+   which branch leads into `L0110B2`.
+2) Name the generated `$1A28 / $14DC / $13FC` surfaces by comparing them
+   against later bank-2/bank-10/bank-11 consumers.
+3) Tie the state that arms `L011551` and the bank-1 IRQ family to the later
+   queue-backed SNES-bank-`$15` object path behind frame `3250`.
+
+Files updated in this turn
+- `rom_analysis/docs/bank2_gameplay_builder_110b2_11551_human.md`
+- `rom_analysis/docs/bank2_gameplay_entry_human.md`
+- `docs/bank_disassembly_status.md`
+- `docs/dev_team_handoff.md`
+- `rom_analysis/docs/snes_runtime_algorithm_human.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `rom_analysis/docs/bank2_gameplay_builder_110b2_11551_human.md`
+- `rom_analysis/docs/bank2_main_callback_9016_human.md`
+- `rom_analysis/docs/bank1_irq_callback_96a0_human.md`
+
+Date: 2026-04-08
+
+Summary
+- Typed the promoted bank-1 gameplay IRQ callback family into human
+  pseudocode instead of leaving `01:96A0` as a vague callback name.
+- Closed the first strong semantic read for the anonymous bank-1 span
+  `01:960D -> 01:96A0 -> 01:97B1/97E1/9809`: it is the visible
+  `BG1/BG3/window/color-math` split lane, not the gameplay main loop.
+- Refreshed the team-facing handoff/runtime/status docs so the callback bundle
+  now reads as:
+  - bank 2 main/control gate: `02:9016`
+  - bank 1 visible IRQ split: `01:960D / 01:96A0`
+  - bank 2 NMI-side gameplay partner: `02:8F3C`
+
+What I ran
+- bounded raw LoROM dump for the anonymous bank-1 IRQ region:
+  - `python3` byte dump over `game.smc` for `01:9600..01:9840`
+- bounded bank disassembly reads:
+  - `sed -n '2550,2825p' bank1.asm`
+  - `sed -n '2480,2765p' bank2.asm`
+  - `sed -n '2860,3065p' bank2.asm`
+
+Artifacts
+- new IRQ-side human note:
+  - `rom_analysis/docs/bank1_irq_callback_96a0_human.md`
+- refreshed team-facing callback docs:
+  - `docs/bank_disassembly_status.md`
+  - `docs/dev_team_handoff.md`
+  - `docs/engine_pseudocode.md`
+  - `rom_analysis/docs/bank2_gameplay_entry_human.md`
+  - `rom_analysis/docs/next_steps_roadmap.md`
+  - `rom_analysis/docs/progress_checkpoints.md`
+  - `rom_analysis/docs/snes_runtime_algorithm_human.md`
+
+Findings / Interpretation
+- The bank-1 gameplay IRQ lane is no longer best described as
+  “some callback near `01:96A0`”.
+- `01:960D` is the first-stage IRQ setup point:
+  it applies one of the BG1 offset presets from `$11AB`, restores the default
+  `TMAIN/CGWSEL` surface, and under a narrower late-gameplay condition arms
+  the second-stage callback `01:96A0`.
+- `01:96A0` is the second-stage visible split routine:
+  it applies BG3 scroll, window, and color-math writes, reprograms `VTIMEL`,
+  and may schedule one or two follow-up IRQ slices through the anonymous
+  continuations `01:97B1`, `01:97E1`, and `01:9809`.
+- This narrows the heavy remaining archaeology target:
+  the hard unresolved problem is less “what is `01:96A0`?” and more
+  “what exact bank-2/gameplay state arms this IRQ family and chooses the
+  queue-backed SNES-bank-`$15` object path?”
+
+What I learned (actionable)
+- The promoted callback bundle now has clearer ownership:
+  - bank 2 main/control gate
+  - bank 1 visible split IRQ lane
+  - bank 2 NMI upload partner
+- For port planning, late gameplay must preserve mid-frame IRQ-visible PPU
+  reprogramming, not only queue/NMI behavior.
+
+Next steps / Checkpoints
+1) Keep tracing the bank-2 selector/control block in `02:9016 .. 02:90B2`.
+2) Tie the conditions that arm `01:960D -> 01:96A0` to the same state changes
+   that eventually choose the SNES-bank-`$15` object upload behind frame
+   `3250`.
+3) Compare `L011551` with its sibling gameplay setup/build routines to decide
+   whether it is the next high-value track-span/state-builder note.
+
+Files updated in this turn
+- `rom_analysis/docs/bank1_irq_callback_96a0_human.md`
+- `rom_analysis/docs/bank2_gameplay_entry_human.md`
+- `docs/bank_disassembly_status.md`
+- `docs/dev_team_handoff.md`
+- `docs/engine_pseudocode.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `rom_analysis/docs/snes_runtime_algorithm_human.md`
+
+Next reading
+- `rom_analysis/docs/bank1_irq_callback_96a0_human.md`
+- `rom_analysis/docs/bank2_main_callback_9016_human.md`
+- `rom_analysis/docs/snes_bank15_object_catalog_human.md`
+
+Date: 2026-04-08
+
+Summary
+- Corrected a bank-namespace mismatch around the late-entry `3250` object:
+  the proven payload address `15:B4A8 -> 15:B4B8` is SNES bank `$15`, which
+  maps to repo file `bank21.asm`, not repo file `bank15.asm`.
+- Added shared-session reuse to the PTY helper so callers can keep one live
+  shell and reattach to it by pointer instead of spawning a new session every
+  time.
+- Refreshed the main bank/team handoff docs to match the current promoted
+  bank map: `bank0`, `bank1`, `bank2`, `bank10`, `bank11`, `bank21($15)`,
+  and `bank30`.
+- Rewrote the dev-team handoff around current human pseudocode and current
+  unresolved bank edges instead of the older `bank10/11/30`-only framing.
+
+What I ran
+- bounded LoROM address sanity check for `15:B4A8`:
+  - `od -Ax -tx2 -N 96 -j $((0x15*0x8000 + (0xB4A8-0x8000))) game.smc`
+- bounded terminal-bot smoke:
+  - `python3 tools/terminal_bot.py self-test`
+
+Artifacts
+- shared current-session support:
+  - `tools/terminal_bot.py`
+- refreshed tooling usage notes:
+  - `tools/README.md`
+- refreshed team-facing bank docs:
+  - `docs/bank_disassembly_status.md`
+  - `docs/dev_team_handoff.md`
+  - `rom_analysis/docs/bank2_gameplay_entry_human.md`
+  - `rom_analysis/docs/bank2_main_callback_9016_human.md`
+  - `rom_analysis/docs/snes_bank15_object_catalog_human.md`
+
+Findings / Interpretation
+- The repo had been mixing decimal file names (`bank15.asm`, `bank21.asm`)
+  with hex-style SNES bank addresses (`15:B4A8`). A quick LoROM offset check
+  closes that ambiguity: the promoted late object lives in SNES bank `$15`,
+  not SNES bank `$0F`.
+- The PTY helper already persisted session logs and metadata, but callers
+  still had to pass raw `session_...` ids around manually, which encouraged
+  unnecessary new session starts.
+- A shared `current_session.json` pointer plus `@current` alias is enough to
+  keep multi-host automation on one live session without changing the
+  underlying PTY/session model.
+- The helper smoke exposed a real teardown bug in the PTY drain loop: EOF on
+  the master PTY could spin forever during close. Fixing that also makes the
+  session helper more reliable for long-lived reuse.
+- The older handoff docs were behind the promoted archaeology state. The
+  stronger current human read is bank-scoped:
+  gameplay is `bank2`-anchored, `bank10/11` are service banks, and
+  `bank21($15)/bank30` are typed support/content banks with specific unresolved
+  provenance edges.
+
+What I learned (actionable)
+- For this repo, “resume the last live shell” should be the default operator
+  habit. `@current` is the right level of indirection; a second session layer
+  is unnecessary.
+- The dev-team handoff reads better when it leads with bank ownership and
+  pseudocode, then points to deeper archaeology notes for proof.
+
+Next steps / Checkpoints
+1) Use `python3 tools/terminal_bot.py start --resume-current` plus
+   `exec @current ...` as the default automation path.
+2) Keep turning the active support banks into team-readable pseudocode,
+   starting from the SNES-bank-`$15` selector path and the remaining unresolved
+   bank-30 targets `DA96/EE7F`.
+
+Files updated in this turn
+- `tools/terminal_bot.py`
+- `tools/README.md`
+- `docs/bank_disassembly_status.md`
+- `docs/dev_team_handoff.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `tools/terminal_bot.py`
+- `docs/dev_team_handoff.md`
+- `rom_analysis/docs/snes_runtime_algorithm_human.md`
+
 Date: 2026-04-03
 
 Summary

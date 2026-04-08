@@ -35,7 +35,7 @@ Current Sprint 0 tooling:
 - `render_mesen_snes_bg.py`: composes a 256x224 preview directly from Mesen VRAM/CGRAM/state dumps, including Mode 7 and optional OBJ composition from OAM dumps
 - `check_obj_vertical_flip.py`: builds a minimal 16x32 vertically mirrored OBJ fixture and checks the Python renderer plus SDL runtime against one golden PPM for the width-vs-height mirror regression
 - `check_bg_layer_priority.py`: builds a minimal mode-0 four-layer scene and checks BG4 support plus tile-priority ordering against one golden PPM in both the Python renderer and SDL runtime
-- `terminal_bot.py`: provides a persistent PTY-backed shell session helper for bot-style automation, including session start/list/status, stateful `cd`/`export`, raw input writes, `Ctrl-C`, and log streaming from a shared session log
+- `terminal_bot.py`: provides a persistent PTY-backed shell session helper for bot-style automation, including session start/list/status, a shared `current_session.json` pointer, `@current` session reuse, stateful `cd`/`export`, raw input writes, `Ctrl-C`, and log streaming from a shared session log
 - `clean_generated_artifacts.py`: removes always-safe build output, scratch untracked `tools/out` runs (`*smoke*`, `*makecheck*`, `*designtest*`, `tmp*`, `test_*`), debugger `game.cdl` junk, and other disposable generated clutter; it skips any tracked path, and `tools/out/` itself is git-ignored by default, so promoting a new artifact from that tree is now an explicit `git add -f` decision
 - `summarize_mode7_trace.py`: summarizes the tracked register-write traces emitted by `mesen_probe_boot.lua` for Mode 7/TMAIN or DMA/HDMA windows
 - `summarize_l001210_trace.py`: summarizes `L001210` dispatcher execution hits (`$0C/$0E/$10`) captured by `mesen_probe_boot.lua` for chunk provenance, including caller-site coverage and `L00A9*` table-index usage when present
@@ -126,13 +126,14 @@ python3 tools/build_bank30_chunk_registry.py tools/out/bank30_headers.json tools
 python3 tools/check_regression_gates.py validation/regression_gates_intro.jsonc --render-dir port/build/regression_frames --json-out tools/out/regression_gates_intro_report.json
 python3 tools/validate_callback_contracts.py rom_analysis/docs/callback_state_contracts.jsonc tools/out/td2_boot_probe.json --json-out tools/out/callback_state_contracts_report.json
 python3 tools/terminal_bot.py start --cwd .
-python3 tools/terminal_bot.py exec SESSION_ID -- pwd
-python3 tools/terminal_bot.py cd SESSION_ID tools
-python3 tools/terminal_bot.py setenv SESSION_ID DEMO value
-python3 tools/terminal_bot.py exec SESSION_ID -- 'printf "%s\n" "$DEMO"'
-python3 tools/terminal_bot.py exec SESSION_ID --stream -- 'python3 -c "import time; print(\"alpha\", flush=True); time.sleep(0.5); print(\"beta\", flush=True)"'
-python3 tools/terminal_bot.py interrupt SESSION_ID
-python3 tools/terminal_bot.py close SESSION_ID --force
+python3 tools/terminal_bot.py start --resume-current
+python3 tools/terminal_bot.py exec @current -- pwd
+python3 tools/terminal_bot.py cd @current tools
+python3 tools/terminal_bot.py setenv @current DEMO value
+python3 tools/terminal_bot.py exec @current -- 'printf "%s\n" "$DEMO"'
+python3 tools/terminal_bot.py exec @current --stream -- 'python3 -c "import time; print(\"alpha\", flush=True); time.sleep(0.5); print(\"beta\", flush=True)"'
+python3 tools/terminal_bot.py interrupt @current
+python3 tools/terminal_bot.py close @current --force
 python3 tools/decompress_td2_chunk.py game.smc tools/out/bank7_42fb_8000.bin --bank 7 --addr 0x8000 --json-out tools/out/bank7_42fb_8000.json
 python3 tools/decompress_td2_chunk.py game.smc tools/out/bank7_26fb_817a.bin --bank 7 --addr 0x817A --json-out tools/out/bank7_26fb_817a.json
 python3 tools/decompress_td2_chunk.py game.smc tools/out/bank30_67fb_da96.bin --bank 30 --addr 0xDA96 --json-out tools/out/bank30_67fb_da96.json
@@ -145,6 +146,12 @@ python3 tools/scan_structured_bank.py game.smc --bank 7 --json-out tools/out/ban
 python3 tools/extract_snes_tiles.py game.smc tools/out/bank7_chunk1_gray.ppm --bank 7 --bpp 4 --offset 0x017e --byte-length 0x64c
 python3 tools/extract_snes_tiles.py game.smc tools/out/bank9_tiles_2bpp.ppm --bank 9 --bpp 2
 ```
+
+Current practical read:
+
+- `start` now writes the live session id into `tools/out/terminal_bot_sessions/current_session.json`
+- later calls may use `@current` instead of copying the raw `session_...` id around
+- `start --resume-current` returns the existing live shared session when possible and only creates a new session when that pointer is missing or dead
 
 Useful make targets:
 

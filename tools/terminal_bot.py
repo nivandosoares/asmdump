@@ -28,6 +28,8 @@ DEFAULT_SHELL = os.environ.get("SHELL") or "/bin/bash"
 META_VERSION = 1
 WAIT_POLL_SECONDS = 0.1
 ANSI_ESCAPE_RE = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]")
+CURRENT_SESSION_FILENAME = "current_session.json"
+CURRENT_SESSION_ALIASES = {"@current", "current"}
 
 
 def now_epoch() -> float:
@@ -50,6 +52,37 @@ def read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def current_session_path(session_root: Path) -> Path:
+    return session_root / CURRENT_SESSION_FILENAME
+
+
+def save_current_session(session_root: Path, session_id: str) -> None:
+    write_json(
+        current_session_path(session_root),
+        {
+            "session_id": session_id,
+            "updated_at": now_epoch(),
+        },
+    )
+
+
+def load_current_session_id(session_root: Path) -> str:
+    path = current_session_path(session_root)
+    if not path.exists():
+        raise FileNotFoundError("no shared current session pointer exists yet")
+    payload = read_json(path)
+    session_id = str(payload.get("session_id") or "").strip()
+    if not session_id:
+        raise RuntimeError(f"shared current session pointer {path} is invalid")
+    return session_id
+
+
+def resolve_session_id(session_root: Path, session_id: str) -> str:
+    if session_id in CURRENT_SESSION_ALIASES:
+        return load_current_session_id(session_root)
+    return session_id
+
+
 def decode_bytes(data: bytes) -> str:
     return data.decode("utf-8", errors="replace")
 
@@ -68,6 +101,7 @@ def parse_env_assignment(raw: str) -> tuple[str, str]:
 
 
 def load_meta(session_root: Path, session_id: str) -> dict[str, Any]:
+    session_id = resolve_session_id(session_root, session_id)
     meta_path = session_root / session_id / "meta.json"
     if not meta_path.exists():
         raise FileNotFoundError(f"session {session_id!r} does not exist")
@@ -302,21 +336,22 @@ class SessionServer:
         if script_path.exists():
             script_path.unlink()
 
-    def read_pty_once(self) -> None:
+    def read_pty_once(self) -> bool:
         if self.master_fd is None:
-            return
+            return False
         try:
             data = os.read(self.master_fd, 65536)
         except BlockingIOError:
-            return
+            return False
         except OSError:
-            return
+            return False
         if not data:
-            return
+            return False
         offset_before = self.log_size
         self.log_file.write(data)
         self.log_size += len(data)
         self.scan_command_output(data, offset_before)
+        return True
 
     def drain_pty_now(self) -> None:
         if self.master_fd is None:
@@ -325,7 +360,8 @@ class SessionServer:
             readable, _, _ = select.select([self.master_fd], [], [], 0)
             if not readable:
                 return
-            self.read_pty_once()
+            if not self.read_pty_once():
+                return
 
     def pump_once(self, timeout: float) -> None:
         if self.master_fd is None:
@@ -545,6 +581,31 @@ def command_start(args: argparse.Namespace) -> int:
     socket_root = Path(args.socket_root).resolve()
     session_root.mkdir(parents=True, exist_ok=True)
     socket_root.mkdir(parents=True, exist_ok=True)
+    if args.resume_current:
+        try:
+            current_id = load_current_session_id(session_root)
+            status = best_effort_status(session_root, current_id)
+        except Exception:  # noqa: BLE001
+            status = None
+        else:
+            if status.get("alive"):
+                result = {
+                    "ok": True,
+                    "session_id": current_id,
+                    "session_dir": str(session_root / current_id),
+                    "log_path": status.get("log_path"),
+                    "socket_path": status.get("socket_path"),
+                    "shell_pid": status.get("shell_pid"),
+                    "server_pid": status.get("server_pid"),
+                    "cwd": status.get("cwd"),
+                    "resumed": True,
+                }
+                save_current_session(session_root, current_id)
+                if args.json:
+                    render_json(result)
+                else:
+                    print(current_id)
+                return 0
     cwd = Path(args.cwd or os.getcwd()).resolve()
     if not cwd.exists():
         raise FileNotFoundError(f"cwd {cwd} does not exist")
@@ -604,6 +665,7 @@ def command_start(args: argparse.Namespace) -> int:
                         "server_pid": status.get("server_pid"),
                         "cwd": status.get("cwd"),
                     }
+                    save_current_session(session_root, session_id)
                     if args.json:
                         render_json(result)
                     else:
@@ -724,6 +786,10 @@ def command_list(args: argparse.Namespace) -> int:
     session_root = Path(args.session_root).resolve()
     if not session_root.exists():
         return 0
+    try:
+        current_id = load_current_session_id(session_root)
+    except Exception:  # noqa: BLE001
+        current_id = None
     sessions: list[dict[str, Any]] = []
     for session_dir in sorted(session_root.iterdir()):
         if not session_dir.is_dir():
@@ -737,10 +803,13 @@ def command_list(args: argparse.Namespace) -> int:
         render_json({"sessions": sessions})
         return 0
     for session in sessions:
+        label = session["session_id"]
+        if current_id is not None and session["session_id"] == current_id:
+            label += " *current"
         print(
             "\t".join(
                 [
-                    session["session_id"],
+                    label,
                     "alive" if session.get("alive") else "dead",
                     str(session.get("cwd")),
                 ]
@@ -851,6 +920,7 @@ def run_self_test(args: argparse.Namespace) -> int:
         env=[],
         json=False,
         session_id=None,
+        resume_current=False,
         start_timeout=5.0,
     )
     session_id = None
@@ -900,6 +970,35 @@ def run_self_test(args: argparse.Namespace) -> int:
         exit_code, output = run_exec('printf "%s" "$TD2_TERMINAL_BOT_TEST"')
         if exit_code != 0 or output.strip() != "sticky":
             raise RuntimeError("environment state did not persist across commands")
+
+        current_id = load_current_session_id(session_root)
+        if current_id != session_id:
+            raise RuntimeError("shared current session pointer did not track the live session")
+
+        resume_args = argparse.Namespace(
+            session_root=str(session_root),
+            socket_root=str(socket_root),
+            cwd=str(cwd),
+            shell=args.shell,
+            login=False,
+            env=[],
+            json=False,
+            session_id=None,
+            start_timeout=5.0,
+            resume_current=True,
+        )
+        try:
+            saved_stdout = sys.stdout
+            from io import StringIO
+
+            capture = StringIO()
+            sys.stdout = capture
+            command_start(resume_args)
+            resumed_id = capture.getvalue().strip()
+        finally:
+            sys.stdout = saved_stdout
+        if resumed_id != session_id:
+            raise RuntimeError("start --resume-current did not return the existing live session")
 
         exit_code, output = run_exec(
             'python3 -c "import os; print(int(os.isatty(0)), int(os.isatty(1)))"'
@@ -994,6 +1093,11 @@ def build_parser() -> argparse.ArgumentParser:
     start_parser.add_argument("--env", action="append", default=[])
     start_parser.add_argument("--login", action="store_true")
     start_parser.add_argument("--json", action="store_true")
+    start_parser.add_argument(
+        "--resume-current",
+        action="store_true",
+        help="reuse the shared current live session if it exists instead of starting a new one",
+    )
     start_parser.add_argument("--start-timeout", type=float, default=5.0)
     start_parser.set_defaults(func=command_start)
 

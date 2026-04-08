@@ -22,8 +22,8 @@ graph TD
     subgraph "Asset Layer (ROM Sources)"
         Dispatch[Asset Dispatcher: Bank 30] --> Decompressor[SNES Decompressor: L001210]
         Decompressor --> VRAM_Staging[VRAM/CGRAM Buffers]
-        Bank15Obj[Bank 15 Object Catalogs]
-        Bank15Obj --> TileObj3250[Late-entry object 15:B4A8\npayload 15:B4B8]
+        Bank21Obj[SNES Bank $15 Object Catalogs\nrepo file bank21.asm]
+        Bank21Obj --> TileObj3250[Late-entry object 15:B4A8\npayload 15:B4B8]
     end
 
     subgraph "Rendering / Staging Layer"
@@ -82,5 +82,6 @@ graph TD
 ### 5. Current Late-Gameplay Constraint
 - **Frame `3250`:** One active visible descriptor survives on the queue.
 - **Descriptor:** `01 B8 B4 15 20 00 80 61`.
-- **Interpretation:** A one-tile bank-15 object (`15:B4A8 -> 15:B4B8`) is
-  streamed into `VRAM 0x6180`, which resolves to visible `BG1` tile `396`.
+- **Interpretation:** A one-tile object from SNES bank `$15`
+  (`15:B4A8 -> 15:B4B8`) is streamed into `VRAM 0x6180`, which resolves to
+  visible `BG1` tile `396`.

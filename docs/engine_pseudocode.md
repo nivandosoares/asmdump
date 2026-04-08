@@ -64,14 +64,15 @@ void gameplay_main_loop() {
     // 5. Prepare Render Data
     build_road_raster(&state.world); // Bank 11
     update_radar_markers(state.actors); // Bank 2 L0108EF
-    apply_irq_visible_split(); // IRQ partner 01:96A0
+    apply_irq_visible_split(); // Bank 1 IRQ family 01:960D -> 01:96A0
 
     // 6. Stage DMA Queue
     queue_dma_uploads(); // $0600
 
     // 6a. Late gameplay can still stream small BG1 objects instead of relying
     // only on final VRAM. The current proven 3250 counterexample is a one-tile
-    // object from bank 15 staged through the queue-builder family.
+    // object from SNES bank $15 (repo file bank21.asm) staged through the
+    // queue-builder family.
     if (needs_late_bg1_tile_stream()) {
         QueueDescriptor desc = build_table_object_descriptor(
             /* table */ 0x15B4A8,
@@ -80,6 +81,19 @@ void gameplay_main_loop() {
             /* vram_dest */ 0x6180
         );
         queue_descriptor(desc);
+    }
+}
+```
+
+### IRQ Visible-Split Partner
+```c
+void apply_irq_visible_split() {
+    apply_bg1_mode_from_11ab();
+
+    if (late_visible_phase_is_armed()) {
+        configure_window_color_math_and_bg3_scroll();
+        schedule_followup_irq_slices();
+        apply_bg1_scroll_from_dp_c2_c4_c5();
     }
 }
 ```
@@ -111,9 +125,10 @@ void snes_nmi_handler() {
 // - paired IRQ callback: 01:96A0
 // - one visible queue descriptor appears on scanlines 46..223
 // - descriptor bytes: 01 B8 B4 15 20 00 80 61
-// - payload object: 15:B4A8 -> 15:B4B8
+// - payload object: SNES $15:B4A8 -> $15:B4B8
 // - destination: VRAM 0x6180 -> BG1 tile 396
 //
 // Port comparison target:
-// emulate the selector -> queue -> NMI handoff, not only seeded end-frame VRAM.
+// emulate the selector -> IRQ-visible-split -> queue -> NMI handoff,
+// not only seeded end-frame VRAM.
 ```

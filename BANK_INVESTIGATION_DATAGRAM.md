@@ -18,7 +18,7 @@ flowchart LR
     B02["bank2 / SNES $02<br/>gameplay main family<br/>02:9016 main / 02:8F3C nmi"]
     B0A["bank10 / SNES $0A<br/>physics + AI core"]
     B0B["bank11 / SNES $0B<br/>road raster + scanline/HDMA prep"]
-    B0F["bank15 / SNES $0F<br/>object payload catalogs"]
+    B15["bank21 / SNES $15<br/>object payload catalogs"]
     B1E["bank30 / SNES $1E<br/>compressed dispatch/data"]
 
     B00 -->|"dispatches active_main / active_irq / active_nmi"| B01
@@ -28,8 +28,8 @@ flowchart LR
     B02 -->|"feeds road-visible state and raster data"| B0B
     B0B -->|"visible split is materialized by 01:96A0 / 01:960D IRQ pair"| B01
     B01 -->|"pointer tables feed L001210 bank30 entries"| B1E
-    B02 -->|"late gameplay selects object payloads"| B0F
-    B0F -->|"payloads are queued through bank0 DMA helpers"| B00
+    B02 -->|"late gameplay selects object payloads"| B15
+    B15 -->|"payloads are queued through bank0 DMA helpers"| B00
     B02 -->|"queue/OAM state is consumed by bank0 NMI body"| B00
 
     P00["pseudo<br/>promote pending callbacks<br/>jmp active_main irq nmi"]:::note
@@ -37,7 +37,7 @@ flowchart LR
     P02["pseudo<br/>update gameplay state<br/>build queue and OAM"]:::note
     P03["pseudo<br/>step physics AI<br/>car and traffic logic"]:::note
     P04["pseudo<br/>build road scanline operands<br/>prepare HDMA shape"]:::note
-    P05["pseudo<br/>obj = table[idx]<br/>payload = bank15 bytes"]:::note
+    P05["pseudo<br/>obj = table[idx]<br/>payload = SNES $15 bytes"]:::note
     P06["pseudo<br/>ptr = table[idx]<br/>chunk = L001210(ptr)"]:::note
 
     B00 -.-> P00
@@ -45,13 +45,13 @@ flowchart LR
     B02 -.-> P02
     B0A -.-> P03
     B0B -.-> P04
-    B0F -.-> P05
+    B15 -.-> P05
     B1E -.-> P06
 
     class B00,B01,B02 validated;
     class B0A active;
     class B0B validated;
-    class B0F,B1E mixed;
+    class B15,B1E mixed;
 ```
 
 ## Reading Notes
@@ -65,5 +65,7 @@ flowchart LR
 - `bank2` is the current promoted gameplay bank:
   main callback `02:9016`, NMI callback `02:8F3C`.
 - `bank10` and `bank11` are gameplay-support banks, not top-level schedulers.
-- `bank15` and `bank30` are content/support banks whose consumers are known,
-  but whose full provenance map is still being closed.
+- the currently promoted object-catalog bank is SNES `$15`
+  (repo file `bank21.asm`), not repo file `bank15.asm`
+- `bank21/$15` and `bank30/$1E` are content/support banks whose consumers are
+  known, but whose full provenance map is still being closed
