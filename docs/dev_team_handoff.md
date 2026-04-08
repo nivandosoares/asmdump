@@ -16,7 +16,8 @@ ownership and pseudocode over raw assembly detail.
   split/window/color-math lane.
 - **Bank 2** is the promoted gameplay family: `02:9016` main,
   `02:8F3C` NMI, plus visible HUD/OAM work such as `L0108EF` and the
-  heavier selector-to-runtime builder `L0110B2 -> L011551`.
+  heavier selector-to-runtime builder `L0110B2 -> L011551`, which bank 1
+  calls during entry/setup rather than through the `02:9016` callback body.
 - **Bank 11** is a gameplay-support render bank, not a top-level scheduler:
   the current promoted read is “prepare road/scanline-visible operands for the
   gameplay callback family and its IRQ-visible split.”
@@ -48,6 +49,7 @@ void frontend_step(void) {
     bank1_materialize_bundle_assets(bundle);  // VRAM/CGRAM/OAM staging
 
     if (bundle_closes_gameplay_entry()) {
+        bank2_gameplay_entry_builder();
         active_main = 0x029016;
         active_nmi = 0x028F3C;
         active_irq = 0x0196A0;
@@ -59,7 +61,6 @@ void frontend_step(void) {
 
 ```c
 void gameplay_family_029016(void) {
-    bank2_build_runtime_profiles_from_selectors();
     bank10_step_physics_ai_collision();
     bank11_prepare_road_and_visible_split_operands();
     bank2_stage_hud_oam_queue_state();
@@ -68,6 +69,12 @@ void gameplay_family_029016(void) {
         ObjectDesc obj = bank21_select_object_payload();
         bank0_queue_dma_upload(obj);
     }
+}
+
+void bank2_gameplay_entry_builder(void) {
+    build_secondary_profile_from_1c7a();
+    postprocess_span_map_from_1c6c();
+    build_primary_profile_from_1c78();
 }
 
 void gameplay_irq_family_01960d_0196a0(void) {
@@ -103,8 +110,8 @@ void bank1_materialize_bundle_assets(DerivedBundle bundle) {
 - Treat the bank-1 IRQ family as a real runtime surface:
   it reprograms visible PPU state mid-frame and is not just bookkeeping.
 - Treat bank-2 `L011551` as the first strong selector-to-runtime builder:
-  it turns `$1C78/$1C7A/$1C76` into generated gameplay working tables rather
-  than only copying presentation assets.
+  it turns `$1C78/$1C7A/$1C76` into generated gameplay working tables during
+  entry/setup rather than inside the active `02:9016` callback body.
 - Treat **bank10** and **bank11** as service banks consumed by the gameplay
   callback family.
 - Treat **bank21/$15** and **bank30/$1E** as typed support banks whose

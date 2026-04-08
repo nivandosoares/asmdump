@@ -1,6 +1,81 @@
 Date: 2026-04-08
 
 Summary
+- Closed an important control-flow correction in bank 2:
+  `02:9016` does not fall through into `L0110B2`.
+- The anonymous main callback block at `02:9016` now reads as a self-contained
+  transition/input-history gate with `RTL` on every currently visible path.
+- `L0110B2 -> L011551` is still a strong selector-to-runtime builder, but it
+  is called separately from bank 1 at `L009075`, which moves it from
+  “per-frame callback body” to “gameplay-entry/setup builder.”
+
+What I ran
+- bounded anonymous bank-2 block read:
+  - `sed -n '1860,2145p' bank2.asm`
+- bounded raw LoROM dump for `02:8F34..02:90C0`
+- bounded callback/setup reads:
+  - `sed -n '1940,2005p' bank1.asm`
+
+Artifacts
+- corrected callback/setup notes:
+  - `rom_analysis/docs/bank2_main_callback_9016_human.md`
+  - `rom_analysis/docs/bank2_gameplay_builder_110b2_11551_human.md`
+  - `rom_analysis/docs/bank2_gameplay_entry_human.md`
+  - `docs/dev_team_handoff.md`
+  - `docs/engine_pseudocode.md`
+  - `docs/bank_disassembly_status.md`
+  - `rom_analysis/docs/snes_runtime_algorithm_human.md`
+  - `rom_analysis/docs/progress_checkpoints.md`
+
+Findings / Interpretation
+- The raw branch layout around `02:9016` now closes one tempting false lead.
+- The anonymous `02:9016` callback body does not jump or fall through into
+  `L0110B2`; after the `$0996`, `$0998`, and `$11BD` control branches it
+  always returns via `RTL`.
+- That means `L0110B2 -> L011551` should not currently be modeled as “the
+  next phase of `02:9016`”.
+- The strongest proven caller for `L0110B2` remains the bank-1 setup corridor
+  at `L009075`, after the derived bundle and the `$1C78/$1C7A` asset staging
+  have already been performed.
+- This is a useful narrowing move:
+  `02:9016` is the active per-frame gate;
+  `L0110B2 -> L011551` is the separate setup builder that prepares deeper
+  gameplay runtime surfaces.
+
+What I learned (actionable)
+- The gameplay architecture is cleaner than the earlier rough read:
+  1. bank 1 collapses selectors and performs setup-time calls
+  2. bank 2 `L0110B2 -> L011551` builds generated runtime tables
+  3. bank 2 `02:9016` runs as the later active callback gate
+  4. bank 1 `01:960D -> 01:96A0` owns the visible IRQ split
+- The next high-value task is no longer “find the 9016 -> 110B2 edge”; that
+  edge is currently disproven.
+
+Next steps / Checkpoints
+1) Identify which later consumers read the state mutated by `02:9016`.
+2) Identify which later consumers read the generated `$14DC/$13FC/$1A28`
+   surfaces from `L011551`.
+3) Keep tracing the path that eventually chooses the queue-backed SNES-bank-`$15`
+   upload behind frame `3250`.
+
+Files updated in this turn
+- `rom_analysis/docs/bank2_main_callback_9016_human.md`
+- `rom_analysis/docs/bank2_gameplay_builder_110b2_11551_human.md`
+- `rom_analysis/docs/bank2_gameplay_entry_human.md`
+- `docs/dev_team_handoff.md`
+- `docs/engine_pseudocode.md`
+- `docs/bank_disassembly_status.md`
+- `rom_analysis/docs/snes_runtime_algorithm_human.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `rom_analysis/docs/bank2_main_callback_9016_human.md`
+- `rom_analysis/docs/bank2_gameplay_builder_110b2_11551_human.md`
+- `rom_analysis/docs/bank1_irq_callback_96a0_human.md`
+
+Date: 2026-04-08
+
+Summary
 - Typed the next heavy bank-2 builder block after the anonymous `02:9016`
   gate: `L0110B2 -> L011551`.
 - Closed the first strong human read for that block as a selector-to-runtime

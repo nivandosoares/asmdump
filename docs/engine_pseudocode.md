@@ -44,6 +44,16 @@ typedef struct {
 
 ## 3. Logic Flow Pseudocode
 
+### Gameplay Entry Builder
+```c
+void gameplay_entry_builder() {
+    build_secondary_profile_from_1c7a();
+    postprocess_secondary_span_map();
+    build_primary_profile_from_1c78();
+    seed_runtime_for_primary_and_optional_rival();
+}
+```
+
 ### Main Gameplay Loop (`callback_9016`)
 ```c
 void gameplay_main_loop() {

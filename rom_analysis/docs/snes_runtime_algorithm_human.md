@@ -127,7 +127,10 @@ already grounded in code reads, probes, or generated artifacts.
     that gate is also no longer opaque in shape: `L0110B2 -> L011551` reads
     as a generated selector-to-runtime builder that consumes the earlier
     `$1C78/$1C7A/$1C76` collapse and produces deeper gameplay working tables
-    like `$14DC/$13FC/$1A28`.
+    like `$14DC/$13FC/$1A28`. A newer control-flow correction tightens that
+    reading further: `02:9016` itself returns on every currently visible path
+    and does not fall through into `L0110B2`; the builder is a separate
+    bank-1-invoked setup stage.
     Direct headless forcing of `01:9568/01:95AD` still does not promote into
     that same corridor: short-force probes keep `active_main` pinned on
     `01:9568/01:95AD` through frame `2199` with no staged callback writes.

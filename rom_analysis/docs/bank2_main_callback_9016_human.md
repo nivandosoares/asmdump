@@ -6,9 +6,10 @@ This note focuses on the still-unlabeled control block behind the promoted
 main gameplay callback:
 
 - installed from bank 1 as `02:9016`
-- located in the anonymous block between:
-  - `L010F34` at `02:8F34`
-  - `L0110B2` at `02:90B2`
+- located in the anonymous bank-2 region that begins after the 8-byte prelude
+  at `L010F34` / `02:8F34`
+- sibling to the separately installed NMI callback `02:8F3C`
+- adjacent to, but not entered through, `L0110B2` at `02:90B2`
 
 That anonymous block is now the strongest current target for “heavy bank
 analysis” because it sits directly between the staged gameplay callback
@@ -22,6 +23,8 @@ The first useful result is negative but important:
 - it is the control/transition gate that decides when deeper gameplay helpers
   should run and when several transient flags/counters should be advanced or
   cleared
+- every currently visible path inside `02:9016` returns with `RTL`
+- there is **no** direct fallthrough from `02:9016` into `L0110B2`
 
 The strongest currently readable state family in this block is:
 
@@ -133,6 +136,16 @@ if (state_1CEA >= 0 &&
 This is the strongest current evidence that `02:9016` owns a local
 transition/input-history surface on top of deeper gameplay state.
 
+## Proven Boundary
+
+The newest useful result is another negative one:
+
+- `02:9016` does **not** directly enter the heavier builder
+  `L0110B2 -> L011551`
+- that builder is called separately from bank 1 at `L009075`
+- so `02:9016` should currently be read as a self-contained callback gate,
+  not the direct parent of every later gameplay helper we have typed
+
 ## Why This Matters
 
 This narrows the heavy disassembly problem:
@@ -142,8 +155,8 @@ This narrows the heavy disassembly problem:
   - what transition does `$0996` gate?
   - what event does `$0998` count down?
   - what input history is `$11BD[0..7]` preserving?
-  - how does this gate feed the later queue-backed SNES-bank-`$15` object
-    uploads?
+  - how does this gate affect the later queue-backed SNES-bank-`$15` object
+    uploads if it does not directly invoke the heavier builder?
 
 ## Current Best Pseudocode
 
@@ -165,8 +178,8 @@ void bank2_main_callback_9016(void) {
         return;
     }
 
-    // The rest of the gameplay family continues into the later
-    // bank-2 helpers that already have stronger typing.
+    // The callback returns here. Any heavier bank-2 setup/builder work
+    // is reached through separate call sites, not by fallthrough.
 }
 ```
 
@@ -176,5 +189,7 @@ void bank2_main_callback_9016(void) {
 - what exact named sub-phase does `$1191` represent?
 - what real-world event is `$0998 = 3` measuring?
 - is `$0F76` a retry counter, latch depth, or phase counter?
-- which branch out of `02:9016` ultimately chooses the SNES-bank-`$15`
+- which later consumer paths read or respond to the state that `02:9016`
+  mutates?
+- which separate path, if any, ultimately chooses the SNES-bank-`$15`
   object family for the frame-`3250` queue-backed upload?

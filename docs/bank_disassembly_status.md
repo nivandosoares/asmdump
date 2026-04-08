@@ -6,7 +6,7 @@ This report tracks the analysis and disassembly status of all 32 ROM banks ($00-
 |------|---------|------------------|--------|-------|
 | $00 | $00:8000 | Kernel / RESET / NMI / IRQ / callback staging | **Advanced** | Owns callback slots/staging, DMA helpers, and the NMI-side upload spine that consumes queue/OAM work prepared by gameplay banks. |
 | $01 | $01:8000 | Front-end corridor / gameplay handoff / gameplay IRQ | **Advanced** | `01:902D` stages `02:9016` + `02:8F3C`; validated gameplay IRQ family `01:960D -> 01:96A0 -> 01:97B1/97E1/9809` now reads as the visible BG split/window/color-math lane, while bank-1 helpers still own much of menu materialization. |
-| $02 | $02:8000 | Gameplay main family / HUD / runtime-table staging | **Active** | Current promoted gameplay callbacks are `02:9016` (main) and `02:8F3C` (NMI); bank also owns visible HUD/OAM work such as `L0108EF` plus the heavier generated-runtime builder `L0110B2 -> L011551` keyed by `$1C78/$1C7A`. |
+| $02 | $02:8000 | Gameplay main family / HUD / runtime-table staging | **Active** | Current promoted gameplay callbacks are `02:9016` (main) and `02:8F3C` (NMI); bank also owns visible HUD/OAM work such as `L0108EF` plus the heavier gameplay-entry builder `L0110B2 -> L011551` keyed by `$1C78/$1C7A`, which is separately invoked from bank 1 rather than called by `02:9016`. |
 | $03 | $03:8000 | Palettes | **Asset Done** | Bank 3 palette extractor is operational. |
 | $04 | $04:8000 | Text / Strings | **Asset Done** | String blocks for menus identified. |
 | $05 | $05:8000 | TBD | Queued | |

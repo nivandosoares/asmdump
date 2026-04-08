@@ -198,8 +198,16 @@ already clear enough for pseudocode and eventual runtime struct design.
 
 ## Proven Runtime Builder: `L0110B2 -> L011551`
 
-The next heavy readable block after the anonymous `02:9016` gate is
+The next heavy readable bank-2 block near the anonymous `02:9016` gate is
 `L0110B2`, which is just a wrapper around `L011551`.
+
+Important boundary correction:
+
+- `02:9016` does not fall through into `L0110B2`
+- all currently visible `02:9016` paths return
+- `L0110B2 -> L011551` is called separately from bank 1 at `L009075`
+- that makes this builder part of the gameplay-entry/setup corridor, not a
+  proven callee of the per-frame main callback
 
 Current best human role:
 
@@ -238,7 +246,7 @@ The strongest current outputs are:
 Current human pseudocode:
 
 ```c
-void bank2_build_gameplay_profiles(void) {
+void bank2_gameplay_entry_builder(void) {
     build_secondary_profile_from_1c7a();
     postprocess_secondary_span_map();
     build_primary_profile_from_1c78();

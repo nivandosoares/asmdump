@@ -2,15 +2,16 @@
 
 Date: `2026-04-08`
 
-This note covers the next heavy bank-2 block immediately after the anonymous
-`02:9016` control gate:
+This note covers the next heavy bank-2 builder block adjacent to the
+anonymous `02:9016` control gate:
 
 - `L0110B2` at `02:90B2`
 - `L011551` at `02:9551`
 
 The current best read is that this is a real gameplay precompute/builder
 pass, not a tiny UI helper. It materializes player/rival-derived working
-tables before the later gameplay helper families run.
+tables during gameplay entry/setup before the later gameplay helper families
+run.
 
 ## Entry Context
 
@@ -35,10 +36,18 @@ The strongest currently proven caller is bank 1 at `L009075`, after the
 front-end derived bundle has already been collapsed and after the selected
 `$1C78` / `$1C7A` VRAM chunks have been staged.
 
+The newest boundary correction is important:
+
+- there is no direct fallthrough from `02:9016` into `L0110B2`
+- `02:9016` returns on every currently visible path
+- `L0110B2 -> L011551` is therefore best read as a separate bank-1-invoked
+  setup/build stage, not as part of the per-frame callback body itself
+
 So this block is best read as:
 
 - front-end has already chosen the player-facing selector state
 - bank 1 has already collapsed that into gameplay-facing fields
+- bank 1 explicitly invokes this builder
 - bank 2 now builds the runtime working set from those choices
 
 ## Inputs That Matter
@@ -275,7 +284,8 @@ staging HUD or OAM rows.
 That is useful to the dev team because it narrows the architecture:
 
 - bank 1 chooses and collapses selectors
-- bank 2 `L011551` materializes those choices into generated runtime tables
+- bank 1 then explicitly calls bank-2 `L011551` to materialize those choices
+  into generated runtime tables
 - later bank-2 / bank-10 / bank-11 helpers consume that generated state
 
 ## Open Questions
