@@ -3,6 +3,46 @@
 This roadmap is the direct follow-up after enabling Mesen design packs with
 decoded tilemaps and sprite visibility metadata.
 
+## DOS Contract Pivot (`2026-04-09`)
+
+- The active interpretation lane now gives priority to DOS-visible contracts
+  whenever they are cleaner than the current SNES recovery.
+- New repo-owned DOS surfaces now exist:
+  - `tools/extract_dos_contracts.py`
+  - `tools/dos_frontend_port.py`
+  - `tools/build_dos_engine_manifest.py`
+  - `tools/build_dos_design_review.py`
+  - `tools/build_dos_preview_manifest.py`
+  - `docs/dos_version_contracts.md`
+  - `docs/dos_engine_porting.md`
+  - `rom_analysis/docs/dos_contract_model.jsonc`
+  - `rom_analysis/docs/dos_engine_contracts.jsonc`
+  - generated local artifacts:
+    - `tools/out/dos_version_contracts.json`
+    - `tools/out/dos_version_contracts.md`
+    - `tools/out/dos_frontend_port_replay.json`
+    - `tools/out/dos_engine_manifest.json`
+    - `tools/out/dos_engine_manifest.md`
+    - `tools/out/dos_design_review.html`
+    - `tools/out/dos_design_review.md`
+    - `tools/out/dos_preview_manifest.json`
+    - `tools/out/dos_preview_manifest.md`
+- Current practical read:
+  - DOS now has a first class in-repo contract source instead of only being
+    referenced indirectly from SNES-correlation prose
+  - the first promoted DOS contract family is front-end/session assembly:
+    graphics-driver launch, sidecar resources, persistence/media surfaces,
+    disk roles, the explicit “both cars and scenery” play-gate messaging,
+    option toggles, and gameplay failure/reporting channels
+  - the first runnable DOS-port surface is still a minimal contract-driven
+    frontend model, but the new preferred abstraction layer is engine-first:
+    catalogs, selector state, preview materialization, and play-session gate
+- Next gate:
+  - keep building the future engine around DOS catalogs and state first
+  - only then decode packed asset rendering on top of that stabilized model
+  - identify the exact DOS preview/materializer code path behind `.SS + *ST`
+    before writing a renderer that would lock in the wrong abstractions
+
 ## Strategy Reset (`2026-04-01`)
 
 - The port goal is now a SNES-mimetic reimplementation with SDL as host only.
@@ -52,6 +92,41 @@ decoded tilemaps and sprite visibility metadata.
   - replace inferred holds and sparse gameplay snapshots with denser
     raw-state coverage or true runtime-owned frame progression before making
     any “continuous native demo” claim
+
+## Port Worktree Resume Note (`2026-04-07`)
+
+- The documented repo checkpoint was still the `2026-04-03` bank-datagram
+  work, but the dirty worktree also contained an undocumented `2026-04-05`
+  alternate port prototype under `port/src/{main,physics,rasterizer,snes_kernel}.c`
+  plus generated raw/header blobs in `port/include/`.
+- That prototype had replaced `port/Makefile` with a minimal SDL build that
+  no longer built the promoted runtime, demo launcher, or validation smokes.
+- The main build surface is now restored and the prototype is preserved under
+  a separate target:
+  - `make -C port prototype`
+  - output: `port/build/td2_proto_port`
+- Practical read:
+  - the prototype is a mini-kernel experiment that seeds embedded
+    `VRAM/CGRAM`, embeds the ROM as a header blob, and swaps intro frames
+    every `16` ticks
+  - it does not yet align with the promoted SNES-mimetic runtime/compare
+    spine and remains outside the validated port lane until it either proves a
+    useful renderer/kernel idea or gets mined for isolated pieces
+- Bounded validation on this host found environment blockers before any fresh
+  rebuild:
+  - `command -v make` -> missing
+  - `command -v gcc` -> missing
+  - `command -v clang` -> missing
+  - `command -v sdl2-config` -> missing
+  - existing worktree binary `./port/td2_port` fails to launch with missing
+    `libSDL2-2.0.so.0`
+- Next gate:
+  - keep the official runtime/test build intact
+  - treat the April 5 prototype as a side experiment until a toolchain-capable
+    host is available to rebuild and inspect it
+  - once that host exists, run `make -C port prototype` and compare its frame
+    output against the current design-pack runtime before promoting any piece
+    of it
 
 ## Port Live Input Checkpoint (`2026-04-01`)
 

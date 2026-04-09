@@ -2,6 +2,56 @@
 
 This directory contains the first validation harness artifact for Sprint 0.
 
+DOS-side validation note:
+
+- `tools/extract_dos_contracts.py` is now the first repo-owned DOS contract
+  extractor; it reads the local DOS executables and emits:
+  - `tools/out/dos_version_contracts.json`
+  - `tools/out/dos_version_contracts.md`
+- `tools/dos_frontend_port.py` is the first runnable DOS contract model; it
+  replays a minimal selection/play-gate surface and can emit:
+  - `tools/out/dos_frontend_port_replay.json`
+- `tools/build_dos_engine_manifest.py` is the first engine-first DOS manifest
+  builder; it emits:
+  - `tools/out/dos_engine_manifest.json`
+  - `tools/out/dos_engine_manifest.md`
+- `tools/build_dos_design_review.py` emits review surfaces for design-team
+  inspection:
+  - `tools/out/dos_design_review.html`
+  - `tools/out/dos_design_review.md`
+- `tools/build_dos_preview_manifest.py` emits the preview/materializer review
+  surface:
+  - `tools/out/dos_preview_manifest.json`
+  - `tools/out/dos_preview_manifest.md`
+- cheap DOS smoke on this host:
+
+```sh
+python3 tools/extract_dos_contracts.py \
+  ../Downloads/testdrive2 \
+  --json-out tools/out/dos_version_contracts.json \
+  --markdown-out tools/out/dos_version_contracts.md
+
+python3 tools/dos_frontend_port.py \
+  --contract-json tools/out/dos_version_contracts.json \
+  --script 'right_car,right_scenery,drop_scenery_catalog'
+
+python3 tools/build_dos_engine_manifest.py \
+  ../Downloads/testdrive2 \
+  --json-out tools/out/dos_engine_manifest.json \
+  --markdown-out tools/out/dos_engine_manifest.md
+
+python3 tools/build_dos_design_review.py \
+  --manifest-json tools/out/dos_engine_manifest.json \
+  --html-out tools/out/dos_design_review.html \
+  --markdown-out tools/out/dos_design_review.md
+
+python3 tools/build_dos_preview_manifest.py \
+  --engine-manifest tools/out/dos_engine_manifest.json \
+  --contracts-json tools/out/dos_version_contracts.json \
+  --json-out tools/out/dos_preview_manifest.json \
+  --markdown-out tools/out/dos_preview_manifest.md
+```
+
 Current asset:
 
 - `mesen_capture.lua`: a Mesen-S/Mesen 2 Lua script that can override input for a fixed window, emit per-frame screenshots, and write a JSON input log

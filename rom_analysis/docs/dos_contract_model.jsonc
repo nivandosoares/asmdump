@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "created": "2026-04-09",
+  "scope": "Repo-owned first-pass DOS contract model extracted from the shipped DOS executables.",
+  "source_artifacts": [
+    "tools/out/dos_version_contracts.json",
+    "tools/out/dos_version_contracts.md",
+    "tools/out/dos_frontend_port_replay.json"
+  ],
+  "contracts": [
+    {
+      "id": "graphics_driver_launcher",
+      "classification": "VERIFIED",
+      "claim": "DUEL.EXE is a graphics-driver launcher that dispatches to concrete CGA, EGA, and Tandy runtime executables.",
+      "evidence": [
+        "DUEL.EXE embeds the device-choice prompt plus the target program names td2cga.exe, td2ega.exe, and td2tdy.exe."
+      ]
+    },
+    {
+      "id": "resource_sidecar_families",
+      "classification": "VERIFIED",
+      "claim": "The DOS runtime binds named .pcs/.pes sidecar resources directly from the graphics executables.",
+      "evidence": [
+        "Common sidecars across TD2EGA.EXE, TD2CGA.EXE, and TD2TDY.EXE include accolade, dsititle, testdrv2, endgame, gameopt, gamediff, gasstuff, cop, and road."
+      ]
+    },
+    {
+      "id": "persistence_surface",
+      "classification": "VERIFIED",
+      "claim": "The DOS build exposes explicit persistence/media files select.dat and diskid.dat.",
+      "evidence": [
+        "All three graphics executables embed select.dat and diskid.dat as literal strings."
+      ]
+    },
+    {
+      "id": "disk_role_gate",
+      "classification": "VERIFIED",
+      "claim": "The DOS front end exposes explicit disk/content roles MASTER, CAR, SCENERY, PLAY, and PROGRAM and prompts for media insertion before advancing.",
+      "evidence": [
+        "All three graphics executables embed the role names MASTER, SCENERY, PROGRAM, Play Disk, Make Play Disk, and Copy Scenery.",
+        "All three graphics executables also embed the prompts Please insert %s DISK in Drive %c:, Hard disk is a %s DISK., This disk is a %s DISK., This disk does not match the master!, and Please insert MASTER or PLAY Disk."
+      ]
+    },
+    {
+      "id": "play_disk_gate",
+      "classification": "VERIFIED",
+      "claim": "The DOS front end has an explicit play-disk gate that refuses to advance until both car and scenery content are present.",
+      "evidence": [
+        "All three graphics executables embed Play Disk needs both cars and scenery! and Press Enter to un/select scenery."
+      ]
+    },
+    {
+      "id": "runtime_toggle_surface",
+      "classification": "VERIFIED",
+      "claim": "The DOS runtime exposes first-class user toggles for music, sound, and keyboard mode.",
+      "evidence": [
+        "All three graphics executables embed MUSIC ON/OFF, SOUND ON/OFF, and KEYBOARD ON."
+      ]
+    },
+    {
+      "id": "gameplay_failure_reporting",
+      "classification": "VERIFIED",
+      "claim": "The DOS gameplay contract includes explicit failure/reporting channels for gas starvation, engine failure, suspension failure, steering failure, damage overflow, fuel refill, and life count.",
+      "evidence": [
+        "All three graphics executables embed the strings You missed the gas station / and you're out of gas. / Hope you enjoy the walk. / Too far left to reach pump. / Engine has lost all power... / Suspension completely gone... / Steering completely shot... / Car took too much damage... / Fill 'er up... / Lives left: / Careful, it's your last life!"
+      ]
+    }
+  ],
+  "minimal_port_surface": {
+    "selection_vector_fields": [
+      "graphics_driver",
+      "car_index",
+      "scenery_index",
+      "music_on",
+      "sound_on",
+      "keyboard_on",
+      "car_catalog_ready",
+      "scenery_catalog_ready"
+    ],
+    "play_gate_rule": "ready only when both car_catalog_ready and scenery_catalog_ready are true",
+    "canonical_disk_roles": [
+      "MASTER",
+      "CAR",
+      "SCENERY",
+      "PLAY",
+      "PROGRAM"
+    ],
+    "canonical_car_ids": [
+      "porsche_959",
+      "lamborghini_diablo",
+      "ferrari_f40"
+    ],
+    "canonical_scenery_ids": [
+      "desert_blast",
+      "city_bound",
+      "east_coast",
+      "west_coast"
+    ]
+  }
+}

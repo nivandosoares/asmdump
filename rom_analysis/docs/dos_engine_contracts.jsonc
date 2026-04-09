@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "created": "2026-04-09",
+  "scope": "Engine-first DOS TD2 contracts for future reimplementation and modding.",
+  "source_artifacts": [
+    "tools/out/dos_engine_manifest.json",
+    "tools/out/dos_engine_manifest.md",
+    "../Downloads/testdrive2/cross_platform_contracts.json",
+    "../Downloads/testdrive2/logic_state_contract.json",
+    "../Downloads/testdrive2/asset_behavior_contract.json"
+  ],
+  "contracts": [
+    {
+      "id": "selection_state",
+      "classification": "VERIFIED",
+      "claim": "The DOS menu state should be modeled as a compact selector vector plus three persisted ID slots, not as scattered globals.",
+      "engine_surface": {
+        "selector_vector_base": "0x8a1c",
+        "persisted_file": "select.dat",
+        "persisted_shape": "3 ints + 3 ids"
+      }
+    },
+    {
+      "id": "car_catalog",
+      "classification": "VERIFIED",
+      "claim": "The DOS engine owns a standalone car catalog loaded from cars.dat, with car IDs that bind logic, layout, and visual-role assets.",
+      "engine_surface": {
+        "catalog_file": "cars.dat",
+        "runtime_record_stride": "0x1e",
+        "bundle_roles": [
+          "<ID>.BIN",
+          "<ID>O.BIN",
+          "<ID>.SS",
+          "<ID>DASH.PES",
+          "<ID>REAR.PES",
+          "<ID>ROAD.PES",
+          "<ID>ST.PES"
+        ]
+      }
+    },
+    {
+      "id": "scene_catalog",
+      "classification": "VERIFIED",
+      "claim": "The DOS engine owns a standalone scenery catalog loaded from scenes.dat, and each scenery record carries a play-disk selector.",
+      "engine_surface": {
+        "catalog_file": "scenes.dat",
+        "runtime_record_stride": "0x20",
+        "extra_field": "play_disk"
+      }
+    },
+    {
+      "id": "preview_materializer",
+      "classification": "VERIFIED",
+      "claim": "Preview composition is a materializer contract that pairs same-stem .SS layout descriptors with *ST.PES packed assets.",
+      "engine_surface": {
+        "layout_sidecar": "*.SS",
+        "packed_preview": "*ST.PES",
+        "descriptor_shape": "<count> <param_1> <param_2> <4-char tokens>"
+      }
+    },
+    {
+      "id": "play_session_gate",
+      "classification": "VERIFIED",
+      "claim": "The DOS engine has an explicit play-session gate that refuses to advance until both car and scenery catalogs are populated.",
+      "engine_surface": {
+        "entry": "0x6064",
+        "user_visible_boundary": "Play Disk needs both cars and scenery!"
+      }
+    },
+    {
+      "id": "platform_specific_rosters",
+      "classification": "VERIFIED",
+      "claim": "SNES and DOS rosters should be treated as platform-specific catalogs until a direct content mapping is proven.",
+      "engine_surface": {
+        "dos_primary_catalog_source": "cars.dat + scenes.dat",
+        "porting_rule": "Never force 1:1 cross-platform asset identity as an engine invariant."
+      }
+    }
+  ]
+}

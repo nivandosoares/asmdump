@@ -596,6 +596,226 @@ Next reading
 - `docs/dev_team_handoff.md`
 - `rom_analysis/docs/snes_runtime_algorithm_human.md`
 
+- Reframed the DOS lane one level lower around future engine work instead of
+  pushing immediately into packed-asset rendering.
+- Promoted the first repo-owned DOS contract lane instead of keeping DOS as an
+  off-repo assumption behind SNES-correlation prose.
+- Added a Python-only DOS executable extractor that recovers launcher,
+  sidecar-resource, persistence/media, disk-role, toggle, and
+  gameplay-failure/reporting surfaces from the shipped DOS binaries.
+- Added a minimal runnable DOS frontend model that replays the first
+  contract-driven selection/play-gate surface for future language ports.
+- Added an engine-first DOS manifest builder that promotes catalogs, selector
+  bootstrap, per-car bundle roles, preview-materializer pairing, and
+  play-session gating as the stable reimplementation surface.
+- Added review-focused HTML/Markdown outputs so the design team can inspect
+  roster, bundle roles, and preview token directions before packed rendering
+  exists.
+- Added a preview/materializer manifest so engine work can target the real
+  `.SS + *ST.PES` bundle contract before implementing decode/render.
+
+What I ran
+- source-of-truth recovery:
+  - `sed -n '1,220p' PORT_PLAN.md`
+  - `sed -n '1,220p' rom_analysis/docs/next_steps_roadmap.md`
+  - `sed -n '1,220p' rom_analysis/docs/progress_checkpoints.md`
+  - `sed -n '1,220p' rom_analysis/docs/validation_gates.md`
+  - `sed -n '1,220p' validation/README.md`
+- bounded DOS executable archaeology:
+  - Python-only MZ header decode over `../Downloads/testdrive2/DUEL.EXE`
+  - Python-only string extraction over:
+    - `../Downloads/testdrive2/TD2EGA.EXE`
+    - `../Downloads/testdrive2/TD2CGA.EXE`
+    - `../Downloads/testdrive2/TD2TDY.EXE`
+- bounded validation:
+  - `python3 tools/extract_dos_contracts.py ../Downloads/testdrive2 --json-out tools/out/dos_version_contracts.json --markdown-out tools/out/dos_version_contracts.md`
+  - `python3 tools/dos_frontend_port.py --contract-json tools/out/dos_version_contracts.json --script 'right_car,right_scenery,drop_scenery_catalog,restore_scenery_catalog,toggle_music' --json-out tools/out/dos_frontend_port_replay.json`
+  - `python3 tools/build_dos_engine_manifest.py ../Downloads/testdrive2 --json-out tools/out/dos_engine_manifest.json --markdown-out tools/out/dos_engine_manifest.md`
+  - `python3 tools/build_dos_design_review.py --manifest-json tools/out/dos_engine_manifest.json --html-out tools/out/dos_design_review.html --markdown-out tools/out/dos_design_review.md`
+  - `python3 tools/build_dos_preview_manifest.py --engine-manifest tools/out/dos_engine_manifest.json --contracts-json tools/out/dos_version_contracts.json --json-out tools/out/dos_preview_manifest.json --markdown-out tools/out/dos_preview_manifest.md`
+  - direct Python assertion smoke over extractor output and replay output
+
+Artifacts
+- new DOS extractor:
+  - `tools/extract_dos_contracts.py`
+- new minimal DOS frontend model:
+  - `tools/dos_frontend_port.py`
+- versioned DOS contract model:
+  - `rom_analysis/docs/dos_contract_model.jsonc`
+- new engine-first DOS manifest builder:
+  - `tools/build_dos_engine_manifest.py`
+- new DOS design-review builder:
+  - `tools/build_dos_design_review.py`
+- new DOS preview/materializer builder:
+  - `tools/build_dos_preview_manifest.py`
+- versioned engine-first DOS contract model:
+  - `rom_analysis/docs/dos_engine_contracts.jsonc`
+- new DOS contract note:
+  - `docs/dos_version_contracts.md`
+- new DOS engine porting note:
+  - `docs/dos_engine_porting.md`
+- generated local artifacts:
+  - `tools/out/dos_version_contracts.json`
+  - `tools/out/dos_version_contracts.md`
+  - `tools/out/dos_frontend_port_replay.json`
+  - `tools/out/dos_engine_manifest.json`
+  - `tools/out/dos_engine_manifest.md`
+  - `tools/out/dos_design_review.html`
+  - `tools/out/dos_design_review.md`
+  - `tools/out/dos_preview_manifest.json`
+  - `tools/out/dos_preview_manifest.md`
+
+Findings / Interpretation
+- The shipped DOS build exposes cleaner contract surfaces than the current
+  SNES recovery for front-end/session assembly:
+  - graphics-device launcher
+  - named `.pcs/.pes` sidecar resource families
+  - explicit persistence/media files `select.dat` and `diskid.dat`
+  - explicit disk/content roles `MASTER/CAR/SCENERY/PLAY/PROGRAM`
+  - explicit play-gate messaging: `Play Disk needs both cars and scenery!`
+  - first-class runtime toggles
+  - first-class gameplay failure/reporting strings
+- That is enough to stop treating DOS contracts as undocumented premises.
+- The better near-term DOS porting surface is engine-first rather than
+  renderer-first:
+  - catalog loader
+  - selection state
+  - preview materializer contract
+  - play-session gate
+  - later packed-asset decode/render
+- Design review can now happen in parallel with that engine work because the
+  new HTML/Markdown surfaces show bootstrap selections, roster, bundle roles,
+  and `.SS` token layouts without pretending the packed renderer is solved.
+- The preview/materializer surface is now explicit enough to guide the next
+  renderer step:
+  same-stem `.SS` plus `*ST` packed assets, with token-family classification
+  already separated into `window_only` vs `window_plus_face` layouts.
+- The live `CARS.DAT` and `SCENES.DAT` files now also make the platform split
+  explicit enough to encode directly in the repo instead of forcing a false
+  SNES-aligned roster assumption.
+
+What I learned (actionable)
+- The best first DOS checkpoint is not “full disassembly” but “versioned
+  contract extraction plus runnable state model”.
+- The next useful engine artifact is not a flat image renderer but a stable
+  manifest of which IDs own which logic/layout/visual bundles.
+- Even without local `objdump/strings/ndisasm` availability in this runtime,
+  the DOS binaries already yield enough hard evidence to anchor the port lane.
+- The next valuable proving targets are exact DOS field layouts and code
+  entrypoints, not more SNES-side speculation about equivalent surfaces.
+
+Next steps / Checkpoints
+1) Keep the future engine centered on DOS catalogs and selector state before
+   writing a packed-asset renderer.
+2) Identify the concrete DOS preview/materializer path behind `.SS + *ST.PES`
+   so the renderer sits on the right engine abstraction.
+3) Expand the engine manifest with the active gameplay parameter consumers of
+   `<ID>.BIN` and `<ID>O.BIN`, then promote gameplay-side runtime modules.
+
+Files updated in this turn
+- `tools/extract_dos_contracts.py`
+- `tools/dos_frontend_port.py`
+- `tools/build_dos_engine_manifest.py`
+- `tools/build_dos_design_review.py`
+- `tools/build_dos_preview_manifest.py`
+- `tools/tests/test_dos_contracts.py`
+- `docs/dos_version_contracts.md`
+- `docs/dos_engine_porting.md`
+- `rom_analysis/docs/dos_contract_model.jsonc`
+- `rom_analysis/docs/dos_engine_contracts.jsonc`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `validation/README.md`
+
+Next reading
+- `docs/dos_version_contracts.md`
+- `docs/dos_engine_porting.md`
+- `rom_analysis/docs/dos_contract_model.jsonc`
+- `rom_analysis/docs/dos_engine_contracts.jsonc`
+- `tools/extract_dos_contracts.py`
+- `tools/dos_frontend_port.py`
+- `tools/build_dos_engine_manifest.py`
+- `tools/build_dos_design_review.py`
+- `tools/build_dos_preview_manifest.py`
+
+Date: 2026-04-07
+
+Summary
+- Recovered the actual repo stop point from the source-of-truth docs and then
+  audited the dirty worktree for the separate port changes another agent left
+  behind.
+- Confirmed the documented checkpoint was still the `2026-04-03` bank-only
+  Mermaid work, while the worktree also contained an undocumented
+  `2026-04-05` SDL mini-kernel prototype under `port/src/` plus generated
+  asset headers.
+- Restored the official `port/Makefile` so the promoted SNES-mimetic runtime,
+  demo launcher, and smoke targets remain the repo-default build surface, and
+  preserved the alternate prototype as `make -C port prototype`.
+
+What I ran
+- source-of-truth recovery:
+  - `sed -n '1,220p' PORT_PLAN.md`
+  - `sed -n '1,260p' rom_analysis/docs/next_steps_roadmap.md`
+  - `sed -n '1,260p' rom_analysis/docs/progress_checkpoints.md`
+  - `sed -n '1,260p' rom_analysis/docs/validation_gates.md`
+  - `sed -n '1,220p' validation/README.md`
+- worktree / history inspection:
+  - `git status --short`
+  - `git log --oneline --decorate -n 12`
+  - `ls -lt port/src port/include tools`
+  - `git diff --stat -- port tools/extract_raw_layers.py tools/generate_attract_assets.py`
+  - `git diff -- port/Makefile ...`
+  - `git show HEAD:port/Makefile`
+- bounded validation / environment probes:
+  - `command -v make`
+  - `command -v gcc`
+  - `command -v clang`
+  - `command -v sdl2-config`
+  - `./port/td2_port`
+
+Artifacts
+- restored main build surface with preserved side prototype:
+  - `port/Makefile`
+- runtime note for the side prototype:
+  - `port/README.md`
+
+Findings / Interpretation
+- The April 5 work is real and substantive, but it is not a continuation of
+  the promoted runtime lane. It is a parallel prototype that embeds ROM/raw
+  blobs directly and drives a small SDL kernel from `src/main.c`.
+- The highest-risk breakage was not the new source files themselves; it was
+  the Makefile replacement, which silently displaced the validated runtime and
+  test entrypoints described in the repo docs.
+- The current host cannot compile or run either SDL path, so the prototype is
+  only resumed to the point of safe coexistence and a clear rebuild entry.
+
+What I learned (actionable)
+- The clean resume point for the other agent's work is:
+  `make -C port prototype` on a machine that actually has a compiler and SDL2.
+- Until then, the prototype should stay explicitly separate from the official
+  port/runtime lane so it does not mask regressions in the documented build.
+
+Next steps / Checkpoints
+1) Rebuild `make -C port prototype` on a toolchain-capable SDL host and record
+   whether the mini-kernel still links from source instead of relying on stale
+   `src/*.o` artifacts.
+2) If it does build, capture one prototype frame and compare it to the
+   current design-pack runtime output before promoting any code from it.
+3) Keep lane-1 bank30 closure as the primary archaeology gate; treat this
+   prototype as a side experiment unless it yields a directly reusable port
+   component.
+
+Files updated in this turn
+- `port/Makefile`
+- `port/README.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `port/README.md`
+- `port/src/main.c`
+- `port/src/snes_kernel.c`
+
 Date: 2026-04-03
 
 Summary
