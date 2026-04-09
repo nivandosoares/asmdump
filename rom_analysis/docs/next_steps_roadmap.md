@@ -830,8 +830,16 @@ decode support exists.
   - `tools/analyze_bank30_chunk_shapes.py` now provides a repeatable static read on unresolved payload families:
     - `DA96` contains a repeated `0x7C1F` run block with `33` starts on a fixed `157`-word stride; interpreting that stride as a row width yields a `157 x 33` block with `32` identical rows, which is strong evidence for row-major visual/map payload rather than executable-like content
     - `EE7F` keeps the same `899`-word footprint as `DF6C/E73F`, but only `20.356..21.0234%` same-index overlap against them, while `DF6C` vs `E73F` remains `77.5306%`; practical read: `EE7F` is a real distinct helper payload and should stay the highest-priority runtime target
+  - new `DA96` literal-tilemap falsifier:
+    - `tools/correlate_bank30_da96_tilemaps.py`
+    - `tools/out/bank30_da96_tilemap_correlation.json`
+    - `tools/out/bank30_da96_tilemap_correlation.md`
+    - current result: scanned `40` extracted BG tilemaps from `tools/out/` and `port/assets/` and found `0` contiguous literal matches at `>= 8` words
+    - practical read: `DA96` still looks visual, but not like a plain extracted BG tilemap dump; the next consumer-side proving path should target raw VRAM or other staged visual buffers instead of tilemap JSONs
   - new handoff note:
     - `rom_analysis/docs/bank30_unresolved_queue_dev_handoff_2026-04-01.md`
+  - new contract note:
+    - `rom_analysis/docs/bank30_da96_visual_payload_contract.md`
 - Export outputs under:
   - `rom_analysis/graphics/tilesets/`
   - `rom_analysis/maps/tilemaps/`

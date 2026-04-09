@@ -1,0 +1,1346 @@
+{
+  "inputs": {
+    "da96": "tools/out/bank30_67fb_da96.bin",
+    "df6c": "tools/out/bank30_26fb_df6c.bin",
+    "e039": "tools/out/bank30_26fb_e039.bin",
+    "e73f": "tools/out/bank30_26fb_e73f.bin",
+    "e800": "tools/out/bank30_26fb_e800.bin",
+    "ee7f": "tools/out/bank30_26fb_ee7f.bin"
+  },
+  "chunks": {
+    "da96": {
+      "word_count": 14310,
+      "zero_word_count": 930,
+      "zero_word_pct": 6.499,
+      "unique_word_count": 2154,
+      "hi_nonzero_word_count": 12448,
+      "hi_nonzero_word_pct": 86.9881,
+      "gt_7fff_word_count": 3115,
+      "gt_7fff_word_pct": 21.768,
+      "top_words": [
+        {
+          "word": 31775,
+          "count": 4139
+        },
+        {
+          "word": 8060,
+          "count": 1056
+        },
+        {
+          "word": 0,
+          "count": 930
+        },
+        {
+          "word": 38960,
+          "count": 294
+        },
+        {
+          "word": 4902,
+          "count": 232
+        },
+        {
+          "word": 32767,
+          "count": 196
+        },
+        {
+          "word": 24672,
+          "count": 178
+        },
+        {
+          "word": 65407,
+          "count": 145
+        },
+        {
+          "word": 18834,
+          "count": 133
+        },
+        {
+          "word": 260,
+          "count": 129
+        },
+        {
+          "word": 42365,
+          "count": 127
+        },
+        {
+          "word": 16104,
+          "count": 124
+        }
+      ],
+      "long_runs_ge_8": [
+        {
+          "start_word": 1,
+          "length_words": 15,
+          "word": 0
+        },
+        {
+          "start_word": 17,
+          "length_words": 15,
+          "word": 0
+        },
+        {
+          "start_word": 65,
+          "length_words": 34,
+          "word": 0
+        },
+        {
+          "start_word": 128,
+          "length_words": 16,
+          "word": 0
+        },
+        {
+          "start_word": 145,
+          "length_words": 16,
+          "word": 0
+        },
+        {
+          "start_word": 194,
+          "length_words": 58,
+          "word": 46649
+        },
+        {
+          "start_word": 252,
+          "length_words": 49,
+          "word": 28918
+        },
+        {
+          "start_word": 301,
+          "length_words": 109,
+          "word": 27744
+        },
+        {
+          "start_word": 410,
+          "length_words": 97,
+          "word": 63232
+        },
+        {
+          "start_word": 585,
+          "length_words": 43,
+          "word": 0
+        },
+        {
+          "start_word": 721,
+          "length_words": 34,
+          "word": 0
+        },
+        {
+          "start_word": 778,
+          "length_words": 127,
+          "word": 65407
+        },
+        {
+          "start_word": 929,
+          "length_words": 65,
+          "word": 24672
+        },
+        {
+          "start_word": 994,
+          "length_words": 113,
+          "word": 31856
+        },
+        {
+          "start_word": 1107,
+          "length_words": 121,
+          "word": 28792
+        },
+        {
+          "start_word": 1228,
+          "length_words": 113,
+          "word": 24672
+        },
+        {
+          "start_word": 1341,
+          "length_words": 65,
+          "word": 64
+        },
+        {
+          "start_word": 1406,
+          "length_words": 65,
+          "word": 24768
+        },
+        {
+          "start_word": 1504,
+          "length_words": 128,
+          "word": 32767
+        },
+        {
+          "start_word": 1633,
+          "length_words": 128,
+          "word": 260
+        },
+        {
+          "start_word": 1763,
+          "length_words": 65,
+          "word": 1
+        },
+        {
+          "start_word": 1846,
+          "length_words": 98,
+          "word": 27482
+        },
+        {
+          "start_word": 2007,
+          "length_words": 112,
+          "word": 18834
+        },
+        {
+          "start_word": 2119,
+          "length_words": 58,
+          "word": 12853
+        }
+      ],
+      "path": "tools/out/bank30_67fb_da96.bin"
+    },
+    "df6c": {
+      "word_count": 899,
+      "zero_word_count": 793,
+      "zero_word_pct": 88.2091,
+      "unique_word_count": 104,
+      "hi_nonzero_word_count": 1,
+      "hi_nonzero_word_pct": 0.1112,
+      "gt_7fff_word_count": 0,
+      "gt_7fff_word_pct": 0.0,
+      "top_words": [
+        {
+          "word": 0,
+          "count": 793
+        },
+        {
+          "word": 5,
+          "count": 2
+        },
+        {
+          "word": 22,
+          "count": 2
+        },
+        {
+          "word": 188,
+          "count": 2
+        },
+        {
+          "word": 518,
+          "count": 1
+        },
+        {
+          "word": 196,
+          "count": 1
+        },
+        {
+          "word": 134,
+          "count": 1
+        },
+        {
+          "word": 2,
+          "count": 1
+        },
+        {
+          "word": 1,
+          "count": 1
+        },
+        {
+          "word": 3,
+          "count": 1
+        },
+        {
+          "word": 4,
+          "count": 1
+        },
+        {
+          "word": 7,
+          "count": 1
+        }
+      ],
+      "long_runs_ge_8": [
+        {
+          "start_word": 3,
+          "length_words": 100,
+          "word": 0
+        },
+        {
+          "start_word": 114,
+          "length_words": 21,
+          "word": 0
+        },
+        {
+          "start_word": 146,
+          "length_words": 24,
+          "word": 0
+        },
+        {
+          "start_word": 178,
+          "length_words": 24,
+          "word": 0
+        },
+        {
+          "start_word": 210,
+          "length_words": 24,
+          "word": 0
+        },
+        {
+          "start_word": 242,
+          "length_words": 24,
+          "word": 0
+        },
+        {
+          "start_word": 274,
+          "length_words": 26,
+          "word": 0
+        },
+        {
+          "start_word": 306,
+          "length_words": 26,
+          "word": 0
+        },
+        {
+          "start_word": 337,
+          "length_words": 26,
+          "word": 0
+        },
+        {
+          "start_word": 370,
+          "length_words": 25,
+          "word": 0
+        },
+        {
+          "start_word": 402,
+          "length_words": 23,
+          "word": 0
+        },
+        {
+          "start_word": 434,
+          "length_words": 23,
+          "word": 0
+        },
+        {
+          "start_word": 466,
+          "length_words": 24,
+          "word": 0
+        },
+        {
+          "start_word": 498,
+          "length_words": 401,
+          "word": 0
+        }
+      ],
+      "path": "tools/out/bank30_26fb_df6c.bin"
+    },
+    "e039": {
+      "word_count": 1632,
+      "zero_word_count": 681,
+      "zero_word_pct": 41.7279,
+      "unique_word_count": 456,
+      "hi_nonzero_word_count": 488,
+      "hi_nonzero_word_pct": 29.902,
+      "gt_7fff_word_count": 57,
+      "gt_7fff_word_pct": 3.4926,
+      "top_words": [
+        {
+          "word": 0,
+          "count": 681
+        },
+        {
+          "word": 1,
+          "count": 52
+        },
+        {
+          "word": 256,
+          "count": 32
+        },
+        {
+          "word": 21,
+          "count": 25
+        },
+        {
+          "word": 103,
+          "count": 18
+        },
+        {
+          "word": 512,
+          "count": 18
+        },
+        {
+          "word": 3,
+          "count": 18
+        },
+        {
+          "word": 7,
+          "count": 17
+        },
+        {
+          "word": 1792,
+          "count": 15
+        },
+        {
+          "word": 2048,
+          "count": 14
+        },
+        {
+          "word": 3072,
+          "count": 13
+        },
+        {
+          "word": 7168,
+          "count": 12
+        }
+      ],
+      "long_runs_ge_8": [
+        {
+          "start_word": 110,
+          "length_words": 11,
+          "word": 0
+        },
+        {
+          "start_word": 494,
+          "length_words": 10,
+          "word": 0
+        },
+        {
+          "start_word": 884,
+          "length_words": 8,
+          "word": 0
+        },
+        {
+          "start_word": 1535,
+          "length_words": 10,
+          "word": 0
+        },
+        {
+          "start_word": 1596,
+          "length_words": 8,
+          "word": 0
+        },
+        {
+          "start_word": 1624,
+          "length_words": 8,
+          "word": 0
+        }
+      ],
+      "path": "tools/out/bank30_26fb_e039.bin"
+    },
+    "e73f": {
+      "word_count": 899,
+      "zero_word_count": 798,
+      "zero_word_pct": 88.7653,
+      "unique_word_count": 100,
+      "hi_nonzero_word_count": 1,
+      "hi_nonzero_word_pct": 0.1112,
+      "gt_7fff_word_count": 1,
+      "gt_7fff_word_pct": 0.1112,
+      "top_words": [
+        {
+          "word": 0,
+          "count": 798
+        },
+        {
+          "word": 5,
+          "count": 2
+        },
+        {
+          "word": 22,
+          "count": 2
+        },
+        {
+          "word": 40966,
+          "count": 1
+        },
+        {
+          "word": 254,
+          "count": 1
+        },
+        {
+          "word": 1,
+          "count": 1
+        },
+        {
+          "word": 160,
+          "count": 1
+        },
+        {
+          "word": 191,
+          "count": 1
+        },
+        {
+          "word": 8,
+          "count": 1
+        },
+        {
+          "word": 9,
+          "count": 1
+        },
+        {
+          "word": 10,
+          "count": 1
+        },
+        {
+          "word": 6,
+          "count": 1
+        }
+      ],
+      "long_runs_ge_8": [
+        {
+          "start_word": 3,
+          "length_words": 113,
+          "word": 0
+        },
+        {
+          "start_word": 126,
+          "length_words": 22,
+          "word": 0
+        },
+        {
+          "start_word": 158,
+          "length_words": 22,
+          "word": 0
+        },
+        {
+          "start_word": 190,
+          "length_words": 22,
+          "word": 0
+        },
+        {
+          "start_word": 220,
+          "length_words": 24,
+          "word": 0
+        },
+        {
+          "start_word": 253,
+          "length_words": 23,
+          "word": 0
+        },
+        {
+          "start_word": 285,
+          "length_words": 23,
+          "word": 0
+        },
+        {
+          "start_word": 316,
+          "length_words": 24,
+          "word": 0
+        },
+        {
+          "start_word": 348,
+          "length_words": 24,
+          "word": 0
+        },
+        {
+          "start_word": 381,
+          "length_words": 23,
+          "word": 0
+        },
+        {
+          "start_word": 413,
+          "length_words": 23,
+          "word": 0
+        },
+        {
+          "start_word": 444,
+          "length_words": 455,
+          "word": 0
+        }
+      ],
+      "path": "tools/out/bank30_26fb_e73f.bin"
+    },
+    "e800": {
+      "word_count": 1584,
+      "zero_word_count": 616,
+      "zero_word_pct": 38.8889,
+      "unique_word_count": 470,
+      "hi_nonzero_word_count": 599,
+      "hi_nonzero_word_pct": 37.8157,
+      "gt_7fff_word_count": 46,
+      "gt_7fff_word_pct": 2.904,
+      "top_words": [
+        {
+          "word": 0,
+          "count": 616
+        },
+        {
+          "word": 17,
+          "count": 53
+        },
+        {
+          "word": 4352,
+          "count": 32
+        },
+        {
+          "word": 256,
+          "count": 20
+        },
+        {
+          "word": 768,
+          "count": 20
+        },
+        {
+          "word": 3072,
+          "count": 17
+        },
+        {
+          "word": 1536,
+          "count": 16
+        },
+        {
+          "word": 65,
+          "count": 16
+        },
+        {
+          "word": 16128,
+          "count": 16
+        },
+        {
+          "word": 512,
+          "count": 14
+        },
+        {
+          "word": 16640,
+          "count": 13
+        },
+        {
+          "word": 12,
+          "count": 13
+        }
+      ],
+      "long_runs_ge_8": [
+        {
+          "start_word": 419,
+          "length_words": 8,
+          "word": 0
+        }
+      ],
+      "path": "tools/out/bank30_26fb_e800.bin"
+    },
+    "ee7f": {
+      "word_count": 899,
+      "zero_word_count": 211,
+      "zero_word_pct": 23.4705,
+      "unique_word_count": 269,
+      "hi_nonzero_word_count": 267,
+      "hi_nonzero_word_pct": 29.6997,
+      "gt_7fff_word_count": 53,
+      "gt_7fff_word_pct": 5.8954,
+      "top_words": [
+        {
+          "word": 0,
+          "count": 211
+        },
+        {
+          "word": 53,
+          "count": 106
+        },
+        {
+          "word": 286,
+          "count": 34
+        },
+        {
+          "word": 256,
+          "count": 33
+        },
+        {
+          "word": 1,
+          "count": 28
+        },
+        {
+          "word": 5,
+          "count": 22
+        },
+        {
+          "word": 2048,
+          "count": 20
+        },
+        {
+          "word": 13568,
+          "count": 11
+        },
+        {
+          "word": 10,
+          "count": 10
+        },
+        {
+          "word": 13569,
+          "count": 9
+        },
+        {
+          "word": 2560,
+          "count": 9
+        },
+        {
+          "word": 8,
+          "count": 7
+        }
+      ],
+      "long_runs_ge_8": [
+        {
+          "start_word": 50,
+          "length_words": 16,
+          "word": 2048
+        },
+        {
+          "start_word": 76,
+          "length_words": 18,
+          "word": 5
+        },
+        {
+          "start_word": 261,
+          "length_words": 8,
+          "word": 0
+        },
+        {
+          "start_word": 752,
+          "length_words": 32,
+          "word": 286
+        },
+        {
+          "start_word": 784,
+          "length_words": 96,
+          "word": 53
+        },
+        {
+          "start_word": 882,
+          "length_words": 17,
+          "word": 0
+        }
+      ],
+      "path": "tools/out/bank30_26fb_ee7f.bin"
+    }
+  },
+  "pairwise_same_index": {
+    "df6c_vs_e039": {
+      "compare_words": 899,
+      "same_words": 325,
+      "same_word_pct": 36.1513
+    },
+    "df6c_vs_e73f": {
+      "compare_words": 899,
+      "same_words": 697,
+      "same_word_pct": 77.5306
+    },
+    "df6c_vs_e800": {
+      "compare_words": 899,
+      "same_words": 291,
+      "same_word_pct": 32.3693
+    },
+    "df6c_vs_ee7f": {
+      "compare_words": 899,
+      "same_words": 189,
+      "same_word_pct": 21.0234
+    },
+    "e039_vs_e73f": {
+      "compare_words": 899,
+      "same_words": 324,
+      "same_word_pct": 36.04
+    },
+    "e039_vs_e800": {
+      "compare_words": 1584,
+      "same_words": 261,
+      "same_word_pct": 16.4773
+    },
+    "e039_vs_ee7f": {
+      "compare_words": 899,
+      "same_words": 96,
+      "same_word_pct": 10.6785
+    },
+    "e73f_vs_e800": {
+      "compare_words": 899,
+      "same_words": 293,
+      "same_word_pct": 32.5918
+    },
+    "e73f_vs_ee7f": {
+      "compare_words": 899,
+      "same_words": 183,
+      "same_word_pct": 20.356
+    },
+    "e800_vs_ee7f": {
+      "compare_words": 899,
+      "same_words": 75,
+      "same_word_pct": 8.3426
+    }
+  },
+  "da96_focus": {
+    "long_runs_ge_32": [
+      {
+        "start_word": 65,
+        "length_words": 34,
+        "word": 0
+      },
+      {
+        "start_word": 194,
+        "length_words": 58,
+        "word": 46649
+      },
+      {
+        "start_word": 252,
+        "length_words": 49,
+        "word": 28918
+      },
+      {
+        "start_word": 301,
+        "length_words": 109,
+        "word": 27744
+      },
+      {
+        "start_word": 410,
+        "length_words": 97,
+        "word": 63232
+      },
+      {
+        "start_word": 585,
+        "length_words": 43,
+        "word": 0
+      },
+      {
+        "start_word": 721,
+        "length_words": 34,
+        "word": 0
+      },
+      {
+        "start_word": 778,
+        "length_words": 127,
+        "word": 65407
+      },
+      {
+        "start_word": 929,
+        "length_words": 65,
+        "word": 24672
+      },
+      {
+        "start_word": 994,
+        "length_words": 113,
+        "word": 31856
+      },
+      {
+        "start_word": 1107,
+        "length_words": 121,
+        "word": 28792
+      },
+      {
+        "start_word": 1228,
+        "length_words": 113,
+        "word": 24672
+      },
+      {
+        "start_word": 1341,
+        "length_words": 65,
+        "word": 64
+      },
+      {
+        "start_word": 1406,
+        "length_words": 65,
+        "word": 24768
+      },
+      {
+        "start_word": 1504,
+        "length_words": 128,
+        "word": 32767
+      },
+      {
+        "start_word": 1633,
+        "length_words": 128,
+        "word": 260
+      },
+      {
+        "start_word": 1763,
+        "length_words": 65,
+        "word": 1
+      },
+      {
+        "start_word": 1846,
+        "length_words": 98,
+        "word": 27482
+      },
+      {
+        "start_word": 2007,
+        "length_words": 112,
+        "word": 18834
+      },
+      {
+        "start_word": 2119,
+        "length_words": 58,
+        "word": 12853
+      },
+      {
+        "start_word": 2177,
+        "length_words": 91,
+        "word": 38657
+      },
+      {
+        "start_word": 2268,
+        "length_words": 42,
+        "word": 38468
+      },
+      {
+        "start_word": 2403,
+        "length_words": 101,
+        "word": 35313
+      },
+      {
+        "start_word": 2549,
+        "length_words": 87,
+        "word": 29357
+      },
+      {
+        "start_word": 2711,
+        "length_words": 63,
+        "word": 53078
+      },
+      {
+        "start_word": 2774,
+        "length_words": 35,
+        "word": 55743
+      },
+      {
+        "start_word": 2820,
+        "length_words": 84,
+        "word": 61515
+      },
+      {
+        "start_word": 2904,
+        "length_words": 109,
+        "word": 56690
+      },
+      {
+        "start_word": 3158,
+        "length_words": 89,
+        "word": 27905
+      },
+      {
+        "start_word": 3247,
+        "length_words": 110,
+        "word": 28013
+      },
+      {
+        "start_word": 3558,
+        "length_words": 85,
+        "word": 56809
+      },
+      {
+        "start_word": 3643,
+        "length_words": 94,
+        "word": 22390
+      },
+      {
+        "start_word": 3737,
+        "length_words": 94,
+        "word": 55460
+      },
+      {
+        "start_word": 3831,
+        "length_words": 89,
+        "word": 32091
+      },
+      {
+        "start_word": 4218,
+        "length_words": 32,
+        "word": 8060
+      },
+      {
+        "start_word": 4250,
+        "length_words": 125,
+        "word": 31775
+      },
+      {
+        "start_word": 4375,
+        "length_words": 32,
+        "word": 8060
+      },
+      {
+        "start_word": 4407,
+        "length_words": 125,
+        "word": 31775
+      },
+      {
+        "start_word": 4532,
+        "length_words": 32,
+        "word": 8060
+      },
+      {
+        "start_word": 4564,
+        "length_words": 125,
+        "word": 31775
+      }
+    ],
+    "repeated_7c1f_row_block": {
+      "run_count": 33,
+      "dominant_stride_words": 157,
+      "stride_counts": [
+        {
+          "stride_words": 157,
+          "count": 32
+        }
+      ],
+      "first_start_word": 4250,
+      "row_block_count": 33,
+      "row_width_words": 157,
+      "identical_row_variants": 2,
+      "largest_repeated_row_count": 32
+    }
+  },
+  "ee7f_family_focus": {
+    "family_members": {
+      "df6c": {
+        "word_count": 899,
+        "zero_word_count": 793,
+        "zero_word_pct": 88.2091,
+        "unique_word_count": 104,
+        "hi_nonzero_word_count": 1,
+        "hi_nonzero_word_pct": 0.1112,
+        "gt_7fff_word_count": 0,
+        "gt_7fff_word_pct": 0.0,
+        "top_words": [
+          {
+            "word": 0,
+            "count": 793
+          },
+          {
+            "word": 5,
+            "count": 2
+          },
+          {
+            "word": 22,
+            "count": 2
+          },
+          {
+            "word": 188,
+            "count": 2
+          },
+          {
+            "word": 518,
+            "count": 1
+          },
+          {
+            "word": 196,
+            "count": 1
+          },
+          {
+            "word": 134,
+            "count": 1
+          },
+          {
+            "word": 2,
+            "count": 1
+          },
+          {
+            "word": 1,
+            "count": 1
+          },
+          {
+            "word": 3,
+            "count": 1
+          },
+          {
+            "word": 4,
+            "count": 1
+          },
+          {
+            "word": 7,
+            "count": 1
+          }
+        ],
+        "long_runs_ge_8": [
+          {
+            "start_word": 3,
+            "length_words": 100,
+            "word": 0
+          },
+          {
+            "start_word": 114,
+            "length_words": 21,
+            "word": 0
+          },
+          {
+            "start_word": 146,
+            "length_words": 24,
+            "word": 0
+          },
+          {
+            "start_word": 178,
+            "length_words": 24,
+            "word": 0
+          },
+          {
+            "start_word": 210,
+            "length_words": 24,
+            "word": 0
+          },
+          {
+            "start_word": 242,
+            "length_words": 24,
+            "word": 0
+          },
+          {
+            "start_word": 274,
+            "length_words": 26,
+            "word": 0
+          },
+          {
+            "start_word": 306,
+            "length_words": 26,
+            "word": 0
+          },
+          {
+            "start_word": 337,
+            "length_words": 26,
+            "word": 0
+          },
+          {
+            "start_word": 370,
+            "length_words": 25,
+            "word": 0
+          },
+          {
+            "start_word": 402,
+            "length_words": 23,
+            "word": 0
+          },
+          {
+            "start_word": 434,
+            "length_words": 23,
+            "word": 0
+          },
+          {
+            "start_word": 466,
+            "length_words": 24,
+            "word": 0
+          },
+          {
+            "start_word": 498,
+            "length_words": 401,
+            "word": 0
+          }
+        ],
+        "path": "tools/out/bank30_26fb_df6c.bin"
+      },
+      "e73f": {
+        "word_count": 899,
+        "zero_word_count": 798,
+        "zero_word_pct": 88.7653,
+        "unique_word_count": 100,
+        "hi_nonzero_word_count": 1,
+        "hi_nonzero_word_pct": 0.1112,
+        "gt_7fff_word_count": 1,
+        "gt_7fff_word_pct": 0.1112,
+        "top_words": [
+          {
+            "word": 0,
+            "count": 798
+          },
+          {
+            "word": 5,
+            "count": 2
+          },
+          {
+            "word": 22,
+            "count": 2
+          },
+          {
+            "word": 40966,
+            "count": 1
+          },
+          {
+            "word": 254,
+            "count": 1
+          },
+          {
+            "word": 1,
+            "count": 1
+          },
+          {
+            "word": 160,
+            "count": 1
+          },
+          {
+            "word": 191,
+            "count": 1
+          },
+          {
+            "word": 8,
+            "count": 1
+          },
+          {
+            "word": 9,
+            "count": 1
+          },
+          {
+            "word": 10,
+            "count": 1
+          },
+          {
+            "word": 6,
+            "count": 1
+          }
+        ],
+        "long_runs_ge_8": [
+          {
+            "start_word": 3,
+            "length_words": 113,
+            "word": 0
+          },
+          {
+            "start_word": 126,
+            "length_words": 22,
+            "word": 0
+          },
+          {
+            "start_word": 158,
+            "length_words": 22,
+            "word": 0
+          },
+          {
+            "start_word": 190,
+            "length_words": 22,
+            "word": 0
+          },
+          {
+            "start_word": 220,
+            "length_words": 24,
+            "word": 0
+          },
+          {
+            "start_word": 253,
+            "length_words": 23,
+            "word": 0
+          },
+          {
+            "start_word": 285,
+            "length_words": 23,
+            "word": 0
+          },
+          {
+            "start_word": 316,
+            "length_words": 24,
+            "word": 0
+          },
+          {
+            "start_word": 348,
+            "length_words": 24,
+            "word": 0
+          },
+          {
+            "start_word": 381,
+            "length_words": 23,
+            "word": 0
+          },
+          {
+            "start_word": 413,
+            "length_words": 23,
+            "word": 0
+          },
+          {
+            "start_word": 444,
+            "length_words": 455,
+            "word": 0
+          }
+        ],
+        "path": "tools/out/bank30_26fb_e73f.bin"
+      },
+      "ee7f": {
+        "word_count": 899,
+        "zero_word_count": 211,
+        "zero_word_pct": 23.4705,
+        "unique_word_count": 269,
+        "hi_nonzero_word_count": 267,
+        "hi_nonzero_word_pct": 29.6997,
+        "gt_7fff_word_count": 53,
+        "gt_7fff_word_pct": 5.8954,
+        "top_words": [
+          {
+            "word": 0,
+            "count": 211
+          },
+          {
+            "word": 53,
+            "count": 106
+          },
+          {
+            "word": 286,
+            "count": 34
+          },
+          {
+            "word": 256,
+            "count": 33
+          },
+          {
+            "word": 1,
+            "count": 28
+          },
+          {
+            "word": 5,
+            "count": 22
+          },
+          {
+            "word": 2048,
+            "count": 20
+          },
+          {
+            "word": 13568,
+            "count": 11
+          },
+          {
+            "word": 10,
+            "count": 10
+          },
+          {
+            "word": 13569,
+            "count": 9
+          },
+          {
+            "word": 2560,
+            "count": 9
+          },
+          {
+            "word": 8,
+            "count": 7
+          }
+        ],
+        "long_runs_ge_8": [
+          {
+            "start_word": 50,
+            "length_words": 16,
+            "word": 2048
+          },
+          {
+            "start_word": 76,
+            "length_words": 18,
+            "word": 5
+          },
+          {
+            "start_word": 261,
+            "length_words": 8,
+            "word": 0
+          },
+          {
+            "start_word": 752,
+            "length_words": 32,
+            "word": 286
+          },
+          {
+            "start_word": 784,
+            "length_words": 96,
+            "word": 53
+          },
+          {
+            "start_word": 882,
+            "length_words": 17,
+            "word": 0
+          }
+        ],
+        "path": "tools/out/bank30_26fb_ee7f.bin"
+      }
+    },
+    "pairwise_same_index": {
+      "df6c_vs_e73f": {
+        "compare_words": 899,
+        "same_words": 697,
+        "same_word_pct": 77.5306
+      },
+      "df6c_vs_ee7f": {
+        "compare_words": 899,
+        "same_words": 189,
+        "same_word_pct": 21.0234
+      },
+      "e73f_vs_ee7f": {
+        "compare_words": 899,
+        "same_words": 183,
+        "same_word_pct": 20.356
+      }
+    }
+  }
+}

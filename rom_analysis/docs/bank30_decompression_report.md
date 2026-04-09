@@ -189,6 +189,31 @@ Current practical read:
   - chase `EE7F` through reachability / organic caller paths
   - chase `DA96` through consumer-side visual/tilemap correlation
 
+## 2026-04-09 Tilemap Correlation Falsifier
+
+New static correlator:
+
+```sh
+python3 tools/correlate_bank30_da96_tilemaps.py \
+  --json-out tools/out/bank30_da96_tilemap_correlation.json \
+  --markdown-out tools/out/bank30_da96_tilemap_correlation.md
+```
+
+Current practical read:
+
+- The current extracted design-pack tilemap set does **not** contain a direct
+  literal copy of the `DA96` stream:
+  - scanned BG tilemaps: `40`
+  - minimum reported literal match threshold: `8` contiguous words
+  - result: `0` matches
+- This strengthens the current lane-1 read:
+  - `DA96` still looks visual, but not like a raw BG tilemap row dump
+  - the better next proving path is raw-VRAM / staged-buffer correlation, not
+    more tilemap-only correlation
+- This also narrows the implementation-facing contract:
+  - treat `DA96` as a separate row-major visual payload class until a caller
+    proves a direct tilemap or other destination binding
+
 ## Next Actions
 
 1. Probe deterministic savestate-targeted paths to confirm reachability for
@@ -198,5 +223,7 @@ Current practical read:
    - decode success + consumed spans
    - pointer-table provenance
    - runtime `L001210` hit evidence
-3. Tie bank-30 chunk outputs to Mesen design-pack tilemap entries for provenance
-   (`frame/layer/tile index` -> `ROM chunk/offset`).
+3. Tie `DA96` to raw VRAM or other staged visual buffers instead of only
+   design-pack tilemaps.
+   - the current `40`-tilemap literal-scan falsifier stayed at `0` matches
+     (`>= 8` contiguous words)

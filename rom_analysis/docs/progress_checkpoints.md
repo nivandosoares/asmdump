@@ -1,3 +1,275 @@
+Date: 2026-04-09
+
+Summary
+- Converted the current `DA96` lane-1 read into an explicit implementation-agnostic contract note instead of leaving it as scattered shape observations.
+- Added a bounded literal-tilemap falsifier for `DA96` and used it to narrow the contract boundary.
+
+What I ran
+- refreshed local bank30 decoder artifacts needed by the shape pass:
+  - `python3 tools/decompress_td2_chunk.py game.smc tools/out/bank30_67fb_da96.bin --bank 30 --addr 0xDA96 --json-out tools/out/bank30_67fb_da96.json`
+  - `python3 tools/decompress_td2_chunk.py game.smc tools/out/bank30_26fb_df6c.bin --bank 30 --addr 0xDF6C --json-out tools/out/bank30_26fb_df6c.json`
+  - `python3 tools/decompress_td2_chunk.py game.smc tools/out/bank30_26fb_e039.bin --bank 30 --addr 0xE039 --json-out tools/out/bank30_26fb_e039.json`
+  - `python3 tools/decompress_td2_chunk.py game.smc tools/out/bank30_26fb_e73f.bin --bank 30 --addr 0xE73F --json-out tools/out/bank30_26fb_e73f.json`
+  - `python3 tools/decompress_td2_chunk.py game.smc tools/out/bank30_26fb_e800.bin --bank 30 --addr 0xE800 --json-out tools/out/bank30_26fb_e800.json`
+  - `python3 tools/decompress_td2_chunk.py game.smc tools/out/bank30_26fb_ee7f.bin --bank 30 --addr 0xEE7F --json-out tools/out/bank30_26fb_ee7f.json`
+- reran the structural summary:
+  - `python3 tools/analyze_bank30_chunk_shapes.py --json-out tools/out/bank30_chunk_shapes.json --markdown-out tools/out/bank30_chunk_shapes.md`
+- new bounded visual-correlation pass:
+  - `python3 tools/correlate_bank30_da96_tilemaps.py --json-out tools/out/bank30_da96_tilemap_correlation.json --markdown-out tools/out/bank30_da96_tilemap_correlation.md`
+
+Artifacts
+- new contract note:
+  - `rom_analysis/docs/bank30_da96_visual_payload_contract.md`
+- new static correlator:
+  - `tools/correlate_bank30_da96_tilemaps.py`
+- new correlation artifacts:
+  - `tools/out/bank30_da96_tilemap_correlation.json`
+  - `tools/out/bank30_da96_tilemap_correlation.md`
+- refreshed structural artifacts:
+  - `tools/out/bank30_chunk_shapes.json`
+  - `tools/out/bank30_chunk_shapes.md`
+
+Findings / Interpretation
+- `DA96` remains best described as a row-major visual payload, not code:
+  - `14310` words
+  - repeated `0x7C1F` run family on a fixed `157`-word stride
+  - repeated-row block still closes at `157 x 33` with `32` identical rows
+- The new bounded consumer-side check closes one tempting overclaim:
+  - scanning `40` extracted BG tilemaps under current `tools/out/` and `port/assets/`
+  - with a literal match threshold of `>= 8` contiguous words
+  - produced `0` matches
+- Practical consequence:
+  - `DA96` still looks visual, but it should not currently be modeled as a
+    plain BG tilemap source
+  - the stronger next lane-1 step is raw-VRAM or staged-buffer correlation on
+    a future real caller path, while `EE7F` remains the better runtime
+    reachability target
+
+What I learned (actionable)
+- Lane 1 now has a cleaner contract boundary for `DA96`:
+  - visual payload: yes, probably
+  - plain literal BG tilemap dump: currently disproven for the extracted set
+- This makes the next proving options sharper:
+  1. chase `EE7F` for runtime reachability
+  2. chase `DA96` through raw-VRAM / intermediate-buffer correlation, not
+     through more tilemap JSON scans
+
+Next steps / Checkpoints
+1) Keep `EE7F` as the primary runtime queue target.
+2) When a real `DA96` caller is found, compare the decompressed `314`-byte row
+   structure against raw VRAM rows or other staged visual buffers first.
+3) Reuse the new `DA96` tilemap correlator as a cheap falsifier whenever a new
+   extracted tilemap set is added.
+
+Files updated in this turn
+- `tools/correlate_bank30_da96_tilemaps.py`
+- `rom_analysis/docs/bank30_da96_visual_payload_contract.md`
+- `rom_analysis/docs/bank30_decompression_report.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `tools/README.md`
+
+Next reading
+- `rom_analysis/docs/bank30_da96_visual_payload_contract.md`
+- `tools/out/bank30_da96_tilemap_correlation.md`
+- `rom_analysis/docs/bank30_unresolved_queue_dev_handoff_2026-04-01.md`
+
+Date: 2026-04-08
+
+Summary
+- Narrowed the speed-side explanation enough to support the simple
+  gameplay-motion write-up without overclaiming.
+- `$11CE` is now materially stronger as a real gameplay speed field even
+  though the final accelerator-to-speed writer is still open.
+
+What I ran
+- bounded reads over the strongest current speed consumers:
+  - `sed -n '1188,1418p' bank2.asm`
+  - `sed -n '4498,4598p' bank2.asm`
+  - `sed -n '7448,8015p' bank2.asm`
+  - `sed -n '2818,2878p' bank1.asm`
+- bounded writer search:
+  - `rg -n 'sta \\$11CE|stz \\$11CE|inc \\$11CE|dec \\$11CE|adc \\$11CE|sbc \\$11CE|cmp \\$11CE|lda \\$11CE' bank*.asm`
+
+Artifacts
+- new partial speed note:
+  - `rom_analysis/docs/gameplay_speed_path_partial.md`
+- refreshed simple gameplay-motion note:
+  - `rom_analysis/docs/gameplay_motion_explained_simple.md`
+
+Findings / Interpretation
+- The exact low-level writer into `$11CE` is still not promoted.
+- But `$11CE` itself is now strong enough to treat as real gameplay speed:
+  - `L010981..L0109A5` decodes it into compact visible HUD marker/needle state
+  - `L012521` uses it as the index into the generated `$1A28` span/depth map
+  - `L013CD9..L013F4D` uses it repeatedly in the live movement/curvature math
+- That means the remaining speed gap is narrower than before:
+  it is no longer "is `$11CE` really speed?" but
+  "where exactly is the authoritative accelerator-driven writer?"
+
+Next steps / Checkpoints
+1) Keep searching for the authoritative `$11CE` writer, likely in noisier
+   bank-10 or adjacent control code.
+2) Keep the simple visible-motion explanation aligned to the stronger partial
+   speed read instead of calling the whole speed path unknown.
+3) Continue the road/world producer work in `L01318D`.
+
+Files updated in this turn
+- `rom_analysis/docs/gameplay_speed_path_partial.md`
+- `rom_analysis/docs/gameplay_motion_explained_simple.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `rom_analysis/docs/gameplay_speed_path_partial.md`
+- `rom_analysis/docs/gameplay_motion_explained_simple.md`
+- `rom_analysis/docs/bank2_main_callback_9016_human.md`
+
+Date: 2026-04-08
+
+Summary
+- Added a simple "game explained" note for the currently strongest proven
+  live-race motion path.
+- The note is aimed at non-specialists and explains the visible chain from
+  "player presses accelerate" to "road starts moving on screen."
+
+What I ran
+- grounded the simple note against already-promoted code paths and notes:
+  - `bank1.asm` `01:9111`
+  - `bank2.asm` `02:9016`, `L011165`, `L0109FD`, `L01397E`, `L01318D`
+  - `rom_analysis/docs/bank2_main_callback_9016_human.md`
+  - `rom_analysis/docs/bank1_irq_callback_96a0_human.md`
+  - `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
+  - `rom_analysis/maps/tracks/track1_live_race_l01318d_static_role_split.md`
+
+Artifacts
+- new simple explanation note:
+  - `rom_analysis/docs/gameplay_motion_explained_simple.md`
+
+Findings / Interpretation
+- The current explanation is now simple enough to hand to a non-engineer
+  without dropping the core bank split:
+  - `02:9016` = input/control gate
+  - `L0109FD -> L01397E` = control/progression fold
+  - `L01318D` = strongest current road/world producer cluster
+  - `01:960D -> 01:96A0` = visible display split that writes the road layer
+    scroll from `$22/$23`
+  - NMI/bank 0 = final upload to hardware
+- One honesty boundary remains:
+  the exact low-level button-to-`$11CE` speed-increment routine is still not
+  fully closed, so the note explains the visible motion pipeline rather than
+  claiming every speed/physics primitive is fully decoded.
+
+Next steps / Checkpoints
+1) Close the exact accelerator-to-`$11CE` physics path.
+2) Keep tracing how `L01318D` chooses between its generic and alternate submit
+   paths.
+3) Keep the later frame-`3250` queue-backed object path separate from the
+   simpler "road moves forward" explanation.
+
+Files updated in this turn
+- `rom_analysis/docs/gameplay_motion_explained_simple.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `rom_analysis/docs/gameplay_motion_explained_simple.md`
+- `rom_analysis/docs/bank2_main_callback_9016_human.md`
+- `rom_analysis/maps/tracks/track1_live_race_bg2_producer_path.md`
+
+Date: 2026-04-08
+
+Summary
+- Tried to restore headless Mesen probing on this host so the next bank pass
+  could gather live evidence instead of only mining archived JSON artifacts.
+- The local Mesen runtime is still blocked, but the fallback archaeology pass
+  still closed an important ownership question:
+  `09A2/09A8/0053/0054` are not best read as anonymous `02:9016`
+  gameplay-mode bytes.
+- The stronger current read is:
+  - `09A2` = OAM staging cursor / sprite-count surface
+  - `09A8` = builder-side allocator control value
+  - `0053/0054` = descriptor-ring producer/consumer cursors
+
+What I ran
+- Mesen recovery attempts:
+  - cloned `https://github.com/SourMesen/Mesen2` to `/home/nivando/Mesen2`
+  - inspected `COMPILING.md` and the root `makefile`
+  - downloaded `Mesen_2.1.1_Linux_x64.zip`
+  - extracted `/home/nivando/mesen-release/extracted/Mesen`
+  - supplied user-space runtime deps with locally extracted Debian packages:
+    `libsdl2-2.0-0`, `libsamplerate0`, `libxss1`, `libdecor-0-0`
+- bounded headless probe attempts:
+  - short boot probe through `validation/run_mesen_probe_boot.sh`
+  - short gameplay probe through `validation/run_mesen_gameplay_probe.sh`
+- fallback code/probe reads:
+  - `sed -n '3270,3465p' bank0.asm`
+  - `sed -n '2080,2148p' bank1.asm`
+  - `sed -n '3528,3640p' bank1.asm`
+  - `sed -n '6248,6310p' bank1.asm`
+  - `sed -n '1280,1525p' bank2.asm`
+  - `sed -n '1,180p' rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
+  - cached compare artifacts under `tools/out/post9016_*` and
+    `tools/out/snes_select_opponent_post_9016_state_compare.json`
+
+Artifacts
+- promoted ownership clarification into the main human notes:
+  - `rom_analysis/docs/bank2_main_callback_9016_human.md`
+  - `rom_analysis/docs/snes_runtime_algorithm_human.md`
+  - `rom_analysis/docs/progress_checkpoints.md`
+
+Findings / Interpretation
+- The headless Mesen route is not working yet on this host.
+- Even after supplying the missing shared libraries in user space, both the
+  short boot probe and the short gameplay probe abort inside the Mesen runtime
+  with `std::bad_cast`.
+- Because the official Linux release asset is only the single `Mesen` binary,
+  the current best explanation is a mismatch between that launcher and the
+  borrowed local `MesenCore.so` under `.mesen-config/Mesen2`.
+- The archaeology side still moved forward:
+  - `09A2` now reads as the bank-0 OAM staging cursor that `L00154E` resets
+    and `L001662/L00179B` advance as sprite rows are emitted
+  - `09A8` now reads as the builder-side allocator control copied into the
+    `$0AAA` allocator/TTL family by bank-0 `L0015E1`
+  - bank-1 `L009185` preserving/restoring `09A2` around helper rendering is
+    strong evidence that these are workload/build surfaces, not top-level
+    gameplay mode flags
+  - the recurring post-`9016` `0053/0054` differences fit the already-promoted
+    `7E:0600` descriptor-ring cursor model
+- This materially narrows the older “post-9016 unknowns” bucket:
+  the remaining question is no longer what those bytes broadly are, but which
+  specific producer cluster advances the extra rival/no-opponent workload
+  inside the shared `02:9016 / 01:96A0 / 02:8F3C` family.
+
+What I learned (actionable)
+- Treat the post-`9016` split in two layers:
+  1. stable visible rival-only marker:
+     `state_11f3 -> oam_0730`
+  2. secondary workload/queue surfaces:
+     `09A2/09A8/0053/0054` plus transient `0020/0022`
+- Stop treating `09A2/09A8` as candidate top-level race-state fields in the
+  main bank notes.
+- If live Mesen probing becomes available later, the next probe should target
+  the producer cluster around `02:B042 / 02:B05D / 02:B0B1 / 02:B0BD / 02:B134`
+  instead of re-proving the already-closed `11F3 -> oam_0730` split.
+
+Next steps / Checkpoints
+1) Either build a matched local Mesen runtime or fetch a compatible
+   `MesenCore.so` bundle so `--testRunner` works again.
+2) Trace which later bank-2 producer path owns the extra rival/no-opponent
+   `09A2/09A8/0053/0054` workload movement.
+3) Keep the heavy selector/control work on `02:9016 -> L0109FD` and the later
+   path that chooses the queue-backed SNES-bank-`$15` upload behind frame
+   `3250`.
+
+Files updated in this turn
+- `rom_analysis/docs/bank2_main_callback_9016_human.md`
+- `rom_analysis/docs/snes_runtime_algorithm_human.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+
+Next reading
+- `rom_analysis/docs/bank2_main_callback_9016_human.md`
+- `rom_analysis/maps/tracks/track1_02_9016_state_ownership.md`
+- `rom_analysis/docs/snes_runtime_algorithm_human.md`
+
 Date: 2026-04-08
 
 Summary
@@ -8,6 +280,10 @@ Summary
 - `L0110B2 -> L011551` is still a strong selector-to-runtime builder, but it
   is called separately from bank 1 at `L009075`, which moves it from
   “per-frame callback body” to “gameplay-entry/setup builder.”
+- Closed the first direct downstream consumers:
+  - `02:9016` state feeds into `L0109FD` through `$118F/$1191/$11BD`
+  - `$1A28` feeds into `L012521`
+  - `$13FC` is a progression bound inside `L01397E`
 
 What I ran
 - bounded anonymous bank-2 block read:
@@ -41,6 +317,11 @@ Findings / Interpretation
   `02:9016` is the active per-frame gate;
   `L0110B2 -> L011551` is the separate setup builder that prepares deeper
   gameplay runtime surfaces.
+- The next positive closure is that these surfaces already have concrete
+  consumers:
+  - `L0109FD` reads `$118F/$1191/$11BD` and folds them into `$137E`
+  - `L012521` reads `$1A28[speed_index]`
+  - `L01397E` uses `$13FC` as an active progression bound
 
 What I learned (actionable)
 - The gameplay architecture is cleaner than the earlier rough read:
@@ -52,9 +333,10 @@ What I learned (actionable)
   edge is currently disproven.
 
 Next steps / Checkpoints
-1) Identify which later consumers read the state mutated by `02:9016`.
-2) Identify which later consumers read the generated `$14DC/$13FC/$1A28`
-   surfaces from `L011551`.
+1) Broaden the `02:9016 -> L0109FD` consumer chain beyond the first proven
+   read through `$137E`.
+2) Type the bank-10 and later bank-2 consumers of `$14DC/$13FC/$1A28` into
+   better human pseudocode.
 3) Keep tracing the path that eventually chooses the queue-backed SNES-bank-`$15`
    upload behind frame `3250`.
 

@@ -15,6 +15,7 @@ Current Sprint 0 tooling:
 - `analyze_bootstrap_queue.py`: decodes the low-WRAM `0600` DMA queue, `0700` staged OAM buffer, `0900` OAM high table, and related allocator maps between two bootstrap captures
 - `analyze_oam_delta.py`: compares two full 544-byte OAM dumps at both raw-byte and parsed-sprite level, including which visible sprites differ under the current PPU-state visibility rules
 - `analyze_bank30_chunk_shapes.py`: summarizes refreshed bank30 chunk binaries into repeatable structural metrics so lane-1 can compare unresolved `DA96/EE7F` outputs against the already-confirmed `26FB` family without hand-reading raw words
+- `correlate_bank30_da96_tilemaps.py`: scans extracted `tilemaps/bg*_tilemap.json` files for literal contiguous word-sequence matches against the decompressed `1E:DA96` bank30 payload, so lane-1 can cheaply falsify the “plain BG tilemap dump” hypothesis before chasing deeper consumer paths
 - `build_bootstrap_queue_scene.py`: applies the active `0600` DMA descriptors from a queue summary onto a seed VRAM image, optionally lifts staged OAM from WRAM, and emits a normal `snes_bg` scene prefix plus preview
 - `build_mode7_source_scene.py`: seeds a Mode 7 scene from VRAM and patches selected VRAM word regions directly from ROM source blobs before rendering; this is the current bridge-visible builder for the late attract window
 - `mesen_ppu_extract`: headless C# bridge into `MesenCore.so` that dumps the current frame's SNES BG layer views, BG tilesets/CHR sheets, palette, per-sprite previews, sprite screen preview, and raw VRAM/CGRAM/OAM without going through the GUI; it now also accepts `--load-state` plus `--frame-is-offset` so gameplay-native extraction can start from preserved savestates instead of replaying from power-on
@@ -123,6 +124,7 @@ python3 tools/run_l001210_probe_matrix.py --out-dir tools/out/l001210_probe_matr
 python3 tools/run_l001210_probe_matrix.py --out-dir tools/out/l001210_probe_matrix_from_1093 --total-frames 2000 --timeout-seconds 120 --savestate tools/out/l001210_state_1093.bin
 # scenario JSON may include `extra_env`, e.g. {"name":"force","extra_env":{"TD2_BOOT_PROBE_FORCE_1C78":"1"}}
 python3 tools/build_bank30_chunk_registry.py tools/out/bank30_headers.json tools/out/bank30_chunk_validation.json tools/out/td2_boot_probe_l001210_summary.json tools/out/bank30_chunk_registry.json --markdown-out tools/out/bank30_chunk_registry.md
+python3 tools/correlate_bank30_da96_tilemaps.py --json-out tools/out/bank30_da96_tilemap_correlation.json --markdown-out tools/out/bank30_da96_tilemap_correlation.md
 python3 tools/check_regression_gates.py validation/regression_gates_intro.jsonc --render-dir port/build/regression_frames --json-out tools/out/regression_gates_intro_report.json
 python3 tools/validate_callback_contracts.py rom_analysis/docs/callback_state_contracts.jsonc tools/out/td2_boot_probe.json --json-out tools/out/callback_state_contracts_report.json
 python3 tools/terminal_bot.py start --cwd .
