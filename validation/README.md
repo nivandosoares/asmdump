@@ -35,6 +35,11 @@ DOS-side validation note:
   page/segment contract over `*ST.PES`:
   - `tools/out/dos_packed_probe_contract.json`
   - `tools/out/dos_packed_probe_contract.md`
+- `tools/build_dos_asset_review_pngs.py` emits visible PNG boards for design
+  review from the current DOS contracts:
+  - `tools/out/dos_asset_review_pngs.json`
+  - `tools/out/dos_asset_review_pngs/dos_asset_review_overview.png`
+  - `tools/out/dos_asset_review_pngs/dos_asset_review_gallery.html`
 - cheap DOS smoke on this host:
 
 ```sh
@@ -84,6 +89,12 @@ python3 tools/build_dos_packed_probe_contract.py \
   --data-dir ../Downloads/testdrive2 \
   --json-out tools/out/dos_packed_probe_contract.json \
   --markdown-out tools/out/dos_packed_probe_contract.md
+
+python3 tools/build_dos_asset_review_pngs.py \
+  --preview-manifest tools/out/dos_preview_manifest.json \
+  --probe-contract tools/out/dos_packed_probe_contract.json \
+  --out-dir tools/out/dos_asset_review_pngs \
+  --json-out tools/out/dos_asset_review_pngs.json
 ```
 
 Current asset:

@@ -52,6 +52,11 @@ whole compressed image format.”
 - generated artifacts:
   - `tools/out/dos_packed_probe_contract.json`
   - `tools/out/dos_packed_probe_contract.md`
+- visible design-review boards:
+  - `tools/build_dos_asset_review_pngs.py`
+  - `tools/out/dos_asset_review_pngs/dos_asset_review_overview.png`
+  - `tools/out/dos_asset_review_pngs/<car>_review_board.png`
+  - `tools/out/dos_asset_review_pngs/dos_asset_review_gallery.html`
 
 ## Run it
 
@@ -62,4 +67,21 @@ python3 tools/build_dos_packed_probe_contract.py \
   --data-dir ../Downloads/testdrive2 \
   --json-out tools/out/dos_packed_probe_contract.json \
   --markdown-out tools/out/dos_packed_probe_contract.md
+
+python3 tools/build_dos_asset_review_pngs.py \
+  --preview-manifest tools/out/dos_preview_manifest.json \
+  --probe-contract tools/out/dos_packed_probe_contract.json \
+  --out-dir tools/out/dos_asset_review_pngs \
+  --json-out tools/out/dos_asset_review_pngs.json
 ```
+
+## Design read
+
+The PNG boards are intentionally conservative:
+
+- they show token layout families
+- packed `PES/PCS` geometry
+- page/tail boundaries
+- evidence grades
+
+They do not claim decoded DOS preview art yet.

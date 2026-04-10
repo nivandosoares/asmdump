@@ -93,6 +93,10 @@ Current bootstrap from `SELECT.DAT`:
   - `tools/out/dos_packed_probe_contract.json`
   - `tools/out/dos_packed_probe_contract.md`
   - [docs/dos_packed_probe_contract.md](/home/nivando-soares/asmdump/docs/dos_packed_probe_contract.md)
+- visible review boards:
+  - `tools/build_dos_asset_review_pngs.py`
+  - `tools/out/dos_asset_review_pngs/dos_asset_review_overview.png`
+  - `tools/out/dos_asset_review_pngs/dos_asset_review_gallery.html`
 
 ## Run it
 
@@ -127,6 +131,12 @@ python3 tools/build_dos_packed_probe_contract.py \
   --data-dir ../Downloads/testdrive2 \
   --json-out tools/out/dos_packed_probe_contract.json \
   --markdown-out tools/out/dos_packed_probe_contract.md
+
+python3 tools/build_dos_asset_review_pngs.py \
+  --preview-manifest tools/out/dos_preview_manifest.json \
+  --probe-contract tools/out/dos_packed_probe_contract.json \
+  --out-dir tools/out/dos_asset_review_pngs \
+  --json-out tools/out/dos_asset_review_pngs.json
 ```
 
 ## Boundary

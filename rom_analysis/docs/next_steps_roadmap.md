@@ -16,6 +16,7 @@ decoded tilemaps and sprite visibility metadata.
   - `tools/build_dos_preview_codepath.py`
   - `tools/build_dos_packed_asset_manifest.py`
   - `tools/build_dos_packed_probe_contract.py`
+  - `tools/build_dos_asset_review_pngs.py`
   - `docs/dos_version_contracts.md`
   - `docs/dos_engine_porting.md`
   - `docs/dos_preview_codepath.md`
@@ -38,6 +39,9 @@ decoded tilemaps and sprite visibility metadata.
     - `tools/out/dos_packed_asset_manifest.md`
     - `tools/out/dos_packed_probe_contract.json`
     - `tools/out/dos_packed_probe_contract.md`
+    - `tools/out/dos_asset_review_pngs.json`
+    - `tools/out/dos_asset_review_pngs/dos_asset_review_overview.png`
+    - `tools/out/dos_asset_review_pngs/dos_asset_review_gallery.html`
 - Current practical read:
   - DOS now has a first class in-repo contract source instead of only being
     referenced indirectly from SNES-correlation prose
@@ -51,6 +55,8 @@ decoded tilemaps and sprite visibility metadata.
   - the packed preview lane now also has a page/segment contract:
     1-page, 3-page, and 4-page `*ST.PES` classes with the first promoted
     `12 KB` tail boundary
+  - design now also has visible PNG boards from the current contracts without
+    overclaiming a decoded preview renderer
 - Next gate:
   - keep building the future engine around DOS catalogs and state first
   - only then decode packed asset rendering on top of that stabilized model

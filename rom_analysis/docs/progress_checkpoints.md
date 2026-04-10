@@ -597,6 +597,72 @@ Next reading
 - `rom_analysis/docs/snes_runtime_algorithm_human.md`
 
 
+
+- Added visible PNG review artifacts for the DOS preview/materializer lane.
+- Kept them contract-backed on purpose: layout tokens, packed geometry, page
+  classes, and evidence grades, not fake decoded car art.
+
+What I ran
+- bounded validation:
+  - `python3 -m py_compile tools/build_dos_asset_review_pngs.py tools/tests/test_dos_asset_review_pngs.py`
+  - `python3 tools/build_dos_asset_review_pngs.py --preview-manifest tools/out/dos_preview_manifest.json --probe-contract tools/out/dos_packed_probe_contract.json --out-dir tools/out/dos_asset_review_pngs --json-out tools/out/dos_asset_review_pngs.json`
+  - `python3 tools/tests/test_dos_asset_review_pngs.py`
+
+Artifacts
+- new PNG review builder:
+  - `tools/build_dos_asset_review_pngs.py`
+- new smoke:
+  - `tools/tests/test_dos_asset_review_pngs.py`
+- generated local artifacts:
+  - `tools/out/dos_asset_review_pngs.json`
+  - `tools/out/dos_asset_review_pngs/dos_asset_review_overview.png`
+  - `tools/out/dos_asset_review_pngs/dos_asset_review_gallery.html`
+  - `tools/out/dos_asset_review_pngs/coun_review_board.png`
+  - `tools/out/dos_asset_review_pngs/f40_review_board.png`
+  - `tools/out/dos_asset_review_pngs/lotu_review_board.png`
+  - `tools/out/dos_asset_review_pngs/p959_review_board.png`
+  - `tools/out/dos_asset_review_pngs/ross_review_board.png`
+  - `tools/out/dos_asset_review_pngs/ruf_review_board.png`
+  - `tools/out/dos_asset_review_pngs/vett_review_board.png`
+
+Findings / Interpretation
+- Design now has visible review boards without waiting for a packed decoder.
+- The boards make three current directions legible at a glance:
+  - `.SS` token families
+  - `*ST.PES/*ST.PCS` size geometry
+  - 1-page / 3-page / 4-page packed probe classes
+- The boards are intentionally not renderer claims. They are proof boards for
+  direction review.
+
+What I learned (actionable)
+- A contract-first visual board is already enough for design review and keeps
+  the engineering boundary honest.
+- The next decoder step should still target front-page and tail-fragment
+  structure, not broad image synthesis.
+
+Next steps / Checkpoints
+1) Recover structure inside one `three_page_stream` and one
+   `four_page_tail_stream` asset.
+2) If a stable substructure appears, add a second review artifact that shows
+   decoded regions only where evidence is direct.
+
+Files updated in this turn
+- `tools/build_dos_asset_review_pngs.py`
+- `tools/tests/test_dos_asset_review_pngs.py`
+- `docs/dos_packed_probe_contract.md`
+- `docs/dos_engine_porting.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `validation/README.md`
+
+Next reading
+- `tools/out/dos_asset_review_pngs/dos_asset_review_gallery.html`
+- `tools/out/dos_asset_review_pngs/dos_asset_review_overview.png`
+- `docs/dos_packed_probe_contract.md`
+
+Date: 2026-04-09
+
+Summary
 - Promoted the packed preview lane from “measured host probe examples” to a
   decoder-facing page/segment contract.
 - Added a bounded probe-class builder for `*ST.PES` so future engine work can
