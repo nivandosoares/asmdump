@@ -62,6 +62,11 @@ whole compressed image format.”
   - `tools/out/dos_frontpage_contract.json`
   - `tools/out/dos_frontpage_contract.md`
   - [docs/dos_next_agent_handoff.md](/home/nivando-soares/asmdump/docs/dos_next_agent_handoff.md)
+- tail-continuity field map:
+  - `tools/build_dos_tail_probe_contract.py`
+  - `tools/out/dos_tail_probe_contract.json`
+  - `tools/out/dos_tail_probe_contract.md`
+  - [docs/dos_tail_probe_contract.md](/home/nivando-soares/asmdump/docs/dos_tail_probe_contract.md)
 
 ## Run it
 
@@ -84,6 +89,12 @@ python3 tools/build_dos_frontpage_contract.py \
   --data-dir ../Downloads/testdrive2 \
   --json-out tools/out/dos_frontpage_contract.json \
   --markdown-out tools/out/dos_frontpage_contract.md
+
+python3 tools/build_dos_tail_probe_contract.py \
+  --preview-manifest tools/out/dos_preview_manifest.json \
+  --data-dir ../Downloads/testdrive2 \
+  --json-out tools/out/dos_tail_probe_contract.json \
+  --markdown-out tools/out/dos_tail_probe_contract.md
 ```
 
 ## Design read
@@ -96,3 +107,11 @@ The PNG boards are intentionally conservative:
 - evidence grades
 
 They do not claim decoded DOS preview art yet.
+
+The new tail contract also keeps the next decoder step honest:
+
+- `P959ST.PES` vs `ROSSST.PES` stays the controlled pair
+- current four-page tails do not share a common opening prefix
+- same-file tail continuity currently beats cross-file tail similarity
+- practical read: treat the tail as continued packed payload until a repeated
+  footer/table structure is directly proven

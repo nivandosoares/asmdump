@@ -44,6 +44,10 @@ DOS-side validation note:
   over the first `64` bytes of `*ST.PES`:
   - `tools/out/dos_frontpage_contract.json`
   - `tools/out/dos_frontpage_contract.md`
+- `tools/build_dos_tail_probe_contract.py` emits the current bounded
+  tail-continuity contract for four-page `*ST.PES` assets:
+  - `tools/out/dos_tail_probe_contract.json`
+  - `tools/out/dos_tail_probe_contract.md`
 - cheap DOS smoke on this host:
 
 ```sh
@@ -105,6 +109,12 @@ python3 tools/build_dos_frontpage_contract.py \
   --data-dir ../Downloads/testdrive2 \
   --json-out tools/out/dos_frontpage_contract.json \
   --markdown-out tools/out/dos_frontpage_contract.md
+
+python3 tools/build_dos_tail_probe_contract.py \
+  --preview-manifest tools/out/dos_preview_manifest.json \
+  --data-dir ../Downloads/testdrive2 \
+  --json-out tools/out/dos_tail_probe_contract.json \
+  --markdown-out tools/out/dos_tail_probe_contract.md
 ```
 
 Current asset:

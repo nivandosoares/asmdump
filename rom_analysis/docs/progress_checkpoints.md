@@ -599,6 +599,67 @@ Next reading
 
 
 
+
+- Added a bounded tail-continuity contract for the DOS `*ST.PES` lane.
+- Kept the new claim narrow: the current four-page tail looks more like
+  continued asset-specific packed payload than a shared footer family.
+
+What I ran
+- bounded tail reads over `../Downloads/testdrive2/*ST.PES`
+- bounded validation:
+  - `python3 -m py_compile tools/build_dos_tail_probe_contract.py tools/tests/test_dos_tail_probe_contract.py`
+  - `python3 tools/build_dos_tail_probe_contract.py --preview-manifest tools/out/dos_preview_manifest.json --data-dir ../Downloads/testdrive2 --json-out tools/out/dos_tail_probe_contract.json --markdown-out tools/out/dos_tail_probe_contract.md`
+  - `python3 tools/tests/test_dos_tail_probe_contract.py`
+
+Artifacts
+- new tail-contract builder:
+  - `tools/build_dos_tail_probe_contract.py`
+- new smoke:
+  - `tools/tests/test_dos_tail_probe_contract.py`
+- new contract note:
+  - `docs/dos_tail_probe_contract.md`
+- generated local artifacts:
+  - `tools/out/dos_tail_probe_contract.json`
+  - `tools/out/dos_tail_probe_contract.md`
+
+Findings / Interpretation
+- `P959ST.PES` and `ROSSST.PES` remain the best bounded comparison pair:
+  same visible layout family, different page class.
+- The current four-page tail starts do not share a common prefix.
+- For `VETT`, `ROSS`, and `COUN`, tail histogram similarity is stronger
+  against that same asset's preceding page than against another asset's tail.
+
+What I learned (actionable)
+- The next decoder pass should treat the early four-page tail as continued
+  asset-specific packed data until a repeated footer/table structure is
+  directly proven.
+- The next bounded target is now one early-tail subregion, not a broad
+  whole-tail decode claim.
+
+Next steps / Checkpoints
+1) Recover one directly proven early-tail subregion inside `ROSSST.PES`.
+2) Compare that same subregion shape against `COUNST.PES` and `VETTST.PES`.
+3) Only promote a footer/table interpretation if the repeated structure is
+   explicit.
+
+Files updated in this turn
+- `tools/build_dos_tail_probe_contract.py`
+- `tools/tests/test_dos_tail_probe_contract.py`
+- `docs/dos_tail_probe_contract.md`
+- `docs/dos_packed_probe_contract.md`
+- `docs/dos_next_agent_handoff.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `validation/README.md`
+
+Next reading
+- `docs/dos_tail_probe_contract.md`
+- `tools/out/dos_tail_probe_contract.md`
+- `docs/dos_next_agent_handoff.md`
+
+Date: 2026-04-09
+
+Summary
 - Promoted the first bounded field map for the `*ST.PES` front page.
 - Wrote an explicit DOS next-agent handoff so the next resume point is tied to
   real artifacts, current commits, and the known worktree hazards.

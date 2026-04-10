@@ -3,6 +3,29 @@
 This roadmap is the direct follow-up after enabling Mesen design packs with
 decoded tilemaps and sprite visibility metadata.
 
+## DOS Tail Continuity Checkpoint (`2026-04-09`)
+
+- Added a bounded tail-continuity contract for four-page DOS preview assets:
+  - `tools/build_dos_tail_probe_contract.py`
+  - `tools/tests/test_dos_tail_probe_contract.py`
+  - generated artifacts:
+    - `tools/out/dos_tail_probe_contract.json`
+    - `tools/out/dos_tail_probe_contract.md`
+- Current practical read:
+  - `P959ST.PES` and `ROSSST.PES` remain the best controlled pair because
+    they keep the same visible layout family while changing page class
+  - the current four-page tail starts do not share a common opening prefix
+  - for all promoted four-page assets, tail histogram similarity is higher
+    against that same asset's preceding page than against another asset's tail
+  - practical consequence:
+    the post-`12288` fragment should currently be treated as continued
+    asset-specific packed data, not as a promoted shared footer/table family
+- Next gate:
+  - recover one directly proven early-tail subregion whose rules continue from
+    the preceding page
+  - only promote footer/table structure if a repeated cross-asset pattern
+    appears inside `ROSSST.PES`, `COUNST.PES`, and `VETTST.PES`
+
 ## DOS Contract Pivot (`2026-04-09`)
 
 - The active interpretation lane now gives priority to DOS-visible contracts
@@ -16,12 +39,14 @@ decoded tilemaps and sprite visibility metadata.
   - `tools/build_dos_preview_codepath.py`
   - `tools/build_dos_packed_asset_manifest.py`
   - `tools/build_dos_packed_probe_contract.py`
+  - `tools/build_dos_tail_probe_contract.py`
   - `tools/build_dos_asset_review_pngs.py`
   - `tools/build_dos_frontpage_contract.py`
   - `docs/dos_version_contracts.md`
   - `docs/dos_engine_porting.md`
   - `docs/dos_preview_codepath.md`
   - `docs/dos_packed_probe_contract.md`
+  - `docs/dos_tail_probe_contract.md`
   - `docs/dos_next_agent_handoff.md`
   - `rom_analysis/docs/dos_contract_model.jsonc`
   - `rom_analysis/docs/dos_engine_contracts.jsonc`
@@ -46,6 +71,8 @@ decoded tilemaps and sprite visibility metadata.
     - `tools/out/dos_asset_review_pngs/dos_asset_review_gallery.html`
     - `tools/out/dos_frontpage_contract.json`
     - `tools/out/dos_frontpage_contract.md`
+    - `tools/out/dos_tail_probe_contract.json`
+    - `tools/out/dos_tail_probe_contract.md`
 - Current practical read:
   - DOS now has a first class in-repo contract source instead of only being
     referenced indirectly from SNES-correlation prose
@@ -63,12 +90,15 @@ decoded tilemaps and sprite visibility metadata.
     overclaiming a decoded preview renderer
   - the first `64` bytes of `*ST.PES` now also have a bounded field map with
     stable offsets and candidate structured windows
+  - the four-page tail path now also has a bounded continuity contract:
+    current evidence favors continued asset-specific packed payload over a
+    shared footer/table family
 - Next gate:
   - keep building the future engine around DOS catalogs and state first
   - only then decode packed asset rendering on top of that stabilized model
   - use the new front-page field map plus the page/segment contract to recover
-    the first real packed decoder boundary inside the front page and tail
-    fragment of `*ST.PES`
+    the first real packed decoder boundary inside the front page and early
+    tail fragment of `*ST.PES`
     before writing a renderer that would lock in the wrong abstractions
 
 ## Strategy Reset (`2026-04-01`)

@@ -36,6 +36,8 @@ Use these generated artifacts first:
 
 - `tools/out/dos_frontpage_contract.json`
 - `tools/out/dos_frontpage_contract.md`
+- `tools/out/dos_tail_probe_contract.json`
+- `tools/out/dos_tail_probe_contract.md`
 - `tools/out/dos_packed_probe_contract.json`
 - `tools/out/dos_asset_review_pngs/dos_asset_review_gallery.html`
 
@@ -56,6 +58,11 @@ Practical current split:
   the current car set
 - `ROSSST.PES`, `COUNST.PES`, and `VETTST.PES` are the current four-page tail
   class and should be treated as the best next tail-fragment targets
+- `P959ST.PES` and `ROSSST.PES` remain the best bounded cross-class pair:
+  same visible layout family, different page class
+- current four-page tail starts do not share a common prefix, and their
+  histogram similarity stays closer to their own preceding page than to
+  another asset's tail
 
 ## Recommended next experiments
 
@@ -64,17 +71,20 @@ Practical current split:
    - recommended pair:
      - `P959ST.PES`
      - `ROSSST.PES`
-3. Test whether the tail fragment after `12288` looks like:
-   - a footer/table
-   - or a continued packed stream
-4. Only add decoded visual boards when the decoded region is directly proven.
+3. Use the new tail contract to test whether one early four-page tail window
+   continues the same token/bitstream rules as the preceding page.
+4. Only promote a footer/table interpretation if a repeated structure appears
+   across `ROSSST.PES`, `COUNST.PES`, and `VETTST.PES`.
+5. Only add decoded visual boards when the decoded region is directly proven.
 
 ## Files and tools to use first
 
 - `tools/build_dos_frontpage_contract.py`
+- `tools/build_dos_tail_probe_contract.py`
 - `tools/build_dos_packed_probe_contract.py`
 - `tools/build_dos_asset_review_pngs.py`
 - `docs/dos_packed_probe_contract.md`
+- `docs/dos_tail_probe_contract.md`
 - `docs/dos_preview_codepath.md`
 - `docs/dos_engine_porting.md`
 
@@ -94,6 +104,14 @@ python3 tools/build_dos_frontpage_contract.py \
   --markdown-out tools/out/dos_frontpage_contract.md
 
 python3 tools/tests/test_dos_frontpage_contract.py
+
+python3 tools/build_dos_tail_probe_contract.py \
+  --preview-manifest tools/out/dos_preview_manifest.json \
+  --data-dir ../Downloads/testdrive2 \
+  --json-out tools/out/dos_tail_probe_contract.json \
+  --markdown-out tools/out/dos_tail_probe_contract.md
+
+python3 tools/tests/test_dos_tail_probe_contract.py
 ```
 
 ## Worktree warning
