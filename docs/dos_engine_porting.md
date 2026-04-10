@@ -97,6 +97,11 @@ Current bootstrap from `SELECT.DAT`:
   - `tools/build_dos_asset_review_pngs.py`
   - `tools/out/dos_asset_review_pngs/dos_asset_review_overview.png`
   - `tools/out/dos_asset_review_pngs/dos_asset_review_gallery.html`
+- front-page field map:
+  - `tools/build_dos_frontpage_contract.py`
+  - `tools/out/dos_frontpage_contract.json`
+  - `tools/out/dos_frontpage_contract.md`
+  - [docs/dos_next_agent_handoff.md](/home/nivando-soares/asmdump/docs/dos_next_agent_handoff.md)
 
 ## Run it
 
@@ -137,6 +142,12 @@ python3 tools/build_dos_asset_review_pngs.py \
   --probe-contract tools/out/dos_packed_probe_contract.json \
   --out-dir tools/out/dos_asset_review_pngs \
   --json-out tools/out/dos_asset_review_pngs.json
+
+python3 tools/build_dos_frontpage_contract.py \
+  --preview-manifest tools/out/dos_preview_manifest.json \
+  --data-dir ../Downloads/testdrive2 \
+  --json-out tools/out/dos_frontpage_contract.json \
+  --markdown-out tools/out/dos_frontpage_contract.md
 ```
 
 ## Boundary

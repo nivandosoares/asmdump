@@ -17,10 +17,12 @@ decoded tilemaps and sprite visibility metadata.
   - `tools/build_dos_packed_asset_manifest.py`
   - `tools/build_dos_packed_probe_contract.py`
   - `tools/build_dos_asset_review_pngs.py`
+  - `tools/build_dos_frontpage_contract.py`
   - `docs/dos_version_contracts.md`
   - `docs/dos_engine_porting.md`
   - `docs/dos_preview_codepath.md`
   - `docs/dos_packed_probe_contract.md`
+  - `docs/dos_next_agent_handoff.md`
   - `rom_analysis/docs/dos_contract_model.jsonc`
   - `rom_analysis/docs/dos_engine_contracts.jsonc`
   - generated local artifacts:
@@ -42,6 +44,8 @@ decoded tilemaps and sprite visibility metadata.
     - `tools/out/dos_asset_review_pngs.json`
     - `tools/out/dos_asset_review_pngs/dos_asset_review_overview.png`
     - `tools/out/dos_asset_review_pngs/dos_asset_review_gallery.html`
+    - `tools/out/dos_frontpage_contract.json`
+    - `tools/out/dos_frontpage_contract.md`
 - Current practical read:
   - DOS now has a first class in-repo contract source instead of only being
     referenced indirectly from SNES-correlation prose
@@ -57,11 +61,14 @@ decoded tilemaps and sprite visibility metadata.
     `12 KB` tail boundary
   - design now also has visible PNG boards from the current contracts without
     overclaiming a decoded preview renderer
+  - the first `64` bytes of `*ST.PES` now also have a bounded field map with
+    stable offsets and candidate structured windows
 - Next gate:
   - keep building the future engine around DOS catalogs and state first
   - only then decode packed asset rendering on top of that stabilized model
-  - use the new page/segment contract to recover the first real packed
-    decoder boundary inside the front page and tail fragment of `*ST.PES`
+  - use the new front-page field map plus the page/segment contract to recover
+    the first real packed decoder boundary inside the front page and tail
+    fragment of `*ST.PES`
     before writing a renderer that would lock in the wrong abstractions
 
 ## Strategy Reset (`2026-04-01`)

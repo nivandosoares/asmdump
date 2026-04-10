@@ -598,6 +598,74 @@ Next reading
 
 
 
+
+- Promoted the first bounded field map for the `*ST.PES` front page.
+- Wrote an explicit DOS next-agent handoff so the next resume point is tied to
+  real artifacts, current commits, and the known worktree hazards.
+
+What I ran
+- bounded front-page reads:
+  - offset-variance scans over the first `64` bytes of `../Downloads/testdrive2/*ST.PES`
+  - candidate field comparisons against `tools/out/dos_preview_manifest.json`
+- bounded validation:
+  - `python3 -m py_compile tools/build_dos_frontpage_contract.py tools/tests/test_dos_frontpage_contract.py`
+  - `python3 tools/build_dos_frontpage_contract.py --preview-manifest tools/out/dos_preview_manifest.json --data-dir ../Downloads/testdrive2 --json-out tools/out/dos_frontpage_contract.json --markdown-out tools/out/dos_frontpage_contract.md`
+  - `python3 tools/tests/test_dos_frontpage_contract.py`
+
+Artifacts
+- new front-page contract builder:
+  - `tools/build_dos_frontpage_contract.py`
+- new smoke:
+  - `tools/tests/test_dos_frontpage_contract.py`
+- new handoff note:
+  - `docs/dos_next_agent_handoff.md`
+- generated local artifacts:
+  - `tools/out/dos_frontpage_contract.json`
+  - `tools/out/dos_frontpage_contract.md`
+
+Findings / Interpretation
+- The first `64` bytes now look like structured header territory, not just
+  compressed payload:
+  - byte `0` stays at `0x82`
+  - bytes `9` and `10` stay `0`
+  - bytes `11/12/13` stay in small bounded sets
+  - bytes `16..21` vary per asset in a way that still looks field-like
+- `P959ST.PES` and `F40ST.PES` currently share the strongest front-page
+  similarity inside the car-preview set.
+- `ROSSST.PES`, `COUNST.PES`, and `VETTST.PES` remain the strongest current
+  four-page tail targets.
+
+What I learned (actionable)
+- The next decoder pass should compare `P959ST.PES` against `ROSSST.PES` first:
+  one three-page stream and one four-page tail stream.
+- The handoff now has enough exact artifact paths and worktree warnings that a
+  new agent can resume without reconstructing repo state first.
+
+Next steps / Checkpoints
+1) Recover whether bytes `11/12/13` behave like format/class flags or layout
+   selectors.
+2) Recover whether the post-`12288` fragment is footer-like or a continued
+   packed stream.
+3) Only promote decoded visual output when a subregion is directly proven.
+
+Files updated in this turn
+- `tools/build_dos_frontpage_contract.py`
+- `tools/tests/test_dos_frontpage_contract.py`
+- `docs/dos_next_agent_handoff.md`
+- `docs/dos_packed_probe_contract.md`
+- `docs/dos_engine_porting.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `validation/README.md`
+
+Next reading
+- `docs/dos_next_agent_handoff.md`
+- `tools/out/dos_frontpage_contract.md`
+- `tools/out/dos_asset_review_pngs/dos_asset_review_gallery.html`
+
+Date: 2026-04-09
+
+Summary
 - Added visible PNG review artifacts for the DOS preview/materializer lane.
 - Kept them contract-backed on purpose: layout tokens, packed geometry, page
   classes, and evidence grades, not fake decoded car art.
