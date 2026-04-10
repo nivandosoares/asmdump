@@ -72,6 +72,14 @@ image decoder underneath it.
   - writes:
     - `tools/out/dos_packed_asset_manifest.json`
     - `tools/out/dos_packed_asset_manifest.md`
+- `tools/build_dos_packed_probe_contract.py`
+  - promotes page classes and the first decoder-facing read plan over
+    `*ST.PES`
+  - writes:
+    - `tools/out/dos_packed_probe_contract.json`
+    - `tools/out/dos_packed_probe_contract.md`
+  - note:
+    - [docs/dos_packed_probe_contract.md](/home/nivando-soares/asmdump/docs/dos_packed_probe_contract.md)
 
 ## Run it
 
@@ -90,4 +98,11 @@ python3 tools/build_dos_packed_asset_manifest.py \
   --data-dir ../Downloads/testdrive2 \
   --json-out tools/out/dos_packed_asset_manifest.json \
   --markdown-out tools/out/dos_packed_asset_manifest.md
+
+python3 tools/build_dos_packed_probe_contract.py \
+  --preview-manifest tools/out/dos_preview_manifest.json \
+  --host-io ../Downloads/testdrive2/host_io_measurements.json \
+  --data-dir ../Downloads/testdrive2 \
+  --json-out tools/out/dos_packed_probe_contract.json \
+  --markdown-out tools/out/dos_packed_probe_contract.md
 ```

@@ -596,6 +596,92 @@ Next reading
 - `docs/dev_team_handoff.md`
 - `rom_analysis/docs/snes_runtime_algorithm_human.md`
 
+
+- Promoted the packed preview lane from “measured host probe examples” to a
+  decoder-facing page/segment contract.
+- Added a bounded probe-class builder for `*ST.PES` so future engine work can
+  target file geometry and read phases before committing to a pixel decoder.
+
+What I ran
+- source-of-truth recovery:
+  - `sed -n '1,220p' PORT_PLAN.md`
+  - `sed -n '1,220p' rom_analysis/docs/next_steps_roadmap.md`
+  - `sed -n '1,220p' rom_analysis/docs/progress_checkpoints.md`
+  - `sed -n '1,220p' rom_analysis/docs/validation_gates.md`
+  - `sed -n '1,220p' validation/README.md`
+- bounded DOS geometry reads:
+  - page-count and tail-size scans over `../Downloads/testdrive2/*ST.PES`
+  - page-count scans over `../Downloads/testdrive2/*ST.PCS`
+  - bounded entropy samples at offsets `0/4096/8192/12288`
+- bounded validation:
+  - `python3 -m py_compile tools/build_dos_packed_probe_contract.py tools/tests/test_dos_packed_probe_contract.py`
+  - `python3 tools/build_dos_packed_probe_contract.py --preview-manifest tools/out/dos_preview_manifest.json --host-io ../Downloads/testdrive2/host_io_measurements.json --data-dir ../Downloads/testdrive2 --json-out tools/out/dos_packed_probe_contract.json --markdown-out tools/out/dos_packed_probe_contract.md`
+  - `python3 tools/tests/test_dos_packed_probe_contract.py`
+
+Artifacts
+- new packed probe builder:
+  - `tools/build_dos_packed_probe_contract.py`
+- new smoke:
+  - `tools/tests/test_dos_packed_probe_contract.py`
+- new contract note:
+  - `docs/dos_packed_probe_contract.md`
+- new generated artifacts:
+  - `tools/out/dos_packed_probe_contract.json`
+  - `tools/out/dos_packed_probe_contract.md`
+
+Findings / Interpretation
+- The current `*ST.PES` assets split cleanly into practical page classes:
+  - `single_page_stream`: `TDS2DEST.PES`
+  - `three_page_stream`: `F40ST.PES`, `LOTUST.PES`, `P959ST.PES`, `RUFST.PES`
+  - `four_page_tail_stream`: `COUNST.PES`, `ROSSST.PES`, `VETTST.PES`
+- The measured `ROSSST.PES` host trace now promotes one concrete generalized
+  loader boundary:
+  - front probe
+  - optional tail segment at `12288`
+  - full reread before decode
+- That boundary is now geometry-backed, not just string-backed:
+  - `ROSSST.PES` tail bytes: `810`
+  - `COUNST.PES` tail bytes: `1524`
+  - `VETTST.PES` tail bytes: `191`
+- Practical consequence:
+  - the next decoder experiment should target front-page and tail-fragment
+    structure first
+  - it should not start by assuming a monolithic whole-file image format API
+
+What I learned (actionable)
+- The packed preview lane now has a stable read API candidate:
+  front page, optional `12 KB` tail fragment, then full asset reread.
+- File geometry is already strong enough to separate future decoder work into
+  one-page, three-page, and four-page cases without overclaiming the format.
+- `PCS` remains useful as paired geometry context, but `PES` is still the
+  stronger promoted ownership path for preview loading.
+
+Next steps / Checkpoints
+1) Recover structure inside the promoted front-page region for one
+   `three_page_stream` and one `four_page_tail_stream` asset.
+2) Test whether the post-`12288` tail fragment behaves like a table/footer or
+   a continued packed stream.
+3) Keep the future engine API centered on bundle materialization and staged
+   reads, not direct full-file decode assumptions.
+
+Files updated in this turn
+- `tools/build_dos_packed_probe_contract.py`
+- `tools/tests/test_dos_packed_probe_contract.py`
+- `docs/dos_packed_probe_contract.md`
+- `docs/dos_engine_porting.md`
+- `docs/dos_preview_codepath.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `validation/README.md`
+
+Next reading
+- `docs/dos_packed_probe_contract.md`
+- `tools/out/dos_packed_probe_contract.md`
+- `tools/build_dos_packed_probe_contract.py`
+
+Date: 2026-04-09
+
+Summary
 - Reframed the DOS lane one level lower around future engine work instead of
   pushing immediately into packed-asset rendering.
 - Promoted the first repo-owned DOS contract lane instead of keeping DOS as an

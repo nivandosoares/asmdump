@@ -15,9 +15,11 @@ decoded tilemaps and sprite visibility metadata.
   - `tools/build_dos_preview_manifest.py`
   - `tools/build_dos_preview_codepath.py`
   - `tools/build_dos_packed_asset_manifest.py`
+  - `tools/build_dos_packed_probe_contract.py`
   - `docs/dos_version_contracts.md`
   - `docs/dos_engine_porting.md`
   - `docs/dos_preview_codepath.md`
+  - `docs/dos_packed_probe_contract.md`
   - `rom_analysis/docs/dos_contract_model.jsonc`
   - `rom_analysis/docs/dos_engine_contracts.jsonc`
   - generated local artifacts:
@@ -34,6 +36,8 @@ decoded tilemaps and sprite visibility metadata.
     - `tools/out/dos_preview_codepath.md`
     - `tools/out/dos_packed_asset_manifest.json`
     - `tools/out/dos_packed_asset_manifest.md`
+    - `tools/out/dos_packed_probe_contract.json`
+    - `tools/out/dos_packed_probe_contract.md`
 - Current practical read:
   - DOS now has a first class in-repo contract source instead of only being
     referenced indirectly from SNES-correlation prose
@@ -44,12 +48,15 @@ decoded tilemaps and sprite visibility metadata.
   - the first runnable DOS-port surface is still a minimal contract-driven
     frontend model, but the new preferred abstraction layer is engine-first:
     catalogs, selector state, preview materialization, and play-session gate
+  - the packed preview lane now also has a page/segment contract:
+    1-page, 3-page, and 4-page `*ST.PES` classes with the first promoted
+    `12 KB` tail boundary
 - Next gate:
   - keep building the future engine around DOS catalogs and state first
   - only then decode packed asset rendering on top of that stabilized model
-  - decode the measured packed-asset probe grammar behind the now-promoted
-    preview codepath contract before writing a renderer that would lock in the
-    wrong abstractions
+  - use the new page/segment contract to recover the first real packed
+    decoder boundary inside the front page and tail fragment of `*ST.PES`
+    before writing a renderer that would lock in the wrong abstractions
 
 ## Strategy Reset (`2026-04-01`)
 

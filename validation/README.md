@@ -31,6 +31,10 @@ DOS-side validation note:
   asset registry:
   - `tools/out/dos_packed_asset_manifest.json`
   - `tools/out/dos_packed_asset_manifest.md`
+- `tools/build_dos_packed_probe_contract.py` emits the first decoder-facing
+  page/segment contract over `*ST.PES`:
+  - `tools/out/dos_packed_probe_contract.json`
+  - `tools/out/dos_packed_probe_contract.md`
 - cheap DOS smoke on this host:
 
 ```sh
@@ -73,6 +77,13 @@ python3 tools/build_dos_packed_asset_manifest.py \
   --data-dir ../Downloads/testdrive2 \
   --json-out tools/out/dos_packed_asset_manifest.json \
   --markdown-out tools/out/dos_packed_asset_manifest.md
+
+python3 tools/build_dos_packed_probe_contract.py \
+  --preview-manifest tools/out/dos_preview_manifest.json \
+  --host-io ../Downloads/testdrive2/host_io_measurements.json \
+  --data-dir ../Downloads/testdrive2 \
+  --json-out tools/out/dos_packed_probe_contract.json \
+  --markdown-out tools/out/dos_packed_probe_contract.md
 ```
 
 Current asset:
