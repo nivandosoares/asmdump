@@ -67,6 +67,11 @@ whole compressed image format.”
   - `tools/out/dos_tail_probe_contract.json`
   - `tools/out/dos_tail_probe_contract.md`
   - [docs/dos_tail_probe_contract.md](/home/nivando-soares/asmdump/docs/dos_tail_probe_contract.md)
+- decoder-boundary field map:
+  - `tools/build_dos_decoder_boundary_contract.py`
+  - `tools/out/dos_decoder_boundary_contract.json`
+  - `tools/out/dos_decoder_boundary_contract.md`
+  - [docs/dos_decoder_boundary_contract.md](/home/nivando-soares/asmdump/docs/dos_decoder_boundary_contract.md)
 
 ## Run it
 
@@ -95,6 +100,12 @@ python3 tools/build_dos_tail_probe_contract.py \
   --data-dir ../Downloads/testdrive2 \
   --json-out tools/out/dos_tail_probe_contract.json \
   --markdown-out tools/out/dos_tail_probe_contract.md
+
+python3 tools/build_dos_decoder_boundary_contract.py \
+  --preview-manifest tools/out/dos_preview_manifest.json \
+  --data-dir ../Downloads/testdrive2 \
+  --json-out tools/out/dos_decoder_boundary_contract.json \
+  --markdown-out tools/out/dos_decoder_boundary_contract.md
 ```
 
 ## Design read
@@ -115,3 +126,11 @@ The new tail contract also keeps the next decoder step honest:
 - same-file tail continuity currently beats cross-file tail similarity
 - practical read: treat the tail as continued packed payload until a repeated
   footer/table structure is directly proven
+
+The new decoder-boundary contract narrows the front/tail split further:
+
+- current front pages carry long increasing-run bands inside the first `256`
+  bytes
+- current four-page tail starts do not carry that same table-like pattern
+- practical read: isolate front-page structured windows first and keep the
+  early tail in the stream-continuation lane

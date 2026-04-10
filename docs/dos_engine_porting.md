@@ -102,6 +102,11 @@ Current bootstrap from `SELECT.DAT`:
   - `tools/out/dos_frontpage_contract.json`
   - `tools/out/dos_frontpage_contract.md`
   - [docs/dos_next_agent_handoff.md](/home/nivando-soares/asmdump/docs/dos_next_agent_handoff.md)
+- decoder-boundary field map:
+  - `tools/build_dos_decoder_boundary_contract.py`
+  - `tools/out/dos_decoder_boundary_contract.json`
+  - `tools/out/dos_decoder_boundary_contract.md`
+  - [docs/dos_decoder_boundary_contract.md](/home/nivando-soares/asmdump/docs/dos_decoder_boundary_contract.md)
 
 ## Run it
 

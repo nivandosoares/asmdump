@@ -26,6 +26,41 @@ decoded tilemaps and sprite visibility metadata.
   - only promote footer/table structure if a repeated cross-asset pattern
     appears inside `ROSSST.PES`, `COUNST.PES`, and `VETTST.PES`
 
+## DOS Decoder Boundary Checkpoint (`2026-04-10`)
+
+- Added a bounded decoder-boundary contract over the first `256` bytes of the
+  front page and the earliest four-page tail window:
+  - `tools/build_dos_decoder_boundary_contract.py`
+  - `tools/tests/test_dos_decoder_boundary_contract.py`
+  - generated artifacts:
+    - `tools/out/dos_decoder_boundary_contract.json`
+    - `tools/out/dos_decoder_boundary_contract.md`
+- Current practical read:
+  - every promoted car-preview `*ST.PES` front page now shows long strictly
+    increasing runs in the first `256` bytes, with longest runs from `56` to
+    `68`
+  - those front-page bands begin in the same practical offset family:
+    roughly `27..30` for most current assets
+  - the first `256` bytes of the promoted four-page tails do not preserve
+    that table-like pattern:
+    - `ROSS`: longest run `5`
+    - `COUN`: longest run `4`
+    - `VETT`: longest run `4`
+  - the immediate pre-tail boundary window stays similarly stream-like:
+    - `ROSS`: `6`
+    - `COUN`: `5`
+    - `VETT`: `6`
+  - practical consequence:
+    the next decoder pass should isolate one front-page increasing-run band as
+    a structured lookup/table candidate while keeping the early four-page tail
+    in the stream-continuation lane
+- Next gate:
+  - recover one directly proven front-page increasing-run band and test
+    whether it behaves like a true lookup/table family across
+    `P959ST.PES` and `ROSSST.PES`
+  - only revisit footer/reset ideas for the four-page tail if a repeated
+    marker appears after that front-page boundary work
+
 ## DOS Contract Pivot (`2026-04-09`)
 
 - The active interpretation lane now gives priority to DOS-visible contracts

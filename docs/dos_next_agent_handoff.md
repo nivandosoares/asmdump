@@ -36,6 +36,8 @@ Use these generated artifacts first:
 
 - `tools/out/dos_frontpage_contract.json`
 - `tools/out/dos_frontpage_contract.md`
+- `tools/out/dos_decoder_boundary_contract.json`
+- `tools/out/dos_decoder_boundary_contract.md`
 - `tools/out/dos_tail_probe_contract.json`
 - `tools/out/dos_tail_probe_contract.md`
 - `tools/out/dos_packed_probe_contract.json`
@@ -51,6 +53,16 @@ Current bounded front-page read:
 - bytes `11/12/13` stay in a tiny range and likely belong to a structured
   header family rather than compressed payload noise
 - bytes `16..21` vary per asset in a way that still looks field-like
+- the first `256` bytes also carry long strictly increasing bands across all
+  promoted car-preview assets, with longest runs from `56` to `67`
+- the four-page tail start does not carry that same pattern:
+  - `ROSS`: longest run `5`
+  - `COUN`: longest run `4`
+  - `VETT`: longest run `4`
+- the immediate pre-tail boundary stays similarly stream-like:
+  - `ROSS`: longest run `6`
+  - `COUN`: longest run `5`
+  - `VETT`: longest run `6`
 
 Practical current split:
 
@@ -81,9 +93,11 @@ Practical current split:
 
 - `tools/build_dos_frontpage_contract.py`
 - `tools/build_dos_tail_probe_contract.py`
+- `tools/build_dos_decoder_boundary_contract.py`
 - `tools/build_dos_packed_probe_contract.py`
 - `tools/build_dos_asset_review_pngs.py`
 - `docs/dos_packed_probe_contract.md`
+- `docs/dos_decoder_boundary_contract.md`
 - `docs/dos_tail_probe_contract.md`
 - `docs/dos_preview_codepath.md`
 - `docs/dos_engine_porting.md`
@@ -112,6 +126,14 @@ python3 tools/build_dos_tail_probe_contract.py \
   --markdown-out tools/out/dos_tail_probe_contract.md
 
 python3 tools/tests/test_dos_tail_probe_contract.py
+
+python3 tools/build_dos_decoder_boundary_contract.py \
+  --preview-manifest tools/out/dos_preview_manifest.json \
+  --data-dir ../Downloads/testdrive2 \
+  --json-out tools/out/dos_decoder_boundary_contract.json \
+  --markdown-out tools/out/dos_decoder_boundary_contract.md
+
+python3 tools/tests/test_dos_decoder_boundary_contract.py
 ```
 
 ## Worktree warning

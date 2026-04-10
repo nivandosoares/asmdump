@@ -48,6 +48,10 @@ DOS-side validation note:
   tail-continuity contract for four-page `*ST.PES` assets:
   - `tools/out/dos_tail_probe_contract.json`
   - `tools/out/dos_tail_probe_contract.md`
+- `tools/build_dos_decoder_boundary_contract.py` emits the current bounded
+  front-page versus early-tail decoder boundary contract for `*ST.PES`:
+  - `tools/out/dos_decoder_boundary_contract.json`
+  - `tools/out/dos_decoder_boundary_contract.md`
 - cheap DOS smoke on this host:
 
 ```sh
@@ -115,6 +119,12 @@ python3 tools/build_dos_tail_probe_contract.py \
   --data-dir ../Downloads/testdrive2 \
   --json-out tools/out/dos_tail_probe_contract.json \
   --markdown-out tools/out/dos_tail_probe_contract.md
+
+python3 tools/build_dos_decoder_boundary_contract.py \
+  --preview-manifest tools/out/dos_preview_manifest.json \
+  --data-dir ../Downloads/testdrive2 \
+  --json-out tools/out/dos_decoder_boundary_contract.json \
+  --markdown-out tools/out/dos_decoder_boundary_contract.md
 ```
 
 Current asset:

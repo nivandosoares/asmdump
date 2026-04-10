@@ -657,6 +657,85 @@ Next reading
 - `tools/out/dos_tail_probe_contract.md`
 - `docs/dos_next_agent_handoff.md`
 
+Date: 2026-04-10
+
+Summary
+- Added a bounded decoder-boundary contract for DOS `*ST.PES` assets.
+- Narrowed the next decoder target to one front-page increasing-run band
+  instead of treating the whole front page and tail as one undifferentiated
+  packed region.
+
+What I ran
+- bounded byte-pattern reads over `../Downloads/testdrive2/*ST.PES`
+- bounded validation:
+  - `python3 -m py_compile tools/build_dos_decoder_boundary_contract.py tools/tests/test_dos_decoder_boundary_contract.py`
+  - `python3 tools/build_dos_decoder_boundary_contract.py --preview-manifest tools/out/dos_preview_manifest.json --data-dir ../Downloads/testdrive2 --json-out tools/out/dos_decoder_boundary_contract.json --markdown-out tools/out/dos_decoder_boundary_contract.md`
+  - `python3 tools/tests/test_dos_decoder_boundary_contract.py`
+
+Artifacts
+- new decoder-boundary builder:
+  - `tools/build_dos_decoder_boundary_contract.py`
+- new smoke:
+  - `tools/tests/test_dos_decoder_boundary_contract.py`
+- new contract note:
+  - `docs/dos_decoder_boundary_contract.md`
+- generated local artifacts:
+  - `tools/out/dos_decoder_boundary_contract.json`
+  - `tools/out/dos_decoder_boundary_contract.md`
+
+Findings / Interpretation
+- Every promoted car-preview `*ST.PES` asset now shows long strictly
+  increasing runs in the first `256` bytes:
+  - `P959`: `64`
+  - `F40`: `65`
+  - `RUF`: `68`
+  - `LOTU`: `67`
+  - `ROSS`: `67`
+  - `COUN`: `56`
+  - `VETT`: `61`
+- Those front-page runs cluster in the same practical offset family, usually
+  beginning around `27..30`.
+- The first `256` bytes of the promoted four-page tails do not carry that
+  same pattern:
+  - `ROSS`: longest run `5`
+  - `COUN`: longest run `4`
+  - `VETT`: longest run `4`
+- The immediate pre-tail boundary window stays similarly stream-like:
+  - `ROSS`: `6`
+  - `COUN`: `5`
+  - `VETT`: `6`
+
+What I learned (actionable)
+- The front page now has a directly provable structured subregion candidate:
+  one of the increasing-run bands in the first `256` bytes.
+- The early four-page tail still looks like continued stream territory rather
+  than a front-page-style table reset, so footer-first decoder work should
+  stay deprioritized.
+
+Next steps / Checkpoints
+1) Isolate one front-page increasing-run band and test whether it behaves like
+   a true lookup/table family across `P959ST.PES` and `ROSSST.PES`.
+2) Recover where the shared front-page structure diverges between the
+   three-page and four-page variants.
+3) Keep the early four-page tail in the continuity-first lane unless a
+   repeated reset/footer marker appears.
+
+Files updated in this turn
+- `tools/build_dos_decoder_boundary_contract.py`
+- `tools/tests/test_dos_decoder_boundary_contract.py`
+- `docs/dos_decoder_boundary_contract.md`
+- `docs/dos_packed_probe_contract.md`
+- `docs/dos_engine_porting.md`
+- `docs/dos_next_agent_handoff.md`
+- `rom_analysis/docs/next_steps_roadmap.md`
+- `rom_analysis/docs/progress_checkpoints.md`
+- `validation/README.md`
+
+Next reading
+- `docs/dos_decoder_boundary_contract.md`
+- `tools/out/dos_decoder_boundary_contract.md`
+- `docs/dos_next_agent_handoff.md`
+
 Date: 2026-04-09
 
 Summary
