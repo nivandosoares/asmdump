@@ -613,6 +613,12 @@ Next reading
   exists.
 - Added a preview/materializer manifest so engine work can target the real
   `.SS + *ST.PES` bundle contract before implementing decode/render.
+- Added a concrete preview-codepath builder that promotes the handler chain,
+  bootstrap preview bundles, and measured host-side packed-asset probe grammar
+  into one contract artifact.
+- Added a packed preview-asset manifest so the next decoder step has stable
+  `*ST.PES/*ST.PCS` header and pair-comparison data instead of ad hoc hex
+  snippets.
 
 What I ran
 - source-of-truth recovery:
@@ -633,6 +639,8 @@ What I ran
   - `python3 tools/build_dos_engine_manifest.py ../Downloads/testdrive2 --json-out tools/out/dos_engine_manifest.json --markdown-out tools/out/dos_engine_manifest.md`
   - `python3 tools/build_dos_design_review.py --manifest-json tools/out/dos_engine_manifest.json --html-out tools/out/dos_design_review.html --markdown-out tools/out/dos_design_review.md`
   - `python3 tools/build_dos_preview_manifest.py --engine-manifest tools/out/dos_engine_manifest.json --contracts-json tools/out/dos_version_contracts.json --json-out tools/out/dos_preview_manifest.json --markdown-out tools/out/dos_preview_manifest.md`
+  - `python3 tools/build_dos_preview_codepath.py --engine-manifest tools/out/dos_engine_manifest.json --preview-manifest tools/out/dos_preview_manifest.json --runtime-trace ../Downloads/testdrive2/runtime_trace.json --host-io ../Downloads/testdrive2/host_io_measurements.json --json-out tools/out/dos_preview_codepath.json --markdown-out tools/out/dos_preview_codepath.md`
+  - `python3 tools/build_dos_packed_asset_manifest.py --preview-manifest tools/out/dos_preview_manifest.json --host-io ../Downloads/testdrive2/host_io_measurements.json --data-dir ../Downloads/testdrive2 --json-out tools/out/dos_packed_asset_manifest.json --markdown-out tools/out/dos_packed_asset_manifest.md`
   - direct Python assertion smoke over extractor output and replay output
 
 Artifacts
@@ -648,12 +656,18 @@ Artifacts
   - `tools/build_dos_design_review.py`
 - new DOS preview/materializer builder:
   - `tools/build_dos_preview_manifest.py`
+- new DOS preview codepath builder:
+  - `tools/build_dos_preview_codepath.py`
+- new DOS packed preview-asset builder:
+  - `tools/build_dos_packed_asset_manifest.py`
 - versioned engine-first DOS contract model:
   - `rom_analysis/docs/dos_engine_contracts.jsonc`
 - new DOS contract note:
   - `docs/dos_version_contracts.md`
 - new DOS engine porting note:
   - `docs/dos_engine_porting.md`
+- new DOS preview codepath note:
+  - `docs/dos_preview_codepath.md`
 - generated local artifacts:
   - `tools/out/dos_version_contracts.json`
   - `tools/out/dos_version_contracts.md`
@@ -664,6 +678,10 @@ Artifacts
   - `tools/out/dos_design_review.md`
   - `tools/out/dos_preview_manifest.json`
   - `tools/out/dos_preview_manifest.md`
+  - `tools/out/dos_preview_codepath.json`
+  - `tools/out/dos_preview_codepath.md`
+  - `tools/out/dos_packed_asset_manifest.json`
+  - `tools/out/dos_packed_asset_manifest.md`
 
 Findings / Interpretation
 - The shipped DOS build exposes cleaner contract surfaces than the current
@@ -690,6 +708,15 @@ Findings / Interpretation
   renderer step:
   same-stem `.SS` plus `*ST` packed assets, with token-family classification
   already separated into `window_only` vs `window_plus_face` layouts.
+- The preview codepath itself is now no longer just a prose hypothesis:
+  the repo has one concrete contract that binds
+  `0x57fb/0x5cf8 -> 0x4c15/0x4d4e -> 0x4e86`,
+  the bootstrap preview bundles, and the measured `ROSSST.PES`
+  front-probe/tail-seek/bulk-reread access pattern.
+- The packed preview assets are now also registry-backed:
+  all current `*ST.PES/*ST.PCS` pairs carry the shared `0x82` signature and
+  can be compared by size, first header words, and measured probe coverage
+  without reopening raw files by hand.
 - The live `CARS.DAT` and `SCENES.DAT` files now also make the platform split
   explicit enough to encode directly in the repo instead of forcing a false
   SNES-aligned roster assumption.
@@ -707,8 +734,8 @@ What I learned (actionable)
 Next steps / Checkpoints
 1) Keep the future engine centered on DOS catalogs and selector state before
    writing a packed-asset renderer.
-2) Identify the concrete DOS preview/materializer path behind `.SS + *ST.PES`
-   so the renderer sits on the right engine abstraction.
+2) Decode the packed-asset probe grammar behind the promoted preview codepath
+   contract instead of jumping straight to a flat image renderer.
 3) Expand the engine manifest with the active gameplay parameter consumers of
    `<ID>.BIN` and `<ID>O.BIN`, then promote gameplay-side runtime modules.
 
@@ -718,9 +745,12 @@ Files updated in this turn
 - `tools/build_dos_engine_manifest.py`
 - `tools/build_dos_design_review.py`
 - `tools/build_dos_preview_manifest.py`
+- `tools/build_dos_preview_codepath.py`
+- `tools/build_dos_packed_asset_manifest.py`
 - `tools/tests/test_dos_contracts.py`
 - `docs/dos_version_contracts.md`
 - `docs/dos_engine_porting.md`
+- `docs/dos_preview_codepath.md`
 - `rom_analysis/docs/dos_contract_model.jsonc`
 - `rom_analysis/docs/dos_engine_contracts.jsonc`
 - `rom_analysis/docs/next_steps_roadmap.md`
@@ -737,6 +767,8 @@ Next reading
 - `tools/build_dos_engine_manifest.py`
 - `tools/build_dos_design_review.py`
 - `tools/build_dos_preview_manifest.py`
+- `tools/build_dos_preview_codepath.py`
+- `tools/build_dos_packed_asset_manifest.py`
 
 Date: 2026-04-07
 

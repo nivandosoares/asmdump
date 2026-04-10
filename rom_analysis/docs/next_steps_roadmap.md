@@ -13,8 +13,11 @@ decoded tilemaps and sprite visibility metadata.
   - `tools/build_dos_engine_manifest.py`
   - `tools/build_dos_design_review.py`
   - `tools/build_dos_preview_manifest.py`
+  - `tools/build_dos_preview_codepath.py`
+  - `tools/build_dos_packed_asset_manifest.py`
   - `docs/dos_version_contracts.md`
   - `docs/dos_engine_porting.md`
+  - `docs/dos_preview_codepath.md`
   - `rom_analysis/docs/dos_contract_model.jsonc`
   - `rom_analysis/docs/dos_engine_contracts.jsonc`
   - generated local artifacts:
@@ -27,6 +30,10 @@ decoded tilemaps and sprite visibility metadata.
     - `tools/out/dos_design_review.md`
     - `tools/out/dos_preview_manifest.json`
     - `tools/out/dos_preview_manifest.md`
+    - `tools/out/dos_preview_codepath.json`
+    - `tools/out/dos_preview_codepath.md`
+    - `tools/out/dos_packed_asset_manifest.json`
+    - `tools/out/dos_packed_asset_manifest.md`
 - Current practical read:
   - DOS now has a first class in-repo contract source instead of only being
     referenced indirectly from SNES-correlation prose
@@ -40,8 +47,9 @@ decoded tilemaps and sprite visibility metadata.
 - Next gate:
   - keep building the future engine around DOS catalogs and state first
   - only then decode packed asset rendering on top of that stabilized model
-  - identify the exact DOS preview/materializer code path behind `.SS + *ST`
-    before writing a renderer that would lock in the wrong abstractions
+  - decode the measured packed-asset probe grammar behind the now-promoted
+    preview codepath contract before writing a renderer that would lock in the
+    wrong abstractions
 
 ## Strategy Reset (`2026-04-01`)
 

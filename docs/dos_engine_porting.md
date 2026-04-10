@@ -83,6 +83,11 @@ Current bootstrap from `SELECT.DAT`:
   - `tools/build_dos_preview_manifest.py`
   - `tools/out/dos_preview_manifest.json`
   - `tools/out/dos_preview_manifest.md`
+- preview codepath contract:
+  - `tools/build_dos_preview_codepath.py`
+  - `tools/out/dos_preview_codepath.json`
+  - `tools/out/dos_preview_codepath.md`
+  - [docs/dos_preview_codepath.md](/home/nivando-soares/asmdump/docs/dos_preview_codepath.md)
 
 ## Run it
 
@@ -102,6 +107,14 @@ python3 tools/build_dos_preview_manifest.py \
   --contracts-json tools/out/dos_version_contracts.json \
   --json-out tools/out/dos_preview_manifest.json \
   --markdown-out tools/out/dos_preview_manifest.md
+
+python3 tools/build_dos_preview_codepath.py \
+  --engine-manifest tools/out/dos_engine_manifest.json \
+  --preview-manifest tools/out/dos_preview_manifest.json \
+  --runtime-trace ../Downloads/testdrive2/runtime_trace.json \
+  --host-io ../Downloads/testdrive2/host_io_measurements.json \
+  --json-out tools/out/dos_preview_codepath.json \
+  --markdown-out tools/out/dos_preview_codepath.md
 ```
 
 ## Boundary

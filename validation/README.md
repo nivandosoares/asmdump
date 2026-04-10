@@ -23,6 +23,14 @@ DOS-side validation note:
   surface:
   - `tools/out/dos_preview_manifest.json`
   - `tools/out/dos_preview_manifest.md`
+- `tools/build_dos_preview_codepath.py` emits the concrete preview ownership
+  and measured file-access contract:
+  - `tools/out/dos_preview_codepath.json`
+  - `tools/out/dos_preview_codepath.md`
+- `tools/build_dos_packed_asset_manifest.py` emits the first packed preview
+  asset registry:
+  - `tools/out/dos_packed_asset_manifest.json`
+  - `tools/out/dos_packed_asset_manifest.md`
 - cheap DOS smoke on this host:
 
 ```sh
@@ -50,6 +58,21 @@ python3 tools/build_dos_preview_manifest.py \
   --contracts-json tools/out/dos_version_contracts.json \
   --json-out tools/out/dos_preview_manifest.json \
   --markdown-out tools/out/dos_preview_manifest.md
+
+python3 tools/build_dos_preview_codepath.py \
+  --engine-manifest tools/out/dos_engine_manifest.json \
+  --preview-manifest tools/out/dos_preview_manifest.json \
+  --runtime-trace ../Downloads/testdrive2/runtime_trace.json \
+  --host-io ../Downloads/testdrive2/host_io_measurements.json \
+  --json-out tools/out/dos_preview_codepath.json \
+  --markdown-out tools/out/dos_preview_codepath.md
+
+python3 tools/build_dos_packed_asset_manifest.py \
+  --preview-manifest tools/out/dos_preview_manifest.json \
+  --host-io ../Downloads/testdrive2/host_io_measurements.json \
+  --data-dir ../Downloads/testdrive2 \
+  --json-out tools/out/dos_packed_asset_manifest.json \
+  --markdown-out tools/out/dos_packed_asset_manifest.md
 ```
 
 Current asset:
